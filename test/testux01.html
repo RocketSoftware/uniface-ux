@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>UX Unit Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link type="text/css" rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css"/>
+    <script type="module" src="https://unpkg.com/@fluentui/web-components"></script>
+    <script type="text/javascript" src="umockup.js"></script>
+    <script type="text/javascript" src="../../ux/base.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../ux/button.css">
+    <script type="text/javascript" src="../../ux/button.js"></script>
+    <link type="text/css" rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+    <script type="text/javascript" src="../node_modules/mocha/mocha.js"></script>
+    <script type="text/javascript" src="../node_modules/chai/chai.js"></script>
+
+    <script class="mocha-init">
+      mocha.setup('bdd');
+      mocha.checkLeaks();
+    </script>
+  </head>
+  <body style="margin: 2em;">
+    
+    <h2>UX-Widget: <span id="widget-name">TODO</span></h2>
+
+    <div id="widget-container">
+      <fluent-button id="ux-widget" class="neutral u-button" current-value="" appearance="neutral">
+        <span class="u-icon" hidden="" slot=""></span>
+        <span class="u-text" slot="">UX.Button</span>
+      </fluent-button>
+    </div>
+
+    <hr/>
+    <!-- Unit test script -->
+    <script src="test_ux_button.js"></script>
+    <!-- 
+    -->
+    <h2>Mocha Unit Test</h2>
+
+    <div id="mocha"></div>
+    <script class="mocha-exec">
+      mocha.run();
+    </script>
+    <!--
+     -->
+</body>
+</html>
