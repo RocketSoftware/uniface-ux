@@ -2,13 +2,27 @@
 
 (function (global) {
     'use strict';
-    var classRegistry = {};
+
+    /**
+     * Mockup of the uniface public namespace
+     * 
+     * @namespace uniface
+     * @public
+     */
+    global.uniface = {
+        RESET: {}
+    };
+
+
+    // ---------------------------------------
+    // Mockup of private namespaces of UNIFACE
+    // ---------------------------------------
+    const classRegistry = {};
 
     /**
      * Mockup of the UNIFACE private namespace
      *
-     * @name UNIFACE
-     * @namespace
+     * @namespace UNIFACE
      * @private
      */
     global.UNIFACE = {   // Global
@@ -24,20 +38,69 @@
     };
 
     /**
-     * Mockup of the uniface public namespace
-     */
-    global.uniface = {
-        RESET: {}
-    };
-
-    /**
      * Mockup of the relevant part of private _uf namespace
      *
-     * @name _uf
-     * @namespace
+     * @namespace _uf
      * @private
      */
     global._uf = {
+        DOMNodeManager : {
+            /**
+             * get custom widget processed layout
+             * @param {Node} node The node
+             * @param {String} customWidgetName custom widget name
+             * @param {Boolean} mockUp optional, default is undefined or false;
+             *       and true if this function is used for mockup, 
+             */
+            getCustomWidgetLayout: function (node, customWidgetName, mockUp) {
+                var layout = node;
+                var customPluginClass = UNIFACE.ClassRegistry.get(customWidgetName);
+                if (customPluginClass) {
+                    if (typeof(customPluginClass.processLayout) === "function") {
+                        if (!mockUp) {
+                            // original implementation, will cause error if called in mockup env.
+                            layout = UNIFACE.widget.custom_widget_container.callStaticPluginFunction("processLayout", customPluginClass, node);
+                        } else {
+                            layout = customPluginClass.processLayout(node);
+                        }
+                    }
+                } else {
+                    throw new Error("Getting custom widget class  \"" + customPluginClass + "\" failed");
+                }
+                return layout;
+            },
+
+            /**
+             * Parses a the node containing IDs with "uent:" or "uocc:" or "ufld:" 
+             * that indicate they are relevant to the Uniface entity, occurence and field.
+             * If it is custom widget then get custom widget processed layout for given node
+             * and return processed node.
+             * @param {Node} node The node to start parsing at
+             * @param {String} customWidgetName optional, default is undefined or false for
+             *      DSP front-end runtime; the custom widget name for umockup module. 
+             */
+            parseCustomWidgetNode: function(node, customWidgetName) {
+                if (customWidgetName) { // mockup
+                    if (typeof customWidgetName === "string" && customWidgetName.length > 0) {
+                        // If its custom widget then call getCustomWidgetLayout
+                        const layout = this.getCustomWidgetLayout(node, customWidgetName, true);
+                        if (layout instanceof HTMLElement) {
+                            layout.id = node.id;
+                            var parentNode = node.parentNode;
+                            parentNode.replaceChild(layout, node);
+                            node = layout;
+                        } else {
+                            throw new Error("Function processLayout of " + customWidgetName + " does not return an HTMLElement.");
+                        }
+                    }
+                } else {
+                    // throw error
+                    // See the original function implementation of this function in uniface.js
+                }
+                return node;
+            }
+        },
+
         uconsole : (function() {
             var _log, _error, _warn;
 
