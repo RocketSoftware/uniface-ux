@@ -4,6 +4,7 @@
 (function(){
 
   // Test configuration
+  const widgetId = "ux-widget";
   const widgetName = "UX.Button";
 
   //var assert = require('assert');
@@ -16,14 +17,14 @@
   let el = document.getElementById("widget-name");
   el.textContent = widgetName;
 
-  // for unit test
-  var widgetClass, widget, control;
-
   var showTodoOk = true;
   //var showTodoOk = false;
   function assertTodo(message) {
     assert(showTodoOk, message);
   }
+
+  // for unit test
+  var widgetClass, widget, control, element;
 
   // Set wait time between each test case
   beforeEach(function (done) {
@@ -32,7 +33,6 @@
   });
 
   describe("Uniface Mockup tests", function() {
-    var element;
 
     it("Get class " + widgetName, function () {
       widgetClass = UNIFACE.ClassRegistry.get(widgetName);
@@ -41,13 +41,49 @@
 
   });
 
-  describe("Create widget", function() {
-    var element;
+  describe(widgetName + ".processLayout", function() {
 
-    it("TODO: processLayout", function() {
-      assertTodo("TODO: implement it!");
+    function doProcessLayout() {
+      const node = document.getElementById(widgetId);
+      element = _uf.DOMNodeManager.parseCustomWidgetNode(node, widgetName);
+    }
+    
+    before(function() {
+      widgetClass = UNIFACE.ClassRegistry.get(widgetName);
     });
 
+    it("processLayout", doProcessLayout);
+
+    describe("Checks", function() {
+
+      beforeEach(doProcessLayout);
+
+      it("check instance of HTMLElement", function() {
+        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+      });
+  
+      it("check tagName", function() {
+        expect(element).to.have.tagName("fluent-button");
+      });
+  
+      it("check id", function() {
+        expect(element).to.have.id(widgetId);
+      });
+  
+      it("check u-icon", function() {
+        assert(element.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
+      });
+  
+      it("check u-text", function() {
+        assert(element.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
+      });
+  
+    });
+
+  });
+
+  describe("Create widget", function() {
+    
     it("constructor", function () {
       try {
         widget = new widgetClass();
@@ -58,21 +94,14 @@
     });
   
     it("onConnect", function () {
-      element = document.getElementById("ux-widget");
+      element = document.getElementById(widgetId);
       assert(element, "Target element is not defined!");
-      try {
-        widget.onConnect(element);
-      } catch (e) {
-        assert(false, "Failed to connect with target element, exception " + e);
-      }
+      widget.onConnect(element);
     });
     
     it("dataInit", function () {
-      try {
-        widget.dataInit();
-      } catch (e) {
-        assert(false, "Failed to call dataInit(), exception " + e);
-      }
+      widget.dataInit();
+      expect(element).to.have.class("u-button", "widget element has class");
     });
       
   });
