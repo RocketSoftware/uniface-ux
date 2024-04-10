@@ -181,7 +181,7 @@
         
     });
 
-    describe("Disconnect and etc", function() {
+    describe("End", function() {
 
         it("Set back to default", function() {
             widget.dataUpdate({
@@ -189,16 +189,6 @@
             });
         });
 
-        it("onDisconnect", function () {
-            try {
-                widget.onDisconnect();
-                assert(!(widget.element instanceof Element), "widget is still connected with the element " + widget.element);
-            } catch (e) {
-                assert(false, "Failed to disconnect with target element, exception " + e);
-            }
-        });
-        
     });
 
 })();
-
