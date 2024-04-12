@@ -133,7 +133,7 @@
                     let buttonText = widget.elements.widget.querySelector("span.u-text").innerText;
                     assert.equal(buttonText, texts[i]);
                     done();
-                }, 100); // Wait for 100 ms
+                }, 1); // Wait for 100 ms
 
             });
         }
