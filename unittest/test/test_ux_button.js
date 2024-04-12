@@ -24,6 +24,14 @@
     // for unit test
     var widgetClass, widget, control, element, uxTagName;
 
+    /* TODO: Not necessary for test, maybe for demo?
+    // Set wait time between each test case
+    beforeEach(function (done) {
+        this.timeout(3000); // environment setup time 3 seconds
+        setTimeout(done, 500);  // 500 ms
+    });
+    */
+
     describe("Uniface Mockup tests", function () {
 
         it("Get class " + widgetName, function () {
