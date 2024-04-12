@@ -26,6 +26,12 @@
   // for unit test
   var widgetClass, widget, control, element;
 
+  // Set wait time between each test case
+  beforeEach(function (done) {
+    this.timeout(3000); // environment setup time 3 seconds
+    setTimeout(done, 500);  // 500 ms
+  });
+
   describe("Uniface Mockup tests", function() {
 
     it("Get class " + widgetName, function () {
@@ -120,24 +126,106 @@
   });
 
   describe("dataUpdate", function() {
-    const texts = ["Unit Test", "", "UX.Button"];
 
+    const texts = ["Button Text 1", "Button Text 2", "Button Text 3"];
     for (let i=0; i<texts.length; i++) {
       it("Set value to '" + texts[i] + "'", function () {
         widget.dataUpdate({
           value: texts[i]
         });
-        //TODO: Assert value here;
+
+        setTimeout(function() {
+          let buttonText = widget.elements.widget.querySelector("span.u-text").innerText;
+          assert.equal(buttonText, texts[i]);
+          //done();
+        }, 100); // Wait for 100 ms
+  
       });
     }
 
-    it("TODO: Assert value of the widget", function() {
-      assertTodo("TODO: implement it!");
-      //throw new Error("TODO: impl");
+    it("Set HTML property", function(done) {
+      //html: {appearance: "accent"}  // but: it stays as neutral not accent, but class accent is well set
+      widget.dataUpdate({
+        html: {appearance: "accent"}
+      });
+
+      setTimeout(function() {
+        let appearanceValue = widget.elements.widget.getAttribute('appearance');
+        assert.equal(appearanceValue, 'accent');
+        done();
+      }, 100); // Wait for 100 ms
+
     });
 
-    it("TODO: set properties, html, style, uniface, etc", function() {
-      assertTodo("TODO: implement it!");
+    it("Set STYLE property", function() {
+      widget.dataUpdate({
+        style: {"background-color": "green"}
+      });
+
+      setTimeout(function() {
+        let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
+        let bgColor = buttonStyle.getPropertyValue("background-color");
+        assert.equal(bgColor, 'rgb(0, 128, 0)');
+      }, 100); // Wait for 100 ms
+
+    });
+
+    it("Set CLASS property", function() {
+      widget.dataUpdate({
+        classes: {"ClassA": true}
+      });
+
+      setTimeout(function() {
+        let classAttributeValue = widget.elements.widget.getAttribute('class');
+        let classExist = classAttributeValue.includes('ClassA');
+        expect(classExist).to.be.true;
+      }, 100); // Wait for 100 ms
+
+    });
+
+    it("Set icon and icon-position", function() {
+      widget.dataUpdate({
+        uniface: {icon: "IncomingCall", 'icon-position': "start"}
+      });
+
+      setTimeout(function() {
+        let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
+        assert.notEqual(buttonIcon, null);
+      }, 100); // Wait for 100 ms
+
+    });
+
+    // Multiple properties update
+    it("Change multiple properties", function(done) {
+      widget.dataUpdate({
+        value: "Button Text",
+        html: {appearance: "accent"},
+        style: {"background-color": "green"},
+        classes: {"ClassA": true},
+        uniface: {icon: "IncomingCall", 'icon-position': "start"}
+      });
+
+      setTimeout(function() {
+        let buttonText = widget.elements.widget.querySelector("span.u-text").innerText;
+        assert.equal(buttonText, "Button Text");
+
+        let appearanceValue = widget.elements.widget.getAttribute('appearance');
+        assert.equal(appearanceValue, 'accent');
+
+        let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
+        let bgColor = buttonStyle.getPropertyValue("background-color");
+        assert.equal(bgColor, 'rgb(0, 128, 0)');
+
+        let classAttributeValue = widget.elements.widget.getAttribute('class');
+        let classExist = classAttributeValue.includes('ClassA');
+        expect(classExist).to.be.true;
+
+        let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
+        assert.notEqual(buttonIcon, null);
+
+        done();
+      }, 100); // Wait for 100 ms
+
     });
 
   });
