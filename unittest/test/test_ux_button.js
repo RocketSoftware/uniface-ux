@@ -173,7 +173,7 @@
 
         });
 
-        it("Set CLASS property", function () {
+        it("Set CLASS property", function (done) {
             widget.dataUpdate({
                 classes: { "ClassA": true }
             });
@@ -182,11 +182,12 @@
                 let classAttributeValue = widget.elements.widget.getAttribute('class');
                 let classExist = classAttributeValue.includes('ClassA');
                 expect(classExist).to.be.true;
+                done();
             }, 100); // Wait for 100 ms
 
         });
 
-        it("Set icon and icon-position", function () {
+        it("Set icon and icon-position", function (done) {
             widget.dataUpdate({
                 uniface: { icon: "IncomingCall", 'icon-position': "start" }
             });
@@ -194,6 +195,7 @@
             setTimeout(function () {
                 let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
                 assert.notEqual(buttonIcon, null);
+                done();
             }, 100); // Wait for 100 ms
 
         });
