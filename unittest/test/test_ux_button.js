@@ -7,6 +7,11 @@
     const widgetId = "ux-widget";
     const widgetName = "UX.Button";
 
+    /**
+     * Default timeout for waiting for DOM rendering (in milliseconds)
+     */
+    const defaultAsyncTimeout = 100; //ms
+
     const assert = chai.assert;
     const expect = chai.expect;
 
@@ -173,7 +178,7 @@
                     let buttonText = widget.elements.widget.querySelector("span.u-text").innerText;
                     assert.equal(buttonText, texts[i]);
                     done();
-                }, 1); // Wait for 100 ms
+                }, defaultAsyncTimeout); // Wait for DOM rendering
 
             });
         }
@@ -188,7 +193,7 @@
                 let appearanceValue = widget.elements.widget.getAttribute('appearance');
                 assert.equal(appearanceValue, 'accent');
                 done();
-            }, 100); // Wait for 100 ms
+            }, defaultAsyncTimeout); // Wait for DOM rendering
 
         });
 
@@ -201,7 +206,7 @@
                 let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
                 let bgColor = buttonStyle.getPropertyValue("background-color");
                 assert.equal(bgColor, 'rgb(0, 128, 0)');
-            }, 100); // Wait for 100 ms
+            }, defaultAsyncTimeout); // Wait for DOM rendering
 
         });
 
@@ -215,12 +220,13 @@
                 let classExist = classAttributeValue.includes('ClassA');
                 expect(classExist).to.be.true;
                 done();
-            }, 100); // Wait for 100 ms
+            }, defaultAsyncTimeout); // Wait for DOM rendering
 
         });
 
         it("Set icon and icon-position", function (done) {
             widget.dataUpdate({
+                value : widgetName,  // not empty value, required by icon-position=start
                 uniface: { icon: "IncomingCall", 'icon-position': "start" }
             });
 
@@ -228,7 +234,7 @@
                 let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
                 assert.notEqual(buttonIcon, null);
                 done();
-            }, 100); // Wait for 100 ms
+            }, defaultAsyncTimeout); // Wait for DOM rendering
 
         });
 
@@ -261,7 +267,7 @@
                 assert.notEqual(buttonIcon, null);
 
                 done();
-            }, 100); // Wait for 100 ms
+            }, defaultAsyncTimeout); // Wait for DOM rendering
 
         });
 
