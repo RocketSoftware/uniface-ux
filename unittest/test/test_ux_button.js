@@ -162,10 +162,9 @@
 
         beforeEach(createWidget);
 
-        const texts = ["Unit Test", "", "UX.Button"];
-
+        const texts = ["Button Text 1", "Button Text 2", "Button Text 3"];
         for (let i = 0; i < texts.length; i++) {
-            it("Set value to '" + texts[i] + "'", function () {
+            it("Set value to '" + texts[i] + "'", function (done) {
                 widget.dataUpdate({
                     value: texts[i]
                 });
@@ -182,7 +181,7 @@
         it("Set HTML property", function (done) {
             //html: {appearance: "accent"}  // but: it stays as neutral not accent, but class accent is well set
             widget.dataUpdate({
-                html: { appearance: "accent" } 
+                html: { appearance: "accent" }
             });
 
             setTimeout(function () {
