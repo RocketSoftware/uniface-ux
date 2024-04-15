@@ -3,7 +3,7 @@
  */
 (function () {
 
-    // Test configuration
+    // test configuration
     const widgetId = "ux-widget";
     const widgetName = "UX.Button";
 
