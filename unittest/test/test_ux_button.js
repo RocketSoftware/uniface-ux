@@ -24,6 +24,14 @@
     // for unit test
     var widgetClass, widget, control, element, uxTagName;
 
+    /* TODO: Not necessary for test, maybe for demo?
+    // Set wait time between each test case
+    beforeEach(function (done) {
+        this.timeout(3000); // environment setup time 3 seconds
+        setTimeout(done, 500);  // 500 ms
+    });
+    */
+
     function doProcessLayout() {
         if (!uxTagName) {
             const node = document.getElementById(widgetId);
@@ -81,23 +89,23 @@
             it("check instance of HTMLElement", function () {
                 expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
             });
-    
+
             it("check tagName", function () {
                 expect(element).to.have.tagName(uxTagName);
             });
-    
+
             it("check id", function () {
                 expect(element).to.have.id(widgetId);
             });
-    
+
             it("check u-icon", function () {
                 assert(element.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
             });
-    
+
             it("check u-text", function () {
                 assert(element.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
             });
-    
+
         });
 
     });
@@ -116,24 +124,24 @@
                 assert(false, "Failed to construct new widget, exception " + e);
             }
         });
-    
+
         it("onConnect", function () {
             connectWidget();
             assert(element, "Target element is not defined!");
             assert(widget.elements.widget === element, "widget is not connected");
         });
-        
+
         it("dataInit", function () {
             connectWidget();
             widget.dataInit();
             expect(element).to.have.class("u-button", "widget element has class");
         });
-            
+
     });
 
     describe("TODO: Event tests", function () {
         const texts = [
-            "click", 
+            "click",
             "etc ..."
         ];
 
@@ -161,25 +169,109 @@
                 widget.dataUpdate({
                     value: texts[i]
                 });
-                //TODO: Assert value here;
+
+                setTimeout(function () {
+                    let buttonText = widget.elements.widget.querySelector("span.u-text").innerText;
+                    assert.equal(buttonText, texts[i]);
+                    done();
+                }, 1); // Wait for 100 ms
+
             });
         }
 
-        it("TODO: Assert value of the widget", function () {
-            assertTodo("TODO: implement it!");
-            //throw new Error("TODO: impl");
+        it("Set HTML property", function (done) {
+            //html: {appearance: "accent"}  // but: it stays as neutral not accent, but class accent is well set
+            widget.dataUpdate({
+                html: { appearance: "accent" } 
+            });
+
+            setTimeout(function () {
+                let appearanceValue = widget.elements.widget.getAttribute('appearance');
+                assert.equal(appearanceValue, 'accent');
+                done();
+            }, 100); // Wait for 100 ms
+
         });
 
-        it("TODO: set properties, html, style, uniface, etc", function () {
-            assertTodo("TODO: implement it!");
+        it("Set STYLE property", function () {
+            widget.dataUpdate({
+                style: { "background-color": "green" }
+            });
+
+            setTimeout(function () {
+                let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
+                let bgColor = buttonStyle.getPropertyValue("background-color");
+                assert.equal(bgColor, 'rgb(0, 128, 0)');
+            }, 100); // Wait for 100 ms
+
+        });
+
+        it("Set CLASS property", function (done) {
+            widget.dataUpdate({
+                classes: { "ClassA": true }
+            });
+
+            setTimeout(function () {
+                let classAttributeValue = widget.elements.widget.getAttribute('class');
+                let classExist = classAttributeValue.includes('ClassA');
+                expect(classExist).to.be.true;
+                done();
+            }, 100); // Wait for 100 ms
+
+        });
+
+        it("Set icon and icon-position", function (done) {
+            widget.dataUpdate({
+                uniface: { icon: "IncomingCall", 'icon-position': "start" }
+            });
+
+            setTimeout(function () {
+                let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
+                assert.notEqual(buttonIcon, null);
+                done();
+            }, 100); // Wait for 100 ms
+
+        });
+
+        // Multiple properties update
+        it("Change multiple properties", function (done) {
+            widget.dataUpdate({
+                value: "Button Text",
+                html: { appearance: "accent" },
+                style: { "background-color": "green" },
+                classes: { "ClassA": true },
+                uniface: { icon: "IncomingCall", 'icon-position': "start" }
+            });
+
+            setTimeout(function () {
+                let buttonText = widget.elements.widget.querySelector("span.u-text").innerText;
+                assert.equal(buttonText, "Button Text");
+
+                let appearanceValue = widget.elements.widget.getAttribute('appearance');
+                assert.equal(appearanceValue, 'accent');
+
+                let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
+                let bgColor = buttonStyle.getPropertyValue("background-color");
+                assert.equal(bgColor, 'rgb(0, 128, 0)');
+
+                let classAttributeValue = widget.elements.widget.getAttribute('class');
+                let classExist = classAttributeValue.includes('ClassA');
+                expect(classExist).to.be.true;
+
+                let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
+                assert.notEqual(buttonIcon, null);
+
+                done();
+            }, 100); // Wait for 100 ms
+
         });
 
     });
 
     describe("TODO: API methods", function () {
         const texts = [
-            "getValue", 
-            "validate", 
+            "getValue",
+            "validate",
             "showError",
             "etc ..."
         ];
@@ -213,7 +305,7 @@
                 assert(false, "Failed to call dataCleanup(), exception " + e);
             }
         });
-        
+
     });
 
     describe("End", function () {
