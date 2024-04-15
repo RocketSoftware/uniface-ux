@@ -160,7 +160,7 @@
 
         });
 
-        it("Set STYLE property", function () {
+        it("Set STYLE property", function (done) {
             widget.dataUpdate({
                 style: { "background-color": "green" }
             });
@@ -169,6 +169,7 @@
                 let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
                 let bgColor = buttonStyle.getPropertyValue("background-color");
                 assert.equal(bgColor, 'rgb(0, 128, 0)');
+                done();
             }, 100); // Wait for 100 ms
 
         });
