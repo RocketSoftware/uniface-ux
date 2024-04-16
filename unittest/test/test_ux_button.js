@@ -144,7 +144,7 @@
 
     });
 
-    describe("TODO: Event tests", function () {
+    describe("Event tests (not implemented)", function () {
         const texts = [
             "click",
             "etc ..."
@@ -274,7 +274,7 @@
 
     });
 
-    describe("TODO: API methods", function () {
+    describe("Other API methods (not implemented)", function () {
         const texts = [
             "getValue",
             "validate",
