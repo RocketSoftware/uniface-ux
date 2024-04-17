@@ -72,7 +72,7 @@
 
             /**
              * Parses a the node containing IDs with "uent:" or "uocc:" or "ufld:" 
-             * that indicate they are relevant to the Uniface entity, occurence and field.
+             * that indicate they are relevant to the Uniface entity, occurrence and field.
              * If it is custom widget then get custom widget processed layout for given node
              * and return processed node.
              * @param {Node} node The node to start parsing at
@@ -143,6 +143,78 @@
                 warn : _warn
             };
         })()
+    };
+
+    /**
+     * Utility functions of mockup
+     */
+    global.umockup = {
+        /**
+         * Helper class for testing widget.
+         */
+        WidgetTester : class {
+
+            //widget, element, uxTagName;
+    
+            constructor(widgetId, widgetName) {
+                this.widgetId = widgetId;
+                this.widgetName = widgetName;
+            }
+    
+            getWidgetClass() {
+                return UNIFACE.ClassRegistry.get(this.widgetName);
+            }
+        
+            processLayout() {
+                if (!this.uxTagName) {
+                    const node = document.getElementById(this.widgetId);
+                    this.element = _uf.DOMNodeManager.parseCustomWidgetNode(node, this.widgetName);
+                    this.uxTagName = this.element.tagName;
+                }
+                return this.element;
+            }
+        
+            construct() {
+                if (!this.widget) {
+                    const widgetClass = this.getWidgetClass(this.widgetName);
+                    this.widget = new widgetClass();
+                }
+                return this.widget;
+            }
+        
+            onConnect() {
+                if (!this.widget || !this.widget.elements) {
+                    const element = this.processLayout();
+                    const widget = this.construct();
+                    widget.onConnect(element);
+                }
+                return this.widget;
+            }
+        
+            dataInit() {
+                const widget = this.onConnect();
+                widget.dataInit();
+                return widget;
+            }
+    
+            createWidget() {
+                return this.dataInit();
+            }
+
+            getDefaultProperties() {
+                if (!this.defaultProperties) {
+                    const widgetClass = this.getWidgetClass(this.widgetName);
+                    const _widget = new widgetClass();
+                    this.defaultProperties = widgetClass.defaultProperties;
+                    if (!this.defaultProperties) {
+                        this.defaultProperties = {};
+                    }
+                }
+                return this.defaultProperties;
+            }
+    
+        }
+    
     };
 
 })(this);

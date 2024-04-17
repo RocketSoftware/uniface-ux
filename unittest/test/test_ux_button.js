@@ -7,6 +7,11 @@
     const widgetId = "ux-widget";
     const widgetName = "UX.Button";
 
+    /**
+     * Default timeout for waiting for DOM rendering (in milliseconds)
+     */
+    const defaultAsyncTimeout = 100; //ms
+
     const assert = chai.assert;
     const expect = chai.expect;
 
@@ -21,9 +26,6 @@
         assert(showTodoOk, message);
     }
 
-    // for unit test
-    var widgetClass, widget, control, element, uxTagName;
-
     /* TODO: Not necessary for test, maybe for demo?
     // Set wait time between each test case
     beforeEach(function (done) {
@@ -32,41 +34,37 @@
     });
     */
 
+    // for unit test
+    const tester = new umockup.WidgetTester(widgetId, widgetName);
+
     describe("Uniface Mockup tests", function () {
 
         it("Get class " + widgetName, function () {
-            widgetClass = UNIFACE.ClassRegistry.get(widgetName);
+            const widgetClass = tester.getWidgetClass();
             assert(widgetClass, "widgetClass is not defined!");
         });
 
     });
 
     describe(widgetName + ".processLayout", function () {
+        const element = tester.processLayout();
 
-        function doProcessLayout() {
-            if (!uxTagName) {
-                const node = document.getElementById(widgetId);
-                element = _uf.DOMNodeManager.parseCustomWidgetNode(node, widgetName);
-                uxTagName = element.tagName;
-            }
-        }
-
-        before(function () {
-            widgetClass = UNIFACE.ClassRegistry.get(widgetName);
+        it("processLayout", function () {
+            tester.processLayout();
         });
-
-        it("processLayout", doProcessLayout);
 
         describe("Checks", function () {
 
-            beforeEach(doProcessLayout);
+            beforeEach(function () {
+                tester.processLayout();
+            });
 
             it("check instance of HTMLElement", function () {
                 expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
             });
 
             it("check tagName", function () {
-                expect(element).to.have.tagName(uxTagName);
+                expect(element).to.have.tagName(tester.uxTagName);
             });
 
             it("check id", function () {
@@ -87,48 +85,74 @@
 
     describe("Create widget", function () {
 
+        beforeEach(function () {
+            tester.construct();
+        });
+
         it("constructor", function () {
             try {
-                widget = new widgetClass();
+                const widget = tester.construct();
                 assert(widget, "widget is not defined!");
+                const widgetClass = tester.getWidgetClass();
+                //assert(widgetClass.defaultProperties, "widgetClass.defaultProperties is not defined!");
             } catch (e) {
                 assert(false, "Failed to construct new widget, exception " + e);
             }
         });
 
         it("onConnect", function () {
-            element = document.getElementById(widgetId);
+            const element = tester.processLayout();
+            const widget = tester.onConnect();
             assert(element, "Target element is not defined!");
-            widget.onConnect(element);
-        });
-
-        it("dataInit", function () {
-            widget.dataInit();
-            expect(element).to.have.class("u-button", "widget element has class");
+            assert(widget.elements.widget === element, "widget is not connected");
         });
 
     });
 
-    describe("TODO: Event tests", function () {
+    describe("dataInit", function () {
+        const defaultProperties = tester.getDefaultProperties();
+        const classes = defaultProperties.classes;
+        var element;
+
+        beforeEach(function () {
+            tester.dataInit();
+            element = tester.element;
+            assert(element, "Widget top element is not defined!");
+        });
+
+        for (const clazz in classes) {
+            it("check class '" + clazz + "'", function () {
+                if ( classes[clazz] ) {
+                    expect(element).to.have.class(clazz, "widget element has class " + clazz);
+                } else {
+                    expect(element).not.to.have.class(clazz, "widget element has no class " + clazz);
+                }
+            });
+        }
+    
+
+    });
+
+    describe("Event tests (not supported yet)", function () {
         const texts = [
             "click",
             "etc ..."
         ];
 
-        it("TODO: mapTrigger", function () {
-            assertTodo("TODO: implement it!");
-        });
-
+        it("mapTrigger");
 
         for (let i = 0; i < texts.length; i++) {
-            it("TODO: " + texts[i], function () {
-                assertTodo("TODO: implement it!");
-            });
+            it(texts[i]);
         }
 
     });
 
     describe("dataUpdate", function () {
+        let widget;
+
+        beforeEach(function () {
+            widget = tester.createWidget();
+        });
 
         const texts = ["Button Text 1", "Button Text 2", "Button Text 3"];
         for (let i = 0; i < texts.length; i++) {
@@ -141,7 +165,7 @@
                     let buttonText = widget.elements.widget.querySelector("span.u-text").innerText;
                     assert.equal(buttonText, texts[i]);
                     done();
-                }, 1); // Wait for 100 ms
+                }, defaultAsyncTimeout); // Wait for DOM rendering
 
             });
         }
@@ -156,7 +180,7 @@
                 let appearanceValue = widget.elements.widget.getAttribute('appearance');
                 assert.equal(appearanceValue, 'accent');
                 done();
-            }, 100); // Wait for 100 ms
+            }, defaultAsyncTimeout); // Wait for DOM rendering
 
         });
 
@@ -170,7 +194,7 @@
                 let bgColor = buttonStyle.getPropertyValue("background-color");
                 assert.equal(bgColor, 'rgb(0, 128, 0)');
                 done();
-            }, 100); // Wait for 100 ms
+            }, defaultAsyncTimeout); // Wait for DOM rendering
 
         });
 
@@ -184,12 +208,13 @@
                 let classExist = classAttributeValue.includes('ClassA');
                 expect(classExist).to.be.true;
                 done();
-            }, 100); // Wait for 100 ms
+            }, defaultAsyncTimeout); // Wait for DOM rendering
 
         });
 
         it("Set icon and icon-position", function (done) {
             widget.dataUpdate({
+                value : widgetName,  // not empty value, required by icon-position=start
                 uniface: { icon: "IncomingCall", 'icon-position': "start" }
             });
 
@@ -197,7 +222,7 @@
                 let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
                 assert.notEqual(buttonIcon, null);
                 done();
-            }, 100); // Wait for 100 ms
+            }, defaultAsyncTimeout); // Wait for DOM rendering
 
         });
 
@@ -230,13 +255,13 @@
                 assert.notEqual(buttonIcon, null);
 
                 done();
-            }, 100); // Wait for 100 ms
+            }, defaultAsyncTimeout); // Wait for DOM rendering
 
         });
 
     });
 
-    describe("TODO: API methods", function () {
+    describe("Other API methods (not supported yet)", function () {
         const texts = [
             "getValue",
             "validate",
@@ -245,14 +270,17 @@
         ];
 
         for (let i = 0; i < texts.length; i++) {
-            it("TODO: " + texts[i], function () {
-                assertTodo("TODO: implement it!");
-            });
+            it(texts[i]);
         }
 
     });
 
     describe("dataCleanup", function () {
+        let widget;
+
+        beforeEach(function () {
+            widget = tester.createWidget();
+        });
 
         it("value", function () {
             try {
@@ -275,6 +303,11 @@
     });
 
     describe("End", function () {
+        let widget;
+
+        beforeEach(function () {
+            widget = tester.createWidget();
+        });
 
         it("Set back to default", function () {
             widget.dataUpdate({
