@@ -37,66 +37,37 @@
     });
     */
 
-    function doProcessLayout() {
-        if (!uxTagName) {
-            const node = document.getElementById(widgetId);
-            element = _uf.DOMNodeManager.parseCustomWidgetNode(node, widgetName);
-            uxTagName = element.tagName;
-        }
-    }
-
-    function constructWidget() {
-        if (!widget) {
-            if (!widgetClass) {
-                widgetClass = UNIFACE.ClassRegistry.get(widgetName);
-            }
-            widget = new widgetClass();
-        }
-    }
-
-    function connectWidget() {
-        if (!element) {
-            element = document.getElementById(widgetId);
-        }
-        if (!widget.elements) {
-            widget.onConnect(element);
-        }
-    }
-
-    function createWidget() {
-        doProcessLayout();
-        constructWidget();
-        connectWidget();
-        widget.dataInit();
-    }
+    // for unit test
+    const tester = new umockup.WidgetTester(widgetId, widgetName);
 
     describe("Uniface Mockup tests", function () {
 
         it("Get class " + widgetName, function () {
-            widgetClass = UNIFACE.ClassRegistry.get(widgetName);
+            const widgetClass = tester.getWidgetClass();
             assert(widgetClass, "widgetClass is not defined!");
         });
 
     });
 
     describe(widgetName + ".processLayout", function () {
+        const element = tester.processLayout();
 
-        before(function () {
-            widgetClass = UNIFACE.ClassRegistry.get(widgetName);
+        it("processLayout", function () {
+            tester.processLayout();
         });
-
-        it("processLayout", doProcessLayout);
 
         describe("Checks", function () {
 
-            beforeEach(doProcessLayout);
+            beforeEach(function () {
+                tester.processLayout();
+            });
 
             it("check instance of HTMLElement", function () {
                 expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
             });
 
             it("check tagName", function () {
-                expect(element).to.have.tagName(uxTagName);
+                expect(element).to.have.tagName(tester.uxTagName);
             });
 
             it("check id", function () {
@@ -118,29 +89,50 @@
     describe("Create widget", function () {
 
         beforeEach(function () {
-            constructWidget();
+            tester.construct();
         });
-        
+
         it("constructor", function () {
             try {
-                constructWidget();
+                const widget = tester.construct();
                 assert(widget, "widget is not defined!");
+                const widgetClass = tester.getWidgetClass();
+                //assert(widgetClass.defaultProperties, "widgetClass.defaultProperties is not defined!");
             } catch (e) {
                 assert(false, "Failed to construct new widget, exception " + e);
             }
         });
 
         it("onConnect", function () {
-            connectWidget();
+            const element = tester.processLayout();
+            const widget = tester.onConnect();
             assert(element, "Target element is not defined!");
             assert(widget.elements.widget === element, "widget is not connected");
         });
 
-        it("dataInit", function () {
-            connectWidget();
-            widget.dataInit();
-            expect(element).to.have.class("u-button", "widget element has class");
+    });
+
+    describe("dataInit", function () {
+        const defaultProperties = tester.getDefaultProperties();
+        const classes = defaultProperties.classes;
+        var element;
+
+        beforeEach(function () {
+            tester.dataInit();
+            element = tester.element;
+            assert(element, "Widget top element is not defined!");
         });
+
+        for (const clazz in classes) {
+            it("check class '" + clazz + "'", function () {
+                if ( classes[clazz] ) {
+                    expect(element).to.have.class(clazz, "widget element has class " + clazz);
+                } else {
+                    expect(element).not.to.have.class(clazz, "widget element has no class " + clazz);
+                }
+            });
+        }
+    
 
     });
 
@@ -164,8 +156,11 @@
     });
 
     describe("dataUpdate", function () {
+        let widget;
 
-        beforeEach(createWidget);
+        beforeEach(function () {
+            widget = tester.createWidget();
+        });
 
         const texts = ["Button Text 1", "Button Text 2", "Button Text 3"];
         for (let i = 0; i < texts.length; i++) {
@@ -291,8 +286,11 @@
     });
 
     describe("dataCleanup", function () {
+        let widget;
 
-        beforeEach(createWidget);
+        beforeEach(function () {
+            widget = tester.createWidget();
+        });
 
         it("value", function () {
             try {
@@ -315,6 +313,11 @@
     });
 
     describe("End", function () {
+        let widget;
+
+        beforeEach(function () {
+            widget = tester.createWidget();
+        });
 
         it("Set back to default", function () {
             widget.dataUpdate({
