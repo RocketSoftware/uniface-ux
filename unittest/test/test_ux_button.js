@@ -26,9 +26,6 @@
         assert(showTodoOk, message);
     }
 
-    // for unit test
-    var widgetClass, widget, control, element, uxTagName;
-
     /* TODO: Not necessary for test, maybe for demo?
     // Set wait time between each test case
     beforeEach(function (done) {
@@ -136,21 +133,16 @@
 
     });
 
-    describe("Event tests (not implemented)", function () {
+    describe("Event tests (not supported yet)", function () {
         const texts = [
             "click",
             "etc ..."
         ];
 
-        it("TODO: mapTrigger", function () {
-            assertTodo("TODO: implement it!");
-        });
-
+        it("mapTrigger");
 
         for (let i = 0; i < texts.length; i++) {
-            it("TODO: " + texts[i], function () {
-                assertTodo("TODO: implement it!");
-            });
+            it(texts[i]);
         }
 
     });
@@ -269,7 +261,7 @@
 
     });
 
-    describe("Other API methods (not implemented)", function () {
+    describe("Other API methods (not supported yet)", function () {
         const texts = [
             "getValue",
             "validate",
@@ -278,9 +270,7 @@
         ];
 
         for (let i = 0; i < texts.length; i++) {
-            it("TODO: " + texts[i], function () {
-                assertTodo("TODO: implement it!");
-            });
+            it(texts[i]);
         }
 
     });
