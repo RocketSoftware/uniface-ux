@@ -8,7 +8,7 @@
 - Goto inside the WebApp uxunittest
 - Link your UX source folder as a symbolic link inside the WebApp: e.g.: mklink /j /d ux c:\USYS\10dev\uniface\webapps\uniface\ux
 - Start your Uniface Tomcat
-- Open a browser with URL: http://localhost:8080/uxunittest/unitest/test/testux01.html
+- Open a browser with URL: http://localhost:8080/uxunittest/unitest/test/test_ux_widget.html
 
 ## Files included
 
@@ -16,10 +16,20 @@
 - unittest/node_modules/chai
 - unittest/node_modules/chai/chai.js
 - unittest/node_modules/chai/LICENSE
+- unittest/node_modules/chai-dom
+- unittest/node_modules/chai-dom/chai-dom.js
+- unittest/node_modules/chai-dom/LICENSE
 - unittest/node_modules/mocha
 - unittest/node_modules/mocha/LICENSE
 - unittest/node_modules/mocha/mocha.css
 - unittest/node_modules/mocha/mocha.js
-- unittest/test/testux01.html
 - unittest/test/test_ux_button.js
+- unittest/test/test_ux_template.js
+- unittest/test/test_ux_widget.html
 - unittest/test/umockup.js
+
+# Template and Guideline
+
+See wiki page:
+- UX Unit Test Templates/Guidelines - Uniface UX-Integration - Rocket Software Wiki
+  https://wiki.rocketsoftware.com/pages/viewpage.action?pageId=458704944

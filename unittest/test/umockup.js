@@ -145,10 +145,21 @@
         })()
     };
 
+    const widgetId = "ux-widget";
+
+    function getWidgetName() {
+        let urlString = window.location.href;
+        let paramString = urlString.split('?')[1];
+        let queryString = new URLSearchParams(paramString);
+        let _name = queryString.get("widget_name");
+        return (_name ? _name : "UX.Button");
+    }
+
     /**
      * Utility functions of mockup
      */
     global.umockup = {
+
         /**
          * Helper class for testing widget.
          */
@@ -156,11 +167,20 @@
 
             //widget, element, uxTagName;
     
-            constructor(widgetId, widgetName) {
+            constructor() {
                 this.widgetId = widgetId;
-                this.widgetName = widgetName;
+                this.widgetName = getWidgetName();
+                
+                // update test page
+                if (document) {
+                    const widgetName = getWidgetName();
+                    document.title = "Unit test - " + widgetName;
+                    const el = document.getElementById("widget-name");
+                    el.textContent = widgetName;
+                }
+            
             }
-    
+
             getWidgetClass() {
                 return UNIFACE.ClassRegistry.get(this.widgetName);
             }
@@ -203,7 +223,7 @@
 
             getDefaultProperties() {
                 if (!this.defaultProperties) {
-                    const widgetClass = this.getWidgetClass(this.widgetName);
+                    const widgetClass = this.getWidgetClass();
                     const _widget = new widgetClass();
                     this.defaultProperties = widgetClass.defaultProperties;
                     if (!this.defaultProperties) {
