@@ -2,7 +2,7 @@
  * Test ux-widget
  */
 (function () {
-
+	
     /**
      * Default timeout for waiting for DOM rendering (in milliseconds)
      */
