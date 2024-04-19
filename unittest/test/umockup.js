@@ -146,19 +146,42 @@
     };
 
     const widgetId = "ux-widget";
+    let widgetName;
 
     function getWidgetName() {
-        let urlString = window.location.href;
-        let paramString = urlString.split('?')[1];
-        let queryString = new URLSearchParams(paramString);
-        let _name = queryString.get("widget_name");
-        return (_name ? _name : "UX.Button");
+        if (!widgetName) {
+            const urlString = window.location.href;
+            const paramString = urlString.split('?')[1];
+            const queryString = new URLSearchParams(paramString);
+            const value = queryString.get("widget_name");
+            widgetName = (value ? value : "UX.Button");
+
+            // update test page
+            if (document) {
+                document.title = "Unit test - " + widgetName;
+                let el = document.getElementById("widget-name");
+                el.innerHTML = widgetName;
+                el = document.getElementById("ux-widget");
+                el.innerHTML = widgetName;
+            }
+        }
+        return widgetName;
+    }
+
+    function getFileName(widgetName) {
+        return widgetName.substr(3).replace(/[A-Z]/g, (letter, offset) => { 
+            return (offset ? "_" : "") + letter.toLowerCase(); 
+        });
     }
 
     /**
      * Utility functions of mockup
      */
     global.umockup = {
+
+        getTestJsName : function () {
+            return "test_ux_" + getFileName(getWidgetName()) + ".js";
+        },
 
         /**
          * Helper class for testing widget.
@@ -170,15 +193,6 @@
             constructor() {
                 this.widgetId = widgetId;
                 this.widgetName = getWidgetName();
-                
-                // update test page
-                if (document) {
-                    const widgetName = getWidgetName();
-                    document.title = "Unit test - " + widgetName;
-                    const el = document.getElementById("widget-name");
-                    el.textContent = widgetName;
-                }
-            
             }
 
             getWidgetClass() {

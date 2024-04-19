@@ -11,12 +11,6 @@
     const assert = chai.assert;
     const expect = chai.expect;
 
-    var showTodoOk = true;
-    //var showTodoOk = false;
-    function assertTodo(message) {
-        assert(showTodoOk, message);
-    }
-
     /* TODO: Not necessary for test, maybe for demo?
     // Set wait time between each test case
     beforeEach(function (done) {

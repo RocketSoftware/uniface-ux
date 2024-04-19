@@ -2,7 +2,7 @@
  * Test ux-widget
  */
 (function () {
-	
+
     /**
      * Default timeout for waiting for DOM rendering (in milliseconds)
      */
@@ -10,12 +10,6 @@
 
     const assert = chai.assert;
     const expect = chai.expect;
-
-    var showTodoOk = true;
-    //var showTodoOk = false;
-    function assertTodo(message) {
-        assert(showTodoOk, message);
-    }
 
     /* TODO: Not necessary for test, maybe for demo?
     // Set wait time between each test case
@@ -34,7 +28,8 @@
 
         it("Get class " + widgetName, function () {
             const widgetClass = tester.getWidgetClass();
-            assert(widgetClass, "widgetClass is not defined! \n    Check if the JavaScript file for " + widgetName + " is loaded.");
+            assert(widgetClass, `Widget class '${widgetName}' is not defined!
+            Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
         });
 
     });
