@@ -28,7 +28,8 @@
 
         it("Get class " + widgetName, function () {
             const widgetClass = tester.getWidgetClass();
-            assert(widgetClass, "widgetClass is not defined! \n    Check if the JavaScript file for " + widgetName + " is loaded.");
+            assert(widgetClass, `Widget class '${widgetName}' is not defined!
+            Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
         });
 
     });
