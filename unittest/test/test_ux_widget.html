@@ -34,15 +34,22 @@
 
     <hr/>
     <!-- Unit test script -->
-    <script src="test_ux_template.js"></script>
-    <!-- 
-    -->
+    <script id="test-script" type="text/javascript"></script>
+    <!-- Loading template -->
+    <script id="test-script2" type="text/javascript"></script>
 
     <h2>Mocha Unit Test</h2>
 
     <div id="mocha"></div>
     <script class="mocha-exec">
-      mocha.run();
+      let el = document.getElementById("test-script");
+      el.src = umockup.getTestJsName();
+
+      el = document.getElementById("test-script2");
+      el.onload = function () {
+        mocha.run();
+      };
+      el.src = "test_ux_template.js";
     </script>
     <!--
      -->

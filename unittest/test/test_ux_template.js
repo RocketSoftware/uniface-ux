@@ -3,6 +3,11 @@
  */
 (function () {
 
+    // Keep this!
+    if (umockup.testLoaded()) {
+        return;
+    }
+
     /**
      * Default timeout for waiting for DOM rendering (in milliseconds)
      */
@@ -25,6 +30,15 @@
     const widgetName = tester.widgetName;
 
     describe("Uniface Mockup tests", function () {
+
+        /**
+         * Only for template. Remove this test case from your widget unit test.
+         */
+        it("Template check", function () {
+            assert(false, `The template file 'test_ux_template.js' is using. 
+            If not, remove this test case.
+            (Hint: if you do not have '${umockup.getTestJsName()}', create it by copying 'test_ux_template.js'.)`);
+        });
 
         it("Get class " + widgetName, function () {
             const widgetClass = tester.getWidgetClass();

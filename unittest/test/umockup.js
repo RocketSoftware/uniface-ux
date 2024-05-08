@@ -147,6 +147,7 @@
 
     const widgetId = "ux-widget";
     let widgetName;
+    let testLoaded = false;
 
     function getWidgetName() {
         if (!widgetName) {
@@ -181,6 +182,12 @@
 
         getTestJsName : function () {
             return "test_ux_" + getFileName(getWidgetName()) + ".js";
+        },
+
+        testLoaded : function () {
+            const b = testLoaded;
+            testLoaded = true;
+            return b;
         },
 
         /**
