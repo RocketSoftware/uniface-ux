@@ -2,6 +2,10 @@
  * Test ux-widget
  */
 (function () {
+    // Keep this!
+    if (umockup.testLoaded()) {
+        return;
+    }
 
     /**
      * Default timeout for waiting for DOM rendering (in milliseconds)
