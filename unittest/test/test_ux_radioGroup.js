@@ -127,7 +127,6 @@
             assert(element, "Widget top element is not defined!");
         });
 
-
         for (const clazz in classes) {
             it("check class '" + clazz + "'", function () {
                 if (classes[clazz]) {
@@ -141,8 +140,6 @@
         it("check initial orientation is vertical", function () {
             expect(element).to.have.property("orientation", "vertical");
         });
-
-
     });
 
     describe("dataUpdate", function () {
@@ -152,15 +149,14 @@
             widget = tester.createWidget();
         });
 
-
         it("Set CLASS property", function (done) {
             widget.dataUpdate({
                 classes: { "ClassA": true }
             });
 
             setTimeout(function () {
-                let classAttributeValue = widget.elements.widget.getAttribute('class');
-                let classExist = classAttributeValue.includes('ClassA');
+                let classAttributeValue = widget.elements.widget.getAttribute("class");
+                let classExist = classAttributeValue.includes("ClassA");
                 expect(classExist).to.be.true;
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
@@ -179,7 +175,6 @@
             }, defaultAsyncTimeout); // Wait for DOM rendering
         });
 
-
         it("Set VALREP property", function (done) {
             widget.dataUpdate({
                 valrep: valRepArray
@@ -195,7 +190,6 @@
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
         });
-
 
         it("Change multiple properties", function (done) {
             widget.dataUpdate({
