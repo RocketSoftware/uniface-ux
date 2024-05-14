@@ -253,6 +253,18 @@
                 }
                 return this.defaultProperties;
             }
+
+            dataUpdate(data) {
+                // This is to remember the updated value from unit test so that this.widgetProperties can be used in dataCleanup()
+                Object.keys(data).forEach((key) => {
+                    if (!this.widgetProperties[key])
+                        this.widgetProperties[key] = new Set();
+                    Object.keys(data[key]).forEach((childKey) => {
+                        this.widgetProperties[key].add(childKey);
+                    });
+                });
+                this.widget.dataUpdate(data);
+            }
     
         }
     
