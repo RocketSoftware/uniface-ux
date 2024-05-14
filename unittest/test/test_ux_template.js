@@ -34,16 +34,20 @@
         /**
          * Only for template. Remove this test case from your widget unit test.
          */
-        it("Template check", function () {
-            assert(false, `The template file 'test_ux_template.js' is using. 
-            If not, remove this test case.
-            (Hint: if you do not have '${umockup.getTestJsName()}', create it by copying 'test_ux_template.js'.)`);
+        it("unit test script check", function () {
+            assert(false, `The template file 'test_ux_template.js' is using.                 
+                Hint: if you do not have the unit test script '${umockup.getTestJsName()}', 
+                      create it by copying 'test_ux_template.js,
+                      and remove this test case.'.
+            \n`);
         });
 
-        it("Get class " + widgetName, function () {
+        it("get class " + widgetName, function () {
             const widgetClass = tester.getWidgetClass();
             assert(widgetClass, `Widget class '${widgetName}' is not defined!
-            Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
+                Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.
+                      If not, add <script> element in the header of this html page to load it.
+            \n`);
         });
 
     });
