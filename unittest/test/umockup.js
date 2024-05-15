@@ -175,6 +175,41 @@
         });
     }
 
+    const defaultAsyncTimeout = 100; //ms
+
+    function it_async(testName, testFunction, checkFunction, timeout) {
+        if (timeout === undefined) {
+            timeout = defaultAsyncTimeout;
+        }
+        it(testName, function(done) {
+            testFunction();
+            setTimeout(function () {
+                try {
+                    checkFunction();
+                    done();
+                } catch(e) {
+                    done(e);
+                }
+            }, timeout);
+        });
+    }
+
+    global.it_async = it_async;
+
+    function asyncRun (testFunction, timeout) {
+        if (timeout === undefined) {
+            timeout = defaultAsyncTimeout;
+        }
+        return new Promise(function(resolve, reject) {
+            testFunction();
+            setTimeout(function(){
+                resolve();
+            }, timeout);
+        });
+    }
+
+    global.asyncRun = asyncRun;
+
     /**
      * Utility functions of mockup
      */
