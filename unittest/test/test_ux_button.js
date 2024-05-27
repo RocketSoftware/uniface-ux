@@ -219,6 +219,35 @@
 
         });
 
+        it("Set icon and icon-position 2 (MutationObserver, done())", function (done) {
+            const observer = new MutationObserver(function (records, observer) {
+                for (const record of records) {
+                    if (record.type === "attributes" 
+                        && record.attributeName === "slot" ) {
+
+                        // check the result of dataUpdate
+                        let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start']");
+                        assert.notEqual(buttonIcon, null);
+
+                        // done
+                        observer.disconnect();
+                        done();
+                        return;
+                    }
+                }
+            });
+
+            observer.observe(widget.elements.buttonIconElement, {
+                "attributeFilter" : ["slot"]
+            });
+    
+            widget.dataUpdate({
+                value : widgetName,  // not empty value, required by icon-position=start
+                uniface: { icon: "IncomingCall", 'icon-position': "start" }
+            });
+        });
+
+    
         // Multiple properties update
         it("Change multiple properties", function (done) {
             widget.dataUpdate({
