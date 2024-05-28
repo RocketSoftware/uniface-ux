@@ -155,8 +155,11 @@
             });
 
             setTimeout(function () {
+                let readOnlyTrue = widget.elements.widget.readOnly;
+                assert.equal(readOnlyTrue, true);
+
                 let readOnlyBoolean = widget.elements.widget.getAttribute("aria-readonly");
-                assert.equal(readOnlyBoolean, 'true');
+                assert.equal(readOnlyBoolean, "true");
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
 
@@ -207,7 +210,7 @@
         it("Change multiple properties", function (done) {
             widget.dataUpdate({
                 value: selectedValue,
-                html: {"readonly": true},
+                html: {"readonly": false},
                 classes: { "ClassA": true },
                 uniface: { "label-text": widgetLabelText },
                 valrep: valRepArray
@@ -229,9 +232,12 @@
                 let classExist = classAttributeValue.includes("ClassA");
                 expect(classExist).to.be.true;
 
-                let readOnlyBoolean = widget.elements.widget.getAttribute("aria-readonly");
-                assert.equal(readOnlyBoolean, 'true');
+                let readOnlyFalse = widget.elements.widget.readOnly;
+                assert.equal(readOnlyFalse, false);
 
+                let readOnlyBoolean = widget.elements.widget.getAttribute("aria-readonly");
+                assert.equal(readOnlyBoolean, "false");
+                
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
 
