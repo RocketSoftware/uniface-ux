@@ -200,6 +200,7 @@
             constructor() {
                 this.widgetId = widgetId;
                 this.widgetName = getWidgetName();
+                this.widgetProperties = {};
             }
 
             getWidgetClass() {
