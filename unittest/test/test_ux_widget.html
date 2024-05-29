@@ -1,62 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>UX Unit Test</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link type="text/css" rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css"/>
-    <script type="module" src="https://unpkg.com/@fluentui/web-components@2.5.17/dist/web-components.min.js"></script>
-    <script type="text/javascript" src="umockup.js"></script>
-    <script type="text/javascript" src="../../ux/base.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/base.css"/>
-    <link type="text/css" rel="stylesheet" href="../../ux/button.css"/>
-    <script type="text/javascript" src="../../ux/button.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/number_field.css"/>
-    <script type="text/javascript" src="../../ux/number_field.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/text_field.css"/>
-    <script type="text/javascript" src="../../ux/text_field.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/text_area.css"/>
-    <script type="text/javascript" src="../../ux/text_area.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/select.css"/>
-    <script type="text/javascript" src="../../ux/select.js"></script>
-    <link type="text/css" rel="stylesheet" href="../node_modules/mocha/mocha.css" />
-    <script type="text/javascript" src="../node_modules/mocha/mocha.js"></script>
-    <script type="text/javascript" src="../node_modules/chai/chai.js"></script>
-    <script type="text/javascript" src="../node_modules/chai-dom/chai-dom.js"></script>
 
-    <script class="mocha-init">
-      mocha.setup('bdd');
-      mocha.checkLeaks();
-    </script>
-  </head>
-  <body style="margin: 2em;">
-    
-    <h2>UX-Widget: <span id="widget-name">TODO</span></h2>
+<head>
+  <meta charset="utf-8" />
+  <title>UX Unit Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link type="text/css" rel="stylesheet"
+    href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
+  <script type="module" src="https://unpkg.com/@fluentui/web-components@2.6.1/dist/web-components.min.js"></script>
+  <script type="text/javascript" src="umockup.js"></script>
+  <script type="text/javascript" src="../../ux/base.js"></script>
+  <link type="text/css" rel="stylesheet" href="../../ux/base.css" />
+  <link type="text/css" rel="stylesheet" href="../../ux/button.css" />
+  <script type="text/javascript" src="../../ux/button.js"></script>
+  <link type="text/css" rel="stylesheet" href="../../ux/number_field.css" />
+  <script type="text/javascript" src="../../ux/number_field.js"></script>
+  <link type="text/css" rel="stylesheet" href="../../ux/radio_group.css" />
+  <script type="text/javascript" src="../../ux/radio_group.js"></script>
+  <link type="text/css" rel="stylesheet" href="../../ux/text_field.css" />
+  <script type="text/javascript" src="../../ux/text_field.js"></script>
+  <link type="text/css" rel="stylesheet" href="../../ux/text_area.css" />
+  <script type="text/javascript" src="../../ux/text_area.js"></script>
+  <link type="text/css" rel="stylesheet" href="../../ux/select.css" />
+  <script type="text/javascript" src="../../ux/select.js"></script>
+  <link type="text/css" rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+  <script type="text/javascript" src="../node_modules/mocha/mocha.js"></script>
+  <script type="text/javascript" src="../node_modules/chai/chai.js"></script>
+  <script type="text/javascript" src="../node_modules/chai-dom/chai-dom.js"></script>
 
-    <div id="widget-container">
-      <span id="ux-widget">UX.Button</span>
-    </div>
+  <script class="mocha-init">
+    mocha.setup('bdd');
+    mocha.checkLeaks();
+  </script>
+</head>
 
-    <hr/>
-    <!-- Unit test script -->
-    <script id="test-script" type="text/javascript"></script>
-    <!-- Loading template -->
-    <script id="test-script2" type="text/javascript"></script>
+<body style="margin: 2em;">
 
-    <h2>Mocha Unit Test</h2>
+  <h2>UX-Widget: <span id="widget-name">TODO</span></h2>
 
-    <div id="mocha"></div>
-    <script class="mocha-exec">
-      let el = document.getElementById("test-script");
-      el.src = umockup.getTestJsName();
+  <div id="widget-container">
+    <span id="ux-widget">UX.Button</span>
+  </div>
 
-      el = document.getElementById("test-script2");
-      el.onload = function () {
-        mocha.run();
-      };
-      el.src = "test_ux_template.js";
-    </script>
-    <!--
+  <hr />
+  <!-- Unit test script -->
+  <script id="test-script" type="text/javascript"></script>
+  <!-- Loading template -->
+  <script id="test-script2" type="text/javascript"></script>
+
+  <h2>Mocha Unit Test</h2>
+
+  <div id="mocha"></div>
+  <script class="mocha-exec">
+    let el = document.getElementById("test-script");
+    el.src = umockup.getTestJsName();
+
+    el = document.getElementById("test-script2");
+    el.onload = function () {
+      mocha.run();
+    };
+    el.src = "test_ux_template.js";
+  </script>
+  <!--
      -->
 </body>
+
 </html>
