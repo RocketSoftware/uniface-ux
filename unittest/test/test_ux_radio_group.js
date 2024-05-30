@@ -210,7 +210,7 @@
         it("Change multiple properties", function (done) {
             widget.dataUpdate({
                 value: selectedValue,
-                html: {"readonly": false},
+                html: {"readonly": false , "disabled" : true}, 
                 classes: { "ClassA": true },
                 uniface: { "label-text": widgetLabelText },
                 valrep: valRepArray
@@ -237,6 +237,12 @@
 
                 let readOnlyBoolean = widget.elements.widget.getAttribute("aria-readonly");
                 assert.equal(readOnlyBoolean, "false");
+
+                let disabledTrue = widget.elements.widget.disabled;
+                assert.equal(disabledTrue, true);
+
+                let disabledBoolean = widget.elements.widget.getAttribute("aria-disabled");
+                assert.equal(disabledBoolean, "true");
                 
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
