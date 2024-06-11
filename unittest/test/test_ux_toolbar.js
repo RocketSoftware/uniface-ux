@@ -1,6 +1,6 @@
-/**
- * Test ux-widget
- */
+// Currently, the Toolbar widget changes are not present in the main source branch.
+// Please add the CSS and JavaScript files for the Toolbar widget to your local environment from
+// this branch: https://git.rocketsoftware.com/projects/UNI/repos/uniface_uniface/browse/u/cc/uce/web/ria/ux?at=refs%2Fheads%2Ffeature%2Fux-toolbar
 (function () {
   /**
    * Default timeout for waiting for DOM rendering (in milliseconds)
