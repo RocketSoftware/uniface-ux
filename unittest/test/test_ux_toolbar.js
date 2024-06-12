@@ -26,7 +26,7 @@
 
   const MOCK_EMPTY_START_CONTROLS_DEFINITION = {
     properties: {
-      "controls-center": "",
+      "controls-start": "",
       "controls-center": "size",
       "controls-end": "goto",
       "goto:widget-class": "UX.NumberField",
