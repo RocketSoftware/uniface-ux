@@ -219,35 +219,6 @@
 
         });
 
-        it("Set icon and icon-position 2 (MutationObserver, done())", function (done) {
-            const observer = new MutationObserver(function (records, observer) {
-                for (const record of records) {
-                    if (record.type === "attributes" 
-                        && record.attributeName === "slot" ) {
-
-                        // check the result of dataUpdate
-                        let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start']");
-                        assert.notEqual(buttonIcon, null);
-
-                        // done
-                        observer.disconnect();
-                        done();
-                        return;
-                    }
-                }
-            });
-
-            observer.observe(widget.elements.buttonIconElement, {
-                "attributeFilter" : ["slot"]
-            });
-    
-            widget.dataUpdate({
-                value : widgetName,  // not empty value, required by icon-position=start
-                uniface: { icon: "IncomingCall", 'icon-position': "start" }
-            });
-        });
-
-    
         // Multiple properties update
         it("Change multiple properties", function (done) {
             widget.dataUpdate({
@@ -284,61 +255,37 @@
     });
 
     describe("Samples of async test cases", function () {
+		const asyncRun = umockup.asyncRun;
         let widget;
 
         beforeEach(function () {
             widget = tester.createWidget();
         });
 
-        it("Set STYLE property 1 (setTimeout)", function (done) {
+        it("Set STYLE property (old way, setTimeout, done)", function (done) {
             widget.dataUpdate({
-                style: { "background-color": "green" }
+                style: { "background-color": "red" }
             });
 
             setTimeout(function () {
                 let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
                 let bgColor = buttonStyle.getPropertyValue("background-color");
-                assert.equal(bgColor, 'rgb(0, 128, 0)');
+                assert.equal(bgColor, 'rgb(255, 0, 0)');
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
 
         });
 
-        it_async("Set STYLE property 2 (it_async)", function () {
+        it("Set STYLE property 2 (new API asyncRun(), setTimeout)", async function () {
+            await asyncRun(function() {
                 widget.dataUpdate({
                     style: { "background-color": "green" }
                 });
-            },
-            function () {
-                let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
-                let bgColor = buttonStyle.getPropertyValue("background-color");
-                assert.equal(bgColor, 'rgb(0, 128, 0)');
-            }
-        );
+            }, defaultAsyncTimeout);
 
-        it("Set STYLE property 3 (promise 1)", function () { 
-            const p = asyncRun(function() {
-                widget.dataUpdate({
-                    style: { "background-color": "green" }
-                });
-            });
-            return p.then(function () { // check result
-                let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
-                let bgColor = buttonStyle.getPropertyValue("background-color");
-                assert.equal(bgColor, 'rgb(0, 128, 0)');
-            });
-        });
-
-        it("Set STYLE property 4 (promise 2)", function () { 
-            return asyncRun(function() {
-                widget.dataUpdate({
-                    style: { "background-color": "green" }
-                });
-            }).then(function () { // check result
-                let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
-                let bgColor = buttonStyle.getPropertyValue("background-color");
-                assert.equal(bgColor, 'rgb(0, 128, 0)');
-            });
+            let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
+            let bgColor = buttonStyle.getPropertyValue("background-color");
+            assert.equal(bgColor, 'rgb(0, 128, 0)');
         });
 
     });

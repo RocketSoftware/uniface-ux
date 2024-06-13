@@ -177,26 +177,15 @@
 
     const defaultAsyncTimeout = 100; //ms
 
-    function it_async(testName, testFunction, checkFunction, timeout) {
-        if (timeout === undefined) {
-            timeout = defaultAsyncTimeout;
-        }
-        it(testName, function(done) {
-            testFunction();
-            setTimeout(function () {
-                try {
-                    checkFunction();
-                    done();
-                } catch(e) {
-                    done(e);
-                }
-            }, timeout);
-        });
-    }
-
-    global.it_async = it_async;
-
-    function asyncRun (testFunction, timeout) {
+    /**
+     * Run asynchronous test actions via setTimeout.
+     * 
+     * @param {Function} testFunction a function including test actions;
+     * @param {Function} timeout the miliseconds delay of setTimeout for resolve 
+     *                   the returned promise;
+     * @returns a promise.
+     */
+    async function asyncRunST (testFunction, timeout) {
         if (timeout === undefined) {
             timeout = defaultAsyncTimeout;
         }
@@ -207,8 +196,6 @@
             }, timeout);
         });
     }
-
-    global.asyncRun = asyncRun;
 
     /**
      * Utility functions of mockup
@@ -224,6 +211,8 @@
             testLoaded = true;
             return b;
         },
+        
+        asyncRun : asyncRunST,
 
         /**
          * Helper class for testing widget.

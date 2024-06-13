@@ -269,6 +269,7 @@
     });
 
     describe("Samples of async test cases", function () {
+		const asyncRun = umockup.asyncRun;
         let widget;
 
         beforeEach(function () {
@@ -289,19 +290,7 @@
 
         });
 
-        it_async("Set STYLE property 2 (it_async)", function () {
-                widget.dataUpdate({
-                    style: { "background-color": "green" }
-                });
-            },
-            function () {
-                let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
-                let bgColor = buttonStyle.getPropertyValue("background-color");
-                assert.equal(bgColor, 'rgb(0, 128, 0)');
-            }
-        );
-
-        it("Set STYLE property 3 (promise 1)", function () { 
+        it("Set STYLE property 2 (promise 1)", function () { 
             const p = asyncRun(function() {
                 widget.dataUpdate({
                     style: { "background-color": "green" }
@@ -314,7 +303,7 @@
             });
         });
 
-        it("Set STYLE property 4 (promise 2)", function () { 
+        it("Set STYLE property 3 (promise 2)", function () { 
             return asyncRun(function() {
                 widget.dataUpdate({
                     style: { "background-color": "green" }
