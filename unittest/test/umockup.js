@@ -175,6 +175,28 @@
         });
     }
 
+    const defaultAsyncTimeout = 100; //ms
+
+    /**
+     * Run asynchronous test actions via setTimeout.
+     * 
+     * @param {Function} testFunction a function including test actions;
+     * @param {Function} timeout the miliseconds delay of setTimeout for resolve 
+     *                   the returned promise;
+     * @returns a promise.
+     */
+    async function asyncRunST (testFunction, timeout) {
+        if (timeout === undefined) {
+            timeout = defaultAsyncTimeout;
+        }
+        return new Promise(function(resolve, reject) {
+            testFunction();
+            setTimeout(function(){
+                resolve();
+            }, timeout);
+        });
+    }
+
     /**
      * Utility functions of mockup
      */
@@ -189,6 +211,8 @@
             testLoaded = true;
             return b;
         },
+        
+        asyncRun : asyncRunST,
 
         /**
          * Helper class for testing widget.

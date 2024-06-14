@@ -35,16 +35,20 @@
         /**
          * Only for template. Remove this test case from your widget unit test.
          */
-        it("Template check", function () {
-            assert(false, `The template file 'test_ux_template.js' is using. 
-            If not, remove this test case.
-            (Hint: if you do not have '${umockup.getTestJsName()}', create it by copying 'test_ux_template.js'.)`);
+        it("unit test script check", function () {
+            assert(false, `The template file 'test_ux_template.js' is using.                 
+                Hint: if you do not have the unit test script '${umockup.getTestJsName()}', 
+                      create it by copying 'test_ux_template.js,
+                      and remove this test case.'.
+            \n`);
         });
 
-        it("Get class " + widgetName, function () {
+        it("get class " + widgetName, function () {
             const widgetClass = tester.getWidgetClass();
             assert(widgetClass, `Widget class '${widgetName}' is not defined!
-            Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
+                Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.
+                      If not, add <script> element in the header of this html page to load it.
+            \n`);
         });
 
     });
@@ -261,6 +265,55 @@
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
 
+        });
+
+    });
+
+    describe("Samples of async test cases", function () {
+		const asyncRun = umockup.asyncRun;
+        let widget;
+
+        beforeEach(function () {
+            widget = tester.createWidget();
+        });
+
+        it("Set STYLE property 1 (setTimeout)", function (done) {
+            widget.dataUpdate({
+                style: { "background-color": "green" }
+            });
+
+            setTimeout(function () {
+                let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
+                let bgColor = buttonStyle.getPropertyValue("background-color");
+                assert.equal(bgColor, 'rgb(0, 128, 0)');
+                done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+
+        });
+
+        it("Set STYLE property 2 (promise 1)", function () { 
+            const p = asyncRun(function() {
+                widget.dataUpdate({
+                    style: { "background-color": "green" }
+                });
+            });
+            return p.then(function () { // check result
+                let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
+                let bgColor = buttonStyle.getPropertyValue("background-color");
+                assert.equal(bgColor, 'rgb(0, 128, 0)');
+            });
+        });
+
+        it("Set STYLE property 3 (promise 2)", function () { 
+            return asyncRun(function() {
+                widget.dataUpdate({
+                    style: { "background-color": "green" }
+                });
+            }).then(function () { // check result
+                let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
+                let bgColor = buttonStyle.getPropertyValue("background-color");
+                assert.equal(bgColor, 'rgb(0, 128, 0)');
+            });
         });
 
     });
