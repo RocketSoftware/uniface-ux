@@ -2,6 +2,7 @@
  * Test ux-widget
  */
 (function () {
+    'use strict';
 
     // Keep this!
     if (umockup.testLoaded()) {

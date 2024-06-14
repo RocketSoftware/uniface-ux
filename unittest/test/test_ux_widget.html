@@ -67,14 +67,23 @@
     <script class="mocha-exec">
       let el = document.getElementById("test-script");
       el.src = umockup.getTestJsName();
-
-      el = document.getElementById("test-script2");
       el.onload = function () {
         mocha.run();
       };
-      el.src = "test_ux_template.js";
+
+      el.onerror = function () {
+        console.log("Failed to load");
+      };
+      // el = document.getElementById("test-script2");
+      // el.onload = function () {
+      //   mocha.run();
+      // };
+
+      // el.src = "test_ux_template.js";
     </script>
-    <!--
+
+
+<!--
      -->
 </body>
 </html>
