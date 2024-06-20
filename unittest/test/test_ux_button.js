@@ -87,18 +87,33 @@
             try {
                 const widget = tester.construct();
                 assert(widget, "widget is not defined!");
-                const widgetClass = tester.getWidgetClass();
+                //const widgetClass = tester.getWidgetClass();
                 //assert(widgetClass.defaultProperties, "widgetClass.defaultProperties is not defined!");
+                assert.strictEqual(widget.widget.id.toString().length > 0, true);
             } catch (e) {
                 assert(false, "Failed to construct new widget, exception " + e);
             }
         });
 
-        it("onConnect", function () {
+        describe("onConnect", function () {
             const element = tester.processLayout();
             const widget = tester.onConnect();
-            assert(element, "Target element is not defined!");
-            assert(widget.elements.widget === element, "widget is not connected");
+
+            it("check element created and connected", function () {
+                assert(element, "Target element is not defined!");
+                assert(widget.elements.widget === element, "widget is not connected");
+            });
+
+            it("check span elements 'u-icon' and 'u-text'", function () {
+                expect(widget.elements.buttonIconElement).to.have.class("u-icon", 'widget element has class "u-icon"');
+                expect(widget.elements.buttonTextElement).to.have.class("u-text", 'widget element has class "u-text"');
+            });
+
+            it("check 'hidden' attribtues", function () {
+                assert.notEqual(widget.elements.buttonIconElement.getAttribute('hidden'), null);
+                assert.notEqual(widget.elements.buttonTextElement.getAttribute('hidden'), null);
+            });
+
         });
 
     });
@@ -123,7 +138,29 @@
                 }
             });
         }
-    
+
+        it("check span elements 'u-icon' and 'u-text'", function () {
+            expect(tester.widget.elements.buttonIconElement).to.have.class("u-icon", 'widget element has class "u-icon"');
+            expect(tester.widget.elements.buttonTextElement).to.have.class("u-text", 'widget element has class "u-text"');
+        });
+
+        it("check 'hidden' attributes", function () {
+            assert.notEqual(tester.widget.elements.buttonIconElement.getAttribute('hidden'), null);
+            assert.notEqual(tester.widget.elements.buttonTextElement.getAttribute('hidden'), null);
+        });
+
+        it("check widget id", function () {
+            assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
+        });
+
+        it("check 'icon' and 'icon-position'", function () {
+            assert.equal(tester.widget.data.iconName, '');
+            assert.equal(tester.widget.data.iconPosition, 'start');
+        });
+
+        it("check value", function () {
+            assert.equal(tester.widget.data.value, '');
+        });
 
     });
 
@@ -250,6 +287,75 @@
 
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
+
+        });
+
+        // set icon-position="" empty string
+        it("Set icon-position=''", function (done) {
+            // test preparation: first set icon-poisition="end"
+            widget.dataUpdate({
+                value: widgetName,  // not empty value, required by icon-position=start
+                uniface: { icon: "IncomingCall", 'icon-position': "end" }
+            });
+
+            // now try to restore icon-property back to "start"
+            widget.dataUpdate({
+                value: widgetName,  // not empty value, required by icon-position=start
+                uniface: { icon: "IncomingCall", 'icon-position': "" }
+            });
+
+            setTimeout(function () {
+                // expected icon-position restored to "start"
+                let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
+                assert.notEqual(buttonIcon, null);
+                done();
+            }, defaultAsyncTimeout);   // Wait for DOM rendering
+
+        });
+
+        // set icon-poisition=uniface.RESET
+        it("Set icon-position=uniface.RESET", function (done) {
+            // test preparation: first set icon-poisition="end"
+            widget.dataUpdate({
+                value: widgetName,  // not empty value, required by icon-position=start
+                uniface: { icon: "IncomingCall", 'icon-position': "end" }
+            });
+
+            // now try to restore icon-position property back to "start"
+            widget.dataUpdate({
+                value: widgetName,  // not empty value, required by icon-position=start
+                uniface: { icon: "IncomingCall", 'icon-position': uniface.RESET }
+            });
+
+            setTimeout(function () {
+                // expected icon-position restored to "start"
+                let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
+                assert.notEqual(buttonIcon, null);
+                done();
+            }, defaultAsyncTimeout);   // Wait for DOM rendering
+
+        });
+
+        // set fake Uniface property ""XXX="zzz", both icon and icon-poisition will become "undefined"
+        it("Set fake Uniface property 'XXX'='xxx'", function (done) {
+            // test preparation: first set icon-poisition="end"
+            widget.dataUpdate({
+                value: widgetName,  // not empty value, required by icon-position=start
+                uniface: { icon: "IncomingCall", 'icon-position': "end" }
+            });
+
+            // now set fake Uniface property XXX="xxx"
+            // note: do not supply argument: value : widgetName
+            widget.dataUpdate({
+                uniface: { XXX: "xxx" }
+            });
+
+            setTimeout(function () {
+                // expected icon and icon-position are not changed
+                let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='end'");
+                assert.notEqual(buttonIcon, null);
+                done();
+            }, defaultAsyncTimeout);   // Wait for DOM rendering
 
         });
 
