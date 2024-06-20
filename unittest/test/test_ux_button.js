@@ -256,7 +256,7 @@
     });
 
     describe("Samples of async test cases", function () {
-		const asyncRun = umockup.asyncRun;
+        const asyncRun = umockup.asyncRun;
         let widget;
 
         beforeEach(function () {
@@ -287,6 +287,18 @@
             let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
             let bgColor = buttonStyle.getPropertyValue("background-color");
             assert.equal(bgColor, 'rgb(0, 128, 0)');
+        });
+
+        it("Set STYLE property 3 (new API asyncRun(), MutationObserver)", async function () {
+            await asyncRun(function() {
+                widget.dataUpdate({
+                    style: { "background-color": "red" }
+                });
+            });
+
+            let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
+            let bgColor = buttonStyle.getPropertyValue("background-color");
+            assert.equal(bgColor, 'rgb(255, 0, 0)');
         });
 
     });

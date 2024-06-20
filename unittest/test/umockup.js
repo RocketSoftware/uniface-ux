@@ -149,6 +149,14 @@
     let widgetName;
     let testLoaded = false;
 
+    let _debug = false;
+
+    function debugLog (message) {
+        if (_debug) {
+            console.log(message);
+        }
+    }
+
     function getWidgetName() {
         if (!widgetName) {
             const urlString = window.location.href;
@@ -198,9 +206,81 @@
     }
 
     /**
+     * Run asynchronous test actions via MutationObserver.
+     * 
+     * @param {Function} testFunction a function including test actions;
+     * @param {Function} callbackFunction a callback function;
+     * @returns a promise.
+     */
+    async function asyncRunMO(testFunction, callbackFunction) {
+        const container = document.getElementById("widget-container");
+        let lastTimeoutId = 0;
+
+        let count = 0;
+        
+        debugLog("asyncRunMO");
+
+        if (typeof callbackFunction !== "function") {
+            callbackFunction = function (records, observer, resolve, reject) {
+                const _count = ++count;
+                debugLog("Callback " + _count);
+                setTimeout(function () {
+                    debugLog("Timeout Callback " + _count);
+                        
+                    if (lastTimeoutId) {
+                        clearTimeout(lastTimeoutId);
+                    }
+                    lastTimeoutId = setTimeout(function () {
+                        debugLog("Timeout 2 callback " + _count);
+                        resolve();
+                        observer.disconnect();
+                    });
+                });
+            };    
+        }
+
+        return new Promise(function(resolve, reject){
+            const observer = new MutationObserver(function (records, observer) {
+                callbackFunction(records, observer, resolve, reject);
+            });
+
+            observer.observe(container, {
+                "attributes" : true,
+                "attributeOldValue" : true,
+                "characterData" : true,
+                "childList" : true,
+                "subtree" : true
+            });
+            
+            testFunction();
+        });
+    }
+
+    /**
+     * The helper function for running asynchronous test actions.
+     * 
+     * @param {Function} testFunction a function including test actions;
+     * @param {Function} option optional, if option is a number, it calls
+     *                   asyncRunST(testFunction, option); otherwise, it calls
+     *                   asyncRunMO(testFunction, option).
+     * @returns a promise.
+     */
+    asyncRun = async function (testFunction, option) {
+        if (typeof option === "number") {
+            return asyncRunST(testFunction, option);
+        } else {
+            return asyncRunMO(testFunction, option);
+        }
+    }
+
+    /**
      * Utility functions of mockup
      */
     global.umockup = {
+
+        setDebug : function(b) {
+            _debug = b;
+        },
 
         getTestJsName : function () {
             return "test_ux_" + getFileName(getWidgetName()) + ".js";
@@ -212,7 +292,7 @@
             return b;
         },
         
-        asyncRun : asyncRunST,
+        asyncRun : asyncRun,
 
         /**
          * Helper class for testing widget.
