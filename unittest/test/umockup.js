@@ -265,7 +265,7 @@
      *                   asyncRunMO(testFunction, option).
      * @returns a promise.
      */
-    asyncRun = async function (testFunction, option) {
+    async function asyncRun(testFunction, option) {
         if (typeof option === "number") {
             return asyncRunST(testFunction, option);
         } else {
