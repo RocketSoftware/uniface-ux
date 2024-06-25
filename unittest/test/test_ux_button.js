@@ -9,12 +9,6 @@
         return;
     }
 
-    /**
-     * To be moved to template
-     * Default timeout for waiting for DOM rendering (in milliseconds)
-     */
-    const defaultAsyncTimeout = 100; //ms
-
     const assert = chai.assert;
     const expect = chai.expect;
 
@@ -378,7 +372,7 @@
         //         let bgColor = buttonStyle.getPropertyValue("background-color");
         //         assert.equal(bgColor, 'rgb(255, 0, 0)');
         //         done();
-        //     }, defaultAsyncTimeout); // Wait for DOM rendering
+        //     }, 100); // Wait for DOM rendering
         //
         // });
 
@@ -388,7 +382,7 @@
         //         widget.dataUpdate({
         //             style: { "background-color": "green" }
         //         });
-        //     }, defaultAsyncTimeout);
+        //     }, 100);
         //
         //     let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
         //     let bgColor = buttonStyle.getPropertyValue("background-color");
