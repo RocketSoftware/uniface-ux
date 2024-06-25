@@ -9,15 +9,11 @@
         return;
     }
 
-    /**
-     * Default timeout for waiting for DOM rendering (in milliseconds)
-     */
-    const defaultAsyncTimeout = 100; //ms
-
     const assert = chai.assert;
     const expect = chai.expect;
 
-    /* TODO: Not necessary for test, maybe for demo?
+    /* To be moved to template
+    // Not necessary for test, maybe for demo? : 
     // Set wait time between each test case
     beforeEach(function (done) {
         this.timeout(3000); // environment setup time 3 seconds
@@ -87,12 +83,11 @@
             try {
                 const widget = tester.construct();
                 assert(widget, "widget is not defined!");
-                //const widgetClass = tester.getWidgetClass();
-                //assert(widgetClass.defaultProperties, "widgetClass.defaultProperties is not defined!");
                 assert.strictEqual(widget.widget.id.toString().length > 0, true);
             } catch (e) {
                 assert(false, "Failed to construct new widget, exception " + e);
             }
+
         });
 
         describe("onConnect", function () {
@@ -109,7 +104,7 @@
                 expect(widget.elements.buttonTextElement).to.have.class("u-text", 'widget element has class "u-text"');
             });
 
-            it("check 'hidden' attribtues", function () {
+            it("check 'hidden' attributes", function () {
                 assert.notEqual(widget.elements.buttonIconElement.getAttribute('hidden'), null);
                 assert.notEqual(widget.elements.buttonTextElement.getAttribute('hidden'), null);
             });
@@ -131,7 +126,7 @@
 
         for (const clazz in classes) {
             it("check class '" + clazz + "'", function () {
-                if ( classes[clazz] ) {
+                if (classes[clazz]) {
                     expect(element).to.have.class(clazz, "widget element has class " + clazz);
                 } else {
                     expect(element).not.to.have.class(clazz, "widget element has no class " + clazz);
@@ -179,6 +174,7 @@
     });
 
     describe("dataUpdate", function () {
+        const asyncRun = umockup.asyncRun;
         let widget;
 
         beforeEach(function () {
@@ -187,212 +183,225 @@
 
         const texts = ["Button Text 1", "Button Text 2", "Button Text 3"];
         for (let i = 0; i < texts.length; i++) {
-            it("Set value to '" + texts[i] + "'", function (done) {
-                widget.dataUpdate({
-                    value: texts[i]
+            it("Set value to '" + texts[i] + "'", async function () {
+                await asyncRun(function () {
+                    widget.dataUpdate({
+                        value: texts[i]
+                    });
+
                 });
 
-                setTimeout(function () {
-                    let buttonText = widget.elements.widget.querySelector("span.u-text").innerText;
-                    assert.equal(buttonText, texts[i]);
-                    done();
-                }, defaultAsyncTimeout); // Wait for DOM rendering
+                let buttonText = widget.elements.widget.querySelector("span.u-text").innerText;
+                assert.equal(buttonText, texts[i]);
 
             });
         }
 
-        it("Set HTML property", function (done) {
-            //html: {appearance: "accent"}  // but: it stays as neutral not accent, but class accent is well set
-            widget.dataUpdate({
-                html: { appearance: "accent" }
+        it("Set HTML property", async function () {
+            await asyncRun(function () {
+                widget.dataUpdate({
+                    html: { appearance: "accent" }
+                });
+
             });
 
-            setTimeout(function () {
-                let appearanceValue = widget.elements.widget.getAttribute('appearance');
-                assert.equal(appearanceValue, 'accent');
-                done();
-            }, defaultAsyncTimeout); // Wait for DOM rendering
+            let appearanceValue = widget.elements.widget.getAttribute('appearance');
+            assert.equal(appearanceValue, 'accent');
 
         });
 
-        it("Set STYLE property", function (done) {
-            widget.dataUpdate({
-                style: { "background-color": "green" }
+        it("Set STYLE property", async function () {
+            await asyncRun(function () {
+                widget.dataUpdate({
+                    style: { "background-color": "green" }
+                });
+
             });
 
-            setTimeout(function () {
-                let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
-                let bgColor = buttonStyle.getPropertyValue("background-color");
-                assert.equal(bgColor, 'rgb(0, 128, 0)');
-                done();
-            }, defaultAsyncTimeout); // Wait for DOM rendering
+            let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
+            let bgColor = buttonStyle.getPropertyValue("background-color");
+            assert.equal(bgColor, 'rgb(0, 128, 0)');
 
         });
 
-        it("Set CLASS property", function (done) {
-            widget.dataUpdate({
-                classes: { "ClassA": true }
+        it("Set CLASS property", async function () {
+            await asyncRun(function () {
+                widget.dataUpdate({
+                    classes: { "ClassA": true }
+                });
+
             });
 
-            setTimeout(function () {
-                let classAttributeValue = widget.elements.widget.getAttribute('class');
-                let classExist = classAttributeValue.includes('ClassA');
-                expect(classExist).to.be.true;
-                done();
-            }, defaultAsyncTimeout); // Wait for DOM rendering
+            let classAttributeValue = widget.elements.widget.getAttribute('class');
+            let classExist = classAttributeValue.includes('ClassA');
+            expect(classExist).to.be.true;
 
         });
 
-        it("Set icon and icon-position", function (done) {
-            widget.dataUpdate({
-                value: widgetName,  // not empty value, required by icon-position=start
-                uniface: { icon: "IncomingCall", 'icon-position': "start" }
+        it("Set icon and icon-position", async function () {
+            await asyncRun(function () {
+                widget.dataUpdate({
+                    value: widgetName,  // not empty value, required by icon-position=start
+                    uniface: { icon: "IncomingCall", 'icon-position': "start" }
+                });
+
             });
 
-            setTimeout(function () {
-                let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
-                assert.notEqual(buttonIcon, null);
-                done();
-            }, defaultAsyncTimeout); // Wait for DOM rendering
+            let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
+            assert.notEqual(buttonIcon, null);
 
         });
 
         // Multiple properties update
-        it("Change multiple properties", function (done) {
-            widget.dataUpdate({
-                value: "Button Text",
-                html: { appearance: "accent" },
-                style: { "background-color": "green" },
-                classes: { "ClassA": true },
-                uniface: { icon: "IncomingCall", 'icon-position': "start" }
+        it("Change multiple properties", async function () {
+            await asyncRun(function () {
+                widget.dataUpdate({
+                    value: "Button Text",
+                    html: { appearance: "accent" },
+                    style: { "background-color": "green" },
+                    classes: { "ClassA": true },
+                    uniface: { icon: "IncomingCall", 'icon-position': "start" }
+                });
+
             });
 
-            setTimeout(function () {
-                let buttonText = widget.elements.widget.querySelector("span.u-text").innerText;
-                assert.equal(buttonText, "Button Text");
+            let buttonText = widget.elements.widget.querySelector("span.u-text").innerText;
+            assert.equal(buttonText, "Button Text");
 
-                let appearanceValue = widget.elements.widget.getAttribute('appearance');
-                assert.equal(appearanceValue, 'accent');
+            let appearanceValue = widget.elements.widget.getAttribute('appearance');
+            assert.equal(appearanceValue, 'accent');
 
-                let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
-                let bgColor = buttonStyle.getPropertyValue("background-color");
-                assert.equal(bgColor, 'rgb(0, 128, 0)');
+            let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
+            let bgColor = buttonStyle.getPropertyValue("background-color");
+            assert.equal(bgColor, 'rgb(0, 128, 0)');
 
-                let classAttributeValue = widget.elements.widget.getAttribute('class');
-                let classExist = classAttributeValue.includes('ClassA');
-                expect(classExist).to.be.true;
+            let classAttributeValue = widget.elements.widget.getAttribute('class');
+            let classExist = classAttributeValue.includes('ClassA');
+            expect(classExist).to.be.true;
 
-                let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
-                assert.notEqual(buttonIcon, null);
-
-                done();
-            }, defaultAsyncTimeout); // Wait for DOM rendering
+            let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
+            assert.notEqual(buttonIcon, null);
 
         });
 
         // set icon-position="" empty string
-        it("Set icon-position=''", function (done) {
-            // test preparation: first set icon-poisition="end"
-            widget.dataUpdate({
-                value: widgetName,  // not empty value, required by icon-position=start
-                uniface: { icon: "IncomingCall", 'icon-position': "end" }
+        it("Set icon-position=''", async function () {
+            await asyncRun(function () {
+                // test preparation: first set icon-position="end"
+                widget.dataUpdate({
+                    value: widgetName,  // not empty value, required by icon-position=start
+                    uniface: { icon: "IncomingCall", 'icon-position': "end" }
+                });
+
+                // now try to restore icon-property back to "start"
+                widget.dataUpdate({
+                    value: widgetName,  // not empty value, required by icon-position=start
+                    uniface: { icon: "IncomingCall", 'icon-position': "" }
+                });
+
             });
 
-            // now try to restore icon-property back to "start"
-            widget.dataUpdate({
-                value: widgetName,  // not empty value, required by icon-position=start
-                uniface: { icon: "IncomingCall", 'icon-position': "" }
-            });
-
-            setTimeout(function () {
-                // expected icon-position restored to "start"
-                let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
-                assert.notEqual(buttonIcon, null);
-                done();
-            }, defaultAsyncTimeout);   // Wait for DOM rendering
+            // expected icon-position restored to "start"
+            let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
+            assert.notEqual(buttonIcon, null);
 
         });
 
-        // set icon-poisition=uniface.RESET
-        it("Set icon-position=uniface.RESET", function (done) {
-            // test preparation: first set icon-poisition="end"
-            widget.dataUpdate({
-                value: widgetName,  // not empty value, required by icon-position=start
-                uniface: { icon: "IncomingCall", 'icon-position': "end" }
+        // set icon-position=uniface.RESET
+        it("Set icon-position=uniface.RESET", async function () {
+            await asyncRun(function () {
+                // test preparation: first set icon-position="end"
+                widget.dataUpdate({
+                    value: widgetName,  // not empty value, required by icon-position=start
+                    uniface: { icon: "IncomingCall", 'icon-position': "end" }
+                });
+
+                // now try to restore icon-position property back to "start"
+                widget.dataUpdate({
+                    value: widgetName,  // not empty value, required by icon-position=start
+                    uniface: { icon: "IncomingCall", 'icon-position': uniface.RESET }
+                });
+
             });
 
-            // now try to restore icon-position property back to "start"
-            widget.dataUpdate({
-                value: widgetName,  // not empty value, required by icon-position=start
-                uniface: { icon: "IncomingCall", 'icon-position': uniface.RESET }
-            });
-
-            setTimeout(function () {
-                // expected icon-position restored to "start"
-                let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
-                assert.notEqual(buttonIcon, null);
-                done();
-            }, defaultAsyncTimeout);   // Wait for DOM rendering
+            let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
+            assert.notEqual(buttonIcon, null);
 
         });
 
-        // set fake Uniface property ""XXX="zzz", both icon and icon-poisition will become "undefined"
-        it("Set fake Uniface property 'XXX'='xxx'", function (done) {
-            // test preparation: first set icon-poisition="end"
-            widget.dataUpdate({
-                value: widgetName,  // not empty value, required by icon-position=start
-                uniface: { icon: "IncomingCall", 'icon-position': "end" }
+        // set fake Uniface property "XYZ"="xyz", both icon and icon-position will become "undefined"
+        it("Set fake Uniface property 'XYZ'='xyz'", async function () {
+            await asyncRun(function () {
+                // test preparation: first set icon-position="end"
+                widget.dataUpdate({
+                    value: widgetName,  // not empty value, required by icon-position=start
+                    uniface: { icon: "IncomingCall", 'icon-position': "end" }
+                });
+
+                // now set fake Uniface property XYZ="xyz"
+                // note: do not supply argument: value : widgetName
+                widget.dataUpdate({
+                    uniface: { XYZ: "xyz" }
+                });
+
             });
 
-            // now set fake Uniface property XXX="xxx"
-            // note: do not supply argument: value : widgetName
-            widget.dataUpdate({
-                uniface: { XXX: "xxx" }
-            });
-
-            setTimeout(function () {
-                // expected icon and icon-position are not changed
-                let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='end'");
-                assert.notEqual(buttonIcon, null);
-                done();
-            }, defaultAsyncTimeout);   // Wait for DOM rendering
+            let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='end'");
+            assert.notEqual(buttonIcon, null);
 
         });
 
     });
 
     describe("Samples of async test cases", function () {
-		const asyncRun = umockup.asyncRun;
+        const asyncRun = umockup.asyncRun;
         let widget;
 
         beforeEach(function () {
             widget = tester.createWidget();
         });
 
-        it("Set STYLE property (old way, setTimeout, done)", function (done) {
-            widget.dataUpdate({
-                style: { "background-color": "red" }
-            });
+        // sample of old code: TO BE REMOVED
+        // it("Set STYLE property (old way, setTimeout, done)", function (done) {
+        //     widget.dataUpdate({
+        //         style: { "background-color": "red" }
+        //     });
+        //
+        //     setTimeout(function () {
+        //         let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
+        //         let bgColor = buttonStyle.getPropertyValue("background-color");
+        //         assert.equal(bgColor, 'rgb(255, 0, 0)');
+        //         done();
+        //     }, 100); // Wait for DOM rendering
+        //
+        // });
 
-            setTimeout(function () {
-                let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
-                let bgColor = buttonStyle.getPropertyValue("background-color");
-                assert.equal(bgColor, 'rgb(255, 0, 0)');
-                done();
-            }, defaultAsyncTimeout); // Wait for DOM rendering
+        // sample of hybrid code: : To be moved to template
+        // it("Set STYLE property 2 (new API asyncRun(), setTimeout)", async function () {
+        //     await asyncRun(function() {
+        //         widget.dataUpdate({
+        //             style: { "background-color": "green" }
+        //         });
+        //     }, 100);
+        //
+        //     let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
+        //     let bgColor = buttonStyle.getPropertyValue("background-color");
+        //     assert.equal(bgColor, 'rgb(0, 128, 0)');
+        // });
 
-        });
-
-        it("Set STYLE property 2 (new API asyncRun(), setTimeout)", async function () {
-            await asyncRun(function() {
+        // async code to be used
+        it("Set STYLE property (new API asyncRun(), MutationObserver)", async function () {
+            await asyncRun(function () {
                 widget.dataUpdate({
-                    style: { "background-color": "green" }
+                    style: { "background-color": "red" }
                 });
-            }, defaultAsyncTimeout);
+
+            });
 
             let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
             let bgColor = buttonStyle.getPropertyValue("background-color");
-            assert.equal(bgColor, 'rgb(0, 128, 0)');
+            assert.equal(bgColor, 'rgb(255, 0, 0)');
+
         });
 
     });
@@ -425,6 +434,7 @@
                 console.error(e);
                 assert(false, "Failed to call dataCleanup(), exception " + e);
             }
+
         });
 
         it("style:color", function () {
@@ -434,6 +444,7 @@
                 console.error(e);
                 assert(false, "Failed to call dataCleanup(), exception " + e);
             }
+
         });
 
     });
@@ -449,6 +460,7 @@
             widget.dataUpdate({
                 value: widgetName
             });
+
         });
 
     });
