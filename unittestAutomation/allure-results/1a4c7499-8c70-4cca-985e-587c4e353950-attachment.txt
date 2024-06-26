@@ -1,9 +1,0 @@
-AssertionError: The template file 'test_ux_template.js' is using. 
-            If not, remove this test case.
-            (Hint: if you do not have 'test_ux_button.js', create it by copying 'test_ux_template.js'.)AssertionError@http://localhost:8080/uniface/unittest/node_modules/chai/chai.js:9227:13
-[3]</module.exports/Assertion.prototype.assert@http://localhost:8080/uniface/unittest/node_modules/chai/chai.js:253:13
-[6]</module.exports/chai.assert@http://localhost:8080/uniface/unittest/node_modules/chai/chai.js:4288:10
-@http://localhost:8080/uniface/unittest/test/test_ux_template.js:38:19
-el.onload@http://localhost:8080/uniface/unittest/test/test_ux_widget.html?widget_name=UX.Button:52:15
-EventHandlerNonNull*@http://localhost:8080/uniface/unittest/test/test_ux_widget.html?widget_name=UX.Button:51:7
-
