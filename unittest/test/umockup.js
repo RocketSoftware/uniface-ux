@@ -50,18 +50,20 @@
              * @param {Node} node The node
              * @param {String} customWidgetName custom widget name
              * @param {Boolean} mockUp optional, default is undefined or false;
-             *       and true if this function is used for mockup, 
+             *       and true if this function is used for mockup;
+             * @param {Array} args arguments for processLayout.
              */
-            getCustomWidgetLayout: function (node, customWidgetName, mockUp) {
-                var layout = node;
+            getCustomWidgetLayout: function (customWidgetName, mockUp, args) {
+                var layout = args[0];
                 var customPluginClass = UNIFACE.ClassRegistry.get(customWidgetName);
                 if (customPluginClass) {
                     if (typeof(customPluginClass.processLayout) === "function") {
                         if (!mockUp) {
                             // original implementation, will cause error if called in mockup env.
-                            layout = UNIFACE.widget.custom_widget_container.callStaticPluginFunction("processLayout", customPluginClass, node);
+                            layout = UNIFACE.widget.custom_widget_container.callStaticPluginFunction("processLayout", customPluginClass, args);
                         } else {
-                            layout = customPluginClass.processLayout(node);
+                            layout = customPluginClass.processLayout.apply(null, args);
+                             // here, first argument is not this, but null because processLayout is static method
                         }
                     }
                 } else {
@@ -75,15 +77,16 @@
              * that indicate they are relevant to the Uniface entity, occurrence and field.
              * If it is custom widget then get custom widget processed layout for given node
              * and return processed node.
-             * @param {Node} node The node to start parsing at
              * @param {String} customWidgetName optional, default is undefined or false for
              *      DSP front-end runtime; the custom widget name for umockup module. 
+             * @param {Array} args the arguments for processLayout
              */
-            parseCustomWidgetNode: function(node, customWidgetName) {
+            parseCustomWidgetNode: function(customWidgetName, args) {
+                let node = args[0];
                 if (customWidgetName) { // mockup
                     if (typeof customWidgetName === "string" && customWidgetName.length > 0) {
                         // If its custom widget then call getCustomWidgetLayout
-                        const layout = this.getCustomWidgetLayout(node, customWidgetName, true);
+                        const layout = this.getCustomWidgetLayout(customWidgetName, true, args);
                         if (layout instanceof HTMLElement) {
                             layout.id = node.id;
                             var parentNode = node.parentNode;
@@ -157,12 +160,16 @@
         }
     }
 
+    function getUrlParam(name) {
+        const urlString = window.location.href;
+        const paramString = urlString.split('?')[1];
+        const queryString = new URLSearchParams(paramString);
+        return queryString.get(name);
+    }
+
     function getWidgetName() {
         if (!widgetName) {
-            const urlString = window.location.href;
-            const paramString = urlString.split('?')[1];
-            const queryString = new URLSearchParams(paramString);
-            const value = queryString.get("widget_name");
+            const value = getUrlParam("widget_name");
             widgetName = (value ? value : "UX.Button");
 
             // update test page
@@ -283,7 +290,11 @@
         },
 
         getTestJsName : function () {
-            return "test_ux_" + getFileName(getWidgetName()) + ".js";
+            let name = getUrlParam("test_script");
+            if (!name) {
+                name = "test_ux_" + getFileName(getWidgetName()) + ".js";
+            }
+            return name;
         },
 
         testLoaded : function () {
@@ -305,6 +316,7 @@
                 this.widgetId = widgetId;
                 this.widgetName = getWidgetName();
                 this.widgetProperties = {};
+                this.layoutArgs = [];
             }
 
             getWidgetClass() {
@@ -312,11 +324,20 @@
             }
         
             processLayout() {
+                let args = [...arguments];
                 if (!this.uxTagName) {
-                    const node = document.getElementById(this.widgetId);
-                    this.element = _uf.DOMNodeManager.parseCustomWidgetNode(node, this.widgetName);
+                    if (args.length) {
+                        if (!args[0]) {
+                            args[0] = document.getElementById(this.widgetId);
+                        }
+                    } else {
+                        args = [document.getElementById(this.widgetId)];
+                    }
+                    this.element = _uf.DOMNodeManager.parseCustomWidgetNode(this.widgetName, args);
                     this.uxTagName = this.element.tagName;
                 }
+                this.layoutArgs = args;
+
                 return this.element;
             }
         
@@ -330,7 +351,9 @@
         
             onConnect() {
                 if (!this.widget || !this.widget.elements) {
-                    const element = this.processLayout();
+                    const placeholder = document.getElementById(this.widgetId);
+                    const args = this.layoutArgs.unshift(placeholder);
+                    const element = this.processLayout.apply(this, this.layoutArgs);
                     const widget = this.construct();
                     widget.onConnect(element);
                 }
