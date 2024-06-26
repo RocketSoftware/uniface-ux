@@ -1,0 +1,4 @@
+AssertionError: The template file 'test_ux_template.js' is using. 
+            If not, remove this test case.
+            (Hint: if you do not have 'test_ux_checkbox.js', create it by copying 'test_ux_template.js'.)
+    at Context.<anonymous> (test_ux_template.js:38:13)
