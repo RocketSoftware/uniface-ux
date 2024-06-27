@@ -178,7 +178,7 @@
     }
 
     function getFileName(widgetName) {
-        let name = widgetName.lastIndexOf("_UXWF") > 0 ? widgetName.substr(3, widgetName.lastIndexOf("_UXWF") - 3) : widgetName.substr(3)
+        let name = widgetName.lastIndexOf("_UXWF") > 0 ? widgetName.substr(3, widgetName.lastIndexOf("_UXWF") - 3) : widgetName.substr(3);
         return name.replace(/[A-Z]/g, (letter, offset) => {
             return (offset ? "_" : "") + letter.toLowerCase();
         });
@@ -190,7 +190,7 @@
      * Run asynchronous test actions via setTimeout.
      * 
      * @param {Function} testFunction a function including test actions;
-     * @param {Function} timeout the miliseconds delay of setTimeout for resolve 
+     * @param {Function} timeout the milliseconds delay of setTimeout for resolve 
      *                   the returned promise;
      * @returns a promise.
      */
