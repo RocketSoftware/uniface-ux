@@ -41,6 +41,7 @@
     <script type="text/javascript" src="../node_modules/mocha/mocha.js"></script>
     <script type="text/javascript" src="../node_modules/chai/chai.js"></script>
     <script type="text/javascript" src="../node_modules/chai-dom/chai-dom.js"></script>
+    <script type="text/javascript" src="../node_modules/sinon/pkg/sinon.js"></script>
 
     <script class="mocha-init">
       mocha.setup('bdd');
@@ -64,8 +65,9 @@
     <h2>Mocha Unit Test</h2>
 
     <div id="mocha"></div>
-    <script class="mocha-exec">
+    <script class="mocha-exec" type="module">
       let el = document.getElementById("test-script");
+      el.type = "module";
       el.src = umockup.getTestJsName();
       el.onload = function () {
         mocha.run();

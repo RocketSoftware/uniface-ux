@@ -178,8 +178,9 @@
     }
 
     function getFileName(widgetName) {
-        return widgetName.substr(3).replace(/[A-Z]/g, (letter, offset) => { 
-            return (offset ? "_" : "") + letter.toLowerCase(); 
+        let name = widgetName.lastIndexOf("_UXWF") > 0 ? widgetName.substr(3, widgetName.lastIndexOf("_UXWF") - 3) : widgetName.substr(3)
+        return name.replace(/[A-Z]/g, (letter, offset) => {
+            return (offset ? "_" : "") + letter.toLowerCase();
         });
     }
 
@@ -357,6 +358,18 @@
                     }
                 }
                 return this.defaultProperties;
+            }
+
+            getDefaultValues() {
+                if (!this.defaultValues) {
+                    const widgetClass = this.getWidgetClass();
+                    const _widget = new widgetClass();
+                    this.defaultValues = widgetClass.defaultValues;
+                    if (!this.defaultValues) {
+                        this.defaultValues = {};
+                    }
+                }
+                return this.defaultValues;
             }
 
             dataUpdate(data) {
