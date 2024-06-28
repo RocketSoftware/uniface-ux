@@ -1,8 +1,8 @@
 node_modules/
-.github\
+.github
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
 /allure-results/
-/allure-report/
+/allure-report/.github/
