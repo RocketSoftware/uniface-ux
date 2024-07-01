@@ -290,7 +290,7 @@ import { Switch_UXWF } from "../../../ux/switch_UXWF.js";
             assert(element, "Widget top element is not defined!");
         });
 
-        it("set invalid value when switch checked state is false", function (done) {
+        it("set error to false", function (done) {
             tester.dataUpdate({
                 uniface: {
                     error: false,
