@@ -12,29 +12,14 @@
     const assert = chai.assert;
     const expect = chai.expect;
 
-    /* To be moved to template
-    // Not necessary for test, maybe for demo? : 
-    // Set wait time between each test case
-    beforeEach(function (done) {
-        this.timeout(3000); // environment setup time 3 seconds
-        setTimeout(done, 500);  // 500 ms
-    });
-    */
+    const asyncRun = umockup.asyncRun;
 
     // for unit test
     const tester = new umockup.WidgetTester();
     const widgetId = tester.widgetId;
     const widgetName = tester.widgetName;
 
-    describe("Uniface Mockup tests", function () {
-
-        it("Get class " + widgetName, function () {
-            const widgetClass = tester.getWidgetClass();
-            assert(widgetClass, "widgetClass is not defined! \n    Check if the JavaScript file for " + widgetName + " is loaded.");
-        });
-
-    });
-
+    // toolbar definitions
     const MOCK_CONTROLS_PROPERTIES_DEFINITION = {
         properties: {
           "controls-start": "size",
@@ -109,9 +94,17 @@
           "overflow-index": "2",
         },
     };
-    
-    const asyncRun = umockup.asyncRun;
-    
+
+
+    describe("Uniface Mockup tests", function () {
+
+        it("Get class " + widgetName, function () {
+            const widgetClass = tester.getWidgetClass();
+            assert(widgetClass, "widgetClass is not defined! \n    Check if the JavaScript file for " + widgetName + " is loaded.");
+        });
+
+    });
+
     describe(widgetName + ".processLayout", function () {
         let element;
 
@@ -214,7 +207,6 @@
     });
 
     describe("dataUpdate", function () {
-        const asyncRun = umockup.asyncRun;
         let widget;
 
         beforeEach(function () {
