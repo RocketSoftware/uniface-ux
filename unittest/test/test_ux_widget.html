@@ -66,7 +66,8 @@
     <div id="mocha"></div>
     <script class="mocha-exec">
       let el = document.getElementById("test-script");
-      el.src = umockup.getTestJsName();
+      const scriptName = umockup.getTestJsName();
+      el.src = scriptName;
       el.onload = function () {
         mocha.run();
       };
@@ -80,6 +81,19 @@
       // };
 
       // el.src = "test_ux_template.js";
+    </script>
+
+    <script type="text/javascript">
+      // update document
+      const widgetName = umockup.getWidgetName();
+      document.title = "Unit test - " + widgetName + " - " + scriptName;
+      el = document.getElementById("widget-name");
+      el.innerHTML = widgetName;
+      el = document.getElementById("ux-widget");
+      el.innerHTML = widgetName;
+      
+      el = document.getElementById("test-script-name");
+      el.innerHTML = scriptName;
     </script>
 
 </body>

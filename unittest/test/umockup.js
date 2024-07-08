@@ -1,5 +1,3 @@
-// UNIFACE.ClassRegistry.add
-
 (function (global) {
     'use strict';
 
@@ -47,7 +45,6 @@
         DOMNodeManager : {
             /**
              * get custom widget processed layout
-             * @param {Node} node The node
              * @param {String} customWidgetName custom widget name
              * @param {Boolean} mockUp optional, default is undefined or false;
              *       and true if this function is used for mockup;
@@ -172,15 +169,6 @@
         if (!widgetName) {
             const value = getUrlParam("widget_name");
             widgetName = (value ? value : "UX.Button");
-
-            // update test page
-            if (document) {
-                document.title = "Unit test - " + widgetName;
-                let el = document.getElementById("widget-name");
-                el.innerHTML = widgetName;
-                el = document.getElementById("ux-widget");
-                el.innerHTML = widgetName;
-            }
         }
         return widgetName;
     }
@@ -290,14 +278,14 @@
             _debug = b;
         },
 
+        getWidgetName : getWidgetName,
+
         getTestJsName : function () {
             if (!scriptName) {
                 scriptName = getUrlParam("test_script");
                 if (!scriptName) {
                     scriptName = "test_ux_" + getFileName(getWidgetName()) + ".js";
                 }
-                let el = document.getElementById("test-script-name");
-                el.innerHTML = scriptName;
             }
             return scriptName;
         },
