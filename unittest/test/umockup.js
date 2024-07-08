@@ -150,6 +150,7 @@
 
     const widgetId = "ux-widget";
     let widgetName;
+    let scriptName;
     let testLoaded = false;
 
     let _debug = false;
@@ -290,11 +291,15 @@
         },
 
         getTestJsName : function () {
-            let name = getUrlParam("test_script");
-            if (!name) {
-                name = "test_ux_" + getFileName(getWidgetName()) + ".js";
+            if (!scriptName) {
+                scriptName = getUrlParam("test_script");
+                if (!scriptName) {
+                    scriptName = "test_ux_" + getFileName(getWidgetName()) + ".js";
+                }
+                let el = document.getElementById("test-script-name");
+                el.innerHTML = scriptName;
             }
-            return name;
+            return scriptName;
         },
 
         testLoaded : function () {
@@ -335,8 +340,8 @@
                     }
                     this.element = _uf.DOMNodeManager.parseCustomWidgetNode(this.widgetName, args);
                     this.uxTagName = this.element.tagName;
+                    this.layoutArgs = args;
                 }
-                this.layoutArgs = args;
 
                 return this.element;
             }
@@ -351,8 +356,6 @@
         
             onConnect() {
                 if (!this.widget || !this.widget.elements) {
-                    const placeholder = document.getElementById(this.widgetId);
-                    const args = this.layoutArgs.unshift(placeholder);
                     const element = this.processLayout.apply(this, this.layoutArgs);
                     const widget = this.construct();
                     widget.onConnect(element);
