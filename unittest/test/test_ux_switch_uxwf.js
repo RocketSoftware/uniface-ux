@@ -1,4 +1,6 @@
-import { Switch_UXWF } from "../../../ux/switch_UXWF.js";
+// Source code for refactored switch in git lab repo
+// Branch Name: UNI-36667-refactor-uxswitch-demo-workbench
+// https://gitlab.com/Uniface/sources/harness-project/-/tree/UNI-36667-refactor-uxswitch-demo-workbench?ref_type=heads
 
 (function () {
     'use strict';
@@ -32,14 +34,15 @@ import { Switch_UXWF } from "../../../ux/switch_UXWF.js";
     describe("Uniface static structure constructor definition", function () {
 
         it('should have a static property structure of type Element', function () {
-            const structure = Switch_UXWF.structure;
+            const widgetClass = tester.getWidgetClass();
+            const structure = widgetClass.structure;
             expect(structure.constructor).to.be.an.instanceof(Element.constructor);
             expect(structure.tagName).to.equal('fluent-switch');
             expect(structure.styleClass).to.equal('');
             expect(structure.elementQuerySelector).to.equal('');
-            expect(structure.attributeDefines).to.be.an('array')
-            expect(structure.elementDefines).to.be.an('array')
-            expect(structure.triggerDefines).to.be.an('array')
+            expect(structure.attributeDefines).to.be.an('array');
+            expect(structure.elementDefines).to.be.an('array');
+            expect(structure.triggerDefines).to.be.an('array');
         });
 
     });
@@ -160,7 +163,7 @@ import { Switch_UXWF } from "../../../ux/switch_UXWF.js";
                 value: 1
             });
             setTimeout(function () {
-                expect(element).to.have.class("checked")
+                expect(element).to.have.class("checked");
                 expect(element.getAttribute("current-checked")).equal("true");
                 done();
             }, defaultAsyncTimeout);
@@ -171,14 +174,14 @@ import { Switch_UXWF } from "../../../ux/switch_UXWF.js";
                 value: false
             });
             setTimeout(function () {
-                expect(element).to.not.have.class("checked")
+                expect(element).to.not.have.class("checked");
                 expect(element.getAttribute("current-checked")).equal("false");
                 done();
             }, defaultAsyncTimeout);
         });
 
         it("set label to switch", function (done) {
-            let switchLabelText = "Label"
+            let switchLabelText = "Label";
             tester.dataUpdate({
                 uniface: {
                     "label-text": switchLabelText
@@ -193,7 +196,7 @@ import { Switch_UXWF } from "../../../ux/switch_UXWF.js";
         });
 
         it("set checked message", function (done) {
-            let switchCheckedText = "On"
+            let switchCheckedText = "On";
             tester.dataUpdate({
                 uniface: {
                     "checked-message": switchCheckedText
@@ -273,7 +276,7 @@ import { Switch_UXWF } from "../../../ux/switch_UXWF.js";
                 value: ""
             });
             setTimeout(function () {
-                expect(element).to.have.class("u-format-invalid")
+                expect(element).to.have.class("u-format-invalid");
                 assert(widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text");
                 expect(widget.elements.widget.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("");
                 expect(widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message")
@@ -298,7 +301,7 @@ import { Switch_UXWF } from "../../../ux/switch_UXWF.js";
                 }
             });
             setTimeout(function () {
-                expect(element).to.not.have.class("u-format-invalid")
+                expect(element).to.not.have.class("u-format-invalid");
                 assert(!widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text");
                 expect(widget.elements.widget.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
                 expect(widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message")
