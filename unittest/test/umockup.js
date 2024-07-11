@@ -59,8 +59,7 @@
                             // original implementation, will cause error if called in mockup env.
                             layout = UNIFACE.widget.custom_widget_container.callStaticPluginFunction("processLayout", customPluginClass, args);
                         } else {
-                            layout = customPluginClass.processLayout.apply(null, args);
-                             // here, first argument is not this, but null because processLayout is static method
+                            layout = customPluginClass.processLayout.apply(customPluginClass, args);
                         }
                     }
                 } else {
@@ -174,8 +173,9 @@
     }
 
     function getFileName(widgetName) {
-        return widgetName.substr(3).replace(/[A-Z]/g, (letter, offset) => { 
-            return (offset ? "_" : "") + letter.toLowerCase(); 
+        let name = widgetName.lastIndexOf("_UXWF") > 0 ? widgetName.substr(3, widgetName.lastIndexOf("_UXWF") - 3) : widgetName.substr(3);
+        return name.replace(/[A-Z]/g, (letter, offset) => {
+            return (offset ? "_" : "") + letter.toLowerCase();
         });
     }
 
@@ -185,7 +185,7 @@
      * Run asynchronous test actions via setTimeout.
      * 
      * @param {Function} testFunction a function including test actions;
-     * @param {Function} timeout the miliseconds delay of setTimeout for resolve 
+     * @param {Function} timeout the milliseconds delay of setTimeout for resolve 
      *                   the returned promise;
      * @returns a promise.
      */
@@ -371,6 +371,18 @@
                     }
                 }
                 return this.defaultProperties;
+            }
+
+            getDefaultValues() {
+                if (!this.defaultValues) {
+                    const widgetClass = this.getWidgetClass();
+                    const _widget = new widgetClass();
+                    this.defaultValues = widgetClass.defaultValues;
+                    if (!this.defaultValues) {
+                        this.defaultValues = {};
+                    }
+                }
+                return this.defaultValues;
             }
 
             dataUpdate(data) {

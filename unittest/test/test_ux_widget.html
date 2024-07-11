@@ -27,6 +27,7 @@
     <script type="text/javascript" src="../../ux/select.js"></script>
     <link type="text/css" rel="stylesheet" href="../../ux/switch.css"/>
     <script type="text/javascript" src="../../ux/switch.js"></script>
+    <script type="module" src="../../ux/switch_UXWF.js"></script>
     <link type="text/css" rel="stylesheet" href="../../ux/text_area.css"/>
     <script type="text/javascript" src="../../ux/text_area.js"></script>
     <link type="text/css" rel="stylesheet" href="../../ux/text_field.css"/>
@@ -41,6 +42,7 @@
     <script type="text/javascript" src="../node_modules/mocha/mocha.js"></script>
     <script type="text/javascript" src="../node_modules/chai/chai.js"></script>
     <script type="text/javascript" src="../node_modules/chai-dom/chai-dom.js"></script>
+    <script type="text/javascript" src="../node_modules/sinon/pkg/sinon.js"></script>
 
     <script class="mocha-init">
       mocha.setup('bdd');
@@ -64,9 +66,10 @@
     <h2>Mocha Unit Test: <span id="test-script-name"></span></h2>
 
     <div id="mocha"></div>
-    <script class="mocha-exec">
+    <script class="mocha-exec" type="module">
       let el = document.getElementById("test-script");
       const scriptName = umockup.getTestJsName();
+      el.type = "module";
       el.src = scriptName;
       el.onload = function () {
         mocha.run();
