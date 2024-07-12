@@ -167,7 +167,7 @@
     function getWidgetName() {
         if (!widgetName) {
             const value = getUrlParam("widget_name");
-            widgetName = (value ? value : "UX.Button");
+            widgetName = value ;
         }
         return widgetName;
     }
@@ -279,16 +279,35 @@
         },
 
         getWidgetName : getWidgetName,
-
-        getTestJsName : function () {
-            if (!scriptName) {
-                scriptName = getUrlParam("test_script");
-                if (!scriptName) {
-                    scriptName = "test_ux_" + getFileName(getWidgetName()) + ".js";
-                }
+        getScriptName : function () {
+            let  scriptName = getUrlParam("test_script");
+            console.log("<<<<<<<script name is >>>>",scriptName);
+            if( scriptName){
+                return "test_ux_" + scriptName + ".js";
             }
             return scriptName;
+          
         },
+
+        getTestJsName : function () {
+             let  widget_name =  getWidgetName();
+            let  scriptName = getUrlParam("test_script");
+             console.log("<<<<<<<widget name is >>>>",widget_name);
+             console.log("<<<<<<<script name is >>>>",scriptName);
+            if( widget_name){
+                return "test_ux_" + getFileName(getWidgetName()) + ".js";
+            
+            // if (!scriptName) {
+            //     scriptName = getUrlParam("test_script");
+            //     if (!scriptName) {
+            //         scriptName = "test_ux_" + getFileName(getWidgetName()) + ".js";
+            //     }
+             }
+           return widget_name;
+       //     return scriptName;
+        },
+       
+      //  },
 
         testLoaded : function () {
             const b = testLoaded;
