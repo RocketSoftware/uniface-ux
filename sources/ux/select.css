@@ -1,0 +1,72 @@
+.u-select {
+  flex-direction: column;
+  vertical-align: bottom;
+}
+
+/**
+ * Setting min-height to a default value. This is done to enable the correct
+ * visualization of the select widget when it is stretched in height.
+ */
+.u-select::part(control) {
+  min-height: unset;
+}
+
+/* Unset opacity which is set by disabled property through uniface readonly property. */
+.u-select.u-readonly::part(label),
+.u-select.u-readonly::part(control) {
+  opacity: unset;
+}
+
+.u-select.u-readonly::part(control) {
+  background: padding-box linear-gradient(var(--neutral-fill-rest), var(--neutral-fill-rest)), border-box var(--neutral-stroke-control-rest);
+}
+
+.u-select .u-placeholder {
+  color: var(--neutral-base-color);
+}
+
+.u-select .u-placeholder::after {
+  content: "...";
+}
+
+.u-select .u-valrep-representation {
+  margin-inline-end: calc((var(--design-unit) * 3px) + 2px);
+}
+
+.u-select .u-valrep-value {
+  color: var(--neutral-base-color);
+  font-style: italic;
+}
+
+/* Styling the valrep value to enclose it within parantheses. */
+.u-select .u-valrep-value::before {
+  content: "(";
+}
+
+.u-select .u-valrep-value::after {
+  content: ")";
+}
+
+.u-select:focus-visible {
+  outline: unset;
+  outline-offset: unset;
+}
+
+/* Styling the outline for focus-visible and focus-within visualization. */
+.u-select:focus-visible::part(control),
+.u-select:focus-within::part(control) {
+  outline: calc(var(--focus-stroke-width) * 1px) solid var(--focus-stroke-outer);
+  outline-offset: calc(var(--focus-stroke-width) * -1px);
+}
+
+/* Styling the border color ( according to the fluent design system ) when the widget is in an invalid state and has no focus. */
+.u-select.u-invalid:not(:focus)::part(control),
+.u-select.u-format-invalid:not(:focus)::part(control) {
+  border-color: #d13438;
+}
+
+/* Styling the error icon ( according to the fluent design system ) when the widget is in an invalid state. */
+.u-select.u-invalid .u-error-icon,
+.u-select.u-format-invalid .u-error-icon {
+  color: #d13438;
+}
