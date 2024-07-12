@@ -58,8 +58,8 @@
     </div>
 
     <hr/>
-    <!-- Unit test script -->
-    <script id="test-script" type="text/javascript"></script>
+    <!-- To load test script -->
+    <script id="test-script" type="module"></script>
     <!-- Loading template -->
     <script id="test-script2" type="text/javascript"></script>
 
@@ -67,9 +67,20 @@
 
     <div id="mocha"></div>
     <script class="mocha-exec" type="module">
-      let el = document.getElementById("test-script");
+      // update document
+      const widgetName = umockup.getWidgetName();
       const scriptName = umockup.getTestJsName();
-      el.type = "module";
+      document.title = "Unit test - " + widgetName + " - " + scriptName;
+      let el = document.getElementById("widget-name");
+      el.innerHTML = widgetName;
+      el = document.getElementById("ux-widget");
+      el.innerHTML = widgetName;
+      
+      el = document.getElementById("test-script-name");
+      el.innerHTML = scriptName;
+
+      // dynamically load test script
+      el = document.getElementById("test-script");
       el.src = scriptName;
       el.onload = function () {
         mocha.run();
@@ -78,25 +89,13 @@
       el.onerror = function () {
         console.log("Failed to load");
       };
+
       // el = document.getElementById("test-script2");
       // el.onload = function () {
       //   mocha.run();
       // };
 
       // el.src = "test_ux_template.js";
-    </script>
-
-    <script type="text/javascript">
-      // update document
-      const widgetName = umockup.getWidgetName();
-      document.title = "Unit test - " + widgetName + " - " + scriptName;
-      el = document.getElementById("widget-name");
-      el.innerHTML = widgetName;
-      el = document.getElementById("ux-widget");
-      el.innerHTML = widgetName;
-      
-      el = document.getElementById("test-script-name");
-      el.innerHTML = scriptName;
     </script>
 
 </body>
