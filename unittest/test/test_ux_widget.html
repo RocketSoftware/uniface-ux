@@ -27,7 +27,6 @@
     <script type="text/javascript" src="../../ux/select.js"></script>
     <link type="text/css" rel="stylesheet" href="../../ux/switch.css"/>
     <script type="text/javascript" src="../../ux/switch.js"></script>
-    <script type="module" src="../../ux/switch_UXWF.js"></script>
     <link type="text/css" rel="stylesheet" href="../../ux/text_area.css"/>
     <script type="text/javascript" src="../../ux/text_area.js"></script>
     <link type="text/css" rel="stylesheet" href="../../ux/text_field.css"/>
@@ -70,6 +69,7 @@
       // update document
       const widgetName = umockup.getWidgetName();
       const scriptName = umockup.getTestJsName();
+
       document.title = "Unit test - " + widgetName + " - " + scriptName;
       let el = document.getElementById("widget-name");
       el.innerHTML = widgetName;
