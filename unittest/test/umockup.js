@@ -281,7 +281,6 @@
         getWidgetName : getWidgetName,
         getScriptName : function () {
             let  scriptName = getUrlParam("test_script");
-            console.log("<<<<<<<script name is >>>>",scriptName);
             if( scriptName){
                 return "test_ux_" + scriptName + ".js";
             }
@@ -292,16 +291,9 @@
         getTestJsName : function () {
              let  widget_name =  getWidgetName();
             let  scriptName = getUrlParam("test_script");
-             console.log("<<<<<<<widget name is >>>>",widget_name);
-             console.log("<<<<<<<script name is >>>>",scriptName);
+            
             if( widget_name){
                 return "test_ux_" + getFileName(getWidgetName()) + ".js";
-            
-            // if (!scriptName) {
-            //     scriptName = getUrlParam("test_script");
-            //     if (!scriptName) {
-            //         scriptName = "test_ux_" + getFileName(getWidgetName()) + ".js";
-            //     }
              }
            return widget_name;
        //     return scriptName;
