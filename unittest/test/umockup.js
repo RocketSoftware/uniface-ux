@@ -185,7 +185,7 @@
      * Run asynchronous test actions via setTimeout.
      * 
      * @param {Function} testFunction a function including test actions;
-     * @param {Function} timeout the milliseconds delay of setTimeout for resolve 
+     * @param {Number} timeout the milliseconds delay of setTimeout for resolve 
      *                   the returned promise;
      * @returns a promise.
      */
@@ -206,9 +206,13 @@
      * 
      * @param {Function} testFunction a function including test actions;
      * @param {Function} callbackFunction a callback function;
+     * @param {Number} idleTime the idle time to waiting next round of callback;
      * @returns a promise.
      */
-    async function asyncRunMO(testFunction, callbackFunction) {
+    async function asyncRunMO(testFunction, callbackFunction, idleTime) {
+        if (!idleTime || typeof idleTime !== "number") {
+            idleTime = 10;
+        }
         const container = document.getElementById("widget-container");
         let lastTimeoutId = 0;
 
@@ -230,7 +234,7 @@
                         debugLog("Timeout 2 callback " + _count);
                         resolve();
                         observer.disconnect();
-                    });
+                    }, idleTime);
                 });
             };    
         }
@@ -259,13 +263,14 @@
      * @param {Function} option optional, if option is a number, it calls
      *                   asyncRunST(testFunction, option); otherwise, it calls
      *                   asyncRunMO(testFunction, option).
+     * @param {Number}   idleTime the idle time to waiting next round of callback;
      * @returns a promise.
      */
-    async function asyncRun(testFunction, option) {
+    async function asyncRun(testFunction, option, idleTime) {
         if (typeof option === "number") {
             return asyncRunST(testFunction, option);
         } else {
-            return asyncRunMO(testFunction, option);
+            return asyncRunMO(testFunction, option, idleTime);
         }
     }
 
