@@ -1,0 +1,58 @@
+.u-switch {
+  vertical-align: bottom;
+}
+
+/* Styling the toggle switch for consistent positioning during DOM update interruptions. */
+.u-switch::part(switch) {
+  flex-shrink: 0;
+}
+
+.u-switch.checked::part(switch-toggle) {
+  left: 0%;
+  transform: translateX(20px);
+}
+
+/* Styling the checked switch when the widget is in an invalid state. */
+.u-switch.u-invalid.checked::part(switch),
+.u-switch.u-format-invalid.checked::part(switch) {
+  --accent-fill-rest: #d13438;
+}
+
+.u-switch.u-invalid.checked:hover::part(switch),
+.u-switch.u-format-invalid.checked:hover::part(switch) {
+  --accent-fill-hover: #d83435;
+}
+
+.u-switch.u-invalid.checked:active::part(switch),
+.u-switch.u-format-invalid.checked:active::part(switch) {
+  --accent-fill-active: #dd4c4c;
+}
+
+/* Styling the unchecked switch when the widget is in an invalid state. */
+.u-switch.u-invalid::part(switch),
+.u-switch.u-format-invalid::part(switch) {
+  --neutral-stroke-strong-rest: #d13438;
+}
+
+.u-switch.u-invalid:hover::part(switch),
+.u-switch.u-format-invalid:hover::part(switch) {
+    --neutral-stroke-strong-hover: #d13438;
+}
+
+.u-switch.u-invalid:active::part(switch),
+.u-switch.u-format-invalid:active::part(switch) {
+    --neutral-stroke-strong-active: #d13438;
+}
+
+/* Styling the unchecked switch toggle when the widget is in an invalid state. */
+.u-switch.u-invalid:not(.checked)::part(switch-toggle),
+.u-switch.u-format-invalid:not(.checked)::part(switch-toggle) {
+  --neutral-foreground-rest: #d13438;
+}
+
+/* Styling the error icon and line height (according to the fluent design system) when the widget is in invalid state. */
+.u-switch.u-invalid::part(status-message),
+.u-switch.u-format-invalid::part(status-message) {
+  --type-ramp-base-line-height: 18px;
+  color: #d13438;
+}
