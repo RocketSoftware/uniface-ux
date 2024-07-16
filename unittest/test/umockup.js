@@ -180,6 +180,7 @@
     }
 
     const defaultAsyncTimeout = 100; //ms
+    let defaultIdleTime = 15; //ms
 
     /**
      * Run asynchronous test actions via setTimeout.
@@ -211,7 +212,7 @@
      */
     async function asyncRunMO(testFunction, callbackFunction, idleTime) {
         if (!idleTime || typeof idleTime !== "number") {
-            idleTime = 10;
+            idleTime = defaultIdleTime;
         }
         const container = document.getElementById("widget-container");
         let lastTimeoutId = 0;
@@ -293,6 +294,14 @@
                 }
             }
             return scriptName;
+        },
+
+        getDefaultIdleTime : function () {
+            return defaultIdleTime;
+        },
+
+        setDefaultIdleTime : function (idolTime) {
+            defaultIdleTime = idolTime;
         },
 
         testLoaded : function () {
