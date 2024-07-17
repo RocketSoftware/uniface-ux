@@ -60,30 +60,26 @@
     <hr/>
     <!-- Unit test script -->
     <script id="test-script" type="text/javascript"></script>
-    
-
     <h2 >Widget Test: <span id="test-script-name"></span></h2>
     <h2 id="mocha-ut" ><span id="mocha-ut1"></span></h2>
 
     <div id="mocha"></div>
     <script class="mocha-exec" type="module">
       let el = document.getElementById("test-script");
-      var f =0;
+      var Flag_Widget =0;
       const WidgetName = umockup.getTestJsName();
       const scriptName = umockup.getScriptName();
-      let  a = umockup.getTestJsName();
-      let b  = umockup.getScriptName();
-if(b===null){
+if(scriptName===null){
       
       el.src = WidgetName;
-    f=1;
+      Flag_Widget=1;
 }
       el.src = scriptName;
    
 
 
   
-  if(a){
+  if(WidgetName){
    
       el.onload = function () {
         mocha.run();
@@ -91,17 +87,17 @@ if(b===null){
 
       el.onerror = function () {
         console.log("Failed to load");
-        if(f===1){
-        document.getElementById("mocha-ut").innerHTML = "Failed to load the widget!  Please check  script name  or verify that file <u><i>"+WidgetName+"   </i></u> is available in folder!";
+        if(Flag_Widget===1){
+        document.getElementById("mocha-ut").innerHTML = "Failed to load the widget! Please check script name or verify that file <u><i>"+WidgetName+" </i></u> is available in folder!";
         }
       
       else
-        document.getElementById("mocha-ut").innerHTML = "Failed to load the script!  Please check  widget name & script name   or verify that file <u><i>"+scriptName+"   </i></u> is available in folder!";
+        document.getElementById("mocha-ut").innerHTML = "Failed to load the script! Please check  widget name & script name or verify that file <u><i>"+scriptName+" </i></u> is available in folder!";
 
       };
     }
     else{
-      document.getElementById("mocha-ut").innerHTML = "The widget name \"\"  entered is  empty . Please Enter a widget name!!";
+      document.getElementById("mocha-ut").innerHTML = "The widget name \"\" entered is  empty. Please Enter a widget name!!";
     }
   
 

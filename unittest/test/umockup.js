@@ -289,18 +289,14 @@
         },
 
         getTestJsName : function () {
-             let  widget_name =  getWidgetName();
+            let  widget_name =  getWidgetName();
             let  scriptName = getUrlParam("test_script");
             
             if( widget_name){
                 return "test_ux_" + getFileName(getWidgetName()) + ".js";
              }
            return widget_name;
-       //     return scriptName;
         },
-       
-      //  },
-
         testLoaded : function () {
             const b = testLoaded;
             testLoaded = true;
