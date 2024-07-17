@@ -1,0 +1,76 @@
+body {
+  padding: 10px;
+  height: 100vh;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.u-workbench {
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+  max-height: 100%;
+  overflow-y: hidden;
+}
+
+.u-test-widget {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding: 10px 20px;
+  border: 1px solid black;
+  border-radius: 8px;
+}
+
+.u-title {
+  margin: auto;
+}
+
+.u-fast-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  align-items: start;
+}
+
+.u-fast-control {
+  display: flex;
+  align-items: center;
+  column-gap: 5px;
+}
+
+.u-background-color {
+  background-color: aquamarine;
+}
+
+.u-grid-layout div {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.u-flex-layout div {
+  display: flex;
+  flex-direction: column
+}
+
+.u-card-layout div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 8px;
+  padding: 16px;
+}
+
+.u-workbench fluent-tabs {
+  overflow-y: auto;
+}
+
+.u-workbench fluent-tabs::part(tabpanel) {
+  padding: 10px 0;
+  overflow-y: auto;
+  border-top: solid 2px;
+}
+
+.u-workbench fluent-tabs::part(activeIndicator) {
+  width: 80%;
+}
+

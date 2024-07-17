@@ -1,4 +1,4 @@
-# Prototype for UX-Widget Unit Test
+# UX widget sources & tests
 - by Ming
 - 2024-03-28
 
@@ -6,13 +6,14 @@
 
 - Clone this repository to your web server as a WebApp named uxunittest
 - Goto inside the WebApp uxunittest
-- Link your UX source folder as a symbolic link inside the WebApp: e.g.: mklink /j /d ux c:\USYS\10dev\uniface\webapps\uniface\ux
 - Start your Uniface Tomcat
-- Open a browser with URL: http://localhost:8080/uxunittest/unitest/test/test_ux_widget.html
+- Open a browser with URL: http://localhost:8080/uxunittest/unitest/test/index.html
 
 ## Files included
 
 - README.md
+- sources/ux-old (widget sources - before refactoring)
+- sources/ux (widget sources - refactored)
 - unittest/node_modules/chai
 - unittest/node_modules/chai/chai.js
 - unittest/node_modules/chai/LICENSE
