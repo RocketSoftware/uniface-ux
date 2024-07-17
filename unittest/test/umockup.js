@@ -281,20 +281,13 @@
         getWidgetName : getWidgetName,
         getScriptName : function () {
             let  scriptName = getUrlParam("test_script");
-            const ext = '.';
-            if( scriptName){
-                if(scriptName.includes(ext))
-                    return scriptName;
-                return "test_ux_" + scriptName + ".js";
-            }
             return scriptName;
           
         },
 
         getTestJsName : function () {
             let  widget_name =  getWidgetName();
-            let  scriptName = getUrlParam("test_script");
-            
+            let  scriptName = getUrlParam("test_script");  
             if( widget_name){
                 return "test_ux_" + getFileName(getWidgetName()) + ".js";
              }
