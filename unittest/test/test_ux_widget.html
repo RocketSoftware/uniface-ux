@@ -101,5 +101,18 @@ if(scriptName===null){
      
     </script>
 
+    <script type="text/javascript">
+      // update document
+      const widgetName = umockup.getWidgetName();
+      document.title = "Unit test - " + widgetName + " - " + scriptName;
+      el = document.getElementById("widget-name");
+      el.innerHTML = widgetName;
+      el = document.getElementById("ux-widget");
+      el.innerHTML = widgetName;
+      
+      el = document.getElementById("test-script-name");
+      el.innerHTML = scriptName;
+    </script>
+
 </body>
 </html>
