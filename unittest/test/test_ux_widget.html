@@ -80,6 +80,10 @@ if(scriptName===null){
    
       el.onload = function () {
         mocha.run();
+        if(Flag_Widget)
+        document.getElementById("test-script-name").innerHTML = WidgetName;
+        else
+        document.getElementById("test-script-name").innerHTML = scriptName;
       };
 
       el.onerror = function () {
