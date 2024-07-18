@@ -279,19 +279,18 @@
         },
 
         getWidgetName : getWidgetName,
-        getScriptName : function () {
-            let  scriptName = getUrlParam("test_script");
-            return scriptName;
-          
-        },
-
         getTestJsName : function () {
-            let  widget_name =  getWidgetName();
-            let  scriptName = getUrlParam("test_script");  
-            if( widget_name){
-                return "test_ux_" + getFileName(getWidgetName()) + ".js";
-             }
-           return widget_name;
+            if (!scriptName) {
+                scriptName = getUrlParam("test_script");
+                if (!scriptName) {
+                    const widgetName = getWidgetName();
+                    if (!widgetName) {
+                        return null;
+                   } 
+                  scriptName = "test_ux_" + getFileName(getWidgetName()) + ".js";
+                }
+            }
+           return scriptName;
         },
         testLoaded : function () {
             const b = testLoaded;

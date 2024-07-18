@@ -58,47 +58,28 @@
     <!-- Unit test script -->
     <script id="test-script" type="text/javascript"></script>
     <h2 >Widget Test: <span id="test-script-name"></span></h2>
-    <h2 id="mocha-ut" ><span id="mocha-ut1"></span></h2>
+    <h2 id="test-error" ><span id="mocha-ut1"></span></h2>
 
     <div id="mocha"></div>
     <script class="mocha-exec" type="module">
       let el = document.getElementById("test-script");
-      var Flag_Widget =0;
       const WidgetName = umockup.getTestJsName();
-      const scriptName = umockup.getScriptName();
-if(scriptName===null){
-      
       el.src = WidgetName;
-      Flag_Widget=1;
-}
-      el.src = scriptName;
-   
-
-
-  
-  if(WidgetName){
+   if(WidgetName){
    
       el.onload = function () {
         mocha.run();
-        if(Flag_Widget)
         document.getElementById("test-script-name").innerHTML = WidgetName;
-        else
-        document.getElementById("test-script-name").innerHTML = scriptName;
       };
 
       el.onerror = function () {
         console.log("Failed to load");
-        if(Flag_Widget===1){
-        document.getElementById("mocha-ut").innerHTML = "Failed to load the widget! Please check script name or verify that file <u><i>"+WidgetName+" </i></u> is available in folder!";
-        }
-      
-      else
-        document.getElementById("mocha-ut").innerHTML = "Failed to load the script! Please check  widget name & script name or verify that file <u><i>"+scriptName+" </i></u> is available in folder!";
-
+        document.getElementById("test-error").innerHTML = "Failed to load the Script! Please check script name or verify that file <u><i>"+WidgetName+" </i></u> is available in folder!";
       };
     }
     else{
-      document.getElementById("mocha-ut").innerHTML = "The widget name \"\" entered is  empty. Please Enter a widget name!!";
+
+      document.getElementById("test-error").innerHTML = "The Script  name \"\" entered is  empty. Please Enter a widget name!!";
     }
   
 
