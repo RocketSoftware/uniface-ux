@@ -63,18 +63,18 @@
     <div id="mocha"></div>
     <script class="mocha-exec" type="module">
       let el = document.getElementById("test-script");
-      const WidgetName = umockup.getTestJsName();
-      el.src = WidgetName;
-   if(WidgetName){
+      const scriptName = umockup.getTestJsName();
+      el.src = scriptName;
+   if(scriptName){
    
       el.onload = function () {
         mocha.run();
-        document.getElementById("test-script-name").innerHTML = WidgetName;
+        document.getElementById("test-script-name").innerHTML = scriptName;
       };
 
       el.onerror = function () {
         console.log("Failed to load");
-        document.getElementById("test-error").innerHTML = "Failed to load the Script! Please check script name or verify that file <u><i>"+WidgetName+" </i></u> is available in folder!";
+        document.getElementById("test-error").innerHTML = "Failed to load the Script! Please check script name or verify that file <u><i>"+scriptName+" </i></u> is available in folder!";
       };
     }
     else{
