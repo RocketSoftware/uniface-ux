@@ -65,22 +65,22 @@
       let el = document.getElementById("test-script");
       const scriptName = umockup.getTestJsName();
       el.src = scriptName;
-   if(scriptName){
+      if(scriptName){
    
-      el.onload = function () {
+        el.onload = function () {
         mocha.run();
         document.getElementById("test-script-name").innerHTML = scriptName;
-      };
+        };
 
-      el.onerror = function () {
+        el.onerror = function () {
         console.log("Failed to load");
         document.getElementById("test-error").innerHTML = "Failed to load the Script! Please check script name or verify that file <u><i>"+scriptName+" </i></u> is available in folder!";
-      };
-    }
-    else{
+        };
+      }
+      else{
 
-      document.getElementById("test-error").innerHTML = "The Script  name \"\" entered is  empty. Please Enter a widget name!!";
-    }
+        document.getElementById("test-error").innerHTML = "The Script  name \"\" entered is  empty. Please Enter a widget name!!";
+      }
   
 
      
