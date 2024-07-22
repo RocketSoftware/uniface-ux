@@ -10,34 +10,30 @@
 
     <script type="text/javascript" src="umockup.js"></script>
 
-    <link type="text/css" rel="stylesheet" href="../../ux/base.css"/>
-    <script type="text/javascript" src="../../ux/base.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../sources/ux-old/base.css"/>
+    <script type="text/javascript" src="../../sources/ux-old/base.js"></script>
     <!-- field widgets -->
-    <link type="text/css" rel="stylesheet" href="../../ux/button.css"/>
-    <script type="text/javascript" src="../../ux/button.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/checkbox.css"/>
-    <script type="text/javascript" src="../../ux/checkbox.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/number_field.css"/>
-    <script type="text/javascript" src="../../ux/number_field.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/plain_text.css"/>
-    <script type="text/javascript" src="../../ux/plain_text.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/radio_group.css"/>
-    <script type="text/javascript" src="../../ux/radio_group.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/select.css"/>
-    <script type="text/javascript" src="../../ux/select.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/switch.css"/>
-    <script type="text/javascript" src="../../ux/switch.js"></script>
-    <script type="module" src="../../ux/switch_UXWF.js"></script>
-    <script type="module" src="../../ux/button_UXWF.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/text_area.css"/>
-    <script type="text/javascript" src="../../ux/text_area.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/text_field.css"/>
-    <script type="text/javascript" src="../../ux/text_field.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../sources/ux-old/button.css"/>
+    <script type="text/javascript" src="../../sources/ux-old/button.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../sources/ux-old/checkbox.css"/>
+    <script type="text/javascript" src="../../sources/ux-old/checkbox.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../sources/ux-old/number_field.css"/>
+    <script type="text/javascript" src="../../sources/ux-old/number_field.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../sources/ux-old/plain_text.css"/>
+    <script type="text/javascript" src="../../sources/ux-old/plain_text.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../sources/ux-old/select.css"/>
+    <script type="text/javascript" src="../../sources/ux-old/select.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../sources/ux-old/switch.css"/>
+    <script type="text/javascript" src="../../sources/ux-old/switch.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../sources/ux-old/text_area.css"/>
+    <script type="text/javascript" src="../../sources/ux-old/text_area.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../sources/ux-old/text_field.css"/>
+    <script type="text/javascript" src="../../sources/ux-old/text_field.js"></script>
     <!-- complex widgets -->
-    <link type="text/css" rel="stylesheet" href="../../ux/controlbar.css"/>
-    <script type="text/javascript" src="../../ux/controlbar.js"></script>
-    <link type="text/css" rel="stylesheet" href="../../ux/toolbar.css"/>
-    <script type="text/javascript" src="../../ux/toolbar.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../sources/ux-old/controlbar.css"/>
+    <script type="text/javascript" src="../../sources/ux-old/controlbar.js"></script>
+    <link type="text/css" rel="stylesheet" href="../../sources/ux-old/toolbar.css"/>
+    <script type="text/javascript" src="../../sources/ux-old/toolbar.js"></script>
 
     <link type="text/css" rel="stylesheet" href="../node_modules/mocha/mocha.css" />
     <script type="text/javascript" src="../node_modules/mocha/mocha.js"></script>
@@ -59,8 +55,8 @@
     </div>
 
     <hr/>
-    <!-- Unit test script -->
-    <script id="test-script" type="text/javascript"></script>
+    <!-- To load test script -->
+    <script id="test-script" type="module"></script>
     <!-- Loading template -->
     <script id="test-script2" type="text/javascript"></script>
 
@@ -68,9 +64,21 @@
 
     <div id="mocha"></div>
     <script class="mocha-exec" type="module">
-      let el = document.getElementById("test-script");
+      // update document
+      const widgetName = umockup.getWidgetName();
       const scriptName = umockup.getTestJsName();
-      el.type = "module";
+
+      document.title = "Unit test - " + widgetName + " - " + scriptName;
+      let el = document.getElementById("widget-name");
+      el.innerHTML = widgetName;
+      el = document.getElementById("ux-widget");
+      el.innerHTML = widgetName;
+      
+      el = document.getElementById("test-script-name");
+      el.innerHTML = scriptName;
+
+      // dynamically load test script
+      el = document.getElementById("test-script");
       el.src = scriptName;
       el.onload = function () {
         mocha.run();
@@ -79,26 +87,13 @@
       el.onerror = function () {
         console.log("Failed to load");
       };
+
       // el = document.getElementById("test-script2");
       // el.onload = function () {
       //   mocha.run();
       // };
 
       // el.src = "test_ux_template.js";
-    </script>
-
-    <script type="text/javascript">
-      // update document
-      const widgetName = umockup.getWidgetName();
-      scriptName = umockup.getTestJsName();
-      document.title = "Unit test - " + widgetName + " - " + scriptName;
-      el = document.getElementById("widget-name");
-      el.innerHTML = widgetName;
-      el = document.getElementById("ux-widget");
-      el.innerHTML = widgetName;
-      
-      el = document.getElementById("test-script-name");
-      el.innerHTML = scriptName;
     </script>
 
 </body>
