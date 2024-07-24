@@ -167,7 +167,7 @@
     function getWidgetName() {
         if (!widgetName) {
             const value = getUrlParam("widget_name");
-            widgetName = (value ? value : "UX.Button");
+            widgetName = value ;
         }
         return widgetName;
     }
@@ -279,17 +279,19 @@
         },
 
         getWidgetName : getWidgetName,
-
         getTestJsName : function () {
             if (!scriptName) {
                 scriptName = getUrlParam("test_script");
                 if (!scriptName) {
-                    scriptName = "test_ux_" + getFileName(getWidgetName()) + ".js";
+                    const widgetName = getWidgetName();
+                    if (!widgetName) {
+                        return null;
+                   } 
+                  scriptName = "test_ux_" + getFileName(getWidgetName()) + ".js";
                 }
             }
-            return scriptName;
+           return scriptName;
         },
-
         testLoaded : function () {
             const b = testLoaded;
             testLoaded = true;
