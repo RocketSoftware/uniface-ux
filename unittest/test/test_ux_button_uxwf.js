@@ -22,12 +22,19 @@
   const widgetId = tester.widgetId;
   const widgetName = tester.widgetName;
 
+  /**
+   * Function to determine whether the widget class has been loaded.
+   */
+  function verifyWidgetClass(widgetClass) {
+    assert(widgetClass, `Widget class '${widgetName}' is not defined!
+          Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
+  }
+
   describe("Uniface Mockup tests", function () {
 
-    it("Get class " + widgetName, function () {
+    it("get class " + widgetName, function () {
       const widgetClass = tester.getWidgetClass();
-      assert(widgetClass, `Widget class '${widgetName}' is not defined!
-            Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
+      verifyWidgetClass(widgetClass);
     });
 
   });
@@ -36,6 +43,7 @@
 
     it('should have a static property structure of type Element', function () {
       const widgetClass = tester.getWidgetClass();
+      verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
       expect(structure.constructor).to.be.an.instanceof(Element.constructor);
       expect(structure.tagName).to.equal('fluent-button');
@@ -51,6 +59,8 @@
     let element;
 
     it("processLayout", function () {
+      const widgetClass = tester.getWidgetClass();
+      verifyWidgetClass(widgetClass);
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
     });
@@ -58,6 +68,8 @@
     describe("Checks", function () {
 
       before(function () {
+        const widgetClass = tester.getWidgetClass();
+        verifyWidgetClass(widgetClass);
         element = tester.processLayout();
       });
 
@@ -86,6 +98,8 @@
   describe("Create widget", function () {
 
     before(function () {
+      const widgetClass = tester.getWidgetClass();
+      verifyWidgetClass(widgetClass);
       tester.construct();
     });
 
@@ -94,13 +108,14 @@
         const widget = tester.construct();
         assert(widget, "widget is not defined!");
         const widgetClass = tester.getWidgetClass();
+        verifyWidgetClass(widgetClass);
         assert(widgetClass.defaultValues.classes['u-button'], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
     });
 
-    describe("onConnect", function () {
+    describe("On Connect", function () {
       const element = tester.processLayout();
       const widget = tester.onConnect();
       it("check element created and connected", function () {
@@ -116,7 +131,7 @@
     widget.mapTrigger("click");
   });
 
-  describe("dataInit", function () {
+  describe("Data Init", function () {
     const defaultValues = tester.getDefaultValues();
     const classes = defaultValues.classes;
     var element;
@@ -158,7 +173,7 @@
     });
   });
 
-  describe("dataUpdate", function () {
+  describe("Data Update", function () {
     let element;
     before(function () {
       tester.createWidget();
@@ -291,17 +306,18 @@
     });
   });
 
-  describe("showError", function () {
-    it("Not required", function () { });
+  describe("Show Error", function () {
+    it("not required", function () { });
   });
 
-  describe("hideError", function () {
-    it("Not required", function () { });
+  describe("Hide Error", function () {
+    it("not required", function () { });
 
   });
 
   describe("Test SlottedButtonText class", function () {
     const widgetClass = tester.getWidgetClass();
+    verifyWidgetClass(widgetClass);
     let styleClass = "u-text";
     let elementQuerySelector = ".u-text";
     let instance;
@@ -352,6 +368,7 @@
 
   describe("Test SlottedButtonIcon class", function () {
     const widgetClass = tester.getWidgetClass();
+    verifyWidgetClass(widgetClass);
     let styleClass = "u-icon";
     let elementQuerySelector = ".u-icon";
     let instance;
@@ -448,13 +465,13 @@
     });
   });
 
-  describe("reset all properties", function () {
+  describe("Reset all properties", function () {
     it("reset all property", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, "Failed to reset the properties, exception " + e);
       }
     });
   });
