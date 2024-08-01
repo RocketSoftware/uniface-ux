@@ -331,3 +331,6 @@ export class Base_UXWF {
     }
   }
 }
+
+UNIFACE.ClassRegistry.add("UX.Base_UXWF", Base_UXWF);
+
