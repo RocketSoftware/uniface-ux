@@ -557,3 +557,5 @@ export class Widget_UXWF extends Base_UXWF {
     }
   }
 }
+
+UNIFACE.ClassRegistry.add("UX.Widget", Widget_UXWF);
