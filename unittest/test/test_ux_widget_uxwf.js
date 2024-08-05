@@ -1,8 +1,39 @@
 import {Widget_UXWF} from "../../../ux/widget_UXWF.js"
 import { Button_UXWF } from "../../../ux/button_UXWF.js";
-import { Worker } from "../../../ux/workers_UXWF.js";
-import {TextField_UXWF} from "../../../ux/text_field_UXWF.js"
+import { Worker, Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedWidget, Element } from "../../../ux/workers_UXWF.js";
+import { Switch_UXWF } from "../../../ux/switch_UXWF.js";
 
+
+
+//Simple widget that has both subwidget and triggers for easier testing and doens't mess with other widgets
+export class TestWidget extends Widget_UXWF {
+
+  static subWidgets = {};
+  static defaultValues = {};
+  static setters = {};
+  static getters = {};
+  static triggers = {};
+  static uiBlocking = "disabled";
+
+  static structure = new Element(this, "fluent-text-field", "", "", [
+    new StyleClass(this, ["u-test-field"]),
+    new HtmlAttribute(this, "html:current-value", "current-value", ""),
+    new HtmlValueAttributeBoolean(this, "value", "checked", false),
+  ], [
+    new SlottedWidget(this, "span", "u-change-button", ".u-change-button", "end", "change-button", "UX.Button_UXWF", {
+      "uniface:icon": "",
+      "uniface:icon-position": "end",
+      "value": "Change",
+      "classes:u-change-button": true,
+      "html:title": "",
+      "html:appearance": ""
+    }, false, ["detail"])
+  ], [
+    new Trigger(this, "onchange", "change", true),
+    new Trigger(this, "detail", "click", true)
+  ]);
+
+}
 
 (function () {
     'use strict';
@@ -10,6 +41,7 @@ import {TextField_UXWF} from "../../../ux/text_field_UXWF.js"
     if (umockup.testLoaded()) {
         return;
     }
+
     const defaultAsyncTimeout = 100; //ms
 
     const assert = chai.assert;
@@ -51,150 +83,131 @@ import {TextField_UXWF} from "../../../ux/text_field_UXWF.js"
 
     });
 
-    describe(widgetName + " test Widget_UXWF Class methods", function () {
+    describe(widgetName + " Class methods", function () {
 
         globalThis.UX_DEFINITIONS = {}
         globalThis.UX_DEFINITIONS["ufld:FIELD.ENTITY.MODEL"] = "test"
         
-        let widgetClass, propId, setterClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, defaultValue, triggerName,
-        node, url, sourceElement, tagName, copyChildren, copyAttributes, functionName, message, consequence, data , definitions, element
-        let widget;
+        let definitions, returnedProcess , widget, testwidget;
+
+        definitions = {
+            "widget_class": tester.getWidgetClass(),
+            "properties": {
+                "controls-center": "four\u001bfive\u001bsix",
+                "controls-end": "seven",
+                "controls-start": "one\u001btwo\u001bthree",
+                "five:widget-class": "UX.Button",
+                "four:widget-class": "UX.Button",
+                "html:readonly": "true",
+                "one:widget-class": "UX.Button",
+                "seven:widget-class": "UX.Button",
+                "six:widget-class": "UX.Button",
+                "three:widget-class": "UX.Button",
+                "two:widget-class": "UX.Button"
+            } , 
+        }
 
         beforeEach(function () {
             widget = new Widget_UXWF;
+            testwidget = new TestWidget;
+            returnedProcess = TestWidget.processLayout(widget.widget, definitions)
+            testwidget.onConnect(returnedProcess)
+            testwidget.dataInit()
         });
 
-        it("processLayout", function () {
-            
-            definitions = {
-                "widget_class": tester.getWidgetClass(),
-                "properties": {
-                    "controls-center": "four\u001bfive\u001bsix",
-                    "controls-end": "seven",
-                    "controls-start": "one\u001btwo\u001bthree",
-                    "five:widget-class": "UX.Button",
-                    "four:widget-class": "UX.Button",
-                    "html:readonly": "true",
-                    "one:widget-class": "UX.Button",
-                    "seven:widget-class": "UX.Button",
-                    "six:widget-class": "UX.Button",
-                    "three:widget-class": "UX.Button",
-                    "two:widget-class": "UX.Button"
-                } , 
-            }
-
-            // console.log("widget " , widget)
-            // console.log("definitions " , definitions)
-
-            const elementBase = Widget_UXWF.processLayout(widget, definitions)
-            console.log(widget)
-
+        it("processLayout", function () {            
+            expect(returnedProcess).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+            expect(returnedProcess).to.have.tagName("FLUENT-TEXT-FIELD");
+            expect(returnedProcess.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
+            expect(returnedProcess.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
+            expect(returnedProcess).to.have.id( widget.widget.id);
         });
 
+        //The getValueUpdaters function for button_UXWF widget returns null, it does log the correct updater
         it("onConnect", function () {
-            element = document.createElement("h2")
-            element.id = "ufld:FIELD.ENTITY.MODEL:INSTANCE.1"
-            element["data-test-attribute"] = "test"
-            widgetClass = {}
-
-            propId = "html:disabled"
-            setterClass = {}
-            widget.registerGetter(widgetClass, propId, setterClass)
-            console.log("registeredSub after Getter" , widgetClass)
-
-            
-            widgetClass = {}
-            subWidgetId = "change-button"
-            subWidgetStyleClass = "u-change-button"
-            subWidgetClass = new Button_UXWF()
-            subWidgetTriggers = {}
-            widget.registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers)            
-            widget.subWidgets = widgetClass.subWidgets
-            widget.getters = widgetClass.getters
-            console.log("SHOULD HAVE SUBWIDGETS " , widgetClass)
-            widget.onConnect(element)
+            let connectedWidget = testwidget.onConnect(returnedProcess)
         });
 
+        //Button_UXWF widget currently doesn't have a mapTrigger functionality
         it("mapTrigger", function () {
-            console.log("map " , widget)
-            widgetClass = TextField_UXWF
-            triggerName = "change-button__disabled"
-            setterClass = {}
-            widget.registerTrigger(widgetClass, triggerName, setterClass)
-            //widget.triggers = widgetClass.triggers
-            // subWidgetId = "change-button"
-            // subWidgetStyleClass = "u-change-button"
-            // subWidgetClass = TextField_UXWF
-            // new Trigger(subWidgetClass, triggerName, "click" , true)
-            // new Trigger(subWidgetClass, "trigger2" , "click" , true)
-            //subWidgetTriggers = ["change-button__disabled", "trigger2"]
-            //widget.registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers) 
-            console.log("NEW subwidget " , widget)
-            //Change when subwigets work
-            //widget.subWidgets = widgetClass.subWidgets 
-            let widget1 = new widgetClass()
-            console.log("NEW NEW WIDGET " , widget1)
-            widget1.mapTrigger(triggerName)
+            testwidget.mapTrigger("click")
         });
 
         it("dataInit", function () {
-            widgetClass = {}
-            subWidgetId = "change-button"
-            subWidgetStyleClass = "u-change-button"
-            subWidgetClass = new Button_UXWF()
-            subWidgetTriggers = {}
-            widget.registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers) 
-            //Change when subwigets work
-            //widget.subWidgets = widgetClass.subWidgets 
-            console.log("map " , widget)
-            console.log("elements " , element)
-            widget.elements.widget = element
-            widget.dataInit()
-            
+            expect(testwidget.element, "Widget top element is not defined!");
+            expect(TestWidget.defaultValues.classes).to.eql(testwidget.data.properties.classes)
         });
 
-        //TELL ME DATA
         it("dataUpdate", function () {
-            data = {}
-            widget.dataUpdate(data)
+            const data =  {
+                uniface: {
+                    "icon": "",
+                    "icon-position": "start"
+                },
+                value: true
+            }
+
+            testwidget.dataUpdate(data)
+
+            const defaultTestWidget = new TestWidget
+            defaultTestWidget.onConnect(returnedProcess)
+            defaultTestWidget.dataInit()
+
+            //Expect widget properties to differ from the initial Widget
+            expect(defaultTestWidget.data.properties).to.not.eql(testwidget.data.properties); 
             
+            expect(testwidget.data.properties.value).to.equal(true); 
+            expect(testwidget.data.properties.uniface).to.have.any.keys(data.uniface); 
         });
 
-        //TELL ME DATA
+        //Data cleanup functionality for UXWF Widgets doesn't do anything
         it("dataCleanup", function () {
-            widgetClass = {}
-            subWidgetId = "change-button"
-            subWidgetStyleClass = "u-change-button"
-            subWidgetClass = new Button_UXWF()
-            subWidgetTriggers = {}
-            widget.registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers) 
-            widget.registerSubWidget(widgetClass, "tehe", subWidgetClass, subWidgetStyleClass, subWidgetTriggers) 
-            //Fix when subwidgets
-            //widget.subWidgets = widgetClass.subWidgets 
-            console.log("map " , widget)
-
-            widget.dataCleanup()
+            testwidget.dataCleanup()
         });
 
-         //TELL ME DATA
          it("getValue", function () {
-            console.log("map " , widget)
-            let test = new Worker(tester.getWidgetClass())
-            widgetClass = {}
-            subWidgetId = "change-button"
-            subWidgetStyleClass = "u-change-button"
-            subWidgetClass = new Button_UXWF()
-            subWidgetTriggers = {}
-            test.registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers) 
-            test.registerGetter(widgetClass, "value", this);
-            console.log("getters " , widgetClass)
-            test.widgetClass.subWidgets = widgetClass.subWidgets
-            //Fix
-            //test.widgetClass.getters = widgetClass.getters
-            console.log(test)
-            console.log(widget.getValue())
+            const value = testwidget.getValue()
+            
+            expect(value).to.equal(false); 
         });
 
-        
+        //Validate only returns null for the time being
+        it("validate", function () {
+            const returnNull = testwidget.validate()
+
+            expect(returnNull).to.equal(null);         
+        });
+
+        it("showError", function () {
+            const errorString = "This is a testing error"
+            
+            testwidget.showError(errorString) 
+            expect(testwidget.data.properties.uniface["error-message"]).to.equal(errorString); 
+            expect(testwidget.data.properties.uniface["error"]).to.equal(true);       
+        });
+
+        it("hideError", function () {
+            testwidget.hideError() 
+
+            expect(testwidget.data.properties.uniface["error-message"]).to.equal(""); 
+            expect(testwidget.data.properties.uniface["error"]).to.equal(false);     
+        });
+
+        it("blockUI", function () { 
+            expect(testwidget.elements.widget.disabled).to.equal(false);     
+            
+            testwidget.blockUI() 
+            expect(testwidget.elements.widget.disabled).to.equal(true);     
+        });
+
+        it("unblockUI", function () {
+            expect(testwidget.elements.widget.disabled).to.equal(false);     
+            
+            testwidget.blockUI() 
+            expect(testwidget.elements.widget.disabled).to.equal(true);
+            
+            testwidget.unblockUI()   
+            expect(testwidget.elements.widget.disabled).to.equal(false);
+        });
     });
 })();
