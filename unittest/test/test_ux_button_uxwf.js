@@ -21,6 +21,7 @@
   const tester = new umockup.WidgetTester();
   const widgetId = tester.widgetId;
   const widgetName = tester.widgetName;
+  const widgetClass = tester.getWidgetClass();
 
   /**
    * Function to determine whether the widget class has been loaded.
@@ -33,7 +34,6 @@
   describe("Uniface Mockup tests", function () {
 
     it("get class " + widgetName, function () {
-      const widgetClass = tester.getWidgetClass();
       verifyWidgetClass(widgetClass);
     });
 
@@ -42,7 +42,6 @@
   describe("Uniface static structure constructor definition", function () {
 
     it('should have a static property structure of type Element', function () {
-      const widgetClass = tester.getWidgetClass();
       verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
       expect(structure.constructor).to.be.an.instanceof(Element.constructor);
@@ -59,7 +58,6 @@
     let element;
 
     it("processLayout", function () {
-      const widgetClass = tester.getWidgetClass();
       verifyWidgetClass(widgetClass);
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
@@ -68,7 +66,6 @@
     describe("Checks", function () {
 
       before(function () {
-        const widgetClass = tester.getWidgetClass();
         verifyWidgetClass(widgetClass);
         element = tester.processLayout();
       });
@@ -98,7 +95,6 @@
   describe("Create widget", function () {
 
     before(function () {
-      const widgetClass = tester.getWidgetClass();
       verifyWidgetClass(widgetClass);
       tester.construct();
     });
@@ -107,7 +103,6 @@
       try {
         const widget = tester.construct();
         assert(widget, "widget is not defined!");
-        const widgetClass = tester.getWidgetClass();
         verifyWidgetClass(widgetClass);
         assert(widgetClass.defaultValues.classes['u-button'], "Class is not defined");
       } catch (e) {
@@ -154,8 +149,8 @@
     }
 
     it("check 'hidden' attributes", function () {
-      assert.notEqual(element.querySelector('span.u-text').getAttribute('hidden'), null);
-      assert.notEqual(element.querySelector('span.u-icon').getAttribute('hidden'), null);
+      assert(element.querySelector('span.u-text').hasAttribute('hidden'), "Text span element should be hidden by default");
+      assert(element.querySelector('span.u-icon').hasAttribute('hidden'), "Icon span element should be hidden by default");
     });
 
     it("check widget id", function () {
@@ -164,12 +159,12 @@
 
     it("check 'icon' and 'icon-position'", function () {
       let unifaceProperties = tester.defaultValues.uniface;
-      assert.equal(unifaceProperties["icon"], '');
-      assert.equal(unifaceProperties["icon-position"], 'start');
+      assert.equal(unifaceProperties["icon"], '', "Default value of icon should be ''");
+      assert.equal(unifaceProperties["icon-position"], 'start', "Default value of icon-position will be start");
     });
 
     it("check value", function () {
-      assert.equal(tester.defaultValues.value, '');
+      assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
     });
   });
 
@@ -189,7 +184,7 @@
       setTimeout(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
-        assert(element.querySelector('span.u-icon').hasAttribute("hidden"));
+        assert(element.querySelector('span.u-icon').hasAttribute("hidden"), "Icon Element should be hidden");
         done();
       }, defaultAsyncTimeout);
     });
@@ -316,7 +311,6 @@
   });
 
   describe("Test SlottedButtonText class", function () {
-    const widgetClass = tester.getWidgetClass();
     verifyWidgetClass(widgetClass);
     let styleClass = "u-text";
     let elementQuerySelector = ".u-text";
@@ -367,7 +361,6 @@
   });
 
   describe("Test SlottedButtonIcon class", function () {
-    const widgetClass = tester.getWidgetClass();
     verifyWidgetClass(widgetClass);
     let styleClass = "u-icon";
     let elementQuerySelector = ".u-icon";
