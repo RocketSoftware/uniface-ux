@@ -1,36 +1,52 @@
 // @ts-check
 /* global UNIFACE */
 import { Widget_UXWF } from "./widget_UXWF.js";
-import { Worker, Element, StyleClass, Trigger } from "./workers_UXWF.js";
 import {
+  Worker,
+  Element,
+  StyleClass,
+  Trigger,
   HtmlAttribute,
   HtmlAttributeNumber,
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
 } from "./workers_UXWF.js";
-import "https://unpkg.com/@fluentui/web-components";
 
 /**
- * Setter that maintains
+ * Button Widget
  * @export
  * @class Button_UXWF
  * @extends {Widget_UXWF}
  */
 export class Button_UXWF extends Widget_UXWF {
+
   /**
-   * PRIVATE WORKER: BUTTON TEXT.
+   * Initialize as static at derived level, so definitions are unique per widget class.
+   * @static
+   * @memberof Button_UXWF
+   */
+
+  static subWidgets = {};
+  static defaultValues = {};
+  static setters = {};
+  static getters = {};
+  static triggers = {};
+  static uiBlocking = "disabled";
+
+  /**
+   * Private Worker: Slotted Button Text
    * Adds and maintains a slotted element for the button text.
-   * @export
-   * @class ButtonText
+   * @class SlottedButtonText
    * @extends {Worker}
    */
   static SlottedButtonText = class extends Worker {
+
     /**
-     * Creates an instance of ButtonText.
+     * Creates an instance of SlottedButtonText.
+     * @constructor
      * @param {typeof Widget_UXWF} widgetClass
-     * @param {String} styleClass
-     * @param {String} elementQuerySelector
-     * @memberof Element
+     * @param {string} styleClass
+     * @param {string} elementQuerySelector
      */
     constructor(widgetClass, styleClass, elementQuerySelector) {
       super(widgetClass);
@@ -44,7 +60,9 @@ export class Button_UXWF extends Widget_UXWF {
     getLayout() {
       this.log("getLayout", null);
       let element = document.createElement("span");
-      element.classList.add(this.styleClass);
+      if (this.styleClass) {
+        element.classList.add(this.styleClass);
+      }
       return element;
     }
 
@@ -52,7 +70,7 @@ export class Button_UXWF extends Widget_UXWF {
       this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription() });
       super.refresh(widgetInstance);
       let element = this.getElement(widgetInstance);
-      let text = widgetInstance.data.properties["value"];
+      let text = this.getNode(widgetInstance.data.properties, "value");
       if (text) {
         element.hidden = false;
         element.innerText = text;
@@ -63,32 +81,31 @@ export class Button_UXWF extends Widget_UXWF {
     }
 
     getValue(widgetInstance) {
-      let text = widgetInstance.data.properties["value"];
+      this.log("getValue", { widgetInstance: widgetInstance.getTraceDescription() });
+      let text = this.getNode(widgetInstance.data.properties, "value");
       return text;
     }
 
     getValueUpdaters(widgetInstance) {
-      this.log("getValueUpdaters", {
-        widgetInstance: widgetInstance.getTraceDescription(),
-      });
+      this.log("getValueUpdaters", { widgetInstance: widgetInstance.getTraceDescription() });
       return;
     }
   };
 
   /**
-   * PRIVATE WORKER: BUTTON ICON
-   * Adds and maintains a slotted element for the button icon
-   * @export
-   * @class ButtonIcon
+   * Private Worker: Slotted Button Icon
+   * Adds and maintains a slotted element for the button icon.
+   * @class SlottedButtonIcon
    * @extends {Worker}
    */
   static SlottedButtonIcon = class extends Worker {
+
     /**
-     * Creates an instance of ButtonIcon.
+     * Creates an instance of SlottedButtonIcon.
+     * @constructor
      * @param {typeof Widget_UXWF} widgetClass
      * @param {String} styleClass
      * @param {String} elementQuerySelector
-     * @memberof Element
      */
     constructor(widgetClass, styleClass, elementQuerySelector) {
       super(widgetClass);
@@ -105,7 +122,9 @@ export class Button_UXWF extends Widget_UXWF {
     getLayout() {
       this.log("getLayout", null);
       let element = document.createElement("span");
-      element.classList.add(this.styleClass);
+      if (this.styleClass) {
+        element.classList.add(this.styleClass);
+      }
       return element;
     }
 
@@ -113,16 +132,15 @@ export class Button_UXWF extends Widget_UXWF {
       this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription() });
       super.refresh(widgetInstance);
       let element = this.getElement(widgetInstance);
-      let text = widgetInstance.data.properties["value"];
-      let icon = widgetInstance.data.properties.uniface["icon"];
-      let iconPosition = widgetInstance.data.properties.uniface["icon-position"];
-      let defaultIconPosition = this.widgetClass.defaultValues.uniface["icon-position"];
-      iconPosition =
-        iconPosition !== "start" && iconPosition !== "end"
-          ? defaultIconPosition
-          : iconPosition;
+      let text = this.getNode(widgetInstance.data.properties, "value");
+      let icon = this.getNode(widgetInstance.data.properties, "uniface:icon");
+      let iconPosition = this.getNode(widgetInstance.data.properties, "uniface:icon-position");
+      let defaultIconPosition = this.getNode(this.widgetClass.defaultValues, "uniface:icon-position");
+      if (iconPosition !== "start" && iconPosition !== "end") {
+        iconPosition = defaultIconPosition;
+      }
+      deleteIconClasses();
       if (icon) {
-        deleteIconClasses();
         element.hidden = false;
         element.classList.add(`ms-Icon`, `ms-Icon--${icon}`);
         // Set the iconPosition if there is buttonText.
@@ -134,14 +152,12 @@ export class Button_UXWF extends Widget_UXWF {
           element.setAttribute("slot", "");
         }
       } else {
-        deleteIconClasses();
         element.hidden = true;
         element.setAttribute("slot", "");
       }
 
       function deleteIconClasses() {
-        let arr = Array.from(element.classList);
-        arr.forEach((key) => {
+        Array.from(element.classList).forEach((key) => {
           if (key.startsWith("ms-Icon")) {
             element.classList.remove(key);
           }
@@ -151,19 +167,7 @@ export class Button_UXWF extends Widget_UXWF {
   };
 
   /**
-   * Initialize as static at derived level, so definitions are unique per widget class.
-   * @static
-   * @memberof Button_UXWF
-   */
-  static subWidgets = {};
-  static defaultValues = {};
-  static setters = {};
-  static getters = {};
-  static triggers = {};
-  static uiBlocking = "disabled";
-
-  /**
-   *WIDGET DEFINITION
+   * Widget Definition
    */
   static structure = new Element(
     this,
@@ -179,25 +183,27 @@ export class Button_UXWF extends Widget_UXWF {
         "html:appearance",
         "appearance",
         ["neutral", "accent", "outline", "lightweight", "stealth"],
-        "neutral",
+        "neutral"
       ),
       new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
       new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
+      new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
       new StyleClass(this, ["u-button", "neutral"]),
     ],
     [
       new this.SlottedButtonIcon(this, "u-icon", ".u-icon"),
       new this.SlottedButtonText(this, "u-text", ".u-text"),
     ],
-    [new Trigger(this, "detail", "click", true)],
+    [new Trigger(this, "detail", "click", true)]
   );
 
   /**
-   * SPECIALIZED UX METHODS - INVOKED BY UNIFACE TO PERFORM A SPECIFIC ACTION.
+   * Private Uniface API methods are used for the button class since we don’t implement any error handling for it.
+   * However, we can still log errors if any occur from Uniface.
    */
   showError(errorMessage) {
     this.log("showError", errorMessage);
-    // If error exist throw exception.
+    // If error exist just console log.
     console.error(errorMessage);
   }
 
