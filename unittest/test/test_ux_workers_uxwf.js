@@ -2,7 +2,7 @@ import { Button_UXWF } from "../../../ux/button_UXWF.js";
 import { Widget_UXWF } from "../../../ux/widget_UXWF.js";
 import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidget, SlottedWidgetsByProperty, 
     WidgetsByProperty , BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean ,
-    HtmlValueAttributeBoolean , HtmlAttributeMinMaxLength , StyleProperty
+    HtmlValueAttributeBoolean , HtmlAttributeMinMaxLength , StyleProperty , Worker
  } from "../../../ux/workers_UXWF.js"
 
 
@@ -20,13 +20,45 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     const widgetId = tester.widgetId;
     const widgetName = tester.widgetName;
 
-    describe("Uniface Mockup tests for Workers", function () {
+    describe("Uniface Mockup tests for " + widgetName, function () {
 
+        let widgetClass;
+        let worker;
+        let elementQuerySelector;
+        let element;
+
+        beforeEach(function () {
+            widgetClass = {};
+            worker = new Worker(widgetClass);
+        });
+        
         it("Get class " + widgetName, function () {
             const widgetClass = tester.getWidgetClass();
 
             assert(widgetClass, `Widget class '${widgetName}' is not defined!
             Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
+        });
+
+        it("should initialize with the correct properties" , function () {
+            expect(worker.widgetClass).to.equal(widgetClass);
+            expect(worker.isSetter).to.equal(true);
+        });
+
+        it("testing setElementQuerySelector" , function () {
+            elementQuerySelector = "div"
+            worker.setElementQuerySelector(elementQuerySelector)
+            expect(worker.elementQuerySelector).to.equal(elementQuerySelector);
+        });
+
+        it("testing getElement" , function () {
+            const widgetInstance = {
+                elements : {
+                    widget: document.createElement("div")
+                } ,
+                getTraceDescription: () => { return "description" }
+            }
+            element = worker.getElement(widgetInstance)
+            expect(element).to.have.tagName("div");
         });
     });
 
@@ -310,7 +342,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
                 getTraceDescription: () => { return "description" }
             }
             slottedError.refresh(widgetInstance)
-            console.log(widgetInstance.elements.widget.classList)
             expect(widgetInstance.elements.widget.hidden).to.equal(false);
             expect(widgetInstance.elements.widget.classList[0]).to.equal("styleClass-shown");
 
@@ -353,7 +384,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         });
 
         it("should initialize with correct properties", function () {
-            console.log("Element is " , element)
             expect(element.widgetClass).to.equal(widgetClass);
             expect(element.tagName).to.equal(tagName);
             expect(element.styleClass).to.equal(styleClass);
@@ -929,7 +959,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
                 getTraceDescription: () => { return "description" }
             }
             let returnMapping = element.getTriggerMapping(widgetInstance)
-            console.log(returnMapping)
             expect(returnMapping.event_name).to.equal(eventName)
             expect(returnMapping.validate).to.equal(validate)
             expect(returnMapping.element).to.have.tagName("div")
