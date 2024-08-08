@@ -4,7 +4,7 @@ import "./button_UXWF.js";
 import "./text_field_UXWF.js";
 import "./controlbar_UXWF.js";
 import "./switch_UXWF.js";
-
+import "./radio_group_UXWF.js";
 
 /**
  * For debugging purposes
