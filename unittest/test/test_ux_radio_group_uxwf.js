@@ -21,6 +21,7 @@
   const tester = new umockup.WidgetTester();
   const widgetId = tester.widgetId;
   const widgetName = tester.widgetName;
+  const widgetClass = tester.getWidgetClass();
 
   // custom test variables
   const valRepArray = [
@@ -50,7 +51,6 @@
   describe("Uniface Mockup tests", function () {
 
     it("get class " + widgetName, function () {
-      const widgetClass = tester.getWidgetClass();
       verifyWidgetClass(widgetClass);
     });
 
@@ -59,7 +59,6 @@
   describe("Uniface static structure constructor definition", function () {
 
     it('should have a static property structure of type Element', function () {
-      const widgetClass = tester.getWidgetClass();
       verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
       expect(structure.constructor).to.be.an.instanceof(Element.constructor);
@@ -77,7 +76,6 @@
     let element;
 
     it("processLayout", function () {
-      const widgetClass = tester.getWidgetClass();
       verifyWidgetClass(widgetClass);
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
@@ -86,7 +84,6 @@
     describe("Checks", function () {
 
       before(function () {
-        const widgetClass = tester.getWidgetClass();
         verifyWidgetClass(widgetClass);
         element = tester.processLayout();
       });
@@ -117,7 +114,6 @@
   describe("Create widget", function () {
 
     before(function () {
-      const widgetClass = tester.getWidgetClass();
       verifyWidgetClass(widgetClass);
       tester.construct();
     });
@@ -126,7 +122,6 @@
       try {
         const widget = tester.construct();
         assert(widget, "widget is not defined!");
-        const widgetClass = tester.getWidgetClass();
         verifyWidgetClass(widgetClass);
         assert(widgetClass.defaultValues.classes['u-radio-group'], "Class is not defined");
       } catch (e) {
