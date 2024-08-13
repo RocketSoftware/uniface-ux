@@ -1,5 +1,5 @@
 import { Button_UXWF } from "../../../ux/button_UXWF.js";
-import {Base_UXWF} from "../../../ux/base_UXWF.js"
+import {Base_UXWF} from "../../sources/ux/base_UXWF.js"
 
 
 (function () {
@@ -8,24 +8,10 @@ import {Base_UXWF} from "../../../ux/base_UXWF.js"
     if (umockup.testLoaded()) {
         return;
     }
-    const defaultAsyncTimeout = 100; //ms
-
-    const assert = chai.assert;
     const expect = chai.expect;
-    const tester = new umockup.WidgetTester();
-    const widgetId = tester.widgetId;
-    const widgetName = tester.widgetName;
-    
-    describe("Uniface Mockup tests", function () {
+    const sandbox = sinon.createSandbox();
 
-        it("Get class " + widgetName, function () {
-            const widgetClass = tester.getWidgetClass();
-            assert(widgetClass, `Widget class '${widgetName}' is not defined!
-            Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
-        });
-    });
-
-    describe(widgetName + " constructor properly defined", function () {
+    describe("Base_UXWF constructor properly defined", function () {
 
         it('constructor', function () {
             let base = new Base_UXWF();
@@ -33,10 +19,10 @@ import {Base_UXWF} from "../../../ux/base_UXWF.js"
         });
     });
 
-    describe(widgetName + " test Base_UXWF Class methods", function () {
+    describe(" test Base_UXWF Class methods", function () {
 
         let base, widgetClass, propId, setterClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, defaultValue, triggerName,
-        url, functionName, message, consequence, data
+        url, functionName, message, consequence, data, consoleLogSpy
 
         beforeEach(function () {
             base = new Base_UXWF();
@@ -164,14 +150,20 @@ import {Base_UXWF} from "../../../ux/base_UXWF.js"
             functionName = "tooBoolean"
             message = "Function does not return that value"
             consequence = "Aborting"
+            consoleLogSpy = sandbox.spy(console, 'warn');
             base.warn(functionName, message, consequence)
+            expect(consoleLogSpy.called).to.equal(true)
+            sandbox.restore();
         });
 
         it("error", function () {
             functionName = "tooBoolean"
             message = "Function does not return that value"
             consequence = "Aborting"
+            consoleLogSpy = sandbox.spy(console, 'error');
             base.error(functionName, message, consequence)
+            expect(consoleLogSpy.called).to.equal(true)
+            sandbox.restore();
         });
     });
 })();
