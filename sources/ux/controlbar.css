@@ -20,13 +20,13 @@
   flex-shrink: 0;
 }
 
-.u-start-section > *,
-.u-center-section > *,
-.u-end-section > * {
+.u-start-section>*,
+.u-center-section>*,
+.u-end-section>* {
   margin: 0 4px;
 }
 
-.u-controlbar[orientation="vertical"] {
+.u-controlbar[u-orientation="vertical"] {
   flex-direction: column;
 }
 

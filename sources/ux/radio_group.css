@@ -1,0 +1,46 @@
+.u-radio-group .u-radio {
+    margin: calc(var(--design-unit) * 1px) 0;
+}
+
+.u-radio-group .u-label-text {
+    display: block;
+    color: var(--neutral-foreground-rest);
+    cursor: pointer;
+    font-family: var(--body-font);
+    font-size: var(--type-ramp-base-font-size);
+    line-height: var(--type-ramp-base-line-height);
+    font-weight: initial;
+    font-variation-settings: var(--type-ramp-base-font-variations);
+}
+
+/* Styles the ellipsis */
+.u-radio-group[orientation="horizontal"] fluent-radio::part(label) {
+    display: flex;
+    align-items: center;
+  }
+
+/* Add ellipsis to horizontal layout */
+.u-radio-group[orientation="horizontal"] .u-radio span {
+    max-width: 25ch;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .u-radio-group .u-radio .u-valrep-representation {
+    margin-inline-end: calc((var(--design-unit) * 1px) + 0px);
+  }
+
+  .u-radio-group .u-radio .u-valrep-value {
+    color: var(--neutral-base-color);
+    font-style: italic;
+  }
+  
+  /* Styling the valrep value to enclose it within parentheses. */
+  .u-radio-group .u-radio .u-valrep-value::before {
+    content: "(";
+  }
+  
+  .u-radio-group .u-radio .u-valrep-value::after {
+    content: ")";
+  }
