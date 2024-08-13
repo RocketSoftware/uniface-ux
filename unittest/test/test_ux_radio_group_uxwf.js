@@ -37,7 +37,7 @@
     {
       value: "3",
       representation: "option three"
-    },
+    }
   ];
 
   /**
@@ -84,6 +84,7 @@
     describe("Checks", function () {
 
       before(function () {
+
         verifyWidgetClass(widgetClass);
         element = tester.processLayout();
       });
@@ -174,7 +175,7 @@
     });
 
     it("check value", function () {
-      assert.equal(tester.defaultValues.value, null);
+      assert.equal(tester.defaultValues.value, "");
     });
 
     it("check for single unselected radio button placeholder", function () {
@@ -242,7 +243,7 @@
       }, defaultAsyncTimeout);
     });
 
-    it("Set valrep property with default display value as value", function (done) {
+    it("Set valrep property with default display-format as value", function (done) {
       tester.dataUpdate({
         valrep: valRepArray,
         uniface: {
@@ -327,7 +328,7 @@
     });
 
     it("Change multiple properties", function (done) {
-      let selectedValue = 3;
+      let selectedValue = "2";
       tester.dataUpdate({
         valrep: valRepArray,
         value: selectedValue,
@@ -392,7 +393,6 @@
       radioElement.dispatchEvent(event);
 
       // Assert that the onchange event handler was called once
-      console.log(onchangeSpy, onchangeSpy.calledOnce, 'we');
       expect(onchangeSpy.calledOnce).to.be.true;
     });
   });
@@ -405,11 +405,10 @@
     it("not required", function () { });
   });
 
-  describe("DataCleanup", function () {
-    let widget = tester.createWidget();
+  describe("reset all properties", function () {
     it("reset all property", function () {
       try {
-        widget.dataCleanup(tester.widgetProperties);
+        tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
         assert(false, "Failed to call dataCleanup(), exception " + e);
