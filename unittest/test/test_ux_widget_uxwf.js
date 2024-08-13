@@ -124,6 +124,7 @@ export class TestWidget extends Widget_UXWF {
             let detailTrigger = testwidget.mapTrigger("detail")
             expect(detailTrigger.element).instanceOf(HTMLElement);
             expect(detailTrigger.event_name).to.eql("click");
+            expect(onchangeTrigger.element).to.have.tagName("FLUENT-TEXT-FIELD");
         });
 
         it("dataInit", function () {
