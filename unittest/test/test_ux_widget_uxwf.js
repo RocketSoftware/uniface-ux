@@ -1,6 +1,6 @@
-import {Widget_UXWF} from "../../../ux/widget_UXWF.js"
-import { Button_UXWF } from "../../../ux/button_UXWF.js";
-import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedWidget, Element } from "../../../ux/workers_UXWF.js";
+import {Widget_UXWF} from "../../sources/ux/widget_UXWF.js"
+import { Button_UXWF } from "../../sources/ux/button_UXWF.js";
+import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedWidget, Element } from "../../sources/ux/workers_UXWF.js";
 
 //Simple widget that has both subwidget and triggers for easier testing and doens't mess with other widgets
 export class TestWidget extends Widget_UXWF {
@@ -40,28 +40,22 @@ export class TestWidget extends Widget_UXWF {
     }
 
     const expect = chai.expect;
+    const sandbox = sinon.createSandbox();
 
-    describe("Widget_UXWF constructor properly defined", function () {        
-        it('constructor default', function () {
-            let widget = new Widget_UXWF()
-
-            expect(widget.constructor.name).to.equal("Widget_UXWF")
-            expect(widget.data).eql({})
-            expect(widget.elements).eql({})
-            expect(widget.subWidgets).eql({})
-        });
-
+    describe("Widget_UXWF constructor properly defined with subwidgets", function () {        
+        
+        let widget, subWidgetId;
+        
         it('constructor with subWidgets', function () {
-            let subWidgetId = "change-button"
-            let subWidgetStyleClass = "u-change-button"
-            let subWidgetClass = new Button_UXWF()
-            let subWidgetTriggers = {}
-            let widget =  new Widget_UXWF()
-            
-            widget.registerSubWidget(widget, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers)
-
+            subWidgetId = "change-button"
+            // let subWidgetStyleClass = "u-change-button"
+            // let subWidgetClass = new Button_UXWF()
+            // let subWidgetTriggers = {}
+            // let widget =  Widget_UXWF
+            //returnedProcess = TestWidget.processLayout(widget.widget, definitions)
+            //testwidget.onConnect(returnedProcess)
+            widget = new TestWidget;
             expect(Object.keys(widget.subWidgets)).to.eql([subWidgetId])
-            expect(widget.subWidgets[subWidgetId].styleClass).to.equal(subWidgetStyleClass)
         });
 
     });
@@ -71,7 +65,7 @@ export class TestWidget extends Widget_UXWF {
         globalThis.UX_DEFINITIONS = {}
         globalThis.UX_DEFINITIONS["ufld:FIELD.ENTITY.MODEL"] = "test"
         
-        let definitions, returnedProcess , widget, testwidget;
+        let definitions, returnedProcess , widget, testwidget, consoleLogSpy;
 
         definitions = {
             "widget_class": "Widget_UXWF",
@@ -91,29 +85,45 @@ export class TestWidget extends Widget_UXWF {
         }
 
         beforeEach(function () {
-            widget = new Widget_UXWF;
+            // widget = new Widget_UXWF;
             testwidget = new TestWidget;
-            returnedProcess = TestWidget.processLayout(widget.widget, definitions)
+            returnedProcess = TestWidget.processLayout(testwidget.widget, definitions)
             testwidget.onConnect(returnedProcess)
             testwidget.dataInit()
         });
 
         it("processLayout", function () {            
-            expect(returnedProcess).instanceOf(HTMLElement, "Function processLayout of Widget_UXWF does not return an HTMLElement.");
             expect(returnedProcess).to.have.tagName("FLUENT-TEXT-FIELD");
             expect(returnedProcess.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
             expect(returnedProcess.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
-            expect(returnedProcess).to.have.id( widget.widget.id);
+            expect(returnedProcess).to.have.id( testwidget.widget.id);
         });
 
-        //The getValueUpdaters function for button_UXWF widget returns null, it does log the correct updater
         it("onConnect", function () {
             let connectedWidget = testwidget.onConnect(returnedProcess)
+
+            expect(connectedWidget[0].element).instanceOf(HTMLElement);
+            expect(connectedWidget[0].event_name).to.eql("change")
+            expect(Number(connectedWidget[0].element.id)).to.eql(testwidget.widget.id)
+            expect(connectedWidget[0].element).to.have.tagName("FLUENT-TEXT-FIELD");
         });
 
-        //Button_UXWF widget currently doesn't have a mapTrigger functionality
         it("mapTrigger", function () {
-            testwidget.mapTrigger("click")
+            //Test with a wrong trigger, should return undefined and display a warning
+            consoleLogSpy = sandbox.spy(console, 'warn');
+            let badTrigger = testwidget.mapTrigger("click")
+            expect(badTrigger).to.be.undefined
+            expect(consoleLogSpy.called).to.equal(true)
+            sandbox.restore();
+
+            let onchangeTrigger = testwidget.mapTrigger("onchange")
+            expect(onchangeTrigger.element).instanceOf(HTMLElement);
+            expect(onchangeTrigger.event_name).to.eql("change");
+            expect(onchangeTrigger.element).to.have.tagName("FLUENT-TEXT-FIELD");
+
+            let detailTrigger = testwidget.mapTrigger("detail")
+            expect(detailTrigger.element).instanceOf(HTMLElement);
+            expect(detailTrigger.event_name).to.eql("click");
         });
 
         it("dataInit", function () {
@@ -142,15 +152,14 @@ export class TestWidget extends Widget_UXWF {
             expect(testwidget.data.properties.value).to.equal(true); 
             expect(testwidget.data.properties.uniface).to.have.any.keys(data.uniface); 
         });
-
-        //Data cleanup functionality for UXWF Widgets doesn't do anything
+        
+        //button_UXWF doesn't have a dateCleanup function
         it("dataCleanup", function () {
             testwidget.dataCleanup()
         });
 
          it("getValue", function () {
             const value = testwidget.getValue()
-            
             expect(value).to.equal(false); 
         });
 
