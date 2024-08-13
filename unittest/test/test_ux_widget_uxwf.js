@@ -1,9 +1,6 @@
 import {Widget_UXWF} from "../../../ux/widget_UXWF.js"
 import { Button_UXWF } from "../../../ux/button_UXWF.js";
-import { Worker, Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedWidget, Element } from "../../../ux/workers_UXWF.js";
-import { Switch_UXWF } from "../../../ux/switch_UXWF.js";
-
-
+import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedWidget, Element } from "../../../ux/workers_UXWF.js";
 
 //Simple widget that has both subwidget and triggers for easier testing and doens't mess with other widgets
 export class TestWidget extends Widget_UXWF {
@@ -42,25 +39,11 @@ export class TestWidget extends Widget_UXWF {
         return;
     }
 
-    const defaultAsyncTimeout = 100; //ms
-
-    const assert = chai.assert;
     const expect = chai.expect;
-    const tester = new umockup.WidgetTester();
-    const widgetId = tester.widgetId;
-    const widgetName = tester.widgetName;
-    describe("Uniface Mockup tests", function () {
 
-        it("Get class " + widgetName, function () {
-            const widgetClass = tester.getWidgetClass();
-            assert(widgetClass, `Widget class '${widgetName}' is not defined!
-            Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
-        });
-    });
-
-    describe(widgetName + " constructor properly defined", function () {        
+    describe("Widget_UXWF constructor properly defined", function () {        
         it('constructor default', function () {
-            let widget = tester.construct();
+            let widget = new Widget_UXWF()
 
             expect(widget.constructor.name).to.equal("Widget_UXWF")
             expect(widget.data).eql({})
@@ -73,7 +56,7 @@ export class TestWidget extends Widget_UXWF {
             let subWidgetStyleClass = "u-change-button"
             let subWidgetClass = new Button_UXWF()
             let subWidgetTriggers = {}
-            let widget = tester.construct();
+            let widget =  new Widget_UXWF()
             
             widget.registerSubWidget(widget, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers)
 
@@ -83,7 +66,7 @@ export class TestWidget extends Widget_UXWF {
 
     });
 
-    describe(widgetName + " Class methods", function () {
+    describe("Widget_UXWF Class methods", function () {
 
         globalThis.UX_DEFINITIONS = {}
         globalThis.UX_DEFINITIONS["ufld:FIELD.ENTITY.MODEL"] = "test"
@@ -91,7 +74,7 @@ export class TestWidget extends Widget_UXWF {
         let definitions, returnedProcess , widget, testwidget;
 
         definitions = {
-            "widget_class": tester.getWidgetClass(),
+            "widget_class": "Widget_UXWF",
             "properties": {
                 "controls-center": "four\u001bfive\u001bsix",
                 "controls-end": "seven",
@@ -116,7 +99,7 @@ export class TestWidget extends Widget_UXWF {
         });
 
         it("processLayout", function () {            
-            expect(returnedProcess).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+            expect(returnedProcess).instanceOf(HTMLElement, "Function processLayout of Widget_UXWF does not return an HTMLElement.");
             expect(returnedProcess).to.have.tagName("FLUENT-TEXT-FIELD");
             expect(returnedProcess.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
             expect(returnedProcess.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
