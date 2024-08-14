@@ -12,15 +12,10 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     if (umockup.testLoaded()) {
         return;
     }
-    const defaultAsyncTimeout = 100; //ms
 
-    const assert = chai.assert;
     const expect = chai.expect;
-    const tester = new umockup.WidgetTester();
-    const widgetId = tester.widgetId;
-    const widgetName = tester.widgetName;
 
-    describe("Uniface Mockup tests for " + widgetName, function () {
+    describe("Tests for Workers_UXWF", function () {
 
         let widgetClass;
         let worker;
@@ -58,7 +53,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing ClassStyle class =========================================================================================
     // ===================================================================================================================
-    describe(widgetName +  "Test ClassStyle Class", function () {
+    describe("Test ClassStyle Class", function () {
         let widgetClass;
         let defaultClassList;
         let instance;
@@ -104,7 +99,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing Elements class =========================================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test Element Class", function () {
+    describe(" Test Element Class", function () {
 
         let widgetClass;
         let tagname;
@@ -161,7 +156,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing Slotted Elements class =========================================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test Slotted Elements Class", function () {
+    describe(" Test Slotted Elements Class", function () {
 
         let widgetClass;
         let propText;
@@ -229,7 +224,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing SlottedError class =========================================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test SlottedError Class", function () {
+    describe(" Test SlottedError Class", function () {
 
         let widgetClass;
         let slottedError;
@@ -289,7 +284,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
      // ===================================================================================================================
     // == Testing SlottedWidget class =========================================================================================
     // ===================================================================================================================
-    describe(widgetName + " test SlottedWidget Class", function () {
+    describe(" test SlottedWidget Class", function () {
         let widgetClass;
         let subWidgetId;
         let subWidgetName;
@@ -349,7 +344,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing SlottedWidgetsByProperty class ==========================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test SlottedWidgetsByProperty Class", function () {
+    describe(" Test SlottedWidgetsByProperty Class", function () {
 
         globalThis.UX_DEFINITIONS = {}
         globalThis.UX_DEFINITIONS["ufld:FIELD.ENTITY.MODEL"] = "test"
@@ -412,7 +407,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing WidgetsByProperty class ==========================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test WidgetsByProperty Class", function () {
+    describe("Test WidgetsByProperty Class", function () {
           
         let widgetClass;
         let tagName;
@@ -459,7 +454,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing BaseHtmlAttribute class ================================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test BaseHtmlAttribute Class", function () {
+    describe(" Test BaseHtmlAttribute Class", function () {
   
         let widgetClass;
         let propId;
@@ -554,7 +549,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing HtmlAttribute class ==========================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test HtmlAttribute Class", function () {
+    describe(" Test HtmlAttribute Class", function () {
 
         let widgetClass;
         let propId;
@@ -598,7 +593,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing HtmlAttributeChoice class ==========================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test HtmlAttributeChoice Class", function () {
+    describe(" Test HtmlAttributeChoice Class", function () {
 
         let widgetClass;
         let propId;
@@ -645,7 +640,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing HtmlAttributeNumber class ==========================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test HtmlAttributeNumber Class", function () {
+    describe(" Test HtmlAttributeNumber Class", function () {
 
         let widgetClass;
         let propId;
@@ -695,7 +690,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing HtmlAttributeBoolean class ==========================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test HtmlAttributeBoolean Class", function () {
+    describe(" Test HtmlAttributeBoolean Class", function () {
 
         let widgetClass;
         let propId;
@@ -743,7 +738,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing HtmlValueAttributeBoolean class ==========================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test HtmlValueAttributeBoolean Class", function () {
+    describe(" Test HtmlValueAttributeBoolean Class", function () {
 
         let widgetClass;
         let propId;
@@ -797,7 +792,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing HtmlAttributeMinMaxLength class ==========================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test HtmlAttributeMinMaxLength Class", function () {
+    describe(" Test HtmlAttributeMinMaxLength Class", function () {
 
         let widgetClass;
         let propMin;
@@ -867,7 +862,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing StyleProperty class ==========================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test StyleProperty Class", function () {
+    describe(" Test StyleProperty Class", function () {
 
         let widgetClass;
         let property;
@@ -918,7 +913,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     // ===================================================================================================================
     // == Testing Trigger class ==========================================================================
     // ===================================================================================================================
-    describe(widgetName + " Test Trigger Class", function () {
+    describe(" Test Trigger Class", function () {
 
         let widgetClass;
         let triggerName;
