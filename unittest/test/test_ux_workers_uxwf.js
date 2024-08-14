@@ -1,9 +1,9 @@
-import { Button_UXWF } from "../../../ux/button_UXWF.js";
-import { Widget_UXWF } from "../../../ux/widget_UXWF.js";
+import { Button_UXWF } from "../../sources/ux/button_UXWF.js";
+import { Widget_UXWF } from "../../sources/ux/widget_UXWF.js";
 import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidget, SlottedWidgetsByProperty, 
     WidgetsByProperty , BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean ,
     HtmlValueAttributeBoolean , HtmlAttributeMinMaxLength , StyleProperty , Worker
- } from "../../../ux/workers_UXWF.js"
+ } from "../../sources/ux/workers_UXWF.js"
 
 
 (function () {
