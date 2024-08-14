@@ -1,5 +1,4 @@
 import {Widget_UXWF} from "../../sources/ux/widget_UXWF.js"
-import { Button_UXWF } from "../../sources/ux/button_UXWF.js";
 import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedWidget, Element } from "../../sources/ux/workers_UXWF.js";
 
 //Simple widget that has both subwidget and triggers for easier testing and doens't mess with other widgets
@@ -48,12 +47,6 @@ export class TestWidget extends Widget_UXWF {
         
         it('constructor with subWidgets', function () {
             subWidgetId = "change-button"
-            // let subWidgetStyleClass = "u-change-button"
-            // let subWidgetClass = new Button_UXWF()
-            // let subWidgetTriggers = {}
-            // let widget =  Widget_UXWF
-            //returnedProcess = TestWidget.processLayout(widget.widget, definitions)
-            //testwidget.onConnect(returnedProcess)
             widget = new TestWidget;
             expect(Object.keys(widget.subWidgets)).to.eql([subWidgetId])
         });
@@ -85,7 +78,6 @@ export class TestWidget extends Widget_UXWF {
         }
 
         beforeEach(function () {
-            // widget = new Widget_UXWF;
             testwidget = new TestWidget;
             returnedProcess = TestWidget.processLayout(testwidget.widget, definitions)
             testwidget.onConnect(returnedProcess)
