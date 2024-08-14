@@ -1,4 +1,4 @@
-import { Button_UXWF } from "../../../ux/button_UXWF.js";
+import { Button_UXWF } from "../../sources/ux/button_UXWF.js";
 import {Base_UXWF} from "../../sources/ux/base_UXWF.js"
 
 
