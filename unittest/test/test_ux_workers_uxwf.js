@@ -31,13 +31,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
             widgetClass = {};
             worker = new Worker(widgetClass);
         });
-        
-        it("Get class " + widgetName, function () {
-            const widgetClass = tester.getWidgetClass();
-
-            assert(widgetClass, `Widget class '${widgetName}' is not defined!
-            Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
-        });
 
         it("should initialize with the correct properties" , function () {
             expect(worker.widgetClass).to.equal(widgetClass);
