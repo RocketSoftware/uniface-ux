@@ -901,6 +901,3 @@ export class Trigger extends Worker {
     };
   }
 }
-
-
-UNIFACE.ClassRegistry.add("UX.Workers_UXWF", Worker);
