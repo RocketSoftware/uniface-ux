@@ -9,7 +9,7 @@ import {
   HtmlAttribute,
   HtmlAttributeNumber,
   HtmlAttributeChoice,
-  HtmlAttributeBoolean,
+  HtmlAttributeBoolean
 } from "./workers_UXWF.js";
 
 /**
@@ -23,7 +23,6 @@ export class Button_UXWF extends Widget_UXWF {
   /**
    * Initialize as static at derived level, so definitions are unique per widget class.
    * @static
-   * @memberof Button_UXWF
    */
 
   static subWidgets = {};
@@ -67,7 +66,7 @@ export class Button_UXWF extends Widget_UXWF {
     }
 
     refresh(widgetInstance) {
-      this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription() });
+      this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
       super.refresh(widgetInstance);
       let element = this.getElement(widgetInstance);
       let text = this.getNode(widgetInstance.data.properties, "value");
@@ -81,13 +80,13 @@ export class Button_UXWF extends Widget_UXWF {
     }
 
     getValue(widgetInstance) {
-      this.log("getValue", { widgetInstance: widgetInstance.getTraceDescription() });
+      this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
       let text = this.getNode(widgetInstance.data.properties, "value");
       return text;
     }
 
     getValueUpdaters(widgetInstance) {
-      this.log("getValueUpdaters", { widgetInstance: widgetInstance.getTraceDescription() });
+      this.log("getValueUpdaters", { "widgetInstance": widgetInstance.getTraceDescription() });
       return;
     }
   };
@@ -129,7 +128,7 @@ export class Button_UXWF extends Widget_UXWF {
     }
 
     refresh(widgetInstance) {
-      this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription() });
+      this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
       super.refresh(widgetInstance);
       let element = this.getElement(widgetInstance);
       let text = this.getNode(widgetInstance.data.properties, "value");
@@ -167,7 +166,7 @@ export class Button_UXWF extends Widget_UXWF {
   };
 
   /**
-   * Widget Definition
+   * Widget Definition.
    */
   static structure = new Element(
     this,
@@ -178,13 +177,7 @@ export class Button_UXWF extends Widget_UXWF {
       new HtmlAttribute(this, "html:current-value", "currentValue", ""),
       new HtmlAttribute(this, "html:title", "title", undefined),
       new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-      new HtmlAttributeChoice(
-        this,
-        "html:appearance",
-        "appearance",
-        ["neutral", "accent", "outline", "lightweight", "stealth"],
-        "neutral"
-      ),
+      new HtmlAttributeChoice(this, "html:appearance", "appearance", ["neutral", "accent", "outline", "lightweight", "stealth"], "neutral"),
       new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
       new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
       new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
@@ -211,5 +204,4 @@ export class Button_UXWF extends Widget_UXWF {
     this.log("hideError");
   }
 }
-
 UNIFACE.ClassRegistry.add("UX.Button_UXWF", Button_UXWF);

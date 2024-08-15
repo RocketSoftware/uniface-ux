@@ -1,22 +1,17 @@
-/* global */
-
+/* global UNIFACE, UX */
 
 (function () {
-  'use strict';
+  "use strict";
 
   // This widget provides controls allowing development and testing of your custom web widgets.
-  //
-  // INSTRUCTIONS:
-  // 1. Create a DSP with an entity and a field
+  // Instructions:
+  // 1. Create a DSP with an entity and a field.
   // 2. Assign your custom web widget to one of these objects, depending on the object type your widget
   //    is suited, either component, entity, or field.
   // 3. Create one more non-dbms entity and a field where the field is of datatype String and interface C*.
-  //    Assign this widget to the field.
-  // 4. Set the SUBJECT_NAME propery to the name of the object using your custom web widget.
-  // 5. Add a placeholder element for the UTest widget somewhere in the layout of your DSP.
-  
+  //    Assign uxFastControls widget to the field.
   class FastControls {
-    constructor() {}
+    constructor() { }
 
     static processLayout(skeleton_element) {
       const element = document.createElement("div");
@@ -30,40 +25,40 @@
       this.elements.widget = element;
       return [
         {
-          element: this.elements.widget,
-          event_name: "change",
+          "element": this.elements.widget,
+          "event_name": "change",
         },
       ];
     }
 
-    onDisconnect() {}
+    onDisconnect() { }
 
     mapTrigger(trigger_name) {
       if (trigger_name.startsWith("button_")) {
         const element = this.createButton(trigger_name);
         this.elements.widget.appendChild(element);
         return {
-          element: element,
-          event_name: "click",
-          validate: true,
-        }
+          "element": element,
+          "event_name": "click",
+          "validate": true,
+        };
       } else if (trigger_name.startsWith("check_")) {
         const element = this.createCheckbox(trigger_name);
         this.elements.widget.appendChild(element);
         return {
-          element: element,
-          event_name: "change",
-          validate: true,
-        }
+          "element": element,
+          "event_name": "change",
+          "validate": true,
+        };
       } else if (trigger_name.startsWith("radio_")) {
         const element = this.createRadioGroup(trigger_name);
         this.elements.widget.appendChild(element);
         return {
-          element: element,
-          event_name: "change",
-          validate: true,
-        }
-      } 
+          "element": element,
+          "event_name": "change",
+          "validate": true,
+        };
+      }
     }
 
     dataInit() {
@@ -82,8 +77,6 @@
         }
       }
     }
-
-    dataCleanup(data_names) {}
 
     getValue() {
       let value = {};
@@ -107,8 +100,6 @@
     }
 
     validate() {}
-
-    showError(errorMessage) {}
 
     hideError() {}
 
@@ -152,11 +143,11 @@
       const element = document.createElement("span");
       element.setAttribute("u-fast-control", "radiogroup");
       element.setAttribute("u-trigger_name", triggerName);
-      element.style = "display: grid; grid-template-columns: 1fr; align-content: start;"
+      element.style = "display: grid; grid-template-columns: 1fr; align-content: start;";
       const label = document.createElement("span");
-      label.innerText = labelText
+      label.innerText = labelText;
       element.appendChild(label);
-      radioButtons.forEach((value, i) => {
+      radioButtons.forEach((value) => {
         const radio = document.createElement("label");
         radio.style.whiteSpace = "nowrap";
         const input = document.createElement("input");
@@ -172,16 +163,13 @@
       });
       return element;
     }
-    
-    
   }
 
-  // Add widget class to YOUR namespace and register widget class with Uniface.
-  if (typeof (UX) == "undefined" || UX == null) {
-    UX = {};
+  // Add the widget class to the UX namespace.
+  if (typeof window.UX == "undefined" || window.UX == null) {
+    window.UX = {};
   }
   UX.FastControls = FastControls;
+  // Make the widget class known to the UNIFACE framework.
   UNIFACE.ClassRegistry.add("UX.FastControls", FastControls);
-
-}());
-
+})();

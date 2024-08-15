@@ -1,7 +1,7 @@
 .u-select {
-  flex-direction: column;
   vertical-align: bottom;
 }
+
 
 /**
  * Setting min-height to a default value. This is done to enable the correct
@@ -9,16 +9,6 @@
  */
 .u-select::part(control) {
   min-height: unset;
-}
-
-/* Unset opacity which is set by disabled property through uniface readonly property. */
-.u-select.u-readonly::part(label),
-.u-select.u-readonly::part(control) {
-  opacity: unset;
-}
-
-.u-select.u-readonly::part(control) {
-  background: padding-box linear-gradient(var(--neutral-fill-rest), var(--neutral-fill-rest)), border-box var(--neutral-stroke-control-rest);
 }
 
 .u-select .u-placeholder {
@@ -52,9 +42,8 @@
   outline-offset: unset;
 }
 
-/* Styling the outline for focus-visible and focus-within visualization. */
-.u-select:focus-visible::part(control),
-.u-select:focus-within::part(control) {
+/* Styling the outline for focus-visible visualization. */
+.u-select:focus-visible::part(control) {
   outline: calc(var(--focus-stroke-width) * 1px) solid var(--focus-stroke-outer);
   outline-offset: calc(var(--focus-stroke-width) * -1px);
 }
