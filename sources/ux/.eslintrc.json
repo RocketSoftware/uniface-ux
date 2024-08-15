@@ -14,7 +14,7 @@
             "globalReturn": false,
             "impliedStrict": true
         },
-        "sourceType": "script"
+        "sourceType": "module"
     },
     "rules": {
         // loosen eslint:recommended

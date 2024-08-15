@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>UX Unit Test</title>
+    <title>UX Widget Test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link type="text/css" rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css"/>
@@ -32,7 +32,7 @@
     <link type="text/css" rel="stylesheet" href="../../sources/ux/controlbar.css"/>
     <link type="text/css" rel="stylesheet" href="../../sources/ux/toolbar.css"/>
 
-
+    <!-- Mocha related -->
     <link type="text/css" rel="stylesheet" href="../node_modules/mocha/mocha.css" />
     <script type="text/javascript" src="../node_modules/mocha/mocha.js"></script>
     <script type="text/javascript" src="../node_modules/chai/chai.js"></script>
@@ -44,19 +44,20 @@
       mocha.checkLeaks();
     </script>
   </head>
+
   <body style="margin: 2em;">
-    
-    <h2>Refactored UX-Widget: <span id="widget-name"></span></h2>
+    <h2>UX-Widget: <span id="widget-name"></span></h2>
 
     <div id="widget-container">
-      <span id="ux-widget">UX.Button</span>
+      <span id="ux-widget">Widget container</span>
     </div>
 
     <hr/>
     <!-- To load test script -->
     <script id="test-script" type="module"></script>
 
-    <h2>Mocha Unit Test: <span id="test-script-name"></span></h2>
+    <h2>Widget Test: <span id="test-script-name"></span></h2>
+    <h2 id="test-error"></h2>
 
     <div id="mocha"></div>
     <script class="mocha-exec" type="module">
@@ -64,10 +65,8 @@
       const widgetName = umockup.getWidgetName();
       const scriptName = umockup.getTestJsName();
 
-      document.title = "Unit test - " + widgetName + " - " + scriptName;
+      document.title = "Widget test - " + widgetName + " - " + scriptName;
       let el = document.getElementById("widget-name");
-      el.innerHTML = widgetName;
-      el = document.getElementById("ux-widget");
       el.innerHTML = widgetName;
 
       el = document.getElementById("test-script-name");
@@ -75,14 +74,19 @@
 
       // dynamically load test script
       el = document.getElementById("test-script");
-      el.src = scriptName;
-      el.onload = function () {
-        mocha.run();
-      };
+      if (scriptName) {
+        el.src = scriptName;
+        el.onload = function () {
+          mocha.run();
+        };
 
-      el.onerror = function () {
-        console.log("Failed to load");
-      };
+        el.onerror = function () {
+          console.log("Failed to load test script " + scriptName);
+          document.getElementById("test-error").innerHTML = "Failed to load the script! Please check script name or verify that file <u><i>"+scriptName+"</i></u> is available in folder!";
+        };
+      } else {
+        document.getElementById("test-error").innerHTML = "The script name \"\" entered is empty. Please enter a widget name!!";
+      }
     </script>
 
   </body>

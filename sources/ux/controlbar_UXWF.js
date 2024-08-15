@@ -1,13 +1,10 @@
-//@ts-check
-
+// @ts-check
+/* global UNIFACE */
 import { Widget_UXWF } from "./widget_UXWF.js";
-import { Worker, Element, StyleClass, Trigger, WidgetsByProperty } from "./workers_UXWF.js";
-import { HtmlAttribute, HtmlAttributeNumber, HtmlAttributeChoice, HtmlAttributeBoolean } from "./workers_UXWF.js";
-import "https://unpkg.com/@fluentui/web-components";
+import { Element, StyleClass, WidgetsByProperty, HtmlAttributeChoice } from "./workers_UXWF.js";
 
 /**
- * Setter that maintains 
- *
+ * Controlbar Widget
  * @export
  * @class Controlbar_UXWF
  * @extends {Widget_UXWF}
@@ -15,34 +12,32 @@ import "https://unpkg.com/@fluentui/web-components";
 export class Controlbar_UXWF extends Widget_UXWF {
 
   /**
-   * Initialize as static at derived level, so definitions are unique per widget class.  
-   *
+   * Initialize as static at derived level, so definitions are unique per widget class.
    * @static
-   * @memberof Controlbar_UXWF
    */
   static subWidgets = {};
+  static subWidgetWorkers = [];
   static defaultValues = {};
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "disabled";  // or "readonly" 
+  // This widget does not have uiBlocking of its own but the subWidget may have.
+  static uiBlocking = "";
 
   /**
-    WIDGET DEFINITION
-  **/
-  static structure = new Element(this, "div", "", "", [
-    new StyleClass(this, ["u-controlbar"]),
-  ], [
-    new Element(this, "div", "u-start-section", ".u-start-section", [], [
-      new WidgetsByProperty(this, "span", "", "", "uniface:controls-start")
-    ]),
-    new Element(this, "div", "u-center-section", ".u-center-section", [], [
-      new WidgetsByProperty(this, "span", "", "", "uniface:controls-center")
-    ]),
-    new Element(this, "div", "u-end-section", ".u-end-section", [], [
-      new WidgetsByProperty(this, "span", "", "", "uniface:controls-end")
-    ])
-  ]);
-
+   * Widget definition.
+   */
+  static structure = new Element(
+    this,
+    "div",
+    "",
+    "",
+    [new HtmlAttributeChoice(this, "uniface:orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true), new StyleClass(this, ["u-controlbar"])],
+    [
+      new Element(this, "div", "u-start-section", ".u-start-section", [], [new WidgetsByProperty(this, "span", "", "", "controls-start")]),
+      new Element(this, "div", "u-center-section", ".u-center-section", [], [new WidgetsByProperty(this, "span", "", "", "controls-center")]),
+      new Element(this, "div", "u-end-section", ".u-end-section", [], [new WidgetsByProperty(this, "span", "", "", "controls-end")]),
+    ]
+  );
 }
 UNIFACE.ClassRegistry.add("UX.Controlbar_UXWF", Controlbar_UXWF);
