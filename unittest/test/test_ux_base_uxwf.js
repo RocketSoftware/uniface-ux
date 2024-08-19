@@ -1,6 +1,6 @@
 import { Button_UXWF } from "../../sources/ux/button_UXWF.js";
 import {Base_UXWF} from "../../sources/ux/base_UXWF.js"
-
+import { Worker } from "../../sources/ux/workers_UXWF.js";
 
 (function () {
     'use strict';
@@ -22,20 +22,34 @@ import {Base_UXWF} from "../../sources/ux/base_UXWF.js"
     describe(" test Base_UXWF Class methods", function () {
 
         let base, widgetClass, propId, setterClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, defaultValue, triggerName,
-        url, functionName, message, consequence, data, consoleLogSpy
+        url, functionName, message, consequence, data, consoleLogSpy, worker
 
         beforeEach(function () {
             base = new Base_UXWF();
         });
 
         it("registerSetter", function () {
-            widgetClass = {}
+            widgetClass = Button_UXWF
+            worker = new Worker(widgetClass);
             propId = "html:disabled"
-            setterClass = {}
-            base.registerSetter(widgetClass, propId, setterClass)
-            expect(String(Object.keys(widgetClass.setters))).to.equal("html")
-            expect(String(Object.keys(widgetClass.setters.html))).to.equal("disabled")
 
+            base.registerSetter(widgetClass, propId, worker)
+
+            expect(String(Object.keys(widgetClass.setters))).to.include("html")
+            expect(String(Object.keys(widgetClass.setters.html))).to.include("disabled")
+            expect(widgetClass.setters.html.disabled).to.have.lengthOf(2)
+            expect(widgetClass.setters.html.disabled[1].constructor.name).to.equal("Worker")
+        });
+
+        it("registerGetter", function () {
+            widgetClass = Button_UXWF
+            propId = "html:disabled"
+            worker = new Worker(widgetClass);
+            base.registerGetter(widgetClass, propId, worker)
+
+            expect(String(Object.keys(widgetClass.getters))).to.include("html")
+            expect(String(Object.keys(widgetClass.getters.html))).to.equal("disabled")
+            expect(widgetClass.getters.html.disabled.constructor.name).to.equal("Worker")
         });
 
         it("registerSubWidget", function () {
@@ -58,14 +72,6 @@ import {Base_UXWF} from "../../sources/ux/base_UXWF.js"
             expect(String(Object.keys(widgetClass.defaultValues))).to.equal("html")
             expect(String(Object.keys(widgetClass.defaultValues.html))).to.equal("disabled")
             expect(widgetClass.defaultValues.html.disabled).to.equal(defaultValue)
-        });
-
-        it("registerGetter", function () {
-            widgetClass = {}
-            propId = "html:disabled"
-            base.registerGetter(widgetClass, propId, this)
-            expect(String(Object.keys(widgetClass.getters))).to.equal("html")
-            expect(String(Object.keys(widgetClass.getters.html))).to.equal("disabled")
         });
 
         it("registerTrigger", function () {
