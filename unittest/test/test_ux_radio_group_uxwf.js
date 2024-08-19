@@ -307,7 +307,7 @@
       tester.dataUpdate({
         valrep: valRepArrayLongText,
         uniface: {
-          "display-format" : "rep",
+          "display-format": "rep",
           "layout": "horizontal"
         }
       });
@@ -333,8 +333,8 @@
         valrep: valRepArray,
         value: selectedValue,
         html: {
-          "disabled" : true,
-          "readonly" : false
+          "disabled": true,
+          "readonly": false
         },
         classes: { "ClassA": true },
         uniface: {
@@ -411,7 +411,7 @@
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, "Failed to reset all properties, exception " + e);
       }
     });
   });
