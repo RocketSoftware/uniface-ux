@@ -22,8 +22,8 @@ import { Widget_UXWF } from "../../sources/ux/widget_UXWF.js";
 
     describe(" test Base_UXWF Class methods", function () {
 
-        let base, widgetClass, propId, setterClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, defaultValue, triggerName,
-        url, functionName, message, consequence, data, consoleLogSpy, worker
+        let base, widgetClass, propId, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, defaultValue, triggerName,
+        url, functionName, message, consequence, consoleLogSpy, worker
 
         beforeEach(function () {
             base = new Base_UXWF();
