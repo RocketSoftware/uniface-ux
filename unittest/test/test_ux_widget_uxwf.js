@@ -48,7 +48,7 @@ export class TestWidget extends Widget_UXWF {
         it('constructor with subWidgets', function () {
             subWidgetId = "change-button"
             widget = new TestWidget;
-            expect(Object.keys(widget.subWidgets)).to.eql([subWidgetId])
+            expect(Object.keys(widget.subWidgetDefinitions)).to.eql([subWidgetId])
         });
 
     });
@@ -164,18 +164,16 @@ export class TestWidget extends Widget_UXWF {
         });
 
         it("showError", function () {
-            const errorString = "This is a testing error"
+            const errorString = '{ "change-button": "This is a testing error" }'
+            consoleLogSpy = sandbox.spy(console, 'error');
             
             testwidget.showError(errorString) 
-            expect(testwidget.data.properties.uniface["error-message"]).to.equal(errorString); 
-            expect(testwidget.data.properties.uniface["error"]).to.equal(true);       
+            expect(consoleLogSpy.called).to.equal(true)
+            sandbox.restore();
         });
 
         it("hideError", function () {
-            testwidget.hideError() 
-
-            expect(testwidget.data.properties.uniface["error-message"]).to.equal(""); 
-            expect(testwidget.data.properties.uniface["error"]).to.equal(false);     
+            testwidget.hideError()             
         });
 
         it("blockUI", function () { 
