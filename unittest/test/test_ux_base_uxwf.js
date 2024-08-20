@@ -163,7 +163,7 @@ import { Widget_UXWF } from "../../sources/ux/widget_UXWF.js";
         });
 
         it("getFormattedValrep", function () {
-            let valRepString = "valrep1=value1 valrep2=value2"
+            let valRepString = "valrep1=value1valrep2=value2"
             let formattedValReps = base.getFormattedValrep(valRepString)
             
             expect(formattedValReps).to.have.lengthOf(2)
