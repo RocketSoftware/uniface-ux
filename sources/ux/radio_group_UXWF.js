@@ -52,12 +52,7 @@ export class RadioGroup_UXWF extends Widget_UXWF {
      * @param {String} styleClass
      * @param {String} elementQuerySelector
      */
-    constructor(
-      widgetClass,
-      tagName,
-      styleClass,
-      elementQuerySelector,
-    ) {
+    constructor(widgetClass, tagName, styleClass, elementQuerySelector) {
       super(widgetClass, tagName, styleClass, elementQuerySelector);
       this.registerSetter(widgetClass, "uniface:layout", this);
     }
@@ -69,7 +64,7 @@ export class RadioGroup_UXWF extends Widget_UXWF {
       valRepRadioElement.forEach((radioButton) => {
         let label = radioButton.querySelector("span");
         let labelText = label && label.textContent ? label.textContent : " ";
-        if (layout === 'horizontal' && labelText.length > 25) {
+        if (layout === "horizontal" && labelText.length > 25) {
           // Append tooltip to the label text
           const tooltipId = String(Math.random());
           radioButton.id = tooltipId;
@@ -98,29 +93,24 @@ export class RadioGroup_UXWF extends Widget_UXWF {
   /**
    * Widget Definition.
    */
-  static structure = new Element(
-    this,
-    "fluent-radio-group",
-    "",
-    "",
-    [
-      new StyleClass(this, ["u-radio-group"]),
-      new HtmlAttribute(this, "html:current-value", "current-value", ""),
-      new HtmlAttribute(this, "value", "value", ""),
-      new HtmlAttributeBoolean(this, "html:aria-disabled", "ariaDisabled", false),
-      new HtmlAttributeBoolean(this, "html:aria-readonly", "ariaReadOnly", false),
-      new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
-      new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
-      new HtmlAttributeBoolean(this, "html:required", "required", false),
-      new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
-      new HtmlAttributeChoice(this, "uniface:layout", "orientation", ["vertical", "horizontal"], "vertical", true)
-    ],
-    [
-      new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
-      new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
-      new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
-    ],
-    [new Trigger(this, "onchange", "change", true)],
-  );
+  // prettier-ignore
+  static structure = new Element(this, "fluent-radio-group", "", "", [
+    new StyleClass(this, ["u-radio-group"]),
+    new HtmlAttribute(this, "html:current-value", "current-value", ""),
+    new HtmlAttribute(this, "value", "value", ""),
+    new HtmlAttributeBoolean(this, "html:aria-disabled", "ariaDisabled", false),
+    new HtmlAttributeBoolean(this, "html:aria-readonly", "ariaReadOnly", false),
+    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
+    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
+    new HtmlAttributeBoolean(this, "html:required", "required", false),
+    new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
+    new HtmlAttributeChoice(this, "uniface:layout", "orientation", ["vertical", "horizontal"], "vertical", true)
+  ], [
+    new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
+    new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
+  ], [
+    new Trigger(this, "onchange", "change", true)
+  ]);
 }
 UNIFACE.ClassRegistry.add("UX.RadioGroup_UXWF", RadioGroup_UXWF);

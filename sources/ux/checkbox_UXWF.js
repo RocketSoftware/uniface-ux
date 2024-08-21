@@ -128,9 +128,7 @@ export class Checkbox_UXWF extends Widget_UXWF {
       if (!widgetInstance.data.ignoreChangeEvent) {
         event.preventDefault();
         let newValue;
-        const isTriState = widgetInstance.toBoolean(
-          widgetInstance.data.properties.uniface["tri-state"]
-        );
+        const isTriState = widgetInstance.toBoolean(widgetInstance.data.properties.uniface["tri-state"]);
         switch (widgetInstance.data.currentValue) {
           case true:
             newValue = false;
@@ -188,9 +186,7 @@ export class Checkbox_UXWF extends Widget_UXWF {
         "widgetInstance": widgetInstance.getTraceDescription(),
         "attrName": this.attrName,
       });
-      const value = widgetInstance.elements.widget.indeterminate
-        ? ""
-        : widgetInstance.elements.widget.checked;
+      const value = widgetInstance.elements.widget.indeterminate ? "" : widgetInstance.elements.widget.checked;
       return value;
     }
 
@@ -230,31 +226,26 @@ export class Checkbox_UXWF extends Widget_UXWF {
   /**
    * Widget definition.
    */
-  static structure = new Element(
-    this,
-    "fluent-checkbox",
-    "",
-    "",
-    [
-      new StyleClass(this, ["u-checkbox"]),
-      new HtmlAttribute(this, "html:role", "role", "checkbox"),
-      new HtmlAttribute(this, "html:title", "title", ""),
-      new HtmlAttribute(this, "html:current-value", "currentValue", "on"),
-      new this.HTMLValueAttributeTristate(this, "value", "checked", false),
-      new HtmlAttributeBoolean(this, "html:aria-checked", "ariaChecked", false),
-      new HtmlAttributeBoolean(this, "html:aria-required", "ariaRequired", false),
-      new HtmlAttributeBoolean(this, "html:aria-disabled", "ariaDisabled", false),
-      new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
-      new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
-      new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-      new HtmlAttributeBoolean(this, "html:current-checked", "currentChecked", false),
-    ],
-    [
-      new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
-      new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
-    ],
-    [new Trigger(this, "onchange", "valuechange", true)]
-  );
+  // prettier-ignore
+  static structure = new Element(this, "fluent-checkbox", "", "", [
+    new StyleClass(this, ["u-checkbox"]),
+    new HtmlAttribute(this, "html:role", "role", "checkbox"),
+    new HtmlAttribute(this, "html:title", "title", ""),
+    new HtmlAttribute(this, "html:current-value", "currentValue", "on"),
+    new this.HTMLValueAttributeTristate(this, "value", "checked", false),
+    new HtmlAttributeBoolean(this, "html:aria-checked", "ariaChecked", false),
+    new HtmlAttributeBoolean(this, "html:aria-required", "ariaRequired", false),
+    new HtmlAttributeBoolean(this, "html:aria-disabled", "ariaDisabled", false),
+    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
+    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
+    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new HtmlAttributeBoolean(this, "html:current-checked", "currentChecked", false),
+  ], [
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
+  ], [
+    new Trigger(this, "onchange", "valuechange", true)
+  ]);
 }
 
 UNIFACE.ClassRegistry.add("UX.Checkbox_UXWF", Checkbox_UXWF);

@@ -32,7 +32,10 @@ export class Controlbar_UXWF extends Widget_UXWF {
     "div",
     "",
     "",
-    [new HtmlAttributeChoice(this, "uniface:orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true), new StyleClass(this, ["u-controlbar"])],
+    [
+      new HtmlAttributeChoice(this, "uniface:orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
+      new StyleClass(this, ["u-controlbar"]),
+    ],
     [
       new Element(this, "div", "u-start-section", ".u-start-section", [], [new WidgetsByProperty(this, "span", "", "", "controls-start")]),
       new Element(this, "div", "u-center-section", ".u-center-section", [], [new WidgetsByProperty(this, "span", "", "", "controls-center")]),

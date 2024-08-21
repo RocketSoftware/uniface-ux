@@ -2,6 +2,7 @@
 
 import { Widget_UXWF } from "./widget_UXWF.js"; // eslint-disable-line no-unused-vars
 import { Worker } from "./workers_UXWF.js"; // eslint-disable-line no-unused-vars
+
 /**
  * UX Widget generic helper functions.
  * @export
@@ -122,7 +123,7 @@ export class Base_UXWF {
    * The UXWF deals with sub-widgets transparently, like generate their layouts, instantiate them, invoke their onConnect
    * get their value, map their triggers, update their properties, etc.
    * @param {typeof Widget_UXWF} widgetClass - Specifies the widget-class for which the worker will be registered.
-   * @param {*} worker - Specifies the worker.
+   * @param {Worker} worker - Specifies the worker.
    */
   // @ts-ignore
   registerSubWidgetWorker(widgetClass, worker) {
@@ -132,9 +133,12 @@ export class Base_UXWF {
   getNode(node, url) {
     if (url) {
       url = url.split(":");
-      url.forEach((key) => {
-        node = node[key];
-      });
+      for (let i = 0; i < url.length; i++) {
+        node = node[url[i]];
+        if (node === undefined) {
+          return undefined;
+        }
+      }
       return node;
     } else {
       return undefined;
@@ -154,12 +158,7 @@ export class Base_UXWF {
         break;
       case "string":
         value = value.toUpperCase();
-        if (
-          value.substring(0, 1) === "1" ||
-          value.substring(0, 1) === "T" ||
-          value.substring(0, 1) === "Y" ||
-          value.substring(0, 1) === "J"
-        ) {
+        if (value.substring(0, 1) === "1" || value.substring(0, 1) === "T" || value.substring(0, 1) === "Y" || value.substring(0, 1) === "J") {
           result = true;
         }
         break;
@@ -261,15 +260,56 @@ export class Base_UXWF {
   }
 
   /**
+   * Calls an objectDefinition function, as specified by the instruction string, and returns the result of that function call.
+   * Returns a error message if the instruction is of an incorrect format or the requested function does not exist.
+   * @param {UObjectDefinition} objectDefinition
+   * @param {String} instruction  ; Instruction string of syntax: "function({arg1{,arg2{...,argN}}})"
+   * @return {*}
+   * @memberof Base_UXWF
+   */
+  objectDefinitionFunctionCall(objectDefinition, instruction) {
+    // Check whether instruction is a proper function call: func(), func(a), or func(a,b,c)
+    if (/^\w+\([\w\s-:,]*\)$/.test(instruction)) {
+      const funcName = instruction.split("(")[0];
+      const args = instruction.split("(")[1].split(")")[0].split(",");
+      switch (funcName) {
+        case "getType":
+          return objectDefinition.getType();
+        case "getName":
+          return objectDefinition.getName();
+        case "getShortName":
+          return objectDefinition.getShortName();
+        case "getProperty":
+          return objectDefinition.getProperty(args[0]);
+        case "getWidgetClass":
+          return objectDefinition.getWidgetClass();
+        case "getCollectionWidgetClass":
+          return objectDefinition.getCollectionWidgetClass();
+        case "getOccurrenceWidgetClass":
+          return objectDefinition.getOccurrenceWidgetClass();
+        default:
+          return `Unknown function detected (${funcName}). Allowed: getType(), getName(), getShortName(), getProperty(propId), getWidgetClass(), getCollectionWidgetClass(), getOccurrenceWidgetClass()`;
+      }
+    } else {
+      return `Invalid instruction detected (${instruction}). Expected: func(), func(a), func(a,b), ...`;
+    }
+  }
+
+  substituteInstructions(objectDefinition, string) {
+    return string.replaceAll(/{{(.*?)}}/gi, (instruction) => {
+      instruction = instruction.substring(2, instruction.length - 2);
+      return this.objectDefinitionFunctionCall(objectDefinition, instruction);
+    });
+  }
+
+  /**
    * Warning log function.
    * @param {String} functionName
    * @param {String} message
    * @param {String} consequence
    */
   warn(functionName, message, consequence) {
-    console.warn(
-      `${this.constructor.name}.${functionName}: ${message} - ${consequence}.`
-    );
+    console.warn(`${this.constructor.name}.${functionName}: ${message} - ${consequence}.`);
   }
 
   /**
@@ -279,8 +319,6 @@ export class Base_UXWF {
    * @param {String} consequence
    */
   error(functionName, message, consequence) {
-    console.error(
-      `${this.constructor.name}.${functionName}: ${message} - ${consequence}.`
-    );
+    console.error(`${this.constructor.name}.${functionName}: ${message} - ${consequence}.`);
   }
 }

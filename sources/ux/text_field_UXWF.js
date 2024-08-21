@@ -38,52 +38,38 @@ export class TextField_UXWF extends Widget_UXWF {
   /**
    * Widget Definition.
    */
-  static structure = new Element(
-    this,
-    "fluent-text-field",
-    "",
-    "",
-    [
-      new HtmlAttribute(this, "html:current-value", "current-value", ""),
-      new HtmlAttribute(this, "value", "value", ""),
-      new HtmlAttribute(this, "html:title", "title", undefined),
-      new HtmlAttribute(this, "html:pattern", "pattern", undefined),
-      new HtmlAttribute(this, "html:placeholder", "placeholder", undefined),
-      new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, undefined),
-      new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
-      new HtmlAttributeChoice(this, "html:type", "type", ["text", "email", "password", "tel", "url", "date"], "text"),
-      new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "", true),
-      new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-      new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
-      new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
-      new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
-      new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
-      new StyleClass(this, ["u-text-field", "outline"]),
-    ],
-    [
-      new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
-      new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
-      new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
-      new SlottedElement(this, "span", "u-suffix", ".u-suffix", "end", "uniface:suffix-text", "", "uniface:suffix-icon", ""),
-      new SlottedWidget(
-        this,
-        "span",
-        "",
-        "",
-        "end",
-        "changebutton",
-        "UX.Button_UXWF",
-        {
-          "uniface:icon-position": "end",
-          "html:tabindex": "-1",
-          "html:appearance": "stealth",
-        },
-        false,
-        ["detail"]
-      ),
-    ],
-    [new Trigger(this, "onchange", "change", true)]
-  );
+  // prettier-ignore
+  static structure = new Element(this, "fluent-text-field", "", "", [
+    new HtmlAttribute(this, "html:current-value", "current-value", ""),
+    new HtmlAttribute(this, "value", "value", ""),
+    new HtmlAttribute(this, "html:title", "title", undefined),
+    new HtmlAttribute(this, "html:pattern", "pattern", undefined),
+    new HtmlAttribute(this, "html:placeholder", "placeholder", undefined),
+    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, undefined),
+    new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
+    new HtmlAttributeChoice(this, "html:type", "type", ["text", "email", "password", "tel", "url", "date"], "text"),
+    new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "", true),
+    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
+    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
+    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
+    new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
+    new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
+    new StyleClass(this, ["u-text-field", "outline"]),
+  ], [
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
+    new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
+    new SlottedElement(this, "span", "u-suffix", ".u-suffix", "end", "uniface:suffix-text", "", "uniface:suffix-icon", ""),
+    new SlottedWidget(this, "span", "", "", "end", "changebutton", "UX.Button_UXWF", {
+      "uniface:icon-position": "end",
+      "html:tabindex": "-1",
+      "html:appearance": "stealth",
+    }, false, [
+      "detail"
+    ]),
+  ], [
+    new Trigger(this, "onchange", "change", true)
+  ]);
 
   /**
    * Private Uniface API method - onConnect.
@@ -119,14 +105,14 @@ export class TextField_UXWF extends Widget_UXWF {
   validate() {
     this.log("validate");
     // Return any HTML5 validation errors.
-    let html5ValidationMessage;
+    let validationMessage;
     if (!this.elements.widget.control.checkValidity()) {
-      html5ValidationMessage = this.elements.widget.control.validationMessage;
+      validationMessage = this.elements.widget.control.validationMessage;
     } else if (this.data.properties.html.minlength > 0 && this.elements.widget.value.length < this.data.properties.html.minlength) {
-      // HTML5 minlength validation errors are not detected by fluent, Hence we manually add the HTML5 minlength validation message.
-      html5ValidationMessage = `Please lengthen this text to ${this.data.properties.html.minlength} characters or more (you are currently using ${this.elements.widget.value.length} characters).`;
+      // minlength errors are not detected by HTML5. Do it now.
+      validationMessage = `String must be at least consist of ${this.data.properties.html.minlength} characters.`;
     }
-    return html5ValidationMessage;
+    return validationMessage;
   }
 }
 
