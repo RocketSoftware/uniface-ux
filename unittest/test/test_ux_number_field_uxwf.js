@@ -130,14 +130,14 @@
     describe("mapTrigger", function () {
         const element = tester.processLayout();
         const widget = tester.onConnect();
-        widget.mapTrigger("click");
-        const event = new window.Event('click');
+        widget.mapTrigger("onchange");
+        const event = new window.Event('onchange');
         element.dispatchEvent(event);
         assert(widget.elements.widget === element, "widget is not connected");
     })
 
-    describe('Map Trigger click event', function () {
-        let numberElement, onClickSpy;
+    describe('Number Field onchange event', function () {
+        let numberElement, onChangeSpy;
     
         beforeEach(function () {
     
@@ -145,10 +145,10 @@
           numberElement = tester.element;
     
           // Create a spy for the click event
-          onClickSpy = sinon.spy();
+          onChangeSpy = sinon.spy();
     
           // Add the click event listener to the number field element
-          numberElement.addEventListener('click', onClickSpy);
+          numberElement.addEventListener('onchange', onChangeSpy);
         });
     
         // Clean up after each test
@@ -157,14 +157,14 @@
           sinon.restore();
         });
     
-        // Test case for the click event
-        it('should call the click event handler when the number field is clicked', function () {
-          // Simulate a click event
-          const event = new window.Event('click');
+        // Test case for the on change event
+        it('should call the onchange event handlerr when the number field is changed', function () {
+          // Simulate a onchange event
+          const event = new window.Event('onchange');
           numberElement.dispatchEvent(event);
     
           // Assert that the click event handler was called once
-          expect(onClickSpy.calledOnce).to.be.true;
+          expect(onChangeSpy.calledOnce).to.be.true;
         });
       });
 
