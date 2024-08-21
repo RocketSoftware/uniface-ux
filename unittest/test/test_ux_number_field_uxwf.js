@@ -158,12 +158,12 @@
         });
     
         // Test case for the on change event
-        it('should call the onchange event handlerr when the number field is changed', function () {
+        it('should call the onchange event handler when the number field is changed', function () {
           // Simulate a onchange event
           const event = new window.Event('onchange');
           numberElement.dispatchEvent(event);
     
-          // Assert that the click event handler was called once
+          // Assert that the onchange event handler was called once
           expect(onChangeSpy.calledOnce).to.be.true;
         });
       });
