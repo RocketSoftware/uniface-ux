@@ -296,7 +296,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
             widgetClass = Widget_UXWF;
             subWidgetName = "UX.Button_UXWF";
             tagName = "DIV"
-            subWidgetId = "Button"
+            subWidgetId = "undefined"
             slottedWidget = new SlottedWidget(widgetClass, tagName, "styleClass", "", "", subWidgetId, subWidgetName, {}, "");
         });
 
@@ -306,13 +306,13 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
 
         it("Check getters/setters changed and subWidget added", function () {
             expect(slottedWidget.subWidgetClass.name).to.equal("Button_UXWF")
-            expect(slottedWidget.propId).to.equal("uniface:Button")
+            expect(slottedWidget.propId).to.equal("uniface:undefined")
          });
 
          it("Check Generate Layout", function () {
             let layoutElement = slottedWidget.getLayout()
             
-            expect(layoutElement).to.have.class('u-sw-Button')
+            expect(layoutElement).to.have.class('u-sw-undefined')
             expect(layoutElement.hidden).to.equal(true)
             expect(layoutElement).to.have.tagName('FLUENT-BUTTON')
          });
@@ -331,11 +331,12 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
                 } ,
                 getTraceDescription: () => { return "description" }
             }
-            widgetInstance.elements.widget.classList.add(".u-sw-Button");
-            console.log("HELLO " , widgetInstance.elements.widget)
+            
+            slottedWidget.elementQuerySelector = ""
             slottedWidget.refresh(widgetInstance)
+            
             expect(widgetInstance.elements.widget.hidden).to.equal(false);
-            expect(widgetInstance.elements.widget.classList[0]).to.equal("styleClass-shown");
+            expect(widgetInstance.elements.widget.classList[0]).to.equal("u-sw-undefined-shown");
 
             delete widgetInstance.data.properties.uniface["undefined"]
             slottedWidget.refresh(widgetInstance)
@@ -358,7 +359,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let definitions;
 
         beforeEach(function () {
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             element = new WidgetsByProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
         });
 
@@ -372,7 +373,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
 
         it("Check Generate Layout", function () {
             definitions = {
-                "widget_class": tester.getWidgetClass(),
+                "widget_class": "UXWF_Button",
                 "properties": {
                     "controls-center": "four\u001bfive\u001bsix",
                     "controls-end": "seven",
@@ -406,7 +407,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let value;
 
         beforeEach(function () {
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             propId = "value"
             attrName = "contentEditable"
             defaultValue = "1"
@@ -498,7 +499,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let element;
 
         beforeEach(function () {
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             propId = "uniface:icon-position"
             attrName = "button"
             defaultValue = "1"
@@ -543,7 +544,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let element;
 
         beforeEach(function () {
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             propId = "uniface:icon-position"
             attrName = "button"
             defaultValue = "1"
@@ -591,7 +592,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let element;
 
         beforeEach(function () {
-            widgetClass = {}
+            widgetClass = Widget_UXWF
             propId = "uniface:numberValue"
             attrName = "newReturnNumber"
             defaultValue = "1"
@@ -639,7 +640,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let element;
 
         beforeEach(function () {
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             propId = "uniface:icon-position"
             attrName = "button"
             defaultValue = "1"
@@ -690,7 +691,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let returnedProcess;
 
         beforeEach(function () {
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             propId = "uniface:icon-position"
             attrName = "ariaValueMax"
             defaultValue = "1"
@@ -743,7 +744,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let divElement;
 
         beforeEach(function () {
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             propMin = "uniface:min"
             propMax = "uniface:max"
             defaultMin = 0
@@ -809,7 +810,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let element;
 
         beforeEach(function () {
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             property = {
                 id : "propertyClass" ,
                 value : 26
@@ -862,7 +863,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let element;
 
         beforeEach(function () {
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             triggerName = "NameofTrigger"
             eventName = "EventName"
             validate = "Validated"
