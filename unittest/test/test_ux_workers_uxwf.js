@@ -59,7 +59,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let instance;
 
         beforeEach(function () {
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             defaultClassList = ['class1', 'class2'];
             instance = new StyleClass(widgetClass, defaultClassList);
         });
@@ -112,14 +112,14 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let definitions;
 
         beforeEach(function () {
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             tagname = "DIV";
             elementQuerySelector = "div"
             styleclass = "styleClass"
-            attributeDefines = [new StyleClass(this, ["u-switch"]) , new HtmlAttribute(this, "html:role", "role", "switch"),]
-            elementDefines = [new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"), 
-                new SlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "uniface:checked-message")]
-            triggerDefines = [new Trigger(this, "onchange", "change", true)]
+            attributeDefines = [new StyleClass(widgetClass, ["u-switch"]) , new HtmlAttribute(widgetClass, "html:role", "role", "switch"),]
+            elementDefines = [new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"), 
+                new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "uniface:checked-message")]
+            triggerDefines = [new Trigger(widgetClass, "onchange", "change", true)]
             element = new Element(widgetClass, tagname, styleclass, elementQuerySelector, attributeDefines, elementDefines, triggerDefines );
         });
 
@@ -188,7 +188,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
 
         beforeEach(function () {
             tagname = "DIV";
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             propText = "uniface:text"
             propIcon = "uniface:icon"
             defaultText = "defaultText"
@@ -198,10 +198,10 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
 
         it("should initialize with correct properties", function () {
             expect(slottedElement.widgetClass).to.equal(widgetClass);
-            expect(slottedElement.propText).to.equal(propText);
-            expect(slottedElement.defaultText).to.equal(defaultText);
-            expect(slottedElement.propIcon).to.equal(propIcon);
-            expect(slottedElement.defaultIcon).to.equal(defaultIcon);
+            expect(slottedElement.textPropId).to.equal(propText);
+            expect(slottedElement.textDefaultValue).to.equal(defaultText);
+            expect(slottedElement.iconPropId).to.equal(propIcon);
+            expect(slottedElement.iconDefaultValue).to.equal(defaultIcon);
         });
 
         it("Check getters/setters changed for propIcon, propText", function () {
@@ -230,7 +230,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let slottedError;
 
         beforeEach(function () {
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             slottedError = new SlottedError(widgetClass, "", "", "", "");
         });
 
@@ -240,7 +240,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
 
         it("Check setters were added", function () {
             let setters = Object.keys(slottedError.widgetClass.setters.uniface)
-            expect(setters).to.have.lengthOf(4);
+            expect(setters).to.have.lengthOf(8);
          });
 
          it('should refresh correctly', function () {
@@ -289,28 +289,30 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let subWidgetId;
         let subWidgetName;
         let tagName;
-        let slottedError;
+        let slottedWidget;
 
 
         beforeEach(function () {
-            widgetClass = {};
+            widgetClass = Widget_UXWF;
             subWidgetName = "UX.Button_UXWF";
             tagName = "DIV"
-            slottedError = new SlottedWidget(widgetClass, tagName, "styleClass", "", "", subWidgetId, subWidgetName, {}, "");
+            subWidgetId = "Button"
+            slottedWidget = new SlottedWidget(widgetClass, tagName, "styleClass", "", "", subWidgetId, subWidgetName, {}, "");
         });
 
         it("should initialize with correct properties", function () {
-            expect(slottedError.widgetClass).to.equal(widgetClass);
+            expect(slottedWidget.widgetClass).to.equal(widgetClass);
         });
 
         it("Check getters/setters changed and subWidget added", function () {
-            expect(slottedError.subWidget.name).to.equal("Button_UXWF")
-            expect(slottedError.propId).to.equal("uniface:undefined")
+            expect(slottedWidget.subWidgetClass.name).to.equal("Button_UXWF")
+            expect(slottedWidget.propId).to.equal("uniface:Button")
          });
 
          it("Check Generate Layout", function () {
-            let layoutElement = slottedError.getLayout()
-            expect(layoutElement).to.have.class('styleClass')
+            let layoutElement = slottedWidget.getLayout()
+            
+            expect(layoutElement).to.have.class('u-sw-Button')
             expect(layoutElement.hidden).to.equal(true)
             expect(layoutElement).to.have.tagName('FLUENT-BUTTON')
          });
@@ -329,12 +331,14 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
                 } ,
                 getTraceDescription: () => { return "description" }
             }
-            slottedError.refresh(widgetInstance)
+            widgetInstance.elements.widget.classList.add(".u-sw-Button");
+            console.log("HELLO " , widgetInstance.elements.widget)
+            slottedWidget.refresh(widgetInstance)
             expect(widgetInstance.elements.widget.hidden).to.equal(false);
             expect(widgetInstance.elements.widget.classList[0]).to.equal("styleClass-shown");
 
             delete widgetInstance.data.properties.uniface["undefined"]
-            slottedError.refresh(widgetInstance)
+            slottedWidget.refresh(widgetInstance)
             expect(widgetInstance.elements.widget.hidden).to.equal(true);
             expect(widgetInstance.elements.widget.classList).to.have.lengthOf(0);
         });
