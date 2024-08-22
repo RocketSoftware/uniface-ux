@@ -77,7 +77,27 @@
       if (scriptName) {
         el.src = scriptName;
         el.onload = function () {
-          mocha.run();
+          mocha.run()
+          .on('end', function () {
+            var line;
+            line = "Results Passed : " + this.stats.passes + " || Failed : " + this.stats.failures;
+
+            var newDiv = document.createElement("div");
+            var newHr = document.createElement("hr");
+            var newResultDiv = document.createElement("div");
+
+            newDiv.id = "test-ended";
+            newResultDiv.id = "test-result";
+
+            var newContent = document.createTextNode(line);
+            newDiv.appendChild(newHr);
+            newDiv.appendChild(newResultDiv);
+            newResultDiv.appendChild(newContent);
+
+            document.body.appendChild(newDiv);
+
+            });
+          document.getElementById("test-script-name").innerHTML = scriptName;
         };
 
         el.onerror = function () {
