@@ -1,14 +1,13 @@
-//@ts-check
+// @ts-check
+/* global UNIFACE */
 
-import { Widget_UXWF } from "./widget_UXWF.js";
+import { Widget_UXWF } from "./widget_UXWF.js"; // eslint-disable-line no-unused-vars
 import { Base_UXWF } from "./base_UXWF.js";
 
-
 /**
- * WORKER BASE CLASS
- * This worker is the abstract base-class for all workers as used by widget class definitions.
+ * Worker base class.
+ * This worker is the abstract base class for all workers used by widget class definitions.
  * All worker classes need to extend this class.
- *
  * @export
  * @class Worker
  * @abstract
@@ -19,7 +18,6 @@ export class Worker extends Base_UXWF {
   /**
    * Creates an instance of Worker.
    * @param {typeof Widget_UXWF} widgetClass
-   * @memberof Worker
    */
   constructor(widgetClass) {
     super();
@@ -30,9 +28,7 @@ export class Worker extends Base_UXWF {
 
   /**
    * Sets the styleClass that identifies the element this setters work on.
-   *
    * @param {String} elementQuerySelector
-   * @memberof Worker
    */
   setElementQuerySelector(elementQuerySelector) {
     this.elementQuerySelector = elementQuerySelector;
@@ -40,14 +36,12 @@ export class Worker extends Base_UXWF {
 
   /**
    * Uses the provided styleClass, which should be unique within the widget, to return the element this setter work on.
-   *
    * @param {Widget_UXWF} widgetInstance
-   * @return {HTMLElement} 
-   * @memberof Worker
+   * @return {HTMLElement}
    */
   getElement(widgetInstance) {
     let element = widgetInstance.elements.widget;
-    if (this.elementQuerySelector && this.elementQuerySelector !== "") {
+    if (this.elementQuerySelector) {
       element = element.querySelector(this.elementQuerySelector);
     }
     return element;
@@ -55,36 +49,41 @@ export class Worker extends Base_UXWF {
 
   /**
    * Refresh widget parts this setter is responsible for based on the widget properties.
-   *
    * @param {Widget_UXWF} widgetInstance
-   * @memberof Worker
    */
-  refresh(widgetInstance) {
+  refresh(widgetInstance) {} // eslint-disable-line no-unused-vars
+
+  /**
+   * Type guard function to check if an element is an HTMLInputElement.
+   * @param {HTMLElement | null} element
+   * @returns {element is HTMLInputElement}
+   */
+  isHTMLInputElement(element) {
+    return element !== null && element instanceof HTMLInputElement;
   }
 
   /**
    * Provides setter-specific tracing.
-   *
    * @param {String} functionName
    * @param {Object} data
-   * @memberof Worker
    */
   log(functionName, data) {
     const classNames = {
-      all: true,
+      "all": false,
     };
     if (classNames.all || classNames[this.constructor.name]) {
       let data_ = "";
-      if (data) data_ = JSON.stringify(data);
+      if (data) {
+        data_ = JSON.stringify(data);
+      }
       console.log(`SETTER[${this.widgetClass.name}.${this.constructor.name}].${functionName}(${data_})`);
     }
   }
 }
 
 /**
- * WORKER: ELEMENT
- * Adds and maintains an element where the element is added as a child according the structure
- *
+ * Worker: Element
+ * Adds and maintains an element where the element is added as a child according to the widget structure.
  * @export
  * @class Element
  * @extends {Worker}
@@ -100,7 +99,6 @@ export class Element extends Worker {
    * @param {Array} [attributeDefines]
    * @param {Array} [elementDefines]
    * @param {Array} [triggerDefines]
-   * @memberof Element
    */
   constructor(widgetClass, tagName, styleClass, elementQuerySelector, attributeDefines, elementDefines, triggerDefines) {
     super(widgetClass);
@@ -111,8 +109,8 @@ export class Element extends Worker {
     this.attributeDefines = attributeDefines;
     this.elementDefines = elementDefines;
     this.triggerDefines = triggerDefines;
-    // Attributes and triggers work on an element
-    /// Make sure the setters can find the element by providing the element query selector.
+    // Attributes and triggers work on an element.
+    // Make sure the setters can find the element by providing the element query selector.
     if (this.attributeDefines) {
       this.attributeDefines.forEach((attributeDefine) => {
         attributeDefine.setElementQuerySelector(this.elementQuerySelector);
@@ -123,51 +121,48 @@ export class Element extends Worker {
         triggerDefine.setElementQuerySelector(this.elementQuerySelector);
       });
     }
-
   }
 
   /**
-   * Generate and return layout for this setter
-   *
-   * @param {UObjectDefinition} definitions
-   * @return {HTMLElement[] | HTMLElement} 
-   * @memberof SlotsWidgetByProperty
+   * Generate and return layout for this setter.
+   * @param {UObjectDefinition} objectDefinition
+   * @return {HTMLElement[] | HTMLElement}
    */
-  getLayout(definitions) {
+  getLayout(objectDefinition) {
     this.log("getLayout", null);
     let element = document.createElement(this.tagName);
     element.hidden = this.hidden;
     if (this.styleClass) {
       element.classList.add(this.styleClass);
     }
-    if (this.elementDefines) {
-      this.elementDefines.forEach((define) => {
-        let childLayout = define.getLayout(definitions);
-        if (childLayout instanceof Array) {
-          childLayout.forEach(childElement => {
-            element.appendChild(childElement);
-          });
-        } else if (childLayout) {
-          element.appendChild(childLayout);
-        }
-      });
-    }
+    this.elementDefines?.forEach((define) => {
+      let childLayout = define.getLayout(objectDefinition);
+      if (childLayout instanceof Array) {
+        childLayout.forEach((childElement) => {
+          element.appendChild(childElement);
+        });
+      } else if (childLayout) {
+        element.appendChild(childLayout);
+      }
+    });
     return element;
   }
 
   refresh(widgetInstance) {
-    this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription(), styleClass: this.styleClass });
+    this.log("refresh", {
+      "widgetInstance": widgetInstance.getTraceDescription(),
+      "styleClass": this.styleClass
+    });
     super.refresh(widgetInstance);
   }
 }
 
 /**
- * WORKER: ICON OR TEXT SLOT
+ * Worker: Slotted element with icon or inner text.
  * This setter adds an element to your widget, where:
- * - the element is added as a child according the structure
- * - the element is being slotted into the web-component (the parent element).
- * - the element has innerText and Icon capabilities
- * 
+ * - the element is added as a child according the structure,
+ * - the element is being slotted into the web-component (the parent element),
+ * - the element has innerText and Icon capabilities.
  * @export
  * @class SlottedElement
  * @extends {Element}
@@ -181,44 +176,57 @@ export class SlottedElement extends Element {
    * @param {String} styleClass
    * @param {String} elementQuerySelector
    * @param {String} slot
-   * @param {UPropName} [propText]
-   * @param {UPropValue} [defaultText]
-   * @param {UPropName} [propIcon]
-   * @param {UPropValue} [defaultIcon]
-   * @memberof SlottedElement
+   * @param {UPropName} [textPropId]
+   * @param {UPropValue} [textDefaultValue]
+   * @param {UPropName} [iconPropId]
+   * @param {UPropValue} [iconDefaultValue]
    */
-  constructor(widgetClass, tagName, styleClass, elementQuerySelector, slot, propText, defaultText, propIcon, defaultIcon) {
-    super(widgetClass, tagName, styleClass, elementQuerySelector, undefined, undefined, undefined);
+  constructor(widgetClass, tagName, styleClass, elementQuerySelector, slot, textPropId, textDefaultValue, iconPropId, iconDefaultValue) {
+    super(widgetClass, tagName, styleClass, elementQuerySelector);
     this.hidden = true;
     this.slot = slot;
-    this.propText = propText;
-    this.defaultText = defaultText;
-    this.propIcon = propIcon;
-    this.defaultIcon = defaultIcon;
-    if (this.propIcon) {
-      this.registerSetter(widgetClass, this.propIcon, this);
-      this.registerDefaultValue(widgetClass, this.propIcon, defaultIcon);
+    this.textPropId = textPropId;
+    this.textDefaultValue = textDefaultValue;
+    this.iconPropId = iconPropId;
+    this.iconDefaultValue = iconDefaultValue;
+    if (this.iconPropId) {
+      this.registerSetter(widgetClass, this.iconPropId, this);
+      this.registerDefaultValue(widgetClass, this.iconPropId, iconDefaultValue);
     }
-    if (this.propText) {
-      this.registerSetter(widgetClass, this.propText, this);
-      this.registerDefaultValue(widgetClass, this.propText, defaultText);
+    if (this.textPropId) {
+      this.registerSetter(widgetClass, this.textPropId, this);
+      this.registerDefaultValue(widgetClass, this.textPropId, textDefaultValue);
     }
+  }
+
+  getLayout(objectDefinition) { // eslint-disable-line no-unused-vars
+    this.log("getLayout", null);
+    let element = document.createElement(this.tagName);
+    element.hidden = this.hidden;
+    if (this.styleClass) {
+      element.classList.add(this.styleClass);
+    }
+    return element;
   }
 
   refresh(widgetInstance) {
     super.refresh(widgetInstance);
     let element = this.getElement(widgetInstance);
-    let icon = this.getNode(widgetInstance.data.properties, this.propIcon);
-    let text = this.getNode(widgetInstance.data.properties, this.propText);
+    let icon = this.getNode(widgetInstance.data.properties, this.iconPropId);
+    let text = this.getNode(widgetInstance.data.properties, this.textPropId);
+    this.setIconOrText(element, this.slot, icon, text);
+  }
+
+  setIconOrText(element, slot, icon, text) {
     if (icon) {
       element.hidden = false;
-      element.slot = this.slot;
+      element.slot = slot;
       element.classList.add("ms-Icon");
       element.classList.add(`ms-Icon--${icon}`);
       element.innerText = "";
     } else if (text) {
       element.hidden = false;
-      element.slot = this.slot;
+      element.slot = slot;
       Array.from(element.classList).forEach((className) => {
         if (className.startsWith("ms-")) {
           element.classList.remove(className);
@@ -227,7 +235,8 @@ export class SlottedElement extends Element {
       element.innerText = text;
     } else {
       element.hidden = true;
-      element.slot = ""; // force to default slot to avoid unwanted paddings and margins
+      // Force to default slot to avoid unwanted paddings and margins.
+      element.slot = "";
       Array.from(element.classList).forEach((className) => {
         if (className.startsWith("ms-")) {
           element.classList.remove(className);
@@ -239,12 +248,11 @@ export class SlottedElement extends Element {
 }
 
 /**
- * WORKER: ERROR SLOT
+ * Worker: Slotted error element.
  * This setter adds an element to your widget, where:
- * - the element is added as a child according the structure
- * - the element is being slotted into the web-component (the parent element).
+ * - the element is added as a child according the structure,
+ * - the element is being slotted into the web-component (the parent element),
  * - the element provides the data-validation error visualization of the widget.
- *
  * @export
  * @class SlottedError
  * @extends {Element}
@@ -258,10 +266,9 @@ export class SlottedError extends Element {
    * @param {String} styleClass
    * @param {String} elementQuerySelector
    * @param {String} slot
-   * @memberof SlottedError
    */
   constructor(widgetClass, tagName, styleClass, elementQuerySelector, slot) {
-    super(widgetClass, tagName, styleClass, elementQuerySelector, undefined, undefined, undefined);
+    super(widgetClass, tagName, styleClass, elementQuerySelector);
     this.hidden = true;
     this.slot = slot;
     this.registerSetter(widgetClass, "uniface:error", this);
@@ -309,12 +316,11 @@ export class SlottedError extends Element {
 }
 
 /**
- * WORKER: SUB-WIDGET SLOT
- * This setter adds an element to your widget, where:
- * - the element is added as a child according the structure
- * - the element is a UX widget
+ * Worker: Slotted sub-widget.
+ * This worker adds and maintains a sub-widget to the widget, where:
+ * - the element is added as a child according the structure.
+ * - the element is a UX widget.
  * - the element is being slotted into the web-component (the parent element).
- *
  * @export
  * @class SlottedWidget
  * @extends {Element}
@@ -323,208 +329,363 @@ export class SlottedWidget extends Element {
 
   /**
    * Creates an instance of SlottedWidget.
-   * 
    * @param {typeof Widget_UXWF} widgetClass
    * @param {String} tagName
    * @param {String} styleClass
    * @param {String} elementQuerySelector
    * @param {String} slot
    * @param {String} subWidgetId
-   * @param {String} subWidgetName
+   * @param {String} subWidgetClassName
    * @param {Object} subWidgetDefaultValues
    * @param {Boolean} visible
    * @param {Array} subWidgetTriggers
-   * @memberof SlottedWidget
    */
-  constructor(widgetClass, tagName, styleClass, elementQuerySelector, slot, subWidgetId, subWidgetName, subWidgetDefaultValues, visible, subWidgetTriggers) {
-    super(widgetClass, tagName, styleClass, elementQuerySelector, undefined, undefined, undefined);
-    this.subWidget = UNIFACE.ClassRegistry.get(subWidgetName);
-    if (this.subWidget) {
+  constructor(
+    widgetClass,
+    tagName,
+    styleClass,
+    elementQuerySelector,
+    slot,
+    subWidgetId,
+    subWidgetClassName,
+    subWidgetDefaultValues,
+    visible,
+    subWidgetTriggers
+  ) {
+    // Redefine styleClass with hard-coded values based on sub-widget id
+    styleClass = `u-sw-${subWidgetId}`;
+    elementQuerySelector = `.${styleClass}`;
+    super(widgetClass, tagName, styleClass, elementQuerySelector);
+    this.subWidgetId = subWidgetId;
+    this.subWidgetClass = UNIFACE.ClassRegistry.get(subWidgetClassName);
+    if (this.subWidgetClass) {
       if (subWidgetDefaultValues) {
         Object.keys(subWidgetDefaultValues).forEach((propId) => {
           this.registerDefaultValue(widgetClass, `${subWidgetId}:${propId}`, subWidgetDefaultValues[propId]);
         });
       }
       this.slot = slot;
-      this.styleClass = styleClass;
-      // Register setter that makes sub-widget visible and register default value for it
+      // Register sub-widget and the property workers that toggle the sub-widget visible attribute.
       this.propId = `uniface:${subWidgetId}`;
       this.registerSetter(widgetClass, this.propId, this);
       this.registerDefaultValue(widgetClass, this.propId, visible);
-      // Register sub-widget with current widget
-      this.registerSubWidget(widgetClass, subWidgetId, this.subWidget, this.styleClass, subWidgetTriggers);
+      this.registerSubWidget(widgetClass, subWidgetId, this.subWidgetClass, this.styleClass, subWidgetTriggers);
     } else {
-      this.error("constructor", `Widget with name '${subWidgetName}' not found in UNIFACE.widgetRepository.`, "Not available")
+      this.error("constructor", `Widget class with name '${subWidgetClassName}' not found in UNIFACE.widgetRepository.`, "Not available");
     }
   }
 
   getLayout() {
     let element = document.createElement(this.tagName);
-    element = this.subWidget.processLayout(element);
+    element = this.subWidgetClass.processLayout(element);
     element.hidden = true;
-    if (this.styleClass) element.classList.add(this.styleClass);
+    element.classList.add(this.styleClass);
     return element;
   }
 
   refresh(widgetInstance) {
     super.refresh(widgetInstance);
-    let element = this.getElement(widgetInstance);
-    if (element) {
-      if (this.toBoolean(this.getNode(widgetInstance.data.properties, this.propId))) {
-        element.hidden = false;
-        element.slot = this.slot || "";
-        widgetInstance.elements.widget.classList.add(`${this.styleClass}-shown`);
-      } else {
-        element.hidden = true;
-        element.slot = "";
-        widgetInstance.elements.widget.classList.remove(`${this.styleClass}-shown`);
-      }
+    let widgetElement = widgetInstance.elements.widget;
+    let subWidgetElement = this.getElement(widgetInstance);
+    if (this.toBoolean(this.getNode(widgetInstance.data.properties, this.propId))) {
+      subWidgetElement.hidden = false;
+      subWidgetElement.slot = this.slot || "";
+      widgetElement.classList.add(`${this.styleClass}-shown`);
     } else {
-      this.error("refresh", `No sub-widget element found for styleClass '${this.styleClass}'`, "Ignored");
+      subWidgetElement.hidden = true;
+      subWidgetElement.slot = "";
+      widgetElement.classList.remove(`${this.styleClass}-shown`);
     }
   }
 }
 
+
 /**
- * WORKER: SUB-WIDGET SLOT GENERATED BY UNIFACE PROPERTIES
- * This setter adds one or more slotted sub-widgets to the widget based on web-defnitions.
- * This happens statically during processLayout and cannot be changed dynamically.
-  * The property, of which the name is specified by propId, holds an array of subWidgetIds of the to be added sub-widgets:
- *   ["sub-widget1", "sub-widget2", "sub-widget3", "sub-widget4"]
- * For every sub-widget, a separate property needs to be available thatto specify the widget-class of the sub-widgets as registered with UNIFACE.classRegistry,
- * where the property name is prefixed by the subWidgetId: "<subWidgetId>:widget-class"
- *   "sub-widget1:widget-class" - Must specify the name of the sub-widget as registered with UNIFACE.classRegistry
- *
+ * Worker: Widget that will be bound to a Uniface data object by providing the binding id.
+ * This worker only provides the getLayout() method, because once the layout is provided (executed as part of processLayout())
+ * Uniface takes over and directly creates and maintains the widget (or widgets).
+ * This worker sets  the binding as provided by an argument of the worker's constructor.
+ * This worker does not define the widget-class to be used, that is provided by Uniface.
  * @export
- * @class SlottedWidgetsByProperty
- * @extends {Element}
+ * @class Widget
+ * @extends {Worker}
  */
-export class SlottedWidgetsByProperty extends Element {
+export class Widget extends Worker {
 
   /**
-   * Creates an instance of SlottedWidgetsByProperty.
-   * 
-   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget class definition the setter is created for
-   * @param {String} tagName - Specifies the wub-widget's element tag-name
-   * @param {String} styleClass - Specifies the style class for custom styling of the sub-widget
-   * @param {String} elementQuerySelector - Specifies the questySelector to find the sub-eidget back
-   * @param {String} slot - Specifies the slot in which the sub-widget needs to be slotted
-   * @param {UPropName} propId - specifies the property used to add sub-widgets.
-   * @param {Object} [subWidgetDefaultValues] - specifies default values for the sub-widget
-   * @memberof SlottedWidgetsByProperty
+   * Creates an instance of Widget.
+   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget class definition the worker is created for.
+   * @param {String} tagName - Specifies the sub-widget's element tag-name in the skeleton layout.
+   * @param {String} bindingId - Specifies the binding id.
    */
-  constructor(widgetClass, tagName, styleClass, elementQuerySelector, slot, propId, subWidgetDefaultValues) {
-    super(widgetClass, tagName, styleClass, elementQuerySelector, undefined, undefined, undefined);
-    this.subWidgetDefaultValues = subWidgetDefaultValues;
-    this.slot = slot;
-    this.styleClass = styleClass;
-    this.propId = propId;
+  constructor(widgetClass, tagName, bindingId) {
+    super(widgetClass);
+    this.tagName = tagName;
+    this.bindingId = bindingId;
   }
 
   /**
-   * Generate and reurn layout for this setter
-   *
-   * @param {UObjectDefinition} definitions
+   * Generate and return layout for this setter.
+   * @param {UObjectDefinition} objectDefinition
    * @return {HTMLElement[]}
-   * @memberof SlotsWidgetByProperty
    */
-  getLayout(definitions) {
+  getLayout(objectDefinition) {
     let elements = [];
-    let actualSubWidgetIds = [];
-    let subWidgetIds = definitions.getProperty(this.propId);
-    if (subWidgetIds) {
-      // Convert Uniface list into array
-      subWidgetIds = subWidgetIds.split("");
-      subWidgetIds.forEach(subWidgetId => {
-        let propName = `${subWidgetId}:widget-class`;
-        let subWidgetClassName = definitions.getProperty(propName);
-        if (subWidgetClassName) {
-          let subWidgetClass = UNIFACE.ClassRegistry.get(subWidgetClassName);
-          if (subWidgetClass) {
-            actualSubWidgetIds.push(subWidgetId);
-            let element = document.createElement(this.tagName);
-            element = subWidgetClass.processLayout(element, definitions);
-            if (this.styleClass) element.classList.add(this.styleClass);
-            elements.push(element);
-          } else {
-            this.warn("getLayout", `Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry.`, `Creation of sub-widget '${subWidgetId}' skipped`);
-          }
-        } else {
-          this.warn("getLayout", `Property '${propName}' not defined for object.`, `Creation of sub-widget '${subWidgetId}' skipped`);
-        }
-      });
-    } else {
-      this.warn("getLayout", `Property '${this.propId}' not defined for object.`, "Creation of sub-widgets skipped")
-    }
-    // Some sub-widgets might not get created -> update the property
-    definitions.setProperty(this.propId, actualSubWidgetIds);
+    let element = document.createElement(this.tagName);
+    element.id = this.substituteInstructions(objectDefinition, this.bindingId);
+    elements.push(element);
     return elements;
   }
 }
 
+/**
+ * Worker: Generated sub-widgets based on Uniface properties.
+ * This worker adds one or more sub-widgets to the widget based on object definitions.
+ * This happens once during processLayout and cannot be changed afterwards.
+ * The property, of which the name is specified by propId, holds a Uniface list of subWidgetIds which are be added as sub-widgets:
+ *   "sub-widget1;sub-widget2;sub-widget3;sub-widget4"
+ * For each sub-widget, additional properties need to be available:
+ *   - "<subWidgetId>:widget-class" - defines the sub-widget's widget-class as registered with UNIFACE.classRegistry
+ *   - "<subWidgetId>:properties" - defines a list of property ids that need to be passed on to the sub-widget;
+ *     if not defined, all properties are passed on to the sub-widget.
+ *   - "<subWidgetId>:triggers" - defines a list of trigger names that need to be mapped on to the wub-widget;
+ *     if not defined, all triggers are mapped to the sub-widget.
+ * The sub-widgets receive a style-class, of syntax "u-sw-<subWidgetId>", to allow custom styling of the sub-widgets.
+ * @export
+ * @class WidgetsByProperty
+ * @extends {Element}
+ */
 export class WidgetsByProperty extends Element {
 
   /**
    * Creates an instance of WidgetsByProperty.
-   * 
-   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget class definition the setter is created for
-   * @param {String} tagName - Specifies the wub-widget's element tag-name
-   * @param {String} styleClass - Specifies the style class for custom styling of the sub-widget
-   * @param {String} elementQuerySelector - Specifies the questySelector to find the sub-eidget back
+   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget class definition the setter is created for.
+   * @param {String} tagName - Specifies the wub-widget's element tag-name.
+   * @param {String} styleClass - Specifies the style class for custom styling of the sub-widget.
+   * @param {String} elementQuerySelector - Specifies the querySelector to find the sub-widget back.
    * @param {UPropName} propId - specifies the property used to get the ids of the to be added sub-widgets.
-   * @memberof SlottedWidgetsByProperty
    */
   constructor(widgetClass, tagName, styleClass, elementQuerySelector, propId) {
-    super(widgetClass, tagName, styleClass, elementQuerySelector, undefined, undefined, undefined);
+    super(widgetClass, tagName, styleClass, elementQuerySelector);
     this.styleClass = styleClass;
     this.propId = propId;
+    this.registerSubWidgetWorker(widgetClass, this);
+    this.registerSetter(widgetClass, "value", this);
+    this.registerDefaultValue(widgetClass, "value", null);
+    this.registerGetter(widgetClass, "value", this);
   }
 
   /**
-   * Generate and return layout for this setter
-   *
-   * @param {UObjectDefinition} definitions
+   * Generate and return layout for this setter.
+   * @param {UObjectDefinition} objectDefinition
    * @return {HTMLElement[]}
-   * @memberof SlotsWidgetByProperty
    */
-  getLayout(definitions) {
+  getLayout(objectDefinition) {
     let elements = [];
-    let actualSubWidgetIds = [];
-    let subWidgetIds = definitions.getProperty(this.propId);
+    let validSubWidgetIds = [];
+    let subWidgetIds = objectDefinition.getProperty(this.propId);
     if (subWidgetIds) {
-      // Convert Uniface list into array
-      subWidgetIds = subWidgetIds.split("");
-      subWidgetIds.forEach(subWidgetId => {
+      subWidgetIds.split("")?.forEach((subWidgetId) => {
         let propName = `${subWidgetId}:widget-class`;
-        let subWidgetClassName = definitions.getProperty(propName);
+        let subWidgetClassName = objectDefinition.getProperty(propName);
         if (subWidgetClassName) {
           let subWidgetClass = UNIFACE.ClassRegistry.get(subWidgetClassName);
           if (subWidgetClass) {
-            actualSubWidgetIds.push(subWidgetId);
+            validSubWidgetIds.push(subWidgetId);
             let element = document.createElement(this.tagName);
-            element = subWidgetClass.processLayout(element, definitions);
-            if (this.styleClass) element.classList.add(this.styleClass);
+            element = subWidgetClass.processLayout(element, objectDefinition);
+            let subWidgetStyleClass = `u-sw-${subWidgetId}`;
+            element.classList.add(subWidgetStyleClass);
             elements.push(element);
           } else {
-            this.warn("getLayout", `Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry.`, `Creation of sub-widget '${subWidgetId}' skipped`);
+            this.warn(
+              "getLayout",
+              `Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry.`,
+              `Creation of sub-widget '${subWidgetId}'skipped`
+            );
           }
         } else {
           this.warn("getLayout", `Property '${propName}' not defined for object.`, `Creation of sub-widget '${subWidgetId}' skipped`);
         }
       });
     } else {
-      this.warn("getLayout", `Property '${this.propId}' not defined for object.`, "Creation of sub-widgets skipped")
+      this.warn("getLayout", `Property '${this.propId}' not defined for object.`, "Creation of sub-widgets skipped");
     }
-    // Some sub-widgets might not get created -> update the property
-    definitions.setProperty(this.propId, actualSubWidgetIds);
+    // Some sub-widgets might not get created -> update the property.
+    objectDefinition.setProperty(this.propId, validSubWidgetIds.join(""));
     return elements;
+  }
+
+  /**
+   * Collects the subWidget definitions based on the properties and returns them.
+   * @param {UObjectDefinition} objectDefinition
+   * @returns {Object}
+   */
+  getSubWidgetDefinitions(objectDefinition) {
+    let subWidgetDefinitions = {};
+    let subWidgetIds = objectDefinition.getProperty(this.propId);
+    if (subWidgetIds) {
+      subWidgetIds.split("")?.forEach((subWidgetId) => {
+        const classNamePropId = `${subWidgetId}:widget-class`;
+        const triggersPropId = `${subWidgetId}:widget-triggers`;
+        const className = objectDefinition.getProperty(classNamePropId);
+        const subWidgetClass = UNIFACE.ClassRegistry.get(className);
+        let subWidgetDefinition = {};
+        subWidgetDefinition.class = subWidgetClass;
+        subWidgetDefinition.styleClass = `u-sw-${subWidgetId}`;
+        let subWidgetTriggers = objectDefinition.getProperty(triggersPropId);
+        subWidgetDefinition.triggers = subWidgetTriggers?.split("") || [];
+        subWidgetDefinitions[subWidgetId] = subWidgetDefinition;
+      });
+    }
+    return subWidgetDefinitions;
+  }
+
+  getValue(widgetInstance) {
+    let value = {};
+    Object.keys(widgetInstance.subWidgets).forEach((subWidgetId) => {
+      value[subWidgetId] = widgetInstance.subWidgets[subWidgetId].getValue();
+    });
+    return JSON.stringify(value);
+  }
+
+  getValueUpdaters(widgetInstance) {
+    this.log("getValueUpdaters", { "widgetInstance": widgetInstance.getTraceDescription() });
+    return;
   }
 }
 
 /**
- * WORKER: HTML ATTRIBUTE - BASE - ABSTRACT
- * This setter is abstract base-class for all setters that maintain an attribute of an element.
- *
+ * Worker: Generated sub-widgets based on Uniface data structure.
+ * This worker adds one or more sub-widgets to the widget for every field in the data object's definition.
+ * This happens ones, during processLayout, and cannot be changed afterwards.
+ * An exclude property, of which the id is specified by propId, allows exclusion of fields to this process.
+ * This property can be set as part of field properties in the IDE. If it evaluates to true, the field is excluded.
+ * @export
+ * @class WidgetsByProperty
+ * @extends {Worker}
+ */
+export class WidgetsByFields extends Worker {
+
+  /**
+   * Creates an instance of WidgetsByProperty.
+   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget class definition the setter is created for.
+   * @param {UPropName} propId - Specifies the id of a Boolean property that, if true, excludes the field from the process.
+   * @param {String} subWidgetClassName - Specifies the name of the sub-widget to be included for every field.
+   */
+  constructor(widgetClass, propId, subWidgetClassName) {
+    super(widgetClass);
+    this.propId = propId;
+    this.subWidgetClassName = subWidgetClassName;
+    this.registerSubWidgetWorker(widgetClass, this);
+    this.registerSetter(widgetClass, "value", this);
+    this.registerDefaultValue(widgetClass, "value", null);
+    this.registerGetter(widgetClass, "value", this);
+  }
+
+  /**
+   * Generate and return layout for this setter.
+   * @param {UObjectDefinition} objectDefinition
+   * @return {HTMLElement[]}
+   */
+  getLayout(objectDefinition) {
+    let excludePropId = this.propId;
+    let elements = [];
+    let childObjectDefinitions = objectDefinition.getChildDefinitions();
+    if (childObjectDefinitions) {
+      let subWidgetClass = UNIFACE.ClassRegistry.get(this.subWidgetClassName);
+      if (subWidgetClass) {
+        childObjectDefinitions.forEach((childObjectDefinition) => {
+          const childType = childObjectDefinition.getType();
+          let exclude = this.toBoolean(childObjectDefinition.getProperty(excludePropId)) || childType !== "field" || false;
+          if (!exclude) {
+            const childName = childObjectDefinition.getName().toLowerCase();
+            const subWidgetId = `${childType}-${childName}`;
+            const subWidgetStyleClass = `u-sw-${childType}-${childName.replace(/\./g, "-")}`;
+            let element = document.createElement("span");
+            element = subWidgetClass.processLayout(element, childObjectDefinition);
+            element.classList.add(subWidgetStyleClass);
+            elements.push(element);
+
+            /**
+             * Iterate through the properties in childObjectDefinitions.
+             * Check whether the property exists as sub-widget property in the sub-widget.
+             * If so, move the property from childObjectDefinition to objectDefinition.
+             */
+            childObjectDefinition.getPropertyNames().forEach((propId) => {
+              // Look it up in the sub-widget's definition.
+              if (this.getNode(subWidgetClass.setters, propId)) {
+                const childPropValue = childObjectDefinition.getProperty(propId);
+                // HACK:
+                if (propId.startsWith("uniface:")) {
+                  propId = propId.substring(8);
+                }
+                objectDefinition.setProperty(`${subWidgetId}:${propId}`, childPropValue);
+              }
+            });
+          }
+        });
+      } else {
+        this.warn(
+          "getLayout",
+          `Widget definition with name '${this.subWidgetClassName}' not found in UNIFACE.classRegistry.`,
+          "Creation of sub-widget(s) skipped"
+        );
+      }
+    }
+    return elements;
+  }
+
+  /**
+   * Returns the subWidget definitions.
+   * WORKAROUND: Moves any declarative property value from the childObjectDefinitions to the parent ObjectDefinitions.
+   *             This might change the moment Uniface can directly access widgets bound to the childObjects.
+   * @param {UObjectDefinition} objectDefinition
+   * @returns {Object}
+   */
+  getSubWidgetDefinitions(objectDefinition) {
+    let excludePropId = this.propId;
+    let subWidgetDefinitions = {};
+    let childObjectDefinitions = objectDefinition.getChildDefinitions();
+    if (childObjectDefinitions) {
+      let subWidgetClass = UNIFACE.ClassRegistry.get(this.subWidgetClassName);
+      if (subWidgetClass) {
+        childObjectDefinitions.forEach((childObjectDefinition) => {
+          const childType = childObjectDefinition.getType();
+          const exclude = this.toBoolean(childObjectDefinition.getProperty(excludePropId)) || childType !== "field" || false;
+          if (!exclude) {
+            const childName = childObjectDefinition.getName().toLowerCase();
+            const subWidgetId = `${childType}-${childName}`;
+            const subWidgetStyleClass = `u-sw-${childType}-${childName.replace(/\./g, "-")}`;
+            let subWidgetDefinition = {};
+            subWidgetDefinition.class = subWidgetClass;
+            subWidgetDefinition.styleClass = subWidgetStyleClass;
+            subWidgetDefinition.triggers = [];
+            subWidgetDefinitions[subWidgetId] = subWidgetDefinition;
+          }
+        });
+      }
+    }
+    return subWidgetDefinitions;
+  }
+
+  getValue(widgetInstance) {
+    let value = {};
+    Object.keys(widgetInstance.subWidgets).forEach((subWidgetId) => {
+      value[subWidgetId] = widgetInstance.subWidgets[subWidgetId].getValue();
+    });
+    return JSON.stringify(value);
+  }
+
+  getValueUpdaters(widgetInstance) {
+    this.log("getValueUpdaters", { "widgetInstance": widgetInstance.getTraceDescription() });
+    return;
+  }
+}
+
+/**
+ * Worker: Abstract Html-attribute base worker.
+ * This worker is the abstract base class for all workers that maintain an attribute of an element.
  * @export
  * @class BaseHtmlAttribute
  * @abstract
@@ -532,33 +693,66 @@ export class WidgetsByProperty extends Element {
  */
 export class BaseHtmlAttribute extends Worker {
 
-  constructor(widgetClass, propId, attrName, defaultValue) {
+  /**
+   * Creates an instance of BaseHtmlAttribute.
+   * @param {typeof Widget_UXWF} widgetClass
+   * @param {UPropName | undefined} [propId]
+   * @param {String} [attrName]
+   * @param {UPropValue} [defaultValue]
+   * @param {Boolean} [setAsAttribute]
+   */
+  constructor(widgetClass, propId, attrName, defaultValue, setAsAttribute) {
     super(widgetClass);
-    this.propId = propId;
-    this.attrName = attrName;
-    this.defaultValue = defaultValue;
-    this.registerSetter(widgetClass, propId, this);
-    this.registerDefaultValue(widgetClass, propId, defaultValue);
-    if (propId === "value") {
-      // This setter maps the Uniface value property -> register getter
-      this.registerGetter(widgetClass, propId, this);
+    if (arguments.length > 1) {
+      // Generate a unique private prop-id.
+      this.propId = propId || `uniface:i${Math.random()}`;
+      if (attrName) {
+        this.attrName = attrName;
+      }
+      this.defaultValue = defaultValue;
+      this.setAsAttribute = setAsAttribute;
+      this.registerSetter(widgetClass, this.propId, this);
+      this.registerDefaultValue(widgetClass, this.propId, defaultValue);
+      if (this.propId === "value") {
+        // This setter maps the Uniface value property -> register getter.
+        this.registerGetter(widgetClass, this.propId, this);
+      }
     }
   }
 
   getLayout() {
-    return { attrName: this.attrName, attrValue: this.defaultValue };
+    return {
+      "attrName": this.attrName,
+      "attrValue": this.defaultValue
+    };
   }
 
-  setHtmlAttribute(element, value) {
-    const validatedAttributes = ["readonly", "type", "pattern", "min", "max", "minlength", "maxlength"];
-    if (validatedAttributes.includes(this.attrName) && element.value !== "") {
-      this.warn("refresh", `Property '${this.propId}' influences HTML5 validation rules and cannot be set if control-value is not ""`, "Ignored");
-      return;
-    }
-    if (value === undefined || value === null) {
-      element.removeAttribute(this.attrName);
-    } else {
-      element[this.attrName] = value;
+  setHtmlAttribute(element, attrValue) {
+    if (this.attrName) {
+      const validatedAttributes = ["readonly", "type", "pattern", "min", "max", "minlength", "maxlength"];
+      if (validatedAttributes.includes(this.attrName) && element.value !== "") {
+        this.warn("refresh", `Property '${this.propId}' influences HTML5 validation rules and cannot be set if control-value is not ""`, "Ignored");
+        return;
+      }
+      if (this.attrName === "innerText") {
+        if (attrValue === undefined || attrValue === null) {
+          element.innerText = "";
+        } else {
+          element.innerText = attrValue;
+        }
+      } else if (attrValue === undefined || attrValue === null) {
+        if (this.setAsAttribute) {
+          element.removeAttribute(this.attrName);
+        } else {
+          delete element[this.attrName];
+        }
+      } else {
+        if (this.setAsAttribute) {
+          element.setAttribute(this.attrName, attrValue);
+        } else {
+          element[this.attrName] = attrValue;
+        }
+      }
     }
   }
 
@@ -567,35 +761,46 @@ export class BaseHtmlAttribute extends Worker {
   }
 
   getValue(widgetInstance) {
-    this.log("getValue", { widgetInstance: widgetInstance.getTraceDescription(), attrName: this.attrName });
-    let element = this.getElement(widgetInstance);
-    let value = element[this.attrName];
-    return value;
+    this.log("getValue", {
+      "widgetInstance": widgetInstance.getTraceDescription(),
+      "attrName": this.attrName
+    });
+    let value = null;
+    if (this.attrName) {
+      let element = this.getElement(widgetInstance);
+      value = element[this.attrName];
+      return value;
+    }
   }
 
   getValueUpdaters(widgetInstance) {
-    this.log("getValueUpdaters", { widgetInstance: widgetInstance.getTraceDescription(), attrName: this.attrName });
+    this.log("getValueUpdaters", {
+      "widgetInstance": widgetInstance.getTraceDescription(),
+      "attrName": this.attrName
+    });
     let element = this.getElement(widgetInstance);
     let updaters = [];
     updaters.push({
-      element: element,
-      event_name: "change",
+      "element": element,
+      "event_name": "change",
     });
     return updaters;
   }
 }
 
 /**
-    WORKER: HTML ATTRIBUTE STRING
-  **/
+ * Worker: String html-attribute
+ */
 export class HtmlAttribute extends BaseHtmlAttribute {
-
-  constructor(widgetClass, propId, attrName, defaultValue) {
-    super(widgetClass, propId, attrName, defaultValue);
+  constructor(widgetClass, propId, attrName, defaultValue, setAsAttribute) {
+    super(widgetClass, propId, attrName, defaultValue, setAsAttribute);
   }
 
   refresh(widgetInstance) {
-    this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription(), attrName: this.attrName });
+    this.log("refresh", {
+      "widgetInstance": widgetInstance.getTraceDescription(),
+      "attrName": this.attrName,
+    });
     super.refresh(widgetInstance);
     let element = this.getElement(widgetInstance);
     let value = this.getNode(widgetInstance.data.properties, this.propId);
@@ -604,17 +809,19 @@ export class HtmlAttribute extends BaseHtmlAttribute {
 }
 
 /**
-    WORKER: HTML ATTRIBUTE CHOICE
-  **/
+ * Worker: Choice html-attribute.
+ */
 export class HtmlAttributeChoice extends BaseHtmlAttribute {
-
-  constructor(widgetClass, propId, attrName, choices, defaultValue) {
-    super(widgetClass, propId, attrName, defaultValue);
+  constructor(widgetClass, propId, attrName, choices, defaultValue, setAsAttribute) {
+    super(widgetClass, propId, attrName, defaultValue, setAsAttribute);
     this.choices = choices;
   }
 
   refresh(widgetInstance) {
-    this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription(), attrName: this.attrName });
+    this.log("refresh", {
+      "widgetInstance": widgetInstance.getTraceDescription(),
+      "attrName": this.attrName
+    });
     super.refresh(widgetInstance);
     let element = this.getElement(widgetInstance);
     let value = this.getNode(widgetInstance.data.properties, this.propId);
@@ -627,18 +834,20 @@ export class HtmlAttributeChoice extends BaseHtmlAttribute {
 }
 
 /**
-    WORKER: HTML ATTRIBUTE NUMBER
-  **/
+ * Worker: Number html-attribute.
+ */
 export class HtmlAttributeNumber extends BaseHtmlAttribute {
-
-  constructor(widgetClass, propId, attrName, min, max, defaultValue) {
-    super(widgetClass, propId, attrName, defaultValue);
+  constructor(widgetClass, propId, attrName, min, max, defaultValue, setAsAttribute) {
+    super(widgetClass, propId, attrName, defaultValue, setAsAttribute);
     this.min = min;
     this.max = max;
   }
 
   refresh(widgetInstance) {
-    this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription(), attrName: this.attrName });
+    this.log("refresh", {
+      "widgetInstance": widgetInstance.getTraceDescription(),
+      "attrName": this.attrName
+    });
     super.refresh(widgetInstance);
     let element = this.getElement(widgetInstance);
     let value = this.getNode(widgetInstance.data.properties, this.propId);
@@ -647,11 +856,7 @@ export class HtmlAttributeNumber extends BaseHtmlAttribute {
       if (this.min !== undefined && this.min !== null && value < this.min) {
         this.warn("refresh", `Property '${this.propId}' must be a number >== ${this.min}`, "Ignored");
         return;
-      } else if (
-        this.max !== undefined &&
-        this.max !== null &&
-        value > this.max
-      ) {
+      } else if (this.max !== undefined && this.max !== null && value > this.max) {
         this.warn("refresh", `Property '${this.propId}' must be a number <== ${this.max}`, "Ignored");
         return;
       }
@@ -661,52 +866,86 @@ export class HtmlAttributeNumber extends BaseHtmlAttribute {
 }
 
 /**
-    WORKER: HTML ATTRIBUTE BOOLEAN
-  **/
+ * Worker: Boolean html-attribute.
+ */
 export class HtmlAttributeBoolean extends BaseHtmlAttribute {
-
-  constructor(widgetClass, propId, attrName, defaultValue) {
-    super(widgetClass, propId, attrName, defaultValue);
-  }
-
   refresh(widgetInstance) {
-    this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription(), attrName: this.attrName });
-    super.refresh(widgetInstance);
-    let element = this.getElement(widgetInstance);
-    let value = this.getNode(widgetInstance.data.properties, this.propId);
-    element[this.attrName] = this.toBoolean(value);
-  }
-}
-
-/**
-    SETTER: HTML Value ATTRIBUTE BOOLEAN
-  **/
-export class HtmlValueAttributeBoolean extends HtmlAttributeBoolean {
-
-  constructor(widgetClass, propId, attrName, defaultValue) {
-    super(widgetClass, propId, attrName, defaultValue);
-  }
-
-
-  refresh(widgetInstance) {
-    this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription(), attrName: this.attrName });
-    let element = this.getElement(widgetInstance);
-    let value = this.getNode(widgetInstance.data.properties, this.propId);
-    //Validate value before assigning
-    try {
-      element[this.attrName] = this.fieldValueToBoolean(value);
-      widgetInstance.setProperties({ uniface: { "format-error": false, "format-error-message": "" } })
-    } catch (error) {
-      widgetInstance.setProperties({ uniface: { "format-error": true, "format-error-message": error } })
+    this.log("refresh", {
+      "widgetInstance": widgetInstance.getTraceDescription(),
+      "attrName": this.attrName
+    });
+    if (this.attrName) {
+      super.refresh(widgetInstance);
+      let element = this.getElement(widgetInstance);
+      let value = this.getNode(widgetInstance.data.properties, this.propId);
+      element[this.attrName] = this.toBoolean(value);
     }
   }
 }
 
 /**
-    SETTER: HTML MINLENGTH/MAXLENGTH ATTRIBUTE PAIR
-  **/
-export class HtmlAttributeMinMaxLength extends Worker {
+ * Worker: Boolean html-attribute that maps to the Uniface value property.
+ */
+export class HtmlValueAttributeBoolean extends BaseHtmlAttribute {
+  getValueUpdaters(widgetInstance) {
+    this.log("getValueUpdaters", {
+      "widgetInstance": widgetInstance.getTraceDescription(),
+      "attrName": this.attrName
+    });
+    let element = this.getElement(widgetInstance);
+    let updaters = [];
+    updaters.push({
+      "element": element,
+      "event_name": "change",
+      "handler": () => {
+        widgetInstance.setProperties({
+          "uniface": {
+            "format-error": false,
+            "format-error-message": "",
+          },
+        });
+        widgetInstance.setProperties({
+          "uniface": {
+            "error": false,
+            "error-message": "",
+          },
+        });
+      },
+    });
+    return updaters;
+  }
 
+  refresh(widgetInstance) {
+    this.log("refresh", {
+      "widgetInstance": widgetInstance.getTraceDescription(),
+      "attrName": this.attrName
+    });
+    let element = this.getElement(widgetInstance);
+    let value = this.getNode(widgetInstance.data.properties, this.propId);
+    // Validate value before assigning.
+    try {
+      this.setHtmlAttribute(element, this.fieldValueToBoolean(value));
+      widgetInstance.setProperties({
+        "uniface": {
+          "format-error": false,
+          "format-error-message": "",
+        },
+      });
+    } catch (error) {
+      widgetInstance.setProperties({
+        "uniface": {
+          "format-error": true,
+          "format-error-message": error,
+        },
+      });
+    }
+  }
+}
+
+/**
+ * Worker: minlength and maxlength html-attribute pair.
+ */
+export class HtmlAttributeMinMaxLength extends Worker {
   constructor(widgetClass, propMin, propMax, defaultMin, defaultMax) {
     super(widgetClass);
     this.propMin = propMin;
@@ -718,13 +957,16 @@ export class HtmlAttributeMinMaxLength extends Worker {
   }
 
   refresh(widgetInstance) {
-    this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription(), attrNames: ["minlength", "maxlength"] });
-    /** @type {HTMLInputElement} */
+    this.log("refresh", {
+      "widgetInstance": widgetInstance.getTraceDescription(),
+      "attrNames": ["minlength", "maxlength"]
+    });
     let element = this.getElement(widgetInstance);
-    if (element.value != "") {
+    if (this.isHTMLInputElement(element) && element.value !== "") {
       this.warn("refresh()", `Property '${this.propMin}' or '${this.propMax}' cannot be set if control-value is not ""`, "Ignored");
       return;
     }
+
     /** @type {Number|null} */
     let minlength = parseInt(this.getNode(widgetInstance.data.properties, this.propMin));
     if (Number.isNaN(minlength)) {
@@ -733,24 +975,25 @@ export class HtmlAttributeMinMaxLength extends Worker {
       this.warn("refresh()", `Property '${this.propMin}' is not a positive number`, "Ignored");
       return;
     }
+
     /** @type {Number|null} */
     let maxlength = parseInt(this.getNode(widgetInstance.data.properties, this.propMax));
     if (Number.isNaN(maxlength)) {
       maxlength = null;
     } else if (maxlength === 0) {
-      // In Uniface means no maximum length
+      // In Uniface means no maximum length.
       maxlength = null;
     } else if (maxlength < 0) {
       this.warn("refresh()", `Property '${this.propMax}' is not a positive number`, "Ignored");
       return;
     }
-    // BUG: Once maxlength has been set once, fluent forces it to 0 when being unset (attribute).
+    // BUG: Once maxlength has been set, fluent forces it to 0 when being unset (attribute).
     // This causes checks to fail or exceptions to be thrown.
     if (maxlength !== null) {
-      // maxlength has been set at least once
+      // maxlength has been set at least once.
       widgetInstance.widget.maxlengthHasBeenSet = true;
     } else if (widgetInstance.widget.maxlengthHasBeenSet) {
-      // Instead of removing the maxlength attribute, force it to a very high number => 10000
+      // Instead of removing the maxlength attribute, force it to a very high number => 10000.
       maxlength = this.defaultMax;
     }
     if (minlength === null && maxlength === null) {
@@ -762,7 +1005,7 @@ export class HtmlAttributeMinMaxLength extends Worker {
     } else if (minlength !== null && maxlength === null) {
       element.removeAttribute("maxlength");
       element["minlength"] = minlength;
-    } else if (minlength > maxlength) {
+    } else if (minlength && maxlength && minlength > maxlength) {
       this.warn("setMinMaxLength()", `Invalid combination of 'html:minlength' (${this.propMin}) and 'html:maxlength' (${this.propMax})`, "Ignored");
     } else {
       element["maxlength"] = 10000;
@@ -774,10 +1017,9 @@ export class HtmlAttributeMinMaxLength extends Worker {
 }
 
 /**
-    WORKER: HTML MIN/MAX ATTRIBUTE PAIR - UNTESTED
-  **/
-export class HtmlAttributeMinMax extends BaseHtmlAttribute {
-
+ * Worker: Html min/max attribute pair.
+ */
+export class HtmlAttributeMinMax extends Worker {
   constructor(widgetClass, propMin, propMax, defaultMin, defaultMax) {
     super(widgetClass);
     this.propMin = propMin;
@@ -786,52 +1028,71 @@ export class HtmlAttributeMinMax extends BaseHtmlAttribute {
     this.defaultMax = defaultMax;
     this.registerSetter(widgetClass, propMin, this);
     this.registerSetter(widgetClass, propMax, this);
+    this.registerDefaultValue(widgetClass, propMin, defaultMin);
+    this.registerDefaultValue(widgetClass, propMax, defaultMax);
   }
 
   refresh(widgetInstance) {
-    this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription(), attrNames: ["min", "max"] });
-    /** @type {HTMLSelectElement} */
+    this.log("refresh", {
+      "widgetInstance": widgetInstance.getTraceDescription(),
+      "attrNames": ["min", "max"],
+    });
+
     let element = this.getElement(widgetInstance);
-    if (element.value !== "") {
+
+    // @ts-ignore
+    if (element?.value !== "") {
       this.warn("refresh()", `Property '${this.propMin}' or '${this.propMax}' cannot be set if control-value is not ""`, "Ignored");
       return;
     }
-    /** @type {Number|null} */
-    let min = parseInt(this.getNode(widgetInstance.data.properties, this.propMin));
+
+    let min = this.getNode(widgetInstance.data.properties, this.propMin);
+    let max = this.getNode(widgetInstance.data.properties, this.propMax);
+
+    let isMinUndefined = min === undefined;
+    let isMaxUndefined = max === undefined;
+
+    min = parseInt(min);
     if (Number.isNaN(min)) {
       min = null;
     }
-    /** @type {Number|null} */
-    let max = parseInt(this.getNode(widgetInstance.data.properties, this.propMax));
+
+    max = parseInt(max);
     if (Number.isNaN(max)) {
       max = null;
     }
 
-    if (min === null && max === null) {
-      element.removeAttribute("min");
-      element.removeAttribute("max");
+    if (!isMinUndefined && !isMaxUndefined && min === null && max === null) {
+      this.warn(
+        "refresh()",
+        `Fluent does not allow setting'${this.propMin}' (${min}) and '${this.propMax}' (${max}) to undefined/null, a number must be provided`,
+        "Ignored"
+      );
     } else if (min === null && max !== null) {
-      element.removeAttribute("min");
-      element["max"] = max;
+      element.setAttribute("max", max);
+      // If min is null defined by user.
+      if (!isMinUndefined) {
+        this.warn("refresh()", `Fluent does not allow setting'${this.propMin}' (${min}) to undefined/null, a number must be provided`, "Ignored");
+      }
     } else if (min !== null && max === null) {
-      element.removeAttribute("max");
-      element["min"] = min;
+      element.setAttribute("min", min);
+      // If max is null defined by user.
+      if (!isMaxUndefined) {
+        this.warn("refresh()", `Fluent does not allow setting'${this.propMax}' (${max}) to undefined/null, a number must be provided`, "Ignored");
+      }
     } else if (min > max) {
       this.warn("refresh()", `Invalid combination of '${this.propMin}' (${min}) and '${this.propMax}' (${max})`, "Ignored");
-    } else {
-      element["min"] = this.defaultMin;
-      element["max"] = this.defaultMax;
-      element["min"] = min;
-      element["max"] = max;
+    } else if (min !== null && max !== null) {
+      element.setAttribute("min", min);
+      element.setAttribute("max", max);
     }
   }
 }
 
 /**
-    WORKER: ALL STYLE CLASSES
-  **/
+ * Worker: All style classes.
+ */
 export class StyleClass extends Worker {
-
   constructor(widgetClass, defaultClassList) {
     super(widgetClass);
     this.registerSetter(widgetClass, "classes", this);
@@ -841,7 +1102,7 @@ export class StyleClass extends Worker {
   }
 
   refresh(widgetInstance) {
-    this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription() });
+    this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
     let element = this.getElement(widgetInstance);
     let classNames = widgetInstance.data.properties.classes;
     Object.keys(classNames).forEach((className) => {
@@ -856,33 +1117,31 @@ export class StyleClass extends Worker {
 }
 
 /**
-    SETTER: ALL STYLE Property
-  **/
+ * Worker: All style property.
+ */
 export class StyleProperty extends Worker {
   constructor(widgetClass, property) {
     super(widgetClass);
     this.defaultStyleProperty = property;
     this.registerSetter(widgetClass, "style", this);
-    let key = Object.keys(property)[0]
+    let key = Object.keys(property)[0];
     this.registerDefaultValue(widgetClass, `style:${key}`, property[key]);
-
   }
 
   refresh(widgetInstance) {
-    this.log("refresh", { widgetInstance: widgetInstance.getTraceDescription() });
+    this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
     let styleProperty = widgetInstance.data.properties.style;
     let element = this.getElement(widgetInstance);
-    Object.keys(styleProperty).forEach(key => {
+    Object.keys(styleProperty).forEach((key) => {
       element.style[key] = styleProperty[key];
-    })
+    });
   }
 }
 
 /**
-    SETTER: TRIGGER MAPPING
-  **/
+ * Worker: Trigger mapping.
+ */
 export class Trigger extends Worker {
-
   constructor(widgetClass, triggerName, eventName, validate) {
     super(widgetClass);
     this.triggerName = triggerName;
@@ -892,12 +1151,118 @@ export class Trigger extends Worker {
   }
 
   getTriggerMapping(widgetInstance) {
-    this.log("getTriggerMapping", { widgetInstance: widgetInstance.getTraceDescription() });
+    this.log("getTriggerMapping", { "widgetInstance": widgetInstance.getTraceDescription() });
     let element = this.getElement(widgetInstance);
     return {
-      element: element,
-      event_name: this.eventName,
-      validate: this.validate
+      "element": element,
+      "event_name": this.eventName,
+      "validate": this.validate
     };
+  }
+}
+
+/**
+ * Worker: Adds Element for each valrep.
+ * This setter adds an element to your widget, where:
+ * - the element is added as a child according the structure.
+ * - the element is being slotted into the web-component (the parent element).
+ * @export
+ * @class SlottedElementsByValRep
+ * @extends {Element}
+ */
+export class SlottedElementsByValRep extends Element {
+
+  /**
+   * Creates an instance of SlottedElementsByValRep.
+   * @param {typeof Widget_UXWF} widgetClass
+   * @param {String} tagName
+   * @param {String} styleClass
+   * @param {String} elementQuerySelector
+   */
+  constructor(widgetClass, tagName, styleClass, elementQuerySelector) {
+    super(widgetClass, tagName, styleClass, elementQuerySelector);
+    this.hidden = true;
+
+    this.registerSetter(widgetClass, "valrep", this);
+    this.registerDefaultValue(widgetClass, "valrep", []);
+
+    this.registerSetter(widgetClass, "uniface:display-format", this);
+    this.registerDefaultValue(widgetClass, "uniface:display-format", "rep");
+
+    this.registerSetter(widgetClass, "value", this);
+    this.registerDefaultValue(widgetClass, "value", null);
+  }
+
+  /**
+   * Formats error message if valrep is not defined.
+   */
+  reformatErrorText(widgetInstance) {
+    const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
+    let data = widgetInstance.data.properties;
+    let text = "";
+    switch (displayFormat) {
+      case "valrep":
+        text = "ERROR: Unable to show representation of value " + (data.value || "null");
+        break;
+      case "val":
+        text = "ERROR: Invalid value " + (data.value || "null");
+        break;
+      case "rep":
+      default:
+        text = "ERROR: Unable to show representation of value";
+    }
+    return text;
+  }
+
+  /**
+   * Removes all valrep elements from this worker.
+   */
+  removeValRepElements(widgetInstance) {
+    let element =  this.getElement(widgetInstance);
+    let valrepElements = element.querySelectorAll(this.tagName);
+    valrepElements.forEach((element) => {
+      element.remove();
+    });
+  }
+
+  /**
+   * Formats the valrep based on the display format property.
+   */
+  formatValRepElements(widgetInstance, childElement, value, representation) {
+    const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
+    switch (displayFormat) {
+      case "valrep":
+        childElement.innerHTML ="<span class=\"u-valrep-representation\">" + representation + "</span> <span class=\"u-valrep-value\">" + (value || "null") + "</span>";
+        break;
+      case "val":
+        childElement.innerHTML = "<span class=\"u-valrep-value\">" + (value || "") + "</span>";
+        break;
+      case "rep":
+      default:
+        childElement.innerHTML = "<span class=\"u-valrep-representation\">" + representation + "</span>";
+    }
+  }
+
+  /**
+   * Creates all valrep elements from this worker.
+   */
+  createValRepElements(widgetInstance) {
+    let element = this.getElement(widgetInstance);
+    let valrep = this.getNode(widgetInstance.data.properties, "valrep");
+
+    if (valrep.length > 0) {
+      valrep.forEach((valRepObj) => {
+        const childElement = document.createElement(this.tagName);
+        element.appendChild(childElement);
+        childElement.setAttribute("value", valRepObj.value);
+        childElement.setAttribute("class", this.styleClass);
+        this.formatValRepElements(widgetInstance, childElement, valRepObj.value, valRepObj.representation);
+      });
+    }
+  }
+
+  refresh(widgetInstance) {
+    this.removeValRepElements(widgetInstance);
+    this.createValRepElements(widgetInstance);
   }
 }

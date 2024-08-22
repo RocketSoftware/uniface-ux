@@ -1,6 +1,7 @@
 import { Button_UXWF } from "../../sources/ux/button_UXWF.js";
 import {Base_UXWF} from "../../sources/ux/base_UXWF.js"
-
+import { Worker } from "../../sources/ux/workers_UXWF.js";
+import { Widget_UXWF } from "../../sources/ux/widget_UXWF.js";
 
 (function () {
     'use strict';
@@ -21,59 +22,81 @@ import {Base_UXWF} from "../../sources/ux/base_UXWF.js"
 
     describe(" test Base_UXWF Class methods", function () {
 
-        let base, widgetClass, propId, setterClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, defaultValue, triggerName,
-        url, functionName, message, consequence, data, consoleLogSpy
+        let base, widgetClass, propId, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, defaultValue, triggerName,
+        url, functionName, message, consequence, consoleLogSpy, worker
 
         beforeEach(function () {
             base = new Base_UXWF();
+            widgetClass = Widget_UXWF
         });
 
         it("registerSetter", function () {
-            widgetClass = {}
+            worker = new Worker(widgetClass);
             propId = "html:disabled"
-            setterClass = {}
-            base.registerSetter(widgetClass, propId, setterClass)
+
+            base.registerSetter(widgetClass, propId, worker)
+
             expect(String(Object.keys(widgetClass.setters))).to.equal("html")
             expect(String(Object.keys(widgetClass.setters.html))).to.equal("disabled")
+            expect(widgetClass.setters.html.disabled[0].constructor.name).to.equal("Worker")
+
+        });
+
+        it("registerGetter", function () {
+            propId = "html:disabled"
+            worker = new Worker(widgetClass);
+            
+            base.registerGetter(widgetClass, propId, worker)
+
+            expect(String(Object.keys(widgetClass.getters))).to.equal("html")
+            expect(String(Object.keys(widgetClass.getters.html))).to.equal("disabled")
+            expect(widgetClass.getters.html.disabled.constructor.name).to.equal("Worker")
+        });
+
+        
+        it("registerDefaultValue", function () {
+            propId = "html:testDefault"
+            defaultValue = "56"
+            
+            base.registerDefaultValue(widgetClass, propId, defaultValue)
+            
+            expect(String(Object.keys(widgetClass.defaultValues))).to.equal("html")
+            expect(String(Object.keys(widgetClass.defaultValues.html))).to.equal("testDefault")
+            expect(widgetClass.defaultValues.html.testDefault).to.equal(defaultValue)
+
+        });
+
+        it("registerTrigger", function () {
+            triggerName = "newTrigger"
+            worker = new Worker(widgetClass);
+            
+            base.registerTrigger(widgetClass, triggerName, worker)
+
+            expect(String(Object.keys(widgetClass.triggers))).to.equal(triggerName)
+            expect(widgetClass.triggers.newTrigger.widgetClass.name).to.equal("Widget_UXWF")
 
         });
 
         it("registerSubWidget", function () {
-            widgetClass = {}
             subWidgetId = "change-button"
             subWidgetStyleClass = "u-change-button"
             subWidgetClass = new Button_UXWF()
-            subWidgetTriggers = {}
+            subWidgetTriggers = ["trigger1" , "trigger2"]
+            
             base.registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers)
+            
             expect(String(Object.keys(widgetClass.subWidgets))).to.equal(subWidgetId)
             expect((Object.keys(widgetClass.subWidgets[subWidgetId]))).to.have.lengthOf(3)
             expect(widgetClass.subWidgets[subWidgetId].styleClass).to.equal(subWidgetStyleClass)
+            expect(widgetClass.subWidgets[subWidgetId].triggers).to.equal(subWidgetTriggers)
         });
 
-        it("registerDefaultValue", function () {
-            widgetClass = {}
-            propId = "html:disabled"
-            defaultValue = "56"
-            base.registerDefaultValue(widgetClass, propId, defaultValue)
-            expect(String(Object.keys(widgetClass.defaultValues))).to.equal("html")
-            expect(String(Object.keys(widgetClass.defaultValues.html))).to.equal("disabled")
-            expect(widgetClass.defaultValues.html.disabled).to.equal(defaultValue)
-        });
+        it("registerSubWidgetWorker", function () {
+            worker = new Worker(widgetClass);
 
-        it("registerGetter", function () {
-            widgetClass = {}
-            propId = "html:disabled"
-            base.registerGetter(widgetClass, propId, this)
-            expect(String(Object.keys(widgetClass.getters))).to.equal("html")
-            expect(String(Object.keys(widgetClass.getters.html))).to.equal("disabled")
-        });
-
-        it("registerTrigger", function () {
-            widgetClass = {}
-            triggerName = "nameOfTrigger"
-            setterClass = {}
-            base.registerTrigger(widgetClass, triggerName, setterClass)
-            expect(String(Object.keys(widgetClass.triggers))).to.equal(triggerName)
+            base.registerSubWidgetWorker(widgetClass, worker)
+            
+            expect(widgetClass.subWidgetWorkers[0]).to.equal(worker)
         });
 
         it("getNode", function () {
@@ -127,23 +150,30 @@ import {Base_UXWF} from "../../sources/ux/base_UXWF.js"
                 },
                 "icon": {
                     "this-is-bad-data": {
-                        "uniface": {
-                            "baddata": "bad"
-                        }
+                        "baddata": "bad"
                     }
                 }
             }
 
             expect(base.fixData("TESTBASIC")).to.eql({0: 'T', 1: 'E', 2: 'S', 3: 'T', 4: 'B', 5: 'A', 6: 'S', 7: 'I', 8: 'C'})
+            
             let returnData = base.fixData(UData)
             expect(returnData).to.eql(correctedData)
 
         });
 
-        it("fixTriggerName", function () {
-            triggerName = "trigger_Name__disabled"
-            let fixTriggerName = base.fixTriggerName(triggerName)
-            expect(fixTriggerName).to.equal("trigger-Name:disabled")
+        it("getFormattedValrep", function () {
+            let valRepString = "valrep1=value1valrep2=value2"
+            let formattedValReps = base.getFormattedValrep(valRepString)
+            
+            expect(formattedValReps).to.have.lengthOf(2)
+            expect(Object.keys(formattedValReps[0])).to.eql([ 'value', 'representation' ])
+            
+            expect(formattedValReps[0].value).to.eql("valrep1")
+            expect(formattedValReps[0].representation).to.eql("value1")
+
+            expect(formattedValReps[1].value).to.eql("valrep2")
+            expect(formattedValReps[1].representation).to.eql("value2")
         });
 
         it("warn", function () {

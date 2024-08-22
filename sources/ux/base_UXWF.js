@@ -1,120 +1,144 @@
-//@ts-check
+// @ts-check
 
-import { Widget_UXWF } from "./widget_UXWF.js";
+import { Widget_UXWF } from "./widget_UXWF.js"; // eslint-disable-line no-unused-vars
+import { Worker } from "./workers_UXWF.js"; // eslint-disable-line no-unused-vars
 
 /**
- * UX Widget generic helper functions
- *
+ * UX Widget generic helper functions.
  * @export
  * @class Base_UXWF
  */
 export class Base_UXWF {
-  constructor() { }
+  constructor() {}
 
   /**
-   * Registers a setter to react on property changes.
-   *
-   * @param {typeof Widget_UXWF} widgetClass
-   * @param {UPropName} propId
-   * @param {*} setterClass
-   * @memberof Base_UXWF
+   * This method registers the worker that Uniface calls to update the widget caused by a property change.
+   * Per property, one worker needs to be registered.
+   * dataInit() and dataUpdate() call this worker (via setProperties()) to make the widget react to the property change.
+   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
+   * @param {Worker} worker - Specified the worker.
    */
-  registerSetter(widgetClass, propId, setterClass) {
-    if (!widgetClass.setters) widgetClass.setters = {};
+  registerSetter(widgetClass, propId, worker) {
     let pos = propId.search(":");
     if (pos > 0) {
       let prefix = propId.substring(0, pos);
       propId = propId.substring(pos + 1);
-      if (!widgetClass.setters[prefix]) widgetClass.setters[prefix] = {};
-      if (!widgetClass.setters[prefix][propId])
+      if (!widgetClass.setters[prefix]) {
+        widgetClass.setters[prefix] = {};
+      }
+      if (!widgetClass.setters[prefix][propId]) {
         widgetClass.setters[prefix][propId] = [];
-      widgetClass.setters[prefix][propId].push(setterClass);
+      }
+      widgetClass.setters[prefix][propId].push(worker);
     } else {
-      if (!widgetClass.setters[propId]) widgetClass.setters[propId] = [];
-      widgetClass.setters[propId].push(setterClass);
+      if (!widgetClass.setters[propId]) {
+        widgetClass.setters[propId] = [];
+      }
+      widgetClass.setters[propId].push(worker);
     }
   }
 
   /**
-   * Registers a sub-widget.
-   *
-   * @param {typeof Widget_UXWF} widgetClass
-   * @param {String} subWidgetId
-   * @param {typeof Widget_UXWF} subWidgetClass
-   * @param {String} subWidgetStyleClass
-   * @param {*} subWidgetTriggers
-   * @memberof Base_UXWF
+   * This method registers the worker that Uniface calls to get information about getting the value of a property value.
+   * Per property, one worker needs to be registered. Currently, only the 'value' property can be registered.
+   * onConnect() calls the worker to get the updater information, which describes the events fired when the value has been changed.
+   * getValue() calls this worker to get the value of the 'field' property.
+   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
+   * @param {Worker} worker - Specifies the worker.
    */
-  registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers) {
-    // registerSubWidget(class TextField, "change-button", class Button, "u-change-button", {});
-    if (!widgetClass.subWidgets) widgetClass.subWidgets = {};
-    widgetClass.subWidgets[subWidgetId] = {
-      class: subWidgetClass,
-      styleClass: subWidgetStyleClass,
-      triggers: subWidgetTriggers,
-    };
+  registerGetter(widgetClass, propId, worker) {
+    let pos = propId.search(":");
+    if (pos > 0) {
+      let prefix = propId.substring(0, pos);
+      propId = propId.substring(pos + 1);
+      if (!widgetClass.getters[prefix]) {
+        widgetClass.getters[prefix] = {};
+      }
+      widgetClass.getters[prefix][propId] = worker;
+    } else {
+      widgetClass.getters[propId] = worker;
+    }
   }
 
   /**
-   * Registers a default value.
-   *
-   * @param {typeof Widget_UXWF} widgetClass
-   * @param {UPropName} propId
-   * @param {UPropValue} defaultValue
-   * @memberof Base_UXWF
+   * This method registers a default value for a property.
+   * Per property, one default value needs to be registered.
+   * dataInit() uses the set of default values to reinitialize the widget for reuse.
+   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget-class for which the default value will be registered.
+   * @param {UPropName} propId - Specifies the property-id for which the default value will be registered.
+   * @param {UPropValue} defaultValue - Specifies the default value.
    */
   registerDefaultValue(widgetClass, propId, defaultValue) {
-    if (!widgetClass.defaultValues) widgetClass.defaultValues = {};
     let node = widgetClass.defaultValues;
     let ids = propId.split(":");
     let i;
     for (i = 0; i < ids.length - 1; i++) {
-      if (node[ids[i]] == undefined) node[ids[i]] = {};
+      if (node[ids[i]] === undefined) {
+        node[ids[i]] = {};
+      }
       node = node[ids[i]];
     }
     node[ids[i]] = defaultValue;
   }
 
   /**
-   * Registers a getter to return the widget value.
-   *
-   * @param {typeof Widget_UXWF} widgetClass
-   * @param {UPropName} propId
-   * @param {*} setterClass
-   * @memberof Base_UXWF
+   * This method registers the worker that Uniface calls to get a trigger-mapping.
+   * Per trigger-mapping, one worker needs to be registered.
+   * mapTrigger() calls this worker to get the trigger-mapping.
+   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {String} triggerName - Specifies the trigger-name for which the worker will be registered.
+   * @param {Worker} worker - Specifies the worker.
    */
-  registerGetter(widgetClass, propId, setterClass) {
-    if (!widgetClass.getters) widgetClass.getters = {};
-    let pos = propId.search(":");
-    if (pos > 0) {
-      let prefix = propId.substring(0, pos);
-      propId = propId.substring(pos + 1);
-      if (!widgetClass.getters[prefix]) widgetClass.getters[prefix] = {};
-      widgetClass.getters[prefix][propId] = setterClass;
-    } else {
-      widgetClass.getters[propId] = setterClass;
-    }
+  registerTrigger(widgetClass, triggerName, worker) {
+    widgetClass.triggers[triggerName] = worker;
   }
 
   /**
-   * Registers a trigger.
-   *
+   * This method registers static sub-widget information.
+   * Static sub-widgets are defined as part of widget structure.
+   * Static sub-widgets are added to the widget instance at runtime.
+   * The UXWF deals with sub-widgets transparently, like generate their layouts, instantiate them, invoke their onConnect
+   * get their value, map their triggers, update their properties, etc.
    * @param {typeof Widget_UXWF} widgetClass
-   * @param {String} triggerName
-   * @param {*} setterClass
-   * @memberof Base_UXWF
+   * @param {String} subWidgetId
+   * @param {typeof Widget_UXWF} subWidgetClass
+   * @param {String} subWidgetStyleClass
+   * @param {Array} subWidgetTriggers
    */
-  registerTrigger(widgetClass, triggerName, setterClass) {
-    if (!widgetClass.triggers) widgetClass.triggers = {};
-    widgetClass.triggers[triggerName] = setterClass;
+  registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers) {
+    widgetClass.subWidgets[subWidgetId] = {
+      "class": subWidgetClass,
+      "styleClass": subWidgetStyleClass,
+      "triggers": subWidgetTriggers,
+    };
+  }
+
+  /**
+   * This method registers the worker that Uniface calls to handle dynamic sub-widgets.
+   * Dynamic sub-widgets are added to the widget at runtime based on object definitions.
+   * Each worker generates sub-widgets based on a unique algorithm.
+   * Uniface iterates through all registered workers and adds their sub-widgets to the widget object at runtime.
+   * The UXWF deals with sub-widgets transparently, like generate their layouts, instantiate them, invoke their onConnect
+   * get their value, map their triggers, update their properties, etc.
+   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {Worker} worker - Specifies the worker.
+   */
+  // @ts-ignore
+  registerSubWidgetWorker(widgetClass, worker) {
+    widgetClass.subWidgetWorkers.push(worker);
   }
 
   getNode(node, url) {
     if (url) {
       url = url.split(":");
-      url.forEach((key) => {
-        node = node[key];
-      });
+      for (let i = 0; i < url.length; i++) {
+        node = node[url[i]];
+        if (node === undefined) {
+          return undefined;
+        }
+      }
       return node;
     } else {
       return undefined;
@@ -122,43 +146,9 @@ export class Base_UXWF {
   }
 
   /**
-   * Creates a new HTMLElement with a given tagName, which is a clone
-   * of a given HTMLElement.
-   * @param {HTMLElement} sourceElement - The HTMLElement to clone.
-   * @param {string} tagName - The tagName for the new HTMLElement.
-   * @param {boolean} copyChildren - Copy the sourceElement's children
-   *   to the new element.
-   * @param {boolean} copyAttributes - Copy the sourceElement's attributes
-   *   to the new element.
-   * @returns {HTMLElement} The new HTML element.
-   */
-  static cloneElement(sourceElement, tagName, copyChildren, copyAttributes) {
-    /** @type {HTMLElement} */
-    const newElement = document.createElement(tagName);
-    if (copyChildren) {
-      const childNodes = sourceElement.childNodes;
-      childNodes.forEach((node) => {
-        newElement.appendChild(node.cloneNode(true));
-      });
-    }
-    if (copyAttributes) {
-      const attributeNames = sourceElement.getAttributeNames();
-      attributeNames.forEach((name) => {
-        const value = sourceElement.getAttribute(name);
-        if (value) {
-          newElement.setAttribute(name, value);
-        }
-      });
-    }
-    return newElement;
-  }
-
-  /**
-   * Convert various 'Uniface' values into a JS Boolean.
-   *
+   * Convert Uniface property values into JS Boolean.
    * @param {String|boolean|number} value
-   * @return {boolean} 
-   * @memberof Base_UXWF
+   * @return {boolean}
    */
   toBoolean(value) {
     let result = false;
@@ -168,12 +158,7 @@ export class Base_UXWF {
         break;
       case "string":
         value = value.toUpperCase();
-        if (
-          value.substring(0, 1) === "1" ||
-          value.substring(0, 1) === "T" ||
-          value.substring(0, 1) === "Y" ||
-          value.substring(0, 1) === "J"
-        ) {
+        if (value.substring(0, 1) === "1" || value.substring(0, 1) === "T" || value.substring(0, 1) === "Y" || value.substring(0, 1) === "J") {
           result = true;
         }
         break;
@@ -186,7 +171,7 @@ export class Base_UXWF {
   }
 
   /**
-   * Converts a Uniface field value explicitly to a JavaScript Boolean value.
+   * Convert Uniface field value to JS Boolean.
    * Throws an error on conversion failure.
    */
   fieldValueToBoolean(value) {
@@ -216,44 +201,36 @@ export class Base_UXWF {
   }
 
   /**
-      Fix dataUpdate data.
-    **/
+   * Fix dataUpdate data.
+   */
   fixData(data) {
     let newData = {};
     Object.keys(data).forEach((key) => {
-      if (key == "uniface") {
-        if (newData.uniface == undefined) {
-          newData.uniface = {};
-        }
-        Object.keys(data.uniface).forEach((key) => {
-          let ids = key.split(":");
-          if (ids.length == 1) {
-            newData.uniface[key] = data.uniface[key];
-          } else {
-            let newDataNode = newData;
-            let id;
-            let i;
-            for (i = 0; i < ids.length - 1; i++) {
-              id = ids[i];
-              if (newDataNode[id] == undefined) {
-                newDataNode[id] = {};
-              }
-              newDataNode = newDataNode[id];
-            }
-            if (
-              id == "html" ||
-              id == "style" ||
-              id == "class" ||
-              ids[i] == "value" ||
-              ids[i] == "valrep"
-            ) {
-              newDataNode[ids[i]] = data.uniface[key];
+      if (key === "uniface") {
+        Object.keys(data.uniface).forEach((prop) => {
+          let propValue = data.uniface[prop];
+          let [mainKey, ...subKeys] = prop.split(":");
+          if (subKeys.length) {
+            newData[mainKey] = newData[mainKey] || {};
+            if (subKeys.length > 1) {
+              subKeys[0] = subKeys[0] === "class" ? "classes" : subKeys[0];
+              newData[mainKey][subKeys[0]] = newData[mainKey][subKeys[0]] || {};
+              newData[mainKey][subKeys[0]][subKeys[1]] = propValue;
+            } else if (subKeys[0] === "value") {
+              newData[mainKey][subKeys[0]] = propValue;
+            } else if (subKeys[0] === "valrep") {
+              newData[mainKey][subKeys[0]] = this.getFormattedValrep(propValue);
             } else {
-              if (newDataNode.uniface == undefined) {
-                newDataNode.uniface = {};
-              }
-              newDataNode = newDataNode.uniface[ids[i]] = data.uniface[key];
+              newData[mainKey]["uniface"] = newData[mainKey]["uniface"] || {};
+              newData[mainKey]["uniface"][subKeys[0]] = propValue;
             }
+          } else if (mainKey === "value") {
+            newData[mainKey] = propValue;
+          } else if (mainKey === "valrep") {
+            newData[mainKey] = this.getFormattedValrep(propValue);
+          } else {
+            newData["uniface"] = newData["uniface"] || {};
+            newData["uniface"][mainKey] = propValue;
           }
         });
       } else {
@@ -264,70 +241,84 @@ export class Base_UXWF {
   }
 
   /**
-   * Converts "control_id__detail" into "control-id:detail"
-   * 
-   * @param {String} triggerName 
-   * @returns String
+   * Converts a string format valrep into [{"value": "representation"},....] format.
+   * @param {string} valrep - The valrep string to be formatted.
+   * @returns {Array} An array of objects with "value" and "representation" properties.
    */
-  fixTriggerName(triggerName) {
-    triggerName = triggerName.replace("__", ":");
-    triggerName = triggerName.replace("_", "-");
-    return triggerName;
+  getFormattedValrep(valrep) {
+    let formattedValrep = [];
+    valrep.split("").forEach((keyVal) => {
+      // Split each key-value pair by "="
+      let [key, val] = keyVal.split("=");
+      // Push an object with "value" and "representation" properties to the formattedValrep array.
+      formattedValrep.push({
+        "value": key,
+        "representation": val
+      });
+    });
+    return formattedValrep;
   }
 
   /**
-      Trace and console errpr/warning functions
-      Keep trace functions last in JS file, so can easy be changed.
-    **/
-  static warn(functionName, message, consequence) {
-    console.warn(`${this.name}.${functionName}: ${message} - ${consequence}.`);
+   * Calls an objectDefinition function, as specified by the instruction string, and returns the result of that function call.
+   * Returns a error message if the instruction is of an incorrect format or the requested function does not exist.
+   * @param {UObjectDefinition} objectDefinition
+   * @param {String} instruction  ; Instruction string of syntax: "function({arg1{,arg2{...,argN}}})"
+   * @return {*}
+   * @memberof Base_UXWF
+   */
+  objectDefinitionFunctionCall(objectDefinition, instruction) {
+    // Check whether instruction is a proper function call: func(), func(a), or func(a,b,c)
+    if (/^\w+\([\w\s-:,]*\)$/.test(instruction)) {
+      const funcName = instruction.split("(")[0];
+      const args = instruction.split("(")[1].split(")")[0].split(",");
+      switch (funcName) {
+        case "getType":
+          return objectDefinition.getType();
+        case "getName":
+          return objectDefinition.getName();
+        case "getShortName":
+          return objectDefinition.getShortName();
+        case "getProperty":
+          return objectDefinition.getProperty(args[0]);
+        case "getWidgetClass":
+          return objectDefinition.getWidgetClass();
+        case "getCollectionWidgetClass":
+          return objectDefinition.getCollectionWidgetClass();
+        case "getOccurrenceWidgetClass":
+          return objectDefinition.getOccurrenceWidgetClass();
+        default:
+          return `Unknown function detected (${funcName}). Allowed: getType(), getName(), getShortName(), getProperty(propId), getWidgetClass(), getCollectionWidgetClass(), getOccurrenceWidgetClass()`;
+      }
+    } else {
+      return `Invalid instruction detected (${instruction}). Expected: func(), func(a), func(a,b), ...`;
+    }
   }
 
-  static error(functionName, message, consequence) {
-    console.warn(`${this.name}.${functionName}: ${message} - ${consequence}.`);
+  substituteInstructions(objectDefinition, string) {
+    return string.replaceAll(/{{(.*?)}}/gi, (instruction) => {
+      instruction = instruction.substring(2, instruction.length - 2);
+      return this.objectDefinitionFunctionCall(objectDefinition, instruction);
+    });
   }
 
+  /**
+   * Warning log function.
+   * @param {String} functionName
+   * @param {String} message
+   * @param {String} consequence
+   */
   warn(functionName, message, consequence) {
-    console.warn(
-      `${this.constructor.name}.${functionName}: ${message} - ${consequence}.`
-    );
+    console.warn(`${this.constructor.name}.${functionName}: ${message} - ${consequence}.`);
   }
 
+  /**
+   * Error log function.
+   * @param {String} functionName
+   * @param {String} message
+   * @param {String} consequence
+   */
   error(functionName, message, consequence) {
-    console.error(
-      `${this.constructor.name}.${functionName}: ${message} - ${consequence}.`
-    );
-  }
-
-  static staticLog(functionName, data) {
-    const classNames = new Set();
-    // classNames.add("Base");
-    classNames.add("Button");
-    if (classNames.has("ALL") || classNames.has(this.name)) {
-      const log = {
-        all: false,
-        processLayout: false,
-      };
-      let data_ = "";
-      if (data) {
-        data_ = JSON.stringify(data);
-      }
-      console.log(`${this.constructor.name}.static:${functionName}(${data_})`);
-    }
-  }
-
-  log(functionName, data) {
-    // const classNames = new Set("NONE");
-    const classNames = {
-      all: false,
-      Nothing: false,
-    };
-    if (classNames.all || classNames[this.constructor.name]) {
-      let data_ = "";
-      if (data) {
-        data_ = JSON.stringify(data);
-      }
-      console.log(`${this.constructor.name}.${functionName}(${data_})`);
-    }
+    console.error(`${this.constructor.name}.${functionName}: ${message} - ${consequence}.`);
   }
 }

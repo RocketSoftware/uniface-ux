@@ -1,13 +1,12 @@
-// @ts-check 
+// @ts-check
+/* global uniface globalThis */
 
-import "./typedef_UXWF.js"
+import "./typedef_UXWF.js";
+import "./workers_UXWF.js";
 import { Base_UXWF } from "./base_UXWF.js";
-import { StyleClass, StyleProperty } from "./workers_UXWF.js";
 
 /**
- * BASE UX-WIDGET CLASS - Implements all Uniface UX Widget Interface methods.
- * 
- *
+ * Base ux-widget class - Implements all Uniface UX Widget Interface methods.
  * @export
  * @class Widget_UXWF
  * @extends {Base_UXWF}
@@ -15,52 +14,92 @@ import { StyleClass, StyleProperty } from "./workers_UXWF.js";
 export class Widget_UXWF extends Base_UXWF {
 
   /**
-   * Holds the updaters that need to be executed after a property update.
-   *
-   * @property {Array} setters
+   * Configures tracing/logging.
+   * Set all to true to enable tracing for all classes/functions.
+   * Add/set a widget class name to true to enable tracing for that widget class.
+   * Add/set a function to true to enable tracing for that function.
+   * @static
    * @memberof Widget_UXWF
    */
-  setters = [];
+  static tracing = {
+    "classNames": {
+      "all": true,
+      "Select_UXWF": true,
+    },
+    "functionNames": {
+      "all": true,
+      "processLayout": false,
+      "constructor": false,
+      "onConnect": false,
+      "onDisconnect": false,
+      "mapTrigger": false,
+      "dataInit": false,
+      "dataUpdate": false,
+      "dataCleanup": false,
+      "validate": false,
+      "showError": false,
+      "hideError": false,
+      "blockUI": false,
+      "unblockUI": false,
+      "getValue": false,
+    },
+    "elementIds": {
+      "all": true,
+      "noElementId": true,
+      "ufld:WIDGET.DATA.NOMODEL:UX_WORKBENCH.1": false,
+    },
+  };
 
   /**
-   * Holds the updated data of the widget instance
-   *
+   * These static structures are defined here to prevent ESLint parser errors.
+   * However, they need to be defined again within each specific widget class to
+   * ensure unique definitions for each widget.
+   * @static
+   */
+  static structure = {};
+  static subWidgets = {};
+  static subWidgetWorkers = [];
+  static defaultValues = {};
+  static setters = {};
+  static getters = {};
+  static triggers = {};
+  static uiBlocking = ""; // "disabled" | "readonly"
+
+  /**
+   * Holds the updated data of the widget instance.
    * @property {UData} data
-   * @memberof Widget_UXWF
    */
   data = {};
 
   /**
    * Holds references to elements on which updaters, getters, and events handlers need to work.
-   * 
    * @property {Object} elements
-   * @memberof Widget_UXWF
    */
   elements = {};
-
-
 
   /**
    * This method is called by Uniface only once.
    * Returns the template layout to be used by the widget.
-   *
    * @static
-   * @param {Element} skeletonWidgetElement - references to the placeholder element as defined by the IDE or parent widget
-   * @param {UObjectDefinition} definitions - reference to the component definitions
-   * @return {Element} - reference to the root created widget DOM
-   * @memberof Widget_UXWF
+   * @param {Element} skeletonWidgetElement - references to the placeholder element as defined by the IDE or parent widget.
+   * @param {UObjectDefinition} objectDefinition - reference to the the definition of the object for which this widget is created.
+   * @return {Element} - reference to the root created widget DOM.
    */
-  static processLayout(skeletonWidgetElement, definitions) {
-    // Create widget layout
+  static processLayout(skeletonWidgetElement, objectDefinition) {
+    this.staticLog("processLayout", skeletonWidgetElement);
+    // Create widget layout.
     let elementId = skeletonWidgetElement.id;
-    let widgetElement = this.structure.getLayout(definitions);
-    widgetElement.id = elementId;
 
-    // WORKAROUND: Make Uniface object definitions available to widget constructors by element Id
-    if (globalThis.UX_DEFINITIONS === undefined) {
-      globalThis.UX_DEFINITIONS = {};
+    let widgetElement = this.structure.getLayout(objectDefinition);
+    if (elementId) {
+      widgetElement.id = elementId;
     }
-    globalThis.UX_DEFINITIONS[elementId] = definitions;
+
+    // Workaround: Make Uniface object definitions available to widget onConnect() by element Id.
+    if (elementId) {
+      globalThis.UX_DEFINITIONS = globalThis.UX_DEFINITIONS || {};
+      globalThis.UX_DEFINITIONS[elementId] = objectDefinition;
+    }
 
     return widgetElement;
   }
@@ -69,261 +108,418 @@ export class Widget_UXWF extends Base_UXWF {
    * Creates an instance of class widget extended from Widget_UXWF.
    * Initializes some tracing information to distinct widget instances.
    * Instantiates registered sub-widgets.
-   * 
-   * @memberof Widget_UXWF
    */
   constructor() {
     super();
     this.widget = {};
     this.widget.id = Math.random();
-    this.subWidgets = {};
-    this.log("constructor",);
+    this.subWidgetDefinitions = {}; // As registered by the widget class.
+    this.subWidgets = {}; // Instantiated subWidget objects.
+    this.log("constructor");
 
-    // Instantiate sub-widgets
-    Object.keys(this.constructor.subWidgets).forEach((subWidgetId) => {
-      let subWidgetClass = this.constructor.subWidgets[subWidgetId].class;
-      this.subWidgets[subWidgetId] = new subWidgetClass();
+    /**
+     * Perform a deep copy of the sub-widgets registered with the widget class to widget object.
+     * This to make sure widget object changes do not affect the widget class definition.
+     * @type {Object}
+     */
+    let widgetClass = this.constructor;
+    Object.keys(widgetClass.subWidgets).forEach((subWidgetId) => {
+      this.subWidgetDefinitions[subWidgetId] = {};
+      // Copy reference of sub-widget class.
+      this.subWidgetDefinitions[subWidgetId].class =
+        widgetClass.subWidgets[subWidgetId].class;
+      // Copy value of styleClass.
+      this.subWidgetDefinitions[subWidgetId].styleClass =
+        widgetClass.subWidgets[subWidgetId].styleClass;
+      // Copy array of triggers.
+      this.subWidgetDefinitions[subWidgetId].triggers = JSON.parse(
+        JSON.stringify(widgetClass.subWidgets[subWidgetId].triggers)
+      );
     });
-
   }
 
   /**
    * Connects the widget DOM element (as created and returned by processLayout()) with the widget instance.
    * Invokes the onConnect of registered sub-widgets.
    * Returns an array of events descriptions that indicate the value is changed allowing Uniface to react.
-   *
    * @param {Element} widgetElement
-   * @return {Updaters} 
-   * @memberof Widget_UXWF
+   * @param {UObjectDefinition} objectDefinition - reference to the component definitions.
+   * @return {Updaters}
    */
-  onConnect(widgetElement) {
+  onConnect(widgetElement, objectDefinition) {
     this.elements = {};
+
+    /** @type {Object} */
+    let widgetClass = this.constructor;
     this.elements.widget = widgetElement;
     this.log("onConnect");
 
-    // Call onConnect of sub-widgets and map triggers to custom events
-    Object.keys(this.subWidgets).forEach((subWidgetId) => {
-      let element = widgetElement.querySelector(`.${this.constructor.subWidgets[subWidgetId].styleClass}`);
-      let subWidget = this.subWidgets[subWidgetId];
-      subWidget.onConnect(element);
+    // Workaround: Until onConnect() provides the object definition as parameter.
+    if (widgetElement.id && objectDefinition === undefined) {
+      // Only get definition -part of element id: "ufld:FIELD.ENTITY.MODEL:INSTANCE.occ.occ" -> "ufld:FIELD.ENTITY.MODEL"
+      const id = widgetElement.id.split(":").slice(0, 2).join(":");
+      // Look up definition from the global UX_DEFINITIONS object.
+      objectDefinition = globalThis.UX_DEFINITIONS[id];
+    }
+
+    // Iterate registered sub-widget-workers to add their sub-widgets to the sub-widgets of this widget instance.
+    widgetClass.subWidgetWorkers.forEach((subWidgetWorker) => {
+      const subWidgetDefinitions =
+        subWidgetWorker.getSubWidgetDefinitions(objectDefinition);
+      Object.keys(subWidgetDefinitions).forEach((subWidgetId) => {
+        this.subWidgetDefinitions[subWidgetId] =
+          subWidgetDefinitions[subWidgetId];
+      });
     });
 
-    // Get updaters
-    let getter = this.constructor.getters.value;
-    if (getter) {
-      let updaters = getter.getValueUpdaters(this);
-      return updaters;
-    }
+    // Instantiate sub-widgets, register defaults, call their onConnect and collect their value-updaters.
+    let valueUpdaters = [];
+    Object.keys(this.subWidgetDefinitions).forEach((subWidgetId) => {
+      const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
+      const subWidgetStyleClass = subWidgetDefinition.styleClass;
+      const subWidgetElement = widgetElement.querySelector(
+        `.${subWidgetStyleClass}`
+      );
+      const subWidgetClass = this.subWidgetDefinitions[subWidgetId].class;
+      this.subWidgets[subWidgetId] = new subWidgetClass();
+      let subWidgetUpdaters =
+        this.subWidgets[subWidgetId].onConnect(subWidgetElement) || [];
+      subWidgetUpdaters.forEach((subWidgetUpdater) => {
+        if (subWidgetUpdater !== undefined) {
+          valueUpdaters.push(subWidgetUpdater);
+        }
+      });
+    });
+
+    // Add the value-updater(s) of widget itself.
+    let valueWorker = widgetClass.getters.value;
+    let widgetUpdaters = valueWorker?.getValueUpdaters(this);
+    widgetUpdaters?.forEach((widgetUpdater) => {
+      if (widgetUpdater !== undefined) {
+        valueUpdaters.push(widgetUpdater);
+      }
+    });
+    return valueUpdaters;
   }
 
   /**
    * Use this method to map a Uniface trigger to an event of your (sub) widget.
-   * 
    * @param {String} triggerName
-   * @return {TriggerMapping|undefined} [triggerMapping]
-   * @memberof Widget_UXWF
+   * @return {TriggerMapping|undefined} [triggerMapping].
    */
   mapTrigger(triggerName) {
-    triggerName = this.fixTriggerName(triggerName);
     this.log("mapTrigger", triggerName);
+
+    /** @type {Object} */
+    let widgetClass = this.constructor;
     let triggerMapping = null;
-    if (this.constructor.triggers) {
-      let setter = this.constructor.triggers[triggerName];
-      if (setter) {
-        return setter.getTriggerMapping(this);
-      }
+
+    // Look for the trigger-mapping with the widget-class itself.
+    let worker = widgetClass.triggers[triggerName];
+    if (worker) {
+      triggerMapping = worker.getTriggerMapping(this);
     }
-    if (triggerMapping === null && this.subWidgets) {
-      let subWidgetId = triggerName.split(":")[0];
-      if (this.subWidgets[subWidgetId]) {
-        let subWidgetPrefix = `${subWidgetId}:`;
-        let subWidgetTriggerName = triggerName.substring(subWidgetPrefix.length);
-        triggerMapping = this.subWidgets[subWidgetId].mapTrigger(subWidgetTriggerName);
+
+    // Look for the trigger-mapping with on of the widget-class's sub-widgets.
+    Object.keys(this.subWidgets).forEach((subWidgetId) => {
+      if (triggerMapping === null) {
+        const subWidgetPrefix = `${subWidgetId}_`;
+        if (triggerName.startsWith(subWidgetPrefix)) {
+          const subWidgetTriggerName = triggerName.substring(
+            subWidgetPrefix.length
+          );
+          triggerMapping =
+            this.subWidgets[subWidgetId].mapTrigger(subWidgetTriggerName);
+        }
       }
-    }
+    });
+
     if (triggerMapping) {
       return triggerMapping;
-    } else {
-      this.warn("mapTrigger", `No trigger map found for (web)trigger '${triggerName}'.`, "Ignored")
     }
+
+    this.warn(
+      "mapTrigger",
+      `No trigger map found for (web)trigger '${triggerName}'.`,
+      "Ignored"
+    );
   }
 
   /**
    * Initiates the widget after it has been bound to a new data object.
-   *
-   * @memberof Widget_UXWF
    */
   dataInit() {
     this.data = {};
     this.data.id = Math.random();
     this.data.properties = {};
-    this.log("dataInit", this.constructor.defaultValues);
 
-    // Remove all html attributes except id but including class and style attributes
-    this.elements.widget.getAttributeNames().forEach((attributeName) => {
-      if (attributeName !== "id") {
-        this.elements.widget.removeAttribute(attributeName);
+    /** @type {Object} */
+    let widgetClass = this.constructor;
+    this.log("dataInit", widgetClass.defaultValues);
+
+    /** @NOTE: This loop only deletes the attributes of the widget's root element,
+     * it does not delete any attributes on child elements. This means the widget is
+     * potentially still not reset properly and state might by left behind on child
+     * elements by previous use. (UNI-39487)
+     * This loop needs to be rewritten and should cleanup all child elements as well.
+     * However, this has as a consequence that style-classes of child elements get deleted too
+     * meaning child elements cannot be found anymore. To resolve that, the onConnect() needs to
+     * build a element index first, like we had in the old widgets. It can do so by iterating
+     * the widget's workers and have them add their e reference to their element to this admin.
+     * Once this is available, workers don't rely on the style-class to lookup their element
+     * and elements can be safely cleaned up by the dataInit(). (UNI-39488)
+     * For now, we disable this code. Separate stories are created to deal with this.
+    // Remove all html attributes except id but including class and style attributes.
+    */
+    // this.elements.widget.getAttributeNames().forEach((attributeName) => {
+    //   if (attributeName !== "id") {
+    //     this.elements.widget.removeAttribute(attributeName);
+    //   }
+    // });
+
+    // Get default property values.
+    /** @type {UData} */
+    let data = widgetClass.defaultValues;
+
+    // Iterate sub-widgets and call their dataInit() followed by their dataUpdate() with default values targeted at the sub-widgets.
+    Object.keys(this.subWidgets).forEach((subWidgetId) => {
+      this.subWidgets[subWidgetId].dataInit();
+      if (data[subWidgetId]) {
+        this.subWidgets[subWidgetId]?.dataUpdate(data[subWidgetId]);
       }
     });
 
-    // Get default property values
-    /** @type {UData} */
-    let data = this.constructor.defaultValues;
-
-    // Call dataInit() of sub-widgets (if any)
-    // Set default property values targeted for sub-widget
-    if (this.subWidgets) {
-      Object.keys(this.subWidgets).forEach((subWidget) => {
-        this.subWidgets[subWidget].dataInit();
-        this.subWidgets[subWidget].dataUpdate(data[subWidget]);
-      });
-    }
-
-    // Set default property values
+    // Set default property values of widget.
     this.setProperties(data);
   }
 
   /**
    * Updates the widget with new or changed data, where data is value, property values, valrep.
-   *
    * @param {UData} data
-   * @memberof Widget_UXWF
    */
   dataUpdate(data) {
     data = this.fixData(data);
     this.log("dataUpdate", data);
-    this.setProperties(data);
 
-    // Call dataUpdate() of sub-widgets (if any)
-    // and pass data targeted for sub-widget
-    Object.keys(this.subWidgets).forEach((subWidget) => {
-      if (data[subWidget]) {
-        this.subWidgets[subWidget].dataUpdate(data[subWidget]);
+    // Iterate sub-widgets and call their dataUpdate() with data targeted at the sub-widgets.
+    Object.keys(this.subWidgets).forEach((subWidgetId) => {
+      if (data[subWidgetId]) {
+        this.subWidgets[subWidgetId].dataUpdate(data[subWidgetId]);
       }
     });
 
+    this.setProperties(data);
   }
 
   /**
    * Cleans up the widget.
-   *
-   * @memberof Widget_UXWF
    */
   dataCleanup() {
     this.log("dataCleanup");
 
-    // Call dataCleanup of sub-widgets
-    Object.keys(this.subWidgets).forEach((key) => {
-      this.subWidgets[key].dataCleanup();
+    // Call dataCleanup() of sub-widgets (if any).
+    Object.keys(this.subWidgets).forEach((subWidgetId) => {
+      this.subWidgets[subWidgetId].dataCleanup();
     });
   }
 
   /**
    * Returns the (field) value back to Uniface.
-   *
-   * @return {any} 
-   * @memberof Widget_UXWF
+   * @return {any}
    */
   getValue() {
-    let value;
-    // Get value-getter from WORKER
-    let getter = this.constructor.getters.value;
-    if (getter) {
-      value = getter.getValue(this);
+    let value = {};
+    // Get the 'value' worker from the constructor's getters.
+    /** @type {Object} */
+    let widgetClass = this.constructor;
+    let valueWorker = widgetClass.getters.value;
+    // Check if the 'value' worker is defined.
+    if (valueWorker) {
+      // If the 'value' worker is defined, call its getValue method, passing the current instance (this) and
+      // assign the result to the value variable.
+      value = valueWorker.getValue(this);
     }
     this.log("getValue", value);
+    // Return the value.
     return value;
   }
 
   /**
    * Validates the value of the widget before passing it back to Uniface.
-   *
    * @return {UDataError|null} [result]
-   * @memberof TextField5
    */
   validate() {
     this.log("validate");
-    let result = null;
-    return result;
+    let uxwfErrors = {
+      "id": "UXWF_VALIDATION_ERRORS",
+      "validationMessages": {},
+    };
+    // Initialize a flag to track if there are any validation errors.
+    let hasUxwfErrors = false;
+    Object.keys(this.subWidgets).forEach((subWidgetId) => {
+      // Call the validate method on each sub-widget and store the result.
+      let subWidgetValidation = this.subWidgets[subWidgetId].validate();
+      // If the sub-widget returns a validation message, add it to the uxwfErrors object.
+      if (subWidgetValidation) {
+        uxwfErrors.validationMessages[subWidgetId] = subWidgetValidation;
+        // Set the error flag to true since there's at least one validation error.
+        hasUxwfErrors = true;
+      }
+    });
+    return hasUxwfErrors ? JSON.stringify(uxwfErrors) : null;
   }
 
   /**
    * Shows the error as provided by Uniface.
-   *
    * @param {String} errorMessage
-   * @memberof Widget_UXWF
    */
   showError(errorMessage) {
     this.log("showError", errorMessage);
-    this.setProperties({ uniface: { error: true, "error-message": errorMessage } });
+    let subWidgetIds = Object.keys(this.subWidgets);
+    if (subWidgetIds.length > 0) {
+      subWidgetIds.forEach((subWidgetId) => {
+        this.subWidgets[subWidgetId].hideError();
+      });
+      try {
+        let parsedErrorMsg = JSON.parse(errorMessage);
+        if (parsedErrorMsg.id === "UXWF_VALIDATION_ERRORS") {
+          Object.keys(parsedErrorMsg.validationMessages).forEach((subWidgetId) => {
+            this.subWidgets[subWidgetId].showError(parsedErrorMsg.validationMessages[subWidgetId]);
+          });
+        } else {
+          this.setProperties({
+            "uniface": {
+              "error": true,
+              "error-message": errorMessage
+            }
+          });
+        }
+      // eslint-disable-next-line no-unused-vars
+      } catch (_) {
+        this.setProperties({
+          "uniface": {
+            "error": true,
+            "error-message": errorMessage
+          }
+        });
+      }
+    } else {
+      this.setProperties({
+        "uniface": {
+          "error": true,
+          "error-message": errorMessage
+        }
+      });
+    }
   }
 
   /**
    * Hides the error as it was provided by Uniface to showError.
-   *
-   * @memberof Widget_UXWF
    */
   hideError() {
     this.log("hideError");
-    this.setProperties({ uniface: { error: false, "error-message": "" } });
+    // Call hideError() for each sub-widget.
+    Object.keys(this.subWidgets).forEach((subWidgetId) => {
+      this.subWidgets[subWidgetId].hideError();
+    });
+    this.setProperties({
+      "uniface": {
+        "error": false,
+        "error-message": ""
+      }
+    });
   }
 
   /**
    * Blocks user interaction with the widget.
-   *
-   * @memberof Widget_UXWF
    */
   blockUI() {
     this.log("blockUI");
-    this.elements.widget.classList.add("u-blocked");
-    switch (this.constructor.uiBlocking) {
-      case "disabled":
-        this.elements.widget.disabled = true;
-        break;
-      case "readonly":
-        this.elements.widget.readOnly = true;
-        break;
-      default:
-        this.error("blockUI()", "Static uiBlocking not defined or invalid value", "No UI blocking");
+
+    /** @type {Object} */
+    let widgetClass = this.constructor;
+    // Call blockUI() for each sub-widget.
+    Object.keys(this.subWidgets).forEach((key) => {
+      this.subWidgets[key].blockUI();
+    });
+    // Check if uiBlocking is defined in the constructor.
+    if (widgetClass.uiBlocking) {
+      // Add the 'u-blocked' class to the widget element.
+      this.elements.widget.classList.add("u-blocked");
+      // Handle different types of UI blocking.
+      switch (widgetClass.uiBlocking) {
+        case "disabled":
+          // If uiBlocking is set to "disabled", disable the widget element.
+          this.elements.widget.disabled = true;
+          break;
+        case "readonly":
+          // If uiBlocking is set to "readonly", set the widget element to read-only.
+          this.elements.widget.readOnly = true;
+          break;
+        default:
+          // If uiBlocking has an invalid value, log an error.
+          this.error(
+            "blockUI()",
+            "Static uiBlocking not defined or invalid value",
+            "No UI blocking"
+          );
+      }
     }
   }
 
   /**
    * Unblocks user interaction with the widget.
-   *
-   * @memberof Widget_UXWF
    */
   unblockUI() {
     this.log("unblockUI");
-    this.elements.widget.classList.remove("u-blocked");
-    switch (this.constructor.uiBlocking) {
-      case "disabled":
-        this.elements.widget.disabled = this.toBoolean(
-          this.data.properties.html.disabled
-        );
-        break;
-      case "readonly":
-        this.elements.widget.readOnly = this.toBoolean(
-          this.data.properties.html.readonly
-        );
-        break;
-      default:
-        this.error(
-          "unblockUI()",
-          "Static uiBlocking not defined or invalid value",
-          "No UI blocking"
-        );
+
+    /** @type {Object} */
+    let widgetClass = this.constructor;
+    // Call unblockUI() for each sub-widget.
+    Object.keys(this.subWidgets).forEach((key) => {
+      this.subWidgets[key].unblockUI();
+    });
+    // Check if uiBlocking is defined in the constructor.
+    if (widgetClass.uiBlocking) {
+      // Remove the 'u-blocked' class from the widget element.
+      this.elements.widget.classList.remove("u-blocked");
+      // Handle different types of UI blocking.
+      switch (widgetClass.uiBlocking) {
+        case "disabled":
+          // If uiBlocking is set to "disabled",
+          // set the widget's disabled property based on the corresponding HTML property value.
+          this.elements.widget.disabled = this.toBoolean(
+            this.data.properties.html.disabled
+          );
+          break;
+        case "readonly":
+          // If uiBlocking is set to "readonly",
+          // set the widget's readOnly property based on the corresponding HTML property value.
+          this.elements.widget.readOnly = this.toBoolean(
+            this.data.properties.html.readonly
+          );
+          break;
+        default:
+          // If uiBlocking has an invalid value, log an error.
+          this.error(
+            "unblockUI()",
+            "Static uiBlocking not defined or invalid value",
+            "No UI blocking"
+          );
+      }
     }
   }
 
   /**
    * Instructs the widget to update itself based on provided data changes.
-   * 
-   * @param {UData} data 
+   * @param {UData} data
    */
   setProperties(data) {
+
+    /** @type {Object} */
+    let widgetClass = this.constructor;
+    let setters = [];
     this.log("setProperties", data);
-    this.setters = [];
     // Iterate properties in data, update widget state, and collect setter information.
     if (data) {
       Object.keys(data).forEach((prefix) => {
@@ -336,16 +532,16 @@ export class Widget_UXWF extends Base_UXWF {
             Object.keys(data[prefix]).forEach((id) => {
               if (data[prefix][id] === uniface.RESET) {
                 this.data.properties[prefix][id] =
-                  this.constructor.defaultValues[prefix][id];
+                  widgetClass.defaultValues[prefix][id];
               } else {
                 this.data.properties[prefix][id] = data[prefix][id];
               }
               if (
-                this.constructor.setters[prefix] &&
-                this.constructor.setters[prefix][id]
+                widgetClass.setters[prefix] &&
+                widgetClass.setters[prefix][id]
               ) {
-                this.constructor.setters[prefix][id].forEach((setter) => {
-                  this.addSetter(setter);
+                widgetClass.setters[prefix][id].forEach((setter) => {
+                  setters.push(setter);
                 });
               } else {
                 this.warn(
@@ -360,22 +556,26 @@ export class Widget_UXWF extends Base_UXWF {
             if (this.data.properties[prefix] === undefined) {
               this.data.properties[prefix] = {};
             }
-            Object.keys(data[prefix]).forEach(id => {
+            Object.keys(data[prefix]).forEach((id) => {
               if (data[prefix][id] === uniface.RESET) {
-                this.data.properties[prefix][id] = this.constructor.defaultValues[prefix][id] ? this.constructor.defaultValues[prefix][id] : "unset";
-              } else if (this.data.properties[prefix][id]) {
-                this.data.properties[prefix][id] = data[prefix][id];
+                this.data.properties[prefix][id] = widgetClass.defaultValues[
+                  prefix
+                ][id]
+                  ? widgetClass.defaultValues[prefix][id]
+                  : "unset";
               } else {
-                this.data.properties[prefix] = {};
-                this.data.properties[prefix][id] = data[prefix][id]
-                new StyleProperty(this.constructor, { id: data[prefix][id] })
+                this.data.properties[prefix][id] = data[prefix][id];
               }
-              if (this.constructor.setters[prefix]) {
-                this.constructor.setters[prefix].forEach(setter => {
-                  this.addSetter(setter);
+              if (widgetClass.setters[prefix]) {
+                widgetClass.setters[prefix].forEach((setter) => {
+                  setters.push(setter);
                 });
               } else {
-                this.warn("setProperties(data)", `Widget does not support property '${prefix}:${id}'`, "Ignored");
+                this.warn(
+                  "setProperties(data)",
+                  `Widget does not support property '${prefix}:${id}'`,
+                  "Ignored"
+                );
               }
             });
             break;
@@ -383,13 +583,13 @@ export class Widget_UXWF extends Base_UXWF {
           case "valrep":
             let id = prefix;
             if (data[id] === uniface.RESET) {
-              this.data.properties[id] = this.constructor.defaultValues[id];
+              this.data.properties[id] = widgetClass.defaultValues[id];
             } else {
               this.data.properties[id] = data[id];
             }
-            if (this.constructor.setters[id]) {
-              this.constructor.setters[id].forEach((setter) => {
-                this.addSetter(setter);
+            if (widgetClass.setters[id]) {
+              widgetClass.setters[id].forEach((setter) => {
+                setters.push(setter);
               });
             } else {
               this.warn(
@@ -404,16 +604,13 @@ export class Widget_UXWF extends Base_UXWF {
             Object.keys(data[prefix]).forEach((id) => {
               if (data[prefix][id] === uniface.RESET) {
                 this.data.properties[prefix][id] =
-                  this.constructor.defaultValues[prefix][id];
+                  widgetClass.defaultValues[prefix][id];
               } else {
                 this.data.properties[prefix][id] = data[prefix][id];
-                if (data[prefix][id] && !Object.keys(this.data.properties[prefix]).filter(x => Object.keys(data[prefix]).includes(x)).length) {
-                  new StyleClass(this.constructor, [id])
-                }
               }
-              if (this.constructor.setters[prefix]) {
-                this.constructor.setters[prefix].forEach((setter) => {
-                  this.addSetter(setter);
+              if (widgetClass.setters[prefix]) {
+                widgetClass.setters[prefix].forEach((setter) => {
+                  setters.push(setter);
                 });
               } else {
                 this.warn(
@@ -425,25 +622,19 @@ export class Widget_UXWF extends Base_UXWF {
             });
             break;
           default:
-          // This is a sub widget -> delicate TBD
+          // This is a sub widget -> delicate TBD.
         }
       });
     }
-    this.setters.forEach((setter) => {
+    setters.forEach((setter) => {
       setter.refresh(this);
     });
-    this.setters = [];
   }
 
   /**
-   * Adds a setter to itself which are executed later by
-   * 
-   * @param {*} setter
+   * Collects trace information and returns a trace message.
+   * @return {String}
    */
-  addSetter(setter) {
-    this.setters.push(setter);
-  }
-
   getTraceDescription() {
     let widgetId = "<noWidgetId>";
     let elementId = "<noElementId>";
@@ -462,33 +653,34 @@ export class Widget_UXWF extends Base_UXWF {
 
   /**
    * Logs the provided tracing info in console.log.
-   *
    * @static
    * @param {*} functionName
    * @param {*} data
-   * @memberof Widget_UXWF
    */
   static staticLog(functionName, data) {
-    const classNames = new Set();
-    classNames.add("ALL");
-    if (classNames.has("ALL") || classNames.has(this.name)) {
-      const log = {
-        all: true,
-        processLayout: false,
-      };
-      if (log.all || log[functionName]) {
+    if (this.tracing.classNames.all || this.tracing.classNames[this.name]) {
+      if (
+        this.tracing.functionNames.all ||
+        this.tracing.functionNames[functionName]
+      ) {
+        let prefix = "WIDGET";
+        if (["processLayout"].includes(functionName)) {
+          prefix = "UX-WIDGET";
+        }
         if (data) {
           if (data instanceof HTMLElement) {
             console.log(
-              `WIDGET[${this.name}:static].${functionName}("${data.outerHTML}")`
+              `${prefix}[${this.name}:static].${functionName}("${data.outerHTML}")`
             );
           } else {
             console.log(
-              `WIDGET[${this.name}:static].${functionName}(${JSON.stringify(data)})`
+              `${prefix}[${this.name}:static].${functionName}(${JSON.stringify(
+                data
+              )})`
             );
           }
         } else {
-          console.log(`WIDGET[${this.name}:static].${functionName}()`);
+          console.log(`${prefix}[${this.name}:static].${functionName}()`);
         }
       }
     }
@@ -496,62 +688,55 @@ export class Widget_UXWF extends Base_UXWF {
 
   /**
    * Logs the provided tracing info in console.log.
-   *
    * @param {String} functionName
    * @param {Object} [data]
-   * @memberof Widget_UXWF
    */
   log(functionName, data) {
-    // const classNames = new Set("NONE");
-    const classNames = {
-      all: true,
-      TextField_UXWF: true,
-      Button_UXWF: true,
-    };
-    const functionNames = {
-      all: false,
-      constructor: false,
-      onConnect: false,
-      onDisconnect: false,
-      mapTrigger: false,
-      dataInit: false,
-      dataUpdate: false,
-      setDisabled: false,
-      dataCleanup: false,
-      validate: false,
-      showError: false,
-      hideError: false,
-      blockUI: false,
-      unblockUI: false,
-      getValue: false,
-      onFocus: false,
-      onBlur: false,
-      gridEventHandler: false,
-      editorAccept: false,
-      setBlocked: false,
-      setHtmlAttribute: false,
-      setSlot: false,
-      setMinMax: false,
-      setValue: false,
-      invokeSetters: false,
-    };
-    const elementIds = {
-      all: false,
-      noElementId: true,
-      "ufld:WIDGET.DATA.NOMODEL:UX_WORKBENCH.1": true,
-    };
-    if (classNames.all || classNames[this.constructor.name]) {
-      if (functionNames.all || functionNames[functionName]) {
+
+    /** @type {Object} */
+    let widgetClass = this.constructor;
+    if (
+      widgetClass.tracing.classNames.all ||
+      widgetClass.tracing.classNames[this.constructor.name]
+    ) {
+      if (
+        widgetClass.tracing.functionNames.all ||
+        widgetClass.tracing.functionNames[functionName]
+      ) {
         let elementId = "noElementId";
         if (this.elements && this.elements.widget && this.elements.widget.id) {
           elementId = this.elements.widget.id;
         }
-        if (elementIds.all || elementIds[elementId]) {
+        if (
+          widgetClass.tracing.elementIds.all ||
+          widgetClass.tracing.elementIds[elementId]
+        ) {
           let data_ = "";
           if (data) {
             data_ = JSON.stringify(data);
           }
-          console.log(`WIDGET[${this.getTraceDescription()}].${functionName}(${data_})`);
+          let prefix = "WIDGET";
+          if (
+            [
+              "constructor",
+              "onConnect",
+              "mapTrigger",
+              "dataInit",
+              "dataUpdate",
+              "dataCleanup",
+              "getValue",
+              "validate",
+              "showError",
+              "hideError",
+              "blockUI",
+              "unblockUI",
+            ].includes(functionName)
+          ) {
+            prefix = "UX-WIDGET";
+          }
+          console.log(
+            `${prefix}[${this.getTraceDescription()}].${functionName}(${data_})`
+          );
         }
       }
     }

@@ -46,6 +46,12 @@
   transition: all 300ms cubic-bezier(0.1, 0.9, 0.2, 1);
 }
 
+.u-number-field::part(root),
+.u-text-field::part(root),
+.u-text-area::part(root) {
+  width: 100%;
+}
+
 /**
  * Set contentVisibility and contain styles for all fluent-card ancestors of the select widget
  * to visible and initial respectively.
@@ -55,4 +61,67 @@
 fluent-card {
   content-visibility: initial;
   contain: initial;
+}
+
+/* Styling the label with respect to its added attribute u-label-position */
+.u-number-field[u-label-position],
+.u-select[u-label-position],
+.u-text-field[u-label-position],
+.u-text-area[u-label-position] {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  order: unset;
+}
+
+.u-number-field[u-label-position="before"]::part(label),
+.u-select[u-label-position="before"]::part(label),
+.u-text-field[u-label-position="before"]::part(label),
+.u-text-area[u-label-position="before"]::part(label) {
+  margin-bottom: unset;
+  margin-inline-end: 4px;
+  align-self: normal;
+  align-content: center;
+  padding-inline-end: 3px;
+}
+
+.u-number-field[u-label-position="after"]::part(label),
+.u-select[u-label-position="after"]::part(label),
+.u-text-field[u-label-position="after"]::part(label),
+.u-text-area[u-label-position="after"]::part(label) {
+  margin-bottom: unset;
+  margin-inline-start: 4px;
+  order: 2;
+  align-self: normal;
+  align-content: center;
+  padding-inline-start: 3px;
+}
+
+.u-number-field[u-label-position="below"],
+.u-number-field[u-label-position="above"],
+.u-select[u-label-position="below"],
+.u-select[u-label-position="above"],
+.u-text-field[u-label-position="below"],
+.u-text-field[u-label-position="above"],
+.u-text-area[u-label-position="below"],
+.u-text-area[u-label-position="above"] {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.u-number-field[u-label-position="below"]::part(label),
+.u-select[u-label-position="below"]::part(label),
+.u-text-field[u-label-position="below"]::part(label),
+.u-text-area[u-label-position="below"]::part(label) {
+  order: 2;
+  margin-top: 4px;
+  margin-bottom: unset;
+  width: 100%;
+}
+
+.u-number-field[u-label-position="above"]::part(label),
+.u-select[u-label-position="above"]::part(label),
+.u-text-field[u-label-position="above"]::part(label),
+.u-text-area[u-label-position="above"]::part(label) {
+  width: 100%;
 }
