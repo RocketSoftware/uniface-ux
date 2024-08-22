@@ -1,6 +1,6 @@
 import { Button_UXWF } from "../../sources/ux/button_UXWF.js";
 import { Widget_UXWF } from "../../sources/ux/widget_UXWF.js";
-import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidget, SlottedWidgetsByProperty, 
+import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidget, 
     WidgetsByProperty , BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean ,
     HtmlValueAttributeBoolean , HtmlAttributeMinMaxLength , StyleProperty , Worker
  } from "../../sources/ux/workers_UXWF.js"
@@ -338,70 +338,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
             expect(widgetInstance.elements.widget.hidden).to.equal(true);
             expect(widgetInstance.elements.widget.classList).to.have.lengthOf(0);
         });
-    });
-
-
-    // ===================================================================================================================
-    // == Testing SlottedWidgetsByProperty class ==========================================================================
-    // ===================================================================================================================
-    describe(" Test SlottedWidgetsByProperty Class", function () {
-
-        globalThis.UX_DEFINITIONS = {}
-        globalThis.UX_DEFINITIONS["ufld:FIELD.ENTITY.MODEL"] = "test"
-        
-        let widgetClass;
-        let tagName;
-        let styleClass;
-        let elementQuerySelector;
-        let slot;
-        let propId;
-        let subWidgetDefaultValues;
-        let definitions;
-        let element;
-        let worker;
-
-        beforeEach(function () {
-            widgetClass = {};
-            propId = "uniface:value"
-            tagName = "span"
-            styleClass = "u-start"
-            elementQuerySelector = ".u-start"
-            slot = ""
-            subWidgetDefaultValues = []
-            element = new SlottedWidgetsByProperty(widgetClass, tagName, styleClass, elementQuerySelector, slot, propId, []);
-        });
-
-        it("should initialize with correct properties", function () {
-            expect(element.widgetClass).to.equal(widgetClass);
-            expect(element.tagName).to.equal(tagName);
-            expect(element.styleClass).to.equal(styleClass);
-            expect(element.elementQuerySelector).to.equal(elementQuerySelector);
-            expect(element.slot).to.equal(slot);
-            expect(element.propId).to.equal(propId);
-            expect(element.subWidgetDefaultValues).to.eql(subWidgetDefaultValues);
-
-        });
-
-        it("Check Generate Layout", function () {
-            
-            definitions = {
-                "widget_class": tester.getWidgetClass(),
-                "properties": {
-                    "controls-center": "four\u001bfive\u001bsix",
-                    "controls-end": "seven",
-                    "controls-start": "one\u001btwo\u001bthree",
-                    "five:widget-class": "UX.Button",
-                    "four:widget-class": "UX.Button",
-                    "html:readonly": "true",
-                    "one:widget-class": "UX.Button",
-                    "seven:widget-class": "UX.Button",
-                    "six:widget-class": "UX.Button",
-                    "three:widget-class": "UX.Button",
-                    "two:widget-class": "UX.Button"
-                } , 
-            }
-            let layoutElement = element.getLayout(definitions)
-         });
     });
 
     // ===================================================================================================================
