@@ -226,18 +226,18 @@
 
         it("show apply button", function (done) {
           let showApplyButton = true;
-          let defaultClass = "u-change-button";
+          let defaultClass = "u-sw-changebutton";
           // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
           tester.dataUpdate({
             uniface: {
-              "change-button": showApplyButton,
+              "changebutton": showApplyButton,
             },
           });
 
           setTimeout(function () {
             if (showApplyButton) {
               let element = widget.elements.widget.querySelector(
-                "fluent-button.u-change-button"
+                "fluent-button.u-sw-changebutton"
               );
               expect(element).to.have.class(
                 defaultClass,
@@ -245,11 +245,11 @@
               );
             } else {
               let element = widget.elements.widget.querySelector(
-                "fluent-button.u-change-button"
+                "fluent-button.u-sw-changebutton"
               );
               assert(
                 widget.elements.widget
-                  .querySelector("fluent-button.u-change-button")
+                  .querySelector("fluent-button.u-sw-changebutton")
                   .hasAttribute("hidden"),
                 "Failed to show the hidden attribute for button"
               );
@@ -260,22 +260,22 @@
 
         it("don't show apply button", function (done) {
             let showApplyButton = false;
-            let defaultClass = "u-change-button"
+            let defaultClass = "u-sw-changebutton"
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
             tester.dataUpdate({
                 uniface: {
-                    "change-button": showApplyButton
+                    "changebutton": showApplyButton
                 }
 
             });
 
             setTimeout(function () {
                 if (showApplyButton) {
-                    let element = widget.elements.widget.querySelector("fluent-button.u-change-button")
+                    let element = widget.elements.widget.querySelector("fluent-button.u-sw-changebutton")
                     expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
                 } else {
-                    let element = widget.elements.widget.querySelector("fluent-button.u-change-button")
-                    assert(widget.elements.widget.querySelector("fluent-button.u-change-button").hasAttribute("hidden"), "Failed to show the label text");                    
+                    let element = widget.elements.widget.querySelector("fluent-button.u-sw-changebutton")
+                    assert(widget.elements.widget.querySelector("fluent-button.u-sw-changebutton").hasAttribute("hidden"), "Failed to show the label text");                    
                 }
                 done();
 
@@ -291,9 +291,9 @@
             tester.dataUpdate({
                 "icon": buttonIconName,
                 uniface: {
-                    "change-button": showApplyButton,
-                    "change-button:value": "Click Me",
-                    "change-button:icon": buttonIconName,
+                    "changebutton": showApplyButton,
+                    "changebutton:value": "Click Me",
+                    "changebutton:icon": buttonIconName,
                  },
             });
 
@@ -411,8 +411,8 @@
         it("Set html:placeholder property for numberField", function (done) {
             let placeHolderText = "Input the Number"
             tester.dataUpdate({
-                uniface: {
-                    "html:placeholder": placeHolderText
+                "html": {
+                    "placeholder": placeHolderText
                 }
 
             });
@@ -429,8 +429,8 @@
         it("Set html:readonly property true for numberField", function (done) {
             let readOnly = "readOnly"
             tester.dataUpdate({
-                uniface: {
-                    "html:readonly": true
+                "html": {
+                    "readonly": true
                 }
 
             });
@@ -447,8 +447,8 @@
         it("Set html:readonly property false for numberField", function (done) {
             let readOnly = "readOnly"
             tester.dataUpdate({
-                uniface: {
-                    "html:readonly": false
+                "html": {
+                    "readonly": false
                 }
 
             });
@@ -482,8 +482,8 @@
         it("Set html:disabled property false for numberField", function (done) {
             let disabled = "disabled"
             tester.dataUpdate({
-                uniface: {
-                    "html:disabled": false
+                html: {
+                    "disabled": false
                 }
 
             });
@@ -500,8 +500,8 @@
         it("Set html:appearance outline property true for numberField", function (done) {
             let appearanceStyle = "outline"
             tester.dataUpdate({
-                uniface: {
-                    "html:appearance": appearanceStyle
+                html: {
+                    "appearance": appearanceStyle
                 }
 
             });
@@ -520,8 +520,8 @@
         it("Set html:appearance filled property true for numberField", function (done) {
             let appearanceStyle = "filled"
             tester.dataUpdate({
-                uniface: {
-                    "html:appearance": appearanceStyle
+                html: {
+                    "appearance": appearanceStyle
                 }
 
             });
@@ -540,8 +540,8 @@
          it("Set html:hide-step property true for numberField", function (done) {
             let hideStep = true
             tester.dataUpdate({
-                uniface: {
-                    "html:hide-step": hideStep
+                html: {
+                    "hide-step": hideStep
                 }
 
             });
@@ -558,8 +558,8 @@
          it("Set html:hide-step property false for numberField", function (done) {
             let hideStep = false
             tester.dataUpdate({
-                uniface: {
-                    "html:hide-step": hideStep
+                html: {
+                    "hide-step": hideStep
                 }
 
             });
@@ -664,28 +664,31 @@
             verifyWidgetClass(widgetClass)
         });
 
-        it("setting minlength and maxlength", function(done){
+        it("setting min and max", function(done){
             
             tester.dataUpdate({
-                uniface: {
-                    "html:minlength": minlength,
-                    "html:maxlength": maxlength
+                "html": {
+                    "min": minlength,
+                    "max": maxlength
                 }
             });
             setTimeout(function () {
-                expect(widget.elements.widget.hasAttribute("maxlength"), "Failed to show the maxlength attribute");
-                expect(widget.elements.widget.hasAttribute("minlength"), "Failed to show the minlength attribute");
-                assert.equal(widget.elements.widget.getAttribute("minlength"), minlength ,"Min Length is not same" + minlength);
-                assert.equal(widget.elements.widget.getAttribute("maxlength"), maxlength ,"Max Length is not same" + maxlength);
+                expect(widget.elements.widget.hasAttribute("max"), "Failed to show the max attribute");
+                expect(widget.elements.widget.hasAttribute("min"), "Failed to show the min attribute");
+                assert.equal(widget.elements.widget.getAttribute("min"), minlength ,"Min is not same" + minlength);
+                assert.equal(widget.elements.widget.getAttribute("max"), maxlength ,"Max is not same" + maxlength);
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
         });
         
         it("Set invalid value in number Field", function (done) {   
             tester.dataUpdate({
-                    "value": 1
+                uniface: {
+                    error: true,
+                    "error-message": "Field Value length mismatch."
+                }
             });
-            widget.showError("Field Value length mismatch.");
+
             setTimeout(function () {
                 
                 expect(widget.elements.widget).to.have.class("u-invalid");
@@ -699,9 +702,13 @@
 
         it("Hide Error Set invalid value in number Field", function (done) {   
             tester.dataUpdate({
-                    "value": 111
+                uniface: {
+                    error: false,
+                    "error-message": "Field Value length mismatch."
+                }
             });
             widget.hideError("Field Value length mismatch.");
+
             setTimeout(function () {
                 
                 expect(widget.elements.widget).to.not.have.class("u-invalid");
