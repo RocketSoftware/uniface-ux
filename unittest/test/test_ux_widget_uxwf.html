@@ -82,19 +82,20 @@
             var line;
             line = "Results Passed : " + this.stats.passes + " || Failed : " + this.stats.failures;
 
-            var newDiv = document.createElement("div");
-            var newHr = document.createElement("hr");
-            var newResultDiv = document.createElement("div");
+            var resultDiv = document.createElement("div");
+            var resultHr = document.createElement("hr");
+            var resultInnerDiv = document.createElement("div");
 
-            newDiv.id = "test-ended";
-            newResultDiv.id = "test-result";
+            resultDiv.id = "test-ended";
+            resultInnerDiv.id = "test-result";
 
-            var newContent = document.createTextNode(line);
-            newDiv.appendChild(newHr);
-            newDiv.appendChild(newResultDiv);
-            newResultDiv.appendChild(newContent);
+            var resultContent = document.createTextNode(line);
+            resultDiv.appendChild(resultHr);
+            resultDiv.appendChild(resultInnerDiv);
+            resultInnerDiv.appendChild(resultContent);
 
-            document.body.appendChild(newDiv);
+            document.body.appendChild(resultDiv);
+
 
             });
         };
