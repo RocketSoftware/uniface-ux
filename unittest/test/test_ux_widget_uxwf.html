@@ -76,8 +76,26 @@
       el = document.getElementById("test-script");
       if (scriptName) {
         el.src = scriptName;
+        // this block of code ensures that the end of file is reached and add an element to asset the number of test cases
         el.onload = function () {
-          mocha.run();
+          mocha.run().on('end', function () {
+            var line;
+            line = "Results Passed : " + this.stats.passes + " || Failed : " + this.stats.failures;
+
+            var resultDiv = document.createElement("div");
+            var resultHr = document.createElement("hr");
+            var resultInnerDiv = document.createElement("div");
+
+            resultDiv.id = "test-ended";
+            resultInnerDiv.id = "test-result";
+
+            var resultContent = document.createTextNode(line);
+            resultDiv.appendChild(resultHr);
+            resultDiv.appendChild(resultInnerDiv);
+            resultInnerDiv.appendChild(resultContent);
+
+            document.body.appendChild(resultDiv);
+          });
         };
 
         el.onerror = function () {
