@@ -9,7 +9,6 @@ import "./switch_UXWF.js";
 import "./text_field_UXWF.js";
 import "./controlbar_UXWF.js";
 import "./switch_UXWF.js";
-import "./number_field_UXWF.js";
 
 
 // import "./controlbar_UXWF.js";
