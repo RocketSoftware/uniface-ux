@@ -463,11 +463,10 @@
 
 
          //html:disabled property
-         it("Set html:disabled property true for numberField", function (done) {
-            let disabled = "disabled"
-            tester.dataUpdate({
-                    "html":{"disabled": true}           
-
+        it("Set html:disabled property true for numberField", function (done) {
+        let disabled = "disabled"
+        tester.dataUpdate({
+                "html":{"disabled": true}
             });
 
             setTimeout(function () {
@@ -475,7 +474,6 @@
                 assert(widget.elements.widget.hasAttribute(disabled), "Failed to show the disabled attribute");                    
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
-
         });
 
         //html:disabled property false
@@ -485,7 +483,6 @@
                 html: {
                     "disabled": false
                 }
-
             });
 
             setTimeout(function () {
@@ -537,7 +534,7 @@
         });
 
          //html:hide-step true property
-         it("Set html:hide-step property true for numberField", function (done) {
+        it("Set html:hide-step property true for numberField", function (done) {
             let hideStep = true
             tester.dataUpdate({
                 html: {
@@ -551,11 +548,10 @@
                 assert(widget.elements.widget.hasAttribute('hide-step'), "Failed to show the hide-step attribute");
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
-
         });
 
          //html:hide-step false property
-         it("Set html:hide-step property false for numberField", function (done) {
+        it("Set html:hide-step property false for numberField", function (done) {
             let hideStep = false
             tester.dataUpdate({
                 html: {
@@ -569,7 +565,6 @@
                 assert(!widget.elements.widget.hasAttribute('hide-step'), "Failed to hide the hide-step attribute");
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
-
         });
 
         // prefix-text property for number Field
@@ -588,7 +583,6 @@
                 assert.equal(widget.elements.widget.querySelector("span.u-prefix").innerText, prefixTextData,"Prefix Text does not match");
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
-
         });
 
         // suffix-text property for number Field
@@ -653,7 +647,8 @@
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
         });
-        
+    });
+
     describe("showError", function () {
         let widget, element;
         let minlength = 2;
@@ -699,7 +694,16 @@
                 done();
             }, defaultAsyncTimeout);
         });
-
+    });
+    describe("hideError", function () {
+        let widget, element;
+        let minlength = 2;
+        let maxlength = 5;
+        before(function () {
+            widget = tester.createWidget();
+            element = tester.createWidget().element;
+            verifyWidgetClass(widgetClass)
+        });
         it("Hide Error Set invalid value in number Field", function (done) {   
             tester.dataUpdate({
                 uniface: {
@@ -720,5 +724,4 @@
             }, defaultAsyncTimeout);
         });
     });   
-    });
 })();
