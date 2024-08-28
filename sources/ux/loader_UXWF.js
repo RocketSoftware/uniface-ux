@@ -1,5 +1,6 @@
 // @ts-check
 import "https://unpkg.com/@fluentui/web-components";
+
 import "./button_UXWF.js";
 import "./checkbox_UXWF.js";
 import "./number_field_UXWF.js";
@@ -7,11 +8,9 @@ import "./plain_text_UXWF.js";
 import "./radio_group_UXWF.js";
 import "./switch_UXWF.js";
 import "./text_field_UXWF.js";
+
 import "./controlbar_UXWF.js";
-import "./switch_UXWF.js";
 
-
-// import "./controlbar_UXWF.js";
 // import "./data_grid_UXWF.js";
 
 /**
