@@ -144,10 +144,10 @@
           tester.createWidget();
           numberElement = tester.element;
     
-          // Create a spy for the click event
+          // Create a spy for the onchange event
           onChangeSpy = sinon.spy();
     
-          // Add the click event listener to the number field element
+          // Add the onchange event listener to the number field element
           numberElement.addEventListener('onchange', onChangeSpy);
         });
     
@@ -175,7 +175,6 @@
         var element;
     
         beforeEach(function () {
-          //tester.dataInit();
           element = tester.element;
           assert(element, "Widget top element is not defined!");
         });
