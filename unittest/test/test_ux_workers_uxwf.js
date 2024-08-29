@@ -62,6 +62,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let instance;
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+            
             widgetClass = Widget_UXWF;
             defaultClassList = ['class1', 'class2'];
             instance = new StyleClass(widgetClass, defaultClassList);
@@ -115,6 +124,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let definitions;
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+            
             widgetClass = Widget_UXWF;
             tagname = "DIV";
             elementQuerySelector = "div"
@@ -190,8 +208,17 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         
 
         beforeEach(function () {
-            tagname = "DIV";
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+
             widgetClass = Widget_UXWF;
+            tagname = "DIV";
             propText = "uniface:text"
             propIcon = "uniface:icon"
             defaultText = "defaultText"
@@ -233,6 +260,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let slottedError;
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+
             widgetClass = Widget_UXWF;
             slottedError = new SlottedError(widgetClass, "", "", "", "");
         });
@@ -306,6 +342,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
 
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+
             widgetClass = Widget_UXWF;
             subWidgetName = "UX.Button_UXWF";
             tagName = "DIV"
@@ -372,6 +417,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let definitions;
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+            
             widgetClass = Widget_UXWF;
             element = new WidgetsByProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
         });
@@ -420,6 +474,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let value;
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+
             widgetClass = Widget_UXWF;
             propId = "value"
             attrName = "contentEditable"
@@ -514,6 +577,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let element;
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+
             widgetClass = Widget_UXWF;
             propId = "uniface:icon-position"
             attrName = "button"
@@ -559,6 +631,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let element;
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+            
             widgetClass = Widget_UXWF;
             propId = "uniface:icon-position"
             attrName = "button"
@@ -607,6 +688,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let element;
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+            
             widgetClass = Widget_UXWF
             propId = "uniface:numberValue"
             attrName = "newReturnNumber"
@@ -655,6 +745,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let element;
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+            
             widgetClass = Widget_UXWF;
             propId = "uniface:icon-position"
             attrName = "button"
@@ -705,6 +804,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let returnedProcess;
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+            
             widgetClass = Widget_UXWF;
             propId = "uniface:icon-position"
             attrName = "ariaValueMax"
@@ -732,7 +840,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
                 } ,
                 getTraceDescription: () => { return "description" }
             }
-            buttonWidget.onConnect(returnedProcess)
+            buttonWidget.onConnect(returnedProcess, "")
             buttonWidget.dataInit()
             buttonWidget.dataUpdate(widgetInstance.data.properties)
             
@@ -757,6 +865,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let divElement;
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+
             widgetClass = Widget_UXWF;
             propMin = "uniface:min"
             propMax = "uniface:max"
@@ -824,6 +941,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let element;
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+
             widgetClass = Widget_UXWF;
             property = {
                 id : "propertyClass" ,
@@ -880,6 +1006,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let element;
 
         beforeEach(function () {
+            Widget_UXWF.structure = {};
+            Widget_UXWF.subWidgets = {};
+            Widget_UXWF.subWidgetWorkers = [];
+            Widget_UXWF.defaultValues = {};
+            Widget_UXWF.setters = {};
+            Widget_UXWF.getters = {};
+            Widget_UXWF.triggers = {};
+            Widget_UXWF.uiBlocking = ""; 
+            
             widgetClass = Widget_UXWF;
             triggerName = "NameofTrigger"
             eventName = "EventName"
