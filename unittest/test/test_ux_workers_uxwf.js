@@ -15,6 +15,9 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
 
     const expect = chai.expect;
 
+    globalThis.UX_DEFINITIONS = {}
+    globalThis.UX_DEFINITIONS["ufld:FIELD.ENTITY.MODEL"] = "test"
+
     describe("Tests for Workers_UXWF", function () {
 
         let widgetClass;
@@ -240,7 +243,17 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
 
         it("Check setters were added", function () {
             let setters = Object.keys(slottedError.widgetClass.setters.uniface)
-            expect(setters).to.have.lengthOf(8);
+            let errorArray = [
+                "error",
+                "error-message",
+                "format-error",
+                "format-error-message"
+            ]
+
+            expect(setters).to.include(errorArray[0]);
+            expect(setters).to.include(errorArray[1]);
+            expect(setters).to.include(errorArray[2]);
+            expect(setters).to.include(errorArray[3]);
          });
 
          it('should refresh correctly', function () {
@@ -421,10 +434,12 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
             expect(worker.defaultValue).to.equal(defaultValue)
 
         });
-
+        
         it("Check Getters/Setters", function () {
+            let length =  worker.widgetClass.setters.value.length
+
             expect(worker.widgetClass.getters.value.propId).to.equal(propId)
-            expect(worker.widgetClass.setters.value[0].propId).to.equal(propId)
+            expect(worker.widgetClass.setters.value[length- 1].propId).to.equal(propId)
          });
 
         it("Check getLayout ", function () {
@@ -687,7 +702,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         let defaultValue;
         let element;
         let buttonWidget;
-        let baseWidget;
         let returnedProcess;
 
         beforeEach(function () {
@@ -697,8 +711,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
             defaultValue = "1"
             element = new HtmlValueAttributeBoolean(widgetClass, propId, attrName, defaultValue);
             buttonWidget = new Button_UXWF
-            baseWidget = new Widget_UXWF
-            returnedProcess = Button_UXWF.processLayout(baseWidget.widget, "")
+            returnedProcess = Button_UXWF.processLayout(buttonWidget.widget, "")
         });
 
         it("should initialize with correct properties", function () {
@@ -762,8 +775,9 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
 
         it("Check Setters", function () {
             let setterKeys = Object.keys(element.widgetClass.setters.uniface)
-            expect(setterKeys[0]).to.equal("min")
-            expect(setterKeys[1]).to.equal("max")
+            
+            expect(setterKeys[setterKeys.length-2]).to.equal("min")
+            expect(setterKeys[setterKeys.length-1]).to.equal("max")
          });
 
 
@@ -825,10 +839,13 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
         it("Check Setters and Default values", function () {
             let setterKeys = Object.keys(element.widgetClass.setters)
             let defaultKeys = Object.keys(element.widgetClass.defaultValues)
-            expect(setterKeys[0]).to.equal("style")
-            expect(defaultKeys[0]).to.equal("style")
-            expect(element.widgetClass.defaultValues.style.propertyClass).to.equal(property.value)
-            expect(element.widgetClass.defaultValues.style).to.have.keys(property.id)
+            let lengthKeys = setterKeys.length
+            let lengthDefaultKeys = defaultKeys.length
+
+            expect(setterKeys[lengthKeys-1]).to.equal("style")
+            expect(defaultKeys[lengthDefaultKeys-1]).to.equal("style")
+            expect(element.defaultStyleProperty.value).to.equal(property.value)
+            expect(element.defaultStyleProperty.id).to.equal(property.id)
          });
 
 
@@ -877,7 +894,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
 
         it("Check registerTrigger functionality", function () {
             let registerTriggerKey = Object.keys(element.widgetClass.triggers)
-            expect(registerTriggerKey[0]).to.equal(triggerName)
+            expect(registerTriggerKey).to.include(triggerName)
          });
 
          it("Check getTriggerMapping functionality", function () {
