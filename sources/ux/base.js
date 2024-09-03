@@ -1,21 +1,24 @@
 // @ts-check
 
-import { Widget_UXWF } from "./widget_UXWF.js"; // eslint-disable-line no-unused-vars
-import { Worker } from "./workers_UXWF.js"; // eslint-disable-line no-unused-vars
+import { Widget } from "./widget.js"; // eslint-disable-line no-unused-vars
+import { Worker } from "./workers.js"; // eslint-disable-line no-unused-vars
 
 /**
  * UX Widget generic helper functions.
  * @export
- * @class Base_UXWF
+ * @class Base
  */
-export class Base_UXWF {
+export class Base {
+
+  static formatErrorMessage = "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.";
+
   constructor() {}
 
   /**
    * This method registers the worker that Uniface calls to update the widget caused by a property change.
    * Per property, one worker needs to be registered.
    * dataInit() and dataUpdate() call this worker (via setProperties()) to make the widget react to the property change.
-   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
    * @param {Worker} worker - Specified the worker.
    */
@@ -44,7 +47,7 @@ export class Base_UXWF {
    * Per property, one worker needs to be registered. Currently, only the 'value' property can be registered.
    * onConnect() calls the worker to get the updater information, which describes the events fired when the value has been changed.
    * getValue() calls this worker to get the value of the 'field' property.
-   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
    * @param {Worker} worker - Specifies the worker.
    */
@@ -66,7 +69,7 @@ export class Base_UXWF {
    * This method registers a default value for a property.
    * Per property, one default value needs to be registered.
    * dataInit() uses the set of default values to reinitialize the widget for reuse.
-   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget-class for which the default value will be registered.
+   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the default value will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the default value will be registered.
    * @param {UPropValue} defaultValue - Specifies the default value.
    */
@@ -87,7 +90,7 @@ export class Base_UXWF {
    * This method registers the worker that Uniface calls to get a trigger-mapping.
    * Per trigger-mapping, one worker needs to be registered.
    * mapTrigger() calls this worker to get the trigger-mapping.
-   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {String} triggerName - Specifies the trigger-name for which the worker will be registered.
    * @param {Worker} worker - Specifies the worker.
    */
@@ -101,9 +104,9 @@ export class Base_UXWF {
    * Static sub-widgets are added to the widget instance at runtime.
    * The UXWF deals with sub-widgets transparently, like generate their layouts, instantiate them, invoke their onConnect
    * get their value, map their triggers, update their properties, etc.
-   * @param {typeof Widget_UXWF} widgetClass
+   * @param {typeof Widget} widgetClass
    * @param {String} subWidgetId
-   * @param {typeof Widget_UXWF} subWidgetClass
+   * @param {typeof Widget} subWidgetClass
    * @param {String} subWidgetStyleClass
    * @param {Array} subWidgetTriggers
    */
@@ -111,7 +114,7 @@ export class Base_UXWF {
     widgetClass.subWidgets[subWidgetId] = {
       "class": subWidgetClass,
       "styleClass": subWidgetStyleClass,
-      "triggers": subWidgetTriggers,
+      "triggers": subWidgetTriggers
     };
   }
 
@@ -122,7 +125,7 @@ export class Base_UXWF {
    * Uniface iterates through all registered workers and adds their sub-widgets to the widget object at runtime.
    * The UXWF deals with sub-widgets transparently, like generate their layouts, instantiate them, invoke their onConnect
    * get their value, map their triggers, update their properties, etc.
-   * @param {typeof Widget_UXWF} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {Worker} worker - Specifies the worker.
    */
   // @ts-ignore
@@ -130,9 +133,25 @@ export class Base_UXWF {
     widgetClass.subWidgetWorkers.push(worker);
   }
 
-  getNode(node, url) {
-    if (url) {
-      url = url.split(":");
+  /**
+   * Looks up the node within node as specified by propId.
+   * @param {UData} node
+   * @param {UPropName|undefined} propId
+   * @return {Object}
+   */
+  getNode(node, propId) {
+    return Base.getNode(node, propId);
+  }
+
+  /**
+   * Looks up the node within node as specified by propId.
+   * @param {UData} node
+   * @param {UPropName|undefined} propId
+   * @return {Object}
+   */
+  static getNode(node, propId) {
+    if (propId) {
+      let url = propId.split(":");
       for (let i = 0; i < url.length; i++) {
         node = node[url[i]];
         if (node === undefined) {
@@ -151,6 +170,15 @@ export class Base_UXWF {
    * @return {boolean}
    */
   toBoolean(value) {
+    return Base.toBoolean(value);
+  }
+
+  /**
+   * Convert Uniface property values into JS Boolean.
+   * @param {String|boolean|number} value
+   * @return {boolean}
+   */
+  static toBoolean(value) {
     let result = false;
     switch (typeof value) {
       case "boolean":
@@ -172,9 +200,21 @@ export class Base_UXWF {
 
   /**
    * Convert Uniface field value to JS Boolean.
-   * Throws an error on conversion failure.
+   * @param {any} value
+   * @return {Boolean}
+   * @throws {*} - Conversion failure.
    */
   fieldValueToBoolean(value) {
+    return Base.fieldValueToBoolean(value);
+  }
+
+  /**
+   * Convert Uniface field value to JS Boolean.
+   * @param {any} value
+   * @return {Boolean}
+   * @throws {*} - Conversion failure.
+   */
+  static fieldValueToBoolean(value) {
     let type = typeof value;
     switch (type) {
       case "boolean":
@@ -197,13 +237,24 @@ export class Base_UXWF {
         }
         break;
     }
-    throw "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.";
+    throw this.formatErrorMessage;
   }
 
   /**
-   * Fix dataUpdate data.
+   * Fix properties data.
+   * @param {UData} data
+   * @return {UData}
    */
   fixData(data) {
+    return Base.fixData(data);
+  }
+
+  /**
+   * Fix properties data.
+   * @param {UData} data
+   * @return {UData}
+   */
+  static fixData(data) {
     let newData = {};
     Object.keys(data).forEach((key) => {
       if (key === "uniface") {
@@ -241,11 +292,34 @@ export class Base_UXWF {
   }
 
   /**
+   * Returns the valrep-item for the provided value
+   * @param {Array} valrep
+   * @param {any} value
+   * @return {Object}
+   */
+  static getValrepItem(valrep, value) {
+    for (let i = 0; i < valrep.length; i++) {
+      if (valrep[i].value === value) {
+        return valrep[i];
+      }
+    }
+  }
+
+  /**
    * Converts a string format valrep into [{"value": "representation"},....] format.
    * @param {string} valrep - The valrep string to be formatted.
    * @returns {Array} An array of objects with "value" and "representation" properties.
    */
   getFormattedValrep(valrep) {
+    return Base.getFormattedValrep(valrep);
+  }
+
+  /**
+   * Converts a string format valrep into [{"value": "representation"},....] format.
+   * @param {string} valrep - The valrep string to be formatted.
+   * @returns {Array} An array of objects with "value" and "representation" properties.
+   */
+  static getFormattedValrep(valrep) {
     let formattedValrep = [];
     valrep.split("").forEach((keyVal) => {
       // Split each key-value pair by "="
@@ -265,10 +339,10 @@ export class Base_UXWF {
    * @param {UObjectDefinition} objectDefinition
    * @param {String} instruction  ; Instruction string of syntax: "function({arg1{,arg2{...,argN}}})"
    * @return {*}
-   * @memberof Base_UXWF
+   * @memberof Base
    */
   objectDefinitionFunctionCall(objectDefinition, instruction) {
-    // Check whether instruction is a proper function call: func(), func(a), or func(a,b,c)
+    // Check whether instruction is a proper function call: func(), func(a), or func(a,b,c).
     if (/^\w+\([\w\s-:,]*\)$/.test(instruction)) {
       const funcName = instruction.split("(")[0];
       const args = instruction.split("(")[1].split(")")[0].split(",");
@@ -300,6 +374,49 @@ export class Base_UXWF {
       instruction = instruction.substring(2, instruction.length - 2);
       return this.objectDefinitionFunctionCall(objectDefinition, instruction);
     });
+  }
+
+  /**
+   * Formatting valrep element with representation and value.
+   * @param {String} displayFormat
+   * @param {String | null} value
+   * @param {String} representation
+   * @returns {String}
+   */
+  getFormattedValrepItemAsHTML(displayFormat, value, representation) {
+    switch (displayFormat) {
+      case "valrep":
+        return (
+          "<span class='u-valrep-representation'>" + representation + "</span> <span class='u-valrep-value'>" + (value ? value : "null") + "</span>"
+        );
+      case "val":
+        return "<span class='u-valrep-value'>" + (value ? value : "null") + "</span>";
+      case "rep":
+      default:
+        return "<span class='u-valrep-representation'>" + representation + "</span>";
+    }
+  }
+
+  /**
+   * Format Error Text for valrep element.
+   * @param {String} displayFormat
+   * @param {String|null} value
+   * @returns {string}
+   */
+  toFormatValRepErrorText(displayFormat, value) {
+    let text = "";
+    switch (displayFormat) {
+      case "valrep":
+        text = "ERROR: Unable to show representation of value " + (value || null);
+        break;
+      case "val":
+        text = "ERROR: Invalid value " + (value || null);
+        break;
+      case "rep":
+      default:
+        text = "ERROR: Unable to show representation of value";
+    }
+    return text;
   }
 
   /**

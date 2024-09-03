@@ -1,6 +1,6 @@
 // @ts-check
 /* global UNIFACE */
-import { Widget_UXWF } from "./widget_UXWF.js";
+import { Widget } from "./widget.js";
 import {
   Worker,
   Element,
@@ -10,15 +10,16 @@ import {
   HtmlAttributeNumber,
   HtmlAttributeChoice,
   HtmlAttributeBoolean
-} from "./workers_UXWF.js";
+} from "./workers.js";
+import "https://unpkg.com/@fluentui/web-components";
 
 /**
  * Button Widget
  * @export
- * @class Button_UXWF
- * @extends {Widget_UXWF}
+ * @class Button
+ * @extends {Widget}
  */
-export class Button_UXWF extends Widget_UXWF {
+export class Button extends Widget {
 
   /**
    * Initialize as static at derived level, so definitions are unique per widget class.
@@ -26,6 +27,7 @@ export class Button_UXWF extends Widget_UXWF {
    */
 
   static subWidgets = {};
+  static subWidgetWorkers = [];
   static defaultValues = {};
   static setters = {};
   static getters = {};
@@ -43,7 +45,7 @@ export class Button_UXWF extends Widget_UXWF {
     /**
      * Creates an instance of SlottedButtonText.
      * @constructor
-     * @param {typeof Widget_UXWF} widgetClass
+     * @param {typeof Widget} widgetClass
      * @param {string} styleClass
      * @param {string} elementQuerySelector
      */
@@ -85,6 +87,14 @@ export class Button_UXWF extends Widget_UXWF {
       return text;
     }
 
+    getValueAsFormattedHTML(widgetInstance) {
+      this.log("getValueAsFormattedHTML", {
+        "widgetInstance": widgetInstance.getTraceDescription()
+      });
+      const element = this.getElement(widgetInstance);
+      return element.innerHTML;
+    }
+
     getValueUpdaters(widgetInstance) {
       this.log("getValueUpdaters", { "widgetInstance": widgetInstance.getTraceDescription() });
       return;
@@ -102,7 +112,7 @@ export class Button_UXWF extends Widget_UXWF {
     /**
      * Creates an instance of SlottedButtonIcon.
      * @constructor
-     * @param {typeof Widget_UXWF} widgetClass
+     * @param {typeof Widget} widgetClass
      * @param {String} styleClass
      * @param {String} elementQuerySelector
      */
@@ -138,6 +148,7 @@ export class Button_UXWF extends Widget_UXWF {
       if (iconPosition !== "start" && iconPosition !== "end") {
         iconPosition = defaultIconPosition;
       }
+
       deleteIconClasses();
       if (icon) {
         element.hidden = false;
@@ -168,27 +179,50 @@ export class Button_UXWF extends Widget_UXWF {
   /**
    * Widget Definition.
    */
-  static structure = new Element(
-    this,
-    "fluent-button",
-    "",
-    "",
-    [
-      new HtmlAttribute(this, "html:current-value", "currentValue", ""),
-      new HtmlAttribute(this, "html:title", "title", undefined),
-      new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-      new HtmlAttributeChoice(this, "html:appearance", "appearance", ["neutral", "accent", "outline", "lightweight", "stealth"], "neutral"),
-      new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-      new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
-      new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
-      new StyleClass(this, ["u-button", "neutral"]),
-    ],
-    [
-      new this.SlottedButtonIcon(this, "u-icon", ".u-icon"),
-      new this.SlottedButtonText(this, "u-text", ".u-text"),
-    ],
-    [new Trigger(this, "detail", "click", true)]
-  );
+  // prettier-ignore
+  static structure = new Element(this, "fluent-button", "", "", [
+    new HtmlAttribute(this, "html:current-value", "currentValue", ""),
+    new HtmlAttribute(this, "html:title", "title", undefined),
+    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new HtmlAttributeChoice(this, "html:appearance", "appearance", ["neutral", "accent", "outline", "lightweight", "stealth"], "neutral"),
+    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
+    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
+    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
+    new StyleClass(this, ["u-button", "neutral"])
+  ], [
+    new this.SlottedButtonIcon(this, "u-icon", ".u-icon"),
+    new this.SlottedButtonText(this, "u-text", ".u-text")
+  ], [
+    new Trigger(this, "detail", "click", true)
+  ]);
+
+  /**
+   * Returns an array of property ids that affect the formatted value.
+   * @returns {string[]}
+   */
+  static getValueFormattedSetters() {
+    return [
+      "value",
+      "uniface:error",
+      "uniface:error-message",
+      "uniface:icon"
+    ];
+  }
+
+  /**
+   * Returns the value as format-object.
+   * @param {UData} properties
+   * @return {UValueFormatting}
+   */
+  static getValueFormatted(properties) {
+    this.staticLog("getValueFormatted");
+
+    /** @type {UValueFormatting} */
+    let formattedValue = {};
+    formattedValue.text = this.getNode(properties, "value") || "";
+    formattedValue.prefixIcon = this.getNode(properties, "uniface:icon");
+    return formattedValue;
+  }
 
   /**
    * Private Uniface API methods are used for the button class since we don’t implement any error handling for it.
@@ -204,4 +238,4 @@ export class Button_UXWF extends Widget_UXWF {
     this.log("hideError");
   }
 }
-UNIFACE.ClassRegistry.add("UX.Button_UXWF", Button_UXWF);
+UNIFACE.ClassRegistry.add("UX.Button", Button);

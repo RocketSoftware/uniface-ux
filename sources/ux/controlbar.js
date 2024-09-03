@@ -1,15 +1,16 @@
 // @ts-check
 /* global UNIFACE */
-import { Widget_UXWF } from "./widget_UXWF.js";
-import { Element, StyleClass, WidgetsByProperty, HtmlAttributeChoice } from "./workers_UXWF.js";
+import { Widget } from "./widget.js";
+import { Element, StyleClass, SubWidgetsByProperty, HtmlAttributeChoice } from "./workers.js";
+import "https://unpkg.com/@fluentui/web-components";
 
 /**
  * Controlbar Widget
  * @export
- * @class Controlbar_UXWF
- * @extends {Widget_UXWF}
+ * @class Controlbar
+ * @extends {Widget}
  */
-export class Controlbar_UXWF extends Widget_UXWF {
+export class Controlbar extends Widget {
 
   /**
    * Initialize as static at derived level, so definitions are unique per widget class.
@@ -34,13 +35,13 @@ export class Controlbar_UXWF extends Widget_UXWF {
     "",
     [
       new HtmlAttributeChoice(this, "uniface:orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
-      new StyleClass(this, ["u-controlbar"]),
+      new StyleClass(this, ["u-controlbar"])
     ],
     [
-      new Element(this, "div", "u-start-section", ".u-start-section", [], [new WidgetsByProperty(this, "span", "", "", "controls-start")]),
-      new Element(this, "div", "u-center-section", ".u-center-section", [], [new WidgetsByProperty(this, "span", "", "", "controls-center")]),
-      new Element(this, "div", "u-end-section", ".u-end-section", [], [new WidgetsByProperty(this, "span", "", "", "controls-end")]),
+      new Element(this, "div", "u-start-section", ".u-start-section", [], [new SubWidgetsByProperty(this, "span", "", "", "controls-start")]),
+      new Element(this, "div", "u-center-section", ".u-center-section", [], [new SubWidgetsByProperty(this, "span", "", "", "controls-center")]),
+      new Element(this, "div", "u-end-section", ".u-end-section", [], [new SubWidgetsByProperty(this, "span", "", "", "controls-end")])
     ]
   );
 }
-UNIFACE.ClassRegistry.add("UX.Controlbar_UXWF", Controlbar_UXWF);
+UNIFACE.ClassRegistry.add("UX.Controlbar", Controlbar);

@@ -1,6 +1,6 @@
 // @ts-check
 /* global UNIFACE */
-import { Widget_UXWF } from "./widget_UXWF.js";
+import { Widget } from "./widget.js";
 import {
   Element,
   SlottedError,
@@ -12,23 +12,24 @@ import {
   HtmlAttributeMinMaxLength,
   StyleClass,
   Trigger
-} from "./workers_UXWF.js";
+} from "./workers.js";
 import "https://unpkg.com/@fluentui/web-components";
 
 /**
  * Radio-Group Widget Definition
  * Wrapper class for Fluent-radio-group web component.
  * @export
- * @class RadioGroup_UXWF
- * @extends {Widget_UXWF}
+ * @class RadioGroup
+ * @extends {Widget}
  */
-export class RadioGroup_UXWF extends Widget_UXWF {
+export class RadioGroup extends Widget {
 
   /**
    * Initialize as static at derived level, so definitions are unique per widget class.
    * @static
    */
   static subWidgets = {};
+  static subWidgetWorkers = [];
   static defaultValues = {};
   static setters = {};
   static getters = {};
@@ -47,7 +48,7 @@ export class RadioGroup_UXWF extends Widget_UXWF {
 
     /**
      * Creates an instance of RadioGroupValRep.
-     * @param {typeof Widget_UXWF} widgetClass
+     * @param {typeof Widget} widgetClass
      * @param {String} tagName
      * @param {String} styleClass
      * @param {String} elementQuerySelector
@@ -65,7 +66,7 @@ export class RadioGroup_UXWF extends Widget_UXWF {
         let label = radioButton.querySelector("span");
         let labelText = label && label.textContent ? label.textContent : " ";
         if (layout === "horizontal" && labelText.length > 25) {
-          // Append tooltip to the label text
+          // Append tooltip to the label text.
           const tooltipId = String(Math.random());
           radioButton.id = tooltipId;
           const newTooltip = document.createElement("fluent-tooltip");
@@ -97,7 +98,7 @@ export class RadioGroup_UXWF extends Widget_UXWF {
   static structure = new Element(this, "fluent-radio-group", "", "", [
     new StyleClass(this, ["u-radio-group"]),
     new HtmlAttribute(this, "html:current-value", "current-value", ""),
-    new HtmlAttribute(this, "value", "value", ""),
+    new HtmlAttribute(this, "value", "value", null),
     new HtmlAttributeBoolean(this, "html:aria-disabled", "ariaDisabled", false),
     new HtmlAttributeBoolean(this, "html:aria-readonly", "ariaReadOnly", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
@@ -108,9 +109,60 @@ export class RadioGroup_UXWF extends Widget_UXWF {
   ], [
     new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
     new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end")
   ], [
     new Trigger(this, "onchange", "change", true)
   ]);
+
+  /**
+   * Returns an array of property ids that affect the formatted value.
+   * @returns {string[]}
+   */
+  static getValueFormattedSetters() {
+    return [
+      "value",
+      "valrep",
+      "uniface:error",
+      "uniface:error-message",
+      "uniface:display-format"
+    ];
+  }
+
+  /**
+   * Returns the value as format-object.
+   * @param {UData} properties
+   * @return {UValueFormatting}
+   */
+  static getValueFormatted(properties) {
+    this.staticLog("getValueFormatting");
+
+    /** @type {UValueFormatting} */
+    let formattedValue = {};
+    const value_ = this.getNode(properties, "value");
+    const valrepItem  = this.getValrepItem(this.getNode(properties, "valrep"), value_);
+    switch (this.getNode(properties, "uniface:display-format")) {
+      case "valrep":
+        if (valrepItem) {
+          formattedValue.text = `${valrepItem.representation} (${valrepItem.value})`;
+        } else {
+          formattedValue.text = "ERROR";
+          formattedValue.errorMessage = this.formatErrorMessage;
+        }
+        break;
+      case "val":
+        formattedValue.text = value_ || "";
+        break;
+      case "rep":
+      default:
+        if (valrepItem) {
+          formattedValue.text = valrepItem.representation;
+        } else {
+          formattedValue.text = "ERROR";
+          formattedValue.errorMessage = this.formatErrorMessage;
+        }
+        break;
+    }
+    return formattedValue;
+  }
 }
-UNIFACE.ClassRegistry.add("UX.RadioGroup_UXWF", RadioGroup_UXWF);
+UNIFACE.ClassRegistry.add("UX.RadioGroup", RadioGroup);

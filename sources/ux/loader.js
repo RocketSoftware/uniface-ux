@@ -1,17 +1,16 @@
 // @ts-check
-import "https://unpkg.com/@fluentui/web-components";
 
-import "./button_UXWF.js";
-import "./checkbox_UXWF.js";
-import "./number_field_UXWF.js";
-import "./plain_text_UXWF.js";
-import "./radio_group_UXWF.js";
-import "./switch_UXWF.js";
-import "./text_field_UXWF.js";
-
-import "./controlbar_UXWF.js";
-
-// import "./data_grid_UXWF.js";
+import "./button.js";
+import "./checkbox.js";
+import "./radio_group.js";
+import "./switch.js";
+import "./text_field.js";
+import "./select.js";
+import "./controlbar.js";
+import "./data_grid.js";
+import "./plain_text.js";
+import "./number_field.js";
+import "./text_area.js";
 
 /**
  * Uncomment the following code and/or add your own variable to
@@ -24,5 +23,5 @@ import "./controlbar_UXWF.js";
  * - the registered sub-widgets
  * - the registered sub-widget-workers
  */
-// UX.MyTextField = UNIFACE.ClassRegistry.get("UX.TextField_UXWF");
-// UX.MyButtonF = UNIFACE.ClassRegistry.get("UX.Button_UXWF");
+// UX.MyDataGrid = UNIFACE.ClassRegistry.get("UX.DataGridCollection");
+// UX.MyButtonF = UNIFACE.ClassRegistry.get("UX.Button");

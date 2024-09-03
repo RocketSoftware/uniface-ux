@@ -1,6 +1,6 @@
 // @ts-check
 /* global UNIFACE */
-import { Widget_UXWF } from "./widget_UXWF.js";
+import { Widget } from "./widget.js";
 import {
   StyleClass,
   HtmlAttribute,
@@ -10,23 +10,24 @@ import {
   Trigger,
   SlottedElement,
   SlottedError,
-  HtmlAttributeNumber,
-} from "./workers_UXWF.js";
+  HtmlAttributeNumber
+} from "./workers.js";
 import "https://unpkg.com/@fluentui/web-components";
 
 /**
  * Checkbox Widget
  * @export
- * @class Checkbox_UXWF
- * @extends {Widget_UXWF}
+ * @class Checkbox
+ * @extends {Widget}
  */
-export class Checkbox_UXWF extends Widget_UXWF {
+export class Checkbox extends Widget {
 
   /**
    * Initialize as static at derived level, so definitions are unique per widget class.
    * @static
    */
   static subWidgets = {};
+  static subWidgetWorkers = [];
   static defaultValues = {};
   static setters = {};
   static getters = {};
@@ -43,7 +44,7 @@ export class Checkbox_UXWF extends Widget_UXWF {
 
     /**
      * Creates an instance of HTMLValueAttributeTristate.
-     * @param {typeof Widget_UXWF} widgetClass
+     * @param {typeof Widget} widgetClass
      * @param {UPropName} propId
      * @param {String} attrName
      * @param {UPropValue} defaultValue
@@ -72,9 +73,9 @@ export class Checkbox_UXWF extends Widget_UXWF {
       widgetInstance.elements.widget.dispatchEvent(
         new window.CustomEvent("valuechange", {
           "detail": {
-            "value": newValue,
+            "value": newValue
           },
-          "cancelable": true,
+          "cancelable": true
         })
       );
     }
@@ -152,21 +153,21 @@ export class Checkbox_UXWF extends Widget_UXWF {
       widgetInstance.setProperties({
         "uniface": {
           "format-error": false,
-          "format-error-message": "",
-        },
+          "format-error-message": ""
+        }
       });
       widgetInstance.setProperties({
         "uniface": {
           "error": false,
-          "error-message": "",
-        },
+          "error-message": ""
+        }
       });
     }
 
     getValueUpdaters(widgetInstance) {
       this.log("getValueUpdaters", {
         "widgetInstance": widgetInstance.getTraceDescription(),
-        "attrName": this.attrName,
+        "attrName": this.attrName
       });
       let element = this.getElement(widgetInstance);
       let updaters = [];
@@ -176,7 +177,7 @@ export class Checkbox_UXWF extends Widget_UXWF {
         "handler": (event) => {
           this.clearErrors(widgetInstance);
           this.handleChange(event, widgetInstance);
-        },
+        }
       });
       return updaters;
     }
@@ -184,7 +185,7 @@ export class Checkbox_UXWF extends Widget_UXWF {
     getValue(widgetInstance) {
       this.log("getValue", {
         "widgetInstance": widgetInstance.getTraceDescription(),
-        "attrName": this.attrName,
+        "attrName": this.attrName
       });
       const value = widgetInstance.elements.widget.indeterminate ? "" : widgetInstance.elements.widget.checked;
       return value;
@@ -193,7 +194,7 @@ export class Checkbox_UXWF extends Widget_UXWF {
     refresh(widgetInstance) {
       this.log("refresh", {
         "widgetInstance": widgetInstance.getTraceDescription(),
-        "attrName": this.attrName,
+        "attrName": this.attrName
       });
       const value = widgetInstance.data.properties.value;
       let newValue = value;
@@ -204,16 +205,16 @@ export class Checkbox_UXWF extends Widget_UXWF {
         widgetInstance.setProperties({
           "uniface": {
             "format-error": false,
-            "format-error-message": "",
-          },
+            "format-error-message": ""
+          }
         });
       } catch (error) {
         isError = true;
         widgetInstance.setProperties({
           "uniface": {
             "format-error": true,
-            "format-error-message": error,
-          },
+            "format-error-message": error
+          }
         });
       }
 
@@ -232,20 +233,49 @@ export class Checkbox_UXWF extends Widget_UXWF {
     new HtmlAttribute(this, "html:role", "role", "checkbox"),
     new HtmlAttribute(this, "html:title", "title", ""),
     new HtmlAttribute(this, "html:current-value", "currentValue", "on"),
-    new this.HTMLValueAttributeTristate(this, "value", "checked", false),
+    new this.HTMLValueAttributeTristate(this, "value", "checked", null),
     new HtmlAttributeBoolean(this, "html:aria-checked", "ariaChecked", false),
     new HtmlAttributeBoolean(this, "html:aria-required", "ariaRequired", false),
     new HtmlAttributeBoolean(this, "html:aria-disabled", "ariaDisabled", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeBoolean(this, "html:current-checked", "currentChecked", false),
+    new HtmlAttributeBoolean(this, "html:current-checked", "currentChecked", false)
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "")
   ], [
     new Trigger(this, "onchange", "valuechange", true)
   ]);
-}
 
-UNIFACE.ClassRegistry.add("UX.Checkbox_UXWF", Checkbox_UXWF);
+  /**
+   * Returns the value as format-object.
+   * @param {UData} properties
+   * @return {UValueFormatting}
+   */
+  static getValueFormatted(properties) {
+    this.staticLog("getValueFormatted");
+
+    /** @type {UValueFormatting} */
+    let formattedValue = {};
+    const value_ = this.getNode(properties, "value");
+    formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+    if (formattedValue.errorMessage) {
+      formattedValue.text = "ERROR";
+    } else if (value_ === "") {
+      formattedValue.text = "Unset";
+    } else {
+      try {
+        if (this.fieldValueToBoolean(value_)) {
+          formattedValue.text = "Checked";
+        } else {
+          formattedValue.text = "Unchecked";
+        }
+      } catch (err) {
+        formattedValue.errorMessage = err;
+      }
+    }
+    return formattedValue;
+  }
+}
+UNIFACE.ClassRegistry.add("UX.Checkbox", Checkbox);

@@ -1,33 +1,35 @@
 // @ts-check
 /* global UNIFACE */
-import { Widget_UXWF } from "./widget_UXWF.js";
+import { Widget } from "./widget.js";
 import {
   Trigger,
   Element,
   SlottedElement,
   SlottedError,
-  SlottedWidget,
+  SlottedSubWidget,
   HtmlAttribute,
   HtmlAttributeNumber,
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
   HtmlAttributeMinMax,
-  StyleClass,
-} from "./workers_UXWF.js";
+  StyleClass
+} from "./workers.js";
+import "https://unpkg.com/@fluentui/web-components";
 
 /**
  * NumberField Widget.
  * @export
- * @class NumberField_UXWF
- * @extends {Widget_UXWF}
+ * @class NumberField
+ * @extends {Widget}
  */
-export class NumberField_UXWF extends Widget_UXWF {
+export class NumberField extends Widget {
 
   /**
    * Initialize as static at derived level, so definitions are unique per widget class.
    * @static
    */
   static subWidgets = {};
+  static subWidgetWorkers = [];
   static defaultValues = {};
   static setters = {};
   static getters = {};
@@ -37,56 +39,42 @@ export class NumberField_UXWF extends Widget_UXWF {
   /**
    * Widget Definition.
    */
-  static structure = new Element(
-    this,
-    "fluent-number-field",
-    "",
-    "",
-    [
-      new HtmlAttribute(this, "html:current-value", "currentValue", "", false),
-      new HtmlAttribute(this, "value", "value", "", false),
-      new HtmlAttribute(this, "html:size", "size", "", true),
-      new HtmlAttribute(this, "html:step", "step", 1, true),
-      new HtmlAttribute(this, "html:placeholder", "placeholder", undefined, true),
-      new HtmlAttribute(this, "html:title", "title", undefined, true),
-      new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, undefined, true),
-      new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline", false),
-      new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
-      new HtmlAttributeBoolean(this, "html:hidden", "hidden", false, true),
-      new HtmlAttributeBoolean(this, "html:hide-step", "hideStep", false, false),
-      new HtmlAttributeBoolean(this, "html:disabled", "disabled", false, true),
-      new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false, true),
-      new HtmlAttributeMinMax(this, "html:min", "html:max", undefined, undefined),
-      new StyleClass(this, ["u-number-field", "outline"]),
-    ],
-    [
-      new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
-      new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
-      new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
-      new SlottedElement(this, "span", "u-suffix", ".u-suffix", "end", "uniface:suffix-text", "", "uniface:suffix-icon", ""),
-      new SlottedWidget(
-        this,
-        "span",
-        "",
-        "",
-        "end",
-        "changebutton",
-        "UX.Button_UXWF",
-        {
-          "uniface:icon-position": "end",
-          "html:tabindex": "-1",
-          "html:appearance": "stealth",
-        },
-        false,
-        ["detail"]
-      ),
-    ],
-    [new Trigger(this, "onchange", "change", true)]
+  // prettier-ignore
+  static structure = new Element(this, "fluent-number-field", "", "", [
+    new HtmlAttribute(this, "html:current-value", "currentValue", "", false),
+    new HtmlAttribute(this, "value", "value", "", false),
+    new HtmlAttribute(this, "html:size", "size", "", true),
+    new HtmlAttribute(this, "html:step", "step", 1, true),
+    new HtmlAttribute(this, "html:placeholder", "placeholder", undefined, true),
+    new HtmlAttribute(this, "html:title", "title", undefined, true),
+    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, undefined, true),
+    new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline", false),
+    new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
+    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false, true),
+    new HtmlAttributeBoolean(this, "html:hide-step", "hideStep", false, false),
+    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false, true),
+    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false, true),
+    new HtmlAttributeMinMax(this, "html:min", "html:max", undefined, undefined),
+    new StyleClass(this, ["u-number-field", "outline"])
+  ], [
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
+    new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
+    new SlottedElement(this, "span", "u-suffix", ".u-suffix", "end", "uniface:suffix-text", "", "uniface:suffix-icon", ""),
+    new SlottedSubWidget(this, "span", "", "", "end", "changebutton", "UX.Button", {
+      "uniface:icon-position": "end",
+      "html:tabindex": "-1",
+      "html:appearance": "stealth"
+    }, false, [
+      "detail"
+    ])
+  ],
+  [new Trigger(this, "onchange", "change", true)]
   );
 
   /**
    * Private Uniface API method - onConnect.
-   * This method is used for the numberfield class since we need change event for change button when clicked.
+   * This method is used for the number-field class since we need change event for change button when clicked.
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
@@ -110,6 +98,28 @@ export class NumberField_UXWF extends Widget_UXWF {
     });
     return valueUpdaters;
   }
+
+  /**
+   * Returns the value as format-object.
+   * @param {UData} properties
+   * @return {UValueFormatting}
+   */
+  static getValueFormatted(properties) {
+    this.staticLog("getValueFormatted");
+
+    /** @type {UValueFormatting} */
+    let formattedValue = {};
+    formattedValue.text = this.getNode(properties, "value");
+    formattedValue.prefixIcon = this.getNode(properties, "uniface:prefix-icon");
+    if (!formattedValue.prefixIcon) {
+      formattedValue.prefixText = this.getNode(properties, "uniface:prefix-text");
+    }
+    formattedValue.suffixIcon = this.getNode(properties, "uniface:suffix-icon");
+    if (!formattedValue.suffixIcon) {
+      formattedValue.suffixText = this.getNode(properties, "uniface:suffix-text");
+    }
+    return formattedValue;
+  }
 }
 
-UNIFACE.ClassRegistry.add("UX.NumberField_UXWF", NumberField_UXWF);
+UNIFACE.ClassRegistry.add("UX.NumberField", NumberField);

@@ -1,6 +1,6 @@
 // @ts-check
 /* global UNIFACE */
-import { Widget_UXWF } from "./widget_UXWF.js";
+import { Widget } from "./widget.js";
 import {
   Element,
   SlottedError,
@@ -11,22 +11,23 @@ import {
   HtmlAttributeBoolean,
   SlottedElement,
   HtmlValueAttributeBoolean
-} from "./workers_UXWF.js";
+} from "./workers.js";
 import "https://unpkg.com/@fluentui/web-components";
 
 /**
  * Switch widget
  * @export
- * @class Switch_UXWF
- * @extends {Widget_UXWF}
+ * @class Switch
+ * @extends {Widget}
  */
-export class Switch_UXWF extends Widget_UXWF {
+export class Switch extends Widget {
 
   /**
    * Initialize as static at derived level, so definitions are unique per widget class.
    * @static
    */
   static subWidgets = {};
+  static subWidgetWorkers = [];
   static defaultValues = {};
   static setters = {};
   static getters = {};
@@ -44,7 +45,7 @@ export class Switch_UXWF extends Widget_UXWF {
 
     /**
      * Creates an instance of SwitchSlottedError.
-     * @param {typeof Widget_UXWF} widgetClass
+     * @param {typeof Widget} widgetClass
      * @param {String} selectorUsingSameErrorSlot
      */
     constructor(widgetClass, tagName, styleClass, elementQuerySelector, slot, selectorUsingSameErrorSlot) {
@@ -75,34 +76,29 @@ export class Switch_UXWF extends Widget_UXWF {
   /**
    * Widget definition.
    */
-  static structure = new Element(
-    this,
-    "fluent-switch",
-    "",
-    "",
-    [
-      new StyleClass(this, ["u-switch"]),
-      new HtmlAttribute(this, "html:role", "role", "switch"),
-      new HtmlValueAttributeBoolean(this, "value", "checked", false),
-      new HtmlAttribute(this, "html:current-value", "currentValue", "on"),
-      new HtmlAttributeBoolean(this, "html:aria-checked", "ariaChecked", false),
-      new HtmlAttributeBoolean(this, "html:aria-disabled", "ariaDisabled", false),
-      new HtmlAttributeBoolean(this, "html:aria-readonly", "ariaReadOnly", false),
-      new HtmlAttributeBoolean(this, "html:current-checked", "currentChecked", false),
-      new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
-      new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
-      new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-      new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    ],
-    [
-      new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
-      new SlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "uniface:checked-message"),
-      new SlottedElement(this, "span", "u-unchecked-message", ".u-unchecked-message", "unchecked-message", "uniface:unchecked-message"),
-      new this.SwitchSlottedError(this, "span", "u-error-icon-unchecked", ".u-error-icon-unchecked", "unchecked-message", ".u-unchecked-message"),
-      new this.SwitchSlottedError(this, "span", "u-error-icon-checked", ".u-error-icon-checked", "checked-message", ".u-checked-message"),
-    ],
-    [new Trigger(this, "onchange", "change", true)]
-  );
+  // prettier-ignore
+  static structure = new Element(this, "fluent-switch", "", "", [
+    new StyleClass(this, ["u-switch"]),
+    new HtmlAttribute(this, "html:role", "role", "switch"),
+    new HtmlValueAttributeBoolean(this, "value", "checked", null),
+    new HtmlAttribute(this, "html:current-value", "currentValue", "on"),
+    new HtmlAttributeBoolean(this, "html:aria-checked", "ariaChecked", false),
+    new HtmlAttributeBoolean(this, "html:aria-disabled", "ariaDisabled", false),
+    new HtmlAttributeBoolean(this, "html:aria-readonly", "ariaReadOnly", false),
+    new HtmlAttributeBoolean(this, "html:current-checked", "currentChecked", false),
+    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
+    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
+    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
+    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0)
+  ], [
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text", ""),
+    new SlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "uniface:checked-message"),
+    new SlottedElement(this, "span", "u-unchecked-message", ".u-unchecked-message", "unchecked-message", "uniface:unchecked-message"),
+    new this.SwitchSlottedError(this, "span", "u-error-icon-unchecked", ".u-error-icon-unchecked", "unchecked-message", ".u-unchecked-message"),
+    new this.SwitchSlottedError(this, "span", "u-error-icon-checked", ".u-error-icon-checked", "checked-message", ".u-checked-message")
+  ], [
+    new Trigger(this, "onchange", "change", true)
+  ]);
 
   onConnect(widgetElement, objectDefinition) {
     this.elements = {};
@@ -111,6 +107,42 @@ export class Switch_UXWF extends Widget_UXWF {
     this.elements.widget.shadowRoot.querySelector("slot[name='switch']").setAttribute("part", "switch-toggle");
     return super.onConnect(widgetElement, objectDefinition);
   }
+
+  /**
+   * Returns an array of property ids that affect the formatted value.
+   * @returns {string[]}
+   */
+  static getValueFormattedSetters() {
+    return [
+      "value",
+      "uniface:error",
+      "uniface:error-message",
+      "uniface:checked-message",
+      "uniface:unchecked-message"
+    ];
+  }
+
+  /**
+   * Returns the value as format-object.
+   * @param {UData} properties
+   * @return {UValueFormatting}
+   */
+  static getValueFormatted(properties) {
+    this.staticLog("getValueFormatting");
+
+    /** @type {UValueFormatting} */
+    let formattedValue = {};
+    try {
+      if (this.fieldValueToBoolean(this.getNode(properties, "value"))) {
+        formattedValue.text = this.getNode(properties, "uniface:checked-message") || "On";
+      } else {
+        formattedValue.text = this.getNode(properties, "uniface:unchecked-message") || "Off";
+      }
+    } catch (err) {
+      formattedValue.errorMessage = err;
+    }
+    return formattedValue;
+  }
 }
 
-UNIFACE.ClassRegistry.add("UX.Switch_UXWF", Switch_UXWF);
+UNIFACE.ClassRegistry.add("UX.Switch", Switch);
