@@ -1,304 +1,423 @@
-/**
- * Test ux-widget
- */
-(function () {
-    'use strict';
+/* eslint-disable no-undef */
+// Source code for refactored radiogroup in git lab repo
+// Branch Name: UNI-38464-refactor-uxradiogroup
+// https://gitlab.com/Uniface/sources/harness-project/-/tree/feature/UNI-38464-refactor-ux-radiogroup?ref_type=heads
 
-    // Keep this!
-    if (umockup.testLoaded()) {
-        return;
+(function () {
+  'use strict';
+
+  // Keep this!
+  if (umockup.testLoaded()) {
+    return;
+  }
+
+  /**
+       * Default timeout for waiting for DOM rendering (in milliseconds)
+       */
+  const defaultAsyncTimeout = 100; // ms
+
+  const assert = chai.assert;
+  const expect = chai.expect;
+  const tester = new umockup.WidgetTester();
+  const widgetId = tester.widgetId;
+  const widgetName = tester.widgetName;
+  const widgetClass = tester.getWidgetClass();
+
+  // custom test variables
+  const valRepArray = [
+    {
+      value: "1",
+      representation: "option one"
+    },
+    {
+      value: "2",
+
+      representation: "option two"
+    },
+    {
+      value: "3",
+      representation: "option three"
+    }
+  ];
+
+  /**
+       * Function to determine whether the widget class has been loaded.
+       */
+  function verifyWidgetClass(widgetClass) {
+    assert(widgetClass, `Widget class '${widgetName}' is not defined!
+              Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
+  }
+
+  describe("Uniface Mockup tests", function () {
+
+    it("get class " + widgetName, function () {
+      verifyWidgetClass(widgetClass);
+    });
+
+  });
+
+  describe("Uniface static structure constructor definition", function () {
+
+    it('should have a static property structure of type Element', function () {
+      verifyWidgetClass(widgetClass);
+      const structure = widgetClass.structure;
+      expect(structure.constructor).to.be.an.instanceof(Element.constructor);
+      expect(structure.tagName).to.equal('fluent-radio-group');
+      expect(structure.styleClass).to.equal('');
+      expect(structure.elementQuerySelector).to.equal('');
+      expect(structure.attributeDefines).to.be.an('array');
+      expect(structure.elementDefines).to.be.an('array');
+      expect(structure.triggerDefines).to.be.an('array');
+    });
+
+  });
+
+  describe(widgetName + ".processLayout", function () {
+    let element;
+
+    it("processLayout", function () {
+      verifyWidgetClass(widgetClass);
+      element = tester.processLayout();
+      expect(element).to.have.tagName(tester.uxTagName);
+    });
+
+    describe("Checks", function () {
+
+      before(function () {
+
+        verifyWidgetClass(widgetClass);
+        element = tester.processLayout();
+      });
+
+      it("check instance of HTMLElement", function () {
+        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+      });
+
+      it("check tagName", function () {
+        expect(element).to.have.tagName(tester.uxTagName);
+      });
+
+      it("check id", function () {
+        expect(element).to.have.id(widgetId);
+      });
+
+      it("check u-label-text", function () {
+        assert(element.querySelector("label.u-label-text"), "Widget misses or has incorrect u-label-text element");
+      });
+
+      it("check u-error-icon", function () {
+        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
+      });
+    });
+
+  });
+
+  describe("Create widget", function () {
+
+    before(function () {
+      verifyWidgetClass(widgetClass);
+      tester.construct();
+    });
+
+    it("constructor", function () {
+      try {
+        const widget = tester.construct();
+        assert(widget, "widget is not defined!");
+        verifyWidgetClass(widgetClass);
+        assert(widgetClass.defaultValues.classes['u-radio-group'], "Class is not defined");
+      } catch (e) {
+        assert(false, "Failed to construct new widget, exception " + e);
+      }
+    });
+
+    it("On Connect", function () {
+      const element = tester.processLayout();
+      const widget = tester.onConnect();
+      assert(element, "Target element is not defined!");
+      assert(widget.elements.widget === element, "widget is not connected");
+    });
+
+  });
+
+  describe("mapTrigger", function () {
+    const widget = tester.onConnect();
+    widget.mapTrigger("onchange");
+  });
+
+  describe("Data Init", function () {
+    const defaultValues = tester.getDefaultValues();
+    const classes = defaultValues.classes;
+    var element;
+
+    beforeEach(function () {
+      tester.dataInit();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    for (const defaultClass in classes) {
+      it("check class '" + defaultClass + "'", function () {
+        if (classes[defaultClass]) {
+          expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+        } else {
+          expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
+        }
+      });
     }
 
-    /**
-     * Default timeout for waiting for DOM rendering (in milliseconds)
-     */
-    const defaultAsyncTimeout = 100; //ms
-
-    const assert = chai.assert;
-    const expect = chai.expect;
-
-    // for unit test
-    const tester = new umockup.WidgetTester();
-    const widgetId = tester.widgetId;
-    const widgetName = tester.widgetName;
-
-    // custom test variables 
-    const valRepArray = [
-        {
-            value: "1",
-            representation: "option 1"
-        },
-        {
-            value: "2",
-
-            representation: "option 2"
-        },
-        {
-            value: "3",
-            representation: "option 3"
-        },
-    ];
-
-    const widgetLabelText = "Test Label";
-
-    const selectedValue = "2";
-
-
-    describe("Uniface Mockup tests", function () {
-
-        it("Get class " + widgetName, function () {
-            const widgetClass = tester.getWidgetClass();
-            assert(widgetClass, `Widget class '${widgetName}' is not defined!
-            Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
-        });
-
+    it("check 'hidden' attributes", function () {
+      assert.notEqual(element.querySelector('label.u-label-text').getAttribute('hidden'), null);
     });
 
-    describe(widgetName + ".processLayout", function () {
-        let element;
-
-        it("processLayout", function () {
-            element = tester.processLayout();
-            expect(element).to.have.tagName(tester.uxTagName);
-        });
-
-        describe("Checks", function () {
-
-            beforeEach(function () {
-                element = tester.processLayout();
-            });
-
-            it("check instance of HTMLElement", function () {
-                expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
-            });
-
-            it("check tagName", function () {
-                expect(element).to.have.tagName(tester.uxTagName);
-            });
-
-            it("check id", function () {
-                expect(element).to.have.id(widgetId);
-            });
-
-            it("check u-error-icon", function () {
-                assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
-            });
-
-            it("check u-label-text", function () {
-                assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element");
-            });
-
-        });
-
+    it("check widget id", function () {
+      assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
     });
 
-    describe("Create widget", function () {
-
-        beforeEach(function () {
-            tester.construct();
-        });
-
-        it("constructor", function () {
-            try {
-                const widget = tester.construct();
-                assert(widget, "widget is not defined!");
-                const widgetClass = tester.getWidgetClass();
-                assert(widgetClass.defaultProperties, "widgetClass.defaultProperties is not defined!");
-            } catch (e) {
-                assert(false, "Failed to construct new widget, exception " + e);
-            }
-        });
-
-        it("onConnect", function () {
-            const element = tester.processLayout();
-            const widget = tester.onConnect();
-            assert(element, "Target element is not defined!");
-            assert(widget.elements.widget === element, "widget is not connected");
-        });
-
+    it("check value", function () {
+      assert.equal(tester.defaultValues.value, "");
     });
 
-    describe("dataInit", function () {
-        const defaultProperties = tester.getDefaultProperties();
-        const classes = defaultProperties.classes;
-        var element;
+    it("check for single unselected radio button placeholder", function () {
+      expect(element.querySelector('fluent-radio').getAttribute("aria-checked")).equal("false");
+    });
 
-        beforeEach(function () {
-            tester.dataInit();
-            element = tester.element;
-            assert(element, "Widget top element is not defined!");
+    it("check error message appears when valrep is not defined", function () {
+      let errorIconTooltip = element.querySelector('.u-error-icon');
+      expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Unable to show representation of value");
+    });
+  });
+
+  describe("Data Update", function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    it("Set Uniface label text", function (done) {
+      tester.dataUpdate({
+        uniface: {
+          "label-text": "Test Label",
+        },
+      });
+
+      setTimeout(function () {
+        expect(element.querySelector("label.u-label-text").innerText).equal("Test Label");
+        done();
+      }, defaultAsyncTimeout);
+    });
+
+    it("Set HTML property readonly to true", function (done) {
+      tester.dataUpdate({
+        html: { readonly: true }
+      });
+
+      setTimeout(function () {
+        expect(element.getAttribute("readonly"));
+        expect(element.getAttribute("aria-readonly")).equal("true");
+        done();
+      }, defaultAsyncTimeout);
+    });
+
+    it("Set HTML property disabled to true", function (done) {
+      tester.dataUpdate({
+        html: { disabled: true }
+      });
+
+      setTimeout(function () {
+        expect(element.getAttribute("disabled"));
+        expect(element.getAttribute("aria-disabled")).equal("true");
+        done();
+      }, defaultAsyncTimeout);
+    });
+
+    it("Set valrep property with default display value as rep", function (done) {
+      tester.dataUpdate({
+        valrep: valRepArray
+      });
+
+      setTimeout(function () {
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        radioButtonArray.forEach(function (node, index) {
+          expect(node.value).equal(valRepArray[index].value);
+          expect(node.querySelector("span").innerText).equal(valRepArray[index].representation);
         });
+        done();
+      }, defaultAsyncTimeout);
+    });
 
-        for (const clazz in classes) {
-            it("check class '" + clazz + "'", function () {
-                if (classes[clazz]) {
-                    expect(element).to.have.class(clazz, "widget element has class " + clazz);
-                } else {
-                    expect(element).not.to.have.class(clazz, "widget element has no class " + clazz);
-                }
-            });
+    it("Set valrep property with default display-format as value", function (done) {
+      tester.dataUpdate({
+        valrep: valRepArray,
+        uniface: {
+          "display-format": "val"
         }
+      });
 
-        it("check initial orientation is vertical", function () {
-            expect(element).to.have.property("orientation", "vertical");
+      setTimeout(function () {
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        radioButtonArray.forEach(function (node, index) {
+          expect(node.value).equal(valRepArray[index].value);
+          expect(node.querySelector("span").innerText).equal(valRepArray[index].value);
         });
+        done();
+      }, defaultAsyncTimeout);
     });
 
-    describe("dataUpdate", function () {
-        let widget;
+    it("Set valrep property with default display value as valrep", function (done) {
+      tester.dataUpdate({
+        valrep: valRepArray,
+        uniface: {
+          "display-format": "valrep"
+        }
+      });
 
-        beforeEach(function () {
-            widget = tester.createWidget();
+      setTimeout(function () {
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        radioButtonArray.forEach(function (node, index) {
+          expect(node.value).equal(valRepArray[index].value);
+          expect(node.querySelector("span.u-valrep-representation").innerText).equal(valRepArray[index].representation);
+          expect(node.querySelector("span.u-valrep-value").innerText).equal(valRepArray[index].value);
         });
-
-        it("Set HTML property", function (done) {
-            widget.dataUpdate({
-                html: { "readonly": true }
-            });
-
-            setTimeout(function () {
-                let readOnlyTrue = widget.elements.widget.readOnly;
-                assert.equal(readOnlyTrue, true);
-
-                let readOnlyBoolean = widget.elements.widget.getAttribute("aria-readonly");
-                assert.equal(readOnlyBoolean, "true");
-                done();
-            }, defaultAsyncTimeout); // Wait for DOM rendering
-
-        });
-
-        it("Set CLASS property", function (done) {
-            widget.dataUpdate({
-                classes: { "ClassA": true }
-            });
-
-            setTimeout(function () {
-                let classAttributeValue = widget.elements.widget.getAttribute("class");
-                let classExist = classAttributeValue.includes("ClassA");
-                expect(classExist).to.be.true;
-                done();
-            }, defaultAsyncTimeout); // Wait for DOM rendering
-
-        });
-
-        it("Set Uniface property", function (done) {
-            widget.dataUpdate({
-                uniface: { "label-text": widgetLabelText }
-            });
-
-            setTimeout(function () {
-                let labelTextValue = widget.elements.widget.querySelector(".u-label-text");
-                assert.equal(labelTextValue.textContent, widgetLabelText);
-                done();
-            }, defaultAsyncTimeout); // Wait for DOM rendering
-        });
-
-        it("Set VALREP property", function (done) {
-            widget.dataUpdate({
-                valrep: valRepArray
-            });
-
-            setTimeout(function () {
-                let radioButtonArray = widget.elements.widget.querySelectorAll("fluent-radio");
-                radioButtonArray.forEach(function (node, index) {
-                    assert.equal(node.value, valRepArray[index].value);
-                    assert.equal(node.textContent, valRepArray[index].representation);
-                });
-
-                done();
-            }, defaultAsyncTimeout); // Wait for DOM rendering
-        });
-
-        it("Change multiple properties", function (done) {
-            widget.dataUpdate({
-                value: selectedValue,
-                html: {"readonly": false , "disabled" : true}, 
-                classes: { "ClassA": true },
-                uniface: { "label-text": widgetLabelText },
-                valrep: valRepArray
-
-            });
-
-            setTimeout(function () {
-
-                let radioButtonArray = widget.elements.widget.querySelectorAll("fluent-radio");
-                radioButtonArray.forEach(function (node, index) {
-                    assert.equal(node.value, valRepArray[index].value);
-                    assert.equal(node.textContent, valRepArray[index].representation);
-                    if (selectedValue === valRepArray[index].value) {
-                        assert(node.checked, "Selected radio button is not checked");
-                    }
-                });
-
-                let classAttributeValue = widget.elements.widget.getAttribute("class");
-                let classExist = classAttributeValue.includes("ClassA");
-                expect(classExist).to.be.true;
-
-                let readOnlyFalse = widget.elements.widget.readOnly;
-                assert.equal(readOnlyFalse, false);
-
-                let readOnlyBoolean = widget.elements.widget.getAttribute("aria-readonly");
-                assert.equal(readOnlyBoolean, "false");
-
-                let disabledTrue = widget.elements.widget.disabled;
-                assert.equal(disabledTrue, true);
-
-                let disabledBoolean = widget.elements.widget.getAttribute("aria-disabled");
-                assert.equal(disabledBoolean, "true");
-                
-                done();
-            }, defaultAsyncTimeout); // Wait for DOM rendering
-
-        });
-
+        done();
+      }, defaultAsyncTimeout);
     });
 
-    // describe("Other API methods (not supported yet)", function () {
-    //     const texts = [
-    //         "getValue",
-    //         "validate",
-    //         "showError",
-    //         "etc ..."
-    //     ];
-
-    //     for (let i = 0; i < texts.length; i++) {
-    //         it(texts[i]);
-    //     }
-
-    // });
-
-    describe("dataCleanup", function () {
-        let widget;
-
-        beforeEach(function () {
-            widget = tester.createWidget();
+    it("Set value to 2 and expect the radio button to be checked", function (done) {
+      tester.dataUpdate({
+        valrep: valRepArray,
+        value: "2",
+      });
+      setTimeout(function () {
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        radioButtonArray.forEach(function (node, index) {
+          if(valRepArray[index].value === "2") {
+            expect(node.getAttribute("current-checked")).equal("true");
+          } else {
+            expect(node.getAttribute("current-checked")).equal("false");
+          }
         });
-
-        it("value", function () {
-            try {
-                widget.dataCleanup({ value: new Set(), html: new Set(), uniface: new Set(), valrep: new Set() });
-            } catch (e) {
-                console.error(e);
-                assert(false, "Failed to call dataCleanup(), exception " + e);
-            }
-        });
-
+        done();
+      }, defaultAsyncTimeout);
     });
 
-    describe("End", function () {
-        let widget;
+    it("Set layout property to horizontal", function (done) {
+      let valRepArrayLongText = [ {
+        value: "0",
+        representation: "Option zero, test horizontal css specification changes when there is more than 25 characters."
+      }, ...valRepArray];
 
-        beforeEach(function () {
-            widget = tester.createWidget();
+      tester.dataUpdate({
+        valrep: valRepArrayLongText,
+        uniface: {
+          "display-format": "rep",
+          "layout": "horizontal"
+        }
+      });
+
+      setTimeout(function () {
+        expect(element.getAttribute("orientation")).equal("horizontal");
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        radioButtonArray.forEach(function (node, index) {
+          let expectedText = valRepArrayLongText[index].representation;
+          if(expectedText.length > 25) {
+            expect(node.querySelector("fluent-tooltip"));
+          } else {
+            expect(node.querySelector("fluent-tooltip")).equal(null);
+          }
         });
-
-        it("Set back to default", function () {
-            widget.dataUpdate({
-                value: widgetName,
-                valrep: valRepArray,
-            });
-        });
-
+        done();
+      }, defaultAsyncTimeout);
     });
+
+    it("Change multiple properties", function (done) {
+      let selectedValue = "2";
+      tester.dataUpdate({
+        valrep: valRepArray,
+        value: selectedValue,
+        html: {
+          "disabled": true,
+          "readonly": false
+        },
+        classes: { "ClassA": true },
+        uniface: {
+          "label-text": "Test Label",
+          "display-format": "val",
+          "layout": "horizontal"
+        },
+      });
+
+      setTimeout(function () {
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        radioButtonArray.forEach(function (node, index) {
+          assert.equal(node.value, valRepArray[index].value);
+          assert.equal(node.textContent, valRepArray[index].value);
+          if (selectedValue === valRepArray[index].value) {
+            expect(node.getAttribute("current-checked")).equal("true");
+          }
+        });
+
+        expect(element.querySelector("label.u-label-text").innerText).equal("Test Label");
+        expect(element.getAttribute("class")).to.includes("ClassA");
+        expect(element.readOnly).equal(false);
+        expect(element.getAttribute("aria-readonly")).equal("false");
+        expect(element.disabled).equal(true);
+        expect(element.getAttribute("aria-disabled")).equal("true");
+        expect(element.getAttribute("orientation")).equal("horizontal");
+        done();
+      }, defaultAsyncTimeout);
+    });
+  });
+
+  describe('Radio onchange event', function () {
+    let radioElement, onchangeSpy, widget;
+    beforeEach(function () {
+
+      widget = tester.createWidget();
+      radioElement = tester.element.querySelector("fluent-radio");
+
+      // Create a spy for the onchange event
+      onchangeSpy = sinon.spy();
+
+      // Add the onchange event listener to the radio element
+      radioElement.addEventListener('onchange', onchangeSpy);
+    });
+
+    // Clean up after each test
+    afterEach(function () {
+      // Restore the spy to its original state
+      sinon.restore();
+    });
+
+    // Test case for the onchange event
+    it('should call the onchange event handler when a radio button is clicked', function () {
+      // Simulate a change event
+      const event = new window.Event('onchange');
+      radioElement.dispatchEvent(event);
+
+      // Assert that the onchange event handler was called once
+      expect(onchangeSpy.calledOnce).to.be.true;
+    });
+  });
+
+  describe("Show Error", function () {
+    it("not required", function () { });
+  });
+
+  describe("Hide Error", function () {
+    it("not required", function () { });
+  });
+
+  describe("reset all properties", function () {
+    it("reset all property", function () {
+      try {
+        tester.dataUpdate(tester.getDefaultValues());
+      } catch (e) {
+        console.error(e);
+        assert(false, "Failed to reset all properties, exception " + e);
+      }
+    });
+  });
 
 })();
