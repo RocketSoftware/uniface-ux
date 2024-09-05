@@ -74,6 +74,13 @@ fluent-card {
   order: unset;
 }
 
+.u-number-field[u-label-position][hidden],
+.u-select[u-label-position][hidden],
+.u-text-field[u-label-position][hidden],
+.u-text-area[u-label-position][hidden] {
+  display: none
+}
+
 .u-number-field[u-label-position="before"]::part(label),
 .u-select[u-label-position="before"]::part(label),
 .u-text-field[u-label-position="before"]::part(label),

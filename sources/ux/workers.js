@@ -60,7 +60,7 @@ export class Worker extends Base {
    * Refresh widget parts this setter is responsible for based on the widget properties.
    * @param {Widget} widgetInstance
    */
-  refresh(widgetInstance) { } // eslint-disable-line no-unused-vars
+  refresh(widgetInstance) {} // eslint-disable-line no-unused-vars
 
   /**
    * Provides setter-specific tracing.
@@ -736,6 +736,41 @@ export class WidgetForOccurrence extends Worker {
     element.id = this.substituteInstructions(objectDefinition, this.bindingId);
     elements.push(element);
     return elements;
+  }
+}
+
+/**
+ * Worker : Used to register setter and default value for properties that do not need to execute any code on refresh.
+ * @export
+ * @class Dummy
+ * @extends {Worker}
+ */
+export class Dummy extends Worker {
+
+  /**
+   * Creates an instance of Dummy
+   * @param {typeof Widget} widgetClass
+   * @param {UPropName} propId
+   * @param {UPropValue} defaultValue
+   */
+  constructor(widgetClass, propId, defaultValue) {
+    super(widgetClass);
+    this.propId = propId;
+    this.defaultValue = defaultValue;
+    this.registerSetter(widgetClass, propId, this);
+    this.registerDefaultValue(widgetClass, propId, defaultValue);
+  }
+
+  /**
+   * Method that will be invoked when there is an update to any of the registered properties.
+   * @param {Object} widgetInstance
+   */
+  refresh(widgetInstance) {
+    this.log("refresh", {
+      "widgetInstance": widgetInstance.getTraceDescription(),
+      "propId" : this.propId,
+      "value" : this.getNode(widgetInstance.data.properties, this.propId)
+    });
   }
 }
 

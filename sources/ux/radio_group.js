@@ -10,6 +10,7 @@ import {
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
   HtmlAttributeMinMaxLength,
+  HtmlAttributeNumber,
   StyleClass,
   Trigger
 } from "./workers.js";
@@ -37,13 +38,80 @@ export class RadioGroup extends Widget {
   static uiBlocking = "readonly";
 
   /**
+   * Private Worker: RadioGroupSelectedValue
+   * @class RadioGroupSelectedValue
+   * @extends {HtmlAttribute}
+   */
+
+  static RadioGroupSelectedValue = class extends HtmlAttribute {
+
+    /**
+     * Creates an instance of RadioGroupSelectedValue.
+     * @param {typeof Widget} widgetClass
+     * @param {UPropName | undefined} [propId]
+     * @param {String} [attrName]
+     * @param {UPropValue} [defaultValue]
+     */
+    constructor(widgetClass, propId, attrName, defaultValue) {
+      super(widgetClass, propId, attrName, defaultValue);
+      this.registerSetter(widgetClass, "valrep", this);
+    }
+
+    getValue(widgetInstance) {
+      this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
+      const value = this.getNode(widgetInstance.data.properties, "value");
+      return value;
+    }
+
+    getValueUpdaters(widgetInstance) {
+      this.log("getValueUpdaters", { "widgetInstance": widgetInstance.getTraceDescription() });
+      const element = this.getElement(widgetInstance);
+      let updaters = [];
+      updaters.push({
+        "element": element,
+        "event_name": "change",
+        "handler": () => {
+          const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+          if (valrep && valrep.length > 0) {
+            widgetInstance.setProperties({ "value": element["value"] });
+          }
+        }
+      });
+      return updaters;
+    }
+
+    refresh(widgetInstance) {
+      super.refresh(widgetInstance);
+      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      const value = this.getNode(widgetInstance.data.properties, "value");
+      const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
+      const errorText = this.toFormatValRepErrorText(displayFormat, value);
+      let matchedValrepObj = valrep ? valrep.find((valrepObj) => valrepObj.value === value) : undefined;
+      if (valrep.length > 0 && (matchedValrepObj || value === "")) {
+        widgetInstance.setProperties({
+          "uniface": {
+            "format-error": false,
+            "format-error-message": ""
+          }
+        });
+      } else {
+        widgetInstance.setProperties({
+          "uniface": {
+            "format-error": true,
+            "format-error-message": errorText
+          }
+        });
+      }
+    }
+  };
+
+
+  /**
    * Private Worker: RadioGroupValRep
-   * It remembers the slot which is utilizing the same valrep slot.
-   * @export
+   * This is specialized worker to accommodate tooltip changes to valrep element.
    * @class RadioGroupValRep
    * @extends {SlottedElementsByValRep}
    */
-
   static RadioGroupValRep = class extends SlottedElementsByValRep {
 
     /**
@@ -56,37 +124,30 @@ export class RadioGroup extends Widget {
     constructor(widgetClass, tagName, styleClass, elementQuerySelector) {
       super(widgetClass, tagName, styleClass, elementQuerySelector);
       this.registerSetter(widgetClass, "uniface:layout", this);
+      this.registerSetter(widgetClass, "valrep", this);
     }
 
     addTooltipToValrepElement(widgetInstance) {
-      let radioGroupElement = this.getElement(widgetInstance);
-      let layout = this.getNode(widgetInstance.data.properties, "uniface:layout");
+      const radioGroupElement = this.getElement(widgetInstance);
+      const layout = this.getNode(widgetInstance.data.properties, "uniface:layout");
       const valRepRadioElement = radioGroupElement.querySelectorAll("fluent-radio");
       valRepRadioElement.forEach((radioButton) => {
         let label = radioButton.querySelector("span");
         let labelText = label && label.textContent ? label.textContent : " ";
-        if (layout === "horizontal" && labelText.length > 25) {
-          // Append tooltip to the label text.
-          const tooltipId = String(Math.random());
-          radioButton.id = tooltipId;
-          const newTooltip = document.createElement("fluent-tooltip");
-          newTooltip.setAttribute("anchor", tooltipId);
-          newTooltip.innerHTML = labelText;
-          radioButton.appendChild(newTooltip);
+        if (layout === "horizontal") {
+          radioButton.setAttribute("title", labelText);
         }
       });
     }
-
     refresh(widgetInstance) {
-      let radioGroupElement = this.getElement(widgetInstance);
-      let valrep = this.getNode(widgetInstance.data.properties, "valrep");
-      this.removeValRepElements(widgetInstance);
+      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
       if (valrep.length > 0) {
-        this.createValRepElements(widgetInstance);
+        super.refresh(widgetInstance);
         this.addTooltipToValrepElement(widgetInstance);
       } else {
-        let childElement = document.createElement(this.tagName);
-        radioGroupElement.appendChild(childElement);
+        const radioGroupElement = this.getElement(widgetInstance);
+        this.removeValRepElements(widgetInstance);
+        radioGroupElement.appendChild(document.createElement(this.tagName));
       }
     }
   };
@@ -97,19 +158,22 @@ export class RadioGroup extends Widget {
   // prettier-ignore
   static structure = new Element(this, "fluent-radio-group", "", "", [
     new StyleClass(this, ["u-radio-group"]),
-    new HtmlAttribute(this, "html:current-value", "current-value", ""),
-    new HtmlAttribute(this, "value", "value", null),
+    new HtmlAttribute(this, "html:title", "title", undefined, true),
     new HtmlAttributeBoolean(this, "html:aria-disabled", "ariaDisabled", false),
     new HtmlAttributeBoolean(this, "html:aria-readonly", "ariaReadOnly", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
+    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new HtmlAttributeBoolean(this, "html:required", "required", false),
+    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
-    new HtmlAttributeChoice(this, "uniface:layout", "orientation", ["vertical", "horizontal"], "vertical", true)
+    new HtmlAttributeChoice(this, "uniface:layout", "orientation", ["vertical", "horizontal"], "vertical", true),
+    new this.RadioGroupSelectedValue(this, "value", "value", "")
   ], [
     new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
     new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end")
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label")
+
   ], [
     new Trigger(this, "onchange", "change", true)
   ]);
@@ -119,6 +183,7 @@ export class RadioGroup extends Widget {
    * @returns {string[]}
    */
   static getValueFormattedSetters() {
+    // prettier-ignore
     return [
       "value",
       "valrep",
@@ -139,7 +204,7 @@ export class RadioGroup extends Widget {
     /** @type {UValueFormatting} */
     let formattedValue = {};
     const value_ = this.getNode(properties, "value");
-    const valrepItem  = this.getValrepItem(this.getNode(properties, "valrep"), value_);
+    const valrepItem = this.getValrepItem(this.getNode(properties, "valrep"), value_);
     switch (this.getNode(properties, "uniface:display-format")) {
       case "valrep":
         if (valrepItem) {
@@ -164,5 +229,19 @@ export class RadioGroup extends Widget {
     }
     return formattedValue;
   }
+
+  /**
+   * Private Uniface API method - onConnect.
+   * This method is used for the radio group class since we need to add the "part" attribute to the label slot.
+   * Fluent provides this attribute in other web components, but is missing for the radio group.
+   */
+  onConnect(widgetElement, objectDefinition) {
+    let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
+    let shadowRoot = this.elements.widget.shadowRoot;
+    let labelSlot = shadowRoot.querySelector('slot[name="label"]');
+    labelSlot.setAttribute("part", "label");
+    return valueUpdaters;
+  }
 }
+
 UNIFACE.ClassRegistry.add("UX.RadioGroup", RadioGroup);

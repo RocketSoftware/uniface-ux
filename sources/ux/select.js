@@ -85,6 +85,7 @@ export class Select extends Widget {
       super(widgetClass);
       // Register a setter for display format, ensuring it also updates the worker's refresh function.
       this.registerSetter(widgetClass, "uniface:display-format", this);
+      this.registerSetter(widgetClass, "valrep", this);
 
       this.registerGetter(widgetClass, "value", this);
       this.registerSetter(widgetClass, "value", this);
@@ -283,8 +284,8 @@ export class Select extends Widget {
       new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
       new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
       new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
-      new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ".u-placeholder"),
-      new HtmlAttributeChoice(this, "uniface:popup-position", "position", ["above", "below"], "below", true),
+      new HtmlAttributeChoice(this, "uniface:popup-position", "u-position", ["above", "below"], "below", true),
+      new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ".u-placeholder")
     ],
     [
       new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
@@ -363,11 +364,8 @@ export class Select extends Widget {
   }
 
   stylingSetRule(index, selector, id, value) {
-    try {
+    if (this.CSSStyleSheet?.cssRules.length && this.CSSStyleSheet?.cssRules[index]) {
       this.CSSStyleSheet?.deleteRule(index);
-    } catch (err) {
-      // Explicitly ignoring all exceptions.
-      console.warn(`Error in styling the rule ${err}`);
     }
     if (selector && id && value) {
       // Set rule to !important, so it will overrule any other (adopted) style sheets.
@@ -516,14 +514,14 @@ export class Select extends Widget {
     // Compute the position of listbox and opens it.
     widgetElement.addEventListener("click", () => {
       this.popupPreCalc(".listbox", widgetElement);
-      const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data.properties.uniface, "uniface:popup-position"));
+      const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data.properties, "uniface:popup-position"));
       this.popupPostCalc(".listbox", rect);
     });
 
     widgetElement.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
         this.popupPreCalc(".listbox", widgetElement);
-        const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data.properties.uniface, "uniface:popup-position"));
+        const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data.properties, "uniface:popup-position"));
         this.popupPostCalc(".listbox", rect);
       }
     });

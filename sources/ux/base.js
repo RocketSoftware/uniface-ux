@@ -256,38 +256,39 @@ export class Base {
    */
   static fixData(data) {
     let newData = {};
-    Object.keys(data).forEach((key) => {
+    for (let key in data) {
       if (key === "uniface") {
-        Object.keys(data.uniface).forEach((prop) => {
-          let propValue = data.uniface[prop];
-          let [mainKey, ...subKeys] = prop.split(":");
-          if (subKeys.length) {
-            newData[mainKey] = newData[mainKey] || {};
-            if (subKeys.length > 1) {
-              subKeys[0] = subKeys[0] === "class" ? "classes" : subKeys[0];
-              newData[mainKey][subKeys[0]] = newData[mainKey][subKeys[0]] || {};
-              newData[mainKey][subKeys[0]][subKeys[1]] = propValue;
-            } else if (subKeys[0] === "value") {
-              newData[mainKey][subKeys[0]] = propValue;
-            } else if (subKeys[0] === "valrep") {
-              newData[mainKey][subKeys[0]] = this.getFormattedValrep(propValue);
-            } else {
-              newData[mainKey]["uniface"] = newData[mainKey]["uniface"] || {};
-              newData[mainKey]["uniface"][subKeys[0]] = propValue;
-            }
-          } else if (mainKey === "value") {
-            newData[mainKey] = propValue;
-          } else if (mainKey === "valrep") {
-            newData[mainKey] = this.getFormattedValrep(propValue);
+        newData.uniface = newData.uniface || {};
+        for (let key in data.uniface) {
+          let prefixes = key.split(":");
+          if (prefixes.length === 1) {
+            newData.uniface[key] = data.uniface[key];
           } else {
-            newData["uniface"] = newData["uniface"] || {};
-            newData["uniface"][mainKey] = propValue;
+            let newDataNode = newData;
+            let prefix;
+            let i;
+            for (i = 0; i < prefixes.length - 1; i++) {
+              prefix = prefixes[i];
+              let id = prefix === "class" ? "classes" : prefix;
+              newDataNode[id] = newDataNode[id] || {};
+              newDataNode = newDataNode[id];
+            }
+            if (prefixes[i] === "valrep") {
+              newDataNode[prefixes[i]] = this.getFormattedValrep(data.uniface[key]);
+            } else if (prefix === "class") {
+              newDataNode[prefixes[i]] = this.toBoolean(data.uniface[key]);
+            } else if (prefix === "html" || prefix === "style" || prefixes[i] === "value") {
+              newDataNode[prefixes[i]] = data.uniface[key];
+            } else {
+              newDataNode.uniface = newDataNode.uniface || {};
+              newDataNode = newDataNode.uniface[prefixes[i]] = data.uniface[key];
+            }
           }
-        });
+        }
       } else {
         newData[key] = data[key];
       }
-    });
+    }
     return newData;
   }
 

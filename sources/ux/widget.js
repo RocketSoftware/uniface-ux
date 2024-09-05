@@ -579,11 +579,15 @@ export class Widget extends Base {
                 widgetClass.setters[prefix][property]
               ) {
                 widgetClass.setters[prefix][property].forEach((setter) => {
-                  setters.push(setter);
+                  if(!setters.includes(setter)) {
+                    setters.push(setter);
+                  }
                 });
               } else if (widgetClass.setters[prefix] && (prefix === "style" || prefix === "classes")) {
                 widgetClass.setters[prefix].forEach((setter) => {
-                  setters.push(setter);
+                  if(!setters.includes(setter)) {
+                    setters.push(setter);
+                  }
                 });
               } else {
                 this.warn(
@@ -605,7 +609,9 @@ export class Widget extends Base {
             }
             if (widgetClass.setters[prefix]) {
               widgetClass.setters[prefix].forEach((setter) => {
-                setters.push(setter);
+                if(!setters.includes(setter)) {
+                  setters.push(setter);
+                }
               });
             } else {
               this.warn(

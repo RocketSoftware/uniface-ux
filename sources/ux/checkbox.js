@@ -10,7 +10,8 @@ import {
   Trigger,
   SlottedElement,
   SlottedError,
-  HtmlAttributeNumber
+  HtmlAttributeNumber,
+  Dummy
 } from "./workers.js";
 import "https://unpkg.com/@fluentui/web-components";
 
@@ -52,7 +53,6 @@ export class Checkbox extends Widget {
     constructor(widgetClass, propId, attrName, defaultValue) {
       super(widgetClass, propId, attrName, defaultValue);
       this.attrName = attrName;
-      this.registerDefaultValue(widgetClass, "uniface:tri-state", false);
     }
 
     /**
@@ -233,6 +233,7 @@ export class Checkbox extends Widget {
     new HtmlAttribute(this, "html:role", "role", "checkbox"),
     new HtmlAttribute(this, "html:title", "title", ""),
     new HtmlAttribute(this, "html:current-value", "currentValue", "on"),
+    new Dummy(this, "uniface:tri-state", false),
     new this.HTMLValueAttributeTristate(this, "value", "checked", null),
     new HtmlAttributeBoolean(this, "html:aria-checked", "ariaChecked", false),
     new HtmlAttributeBoolean(this, "html:aria-required", "ariaRequired", false),
