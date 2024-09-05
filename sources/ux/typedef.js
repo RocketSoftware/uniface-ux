@@ -11,6 +11,7 @@
  * @typedef {"component"|"entity"|"collection"|"occurrence"|"field"} UObjectType
  * @typedef {String} UObjectName
  * @typedef {String} UPropName
+ * @typedef {String} UTriggerName
  * @typedef {any} UPropValue
  * @typedef {String} UWidgetClassName
  *
@@ -24,7 +25,7 @@
  *  @property {function(): UWidgetClassName} getWidgetClass - Returns widget class of a field.
  *  @property {function(): UWidgetClassName} getCollectionWidgetClass - Returns collection widget class of an entity.
  *  @property {function(): UWidgetClassName} getOccurrenceWidgetClass - Returns occurrence widget class of an entity.
- *  @property {function(UWidgetClassName): void} widgetClassName - Sets the widget class.
+ *  @property {function(UWidgetClassName): void} setWidgetClass - Sets the widget class.
  *  @property {function(UWidgetClassName): void} setCollectionWidgetClass - Sets the collection widget class of an entity.
  *  @property {function(UWidgetClassName): void} setOccurrenceWidgetClass - Sets the occurrence widget class of an entity.
  *  @property {function(): UObjectDefinition[]} getChildDefinitions - Returns array of child object definitions.
@@ -49,6 +50,14 @@
  *
  * @typedef {String} UDataError
  *
+ * @typedef {Object} UValueFormatting - Object describing the formatting of a widget value.
+ *  @property {String} text - Main text (html).
+ *  @property {String} [prefixText] - Prefix text.
+ *  @property {String} [prefixIcon] - Prefix icon.
+ *  @property {String} [suffixText] - Suffix text.
+ *  @property {String} [suffixIcon] - Suffix icon.
+ *  @property {String} [errorMessage] - (Format) Error message.
+ *  @property {String} [labelText] - Unformatted label-text.
  */
 
 /** @type {UTYPE_UNIFACE} */

@@ -1,8 +1,8 @@
-import {Widget_UXWF} from "../../sources/ux/widget_UXWF.js"
-import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedWidget, Element } from "../../sources/ux/workers_UXWF.js";
+import { Widget } from "../../sources/ux/widget.js"
+import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedWidget, Element } from "../../sources/ux/workers.js";
 
 //Simple widget that has both subwidget and triggers for easier testing and doens't mess with other widgets
-export class TestWidget extends Widget_UXWF {
+export class TestWidget extends Widget {
 
   static subWidgets = {};
   static defaultValues = {};
@@ -16,7 +16,7 @@ export class TestWidget extends Widget_UXWF {
     new HtmlAttribute(this, "html:current-value", "current-value", ""),
     new HtmlValueAttributeBoolean(this, "value", "checked", false),
   ], [
-    new SlottedWidget(this, "span", "u-change-button", ".u-change-button", "end", "change-button", "UX.Button_UXWF", {
+    new SlottedWidget(this, "span", "u-change-button", ".u-change-button", "end", "change-button", "UX.Button", {
       "uniface:icon": "",
       "uniface:icon-position": "end",
       "value": "Change",
@@ -33,15 +33,11 @@ export class TestWidget extends Widget_UXWF {
 
 (function () {
     'use strict';
-    // Keep this!
-    if (umockup.testLoaded()) {
-        return;
-    }
 
     const expect = chai.expect;
     const sandbox = sinon.createSandbox();
 
-    describe("Widget_UXWF constructor properly defined with subwidgets", function () {        
+    describe("Widget constructor properly defined with subwidgets", function () {        
         
         let widget, subWidgetId;
         
@@ -53,7 +49,7 @@ export class TestWidget extends Widget_UXWF {
 
     });
 
-    describe("Widget_UXWF Class methods", function () {
+    describe("Widget Class methods", function () {
 
         globalThis.UX_DEFINITIONS = {}
         globalThis.UX_DEFINITIONS["ufld:FIELD.ENTITY.MODEL"] = "test"
@@ -61,7 +57,7 @@ export class TestWidget extends Widget_UXWF {
         let definitions, returnedProcess , widget, testwidget, consoleLogSpy;
 
         definitions = {
-            "widget_class": "Widget_UXWF",
+            "widget_class": "Widget",
             "properties": {
                 "controls-center": "four\u001bfive\u001bsix",
                 "controls-end": "seven",
@@ -146,7 +142,7 @@ export class TestWidget extends Widget_UXWF {
             expect(testwidget.data.properties.uniface).to.have.any.keys(data.uniface); 
         });
         
-        //button_UXWF doesn't have a dateCleanup function
+        //button doesn't have a dateCleanup function
         it("dataCleanup", function () {
             testwidget.dataCleanup()
         });

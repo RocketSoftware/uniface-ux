@@ -1,25 +1,30 @@
 body {
-  padding: 10px;
-  height: 100vh;
+  padding: 0px;
   box-sizing: border-box;
-  margin: 0;
+  margin: 0px;
 }
 
 .u-workbench {
   display: flex;
-  flex-direction: column;
   row-gap: 15px;
-  max-height: 100%;
-  overflow-y: hidden;
+  height: calc(100vh - 3em);
+  margin: 1em;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  flex-wrap: nowrap;
+  /* align-content: center; */
 }
 
-.u-test-widget {
+.u-preview {
+  flex-shrink: 1;
+  flex-grow: 1;
   display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
   padding: 10px 20px;
   border: 1px solid black;
   border-radius: 8px;
+  flex-direction: column;
+  max-width: 80em;
+  align-self: center;
 }
 
 .u-title {
@@ -61,7 +66,7 @@ body {
 }
 
 .u-workbench fluent-tabs {
-  overflow-y: auto;
+  overflow-x: auto;
 }
 
 .u-workbench fluent-tabs::part(tabpanel) {

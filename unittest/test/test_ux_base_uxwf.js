@@ -1,33 +1,30 @@
-import { Button_UXWF } from "../../sources/ux/button_UXWF.js";
-import {Base_UXWF} from "../../sources/ux/base_UXWF.js"
-import { Worker } from "../../sources/ux/workers_UXWF.js";
-import { Widget_UXWF } from "../../sources/ux/widget_UXWF.js";
+import { Button } from "../../sources/ux/button.js";
+import { Base } from "../../sources/ux/base.js"
+import { Worker } from "../../sources/ux/workers.js";
+import { Widget } from "../../sources/ux/widget.js";
 
 (function () {
     'use strict';
-    // Keep this!
-    if (umockup.testLoaded()) {
-        return;
-    }
+
     const expect = chai.expect;
     const sandbox = sinon.createSandbox();
 
-    describe("Base_UXWF constructor properly defined", function () {
+    describe("Base constructor properly defined", function () {
 
         it('constructor', function () {
-            let base = new Base_UXWF();
-            expect(base.constructor.name).to.equal("Base_UXWF")
+            let base = new Base();
+            expect(base.constructor.name).to.equal("Base")
         });
     });
 
-    describe(" test Base_UXWF Class methods", function () {
+    describe("test Base Class methods", function () {
 
         let base, widgetClass, propId, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, defaultValue, triggerName,
         url, functionName, message, consequence, consoleLogSpy, worker
 
         beforeEach(function () {
-            base = new Base_UXWF();
-            widgetClass = Widget_UXWF
+            base = new Base();
+            widgetClass = Widget
         });
 
         it("registerSetter", function () {
@@ -73,14 +70,14 @@ import { Widget_UXWF } from "../../sources/ux/widget_UXWF.js";
             base.registerTrigger(widgetClass, triggerName, worker)
 
             expect(String(Object.keys(widgetClass.triggers))).to.equal(triggerName)
-            expect(widgetClass.triggers.newTrigger.widgetClass.name).to.equal("Widget_UXWF")
+            expect(widgetClass.triggers.newTrigger.widgetClass.name).to.equal("Widget")
 
         });
 
         it("registerSubWidget", function () {
             subWidgetId = "change-button"
             subWidgetStyleClass = "u-change-button"
-            subWidgetClass = new Button_UXWF()
+            subWidgetClass = new Button()
             subWidgetTriggers = ["trigger1" , "trigger2"]
             
             base.registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers)
