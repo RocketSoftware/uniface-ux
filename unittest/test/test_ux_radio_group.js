@@ -12,8 +12,8 @@
   }
 
   /**
-       * Default timeout for waiting for DOM rendering (in milliseconds)
-       */
+     * Default timeout for waiting for DOM rendering (in milliseconds)
+     */
   const defaultAsyncTimeout = 100; // ms
 
   const assert = chai.assert;
@@ -41,11 +41,11 @@
   ];
 
   /**
-       * Function to determine whether the widget class has been loaded.
-       */
+     * Function to determine whether the widget class has been loaded.
+     */
   function verifyWidgetClass(widgetClass) {
     assert(widgetClass, `Widget class '${widgetName}' is not defined!
-              Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
+            Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
   }
 
   describe("Uniface Mockup tests", function () {
@@ -166,7 +166,7 @@
     }
 
     it("check 'hidden' attributes", function () {
-      assert.notEqual(element.querySelector('label.u-label-text').getAttribute('hidden'), null);
+      assert(element.querySelector('label.u-label-text').hasAttribute('hidden'), "Label Text element should be hidden by default");
     });
 
     it("check widget id", function () {
