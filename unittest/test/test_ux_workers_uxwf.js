@@ -1,7 +1,7 @@
 import { Button } from "../../sources/ux/button.js";
 import { Widget } from "../../sources/ux/widget.js";
-import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidget, 
-    WidgetsByProperty , BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean ,
+import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget, 
+    SubWidgetsByProperty , BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean ,
     HtmlValueAttributeBoolean , HtmlAttributeMinMaxLength , StyleProperty , Worker
  } from "../../sources/ux/workers.js"
 
@@ -327,9 +327,9 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     });
 
      // ===================================================================================================================
-    // == Testing SlottedWidget class =====================================================================================
+    // == Testing SlottedSubWidget class =====================================================================================
     // ====================================================================================================================
-    describe("Test SlottedWidget Class", function () {
+    describe("Test SlottedSubWidget Class", function () {
         let widgetClass;
         let subWidgetId;
         let subWidgetName;
@@ -351,7 +351,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
             subWidgetName = "UX.Button";
             tagName = "DIV"
             subWidgetId = "undefined"
-            slottedWidget = new SlottedWidget(widgetClass, tagName, "styleClass", "", "", subWidgetId, subWidgetName, {}, "");
+            slottedWidget = new SlottedSubWidget(widgetClass, tagName, "styleClass", "", "", subWidgetId, subWidgetName, {}, "");
         });
 
         it("should initialize with correct properties", function () {
@@ -400,9 +400,9 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
     });
 
     // ===================================================================================================================
-    // == Testing WidgetsByProperty class ================================================================================
+    // == Testing SubWidgetsByProperty class ================================================================================
     // ===================================================================================================================
-    describe("Test WidgetsByProperty Class", function () {
+    describe("Test SubWidgetsByProperty Class", function () {
           
         let widgetClass;
         let tagName;
@@ -423,7 +423,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedWidg
             Widget.uiBlocking = ""; 
             
             widgetClass = Widget;
-            element = new WidgetsByProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
+            element = new SubWidgetsByProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
         });
 
         it("should initialize with correct properties", function () {
