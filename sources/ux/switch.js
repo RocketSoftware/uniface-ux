@@ -12,7 +12,7 @@ import {
   SlottedElement,
   HtmlValueAttributeBoolean
 } from "./workers.js";
-import "https://unpkg.com/@fluentui/web-components";
+// The import of Fluent UI web-components is done in loader.js
 
 /**
  * Switch widget
@@ -134,11 +134,12 @@ export class Switch extends Widget {
     let formattedValue = {};
     try {
       if (this.fieldValueToBoolean(this.getNode(properties, "value"))) {
-        formattedValue.text = this.getNode(properties, "uniface:checked-message") || "On";
+        formattedValue.primaryHtmlText = this.getNode(properties, "uniface:checked-message") || "On";
       } else {
-        formattedValue.text = this.getNode(properties, "uniface:unchecked-message") || "Off";
+        formattedValue.primaryHtmlText = this.getNode(properties, "uniface:unchecked-message") || "Off";
       }
     } catch (err) {
+      formattedValue.primaryPlainText = "ERROR";
       formattedValue.errorMessage = err;
     }
     return formattedValue;

@@ -2,7 +2,7 @@
 /* global UNIFACE */
 import { Widget } from "./widget.js";
 import * as Worker from "./workers.js";
-import "https://unpkg.com/@fluentui/web-components";
+// The import of Fluent UI web-components is done in loader.js
 
 /**
  * This file describes all widget classes needed to construct the DataGrid entity widget.

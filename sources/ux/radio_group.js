@@ -14,7 +14,7 @@ import {
   StyleClass,
   Trigger
 } from "./workers.js";
-import "https://unpkg.com/@fluentui/web-components";
+// The import of Fluent UI web-components is done in loader.js
 
 /**
  * Radio-Group Widget Definition
@@ -203,29 +203,27 @@ export class RadioGroup extends Widget {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    const value_ = this.getNode(properties, "value");
-    const valrepItem = this.getValrepItem(this.getNode(properties, "valrep"), value_);
-    switch (this.getNode(properties, "uniface:display-format")) {
-      case "valrep":
-        if (valrepItem) {
-          formattedValue.text = `${valrepItem.representation} (${valrepItem.value})`;
-        } else {
-          formattedValue.text = "ERROR";
-          formattedValue.errorMessage = this.formatErrorMessage;
-        }
-        break;
-      case "val":
-        formattedValue.text = value_ || "";
-        break;
-      case "rep":
-      default:
-        if (valrepItem) {
-          formattedValue.text = valrepItem.representation;
-        } else {
-          formattedValue.text = "ERROR";
-          formattedValue.errorMessage = this.formatErrorMessage;
-        }
-        break;
+    const displayFormat = this.getNode(properties, "uniface:display-format") ||
+                          this.getNode(this.defaultValues, "uniface:display-format");
+    const value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
+    const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
+    const valrepItem  = this.getValrepItem(valrep, value);
+    if (valrepItem) {
+      switch (displayFormat) {
+        case "valrep":
+          formattedValue.primaryHtmlText = valrepItem.representation;
+          formattedValue.secondaryPlainText = valrepItem.value;
+          break;
+        case "val":
+          formattedValue.primaryPlainText = valrepItem.value;
+          break;
+        case "rep":
+          formattedValue.primaryHtmlText = valrepItem.representation;
+          break;
+      }
+    } else {
+      formattedValue.primaryPlainText = "ERROR";
+      formattedValue.secondaryPlainText = value;
     }
     return formattedValue;
   }

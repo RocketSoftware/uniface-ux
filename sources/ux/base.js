@@ -299,11 +299,14 @@ export class Base {
    * @return {Object}
    */
   static getValrepItem(valrep, value) {
-    for (let i = 0; i < valrep.length; i++) {
-      if (valrep[i].value === value) {
-        return valrep[i];
+    if (Array.isArray(valrep)) {
+      for (let i = 0; i < valrep.length; i++) {
+        if (valrep[i].value === value) {
+          return valrep[i];
+        }
       }
     }
+    return null;
   }
 
   /**

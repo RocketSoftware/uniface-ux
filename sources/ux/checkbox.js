@@ -13,7 +13,7 @@ import {
   HtmlAttributeNumber,
   Dummy
 } from "./workers.js";
-import "https://unpkg.com/@fluentui/web-components";
+// The import of Fluent UI web-components is done in loader.js
 
 /**
  * Checkbox Widget
@@ -259,20 +259,18 @@ export class Checkbox extends Widget {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    const value_ = this.getNode(properties, "value");
-    formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
-    if (formattedValue.errorMessage) {
-      formattedValue.text = "ERROR";
-    } else if (value_ === "") {
-      formattedValue.text = "Unset";
+    const value = this.getNode(properties, "value");
+    if (value === "") {
+      formattedValue.primaryPlainText = "Unset";
     } else {
       try {
-        if (this.fieldValueToBoolean(value_)) {
-          formattedValue.text = "Checked";
+        if (this.fieldValueToBoolean(value)) {
+          formattedValue.primaryPlainText = "Checked";
         } else {
-          formattedValue.text = "Unchecked";
+          formattedValue.primaryPlainText = "Unchecked";
         }
       } catch (err) {
+        formattedValue.primaryPlainText = "ERROR";
         formattedValue.errorMessage = err;
       }
     }
