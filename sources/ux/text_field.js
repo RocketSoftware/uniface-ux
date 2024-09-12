@@ -15,7 +15,7 @@ import {
   HtmlAttributeReadonlyDisabled,
   HtmlAttributeMinMaxLength
 } from "./workers.js";
-import "https://unpkg.com/@fluentui/web-components";
+// The import of Fluent UI web-components is done in loader.js
 
 /**
  * TextField Widget.
@@ -51,7 +51,7 @@ export class TextField extends Widget {
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, undefined),
     new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
     new HtmlAttributeChoice(this, "html:type", "type", ["text", "email", "password", "tel", "url", "date"], "text"),
-    new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "", true),
+    new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeReadonlyDisabled(this, "html:readonly", "html:disabled", "uniface:uiblocked",  false, false, false),
     new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
@@ -157,7 +157,7 @@ export class TextField extends Widget {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    formattedValue.text = this.getNode(properties, "value");
+    formattedValue.primaryPlainText = this.getNode(properties, "value");
     formattedValue.prefixIcon = this.getNode(properties, "uniface:prefix-icon");
     if (!formattedValue.prefixIcon) {
       formattedValue.prefixText = this.getNode(properties, "uniface:prefix-text");

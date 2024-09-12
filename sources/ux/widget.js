@@ -142,7 +142,7 @@ export class Widget extends Base {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    formattedValue.text = this.getNode(properties, "value");
+    formattedValue.primaryPlainText = this.getNode(properties, "value");
     this.staticLog("getValueFormatted", formattedValue);
     return formattedValue;
   }
@@ -590,11 +590,13 @@ export class Widget extends Base {
                   }
                 });
               } else {
-                this.warn(
-                  "setProperties(data)",
-                  `Widget does not support property '${prefix}:${property}'`,
-                  "Ignored"
-                );
+                if (widgetClass.reportUnsupportedPropertyWarnings) {
+                  this.warn(
+                    "setProperties(data)",
+                    `Widget does not support property '${prefix}:${property}'`,
+                    "Ignored"
+                  );
+                }
               }
             }
             break;
@@ -614,11 +616,13 @@ export class Widget extends Base {
                 }
               });
             } else {
-              this.warn(
-                "setProperties(data)",
-                `Widget does not support property '${prefix}'`,
-                "Ignored"
-              );
+              if (widgetClass.reportUnsupportedPropertyWarnings) {
+                this.warn(
+                  "setProperties(data)",
+                  `Widget does not support property '${prefix}'`,
+                  "Ignored"
+                );
+              }
             }
             break;
           default:

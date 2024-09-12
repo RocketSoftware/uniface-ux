@@ -11,7 +11,7 @@ import {
   HtmlAttributeChoice,
   HtmlAttributeBoolean
 } from "./workers.js";
-import "https://unpkg.com/@fluentui/web-components";
+// The import of Fluent UI web-components is done in loader.js
 
 /**
  * Button Widget
@@ -219,7 +219,7 @@ export class Button extends Widget {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    formattedValue.text = this.getNode(properties, "value") || "";
+    formattedValue.primaryPlainText = this.getNode(properties, "value") || "";
     formattedValue.prefixIcon = this.getNode(properties, "uniface:icon");
     return formattedValue;
   }

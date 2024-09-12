@@ -1,3 +1,11 @@
+.u-checkbox {
+  align-items: flex-start;
+}
+
+.u-checkbox::part(control) {
+  flex-shrink: 0;
+}
+
 .u-checkbox::part(label) {
   display: inline-flex;
 }

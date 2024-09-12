@@ -14,7 +14,7 @@ import {
   SlottedElement,
   HtmlAttributeChoice
 } from "./workers.js";
-import "https://unpkg.com/@fluentui/web-components";
+// The import of Fluent UI web-components is done in loader.js
 
 /**
  * Select Widget
@@ -582,6 +582,54 @@ export class Select extends Widget {
       }
     }
   }
-}
 
+  /**
+   * Returns an array of property ids that affect the formatted value.
+   * @returns {string[]}
+   */
+  static getValueFormattedSetters() {
+    return [
+      "value",
+      "valrep",
+      "uniface:error",
+      "uniface:error-message",
+      "uniface:display-format"
+    ];
+  }
+
+  /**
+   * Returns the value as format-object.
+   * @param {UData} properties
+   * @return {UValueFormatting}
+   */
+  static getValueFormatted(properties) {
+    this.staticLog("getValueFormatting");
+
+    /** @type {UValueFormatting} */
+    let formattedValue = {};
+    const displayFormat = this.getNode(properties, "uniface:display-format") ||
+                          this.getNode(this.defaultValues, "uniface:display-format");
+    const value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
+    const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
+    const valrepItem  = this.getValrepItem(valrep, value);
+    if (valrepItem) {
+      switch (displayFormat) {
+        case "valrep":
+          formattedValue.primaryHtmlText = valrepItem.representation;
+          formattedValue.secondaryPlainText = valrepItem.value;
+          break;
+        case "val":
+          formattedValue.primaryPlainText = valrepItem.value;
+          break;
+        case "rep":
+          formattedValue.primaryHtmlText = valrepItem.representation;
+          break;
+      }
+    } else {
+      formattedValue.primaryPlainText = "ERROR";
+      formattedValue.secondaryPlainText = value;
+    }
+    return formattedValue;
+  }
+}
 UNIFACE.ClassRegistry.add("UX.Select", Select);

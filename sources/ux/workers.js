@@ -583,7 +583,7 @@ export class SubWidgetsByFields extends Worker {
              * it exists as sub-widget property in the sub-widget.
              * If so, move the property from childObjectDefinition to objectDefinition and set child version to undefined.
              */
-            childObjectDefinition.getPropertyNames().forEach((propId) => {
+            childObjectDefinition.getPropertyNames()?.forEach((propId) => {
               // Look it up in the sub-widget's definition.
               if (this.getNode(subWidgetClass.setters, propId)) {
                 const childPropValue = childObjectDefinition.getProperty(propId);
@@ -1263,6 +1263,7 @@ export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
     const orgWidgetClassName = this.getNode(widgetInstance.data.properties, this.propId);
     const orgWidgetClass = UNIFACE.ClassRegistry.get(orgWidgetClassName);
     const element = this.getElement(widgetInstance);
+    element.innerHTML = "";
     element.classList.remove("u-hidden");
     element.title = this.getNode(widgetInstance.data.properties, "html:title") || "";
     if (this.toBoolean(this.getNode(widgetInstance.data.properties, "html:hidden"))) {
@@ -1279,23 +1280,54 @@ export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
     }
 
     /** @type {UValueFormatting} */
-    let formattedValue = {"text": ""};
-    let html = "";
+    let formattedValue = {};
     if (typeof orgWidgetClass.getValueFormatted == "function") {
       formattedValue = orgWidgetClass.getValueFormatted(widgetInstance.data.properties);
     } else {
-      formattedValue.text = this.getNode(widgetInstance.data.properties, "value");
+      // Fallback if org widget does not provide this function.
+      formattedValue.primaryPlainText = this.getNode(widgetInstance.data.properties, "value");
     }
-    if (formattedValue.errorMessage && !formattedValue.text) {
-      formattedValue.text = "ERROR";
+    if (formattedValue.prefixIcon) {
+      let prefixElement = document.createElement("span");
+      prefixElement.classList.add("u-prefix-icon", "ms-Icon", `ms-Icon--${formattedValue.prefixIcon}`);
+      element.appendChild(prefixElement);
+    } else if (formattedValue.prefixText) {
+      let prefixElement = document.createElement("span");
+      prefixElement.classList.add("u-prefix-text");
+      prefixElement.innerText = formattedValue.prefixText;
+      element.appendChild(prefixElement);
     }
-    html = formattedValue.prefixIcon ? `${html}<span class="u-prefix-icon ms-Icon ms-Icon--${formattedValue.prefixIcon}"></span>` : html;
-    html = formattedValue.prefixText ? `${html}<span class="u-prefix-text">${formattedValue.prefixText}</span>` : html;
-    html = `${html}<span class="u-text">${formattedValue.text}</span>`;
-    html = formattedValue.suffixText ? `${html}<span class="u-suffix-text">${formattedValue.suffixText}</span>` : html;
-    html = formattedValue.suffixIcon ? `${html}<span class="u-suffix-icon ms-Icon ms-Icon--${formattedValue.suffixIcon}"></span>` : html;
-    html = formattedValue.errorMessage ? `${html}<span class="u-error ms-Icon ms-Icon--${formattedValue.prefixIcon}" title="${formattedValue.errorMessage}">X</span>` : html;
-    element.innerHTML = html;
+    let textElement = document.createElement("span");
+    textElement.classList.add("u-value");
+    if (formattedValue.primaryPlainText) {
+      let primaryTextElement = document.createElement("span");
+      primaryTextElement.innerText = formattedValue.primaryPlainText;
+      textElement.appendChild(primaryTextElement);
+    } else if (formattedValue.primaryHtmlText) {
+      let primaryTextElement = document.createElement("span");
+      primaryTextElement.innerHTML = formattedValue.primaryHtmlText;
+      textElement.appendChild(primaryTextElement);
+    }
+    if (formattedValue.secondaryPlainText) {
+      let secondaryTextElement = document.createElement("span");
+      secondaryTextElement.innerText = formattedValue.secondaryPlainText;
+      textElement.appendChild(secondaryTextElement);
+    } else if (formattedValue.secondaryHtmlText) {
+      let secondaryTextElement = document.createElement("span");
+      secondaryTextElement.innerHTML = formattedValue.secondaryHtmlText;
+      textElement.appendChild(secondaryTextElement);
+    }
+    element.appendChild(textElement);
+    if (formattedValue.suffixIcon) {
+      let suffixElement = document.createElement("span");
+      suffixElement.classList.add("u-suffix-icon", "ms-Icon", `ms-Icon--${formattedValue.suffixIcon}`);
+      element.appendChild(suffixElement);
+    } else if (formattedValue.suffixText) {
+      let suffixElement = document.createElement("span");
+      suffixElement.classList.add("u-suffix-text");
+      suffixElement.innerText = formattedValue.suffixText;
+      element.appendChild(suffixElement);
+    }
   }
 
   getValue(widgetInstance) {

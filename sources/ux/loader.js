@@ -1,16 +1,35 @@
 // @ts-check
 
+/**
+ * Load fluentUI web components centrally in this JS file.
+ * 
+ * Uncomment one of the following locations to import FluentUI from.
+ * During bundling we need a local JS file.
+ */
+
+// next line for bundling process
+// import "../fluentui/js/web-components.min.js";
+// next line when using remote location (latest version)
+// import "https://unpkg.com/@fluentui/web-components";
+// next line when using remote location (fixed to version 2.6.1)
+import "https://unpkg.com/@fluentui/web-components@2.6.1/dist/web-components.min.js";
+
+// The UX field level widgets to include
 import "./button.js";
 import "./checkbox.js";
-import "./radio_group.js";
-import "./switch.js";
-import "./text_field.js";
-import "./select.js";
-import "./controlbar.js";
-import "./data_grid.js";
-import "./plain_text.js";
 import "./number_field.js";
+import "./plain_text.js";
+import "./radio_group.js";
+import "./select.js";
+import "./switch.js";
 import "./text_area.js";
+import "./text_field.js";
+
+// The UX entity level widgets to include
+import "./data_grid.js";
+
+// Other UX widgets
+import "./controlbar.js";
 
 /**
  * Uncomment the following code and/or add your own variable to

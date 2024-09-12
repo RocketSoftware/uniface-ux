@@ -14,7 +14,7 @@ import {
   HtmlAttributeMinMax,
   StyleClass
 } from "./workers.js";
-import "https://unpkg.com/@fluentui/web-components";
+// The import of Fluent UI web-components is done in loader.js
 
 /**
  * NumberField Widget.
@@ -109,7 +109,7 @@ export class NumberField extends Widget {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    formattedValue.text = this.getNode(properties, "value");
+    formattedValue.primaryPlainText = this.getNode(properties, "value");
     formattedValue.prefixIcon = this.getNode(properties, "uniface:prefix-icon");
     if (!formattedValue.prefixIcon) {
       formattedValue.prefixText = this.getNode(properties, "uniface:prefix-text");

@@ -9,7 +9,7 @@ import {
   SlottedError,
   HtmlAttribute
 } from "./workers.js";
-import "https://unpkg.com/@fluentui/web-components";
+// The import of Fluent UI web-components is done in loader.js
 
 /**
  * PlaintText Widget
@@ -202,25 +202,18 @@ export class PlainText extends Widget {
   /**
    * Widget definition.
    */
-  static structure = new Element(
-    this,
-    "span",
-    "",
-    "",
-    [
-      new StyleClass(this, ["u-plain-text"]),
-      new HtmlAttribute(this, "html:title", "title", undefined, true),
-      new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-      new HtmlAttribute(this, "html:slot", "slot", "")
-    ],
-    [
-      new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
-      new this.SlottedPlainTextFormat(this, "span", "u-control", ".u-control"),
-      new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
-      new SlottedElement(this, "span", "u-suffix", ".u-suffix", "", "uniface:suffix-text", "", "uniface:suffix-icon", "")
-    ],
-    []
-  );
+  // prettier-ignore
+  static structure = new Element(this, "span", "", "", [
+    new StyleClass(this, ["u-plain-text"]),
+    new HtmlAttribute(this, "html:title", "title", undefined, true),
+    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
+    new HtmlAttribute(this, "html:slot", "slot", "")
+  ], [
+    new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
+    new this.SlottedPlainTextFormat(this, "span", "u-control", ".u-control"),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
+    new SlottedElement(this, "span", "u-suffix", ".u-suffix", "", "uniface:suffix-text", "", "uniface:suffix-icon", "")
+  ]);
 }
 
 UNIFACE.ClassRegistry.add("UX.PlainText", PlainText);
