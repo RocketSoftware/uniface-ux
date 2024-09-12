@@ -224,6 +224,8 @@
     });
 
     it("Set label position before", function (done) {
+      const widget = tester.construct();
+      
       tester.dataUpdate({
         uniface: {
           "label-position": "before"
@@ -241,6 +243,7 @@
 
     it("check label position before styles", function () {
       // if u-label-position attribute is added element display is changed
+      const widget = tester.construct();
       let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
       let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
       assert.equal(displayPropertyValue, "inline-flex");
@@ -258,6 +261,7 @@
       });
 
       setTimeout(function () {
+        const widget = tester.construct();
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
         assert.equal(labelPosition, 'below');
         done();
@@ -267,6 +271,7 @@
 
     it("check label position below styles", function () {
       // if u-label-position attribute is added element display is changed
+      const widget = tester.construct();
       let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
       let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
       assert.equal(flexPropertyValue, "column");
@@ -285,6 +290,7 @@
       });
 
       setTimeout(function () {
+        const widget = tester.construct();
         let labelElement = widget.elements.widget.querySelector("span.u-label-text");
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
         assert.equal(labelPosition, 'above');
@@ -298,6 +304,7 @@
 
     it("check reset label position styles", function () {
       // if u-label-position attribute is added element display is changed
+      const widget = tester.construct();
       let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
       let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
       assert.equal(flexPropertyValue, "column");
