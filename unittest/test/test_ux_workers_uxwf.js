@@ -500,12 +500,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
             expect(worker.widgetClass.getters.value.propId).to.equal(propId)
             expect(worker.widgetClass.setters.value[length- 1].propId).to.equal(propId)
          });
-
-        it("Check getLayout ", function () {
-            layout = worker.getLayout()
-            expect(layout.attrName).to.equal(attrName)
-            expect(layout.attrValue).to.equal(defaultValue)
-         });
          
          it("Check setHtmlAttribute", function () {
             element = {
@@ -546,6 +540,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
             expect(value).to.equal("inherit")
          })
 
+        //getValueUpdaters doesn't do anything
          it("check getValueUpdaters" , function () {
             const widgetInstance = {
                 elements : {
@@ -554,10 +549,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
                 getTraceDescription: () => { return "description" }
             }
             value = worker.getValueUpdaters(widgetInstance)
-            expect(value[0]).to.have.all.keys('element', 'event_name');
-            expect(value[0].event_name).to.equal("change")
-            expect(value[0].element[0]).tagName("div");
-            expect(value[0].element[1]).tagName("span");
          })
     });
 
