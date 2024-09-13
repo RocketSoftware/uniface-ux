@@ -1,12 +1,16 @@
 .u-checkbox {
-  vertical-align: bottom;
+  align-items: flex-start;
+}
+
+.u-checkbox::part(control) {
+  flex-shrink: 0;
 }
 
 .u-checkbox::part(label) {
   display: inline-flex;
 }
 
-/* Styling the indeterminate state ( according to the fluent design system ). */
+/* Styling Indeterminate state as per fluent design system */
 .u-checkbox.indeterminate::part(control) {
   --neutral-stroke-strong-rest: var(--accent-fill-rest);
   --neutral-foreground-rest: var(--accent-fill-rest);
@@ -22,7 +26,18 @@
   --neutral-foreground-rest: var(--accent-fill-active);
 }
 
-/* Styling the checked checkbox when the widget is in an invalid state. */
+/* Styling error icons as per fluent design system  */
+.u-checkbox.u-invalid .u-error-icon,
+.u-checkbox.u-format-invalid .u-error-icon {
+  color: #d13438;
+  padding-inline-start: calc(var(--design-unit) * 2px + 2px);
+}
+
+.u-checkbox .u-error-icon[hidden]::before {
+  display: none;
+}
+
+/* Styling Checked Checkbox in error or invalid state */
 .u-checkbox.u-invalid.checked::part(control),
 .u-checkbox.u-format-invalid.checked::part(control) {
   --accent-fill-rest: #d13438;
@@ -30,15 +45,15 @@
 
 .u-checkbox.u-invalid.checked:hover::part(control),
 .u-checkbox.u-format-invalid.checked:hover::part(control) {
-  --accent-fill-hover: #d83435;
+  --accent-fill-hover: #bb2e32;
 }
 
 .u-checkbox.u-invalid.checked:active::part(control),
 .u-checkbox.u-format-invalid.checked:active::part(control) {
-  --accent-fill-active: #dd4c4c;
+  --accent-fill-active: #d54649;
 }
 
-/* Styling the unchecked checkbox when the widget is in an invalid state. */
+/* Styling Unchecked Checkbox in error or invalid state */
 .u-checkbox.u-invalid::part(control),
 .u-checkbox.u-format-invalid::part(control) {
   --neutral-stroke-strong-rest: #d13438;
@@ -46,15 +61,15 @@
 
 .u-checkbox.u-invalid:hover::part(control),
 .u-checkbox.u-format-invalid:hover::part(control) {
-  --neutral-stroke-strong-hover: #d83435;
+  --neutral-stroke-strong-hover: #bb2e32;
 }
 
 .u-checkbox.u-invalid:active::part(control),
 .u-checkbox.u-format-invalid:active::part(control) {
-  --neutral-stroke-strong-active: #dd4c4c;
+  --neutral-stroke-strong-active: #d54649;
 }
 
-/* Styling the indeterminate checkbox when the widget is in an invalid state. */
+/* Styling Indeterminate Checkbox in error or invalid state */
 .u-checkbox.u-invalid.indeterminate::part(control),
 .u-checkbox.u-format-invalid.indeterminate::part(control) {
   --neutral-stroke-strong-rest: #d13438;
@@ -63,19 +78,12 @@
 
 .u-checkbox.u-invalid.indeterminate:hover::part(control),
 .u-checkbox.u-format-invalid.indeterminate:hover::part(control) {
-  --neutral-stroke-strong-hover: #d83435;
-  --neutral-foreground-rest: #d83435;
+  --neutral-stroke-strong-hover: #bb2e32;
+  --neutral-foreground-rest: #bb2e32;
 }
 
 .u-checkbox.u-invalid.indeterminate:active::part(control),
 .u-checkbox.u-format-invalid.indeterminate:active::part(control) {
-  --neutral-stroke-strong-active: #dd4c4c;
-  --neutral-foreground-rest: #dd4c4c;
-}
-
-/* Styling the error icon and padding ( according to the fluent design system ) when the widget is in an invalid state. */
-.u-checkbox.u-invalid .u-error-icon,
-.u-checkbox.u-format-invalid .u-error-icon {
-  color: #d13438;
-  padding-inline-start: calc(var(--design-unit) * 2px + 2px);
+  --neutral-stroke-strong-active: #d54649;
+  --neutral-foreground-rest: #d54649;
 }

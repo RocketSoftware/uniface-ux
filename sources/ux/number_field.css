@@ -14,26 +14,26 @@
 
 .u-number-field .u-prefix,
 .u-number-field .u-suffix,
-.u-number-field .u-change-button {
+.u-number-field .u-sw-changebutton {
   white-space: nowrap;
 }
 
-.u-number-field.u-change-button-shown::part(root) {
+.u-number-field.u-sw-changebutton-shown::part(root) {
   box-sizing: content-box;
 }
 
-.u-number-field.u-change-button-shown::part(end) {
+.u-number-field.u-sw-changebutton-shown::part(end) {
   margin-inline-end: auto;
 }
 
 /* When the number field is readonly, remove all the events on the change button and add not allowed cursor. */
-.u-number-field[readonly] .u-change-button {
+.u-number-field[readonly] .u-sw-changebutton {
   pointer-events: none;
   cursor: not-allowed;
 }
 
 /* Styling the inline start border and removing the border radius (start-start, end-start) of the change button. */
-.u-number-field .u-change-button::part(control) {
+.u-number-field .u-sw-changebutton::part(control) {
   border-inline-start-color: var(--neutral-stroke-rest);
   border-start-start-radius: 0;
   border-end-start-radius: 0;

@@ -1,14 +1,18 @@
 .u-plain-text .u-control,
 .u-plain-text .u-paragraph {
-  background-color: inherit;
+    background-color: inherit;
 }
 
 /* Styling the background color when the widget is in an invalid state. */
 .u-plain-text.u-invalid {
-  background-color: #f6d5d7;
+    background-color: #f6d5d7;
 }
 
 /* Styling the error icon ( according to the fluent design system ) when the widget is in an invalid state. */
 .u-plain-text.u-invalid .u-error-icon {
-  color: #d13438;
+    color: #d13438;
+}
+
+.u-plain-text.u-format-invalid .u-error-icon {
+    color: #d13438;
 }

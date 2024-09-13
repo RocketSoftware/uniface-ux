@@ -1,29 +1,30 @@
 // @ts-check
 /* global UNIFACE */
-import { Widget_UXWF } from "./widget_UXWF.js";
+import { Widget } from "./widget.js";
 import {
   StyleClass,
   HtmlAttributeBoolean,
   Element,
   SlottedElement,
   SlottedError,
-  HtmlAttribute,
-} from "./workers_UXWF.js";
-import "https://unpkg.com/@fluentui/web-components";
+  HtmlAttribute
+} from "./workers.js";
+// The import of Fluent UI web-components is done in loader.js
 
 /**
  * PlaintText Widget
  * @export
- * @class PlainText_UXWF
- * @extends {Widget_UXWF}
+ * @class PlainText
+ * @extends {Widget}
  */
-export class PlainText_UXWF extends Widget_UXWF {
+export class PlainText extends Widget {
 
   /**
    * Initialize as static at derived level, so definitions are unique per widget class.
    * @static
    */
   static subWidgets = {};
+  static subWidgetWorkers = [];
   static defaultValues = {};
   static setters = {};
   static getters = {};
@@ -41,7 +42,7 @@ export class PlainText_UXWF extends Widget_UXWF {
 
     /**
      * Creates an instance of SlottedPlainTextFormat.
-     * @param {typeof Widget_UXWF} widgetClass
+     * @param {typeof Widget} widgetClass
      * @param {String} tagName
      * @param {String} styleClass
      * @param {String} elementQuerySelector
@@ -50,7 +51,7 @@ export class PlainText_UXWF extends Widget_UXWF {
       widgetClass,
       tagName,
       styleClass,
-      elementQuerySelector,
+      elementQuerySelector
     ) {
       super(widgetClass, tagName, styleClass, elementQuerySelector);
       this.hidden = true;
@@ -201,25 +202,18 @@ export class PlainText_UXWF extends Widget_UXWF {
   /**
    * Widget definition.
    */
-  static structure = new Element(
-    this,
-    "span",
-    "",
-    "",
-    [
-      new StyleClass(this, ["u-plain-text"]),
-      new HtmlAttribute(this, "html:title", "title", undefined, true),
-      new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-      new HtmlAttribute(this, "html:slot", "slot", ""),
-    ],
-    [
-      new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
-      new this.SlottedPlainTextFormat(this, "span", "u-control", ".u-control"),
-      new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
-      new SlottedElement(this, "span", "u-suffix", ".u-suffix", "", "uniface:suffix-text", "", "uniface:suffix-icon", "")
-    ],
-    []
-  );
+  // prettier-ignore
+  static structure = new Element(this, "span", "", "", [
+    new StyleClass(this, ["u-plain-text"]),
+    new HtmlAttribute(this, "html:title", "title", undefined, true),
+    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
+    new HtmlAttribute(this, "html:slot", "slot", "")
+  ], [
+    new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
+    new this.SlottedPlainTextFormat(this, "span", "u-control", ".u-control"),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
+    new SlottedElement(this, "span", "u-suffix", ".u-suffix", "", "uniface:suffix-text", "", "uniface:suffix-icon", "")
+  ]);
 }
 
-UNIFACE.ClassRegistry.add("UX.PlainText_UXWF", PlainText_UXWF);
+UNIFACE.ClassRegistry.add("UX.PlainText", PlainText);

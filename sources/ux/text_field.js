@@ -1,72 +1,74 @@
 // @ts-check
 /* global UNIFACE */
-import { Widget_UXWF } from "./widget_UXWF.js";
+import { Widget } from "./widget.js";
 import {
   Element,
   StyleClass,
   Trigger,
   SlottedElement,
   SlottedError,
-  SlottedWidget,
+  SlottedSubWidget,
   HtmlAttribute,
   HtmlAttributeNumber,
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
-  HtmlAttributeMinMaxLength,
-} from "./workers_UXWF.js";
+  HtmlAttributeReadonlyDisabled,
+  HtmlAttributeMinMaxLength
+} from "./workers.js";
+// The import of Fluent UI web-components is done in loader.js
 
 /**
  * TextField Widget.
  * @export
- * @class TextField_UXWF
- * @extends {Widget_UXWF}
+ * @class TextField
+ * @extends {Widget}
  */
-export class TextField_UXWF extends Widget_UXWF {
+export class TextField extends Widget {
 
   /**
    * Initialize as static at derived level, so definitions are unique per widget class.
    * @static
-   * @memberof TextField_UXWF
    */
   static subWidgets = {};
+  static subWidgetWorkers = [];
   static defaultValues = {};
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "disabled";
+  static uiBlocking = "readonly";
 
   /**
    * Widget Definition.
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-text-field", "", "", [
-    new HtmlAttribute(this, "html:current-value", "current-value", ""),
+    new HtmlAttribute(this, "html:current-value", "currentValue", ""),
     new HtmlAttribute(this, "value", "value", ""),
     new HtmlAttribute(this, "html:title", "title", undefined),
+    new HtmlAttribute(this, "html:size", "size", "20", true),
     new HtmlAttribute(this, "html:pattern", "pattern", undefined),
     new HtmlAttribute(this, "html:placeholder", "placeholder", undefined),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, undefined),
     new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
     new HtmlAttributeChoice(this, "html:type", "type", ["text", "email", "password", "tel", "url", "date"], "text"),
-    new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "", true),
+    new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
-    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
+    new HtmlAttributeReadonlyDisabled(this, "html:readonly", "html:disabled", "uniface:uiblocked",  false, false, false),
     new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
     new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
-    new StyleClass(this, ["u-text-field", "outline"]),
+    new StyleClass(this, ["u-text-field", "outline"])
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
     new SlottedElement(this, "span", "u-suffix", ".u-suffix", "end", "uniface:suffix-text", "", "uniface:suffix-icon", ""),
-    new SlottedWidget(this, "span", "", "", "end", "changebutton", "UX.Button_UXWF", {
+    new SlottedSubWidget(this, "span", "", "", "end", "changebutton", "UX.Button", {
       "uniface:icon-position": "end",
       "html:tabindex": "-1",
-      "html:appearance": "stealth",
+      "html:appearance": "stealth"
     }, false, [
       "detail"
-    ]),
+    ])
   ], [
     new Trigger(this, "onchange", "change", true)
   ]);
@@ -105,15 +107,67 @@ export class TextField_UXWF extends Widget_UXWF {
   validate() {
     this.log("validate");
     // Return any HTML5 validation errors.
-    let validationMessage;
+    let html5ValidationMessage;
     if (!this.elements.widget.control.checkValidity()) {
-      validationMessage = this.elements.widget.control.validationMessage;
+      html5ValidationMessage = this.elements.widget.control.validationMessage;
     } else if (this.data.properties.html.minlength > 0 && this.elements.widget.value.length < this.data.properties.html.minlength) {
-      // minlength errors are not detected by HTML5. Do it now.
-      validationMessage = `String must be at least consist of ${this.data.properties.html.minlength} characters.`;
+      // HTML5 minlength validation errors are not detected by fluent, Hence we manually add the HTML5 minlength validation message.
+      html5ValidationMessage = `Please lengthen this text to ${this.data.properties.html.minlength} characters or more (you are currently using ${this.elements.widget.value.length} characters).`;
     }
-    return validationMessage;
+    return html5ValidationMessage;
+  }
+
+  /**
+   * Private Uniface API method - blockUI.
+   * Blocks user interaction with the widget.
+   */
+  blockUI() {
+    this.log("blockUI");
+    // Call blockUI() for each sub-widget.
+    Object.keys(this.subWidgets).forEach((key) => {
+      this.subWidgets[key].blockUI();
+    });
+    // Add the 'u-blocked' class to the widget element.
+    this.elements.widget.classList.add("u-blocked");
+    this.setProperties({ "uniface": { "uiblocked": true } });
+  }
+
+  /**
+   * Private Uniface API method - unblockUI.
+   * Unblocks user interaction with the widget.
+   */
+  unblockUI() {
+    this.log("unblockUI");
+    // Call unblockUI() for each sub-widget.
+    Object.keys(this.subWidgets).forEach((key) => {
+      this.subWidgets[key].unblockUI();
+    });
+    // Remove the 'u-blocked' class from the widget element.
+    this.elements.widget.classList.remove("u-blocked");
+    this.setProperties({ "uniface": { "uiblocked": false } });
+  }
+
+  /**
+   * Returns the value as format-object.
+   * @param {UData} properties
+   * @return {UValueFormatting}
+   */
+  static getValueFormatted(properties) {
+    this.staticLog("getValueFormatted");
+
+    /** @type {UValueFormatting} */
+    let formattedValue = {};
+    formattedValue.primaryPlainText = this.getNode(properties, "value");
+    formattedValue.prefixIcon = this.getNode(properties, "uniface:prefix-icon");
+    if (!formattedValue.prefixIcon) {
+      formattedValue.prefixText = this.getNode(properties, "uniface:prefix-text");
+    }
+    formattedValue.suffixIcon = this.getNode(properties, "uniface:suffix-icon");
+    if (!formattedValue.suffixIcon) {
+      formattedValue.suffixText = this.getNode(properties, "uniface:suffix-text");
+    }
+    return formattedValue;
   }
 }
 
-UNIFACE.ClassRegistry.add("UX.TextField_UXWF", TextField_UXWF);
+UNIFACE.ClassRegistry.add("UX.TextField", TextField);
