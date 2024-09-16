@@ -80,7 +80,7 @@ export class Switch extends Widget {
   static structure = new Element(this, "fluent-switch", "", "", [
     new StyleClass(this, ["u-switch"]),
     new HtmlAttribute(this, "html:role", "role", "switch"),
-    new HtmlValueAttributeBoolean(this, "value", "checked", null),
+    new HtmlValueAttributeBoolean(this, "value", "checked", null, false, "change"),
     new HtmlAttribute(this, "html:current-value", "currentValue", "on"),
     new HtmlAttributeBoolean(this, "html:aria-checked", "ariaChecked", false),
     new HtmlAttributeBoolean(this, "html:aria-disabled", "ariaDisabled", false),

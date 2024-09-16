@@ -87,7 +87,7 @@ export class RadioGroup extends Widget {
       const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
       const errorText = this.toFormatValRepErrorText(displayFormat, value);
       let matchedValrepObj = valrep ? valrep.find((valrepObj) => valrepObj.value === value) : undefined;
-      if (valrep.length > 0 && (matchedValrepObj || value === "")) {
+      if (valrep.length > 0 && (matchedValrepObj || value === "" || value === null)) {
         widgetInstance.setProperties({
           "uniface": {
             "format-error": false,

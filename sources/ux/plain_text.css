@@ -4,15 +4,33 @@
 }
 
 /* Styling the background color when the widget is in an invalid state. */
-.u-plain-text.u-invalid {
+.u-plain-text.u-invalid,
+.u-plain-text.u-format-invalid {
     background-color: #f6d5d7;
 }
 
 /* Styling the error icon ( according to the fluent design system ) when the widget is in an invalid state. */
-.u-plain-text.u-invalid .u-error-icon {
-    color: #d13438;
-}
-
+.u-plain-text.u-invalid .u-error-icon,
 .u-plain-text.u-format-invalid .u-error-icon {
     color: #d13438;
+    padding-inline-start: 4px;
+    vertical-align: text-top;
+}
+
+.u-plain-text .u-prefix:after {
+    content: " ";
+}
+
+.u-plain-text .u-suffix:not(.ms-Icon)::before {
+    content: " ";
+}
+
+.u-plain-text .u-prefix.ms-Icon {
+    padding-inline-end: 4px;
+    vertical-align: text-top;
+}
+
+.u-plain-text .u-suffix.ms-Icon {
+    padding-inline-start: 4px;
+    vertical-align: text-top;
 }

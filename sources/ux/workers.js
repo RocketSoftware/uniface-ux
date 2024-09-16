@@ -60,7 +60,7 @@ export class Worker extends Base {
    * Refresh widget parts this setter is responsible for based on the widget properties.
    * @param {Widget} widgetInstance
    */
-  refresh(widgetInstance) {} // eslint-disable-line no-unused-vars
+  refresh(widgetInstance) { } // eslint-disable-line no-unused-vars
 
   /**
    * Provides setter-specific tracing.
@@ -768,8 +768,8 @@ export class Dummy extends Worker {
   refresh(widgetInstance) {
     this.log("refresh", {
       "widgetInstance": widgetInstance.getTraceDescription(),
-      "propId" : this.propId,
-      "value" : this.getNode(widgetInstance.data.properties, this.propId)
+      "propId": this.propId,
+      "value": this.getNode(widgetInstance.data.properties, this.propId)
     });
   }
 }
@@ -791,8 +791,9 @@ export class BaseHtmlAttribute extends Worker {
    * @param {String} [attrName]
    * @param {UPropValue} [defaultValue]
    * @param {Boolean} [setAsAttribute]
+   * @param {String} [valueChangedEventName]
    */
-  constructor(widgetClass, propId, attrName, defaultValue, setAsAttribute) {
+  constructor(widgetClass, propId, attrName, defaultValue, setAsAttribute, valueChangedEventName) {
     super(widgetClass);
     if (arguments.length > 1) {
       // Generate a unique private prop-id.
@@ -802,6 +803,7 @@ export class BaseHtmlAttribute extends Worker {
       }
       this.defaultValue = defaultValue;
       this.setAsAttribute = setAsAttribute;
+      this.valueChangedEventName = valueChangedEventName;
       this.registerSetter(widgetClass, this.propId, this);
       this.registerDefaultValue(widgetClass, this.propId, defaultValue);
       if (this.propId === "value") {
@@ -878,7 +880,12 @@ export class BaseHtmlAttribute extends Worker {
 
   getValueUpdaters(widgetInstance) {
     this.log("getValueUpdaters", { "widgetInstance": widgetInstance.getTraceDescription() });
-    return;
+    let updaters = [];
+    updaters.push({
+      "element": this.getElement(widgetInstance),
+      "event_name": this.valueChangedEventName || ""
+    });
+    return updaters;
   }
 }
 
@@ -886,9 +893,6 @@ export class BaseHtmlAttribute extends Worker {
  * Worker: String html-attribute.
  */
 export class HtmlAttribute extends BaseHtmlAttribute {
-  constructor(widgetClass, propId, attrName, defaultValue, setAsAttribute) {
-    super(widgetClass, propId, attrName, defaultValue, setAsAttribute);
-  }
 
   refresh(widgetInstance) {
     this.log("refresh", {
@@ -1040,7 +1044,7 @@ export class HtmlValueAttributeBoolean extends BaseHtmlAttribute {
     let updaters = [];
     updaters.push({
       "element": element,
-      "event_name": "change",
+      "event_name": this.valueChangedEventName || "",
       "handler": () => {
         widgetInstance.setProperties({
           "uniface": {
@@ -1330,15 +1334,6 @@ export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
     }
   }
 
-  getValue(widgetInstance) {
-    let value = this.getNode(widgetInstance.data.properties, "value");
-    return value;
-  }
-
-  getValueUpdaters(widgetInstance) {
-    this.log("getValueUpdaters", { "widgetInstance": widgetInstance.getTraceDescription() });
-    return;
-  }
 }
 
 /**

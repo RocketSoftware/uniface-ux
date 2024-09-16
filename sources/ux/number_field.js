@@ -42,7 +42,7 @@ export class NumberField extends Widget {
   // prettier-ignore
   static structure = new Element(this, "fluent-number-field", "", "", [
     new HtmlAttribute(this, "html:current-value", "currentValue", "", false),
-    new HtmlAttribute(this, "value", "value", "", false),
+    new HtmlAttribute(this, "value", "value", "", false, "change"),
     new HtmlAttribute(this, "html:size", "size", "", true),
     new HtmlAttribute(this, "html:step", "step", 1, true),
     new HtmlAttribute(this, "html:placeholder", "placeholder", undefined, true),
