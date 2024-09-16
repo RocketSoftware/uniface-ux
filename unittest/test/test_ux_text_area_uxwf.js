@@ -301,6 +301,164 @@
             assert.equal(flexPropertyValue, "column");
         });
         
+        it("html resize property when set to none", function (done) {
+            let resizeProp = 'none';
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            tester.dataUpdate({
+                "html": {
+                    "resize": "none"
+                }
+            });
+
+
+            setTimeout(function () {
+                let resizePropText = widget.elements.widget.getAttribute("resize");
+                assert.equal(resizePropText, resizeProp);//Check for visibility
+                done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+
+        });
+
+        it("html resize property when set to both", function (done) {
+            let resizeProp = 'both';
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            tester.dataUpdate({
+                "html": {
+                    "resize": resizeProp
+                }
+            });
+
+
+            setTimeout(function () {
+                let resizePropText = widget.elements.widget.getAttribute("resize");
+                assert.equal(resizePropText, resizeProp);//Check for visibility
+                done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+
+        });
+
+        it("html resize property when set to horizontal", function (done) {
+            let resizeProp = 'horizontal';
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            tester.dataUpdate({
+                "html": {
+                    "resize": resizeProp
+                }
+            });
+
+
+            setTimeout(function () {
+                let resizePropText = widget.elements.widget.getAttribute("resize");
+                assert.equal(resizePropText, resizeProp);//Check for visibility
+                done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+
+        });
+
+        it("html resize property when set to vertical", function (done) {
+            let resizeProp = 'vertical';
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            tester.dataUpdate({
+                "html": {
+                    "resize": resizeProp
+                }
+            });
+
+
+            setTimeout(function () {
+                let resizePropText = widget.elements.widget.getAttribute("resize");
+                assert.equal(resizePropText, resizeProp);//Check for visibility
+                done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+
+        });
+
+
+        it("html hidden property when set to true", function (done) {
+            let hiddenProp = true;
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            tester.dataUpdate({
+                "html": {
+                    "hidden": hiddenProp
+                }
+            });
+
+
+            setTimeout(function () {
+                let hiddenPropPresent = widget.elements.widget.hasAttribute("hidden");
+                assert.equal(hiddenPropPresent, hiddenProp);//Check for visibility
+                done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+
+        });
+
+        it("html hidden property when set to false", function (done) {
+            let hiddenProp = false;
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            tester.dataUpdate({
+                "html": {
+                    "hidden": hiddenProp
+                }
+            });
+
+
+            setTimeout(function () {
+                let hiddenPropPresent = widget.elements.widget.hasAttribute("hidden");
+                assert.equal(hiddenPropPresent, hiddenProp);//Check for visibility
+                done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+
+        });
+
+        it("check default html cols value", function (done) {
+            let defaultColsProp = 20;
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()  
+            setTimeout(function () {
+                let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
+                assert.equal(colsText, defaultColsProp);//Check for visibility
+                let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
+                assert.equal(rowsText, 0);
+                done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+        });
+
+        it("html cols property negative integer", function (done) {
+            let colsProp = -1;
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            tester.dataUpdate({
+                "html": {
+                    "cols": colsProp
+                }
+            });
+
+            setTimeout(function () {
+                let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
+                assert.equal(colsText, colsProp);//Check for visibility
+                let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
+                assert.equal(rowsText, 0);
+                done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+        });
+
+        it("html cols property positive integer", function (done) {
+            let colsProp = 25;
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            tester.dataUpdate({
+                "html": {
+                    "cols": colsProp
+                }
+            });
+
+
+            setTimeout(function () {
+                let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
+                assert.equal(colsText, colsProp);//Check for visibility
+                let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
+                assert.equal(rowsText, 0);
+                done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+        });
+
         //html:placeholder property
         it("Set html:placeholder property for textarea", function (done) {
             let placeHolderText = "Input the Number"
@@ -316,7 +474,6 @@
                 assert.equal(placeHolderTextDOM, placeHolderText,"Failed to show placeholder text" + placeHolderText);
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
-
         });
 
         //html:readonly property
@@ -326,7 +483,6 @@
                 "html": {
                     "readonly": true
                 }
-
             });
 
             setTimeout(function () {
@@ -334,7 +490,6 @@
                 assert(widget.elements.widget.hasAttribute(readOnly), "Failed to show the readonly attribute");                    
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
-
         });
 
         //html:readonly property false
@@ -344,7 +499,6 @@
                 "html": {
                     "readonly": false
                 }
-
             });
 
             setTimeout(function () {
@@ -352,7 +506,6 @@
                 assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to hide the readonly attribute");                    
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
-
         });
 
 
@@ -384,7 +537,6 @@
                 assert(!widget.elements.widget.hasAttribute(disabled), "Failed to hide the disabled attribute");                    
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
-
         });
 
         //html:appearance outfill property
@@ -404,7 +556,6 @@
                 assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance outfill style" + appearanceStylePropertyText);
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
-
         });
 
         //html:appearance filled property
@@ -426,6 +577,8 @@
             }, defaultAsyncTimeout); // Wait for DOM rendering
 
         });
+
+       
     });
 
     describe("showError", function () {
@@ -473,6 +626,43 @@
                 done();
             }, defaultAsyncTimeout);
         });
+
+        it("html rows property positive integer", function (done) {
+            let rowsProp = 25;
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            tester.dataUpdate({
+                "html": {
+                    "rows": rowsProp
+                }
+            });
+
+
+            setTimeout(function () {
+                let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
+                assert.equal(colsText, 20);//Check for visibility
+                let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
+                assert.equal(rowsText, rowsProp);
+                done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+
+        });
+        it("html rows property negative integer", function (done) {
+            let rowsProp = -1;
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            tester.dataUpdate({
+                "html": {
+                    "rows": rowsProp
+                }
+            });
+
+            setTimeout(function () {
+                let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
+                assert.equal(colsText, 20);//Check for visibility
+                let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
+                assert.equal(rowsText, rowsProp);
+                done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+        });
     });
     describe("hideError", function () {
         let widget, element;
@@ -483,7 +673,7 @@
             element = tester.createWidget().element;
             verifyWidgetClass(widgetClass)
         });
-        it("Hide Error Set invalid value in number Field", function (done) {   
+        it("Hide Error Set invalid value in text Area", function (done) {   
             tester.dataUpdate({
                 uniface: {
                     error: false,
