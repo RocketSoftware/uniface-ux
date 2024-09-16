@@ -42,7 +42,7 @@ export class TextArea extends Widget {
   // prettier-ignore
   static structure = new Element(this, "fluent-text-area", "", "", [
     new HtmlAttribute(this, "html:current-value", "currentValue", ""),
-    new HtmlAttribute(this, "value", "value", ""),
+    new HtmlAttribute(this, "value", "value", "", false, "change"),
     new HtmlAttribute(this, "html:title", "title", undefined),
     new HtmlAttribute(this, "html:cols", "cols", "20"),
     new HtmlAttribute(this, "html:rows", "rows", "", true),
