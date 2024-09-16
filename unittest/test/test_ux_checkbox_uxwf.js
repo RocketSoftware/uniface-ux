@@ -20,7 +20,7 @@
     const widgetId = tester.widgetId;
     const widgetName = tester.widgetName;
     const widgetClass = tester.getWidgetClass();
-
+ 
     /**
      * Function to determine whether the widget class has been loaded.
      */
@@ -204,7 +204,7 @@
         });
 
         it("check value", function() {
-            assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
+            assert.equal(tester.defaultValues.value, null, "Default value of attribute value should be null");
         });
     });
 
