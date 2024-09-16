@@ -1,0 +1,447 @@
+(function () {
+  'use strict';
+
+  // Keep this!
+  if (umockup.testLoaded()) {
+    return;
+  }
+
+  /**
+     * Default timeout for waiting for DOM rendering (in milliseconds)
+     */
+  const defaultAsyncTimeout = 100; // ms
+
+  const assert = chai.assert;
+  const expect = chai.expect;
+  const tester = new umockup.WidgetTester();
+  const widgetId = tester.widgetId;
+  const widgetName = tester.widgetName;
+  const widgetClass = tester.getWidgetClass();
+
+  // custom test variables
+  const valRepArray = [
+    {
+      value: "1",
+      representation: "option one"
+    },
+    {
+      value: "2",
+
+      representation: "option two"
+    },
+    {
+      value: "3",
+      representation: "option three"
+    }
+  ];
+
+
+  /**
+       * Function to determine whether the widget class has been loaded.
+       */
+  function verifyWidgetClass(widgetClass) {
+    assert(widgetClass, `Widget class '${widgetName}' is not defined!
+              Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
+  }
+
+  describe("Uniface Mockup tests", function () {
+
+    it("get class " + widgetName, function () {
+      verifyWidgetClass(widgetClass);
+    });
+
+  });
+
+  describe("Uniface Mockup tests", function () {
+
+    it("Get class " + widgetName, function () {
+      const widgetClass = tester.getWidgetClass();
+      assert(widgetClass, `Widget class '${widgetName}' is not defined!
+            Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
+    });
+
+  });
+
+
+  describe("Uniface static structure constructor definition", function () {
+
+    it('should have a static property structure of type Element', function () {
+      verifyWidgetClass(widgetClass);
+      const structure = widgetClass.structure;
+      expect(structure.constructor).to.be.an.instanceof(Element.constructor);
+      expect(structure.tagName).to.equal('fluent-select');
+      expect(structure.styleClass).to.equal('');
+      expect(structure.elementQuerySelector).to.equal('');
+      expect(structure.attributeDefines).to.be.an('array');
+      expect(structure.elementDefines).to.be.an('array');
+      expect(structure.triggerDefines).to.be.an('array');
+    });
+
+  });
+
+
+  describe(widgetName + ".processLayout", function () {
+    let element;
+
+    it("processLayout", function () {
+      verifyWidgetClass(widgetClass);
+      element = tester.processLayout();
+      expect(element).to.have.tagName(tester.uxTagName);
+    });
+
+    describe("Checks", function () {
+
+      before(function () {
+        element = tester.processLayout();
+      });
+
+      it("check instance of HTMLElement", function () {
+        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+      });
+
+      it("check tagName", function () {
+        expect(element).to.have.tagName(tester.uxTagName);
+      });
+
+      it("check id", function () {
+        expect(element).to.have.id(widgetId);
+      });
+
+      it("check u-label-text", function () {
+        assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element");
+      });
+
+      it("check u-error-icon", function () {
+        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
+      });
+
+    });
+
+  });
+
+  describe("Create widget", function () {
+
+    before(function () {
+      verifyWidgetClass(widgetClass);
+      tester.construct();
+    });
+
+    it("constructor", function () {
+      try {
+        const widget = tester.construct();
+        assert(widget, "widget is not defined!");
+        verifyWidgetClass(widgetClass);
+        assert(widgetClass.defaultValues.classes['u-select'], "Class is not defined");
+      } catch (e) {
+        assert(false, "Failed to construct new widget, exception " + e);
+      }
+    });
+
+    it("onConnect", function (done) {
+      const element = tester.processLayout();
+      const widget = tester.construct();
+      setTimeout(function () {
+        widget.onConnect(element);
+        assert(element, "Target element is not defined!");
+        assert(widget.elements.widget === element, "widget is not connected");
+        done();
+      }, defaultAsyncTimeout);
+
+      assert(element, "Target element is not defined!");
+      assert(widget.elements.widget === element, "widget is not connected");
+    });
+  });
+
+  describe("mapTrigger", function () {
+    const widget = tester.onConnect();
+    widget.mapTrigger("onchange");
+  });
+
+  describe("Data Init", function () {
+    const defaultValues = tester.getDefaultValues();
+    const classes = defaultValues.classes;
+    var element;
+
+    beforeEach(function () {
+      tester.dataInit();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    for (const defaultClass in classes) {
+      it("check class '" + defaultClass + "'", function () {
+        if (classes[defaultClass]) {
+          expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+        } else {
+          expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
+        }
+      });
+    }
+
+    it("check 'hidden' attributes", function () {
+      assert.notEqual(element.querySelector('span.u-label-text').getAttribute('hidden'), null);
+    });
+
+    it("check widget id", function () {
+      assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
+    });
+
+    it("check value", function () {
+      assert.equal(tester.defaultValues.value, "");
+    });
+
+    it("check error message appears when valrep is not defined", function () {
+      let errorIconTooltip = element.querySelector('.u-error-icon');
+      expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Unable to show representation of value");
+    });
+
+  });
+
+  describe("dataUpdate", function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    it("show label", function (done) {
+      let selectFieldLabel = 'Label';
+      tester.dataUpdate({
+        uniface: {
+          "label-text": selectFieldLabel
+        }
+      });
+
+      setTimeout(function () {
+        let labelElement = element.querySelector("span.u-label-text");
+        let labelText = labelElement.innerText;
+        expect(selectFieldLabel).equal(labelText);
+        assert(!labelElement.hasAttribute("hidden"), "Failed to show the label text");
+        done();
+      }, defaultAsyncTimeout); // Wait for DOM rendering
+
+    });
+
+    it("Set label position before", function (done) {
+      const widget = tester.construct();
+      
+      tester.dataUpdate({
+        uniface: {
+          "label-position": "before"
+        }
+
+      });
+
+      setTimeout(function () {
+        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
+        assert.equal(labelPosition, 'before');
+        done();
+      }, defaultAsyncTimeout); // Wait for DOM rendering
+
+    });
+
+    it("check label position before styles", function () {
+      // if u-label-position attribute is added element display is changed
+      const widget = tester.construct();
+      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
+      assert.equal(displayPropertyValue, "inline-flex");
+      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
+      let alignPropertyValue = labelStyle.getPropertyValue("align-content");
+      assert.equal(alignPropertyValue, "center");
+    });
+
+    it("Set label position below", function (done) {
+      tester.dataUpdate({
+        uniface: {
+          "label-position": "below"
+        }
+
+      });
+
+      setTimeout(function () {
+        const widget = tester.construct();
+        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
+        assert.equal(labelPosition, 'below');
+        done();
+      }, defaultAsyncTimeout); // Wait for DOM rendering
+
+    });
+
+    it("check label position below styles", function () {
+      // if u-label-position attribute is added element display is changed
+      const widget = tester.construct();
+      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
+      assert.equal(flexPropertyValue, "column");
+      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
+      let orderPropertyValue = labelStyle.getPropertyValue("order");
+      assert.equal(orderPropertyValue, 2);
+    });
+
+    it("reset label and its position", function (done) {
+      tester.dataUpdate({
+        uniface: {
+          "label-position": uniface.RESET,
+          "label-text": uniface.RESET
+        }
+
+      });
+
+      setTimeout(function () {
+        const widget = tester.construct();
+        let labelElement = widget.elements.widget.querySelector("span.u-label-text");
+        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
+        assert.equal(labelPosition, 'above');
+        assert(labelElement.hasAttribute("hidden"), "Failed to hide the label text");
+        assert.equal(labelElement.innerText, "");
+        assert.equal(labelElement.getAttribute("slot"), "");
+        done();
+      }, defaultAsyncTimeout); // Wait for DOM rendering
+
+    });
+
+    it("check reset label position styles", function () {
+      // if u-label-position attribute is added element display is changed
+      const widget = tester.construct();
+      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
+      assert.equal(flexPropertyValue, "column");
+    });
+
+    it("Set HTML property readonly to true", function (done) {
+      tester.dataUpdate({
+        html: { readonly: true }
+      });
+      // ux-select is using disabled attribute instead.
+      setTimeout(function () {
+        expect(element.getAttribute("disabled"));
+        done();
+      }, defaultAsyncTimeout);
+    });
+
+    it("Set HTML property disabled to true", function (done) {
+      tester.dataUpdate({
+        html: { disabled: true }
+      });
+
+      setTimeout(function () {
+        expect(element.getAttribute("disabled"));
+        expect(element.getAttribute("aria-disabled")).equal("true");
+        done();
+      }, defaultAsyncTimeout);
+    });
+
+    it("Set valrep property with default display value as rep", function (done) {
+      tester.dataUpdate({
+        valrep: valRepArray
+      });
+
+      setTimeout(function () {
+        let selectOptionArray = element.querySelectorAll("fluent-option");
+        selectOptionArray.forEach(function (node, index) {
+          expect(node.textContent).equal(valRepArray[index].representation);
+        });
+        done();
+      }, defaultAsyncTimeout);
+    });
+
+    it("Set valrep property with default display-format as value", function (done) {
+      tester.dataUpdate({
+        valrep: valRepArray,
+        uniface: {
+          "display-format": "val"
+        }
+      });
+
+      setTimeout(function () {
+        let selectOptionArray = element.querySelectorAll("fluent-option");
+        selectOptionArray.forEach(function (node, index) {
+          expect(node.textContent).equal(valRepArray[index].value);
+        });
+        done();
+      }, defaultAsyncTimeout);
+    });
+
+    it("Set valrep property with default display value as valrep", function (done) {
+      tester.dataUpdate({
+        valrep: valRepArray,
+        uniface: {
+          "display-format": "valrep"
+        }
+      });
+
+      setTimeout(function () {
+        let selectOptionArray = element.querySelectorAll("fluent-option");
+        selectOptionArray.forEach(function (node, index) {
+          let formatValrepText = valRepArray[index].representation + " " + valRepArray[index].value;
+          expect(node.textContent).equal(formatValrepText);
+        });
+        done();
+      }, defaultAsyncTimeout);
+    });
+
+    it("Set value to 2 and expect the second option to be selected", function (done) {
+      tester.dataUpdate({
+        valrep: valRepArray,
+        value: "2",
+        uniface: {
+          "display-format": "rep"
+        }
+      });
+      setTimeout(function () {
+        const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
+        expect(selectedValue.textContent).equal("option two");
+
+        done();
+      }, defaultAsyncTimeout);
+    });
+  });
+
+  describe('Select onchange event', function () {
+    let selectElement, onchangeSpy, widget;
+    beforeEach(function () {
+
+      widget = tester.createWidget();
+      selectElement = tester.element;
+
+      // Create a spy for the onchange event
+      onchangeSpy = sinon.spy();
+
+      // Add the onchange event listener to the select element
+      selectElement.addEventListener('onchange', onchangeSpy);
+    });
+
+    // Clean up after each test
+    afterEach(function () {
+      // Restore the spy to its original state
+      sinon.restore();
+    });
+
+    // Test case for the onchange event
+    it('should call the onchange event handler when a select option is clicked', function () {
+      // Simulate a change event
+      const event = new window.Event('onchange');
+      selectElement.dispatchEvent(event);
+
+      // Assert that the onchange event handler was called once
+      expect(onchangeSpy.calledOnce).to.be.true;
+    });
+  });
+
+  describe("dataCleanup", function () {
+    let widget;
+    before(function () {
+      widget = tester.createWidget();
+    });
+    it("reset all property", function () {
+      try {
+        widget.dataCleanup(tester.widgetProperties);
+      } catch (e) {
+        console.error(e);
+        assert(false, "Failed to call dataCleanup(), exception " + e);
+      }
+    });
+  });
+})();
