@@ -204,7 +204,7 @@
         });
 
         it("check value", function() {
-            assert.equal(tester.defaultValues.value, null, "Default value of attribute value should be ''");
+            assert.equal(tester.defaultValues.value, null, "Default value of attribute value should be null");
         });
     });
 
