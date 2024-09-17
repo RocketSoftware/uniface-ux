@@ -295,10 +295,7 @@
 
         it("set error to false", function (done) {
             tester.dataUpdate({
-                uniface: {
-                    error: false,
-                    "error-message": ""
-                }
+                value: 1
             });
             setTimeout(function () {
                 expect(element).to.not.have.class("u-format-invalid");
