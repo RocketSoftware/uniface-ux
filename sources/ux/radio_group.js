@@ -177,7 +177,8 @@ export class RadioGroup extends Widget {
   ]);
 
   /**
-   * Returns an array of property ids that affect the formatted value.
+   * Returns an array of property ids that affect the formatted value for text-based widgets
+   * like the cell widget of the data-grid.
    * @returns {string[]}
    */
   static getValueFormattedSetters() {
@@ -192,12 +193,12 @@ export class RadioGroup extends Widget {
   }
 
   /**
-   * Returns the value as format-object.
+   * Returns the value as format-object for text-based widgets
+   * like the cell widget of the data-grid.
    * @param {UData} properties
    * @return {UValueFormatting}
    */
   static getValueFormatted(properties) {
-    this.staticLog("getValueFormatting");
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
@@ -216,13 +217,19 @@ export class RadioGroup extends Widget {
           formattedValue.primaryPlainText = valrepItem.value;
           break;
         case "rep":
+        default:
           formattedValue.primaryHtmlText = valrepItem.representation;
           break;
+      }
+      if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
+        formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
       }
     } else {
       formattedValue.primaryPlainText = "ERROR";
       formattedValue.secondaryPlainText = value;
+      formattedValue.errorMessage = this.formatErrorMessage;
     }
+    this.staticLog("getValueFormatted", formattedValue);
     return formattedValue;
   }
 

@@ -333,7 +333,6 @@ export class PlainText extends Widget {
    * @return {UValueFormatting}
    */
   static getValueFormatted(properties) {
-    this.staticLog("getValueFormatted");
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
@@ -366,6 +365,7 @@ export class PlainText extends Widget {
     if (!formattedValue.suffixIcon) {
       formattedValue.suffixText = this.getNode(properties, "uniface:suffix-text");
     }
+    this.staticLog("getValueFormatted", formattedValue);
     return formattedValue;
   }
 }

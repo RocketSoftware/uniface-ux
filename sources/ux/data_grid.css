@@ -1,155 +1,149 @@
-/* Styling data-grid container */
-
+/**
+ Styling data-grid container
+ Default u-responsive-type is "horizontal-scroll".
+ */
 .u-datagrid-container {
   outline: calc(var(--stroke-width) * 1px) solid var(--neutral-stroke-divider-rest);
   display: flex;
   flex-direction: column;
   width: -webkit-fill-available;
-  /* max-height: 100vh; */
+  min-height: 10em;
 }
 
-.u-datagrid-container.-uent-empty- .u-datagrid-content-row {
+.u-datagrid-container.u-hidden {
   display: none;
 }
 
-.u-datagrid-container:not(.-uent-empty-) .u-datagrid-no-content-row {
-  display: none;
-}
-
-/* Styling data-grid itself */
-
-.u-datagrid {
-  overflow-y: auto;
-  height: 10em;
-  flex-shrink: 1;
-  flex-grow: 1;
-}
-
-.u-datagrid .u-datagrid-header-row,
-.u-datagrid .u-datagrid-content-row,
-.u-datagrid .u-datagrid-no_content-row {
-  grid-auto-flow: column;
-  min-height: 47px;
-}
-
-.u-datagrid .u-datagrid-labeltext {
+/**
+ Styling data-grid header toolbar
+ */
+.u-datagrid-container .u-datagrid-labeltext {
   font-size: var(--type-ramp-plus-2-font-size);
   font-family: var(--body-font);
   line-height: var(--type-ramp-plus-2-line-height);
   font-variation-settings: var(--type-ramp-plus-2-font-variations);
-}
-
-.u-datagrid:not([u-responsive-type="horizontal-scroll"]) .u-datagrid-header-row,
-.u-datagrid:not([u-responsive-type="horizontal-scroll"]) .u-datagrid-content-row,
-.u-datagrid:not([u-responsive-type="horizontal-scroll"]) .u-datagrid-no_content-row {
-  grid-auto-columns: 1fr;
-}
-
-.u-datagrid[u-responsive-type="horizontal-scroll"] .u-datagrid-header-row,
-.u-datagrid[u-responsive-type="horizontal-scroll"] .u-datagrid-content-row,
-.u-datagrid[u-responsive-type="horizontal-scroll"] .u-datagrid-no_content-row {
-  grid-auto-columns: minmax(150px, 1fr);
-  min-width: fit-content;
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.u-datagrid:not([u-responsive-type="horizontal-scroll"]) .u-datagrid-header-cell,
-.u-datagrid:not([u-responsive-type="horizontal-scroll"]) .u-datagrid-content-cell {
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-labeltext {
   white-space: normal;
   word-wrap: break-word;
+  height: auto;
+}
+
+/**
+ Styling data-grid itself.
+ */
+.u-datagrid-container .u-datagrid {
+  overflow-y: auto;
+  height: 0em;
+  flex-shrink: 1;
+  flex-grow: 1;
+}
+
+.u-datagrid-container .u-datagrid-header-row,
+.u-datagrid-container .u-datagrid-content-row,
+.u-datagrid-container .u-datagrid-no_content-row {
+  grid-auto-flow: column;
+  min-width: fit-content;
+  grid-auto-columns: minmax(7em, 1fr);
+}
+
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-header-row,
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-content-row,
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-no_content-row {
+  grid-auto-columns: minmax(5em, 1fr);
+}
+
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-header-cell,
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-content-cell {
+  white-space: normal;
+  word-wrap: break-word;
+  align-items: baseline;
+  height: auto;
+}
+
+/**
+ Styling column headers
+ */
+.u-datagrid-container .u-datagrid-header-cell {
+  background-color: var(--neutral-layer-2);
   text-overflow: ellipsis;
 }
 
-.u-datagrid[grid-type="u-grid-condensed"] .u-datagrid-content-row {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-.u-datagrid[grid-type="u-grid-regular"] .u-datagrid-content- {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  --type-ramp-base-font-size: 15px;
-}
-
-.u-datagrid[grid-type="u-grid-relaxed"] .u-datagrid-content-row {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  --type-ramp-base-font-size: 16px;
-}
-
-/* Styling column headers */
-.u-datagrid .u-datagrid-header-cell {
-  background-color: var(--neutral-layer-2);
-}
-
-.u-datagrid .u-datagrid-header-cell[u-sort-enabled="true"],
-.u-datagrid .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-enabled] {
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="true"],
+.u-datagrid-container .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-enabled] {
   cursor: pointer;
 }
 
-.u-datagrid .u-datagrid-header-cell[u-sort-enabled="false"] .u-datagrid-sort-icon,
-.u-datagrid .u-datagrid-header-cell[u-sort-enabled="true"]:not([u-sort-direction]) .u-datagrid-sort-icon,
-.u-datagrid .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-enabled]:not([u-sort-direction]) .u-datagrid-sort-icon {
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="false"] .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="true"]:not([u-sort-direction]) .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-enabled]:not([u-sort-direction]) .u-datagrid-sort-icon {
   display: none;
 }
 
-.u-datagrid .u-datagrid-header-cell[u-sort-enabled="true"]:not([u-sort-direction]):hover .u-datagrid-sort-icon,
-.u-datagrid .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-enabled]:not([u-sort-direction]):hover .u-datagrid-sort-icon,
-.u-datagrid .u-datagrid-header-cell[u-sort-enabled="true"]:not([u-sort-direction]):focus-within .u-datagrid-sort-icon,
-.u-datagrid .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-enabled]:not([u-sort-direction]):focus-within .u-datagrid-sort-icon {
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="true"]:not([u-sort-direction]):hover .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-enabled]:not([u-sort-direction]):hover .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="true"]:not([u-sort-direction]):focus-within .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-enabled]:not([u-sort-direction]):focus-within .u-datagrid-sort-icon {
   display: inline-block;
   color: var(--neutral-base-color);
 }
 
-.u-datagrid .u-datagrid-header-cell[u-sort-enabled="true"][u-sort-direction="descending"] .u-datagrid-sort-icon,
-.u-datagrid .u-datagrid-header-cell[u-sort-enabled="true"][u-sort-direction="desc"] .u-datagrid-sort-icon,
-.u-datagrid .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-direction="descending"] .u-datagrid-sort-icon,
-.u-datagrid .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-direction="desc"] .u-datagrid-sort-icon {
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="true"][u-sort-direction="descending"] .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="true"][u-sort-direction="desc"] .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-direction="descending"] .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-direction="desc"] .u-datagrid-sort-icon {
   transform: rotate(180deg);
-}
-
-.u-datagrid .u-datagrid-sort-icon {
-  margin-left: 5px;
 }
 
 /**
  * Styling data-grid cell content
 */
-.u-datagrid .u-datagrid-content-cell {
+.u-datagrid-container .u-datagrid-content-cell {
   display: flex;
   min-width: 0;
-  justify-content: space-between;
   flex-direction: row;
   align-items: center;
 }
 
-.u-datagrid .u-datagrid-content-cell .u-value {
+.u-datagrid-container .u-datagrid-content-cell .u-value {
+  display: inline-flex;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   flex-grow: 1;
 }
 
-.u-datagrid .u-datagrid-content-cell .u-value>:nth-child(2) {
+.u-datagrid-container .u-datagrid-content-cell .u-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-content-cell .u-text {
+  white-space: normal;
+  text-overflow: normal;
+}
+
+.u-datagrid-container .u-datagrid-content-cell .u-secondary-text {
   margin-inline-start: .5em;
 }
 
-.u-datagrid .u-datagrid-content-cell .u-value>:nth-child(2)::before {
+.u-datagrid-container .u-datagrid-content-cell .u-secondary-text::before {
   content: "(";
 }
 
-.u-datagrid .u-datagrid-content-cell .u-value>:nth-child(2)::after {
+.u-datagrid-container .u-datagrid-content-cell .u-secondary-text::after {
   content: ")";
 }
 
-.u-datagrid .u-datagrid-content-cell .u-error {
-  overflow: hidden;
-  white-space: nowrap;
-  flex-grow: 0;
+.u-datagrid-container .u-datagrid-content-cell .u-error-icon {
+  margin-inline-start: 0.3em;  
 }
 
-.u-datagrid .u-datagrid-content-cell .u-prefix-text,
-  .u-datagrid .u-datagrid-content-cell .u-prefix-icon {
+.u-datagrid-container .u-datagrid-content-cell .u-prefix-text,
+.u-datagrid-container .u-datagrid-content-cell .u-prefix-icon {
   overflow: hidden;
   white-space: nowrap;
   flex-grow: 0;
@@ -157,8 +151,8 @@
   margin-inline-end: 0.3em;
 }
 
-.u-datagrid .u-datagrid-content-cell .u-suffix-text,
-.u-datagrid .u-datagrid-content-cell .u-suffix-icon {
+.u-datagrid-container .u-datagrid-content-cell .u-suffix-text,
+.u-datagrid-container .u-datagrid-content-cell .u-suffix-icon {
   overflow: hidden;
   white-space: nowrap;
   flex-grow: 0;
@@ -166,16 +160,20 @@
   margin-inline-start: 0.3em;
 }
 
-.u-datagrid .u-field-value-changed {
-  border: 1px solid #707070;
-  border-radius: 0%;
-  background-color: #faffed;
-}
-
-.u-datagrid .u-datagrid-content-cell.u-disabled>* {
+.u-datagrid-container .u-datagrid-content-cell.u-disabled>* {
   opacity: var(--disabled-opacity);
 }
 
-.u-datagrid .u-datagrid-content-cell.u-hidden>* {
+.u-datagrid-container .u-datagrid-content-cell.u-hidden>* {
   display: none;
+}
+
+/**
+ Styling the error icon
+ */
+.u-datagrid-container .u-datagrid-content-cell.u-invalid .u-value,
+.u-datagrid-container .u-datagrid-content-cell.u-format-invalid .u-value,
+.u-datagrid-container .u-datagrid-content-cell.u-invalid .u-error-icon,
+.u-datagrid-container .u-datagrid-content-cell.u-format-invalid .u-error-icon {
+  color: #d13438;
 }

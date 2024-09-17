@@ -196,7 +196,8 @@ export class Button extends Widget {
   ]);
 
   /**
-   * Returns an array of property ids that affect the formatted value.
+   * Returns an array of property ids that affect the formatted value for text-based widgets
+   * like the cell widget of the data-grid.
    * @returns {string[]}
    */
   static getValueFormattedSetters() {
@@ -209,17 +210,18 @@ export class Button extends Widget {
   }
 
   /**
-   * Returns the value as format-object.
+   * Returns the value as format-object for text-based widgets
+   * like the cell widget of the data-grid.
    * @param {UData} properties
    * @return {UValueFormatting}
    */
   static getValueFormatted(properties) {
-    this.staticLog("getValueFormatted");
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
     formattedValue.primaryPlainText = this.getNode(properties, "value") || "";
     formattedValue.prefixIcon = this.getNode(properties, "uniface:icon");
+    this.staticLog("getValueFormatted", formattedValue);
     return formattedValue;
   }
 
