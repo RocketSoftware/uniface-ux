@@ -40,4 +40,4 @@ import "./data_grid.js";
  * - the registered sub-widget-workers
  */
 // UX.MyDataGrid = UNIFACE.ClassRegistry.get("UX.DataGridCollection");
-// UX.MyButtonF = UNIFACE.ClassRegistry.get("UX.Button");
+// UX.MyButton = UNIFACE.ClassRegistry.get("UX.Button");

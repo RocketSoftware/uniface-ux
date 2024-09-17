@@ -251,18 +251,34 @@ export class Checkbox extends Widget {
   ]);
 
   /**
-   * Returns the value as format-object.
+   * Returns an array of property ids that affect the formatted value for text-based widgets
+   * like the cell widget of the data-grid.
+   * @returns {string[]}
+   */
+  static getValueFormattedSetters() {
+    return [
+      "value",
+      "uniface:error",
+      "uniface:error-message"
+    ];
+  }
+
+  /**
+   * Returns the value as format-object for text-based widgets
+   * like the cell widget of the data-grid.
    * @param {UData} properties
    * @return {UValueFormatting}
    */
   static getValueFormatted(properties) {
-    this.staticLog("getValueFormatted");
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
     const value = this.getNode(properties, "value");
     if (value === "") {
       formattedValue.primaryPlainText = "Unset";
+      if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
+        formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+      }
     } else {
       try {
         if (this.fieldValueToBoolean(value)) {
@@ -270,11 +286,15 @@ export class Checkbox extends Widget {
         } else {
           formattedValue.primaryPlainText = "Unchecked";
         }
+        if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
+          formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+        }
       } catch (err) {
         formattedValue.primaryPlainText = "ERROR";
         formattedValue.errorMessage = err;
       }
     }
+    this.staticLog("getValueFormatted", formattedValue);
     return formattedValue;
   }
 }

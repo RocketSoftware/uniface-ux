@@ -37,23 +37,17 @@ export class DataGridCollection extends Widget {
     new Worker.StyleClass(this, ["u-datagrid-container"]),
     new Worker.HtmlAttribute(this, "html:title", "title", undefined),
     new Worker.HtmlAttribute(this, "html:base-layer-luminance", "baseLayerLuminance", undefined, false),
-    new Worker.HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new Worker.HtmlAttributeBoolean(this, "html:disabled", "disabled", false, true)
+    new Worker.HtmlAttributeChoice(this, "uniface:responsive-type", "u-responsive-type", ["horizontal-scroll", "wrap"], "horizontal-scroll", true),
+    new Worker.HtmlAttributeClass(this, "html:hidden", "u-hidden", false)
   ], [
-    new Worker.Element(this, "fluent-toolbar", "u-datagrid-header-toolbar", ".u-datagrid-header-toolbar", [
-      new Worker.HtmlAttribute(this, undefined, "aria-orientation", "horizontal", false)
-    ], [
-      new Worker.SlottedElement(this, "span", "u-datagrid-labeltext", ".u-datagrid-labeltext", "", "uniface:label-text", "Abc")
-    ]),
+    new Worker.SlottedElement(this, "span", "u-datagrid-labeltext", ".u-datagrid-labeltext", "", "uniface:label-text", ""),
     new Worker.Element(this, "fluent-data-grid", "u-datagrid", ".u-datagrid", [
       new Worker.HtmlAttribute(this, undefined, "role", "grid", false),
       new Worker.HtmlAttribute(this, undefined, "tabIndex", "0", false),
       new Worker.HtmlAttribute(this, undefined, "generate-header", "default", false),
-      new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", true),
-      new Worker.HtmlAttribute(this, "uniface:responsive-type", "u-responsive-type", "", true)
+      new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", true)
     ], [
       new Worker.Element(this, "fluent-data-grid-row", "u-datagrid-header-row", ".u-datagrid-header-row", [
-        // new Worker.StyleClass(this, ["header"]),
         new Worker.HtmlAttribute(this, undefined, "row-type", "header", false),
         new Worker.HtmlAttribute(this, undefined, "role", "row", false),
         new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", false)
@@ -72,7 +66,6 @@ UNIFACE.ClassRegistry.add("UX.DataGridCollection", DataGridCollection);
  * DataGrid Column Header widget.
  * This widget has the fluent-data-grid-cell web-component as root element and
  * is mend to be used as child element of a fluent column row.
- * It only has one child element being the uxControlbar sub-widget.
  * @export
  * @class DataGridColumnHeader
  */
@@ -103,8 +96,6 @@ export class DataGridColumnHeader extends Widget {
     new Worker.HtmlAttributeNumber(this, undefined, "tabIndex", -1, undefined, -1, true)
   ], [
     new Worker.SlottedElement(this, "span", "control-bar", ".control-bar", "", "uniface:label-text", "")
-  ], [
-    new Worker.Trigger(this, "detail", "click", true)
   ]);
 }
 UNIFACE.ClassRegistry.add("UX.DataGridColumnHeader", DataGridColumnHeader);
@@ -164,6 +155,13 @@ export class DataGridField extends Widget {
   static getters = {};
   static triggers = {};
   static uiBlocking = "";
+
+  /**
+   * This widget transparently maintains properties and triggers.
+   * To avoid unwanted warnings on unknown properties, these are suppressed here.
+   */
+  static reportUnsupportedPropertyWarnings = false;
+  static reportUnsupportedTriggerWarnings = false;
 
   /**
    * Widget structure

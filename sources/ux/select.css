@@ -39,7 +39,7 @@
   font-style: italic;
 }
 
-/* Styling the valrep value to enclose it within parantheses. */
+/* Styling the valrep value to enclose it within parentheses. */
 .u-select .u-valrep-value::before {
   content: "(";
 }

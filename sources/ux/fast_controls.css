@@ -10,9 +10,7 @@ body {
   height: calc(100vh - 3em);
   margin: 1em;
   flex-direction: column;
-  /* justify-content: space-between; */
   flex-wrap: nowrap;
-  /* align-content: center; */
 }
 
 .u-preview {
@@ -23,7 +21,6 @@ body {
   border: 1px solid black;
   border-radius: 8px;
   flex-direction: column;
-  max-width: 80em;
   align-self: center;
 }
 
