@@ -1,0 +1,21 @@
+{
+  "name": "ux_integration_bundling",
+  "version": "1.0.0",
+  "description": " - 2024-03-28",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "",
+  "devDependencies": {
+    "css-loader": "^7.1.2",
+    "mini-css-extract-plugin": "^2.9.1",
+    "terser-webpack-plugin": "^5.3.10",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "css-minimizer-webpack-plugin": "^7.0.0"
+  }
+}
