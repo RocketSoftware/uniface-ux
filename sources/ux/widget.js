@@ -24,10 +24,7 @@ export class Widget extends Base {
   static tracing = {
     "classNames": {
       "all": false,
-      "DataGridCollection": false,
-      "DataGridColumnHeader": false,
-      "DataGridOccurrence": false,
-      "DataGridField": true
+      "MyClassName": true
     },
     "functionNames": {
       "all": false,
@@ -37,7 +34,7 @@ export class Widget extends Base {
       "onDisconnect": false,
       "mapTrigger": false,
       "dataInit": false,
-      "dataUpdate": true,
+      "dataUpdate": false,
       "dataCleanup": false,
       "validate": false,
       "showError": false,
@@ -45,7 +42,8 @@ export class Widget extends Base {
       "blockUI": false,
       "unblockUI": false,
       "getValue": false,
-      "setProperties": false
+      "setProperties": false,
+      "myMethodName": true
     },
     "elementIds": {
       "all": true,
@@ -73,8 +71,8 @@ export class Widget extends Base {
    * These static properties define the default on whether to report unsupported properties or triggers.
    * Redefine these properties on specific widgets based on demand.
    */
-  static reportUnsupportedPropertyWarnings = true;
-  static reportUnsupportedTriggerWarnings = true;
+  static reportUnsupportedPropertyWarnings = false;
+  static reportUnsupportedTriggerWarnings = false;
 
   /**
    * Holds the updated data of the widget instance.
@@ -143,6 +141,9 @@ export class Widget extends Base {
     /** @type {UValueFormatting} */
     let formattedValue = {};
     formattedValue.primaryPlainText = this.getNode(properties, "value");
+    if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
+      formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+    }
     this.staticLog("getValueFormatted", formattedValue);
     return formattedValue;
   }
@@ -194,7 +195,6 @@ export class Widget extends Base {
     let widgetClass = this.constructor;
     this.elements.widget = widgetElement;
     this.log("onConnect");
-    // if (widgetClass.name == "DataGridField") debugger;
 
     // Workaround: Until onConnect() provides the object definition as parameter.
     if (widgetElement.id && objectDefinition === undefined) {
@@ -344,7 +344,6 @@ export class Widget extends Base {
   dataUpdate(data) {
     data = this.fixData(data);
     this.log("dataUpdate", data);
-    // if (this.constructor.name == "DataGridField") debugger;
 
     // Send property data to sub-widgets.
     Object.keys(this.subWidgets).forEach((subWidgetId) => {

@@ -1259,6 +1259,51 @@ export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
   }
 
   /**
+   * This method appends the element with text or icon at the given position.
+   * @param {HTMLElement} element
+   * @param {UValueFormatting} formattedValue
+   * @param {string} position
+   */
+  appendIconOrTextAtPosition(element, formattedValue, position) {
+    const iconKey = `${position}Icon`;
+    const textKey = `${position}Text`;
+
+    if (formattedValue[iconKey]) {
+      let iconElement = document.createElement("span");
+      iconElement.classList.add(`u-${position}-icon`, "ms-Icon", `ms-Icon--${formattedValue[iconKey]}`);
+      element.appendChild(iconElement);
+    } else if (formattedValue[textKey]) {
+      let textElement = document.createElement("span");
+      textElement.classList.add(`u-${position}-text`);
+      textElement.innerText = formattedValue[textKey];
+      element.appendChild(textElement);
+    }
+  }
+
+  /**
+   * This method appends the element as innerText or innerHTML at the given position.
+   * @param {HTMLElement} textElement
+   * @param {UValueFormatting} formattedValue
+   * @param {string} position
+   */
+  appendHtmlOrPlainTextAtPosition(textElement, formattedValue, position) {
+    const plainTextKey = `${position}PlainText`;
+    const htmlTextKey = `${position}HtmlText`;
+
+    if (formattedValue[plainTextKey]) {
+      let textSpan = document.createElement("span");
+      textSpan.classList.add(`u-${position}-text`);
+      textSpan.innerText = formattedValue[plainTextKey];
+      textElement.appendChild(textSpan);
+    } else if (formattedValue[htmlTextKey]) {
+      let textSpan = document.createElement("span");
+      textSpan.classList.add(`u-${position}-text`);
+      textSpan.innerHTML = formattedValue[htmlTextKey];
+      textElement.appendChild(textSpan);
+    }
+  }
+
+  /**
    * This method refreshes the innerHTML of the element with the new HTML-formatted value.
    * @param {Widget} widgetInstance
    */
@@ -1268,17 +1313,18 @@ export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
     const orgWidgetClass = UNIFACE.ClassRegistry.get(orgWidgetClassName);
     const element = this.getElement(widgetInstance);
     element.innerHTML = "";
+    element.classList.remove("u-invalid");
     element.classList.remove("u-hidden");
+    element.classList.remove("u-read-only");
+    element.classList.remove("u-disabled");
     element.title = this.getNode(widgetInstance.data.properties, "html:title") || "";
     if (this.toBoolean(this.getNode(widgetInstance.data.properties, "html:hidden"))) {
       element.classList.add("u-hidden");
       element.title = "";
     }
-    element.classList.remove("u-read-only");
     if (this.toBoolean(this.getNode(widgetInstance.data.properties, "html:readonly"))) {
       element.classList.add("u-read-only");
     }
-    element.classList.remove("u-disabled");
     if (this.toBoolean(this.getNode(widgetInstance.data.properties, "html:disabled"))) {
       element.classList.add("u-disabled");
     }
@@ -1291,49 +1337,52 @@ export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
       // Fallback if org widget does not provide this function.
       formattedValue.primaryPlainText = this.getNode(widgetInstance.data.properties, "value");
     }
-    if (formattedValue.prefixIcon) {
-      let prefixElement = document.createElement("span");
-      prefixElement.classList.add("u-prefix-icon", "ms-Icon", `ms-Icon--${formattedValue.prefixIcon}`);
-      element.appendChild(prefixElement);
-    } else if (formattedValue.prefixText) {
-      let prefixElement = document.createElement("span");
-      prefixElement.classList.add("u-prefix-text");
-      prefixElement.innerText = formattedValue.prefixText;
-      element.appendChild(prefixElement);
-    }
+
+    this.appendIconOrTextAtPosition(element, formattedValue, "prefix");
+
+    let valueElement = document.createElement("span");
+    valueElement.classList.add("u-value");
     let textElement = document.createElement("span");
-    textElement.classList.add("u-value");
-    if (formattedValue.primaryPlainText) {
-      let primaryTextElement = document.createElement("span");
-      primaryTextElement.innerText = formattedValue.primaryPlainText;
-      textElement.appendChild(primaryTextElement);
-    } else if (formattedValue.primaryHtmlText) {
-      let primaryTextElement = document.createElement("span");
-      primaryTextElement.innerHTML = formattedValue.primaryHtmlText;
-      textElement.appendChild(primaryTextElement);
+    textElement.classList.add("u-text");
+    this.appendHtmlOrPlainTextAtPosition(textElement, formattedValue, "primary");
+    this.appendHtmlOrPlainTextAtPosition(textElement, formattedValue, "secondary");
+    valueElement.appendChild(textElement);
+
+    if (formattedValue.errorMessage) {
+      let errorElement = document.createElement("span");
+      errorElement.classList.add("u-error-icon", "ms-Icon", "ms-Icon--AlertSolid");
+      errorElement.title = formattedValue.errorMessage;
+      valueElement.appendChild(errorElement);
+      element.classList.add("u-invalid");
     }
-    if (formattedValue.secondaryPlainText) {
-      let secondaryTextElement = document.createElement("span");
-      secondaryTextElement.innerText = formattedValue.secondaryPlainText;
-      textElement.appendChild(secondaryTextElement);
-    } else if (formattedValue.secondaryHtmlText) {
-      let secondaryTextElement = document.createElement("span");
-      secondaryTextElement.innerHTML = formattedValue.secondaryHtmlText;
-      textElement.appendChild(secondaryTextElement);
-    }
-    element.appendChild(textElement);
-    if (formattedValue.suffixIcon) {
-      let suffixElement = document.createElement("span");
-      suffixElement.classList.add("u-suffix-icon", "ms-Icon", `ms-Icon--${formattedValue.suffixIcon}`);
-      element.appendChild(suffixElement);
-    } else if (formattedValue.suffixText) {
-      let suffixElement = document.createElement("span");
-      suffixElement.classList.add("u-suffix-text");
-      suffixElement.innerText = formattedValue.suffixText;
-      element.appendChild(suffixElement);
-    }
+    element.appendChild(valueElement);
+
+    this.appendIconOrTextAtPosition(element, formattedValue, "suffix");
   }
 
+}
+
+/**
+ * Worker: Use property to update (re)set class attribute.
+ */
+export class HtmlAttributeClass extends Worker {
+  constructor(widgetClass, propId, styleClassName, defaultValue) {
+    super(widgetClass);
+    this.propId = propId;
+    this.styleClassName = styleClassName;
+    this.registerSetter(widgetClass, propId, this);
+    this.registerDefaultValue(widgetClass, propId, this.toBoolean(defaultValue));
+  }
+
+  refresh(widgetInstance) {
+    this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
+    let element = this.getElement(widgetInstance);
+    if (this.toBoolean(this.getNode(widgetInstance.data.properties, this.propId))) {
+      element.classList.add(this.styleClassName);
+    } else {
+      element.classList.remove(this.styleClassName);
+    }
+  }
 }
 
 /**
