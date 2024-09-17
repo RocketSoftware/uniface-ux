@@ -5,11 +5,6 @@
 (function() {
     'use strict';
 
-    // Keep this!
-    if (umockup.testLoaded()) {
-        return;
-    }
-
     /**
      * Default timeout for waiting for DOM rendering (in milliseconds)
      */
@@ -191,15 +186,14 @@
             assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
         });
 
-        it("check tri-state, role icon and text", function() {
+        it("check tri-state, tabindex, hidden , disabled, readonly and title", function() {
             let htmlProperties = tester.defaultValues.html;
             let unifaceProperties = tester.defaultValues.uniface;
-            assert.equal(htmlProperties["role"], 'checkbox', "Default value of html:role should be checkbox");
-            assert.equal(htmlProperties["title"], '', "Default value of html:title icon should be ''");
-            assert.equal(htmlProperties["current-value"], 'on', "Default value of html:current-value should be on");
+            assert.equal(htmlProperties["tabindex"], 0, "Default value of html:tabindex should be 0");
+            assert.equal(htmlProperties["title"], undefined, "Default value of html:title should be undefined");
             assert.equal(htmlProperties["disabled"], false, "Default value of disabled  should be false");
             assert.equal(htmlProperties["readonly"], false, "Default value of readonly  should be false");
-            assert.equal(htmlProperties["current-checked"], false, "Default value of current-checked  should be false");
+            assert.equal(htmlProperties["hidden"], false, "Default value of hidden  should be false");
             assert.equal(unifaceProperties["tri-state"], false, "Default value of label-position will be above");
         });
 
