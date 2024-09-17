@@ -41,19 +41,19 @@ export class NumberField extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-number-field", "", "", [
-    new HtmlAttribute(this, "html:current-value", "currentValue", "", false),
+    new HtmlAttribute(this, undefined, "currentValue", ""),
     new HtmlAttribute(this, "value", "value", "", false, "change"),
     new HtmlAttribute(this, "html:size", "size", "", true),
-    new HtmlAttribute(this, "html:step", "step", 1, true),
-    new HtmlAttribute(this, "html:placeholder", "placeholder", undefined, true),
-    new HtmlAttribute(this, "html:title", "title", undefined, true),
-    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, undefined, true),
+    new HtmlAttribute(this, "html:step", "step", 1),
+    new HtmlAttribute(this, "html:placeholder", "placeholder", undefined),
+    new HtmlAttribute(this, "html:title", "title", undefined),
+    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline", false),
     new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
-    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false, true),
-    new HtmlAttributeBoolean(this, "html:hide-step", "hideStep", false, false),
-    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false, true),
-    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false, true),
+    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
+    new HtmlAttributeBoolean(this, "html:hide-step", "hideStep", false),
+    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
+    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new HtmlAttributeMinMax(this, "html:min", "html:max", undefined, undefined),
     new StyleClass(this, ["u-number-field", "outline"])
   ], [
@@ -68,9 +68,9 @@ export class NumberField extends Widget {
     }, false, [
       "detail"
     ])
-  ],
-  [new Trigger(this, "onchange", "change", true)]
-  );
+  ], [
+    new Trigger(this, "onchange", "change", true)
+  ]);
 
   /**
    * Private Uniface API method - onConnect.

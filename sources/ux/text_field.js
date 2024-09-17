@@ -42,13 +42,13 @@ export class TextField extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-text-field", "", "", [
-    new HtmlAttribute(this, "html:current-value", "currentValue", ""),
+    new HtmlAttribute(this, undefined, "currentValue", ""),
     new HtmlAttribute(this, "value", "value", "", false, "change"),
     new HtmlAttribute(this, "html:title", "title", undefined),
     new HtmlAttribute(this, "html:size", "size", "20", true),
     new HtmlAttribute(this, "html:pattern", "pattern", undefined),
     new HtmlAttribute(this, "html:placeholder", "placeholder", undefined),
-    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, undefined),
+    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
     new HtmlAttributeChoice(this, "html:type", "type", ["text", "email", "password", "tel", "url", "date"], "text"),
     new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),

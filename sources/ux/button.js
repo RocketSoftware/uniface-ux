@@ -181,13 +181,12 @@ export class Button extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-button", "", "", [
-    new HtmlAttribute(this, "html:current-value", "currentValue", ""),
+    new HtmlAttribute(this, undefined, "currentValue", ""),
     new HtmlAttribute(this, "html:title", "title", undefined),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "html:appearance", "appearance", ["neutral", "accent", "outline", "lightweight", "stealth"], "neutral"),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
-    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new StyleClass(this, ["u-button", "neutral"])
   ], [
     new this.SlottedButtonIcon(this, "u-icon", ".u-icon"),

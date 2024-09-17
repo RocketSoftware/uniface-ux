@@ -26,7 +26,7 @@
       return [
         {
           "element": this.elements.widget,
-          "event_name": "change",
+          "event_name": "change"
         },
       ];
     }
@@ -40,7 +40,7 @@
         return {
           "element": element,
           "event_name": "click",
-          "validate": true,
+          "validate": true
         };
       } else if (trigger_name.startsWith("check_")) {
         const element = this.createCheckbox(trigger_name);
@@ -48,7 +48,7 @@
         return {
           "element": element,
           "event_name": "change",
-          "validate": true,
+          "validate": true
         };
       } else if (trigger_name.startsWith("radio_")) {
         const element = this.createRadioGroup(trigger_name);
@@ -56,7 +56,7 @@
         return {
           "element": element,
           "event_name": "change",
-          "validate": true,
+          "validate": true
         };
       }
     }
@@ -78,6 +78,10 @@
       }
     }
 
+    dataCleanup(_dataNames) {
+      // Empty implementation.
+    }
+
     getValue() {
       let value = {};
       const controls = this.elements.widget.querySelectorAll("[u-fast-control]");
@@ -86,7 +90,7 @@
           case "checkbox":
             value[control.getAttribute("u-trigger_name")] = control.querySelector("input[type=checkbox]").checked;
             break;
-          case "radiogroup":
+          case "radiogroup": {
             let checkedElement = control.querySelector("input[type=radio]:checked");
             if (checkedElement) {
               value[control.getAttribute("u-trigger_name")] = checkedElement.value;
@@ -94,6 +98,7 @@
               value[control.getAttribute("u-trigger_name")] = "none";
             }
             break;
+          }
         }
       });
       return JSON.stringify(value);

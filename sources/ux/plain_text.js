@@ -205,7 +205,7 @@ export class PlainText extends Widget {
   // prettier-ignore
   static structure = new Element(this, "span", "", "", [
     new StyleClass(this, ["u-plain-text"]),
-    new HtmlAttribute(this, "html:title", "title", undefined, true),
+    new HtmlAttribute(this, "html:title", "title", undefined),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttribute(this, "html:slot", "slot", "")
   ], [
@@ -214,6 +214,160 @@ export class PlainText extends Widget {
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
     new SlottedElement(this, "span", "u-suffix", ".u-suffix", "", "uniface:suffix-text", "", "uniface:suffix-icon", "")
   ]);
+
+  /**
+   * Returns an array of property ids that affect the formatted value.
+   * @returns {string[]}
+   */
+  static getValueFormattedSetters() {
+    return [
+      "value",
+      "valrep",
+      "uniface:error",
+      "uniface:error-message",
+      "uniface:plaintext-format",
+      "uniface:prefix-icon",
+      "uniface:suffix-icon",
+      "uniface:prefix-text",
+      "uniface:suffix-text"
+    ];
+  }
+
+  /**
+   * Returns true if display format is related to valrep.
+   * @param {string} displayFormat
+   * @return {boolean}
+   */
+  static isValrepRelatedDisplayProperty(displayFormat) {
+    switch (displayFormat) {
+      case "valrep-html":
+      case "valrep-text":
+      case "representation-only":
+      case "value-only":
+        return true;
+    }
+    return false;
+  }
+
+  /**
+   * Returns true if display format is related to text.
+   * @param {string} displayFormat
+   * @return {boolean}
+   */
+  static isTextRelatedDisplayProperty(displayFormat) {
+    switch (displayFormat) {
+      case "multi-paragraphs":
+      case "multi-line":
+      case "single-line":
+      case "first-line":
+        return true;
+    }
+    return false;
+  }
+
+  /**
+   * Returns the value as format-object.
+   * @param {string} displayFormat
+   * @param {object} valrepItem
+   * @return {UValueFormatting}
+   */
+  static formatValrepItem(displayFormat, valrepItem) {
+    const formattedValue = {};
+
+    switch (displayFormat) {
+      case "valrep-html":
+        formattedValue.primaryHtmlText = valrepItem.representation;
+        formattedValue.secondaryPlainText = valrepItem.value;
+        break;
+      case "valrep-text":
+        formattedValue.primaryPlainText = valrepItem.representation;
+        formattedValue.secondaryPlainText = valrepItem.value;
+        break;
+      case "representation-only":
+        formattedValue.primaryHtmlText = valrepItem.representation;
+        break;
+      case "value-only":
+        formattedValue.primaryPlainText = valrepItem.value;
+        break;
+    }
+
+    return formattedValue;
+  }
+
+  /**
+   * Returns the value as format-object.
+   * @param {string} displayFormat
+   * @param {any} value
+   * @return {UValueFormatting}
+   */
+  static formatText(displayFormat, value) {
+    const formattedValue = {};
+
+    switch (displayFormat) {
+      case "multi-paragraphs":
+      case "multi-line":
+        break;
+      case "single-line":
+        if (value?.replaceAll) {
+          value = value.replaceAll(/\n/g, " ");
+        }
+        break;
+      case "first-line":
+      default:
+        if (value?.split) {
+          let arr = value.split("\n", 2);
+          if (arr.length > 1) {
+            value = `${arr[0]}...`;
+          }
+        }
+        break;
+    }
+
+    formattedValue.primaryPlainText = value;
+    return formattedValue;
+  }
+
+  /**
+   * Returns the value as format-object.
+   * @param {UData} properties
+   * @return {UValueFormatting}
+   */
+  static getValueFormatted(properties) {
+    this.staticLog("getValueFormatted");
+
+    /** @type {UValueFormatting} */
+    let formattedValue = {};
+    const displayFormat = this.getNode(properties, "uniface:plaintext-format") ||
+                          this.getNode(this.defaultValues, "uniface:plaintext-format");
+    let value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
+
+    const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
+    const valrepItem  = this.getValrepItem(valrep, value);
+
+    if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
+      formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+    }
+
+    if (this.isValrepRelatedDisplayProperty(displayFormat) && valrepItem) {
+      formattedValue = this.formatValrepItem(displayFormat, valrepItem);
+    } else if (this.isTextRelatedDisplayProperty(displayFormat)) {
+      formattedValue = this.formatText(displayFormat, value);
+    } else {
+      formattedValue.primaryPlainText = "ERROR";
+      formattedValue.secondaryPlainText = value;
+      formattedValue.errorMessage = this.formatErrorMessage;
+    }
+
+    formattedValue.prefixIcon = this.getNode(properties, "uniface:prefix-icon");
+    if (!formattedValue.prefixIcon) {
+      formattedValue.prefixText = this.getNode(properties, "uniface:prefix-text");
+    }
+    formattedValue.suffixIcon = this.getNode(properties, "uniface:suffix-icon");
+    if (!formattedValue.suffixIcon) {
+      formattedValue.suffixText = this.getNode(properties, "uniface:suffix-text");
+    }
+    return formattedValue;
+  }
 }
 
 UNIFACE.ClassRegistry.add("UX.PlainText", PlainText);
