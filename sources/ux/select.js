@@ -269,31 +269,30 @@ export class Select extends Widget {
    * Widget definition.
    */
   // prettier-ignore
-  static structure = new Element(this, "fluent-select", "", "",
-    [
-      new StyleClass(this, ["u-select", "collapsible", "outline"]),
-      new HtmlAttribute(this, "html:role", "role", "combobox"),
-      new HtmlAttribute(this, "html:current-value", "currentValue", ""),
-      new HtmlAttribute(this, "html:aria-activedescendant", "ariaActivedescendant", ""),
-      new HtmlAttribute(this, "html:aria-controls", "ariaControls", ""),
-      new HtmlAttribute(this, "html:aria-haspopup", "ariaHaspopup", "listbox"),
-      new HtmlAttributeBoolean(this, "html:aria-disabled", "ariaDisabled", false),
-      new HtmlAttributeBoolean(this, "html:aria-readonly", "ariaReadOnly", false),
-      new HtmlAttributeBoolean(this, "html:aria-expanded", "ariaExpanded", false),
-      new this.HtmlAttributeBooleanReadOnlyDisabled(this, "html:readonly", "readOnly", false, true),
-      new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-      new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-      new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
-      new HtmlAttributeChoice(this, "uniface:popup-position", "u-position", ["above", "below"], "below", true),
-      new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ".u-placeholder")
-    ],
-    [
-      new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
-      new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
-      new SlottedElementsByValRep(this, "fluent-option", "", "")
-    ],
-    [new Trigger(this, "onchange", "change", true)]
-  );
+  static structure = new Element(this, "fluent-select", "", "", [
+    new StyleClass(this, ["u-select", "collapsible", "outline"]),
+    new HtmlAttribute(this, "html:title", "title", undefined),
+    new HtmlAttribute(this, undefined, "role", "combobox"),
+    new HtmlAttribute(this, undefined, "currentValue", ""),
+    new HtmlAttribute(this, undefined, "ariaActivedescendant", ""),
+    new HtmlAttribute(this, undefined, "ariaControls", ""),
+    new HtmlAttribute(this, undefined, "ariaHaspopup", "listbox"),
+    new HtmlAttributeBoolean(this, undefined, "ariaDisabled", false),
+    new HtmlAttributeBoolean(this, undefined, "ariaReadOnly", false),
+    new HtmlAttributeBoolean(this, undefined, "ariaExpanded", false),
+    new this.HtmlAttributeBooleanReadOnlyDisabled(this, "html:readonly", "readOnly", false),
+    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
+    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
+    new HtmlAttributeChoice(this, "uniface:popup-position", "u-position", ["above", "below"], "below", true),
+    new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ".u-placeholder")
+  ], [
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
+    new SlottedElementsByValRep(this, "fluent-option", "", "")
+  ], [
+    new Trigger(this, "onchange", "change", true)
+  ]);
 
   /**
    * Creates a custom adoptedStyleSheet rules for the label element.

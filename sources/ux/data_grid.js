@@ -35,9 +35,9 @@ export class DataGridCollection extends Widget {
   // prettier-ignore
   static structure = new Worker.Element(this, "fluent-design-system-provider", "", "", [
     new Worker.StyleClass(this, ["u-datagrid-container"]),
-    new Worker.HtmlAttribute(this, "html:title", "title", undefined, true),
+    new Worker.HtmlAttribute(this, "html:title", "title", undefined),
     new Worker.HtmlAttribute(this, "html:base-layer-luminance", "baseLayerLuminance", undefined, false),
-    new Worker.HtmlAttributeBoolean(this, "html:hidden", "hidden", false, true),
+    new Worker.HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new Worker.HtmlAttributeBoolean(this, "html:disabled", "disabled", false, true)
   ], [
     new Worker.Element(this, "fluent-toolbar", "u-datagrid-header-toolbar", ".u-datagrid-header-toolbar", [

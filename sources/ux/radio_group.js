@@ -158,13 +158,12 @@ export class RadioGroup extends Widget {
   // prettier-ignore
   static structure = new Element(this, "fluent-radio-group", "", "", [
     new StyleClass(this, ["u-radio-group"]),
-    new HtmlAttribute(this, "html:title", "title", undefined, true),
-    new HtmlAttributeBoolean(this, "html:aria-disabled", "ariaDisabled", false),
-    new HtmlAttributeBoolean(this, "html:aria-readonly", "ariaReadOnly", false),
+    new HtmlAttribute(this, "html:title", "title", undefined),
+    new HtmlAttributeBoolean(this, undefined, "ariaDisabled", false),
+    new HtmlAttributeBoolean(this, undefined, "ariaReadOnly", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
-    new HtmlAttributeBoolean(this, "html:required", "required", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
     new HtmlAttributeChoice(this, "uniface:layout", "orientation", ["vertical", "horizontal"], "vertical", true),
@@ -173,7 +172,6 @@ export class RadioGroup extends Widget {
     new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
     new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label")
-
   ], [
     new Trigger(this, "onchange", "change", true)
   ]);

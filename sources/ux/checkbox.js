@@ -230,18 +230,19 @@ export class Checkbox extends Widget {
   // prettier-ignore
   static structure = new Element(this, "fluent-checkbox", "", "", [
     new StyleClass(this, ["u-checkbox"]),
-    new HtmlAttribute(this, "html:role", "role", "checkbox"),
-    new HtmlAttribute(this, "html:title", "title", ""),
-    new HtmlAttribute(this, "html:current-value", "currentValue", "on"),
+    new HtmlAttribute(this, undefined, "role", "checkbox"),
+    new HtmlAttribute(this, "html:title", "title", undefined),
+    new HtmlAttribute(this, undefined, "currentValue", "on"),
     new Dummy(this, "uniface:tri-state", false),
     new this.HTMLValueAttributeTristate(this, "value", "checked", null),
-    new HtmlAttributeBoolean(this, "html:aria-checked", "ariaChecked", false),
-    new HtmlAttributeBoolean(this, "html:aria-required", "ariaRequired", false),
-    new HtmlAttributeBoolean(this, "html:aria-disabled", "ariaDisabled", false),
+    new HtmlAttributeBoolean(this, undefined, "ariaChecked", false),
+    new HtmlAttributeBoolean(this, undefined, "ariaRequired", false),
+    new HtmlAttributeBoolean(this, undefined, "ariaDisabled", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
+    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeBoolean(this, "html:current-checked", "currentChecked", false)
+    new HtmlAttributeBoolean(this, undefined, "currentChecked", false)
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "")
