@@ -4,13 +4,7 @@
 // https://gitlab.com/Uniface/sources/harness-project/-/tree/UNI-39226_automated_mocha_tests_uxTextArea?ref_type=heads
 
 (function () {
-    'use strict';
-
-    // Keep this!
-    if (umockup.testLoaded()) {
-        return;
-    }
-
+    
     /**
      * Default timeout for waiting for DOM rendering (in milliseconds)
      */
