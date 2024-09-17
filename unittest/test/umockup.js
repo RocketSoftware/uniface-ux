@@ -407,7 +407,7 @@
                 Object.keys(data).forEach((key) => {
                     if (!this.widgetProperties[key])
                         this.widgetProperties[key] = new Set();
-                    data[key] !== null && Object.keys(data[key]).forEach((childKey) => {
+                    data[key] !== null && data[key] !== undefined && Object.keys(data[key]).forEach((childKey) => {
                         this.widgetProperties[key].add(childKey);
                     });
                 });
