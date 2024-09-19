@@ -4,15 +4,15 @@
  * Load fluentUI web components centrally in this JS file.
  * 
  * Uncomment one of the following locations to import FluentUI from.
- * During bundling process we need a local JS file.
+ * During the bundling process a local JS file needs to be used.
  */
 
 // next line for local or bundling process
-// import "../fluentui/js/web-components.min.js";
+import "../fluentui/js/web-components.min.js";
 // next line when using CDN location (latest version)
 // import "https://unpkg.com/@fluentui/web-components";
 // next line when using CDN location (fixed to version 2.6.1)
-import "https://unpkg.com/@fluentui/web-components@2.6.1/dist/web-components.min.js";
+// import "https://unpkg.com/@fluentui/web-components@2.6.1/dist/web-components.min.js";
 
 // The UX field level widgets to include
 import "./button.js";

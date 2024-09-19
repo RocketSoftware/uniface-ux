@@ -193,7 +193,7 @@
       tester.dataUpdate({
         value: buttonText,
         uniface: {
-          icon: "home"
+          icon: "Home"
         }
       });
       setTimeout(function () {
@@ -415,7 +415,7 @@
         data: {
           properties: {
             uniface: {
-              "icon": "home",
+              "icon": "Home",
             },
             value: ""
           }
