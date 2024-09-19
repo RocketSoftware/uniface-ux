@@ -147,7 +147,9 @@ import { Widget } from "../../sources/ux/widget.js";
                 },
                 "icon": {
                     "this-is-bad-data": {
-                        "baddata": "bad"
+                        uniface: {
+                            "baddata": "bad"
+                        }
                     }
                 }
             }
