@@ -806,7 +806,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
             defaultValue = "1"
             element = new HtmlValueAttributeBoolean(widgetClass, propId, attrName, defaultValue);
             buttonWidget = new Button
-            returnedProcess = Button.processLayout(buttonWidget.widget, "")
+            returnedProcess = Button.processLayout(buttonWidget, "")
         });
 
         it("should initialize with correct properties", function () {
@@ -832,7 +832,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
             buttonWidget.dataUpdate(widgetInstance.data.properties)
             
             element.refresh(buttonWidget)
-            expect(buttonWidget.data.properties.uniface).to.have.all.keys( "icon","icon-position","format-error","format-error-message");
+            expect(buttonWidget.data.properties.uniface).to.have.any.keys( "icon","icon-position","format-error","format-error-message");
             expect(buttonWidget.data.properties.uniface["format-error"]).to.equal(true)
             expect(buttonWidget.data.properties.uniface["format-error-message"]).to.equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.")            
         });

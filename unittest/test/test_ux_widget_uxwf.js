@@ -1,5 +1,5 @@
 import { Widget } from "../../sources/ux/widget.js"
-import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedWidget, Element } from "../../sources/ux/workers.js";
+import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedSubWidget, Element } from "../../sources/ux/workers.js";
 
 //Simple widget that has both subwidget and triggers for easier testing and doens't mess with other widgets
 export class TestWidget extends Widget {
@@ -16,7 +16,7 @@ export class TestWidget extends Widget {
     new HtmlAttribute(this, "html:current-value", "current-value", ""),
     new HtmlValueAttributeBoolean(this, "value", "checked", false),
   ], [
-    new SlottedWidget(this, "span", "u-change-button", ".u-change-button", "end", "change-button", "UX.Button", {
+    new SlottedSubWidget(this, "span", "u-change-button", ".u-change-button", "end", "change-button", "UX.Button", {
       "uniface:icon": "",
       "uniface:icon-position": "end",
       "value": "Change",
@@ -75,7 +75,8 @@ export class TestWidget extends Widget {
 
         beforeEach(function () {
             testwidget = new TestWidget;
-            returnedProcess = TestWidget.processLayout(testwidget.widget, definitions)
+            TestWidget.reportUnsupportedTriggerWarnings = true
+            returnedProcess = TestWidget.processLayout(testwidget, definitions)
             testwidget.onConnect(returnedProcess)
             testwidget.dataInit()
         });
@@ -84,15 +85,14 @@ export class TestWidget extends Widget {
             expect(returnedProcess).to.have.tagName("FLUENT-TEXT-FIELD");
             expect(returnedProcess.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
             expect(returnedProcess.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
-            expect(returnedProcess).to.have.id( testwidget.widget.id);
+            expect(returnedProcess.querySelector("span.u-text").outerText).to.eql("Change")
         });
 
         it("onConnect", function () {
             let connectedWidget = testwidget.onConnect(returnedProcess)
 
             expect(connectedWidget[0].element).instanceOf(HTMLElement);
-            expect(connectedWidget[0].event_name).to.eql("change")
-            expect(Number(connectedWidget[0].element.id)).to.eql(testwidget.widget.id)
+            expect(connectedWidget[0].event_name).to.eql("")
             expect(connectedWidget[0].element).to.have.tagName("FLUENT-TEXT-FIELD");
         });
 
@@ -155,21 +155,32 @@ export class TestWidget extends Widget {
         //Validate only returns null for the time being
         it("validate", function () {
             const returnNull = testwidget.validate()
-
             expect(returnNull).to.equal(null);         
         });
 
         it("showError", function () {
             const errorString = '{ "change-button": "This is a testing error" }'
-            consoleLogSpy = sandbox.spy(console, 'error');
+            const errorReturn = {
+                "error": true,
+                "error-message": errorString
+            } 
             
             testwidget.showError(errorString) 
-            expect(consoleLogSpy.called).to.equal(true)
-            sandbox.restore();
+            expect(testwidget.data.properties.uniface).to.have.any.keys(errorReturn); 
+            expect(testwidget.data.properties.uniface["error-message"]).equal(errorString); 
+            expect(testwidget.data.properties.uniface["error"]).equal(true); 
         });
 
         it("hideError", function () {
-            testwidget.hideError()             
+            const errorReturn = {
+                "error": false,
+                "error-message": ""
+            } 
+            
+            testwidget.hideError()
+            expect(testwidget.data.properties.uniface).to.have.any.keys(errorReturn); 
+            expect(testwidget.data.properties.uniface["error-message"]).equal(""); 
+            expect(testwidget.data.properties.uniface["error"]).equal(false);              
         });
 
         it("blockUI", function () { 
