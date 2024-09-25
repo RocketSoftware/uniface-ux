@@ -12,7 +12,6 @@
 ## Files included
 
 - README.md
-- sources/ux-old (widget sources - before refactoring)
 - sources/ux (widget sources - refactored)
 - unittest/node_modules/chai
 - unittest/node_modules/chai/chai.js
