@@ -12,7 +12,7 @@
 ## Files included
 
 - README.md
-- sources/ux (widget sources - refactored)
+- sources/ux (widget sources)
 - unittest/node_modules/chai
 - unittest/node_modules/chai/chai.js
 - unittest/node_modules/chai/LICENSE
