@@ -8,7 +8,7 @@
   'use strict';
 
   // Keep this!
-  if (umockup && umockup.testLoaded()) {
+  if (umockup) {
     return;
   }
 
