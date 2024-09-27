@@ -147,7 +147,6 @@
     const widgetId = "ux-widget";
     let widgetName;
     let scriptName;
-    let testLoaded = false;
 
     let _debug = false;
 
@@ -305,12 +304,6 @@
 
         setDefaultIdleTime : function (idolTime) {
             defaultIdleTime = idolTime;
-        },
-
-        testLoaded : function () {
-            const b = testLoaded;
-            testLoaded = true;
-            return b;
         },
         
         asyncRun : asyncRun,
