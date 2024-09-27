@@ -4,11 +4,6 @@
 (function () {
     'use strict';
 
-    // Keep this!
-    if (umockup.testLoaded()) {
-        return;
-    }
-
     const assert = chai.assert;
     const expect = chai.expect;
 
