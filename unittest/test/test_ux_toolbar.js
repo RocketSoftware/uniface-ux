@@ -7,11 +7,6 @@
 (function () {
   'use strict';
 
-  // Keep this!
-  if (umockup) {
-    return;
-  }
-
   /**
    * Default timeout for waiting for DOM rendering (in milliseconds)
    */
