@@ -1,9 +1,9 @@
-import { Button } from "../../sources/ux/button.js";
-import { Widget } from "../../sources/ux/widget.js";
+import { Button } from "../../src/ux/button.js";
+import { Widget } from "../../src/ux/widget.js";
 import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget, 
     SubWidgetsByProperty , BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean ,
     HtmlValueAttributeBoolean , HtmlAttributeMinMaxLength , StyleProperty , Worker
- } from "../../sources/ux/workers.js"
+ } from "../../src/ux/workers.js"
 
 
 (function () {

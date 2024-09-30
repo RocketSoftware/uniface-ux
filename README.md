@@ -16,7 +16,6 @@ ux-widgets/
   src/                      // source folder
     fluentui/
     ux/
-    ux-old/   
   test/                     // test folder
     helper/
       umockup.js            // test mockup and helper module
