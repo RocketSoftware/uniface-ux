@@ -1,34 +1,52 @@
 # UX widget sources & tests
-- by Ming
-- 2024-03-28
 
 ## Configuration with Tomcat
 
-- Clone this repository to your web server as a WebApp named uxunittest
-- Goto inside the WebApp uxunittest
+- Clone this repository to your web server as a WebApp named ux-widgets
+- Goto inside the WebApp ux-widgets
 - Start your Uniface Tomcat
-- Open a browser with URL: http://localhost:8080/uxunittest/unitest/test/index.html
+- Open a browser with URL: http://localhost:8080/ux-widgets/test/index.html
 
-## Files included
+## Folder structure
 
-- README.md
-- sources/ux (widget sources)
-- unittest/node_modules/chai
-- unittest/node_modules/chai/chai.js
-- unittest/node_modules/chai/LICENSE
-- unittest/node_modules/chai-dom
-- unittest/node_modules/chai-dom/chai-dom.js
-- unittest/node_modules/chai-dom/LICENSE
-- unittest/node_modules/mocha
-- unittest/node_modules/mocha/LICENSE
-- unittest/node_modules/mocha/mocha.css
-- unittest/node_modules/mocha/mocha.js
-- unittest/test/test_ux_button.js
-- unittest/test/test_ux_template.js
-- unittest/test/test_ux_widget.html
-- unittest/test/umockup.js
+```
+ux-widgets/
+  (dist/)                   // working folder for bundle build, ignored
+  (node_modules/)           // working folder for npm packages, ignored
+  src/                      // source folder
+    fluentui/
+    ux/
+    ux-old/   
+  test/                     // test folder
+    helper/
+      umockup.js            // test mockup and helper module
+    modules/                // third party modules used by mocha framework
+      chai/
+      chai-dom/
+      mocha/
+      sinon/
+    ux/                     // including the test modules for individual widgets
+      test_ux_*.js
+    index.html              // index page of tests
+    test_ux_widgets.html    // test page for ux widget
+  testAutomation/           // Prototype of test automation by playwright
+    pageobjects/
+    tests/
+  README.md                 // this file
+  (package-lock.json)       // working file for npm use, ignored
+  package.json              // npm configuration file
+  webpack.config.js         // webpack configuration file
+```
 
-# Template and Guideline
+## How to build bundles
+
+- Open a command prompt in top folder ux-widgets/;
+- Run command: npm install
+  This will install all nessesary npm packages;
+- Run command: npm run build
+  This will build the bundles in dist/ folder.
+  
+## Template and Guideline
 
 See wiki page:
 - UX Unit Test Templates/Guidelines - Uniface UX-Integration - Rocket Software Wiki
