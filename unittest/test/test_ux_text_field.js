@@ -79,7 +79,7 @@
                 const widget = tester.construct();
                 assert(widget, "widget is not defined!");
                 const widgetClass = tester.getWidgetClass();
-                assert(widgetClass.defaultProperties.classes['u-text-field'], "Class is not defined");
+                assert(widgetClass.defaultValues.classes['u-text-field'], "Class is not defined");
             } catch (e) {
                 assert(false, "Failed to construct new widget, exception " + e);
             }
