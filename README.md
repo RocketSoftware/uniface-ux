@@ -41,9 +41,9 @@ ux-widgets/
 ## How to build bundles
 
 - Open a command prompt in top folder ux-widgets/;
-- Run command: npm install
+- Run command: ```npm install```,
   This will install all nessesary npm packages;
-- Run command: npm run build
+- Run command: ```npm run build```,
   This will build the bundles in dist/ folder.
   
 ## Template and Guideline
