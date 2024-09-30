@@ -371,18 +371,6 @@
                 return this.dataInit();
             }
 
-            getDefaultProperties() {
-                if (!this.defaultProperties) {
-                    const widgetClass = this.getWidgetClass();
-                    const _widget = new widgetClass();
-                    this.defaultProperties = widgetClass.defaultProperties;
-                    if (!this.defaultProperties) {
-                        this.defaultProperties = {};
-                    }
-                }
-                return this.defaultProperties;
-            }
-
             getDefaultValues() {
                 if (!this.defaultValues) {
                     const widgetClass = this.getWidgetClass();
