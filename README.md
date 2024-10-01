@@ -32,7 +32,7 @@ ux-widgets/
     pageobjects/
     tests/
   README.md                 // this file
-  (package-lock.json)       // working file for npm use, ignored
+  package-lock.json         // npm lock file
   package.json              // npm configuration file
   webpack.config.js         // webpack configuration file
 ```

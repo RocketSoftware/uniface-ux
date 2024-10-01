@@ -161,7 +161,7 @@
     });
 
     describe("dataInit", function () {
-        const defaultProperties = tester.getDefaultProperties();
+        const defaultValues = tester.getDefaultValues();
         const classes = defaultProperties.classes;
         var element;
 
