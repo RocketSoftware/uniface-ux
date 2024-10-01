@@ -5,20 +5,20 @@
     <title>UX Widget Test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <script type="text/javascript" src="umockup.js"></script>
+    <script type="text/javascript" src="helper/umockup.js"></script>
 
     <!-- Load all related JS files to import FluentUI & UX widgets -->
-    <script type="module" src="../../sources/ux/loader.js"></script>
+    <script type="module" src="../src/ux/loader.js"></script>
 
     <!-- Load all related CSS files -->
-    <link type="text/css" rel="stylesheet" href="../../sources/ux/loader.css"/>
+    <link type="text/css" rel="stylesheet" href="../src/ux/loader.css"/>
 
     <!-- Mocha related -->
-    <link type="text/css" rel="stylesheet" href="../node_modules/mocha/mocha.css" />
-    <script type="text/javascript" src="../node_modules/mocha/mocha.js"></script>
-    <script type="text/javascript" src="../node_modules/chai/chai.js"></script>
-    <script type="text/javascript" src="../node_modules/chai-dom/chai-dom.js"></script>
-    <script type="text/javascript" src="../node_modules/sinon/pkg/sinon.js"></script>
+    <link type="text/css" rel="stylesheet" href="modules/mocha/mocha.css" />
+    <script type="text/javascript" src="modules/mocha/mocha.js"></script>
+    <script type="text/javascript" src="modules/chai/chai.js"></script>
+    <script type="text/javascript" src="modules/chai-dom/chai-dom.js"></script>
+    <script type="text/javascript" src="modules/sinon/pkg/sinon.js"></script>
 
     <script class="mocha-init">
       mocha.setup('bdd');
@@ -56,7 +56,7 @@
       // dynamically load test script
       el = document.getElementById("test-script");
       if (scriptName) {
-        el.src = scriptName;
+        el.src = "ux/" + scriptName;
         // this block of code ensures that the end of file is reached and add an element to asset the number of test cases
         el.onload = function () {
           mocha.run().on('end', function () {

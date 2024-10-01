@@ -1,5 +1,5 @@
-import { Widget } from "../../sources/ux/widget.js"
-import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedSubWidget, Element } from "../../sources/ux/workers.js";
+import { Widget } from "../../src/ux/widget.js"
+import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedSubWidget, Element } from "../../src/ux/workers.js";
 
 //Simple widget that has both subwidget and triggers for easier testing and doens't mess with other widgets
 export class TestWidget extends Widget {

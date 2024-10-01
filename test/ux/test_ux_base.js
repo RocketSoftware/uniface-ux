@@ -1,7 +1,7 @@
-import { Button } from "../../sources/ux/button.js";
-import { Base } from "../../sources/ux/base.js"
-import { Worker } from "../../sources/ux/workers.js";
-import { Widget } from "../../sources/ux/widget.js";
+import { Button } from "../../src/ux/button.js";
+import { Base } from "../../src/ux/base.js"
+import { Worker } from "../../src/ux/workers.js";
+import { Widget } from "../../src/ux/widget.js";
 
 (function () {
     'use strict';

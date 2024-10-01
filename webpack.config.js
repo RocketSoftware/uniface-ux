@@ -10,7 +10,7 @@ module.exports = {
   mode: 'none',
   // other configuration options...
   devtool: "source-map",
-  context: path.resolve(__dirname, 'sources','ux'),
+  context: path.resolve(__dirname, 'src','ux'),
   entry: ["./loader.js", "./loader.css"],
   output: {
     path: path.resolve(__dirname, "dist"),
