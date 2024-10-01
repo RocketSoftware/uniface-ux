@@ -1,8 +1,3 @@
-/* eslint-disable no-undef */
-// Source code for refactored radiogroup in git lab repo
-// Branch Name: UNI-38464-refactor-uxradiogroup
-// https://gitlab.com/Uniface/sources/harness-project/-/tree/feature/UNI-38464-refactor-ux-radiogroup?ref_type=heads
-
 (function () {
   'use strict';
 

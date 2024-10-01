@@ -1,7 +1,3 @@
-// Source code for refactored switch in git lab repo
-// Branch Name: UNI-36667-refactor-uxswitch-demo-workbench
-// https://gitlab.com/Uniface/sources/harness-project/-/tree/UNI-36667-refactor-uxswitch-demo-workbench?ref_type=heads
-
 (function () {
     'use strict';
 
