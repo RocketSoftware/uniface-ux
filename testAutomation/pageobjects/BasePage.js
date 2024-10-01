@@ -5,7 +5,7 @@ class BasePage{
 
     async open()
     {
-        await this.page.goto('http://localhost:8080/uniface/unittest/test/index.html');
+        await this.page.goto('http://localhost:8080/ux-widgets/test/index.html');
     }
 
     async verifyPageTitle(expectedTitle) {
