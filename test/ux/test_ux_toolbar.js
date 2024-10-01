@@ -356,7 +356,7 @@
     });
 
     it("should have default properties added", function () {
-      expect(toolbar.defaultProperties).to.deep.equal(MOCK_TOOLBAR_DEFAULT_PROPERTIES);
+      expect(toolbar.defaultValues).to.deep.equal(MOCK_TOOLBAR_DEFAULT_PROPERTIES);
     });
   });
 
@@ -391,11 +391,11 @@
       toolbarWidget.onConnect(widgetElement);
       toolbarWidget.dataInit();
 
-      for (let key in toolbar.defaultProperties.html) {
-        expect(widgetElement.getAttribute(key)).to.equal(toolbar.defaultProperties.html[key]);
+      for (let key in toolbar.defaultValues.html) {
+        expect(widgetElement.getAttribute(key)).to.equal(toolbar.defaultValues.html[key]);
       }
 
-      for (let key in toolbar.defaultProperties.classes) {
+      for (let key in toolbar.defaultValues.classes) {
         expect(widgetElement.classList.contains(key)).to.be.true;
       }
     });

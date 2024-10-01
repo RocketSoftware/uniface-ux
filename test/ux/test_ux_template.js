@@ -97,7 +97,7 @@
                 const widget = tester.construct();
                 assert(widget, "widget is not defined!");
                 const widgetClass = tester.getWidgetClass();
-                //assert(widgetClass.defaultProperties, "widgetClass.defaultProperties is not defined!");
+                //assert(widgetClass.defaultValues, "widgetClass.defaultValues is not defined!");
             } catch (e) {
                 assert(false, "Failed to construct new widget, exception " + e);
             }
@@ -114,7 +114,7 @@
 
     describe("dataInit", function () {
         const defaultValues = tester.getDefaultValues();
-        const classes = defaultProperties.classes;
+        const classes = defaultValues.classes;
         var element;
 
         beforeEach(function () {

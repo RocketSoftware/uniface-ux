@@ -162,7 +162,7 @@
 
     describe("dataInit", function () {
         const defaultValues = tester.getDefaultValues();
-        const classes = defaultProperties.classes;
+        const classes = defaultValues.classes;
         var element;
 
         beforeEach(function () {

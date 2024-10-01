@@ -348,7 +348,7 @@
     });
 
     it("should have default properties added", function () {
-      expect(controlbar.defaultProperties).to.deep.equal(MOCK_CONTROLBAR_DEFAULT_PROPERTIES);
+      expect(controlbar.defaultValues).to.deep.equal(MOCK_CONTROLBAR_DEFAULT_PROPERTIES);
     });
   });
 
@@ -383,7 +383,7 @@
       controlbarWidget.onConnect(widgetElement);
       controlbarWidget.dataInit();
 
-      for (let key in controlbar.defaultProperties.classes) {
+      for (let key in controlbar.defaultValues.classes) {
         expect(widgetElement.classList.contains(key)).to.be.true;
       }
     });
