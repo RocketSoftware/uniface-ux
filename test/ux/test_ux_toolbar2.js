@@ -9,7 +9,7 @@
 
     const asyncRun = umockup.asyncRun;
 
-    // for unit test
+    // for widget test
     const tester = new umockup.WidgetTester();
     const widgetId = tester.widgetId;
     const widgetName = tester.widgetName;
