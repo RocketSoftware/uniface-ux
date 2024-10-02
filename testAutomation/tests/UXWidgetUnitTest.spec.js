@@ -24,7 +24,7 @@ for (const browserType of browsers) {
             await browser.close();    
         });
     
-        test('UX Widget Button Unit Test', async () => {
+        test('UX widget tests overview', async () => {
             indexPage = new IndexPage(page);
             const pagePromise = context.waitForEvent('page')
             await indexPage.clickButtonWidgetLink();

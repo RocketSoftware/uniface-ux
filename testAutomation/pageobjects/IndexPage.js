@@ -18,7 +18,7 @@ class IndexPage extends BasePage {
 }
 
 //Constant Variables
-static indexPageTitle = 'UX widgets unit tests overview';
+static indexPageTitle = 'UX widget tests overview';
 
 async clickButtonWidgetLink()
 {   

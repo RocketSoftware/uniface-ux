@@ -13,15 +13,15 @@ class HomePage extends BasePage
 }
 
 //Constant Variables
-static expectedUXButtonTitle = 'Unit test - UX.Button';
-static expectedUXCheckboxTitle = 'Unit test - UX.Checkbox';
-static expectedUXWidgetNumberField = 'Unit test - UX.NumberField';
-static expectedPlainTextTitle = 'Unit test - UX.PlainText';
-static expectedSelectTitle = 'Unit test - UX.Select';
-static expectedRadioGroupTitle = 'Unit test - UX.RadioGroup';
-static expectedSwitchTitle = 'Unit test - UX.Switch';
-static expectedTextAreaTitle = 'Unit test - UX.TextArea';
-static expectedTextFieldTitle = 'Unit test - UX.TextField';
+static expectedUXButtonTitle = 'Widget test - UX.Button - test_ux_button.js';
+static expectedUXCheckboxTitle = 'Widget test - UX.Checkbox - test_ux_checkbox.js';
+static expectedUXWidgetNumberField = 'Widget test - UX.NumberField - test_ux_number_field.js';
+static expectedPlainTextTitle = 'Widget test - UX.PlainText - test_ux_plain_text.js';
+static expectedSelectTitle = 'Widget test - UX.Select - test_ux_select.js';
+static expectedRadioGroupTitle = 'Widget test - UX.RadioGroup - test_ux_radio_group.js';
+static expectedSwitchTitle = 'Widget test - UX.Switch - test_ux_switch.js';
+static expectedTextAreaTitle = 'Widget test - UX.TextArea - test_ux_text_area.js';
+static expectedTextFieldTitle = 'Widget test - UX.TextField - test_ux_text_field.js';
 
 async getFailureCount()
 {   
