@@ -1,8 +1,3 @@
-/* global UNIFACE uniface UX _uf */
-// Source code for refactored numberfield in git lab repo
-// Branch Name: UNI-38933-automated-mocha-tests-uxnumberfield
-// https://gitlab.com/Uniface/sources/harness-project/-/tree/UNI-38933-automated-mocha-tests-uxnumberfield?ref_type=heads
-
 (function () {
     'use strict';
 

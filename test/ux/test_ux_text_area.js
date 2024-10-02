@@ -1,8 +1,3 @@
-/* global UNIFACE uniface UX _uf */
-// Source code for refactored textarea in git lab repo
-// Branch Name: UNI-39226_automated_mocha_tests_uxTextArea
-// https://gitlab.com/Uniface/sources/harness-project/-/tree/UNI-39226_automated_mocha_tests_uxTextArea?ref_type=heads
-
 (function () {
     
     /**

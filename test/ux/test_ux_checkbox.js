@@ -1,6 +1,4 @@
 /* eslint-disable no-undef */
-/* global UNIFACE uniface UX _uf */
-// Source code for refactored checkbox in git lab repo
 
 (function() {
     'use strict';

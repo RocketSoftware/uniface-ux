@@ -1,7 +1,4 @@
 /* eslint-disable no-undef */
-// Source code for refactored button in git lab repo
-// Branch Name: UNI-37232-refactor-uxbutton
-// https://gitlab.com/Uniface/sources/harness-project/-/tree/UNI-37232-refactor-uxbutton?ref_type=heads
 
 (function () {
   'use strict';
