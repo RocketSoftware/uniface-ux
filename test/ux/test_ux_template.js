@@ -20,7 +20,7 @@
     });
     */
 
-    // for unit test
+    // for widget test
     const tester = new umockup.WidgetTester();
     const widgetId = tester.widgetId;
     const widgetName = tester.widgetName;
@@ -28,11 +28,11 @@
     describe("Uniface Mockup tests", function () {
 
         /**
-         * Only for template. Remove this test case from your widget unit test.
+         * Only for template. Remove this test case from your widget test.
          */
-        it("unit test script check", function () {
+        it("widget test script check", function () {
             assert(false, `The template file 'test_ux_template.js' is using.                 
-                Hint: if you do not have the unit test script '${umockup.getTestJsName()}', 
+                Hint: if you do not have the widget test script '${umockup.getTestJsName()}', 
                       create it by copying 'test_ux_template.js,
                       and remove this test case.'.
             \n`);

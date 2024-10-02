@@ -48,5 +48,5 @@ ux-widgets/
 ## Template and Guideline
 
 See wiki page:
-- UX Unit Test Templates/Guidelines - Uniface UX-Integration - Rocket Software Wiki
+- UX Widget Test Templates/Guidelines - Uniface UX-Integration - Rocket Software Wiki
   https://wiki.rocketsoftware.com/pages/viewpage.action?pageId=458704944

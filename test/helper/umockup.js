@@ -384,7 +384,7 @@
             }
 
             dataUpdate(data) {
-                // This is to remember the updated value from unit test so that this.widgetProperties can be used in dataCleanup()
+                // This is to remember the updated value from widget test so that this.widgetProperties can be used in dataCleanup()
                 Object.keys(data).forEach((key) => {
                     if (!this.widgetProperties[key])
                         this.widgetProperties[key] = new Set();

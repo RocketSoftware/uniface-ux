@@ -1,10 +1,10 @@
-## Automation for UX-Widget Unit Tests
+## Automation for UX-Widget Tests
 - by Sparsh Gupta
 - 2024-06-27
 
 ## Introduction
 
-This repository contains a suite of automated tests for automation of uniface ux-widgets unit tests using Playwright, a Node.js library to automate Chromium, Firefox, and WebKit with a single API. Playwright is designed to enable reliable end-to-end testing and is useful for automating web interactions.
+This repository contains a suite of automated tests for automation of uniface ux-widgets tests using Playwright, a Node.js library to automate Chromium, Firefox, and WebKit with a single API. Playwright is designed to enable reliable end-to-end testing and is useful for automating web interactions.
 
 ## Table of Contents
 
@@ -37,11 +37,11 @@ To set up the project locally, follow these steps:
 
 1. Clone the repository:
    
-    git clone https://gitlab.com/Uniface/test/ux-integration/uxunittest.git
+    git clone git@gitlab.com:Uniface/sources/ux-widgets.git
    
 2. Navigate to the project directory:
     
-    cd unittestAutomation
+    cd testAutomation
     
 3. Install the dependencies:
     
