@@ -5,7 +5,7 @@ class BasePage{
 
     async open()
     {
-        await this.page.goto('http://localhost:8080/ux-widgets/test/index.html');
+        await this.page.goto('./index.html');  // relative to use.baseURL
     }
 
     async verifyPageTitle(expectedTitle) {

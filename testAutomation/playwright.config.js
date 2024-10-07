@@ -11,6 +11,7 @@ module.exports = {
   reporter: [['html'], ['allure-playwright']],
   use: {
     browserName: 'chromium',
+    baseURL: process.env.UX_WIDGETS_URL || 'http://localhost:8080/ux-widgets/test/',
     headless: false,
     screenshot: 'on',
     video: "on",

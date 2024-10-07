@@ -51,9 +51,13 @@ To set up the project locally, follow these steps:
 
     npx playwright install
     
-5. Start your Tomcat server with ux-widgets webapp deployed. The URL of index.page is
+5. Start your Tomcat server with ux-widgets webapp deployed. By default, the URL of index.page is
    hard-corded in testAutomation\pageobjects\BasePage.js as:
      http://localhost:8080/ux-widgets/test/index.html
+
+This can be customized locally by environment variable:
+  set UX_WIDGETS_URL=your_local_url_of_index.html
+
     
 6. Running Tests
 
