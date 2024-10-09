@@ -33,17 +33,23 @@ ux-widgets/
     tests/
   README.md                 // this file
   package-lock.json         // npm lock file
-  package.json              // npm configuration file
-  webpack.config.js         // webpack configuration file
+  package.json              // npm configuration
+  webpack.common.js         // webpack common configuration
+  webpack.dev.js            // webpack development configuration
+  webpack.prod.js           // webpack production configuration
 ```
 
 ## How to build bundles
 
-- Open a command prompt in top folder ux-widgets/;
+- Open a command prompt in top folder ux-widgets;
 - Run command: ```npm install```,
   This will install all nessesary npm packages;
 - Run command: ```npm run build```,
-  This will build the bundles in dist/ folder.
+  This will build the bundles for production mode in dist folder;
+- Run command: ```npm run build:dev```,
+  This will build the bundles for development mode, so with source map;
+- Run command: ```npm run watch```,
+  This will build the bundles for development and watch for source changes.
   
 ## Template and Guideline
 
