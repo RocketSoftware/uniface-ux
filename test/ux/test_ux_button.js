@@ -161,6 +161,7 @@
   });
 
   describe("Data Update", function () {
+		const asyncRun = umockup.asyncRun;
     let element;
     before(function () {
       tester.createWidget();
@@ -168,95 +169,109 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("update only button text", function (done) {
+    it("update only button text", function () {
       let buttonText = 'Button';
-      tester.dataUpdate({
-        value: buttonText
+      const p = asyncRun(function() {
+
+        tester.dataUpdate({
+          value: buttonText
+        });
       });
-      setTimeout(function () {
+
+    return p.then(function () { // check result
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(element.querySelector('span.u-icon').hasAttribute("hidden"), "Icon Element should be hidden");
-        done();
-      }, defaultAsyncTimeout);
-    });
-    it("update  button text , icon and  icon-position to default", function (done) {
-      let buttonText = 'Button';
-      tester.dataUpdate({
-        value: buttonText,
-        uniface: {
-          icon: "Home"
-        }
       });
-      setTimeout(function () {
+    });
+    it("update  button text , icon and  icon-position to default", function () {
+      let buttonText = 'Button';
+      const p = asyncRun(function() {
+
+        tester.dataUpdate({
+          value: buttonText,
+          uniface: {
+            icon: "Home"
+          }
+        });
+      });
+
+      return p.then(function () { // check result
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
         expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(tester.defaultValues.uniface["icon-position"]);
-        done();
-      }, defaultAsyncTimeout);
+      });
     });
 
-    it("update icon-position to end", function (done) {
+    it("update icon-position to end", function () {
       let buttonText = 'Button';
       let iconPosition = "end";
-      tester.dataUpdate({
-        uniface: {
-          "icon-position": iconPosition
-        },
-        value: buttonText,
+      const p = asyncRun(function() {
+        tester.dataUpdate({
+          uniface: {
+            "icon-position": iconPosition
+          },
+          value: buttonText,
+        });
       });
-      setTimeout(function () {
+
+      return p.then(function () { // check result
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
         expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(iconPosition);
-        done();
-      }, defaultAsyncTimeout);
+      });
     });
 
-    it("update icon only button", function (done) {
+    it("update icon only button", function () {
       let buttonText = '';
-      tester.dataUpdate({
-        value: buttonText
+      const p = asyncRun(function() {
+        tester.dataUpdate({
+          value: buttonText
+        });
       });
-      setTimeout(function () {
+
+      return p.then(function () { // check result
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
         expect(element.querySelector('span.u-icon').getAttribute("slot")).equal("");
-        done();
-      }, defaultAsyncTimeout);
+      });
     });
 
-    it("update button text and icon will move to last selected slot", function (done) {
+    it("update button text and icon will move to last selected slot", function () {
       let buttonText = 'Button';
-      tester.dataUpdate({
-        value: buttonText
+      const p = asyncRun(function() {
+        tester.dataUpdate({
+          value: buttonText
+        });
       });
-      setTimeout(function () {
+
+      return p.then(function () { // check result
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
         expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(tester.widget.data.properties.uniface["icon-position"]);
-        done();
-      }, defaultAsyncTimeout);
+      });
     });
 
-    it("if icon-position is other than start and end then it should allot default slot to icon", function (done) {
+    it("if icon-position is other than start and end then it should allot default slot to icon", function () {
       let buttonText = 'Button';
-      tester.dataUpdate({
-        uniface: {
-          "icon-position": "stat"
-        },
+      const p = asyncRun(function() {
+        tester.dataUpdate({
+          uniface: {
+            "icon-position": "stat"
+          },
+        });
       });
-      setTimeout(function () {
+
+      return p.then(function () { // check result
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
         expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(tester.defaultValues.uniface["icon-position"]);
-        done();
-      }, defaultAsyncTimeout);
+      });
     });
 
   });
