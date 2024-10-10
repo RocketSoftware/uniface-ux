@@ -208,13 +208,13 @@
         });
       });
 
-    describe("dataUpdate   ", function () {
+    describe("dataUpdate", function () {
         let widget;
         before(function () {
             widget = tester.createWidget();
         });
 
-        it("show apply button  ", function () {
+        it("show apply button", function () {
             let showApplyButton = true;
             let defaultClass = "u-sw-changebutton";
           // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
@@ -234,10 +234,10 @@
                     assert(widget.elements.widget.querySelector("fluent-button.u-sw-changebutton").hasAttribute("hidden"),"Failed to show the hidden attribute for button");
                 }
            
-          }); // Wait for DOM rendering
+            }); // Wait for DOM rendering
         });
 
-        it("don't show apply button  ", function () {
+        it("don't show apply button", function () {
             let showApplyButton = false;
             let defaultClass = "u-sw-changebutton"
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
@@ -263,7 +263,7 @@
 
         });
         
-        it("apply button icon name  ", function () {
+        it("apply button icon name", function () {
             let showApplyButton = true;
             let appliedButtonClass = "u-icon ms-Icon ms-Icon--AddHome"
             let buttonIconName = "AddHome"
@@ -291,7 +291,7 @@
         
         
 
-        it("show label  ", function () {
+        it("show label", function () {
             let numberFieldLabel = 'Label';
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
             const p = asyncRun(function() {
@@ -362,7 +362,7 @@
             assert.equal(orderPropertyValue, 2, "Labelposition below is not in order")
         });
 
-        it("reset label and its position   ", function () {
+        it("reset label and its position", function () {
             const p = asyncRun(function() {
                 tester.dataUpdate({
                     uniface: {
@@ -482,7 +482,7 @@
         });
 
         //html:appearance outfill property
-        it("Set html:appearance outline property true for numberField  ", function () {
+        it("Set html:appearance outline property true for numberField", function () {
            
             let appearanceStyle = "filled"
             const p = asyncRun(function() {
@@ -507,7 +507,7 @@
 
 
         //html:appearance filled property
-        it("Set html:appearance filled property true for numberField   ", function () {
+        it("Set html:appearance filled property true for numberField", function () {
             let appearanceStyle = "outline"
             const p = asyncRun(function() {
                 tester.dataUpdate({
@@ -528,7 +528,7 @@
         });
 
          //html:hide-step true property
-        it("Set html:hide-step property true for numberField   s", function () {
+        it("Set html:hide-step property true for numberField", function () {
             let hideStep = true
             const p = asyncRun(function() {
                 tester.dataUpdate({
@@ -546,7 +546,7 @@
         });
 
          //html:hide-step false property
-        it("Set html:hide-step property false for numberField   ", function () {
+        it("Set html:hide-step property false for numberField", function () {
             let hideStep = false
             const p = asyncRun(function() {
                 tester.dataUpdate({
@@ -564,7 +564,7 @@
         });
 
         // prefix-text property for number Field
-        it("Prefix Text for numberField   ", function () {
+        it("Prefix Text for numberField", function () {
             let prefixTextData = "PrefixMe"
             const p = asyncRun(function() {
                 tester.dataUpdate({
@@ -583,7 +583,7 @@
         });
 
         // suffix-text property for number Field
-        it("Suffix Text for numberField   ", function () {
+        it("Suffix Text for numberField", function () {
             let suffixTextData = "Suffix Me"
             const p = asyncRun(function() {
                 tester.dataUpdate({
