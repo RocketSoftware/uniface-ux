@@ -171,14 +171,12 @@
 
     it("update only button text", function () {
       let buttonText = 'Button';
-      const p = asyncRun(function() {
+      return asyncRun(function() {
 
         tester.dataUpdate({
           value: buttonText
         });
-      });
-
-    return p.then(function () { 
+      }).then(function () { 
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(element.querySelector('span.u-icon').hasAttribute("hidden"), "Icon Element should be hidden");
