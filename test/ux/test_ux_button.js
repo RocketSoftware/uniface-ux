@@ -178,7 +178,7 @@
         });
       });
 
-    return p.then(function () { // check result
+    return p.then(function () { 
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(element.querySelector('span.u-icon').hasAttribute("hidden"), "Icon Element should be hidden");
@@ -196,7 +196,7 @@
         });
       });
 
-      return p.then(function () { // check result
+      return p.then(function () { 
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
@@ -216,7 +216,7 @@
         });
       });
 
-      return p.then(function () { // check result
+      return p.then(function () { 
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
@@ -232,7 +232,7 @@
         });
       });
 
-      return p.then(function () { // check result
+      return p.then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
@@ -248,7 +248,7 @@
         });
       });
 
-      return p.then(function () { // check result
+      return p.then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
@@ -266,7 +266,7 @@
         });
       });
 
-      return p.then(function () { // check result
+      return p.then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
