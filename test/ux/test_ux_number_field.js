@@ -210,7 +210,6 @@
 
     describe("dataUpdate   ", function () {
         let widget;
-        this.timeout(30000);
         before(function () {
             widget = tester.createWidget();
         });
