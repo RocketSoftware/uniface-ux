@@ -186,7 +186,7 @@
     });
     it("update  button text , icon and  icon-position to default", function () {
       let buttonText = 'Button';
-      const p = asyncRun(function() {
+      return asyncRun(function() {
 
         tester.dataUpdate({
           value: buttonText,
@@ -194,9 +194,7 @@
             icon: "Home"
           }
         });
-      });
-
-      return p.then(function () { 
+      }).then(function () { 
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
@@ -207,16 +205,14 @@
     it("update icon-position to end", function () {
       let buttonText = 'Button';
       let iconPosition = "end";
-      const p = asyncRun(function() {
+      return asyncRun(function() {
         tester.dataUpdate({
           uniface: {
             "icon-position": iconPosition
           },
           value: buttonText,
         });
-      });
-
-      return p.then(function () { 
+      }).then(function () { 
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
@@ -226,13 +222,11 @@
 
     it("update icon only button", function () {
       let buttonText = '';
-      const p = asyncRun(function() {
+      asyncRun(function() {
         tester.dataUpdate({
           value: buttonText
         });
-      });
-
-      return p.then(function () {
+      }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
@@ -242,13 +236,11 @@
 
     it("update button text and icon will move to last selected slot", function () {
       let buttonText = 'Button';
-      const p = asyncRun(function() {
+      asyncRun(function() {
         tester.dataUpdate({
           value: buttonText
         });
-      });
-
-      return p.then(function () {
+      }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
@@ -258,15 +250,13 @@
 
     it("if icon-position is other than start and end then it should allot default slot to icon", function () {
       let buttonText = 'Button';
-      const p = asyncRun(function() {
+      asyncRun(function() {
         tester.dataUpdate({
           uniface: {
             "icon-position": "stat"
           },
         });
-      });
-
-      return p.then(function () {
+      }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
