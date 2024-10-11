@@ -38,7 +38,6 @@
  */
 .u-datagrid-container .u-datagrid {
   overflow-y: auto;
-  height: 0em;
   flex-shrink: 1;
   flex-grow: 1;
 }

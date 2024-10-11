@@ -49,3 +49,7 @@
 .u-text-field.u-invalid .u-error-icon {
   color: #d13438;
 }
+
+.u-text-field[disabled] .u-sw-changebutton::part(control) {
+  opacity: unset;
+}

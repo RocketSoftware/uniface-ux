@@ -119,10 +119,10 @@ export class PlainText extends Widget {
       });
 
       switch (plainTextFormat) {
-        case "valrep-html": {
-          value = `<span class="u-valrep-rep">${matchedValrepObj.representation}</span><span class="u-valrep-value">${value}</span>`;
+        case "valrep-html":
+          // The space between the spans is added intentionally to create spacing between the representation and the value.
+          value = `<span class="u-valrep-rep">${matchedValrepObj.representation}</span> <span class="u-valrep-value">${value}</span>`;
           break;
-        }
         case "valrep-text":
           value = `${matchedValrepObj.representation} (${value})`;
           break;
