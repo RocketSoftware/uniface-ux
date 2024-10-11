@@ -11,15 +11,20 @@
   min-height: unset;
 }
 
-/* Unset opacity which is set by disabled property through uniface readonly property. */
 .u-select.u-readonly::part(label),
 .u-select.u-readonly::part(control) {
-  opacity: unset;
+  cursor: not-allowed;
 }
 
 .u-select.u-readonly::part(control) {
   background: padding-box linear-gradient(var(--neutral-fill-rest), var(--neutral-fill-rest)),
     border-box var(--neutral-stroke-control-rest);
+}
+
+.u-select.u-readonly:focus-visible,
+.u-select.u-readonly:focus-within,
+.u-select.u-readonly:focus {
+  pointer-events: none;
 }
 
 .u-select .u-placeholder {
