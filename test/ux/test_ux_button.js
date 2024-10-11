@@ -46,6 +46,7 @@
     });
 
   });
+
   describe(widgetName + ".processLayout", function () {
     let element;
 
@@ -77,9 +78,11 @@
       it("check u-text", function () {
         assert(element.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
       });
+
       it("check u-icon", function () {
         assert(element.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
       });
+
     });
 
   });
@@ -105,6 +108,7 @@
     describe("On Connect", function () {
       const element = tester.processLayout();
       const widget = tester.onConnect();
+
       it("check element created and connected", function () {
         assert(element, "Target element is not defined!");
         assert(widget.elements.widget === element, "widget is not connected");
@@ -128,7 +132,6 @@
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
-
 
     for (const defaultClass in classes) {
       it("check class '" + defaultClass + "'", function () {
@@ -158,11 +161,13 @@
     it("check value", function () {
       assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
     });
+
   });
 
   describe("Data Update", function () {
 		const asyncRun = umockup.asyncRun;
     let element;
+
     before(function () {
       tester.createWidget();
       element = tester.element;
@@ -172,7 +177,6 @@
     it("update only button text", function () {
       let buttonText = 'Button';
       return asyncRun(function() {
-
         tester.dataUpdate({
           value: buttonText
         });
@@ -182,10 +186,10 @@
         assert(element.querySelector('span.u-icon').hasAttribute("hidden"), "Icon Element should be hidden");
       });
     });
-    it("update  button text , icon and  icon-position to default", function () {
+
+    it("update button text, icon and icon-position to default", function () {
       let buttonText = 'Button';
       return asyncRun(function() {
-
         tester.dataUpdate({
           value: buttonText,
           uniface: {
@@ -268,7 +272,6 @@
     let buttonElement, onClickSpy;
 
     beforeEach(function () {
-
       tester.createWidget();
       buttonElement = tester.element;
 
@@ -294,6 +297,7 @@
       // Assert that the click event handler was called once
       expect(onClickSpy.calledOnce).to.be.true;
     });
+
   });
 
   describe("Show Error", function () {
@@ -302,7 +306,6 @@
 
   describe("Hide Error", function () {
     it("not required", function () { });
-
   });
 
   describe("Test SlottedButtonText class", function () {
@@ -310,6 +313,7 @@
     let styleClass = "u-text";
     let elementQuerySelector = ".u-text";
     let instance;
+
     beforeEach(function () {
       instance = new widgetClass.SlottedButtonText(widgetClass, styleClass, elementQuerySelector);
     });
@@ -320,7 +324,6 @@
 
     it('should register default value', function () {
       expect(instance.widgetClass.defaultValues.value).equal("");
-
     });
 
     it('should generate and return layout correctly', function () {
@@ -360,6 +363,7 @@
     let styleClass = "u-icon";
     let elementQuerySelector = ".u-icon";
     let instance;
+
     beforeEach(function () {
       instance = new widgetClass.SlottedButtonIcon(widgetClass, styleClass, elementQuerySelector);
     });
@@ -454,7 +458,7 @@
   });
 
   describe("Reset all properties", function () {
-    it("reset all property", function () {
+    it("reset all properties", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
@@ -463,4 +467,5 @@
       }
     });
   });
+
 })();
