@@ -191,7 +191,6 @@
 
         it("check prefix, suffix icon and text", function () {
           let unifaceProperties = tester.defaultValues.uniface;
-          console.log("UP", unifaceProperties)
           assert.equal(unifaceProperties["prefix-icon"], '', "Default value of prefix icon should be ''");
           assert.equal(unifaceProperties["suffix-icon"], '', "Default value of suffix icon should be ''");
           assert.equal(unifaceProperties["prefix-text"], '', "Default value of prefix text should be ''");
