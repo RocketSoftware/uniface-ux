@@ -1,0 +1,625 @@
+/* global UNIFACE uniface UX _uf */
+// Source code for refactored plain text in git lab repo
+// Branch Name: UNI-39226_automated_mocha_tests_uxPlainText
+// https://gitlab.com/Uniface/sources/ux-widgets/-/tree/UNI-38937_automated_mocha_tests_uxPlainText
+
+(function () {
+    /**
+     * Default timeout for waiting for DOM rendering (in milliseconds)
+     */
+    const defaultAsyncTimeout = 100; //ms
+    const assert = chai.assert;
+    const expect = chai.expect;
+    const tester = new umockup.WidgetTester();
+    const widgetId = tester.widgetId;
+    const widgetName = tester.widgetName;
+    const widgetClass = tester.getWidgetClass();
+    const asyncRun = umockup.asyncRun;
+    // custom test variables
+    const valRepArray = [
+        {
+        value: "1",
+        representation: "option one"
+        },
+        {
+        value: "2",
+
+        representation: "option two"
+        },
+        {
+        value: "3",
+        representation: "option three"
+        }
+    ];
+    /**  
+     * Function to determine whether the widget class has been loaded.
+    */
+    function verifyWidgetClass(widgetClass) {
+        assert(widgetClass, `Widget class '${widgetName}' is not defined!
+              Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
+      }
+    
+    describe("Uniface Mockup tests", function () {
+
+        it("Get class " + widgetName, function () {
+            verifyWidgetClass(widgetClass);
+        });
+
+    });
+
+    describe("Uniface static structure constructor definition", function () {
+
+        it('should have a static property structure of type Element', function () {
+            verifyWidgetClass(widgetClass);
+            const structure = widgetClass.structure;
+            expect(structure.constructor).to.be.an.instanceof(Element.constructor);
+            expect(structure.tagName).to.equal('span');
+            expect(structure.styleClass).to.equal('');
+            expect(structure.isSetter).to.equal(true);
+            expect(structure.hidden).to.equal(false);
+            expect(structure.elementQuerySelector).to.equal('');
+            expect(structure.attributeDefines).to.be.an('array');
+            expect(structure.elementDefines).to.be.an('array');
+            expect(structure.triggerDefines).to.be.an('undefined');
+        });
+
+    });
+
+    describe(widgetName + ".processLayout", function () {
+        let element;
+
+        it("processLayout", function () {
+            verifyWidgetClass(widgetClass);
+            element = tester.processLayout();
+            expect(element).to.have.tagName(tester.uxTagName);
+        });
+        describe("Checks", function () {
+
+            before(function () {
+                verifyWidgetClass(widgetClass);
+                element = tester.processLayout();
+            });
+
+            it("check instance of HTMLElement", function () {
+                expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+            });
+
+            it("check tagName", function () {
+                expect(element).to.have.tagName(tester.uxTagName);
+            });
+
+            it("check id", function () {
+                expect(element).to.have.id(widgetId);
+            });
+            
+            it("check u-prefix", function () {
+                assert(element.querySelector("span.u-prefix"), "Widget misses or has incorrect u-prefix element");
+            });
+
+            it("check u-suffix", function () {
+                assert(element.querySelector("span.u-suffix"), "Widget misses or has incorrect u-suffix element");
+            });
+
+            it("check u-control", function () {
+                assert(element.querySelector("span.u-control"), "Widget misses or has incorrect u-control element");
+            });
+
+            it("check u-error-icon", function () {
+                assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
+            });
+        })
+    });  
+    
+    describe("Create widget", function () {
+
+        before(function () {
+            verifyWidgetClass(widgetClass);
+            tester.construct();
+        });
+
+        it("constructor", function () {
+            try {
+                const widget = tester.construct();
+                assert(widget, "Widget is not defined!");
+                verifyWidgetClass(widgetClass);
+                assert(widgetClass.defaultValues.classes['u-plain-text'], "Class is not defined");
+            } catch (e) {
+                assert(false, "Failed to construct new widget, exception " + e);
+            }
+        });
+        
+        describe("onConnect", function () {
+            const element = tester.processLayout();
+            const widget = tester.onConnect();
+            it("check element created and connected", function () {
+                assert(element, "Target element is not defined!");
+                assert(widget.elements.widget === element, "widget is not connected");
+            });
+        });
+    });
+
+    describe("mapTrigger", function () {
+        const element = tester.processLayout();
+        const widget = tester.onConnect();
+        widget.mapTrigger("onchange");
+        const event = new window.Event('onchange');
+        element.dispatchEvent(event);
+        assert(widget.elements.widget === element, "widget is not connected");
+    })
+
+    describe('Plain Text onchange event', function () {
+        let plaintextElement, onChangeSpy;
+    
+        beforeEach(function () {
+    
+          tester.createWidget();
+          plaintextElement = tester.element;
+    
+          // Create a spy for the onchange event
+          onChangeSpy = sinon.spy();
+    
+          // Add the onchange event listener to the Plain Text Element 
+          plaintextElement.addEventListener('onchange', onChangeSpy);
+        });
+    
+        // Clean up after each test
+        afterEach(function () {
+          // Restore the spy to its original state
+          sinon.restore();
+        });
+    
+        // Test case for the on change event
+        it('should call the onchange event handler when the plain text is changed', function () {
+          // Simulate a onchange event
+          const event = new window.Event('onchange');
+          plaintextElement.dispatchEvent(event);
+    
+          // Assert that the onchange event handler was called once
+          expect(onChangeSpy.calledOnce).to.be.true;
+        });
+      });
+
+      // Data Init
+      describe("Data Init", function () {
+        const defaultValues = tester.getDefaultValues();
+        const classes = defaultValues.classes;
+        var element;
+    
+        beforeEach(function () {
+          element = tester.element;
+          assert(element, "Widget top element is not defined!");
+        });
+    
+    
+        for (const defaultClass in classes) {
+          it("check class '" + defaultClass + "'", function () {
+            if (classes[defaultClass]) {
+              expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+            } else {
+              expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
+            }
+          });
+        }
+    
+        it("check 'hidden' attributes", function () {
+           assert(element.querySelector('span.u-prefix').hasAttribute('hidden'), "Plain Text span.u-prefix element should be hidden by default");
+           assert(element.querySelector('span.u-control').hasAttribute('hidden'), "Plain Text span.u-control element should be hidden by default");
+           assert(element.querySelector('span.u-suffix').hasAttribute('hidden'), "Plain Text span.u-suffix element should be hidden by default");
+           assert(element.querySelector('span.u-error-icon').hasAttribute('hidden'), "Icon span element should be hidden by default");
+        });
+    
+        it("check widget id", function () {
+          assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
+        });
+    
+        it("check value", function () {
+          assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
+        });
+      });
+
+    describe("dataUpdate", function () {
+        let widget;
+        before(function () {
+            widget = tester.createWidget();
+        });
+        
+        it("empty initial value", function () {
+            let resizeProp = 'none';
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    "value" : ""
+                });
+            });
+            return p.then(function () { // check result
+                let value = widget.data.properties.value;
+               assert.equal(value, "", 'Value is not same');//Check for visibility
+            });
+        });
+
+        it("prefix text property", function () {
+            let prefixTextData = 'prefixTextData';
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    "uniface": {
+                        "prefix-text": prefixTextData
+                    }
+                });
+            });
+            return p.then(function () {
+                assert.equal(widget.elements.widget.innerText, prefixTextData, "Prefix data does not match");//Check for visibility
+            }); // Wait for DOM rendering
+
+        });
+
+        it("prefix icon property", function () {
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                "uniface": {
+                    "prefix-icon": "Accounts"
+                }
+                });
+            });
+
+
+            return p.then(function () {
+                assert.equal(widget.elements.widget.childNodes[0].className, "u-prefix ms-Icon ms-Icon--Accounts","widget element doesn't has class u-prefix ms-Icon ms-Icon--Accounts");
+            }); // Wait for DOM rendering
+        });
+
+        it("suffix text property", function () {
+            let suffixTextData = 'suffixTextData';
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    "uniface": {
+                        "suffix-text": suffixTextData
+                    }
+                });
+            });
+            return p.then(function () {
+                assert.equal(widget.elements.widget.innerText, suffixTextData,"Suffix data does not match");//Check for visibility
+            }); // Wait for DOM rendering
+
+        });
+
+        it("suffix icon property", function () {
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {    
+                tester.dataUpdate({
+                    "uniface": {
+                        "suffix-icon": "Accounts"
+                    }
+                });
+            });
+
+            return p.then(function () {
+                assert.equal(widget.elements.widget.childNodes[3].className, "u-suffix ms-Icon ms-Icon--Accounts","widget element doesn't has class u-suffix ms-Icon ms-Icon--Accounts");
+            }); // Wait for DOM rendering
+        });
+
+        it("plainTextFormat property when set to first-line", function () {
+            let plainTextFormat = 'first-line';
+            let val = "Once you have all the widgets ready, the rest was mostly about setting the css styles"
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    "value": val,
+                    "uniface": {
+                        "plaintext-format": plainTextFormat
+                    }
+                });
+            });
+
+            return p.then(function () {
+                let textData = widget.elements.widget.childNodes[1].innerText;
+                assert.equal(textData, val,"The Plain text formatting  first-line data does not match");//Check for visibility
+            }); // Wait for DOM rendering
+        });
+
+        it("plainTextFormat property when set to single-line", function () {
+            let plainTextFormat = 'single-line';
+            let val = "Single Line Once you have all the widgets ready, the rest was mostly about setting the css styles"
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    "value": val,
+                    "uniface": {
+                        "plaintext-format": plainTextFormat
+                    }
+                });
+            });
+
+            return p.then(function () {
+                let textData = widget.elements.widget.childNodes[1].innerText;
+                assert.equal(textData, val,"The Plain text formatting single-line data does not match");//Check for visibility
+            }); // Wait for DOM rendering
+        });
+
+        it("plainTextFormat property when set to multi-line", function () {
+            let plainTextFormat = 'multi-line';
+            let val = "Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles"
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    "value": val,
+                    "uniface": {
+                        "plaintext-format": plainTextFormat
+                    }
+                });
+            });
+
+            return p.then(function () {
+                let textData = widget.elements.widget.childNodes[1].innerText;
+                assert.equal(textData, val,"The Plain text formatting multi-line data does not match");//Check for visibility
+            }); // Wait for DOM rendering
+        });
+
+        it("plainTextFormat property when set to multi-paragraphs", function () {
+            let plainTextFormat = 'multi-paragraphs';
+            let val = "Multi paragraphs Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles"
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    "value": val,
+                    "uniface": {
+                        "plaintext-format": plainTextFormat
+                    }
+                });
+            });
+
+
+            return p.then(function () {
+                assert.equal(widget.elements.widget.querySelector("span.u-control").children[0].className,"u-paragraph" ,"u-paragraph class name is not present");
+                let ele = widget.elements.widget.querySelector("p.u-paragraph").innerText
+                assert.equal(ele,val,"The Plain text formatting multi-paragraphs data does not match")
+                let textData = widget.elements.widget.childNodes[1].innerText;
+                assert.equal(textData, val,"The Plain text formatting multi-paragraphs data does not match");//Check for visibility
+            }); // Wait for DOM rendering
+
+        });
+
+        it("plainTextFormat property when set to representation-only", function () {
+            let plainTextFormat = 'representation-only';
+            let val = "option one";
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    valrep: valRepArray,
+                    value : 1,
+                    "uniface": {
+                        "plaintext-format": plainTextFormat
+                    }
+                });
+            });
+
+
+            return p.then(function () {
+                expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide unchecked message")
+                let textData = widget.elements.widget.childNodes[1].innerText;
+                assert.equal(textData, val,"The Plain text formatting representation-only data does not match");//Check for visibility
+            }); // Wait for DOM rendering
+
+        });
+
+        it("plainTextFormat property when set to valrep-text", function () {
+            let plainTextFormat = 'valrep-text';
+            let val = "option one (1)"
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    valrep: valRepArray,
+                    value : 1,
+                    "uniface": {
+                        "plaintext-format": plainTextFormat
+                    }
+                });
+            });
+
+
+            return p.then(function () {
+                expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide error icon")
+                let textData = widget.elements.widget.childNodes[1].innerText;
+                assert.equal(textData, val,"The Plain text formatting valrep-text data does not match");//Check for visibility
+            }); // Wait for DOM rendering
+
+        });
+
+
+        it("plainTextFormat property when set to valrep-html", function () {
+            let plainTextFormat = 'valrep-html';
+            let val = "option one1"
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    valrep: valRepArray,
+                    value : 1,
+                    "uniface": {
+                        "plaintext-format": plainTextFormat
+                    }
+                });
+            });
+
+
+            return p.then(function () {
+                expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide error icon")
+
+                assert.equal(widget.elements.widget.querySelector("span.u-control").children[0].className,"u-valrep-rep" ,"u-valrep-rep class name is not present");
+                assert.equal(widget.elements.widget.querySelector("span.u-control").children[1].className,"u-valrep-value" ,"u-valrep-value class name is not present");
+
+                let textData = widget.elements.widget.childNodes[1].innerText;
+                assert.equal(textData, val,"The Plain text formatting valrep-html data does not match");//Check for visibility
+            }); // Wait for DOM rendering
+
+        });
+        
+        it("html hidden property when set to true", function () {
+            let hiddenProp = true;
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    "html": {
+                        "hidden": hiddenProp
+                    }
+                });
+            });
+
+            return p.then(function () {
+                let hiddenPropPresent = widget.elements.widget.hasAttribute("hidden");
+                assert.equal(hiddenPropPresent, hiddenProp, "Failed to hide the hidden attribute");//Check for visibility
+            }); // Wait for DOM rendering
+
+        });
+
+
+        it("html hidden property when set to false", function () {
+            let hiddenProp = false;
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    "html": {
+                        "hidden": hiddenProp
+                    }
+                });
+            });
+
+            return p.then(function () {
+                let hiddenPropPresent = widget.elements.widget.hasAttribute("hidden");
+                assert.equal(hiddenPropPresent, hiddenProp, "Failed to show the hidden attribute");//Check for visibility
+            }); // Wait for DOM rendering
+
+        });
+
+         //html:readonly property
+         it("Set html:readonly property true for plaintext", function (done) {
+            let readOnly = "readOnly"
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    "html": {
+                        "readonly": true
+                    }
+                });
+            });
+            setTimeout(function () {
+                let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
+                assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to show the readonly attribute");                    
+                done();
+            },defaultAsyncTimeout); // Wait for DOM rendering
+        });
+
+        //html:readonly property false
+        it("Set html:readonly property false for plaintext", function (done) {
+            let readOnly = "readOnly"
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    "html": {
+                        "readonly": false
+                    }
+                });
+            });
+            setTimeout(function () {
+                let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
+                assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to hide the readonly attribute");                    
+                done();
+            },defaultAsyncTimeout); // Wait for DOM rendering
+        });
+
+        
+        it("html disabled property when set to false", function (done) {
+            let disabledProp = false;
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    "html": {
+                        "disabled": disabledProp
+                    }
+                });
+            });
+
+            setTimeout(function () {
+                let disabledPropPresent = widget.elements.widget.hasAttribute("disabled");
+                assert.equal(disabledPropPresent, disabledProp);//Check for visibility
+                done();
+            },defaultAsyncTimeout); // Wait for DOM rendering
+
+        });
+
+        it("html disabled property when set to true", function (done) {
+            let disabledProp = true;
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    "html": {
+                        "disabled": disabledProp
+                    }
+                });
+            });
+
+            setTimeout(function () {
+                let disabledPropPresent = widget.elements.widget.hasAttribute("disabled");
+                assert(!widget.elements.widget.hasAttribute("disabled"), "Failed to hide the disabled attribute");                                    done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+
+        });
+
+    });
+
+    describe("showError", function () {
+        let widget, element;
+        let minlength = 2;
+        let maxlength = 5;
+        before(function () {
+            widget = tester.createWidget();
+            element = tester.createWidget().element;
+            verifyWidgetClass(widgetClass)
+        });
+
+        it("setting error", function(done){
+            
+            tester.dataUpdate({
+                uniface: {
+                    "format-error": true,
+                    "format-error-message": "Fake Validation Error"
+                }
+            });
+            setTimeout(function () {
+                expect(widget.elements.widget).to.have.class("u-format-invalid");
+                assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
+                assert.equal(widget.elements.widget.childNodes[2].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
+                expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"),"Slot end  does not match");
+                assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Fake Validation Error","Error title doesnot match")
+                done();
+            }, defaultAsyncTimeout); // Wait for DOM rendering
+        });
+    });
+    
+    describe("hideError", function () {
+        let widget, element;
+        before(function () {
+            widget = tester.createWidget();
+            element = tester.createWidget().element;
+            verifyWidgetClass(widgetClass)
+        });
+        it("Hide Error Set invalid value in text Area", function (done) {   
+            tester.dataUpdate({
+                uniface: {
+                    error: false,
+                    "error-message": "Field Value length mismatch."
+                }
+            });
+            widget.hideError("Field Value length mismatch.");
+
+            setTimeout(function () {
+                
+                expect(widget.elements.widget).to.not.have.class("u-invalid");
+                assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
+                assert(widget.elements.widget.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
+                assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"),  "slot attribute is not present");
+                assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("title"), "title attribute is not present")
+                done();
+            }, defaultAsyncTimeout);
+        });
+    });   
+})();
