@@ -197,6 +197,7 @@ export class Select extends Widget {
       let rep;
       const value = this.getNode(widgetInstance.data.properties, "value");
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      const valrepWithNullValue = this.toBoolean(valrep && valrep.some(element => element.value === ""));
       const showPlaceholder = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:show-placeholder"));
       const placeholderText = this.getNode(widgetInstance.data.properties, "uniface:placeholder-text");
       const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
@@ -204,7 +205,7 @@ export class Select extends Widget {
       if (selectedValueElement) {
         selectedValueElement.remove();
       }
-      if ((value === "" || value === null) && showPlaceholder) {
+      if ((value === "" || value === null) && showPlaceholder && !valrepWithNullValue) {
         selectedValueElement = this.createPlaceholderElement(placeholderText, value);
         isPlaceholderElementCreated = true;
       } else {
