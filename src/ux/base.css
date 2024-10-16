@@ -132,3 +132,19 @@ fluent-card {
 .u-text-area[u-label-position="above"]::part(label) {
   width: 100%;
 }
+
+/* To ensure no margin-bottom is applied if the label is empty */
+.u-number-field::part(label),
+.u-select::part(label),
+.u-text-field::part(label),
+.u-text-area::part(label){
+  margin-bottom: 0;
+}
+
+.u-number-field[u-label-position="above"] .u-label-text:not([hidden]),
+.u-select[u-label-position="above"] .u-label-text:not([hidden]),
+.u-text-field[u-label-position="above"] .u-label-text:not([hidden]),
+.u-text-area[u-label-position="above"] .u-label-text:not([hidden]) {
+  display: block;
+  margin-bottom: 4px;
+}
