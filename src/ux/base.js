@@ -382,6 +382,9 @@ export class Base {
 
   /**
    * Formatting valrep element with representation and value.
+   * u-valrep-value - this class is used for querying the value element in both valrep and val display formats.
+   * u-value - this class is specific to valrep format and is used to style the value section.
+   * u-valrep-representation - this class is used both as a query-selector and for styling the representation section.
    * @param {String} displayFormat
    * @param {String | null} value
    * @param {String} representation
@@ -391,7 +394,7 @@ export class Base {
     switch (displayFormat) {
       case "valrep":
         return (
-          "<span class='u-valrep-representation'>" + representation + "</span> <span class='u-valrep-value'>" + (value ? value : "null") + "</span>"
+          "<span class='u-valrep-representation'>" + representation + "</span> <span class='u-valrep-value u-value'>" + (value ? value : "null") + "</span>"
         );
       case "val":
         return "<span class='u-valrep-value'>" + (value ? value : "null") + "</span>";

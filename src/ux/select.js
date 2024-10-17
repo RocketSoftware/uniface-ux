@@ -197,6 +197,7 @@ export class Select extends Widget {
       let rep;
       const value = this.getNode(widgetInstance.data.properties, "value");
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      const valrepWithNullValue = this.toBoolean(valrep && valrep.some(element => element.value === ""));
       const showPlaceholder = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:show-placeholder"));
       const placeholderText = this.getNode(widgetInstance.data.properties, "uniface:placeholder-text");
       const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
@@ -204,7 +205,7 @@ export class Select extends Widget {
       if (selectedValueElement) {
         selectedValueElement.remove();
       }
-      if ((value === "" || value === null) && showPlaceholder) {
+      if ((value === "" || value === null) && showPlaceholder && !valrepWithNullValue) {
         selectedValueElement = this.createPlaceholderElement(placeholderText, value);
         isPlaceholderElementCreated = true;
       } else {
@@ -253,6 +254,23 @@ export class Select extends Widget {
   };
 
   /**
+   * A special check is needed for the tabindex during the disabled state,
+   * as Fluent automatically sets it to null when disabled and to 0 once the component is no longer disabled.
+   * @class
+   * @extends {HtmlAttributeBoolean}
+   */
+  static HtmlAttributeDisabled = class extends HtmlAttributeBoolean {
+    refresh(widgetInstance) {
+      super.refresh(widgetInstance);
+      const element = this.getElement(widgetInstance);
+      const tabIndexValue = this.getNode(widgetInstance.data.properties, "html:tabindex");
+      window.setTimeout(() => {
+        element["tabIndex"] = tabIndexValue;
+      }, 1000);
+    }
+  };
+
+  /**
    * Widget definition.
    */
   // prettier-ignore
@@ -267,7 +285,7 @@ export class Select extends Widget {
     new HtmlAttributeBoolean(this, undefined, "ariaDisabled", false),
     new HtmlAttributeBoolean(this, undefined, "ariaReadOnly", false),
     new HtmlAttributeBoolean(this, undefined, "ariaExpanded", false),
-    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
+    new this.HtmlAttributeDisabled(this, "html:disabled", "disabled", false),
     new this.HtmlAttributeBooleanReadOnly(this, "html:readonly", "readOnly", false),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),

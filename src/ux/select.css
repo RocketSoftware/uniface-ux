@@ -35,21 +35,21 @@
   content: "...";
 }
 
-.u-select .u-valrep-representation {
+.u-select .u-valrep-representation:not(:empty) {
   margin-inline-end: calc((var(--design-unit) * 3px) + 2px);
 }
 
-.u-select .u-valrep-value {
+.u-select .u-value {
   color: var(--neutral-base-color);
   font-style: italic;
 }
 
 /* Styling the valrep value to enclose it within parentheses. */
-.u-select .u-valrep-value::before {
+.u-select .u-value::before {
   content: "(";
 }
 
-.u-select .u-valrep-value::after {
+.u-select .u-value::after {
   content: ")";
 }
 
