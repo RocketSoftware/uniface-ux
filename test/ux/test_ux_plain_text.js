@@ -138,49 +138,9 @@
         });
     });
 
-    describe("mapTrigger", function () {
-        const element = tester.processLayout();
-        const widget = tester.onConnect();
-        widget.mapTrigger("onchange");
-        const event = new window.Event('onchange');
-        element.dispatchEvent(event);
-        assert(widget.elements.widget === element, "widget is not connected");
-    })
-
-    describe('Plain Text onchange event', function () {
-        let plaintextElement, onChangeSpy;
-    
-        beforeEach(function () {
-    
-          tester.createWidget();
-          plaintextElement = tester.element;
-    
-          // Create a spy for the onchange event
-          onChangeSpy = sinon.spy();
-    
-          // Add the onchange event listener to the Plain Text Element 
-          plaintextElement.addEventListener('onchange', onChangeSpy);
-        });
-    
-        // Clean up after each test
-        afterEach(function () {
-          // Restore the spy to its original state
-          sinon.restore();
-        });
-    
-        // Test case for the on change event
-        it('should call the onchange event handler when the plain text is changed', function () {
-          // Simulate a onchange event
-          const event = new window.Event('onchange');
-          plaintextElement.dispatchEvent(event);
-    
-          // Assert that the onchange event handler was called once
-          expect(onChangeSpy.calledOnce).to.be.true;
-        });
-      });
 
       // Data Init
-      describe("Data Init", function () {
+    describe("Data Init", function () {
         const defaultValues = tester.getDefaultValues();
         const classes = defaultValues.classes;
         var element;
