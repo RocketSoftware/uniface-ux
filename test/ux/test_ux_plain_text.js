@@ -185,12 +185,12 @@
         it("empty initial value", function () {
             let resizeProp = 'none';
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "value" : ""
                 });
             });
-            return p.then(function () { // check result
+            return prom.then(function () { // check result
                 let value = widget.data.properties.value;
                assert.equal(value, "", 'Value is not same');//Check for visibility
             });
@@ -199,14 +199,14 @@
         it("prefix text property", function () {
             let prefixTextData = 'prefixTextData';
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "uniface": {
                         "prefix-text": prefixTextData
                     }
                 });
             });
-            return p.then(function () {
+            return prom.then(function () {
                 assert.equal(widget.elements.widget.innerText, prefixTextData, "Prefix data does not match");//Check for visibility
             }); // Wait for DOM rendering
 
@@ -214,7 +214,7 @@
 
         it("prefix icon property", function () {
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                 "uniface": {
                     "prefix-icon": "Accounts"
@@ -223,7 +223,7 @@
             });
 
 
-            return p.then(function () {
+            return prom.then(function () {
                 assert.equal(widget.elements.widget.childNodes[0].className, "u-prefix ms-Icon ms-Icon--Accounts","widget element doesn't has class u-prefix ms-Icon ms-Icon--Accounts");
             }); // Wait for DOM rendering
         });
@@ -231,14 +231,14 @@
         it("suffix text property", function () {
             let suffixTextData = 'suffixTextData';
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "uniface": {
                         "suffix-text": suffixTextData
                     }
                 });
             });
-            return p.then(function () {
+            return prom.then(function () {
                 assert.equal(widget.elements.widget.innerText, suffixTextData,"Suffix data does not match");//Check for visibility
             }); // Wait for DOM rendering
 
@@ -246,7 +246,7 @@
 
         it("suffix icon property", function () {
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {    
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "uniface": {
                         "suffix-icon": "Accounts"
@@ -254,7 +254,7 @@
                 });
             });
 
-            return p.then(function () {
+            return prom.then(function () {
                 assert.equal(widget.elements.widget.childNodes[3].className, "u-suffix ms-Icon ms-Icon--Accounts","widget element doesn't has class u-suffix ms-Icon ms-Icon--Accounts");
             }); // Wait for DOM rendering
         });
@@ -263,7 +263,7 @@
             let plainTextFormat = 'first-line';
             let val = "Once you have all the widgets ready, the rest was mostly about setting the css styles"
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "value": val,
                     "uniface": {
@@ -272,7 +272,7 @@
                 });
             });
 
-            return p.then(function () {
+            return prom.then(function () {
                 let textData = widget.elements.widget.childNodes[1].innerText;
                 assert.equal(textData, val,"The Plain text formatting  first-line data does not match");//Check for visibility
             }); // Wait for DOM rendering
@@ -282,7 +282,7 @@
             let plainTextFormat = 'single-line';
             let val = "Single Line Once you have all the widgets ready, the rest was mostly about setting the css styles"
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "value": val,
                     "uniface": {
@@ -291,7 +291,7 @@
                 });
             });
 
-            return p.then(function () {
+            return prom.then(function () {
                 let textData = widget.elements.widget.childNodes[1].innerText;
                 assert.equal(textData, val,"The Plain text formatting single-line data does not match");//Check for visibility
             }); // Wait for DOM rendering
@@ -301,7 +301,7 @@
             let plainTextFormat = 'multi-line';
             let val = "Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles"
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "value": val,
                     "uniface": {
@@ -310,7 +310,7 @@
                 });
             });
 
-            return p.then(function () {
+            return prom.then(function () {
                 let textData = widget.elements.widget.childNodes[1].innerText;
                 assert.equal(textData, val,"The Plain text formatting multi-line data does not match");//Check for visibility
             }); // Wait for DOM rendering
@@ -320,7 +320,7 @@
             let plainTextFormat = 'multi-paragraphs';
             let val = "Multi paragraphs Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles"
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "value": val,
                     "uniface": {
@@ -330,7 +330,7 @@
             });
 
 
-            return p.then(function () {
+            return prom.then(function () {
                 assert.equal(widget.elements.widget.querySelector("span.u-control").children[0].className,"u-paragraph" ,"u-paragraph class name is not present");
                 let ele = widget.elements.widget.querySelector("p.u-paragraph").innerText
                 assert.equal(ele,val,"The Plain text formatting multi-paragraphs data does not match")
@@ -344,7 +344,7 @@
             let plainTextFormat = 'representation-only';
             let val = "option one";
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     valrep: valRepArray,
                     value : 1,
@@ -355,7 +355,7 @@
             });
 
 
-            return p.then(function () {
+            return prom.then(function () {
                 expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide unchecked message")
                 let textData = widget.elements.widget.childNodes[1].innerText;
                 assert.equal(textData, val,"The Plain text formatting representation-only data does not match");//Check for visibility
@@ -367,7 +367,7 @@
             let plainTextFormat = 'valrep-text';
             let val = "option one (1)"
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     valrep: valRepArray,
                     value : 1,
@@ -378,7 +378,7 @@
             });
 
 
-            return p.then(function () {
+            return prom.then(function () {
                 expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide error icon")
                 let textData = widget.elements.widget.childNodes[1].innerText;
                 assert.equal(textData, val,"The Plain text formatting valrep-text data does not match");//Check for visibility
@@ -391,7 +391,7 @@
             let plainTextFormat = 'valrep-html';
             let val = "option one1"
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     valrep: valRepArray,
                     value : 1,
@@ -402,7 +402,7 @@
             });
 
 
-            return p.then(function () {
+            return prom.then(function () {
                 expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide error icon")
 
                 assert.equal(widget.elements.widget.querySelector("span.u-control").children[0].className,"u-valrep-rep" ,"u-valrep-rep class name is not present");
@@ -417,7 +417,7 @@
         it("html hidden property when set to true", function () {
             let hiddenProp = true;
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "html": {
                         "hidden": hiddenProp
@@ -425,7 +425,7 @@
                 });
             });
 
-            return p.then(function () {
+            return prom.then(function () {
                 let hiddenPropPresent = widget.elements.widget.hasAttribute("hidden");
                 assert.equal(hiddenPropPresent, hiddenProp, "Failed to hide the hidden attribute");//Check for visibility
             }); // Wait for DOM rendering
@@ -436,7 +436,7 @@
         it("html hidden property when set to false", function () {
             let hiddenProp = false;
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "html": {
                         "hidden": hiddenProp
@@ -444,7 +444,7 @@
                 });
             });
 
-            return p.then(function () {
+            return prom.then(function () {
                 let hiddenPropPresent = widget.elements.widget.hasAttribute("hidden");
                 assert.equal(hiddenPropPresent, hiddenProp, "Failed to show the hidden attribute");//Check for visibility
             }); // Wait for DOM rendering
@@ -454,14 +454,14 @@
          //html:title property
          it("Set html:title property true for plaintext", function () {
             let title = "titleText"
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "html": {
                         "title": title
                     }
                 });
             });
-            return p.then(function () {
+            return prom.then(function () {
                 let titleProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute("title"),titleProperty, "Failed to show the title attribute");
                 assert.equal(widget.elements.widget.getAttribute("title"), title);//Check for visibility
@@ -471,14 +471,14 @@
         //html:title property
         it("Set html:title property for changed Title for plaintext", function () {
             let title = "changedTitleText"
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "html": {
                         "title": title
                     }
                 });
             });
-            return p.then(function () {
+            return prom.then(function () {
                 let titleProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute("title"),titleProperty, "Failed to hide the title attribute");
                 assert.equal(widget.elements.widget.getAttribute("title"), title);//Check for visibility
@@ -489,7 +489,7 @@
         it("html slot property when set to end", function () {
             let slotProp = "end";
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "html": {
                         "slot": slotProp
@@ -497,7 +497,7 @@
                 });
             });
 
-            return p.then(function () {
+            return prom.then(function () {
                 let slotPropPresent = widget.elements.widget.hasAttribute("slot");
                 assert(widget.elements.widget.hasAttribute("slot"),slotPropPresent, "Failed to hide the slot attribute");
                 assert.equal(widget.elements.widget.getAttribute("slot"), slotProp);//Check for visibility
@@ -508,7 +508,7 @@
         it("html slot property when set to start", function () {
             let slotProp = "start";
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     "html": {
                         "slot": slotProp
@@ -516,7 +516,7 @@
                 });
             });
 
-            return p.then(function () {
+            return prom.then(function () {
                 let slotPropPresent = widget.elements.widget.hasAttribute("slot");
                 assert(widget.elements.widget.hasAttribute("slot"),slotPropPresent, "Failed to hide the slot attribute");
                 assert.equal(widget.elements.widget.getAttribute("slot"), slotProp);
@@ -534,7 +534,7 @@
         });
 
         it("setting error in plain text", function(){
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     uniface: {
                         "format-error": true,
@@ -542,7 +542,7 @@
                     }
                 });
             });
-            return p.then(function () {
+            return prom.then(function () {
                 expect(widget.elements.widget).to.have.class("u-format-invalid");
                 assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
                 assert.equal(widget.elements.widget.childNodes[2].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
@@ -560,7 +560,7 @@
             verifyWidgetClass(widgetClass)
         });
         it("Hide Error Set invalid value in plain text", function () {
-            const p = asyncRun(function() {
+            const prom = asyncRun(function() {
                 tester.dataUpdate({
                     uniface: {
                         error: false,
@@ -570,7 +570,7 @@
             });
             widget.hideError("Field Value length mismatch.");
 
-            return p.then(function () {
+            return prom.then(function () {
                 
                 expect(widget.elements.widget).to.not.have.class("u-invalid");
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
