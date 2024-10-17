@@ -138,36 +138,35 @@
         });
     });
 
-
       // Data Init
     describe("Data Init", function () {
         const defaultValues = tester.getDefaultValues();
         const classes = defaultValues.classes;
         var element;
-    
-        beforeEach(function () {
-          element = tester.element;
+
+        before(function () {
+        tester.createWidget();
+        element = tester.element;
           assert(element, "Widget top element is not defined!");
         });
     
-    
         for (const defaultClass in classes) {
-          it("check class '" + defaultClass + "'", function () {
-            if (classes[defaultClass]) {
-              expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
-            } else {
-              expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
-            }
-          });
-        }
-    
+            it("check class '" + defaultClass + "'", function () {
+              if (classes[defaultClass]) {
+                expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+              } else {
+                expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
+              }
+            });
+          }
+
         it("check 'hidden' attributes", function () {
            assert(element.querySelector('span.u-prefix').hasAttribute('hidden'), "Plain Text span.u-prefix element should be hidden by default");
            assert(element.querySelector('span.u-control').hasAttribute('hidden'), "Plain Text span.u-control element should be hidden by default");
            assert(element.querySelector('span.u-suffix').hasAttribute('hidden'), "Plain Text span.u-suffix element should be hidden by default");
            assert(element.querySelector('span.u-error-icon').hasAttribute('hidden'), "Icon span element should be hidden by default");
         });
-    
+
         it("check widget id", function () {
           assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
         });
@@ -175,7 +174,7 @@
         it("check value", function () {
           assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
         });
-      });
+    });
 
     describe("dataUpdate", function () {
         let widget;
@@ -452,84 +451,82 @@
 
         });
 
-         //html:readonly property
-         it("Set html:readonly property true for plaintext", function (done) {
-            let readOnly = "readOnly"
+         //html:title property
+         it("Set html:title property true for plaintext", function () {
+            let title = "titleText"
             const p = asyncRun(function() {
                 tester.dataUpdate({
                     "html": {
-                        "readonly": true
+                        "title": title
                     }
                 });
             });
-            setTimeout(function () {
-                let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
-                assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to show the readonly attribute");                    
-                done();
-            },defaultAsyncTimeout); // Wait for DOM rendering
+            return p.then(function () {
+                let titleProperty = window.getComputedStyle(widget.elements.widget, null);
+                assert(widget.elements.widget.hasAttribute("title"),titleProperty, "Failed to show the title attribute");
+                assert.equal(widget.elements.widget.getAttribute("title"), title);//Check for visibility
+            }); // Wait for DOM rendering
         });
 
-        //html:readonly property false
-        it("Set html:readonly property false for plaintext", function (done) {
-            let readOnly = "readOnly"
+        //html:title property
+        it("Set html:title property for changed Title for plaintext", function () {
+            let title = "changedTitleText"
             const p = asyncRun(function() {
                 tester.dataUpdate({
                     "html": {
-                        "readonly": false
+                        "title": title
                     }
                 });
             });
-            setTimeout(function () {
-                let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
-                assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to hide the readonly attribute");                    
-                done();
-            },defaultAsyncTimeout); // Wait for DOM rendering
+            return p.then(function () {
+                let titleProperty = window.getComputedStyle(widget.elements.widget, null);
+                assert(widget.elements.widget.hasAttribute("title"),titleProperty, "Failed to hide the title attribute");
+                assert.equal(widget.elements.widget.getAttribute("title"), title);//Check for visibility
+            }); // Wait for DOM rendering
         });
 
         
-        it("html disabled property when set to false", function (done) {
-            let disabledProp = false;
+        it("html slot property when set to end", function () {
+            let slotProp = "end";
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
             const p = asyncRun(function() {
                 tester.dataUpdate({
                     "html": {
-                        "disabled": disabledProp
+                        "slot": slotProp
                     }
                 });
             });
 
-            setTimeout(function () {
-                let disabledPropPresent = widget.elements.widget.hasAttribute("disabled");
-                assert.equal(disabledPropPresent, disabledProp);//Check for visibility
-                done();
-            },defaultAsyncTimeout); // Wait for DOM rendering
+            return p.then(function () {
+                let slotPropPresent = widget.elements.widget.hasAttribute("slot");
+                assert(widget.elements.widget.hasAttribute("slot"),slotPropPresent, "Failed to hide the slot attribute");
+                assert.equal(widget.elements.widget.getAttribute("slot"), slotProp);//Check for visibility
+            }); // Wait for DOM rendering
 
         });
 
-        it("html disabled property when set to true", function (done) {
-            let disabledProp = true;
+        it("html slot property when set to start", function () {
+            let slotProp = "start";
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
             const p = asyncRun(function() {
                 tester.dataUpdate({
                     "html": {
-                        "disabled": disabledProp
+                        "slot": slotProp
                     }
                 });
             });
 
-            setTimeout(function () {
-                let disabledPropPresent = widget.elements.widget.hasAttribute("disabled");
-                assert(!widget.elements.widget.hasAttribute("disabled"), "Failed to hide the disabled attribute");                                    done();
-            }, defaultAsyncTimeout); // Wait for DOM rendering
-
+            return p.then(function () {
+                let slotPropPresent = widget.elements.widget.hasAttribute("slot");
+                assert(widget.elements.widget.hasAttribute("slot"),slotPropPresent, "Failed to hide the slot attribute");
+                assert.equal(widget.elements.widget.getAttribute("slot"), slotProp);
+            }); // Wait for DOM rendering
         });
 
     });
 
     describe("showError", function () {
         let widget, element;
-        let minlength = 2;
-        let maxlength = 5;
         before(function () {
             widget = tester.createWidget();
             element = tester.createWidget().element;
