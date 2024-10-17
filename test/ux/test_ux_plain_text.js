@@ -533,22 +533,22 @@
             verifyWidgetClass(widgetClass)
         });
 
-        it("setting error", function(done){
-            
-            tester.dataUpdate({
-                uniface: {
-                    "format-error": true,
-                    "format-error-message": "Fake Validation Error"
-                }
+        it("setting error in plain text", function(){
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    uniface: {
+                        "format-error": true,
+                        "format-error-message": "Fake Validation Error"
+                    }
+                });
             });
-            setTimeout(function () {
+            return p.then(function () {
                 expect(widget.elements.widget).to.have.class("u-format-invalid");
                 assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
                 assert.equal(widget.elements.widget.childNodes[2].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
                 expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"),"Slot end  does not match");
                 assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Fake Validation Error","Error title doesnot match")
-                done();
-            }, defaultAsyncTimeout); // Wait for DOM rendering
+            }); // Wait for DOM rendering
         });
     });
     
@@ -559,24 +559,25 @@
             element = tester.createWidget().element;
             verifyWidgetClass(widgetClass)
         });
-        it("Hide Error Set invalid value in text Area", function (done) {   
-            tester.dataUpdate({
-                uniface: {
-                    error: false,
-                    "error-message": "Field Value length mismatch."
-                }
+        it("Hide Error Set invalid value in plain text", function () {
+            const p = asyncRun(function() {
+                tester.dataUpdate({
+                    uniface: {
+                        error: false,
+                        "error-message": "Field Value length mismatch."
+                    }
+                });
             });
             widget.hideError("Field Value length mismatch.");
 
-            setTimeout(function () {
+            return p.then(function () {
                 
                 expect(widget.elements.widget).to.not.have.class("u-invalid");
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
                 assert(widget.elements.widget.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"),  "slot attribute is not present");
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("title"), "title attribute is not present")
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
     });   
 })();
