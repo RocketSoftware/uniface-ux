@@ -400,9 +400,8 @@
 
         it("plainTextFormat property when set to valrep-html", function () {
             let plainTextFormat = 'valrep-html';
-            let val = "option one1"
-            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            const prom = asyncRun(function() {
+            let val = "option one 1";
+            return asyncRun(function() {
                 tester.dataUpdate({
                     valrep: valRepArray,
                     value : 1,
@@ -410,18 +409,15 @@
                         "plaintext-format": plainTextFormat
                     }
                 });
-            });
+            }).then(function () {
+                expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide error icon");
 
-
-            return prom.then(function () {
-                expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide error icon")
-
-                assert.equal(widget.elements.widget.querySelector("span.u-control").children[0].className,"u-valrep-rep" ,"u-valrep-rep class name is not present");
-                assert.equal(widget.elements.widget.querySelector("span.u-control").children[1].className,"u-valrep-value" ,"u-valrep-value class name is not present");
+                assert.equal(widget.elements.widget.querySelector("span.u-control").children[0].className, "u-valrep-rep", "u-valrep-rep class name is not present");
+                assert.equal(widget.elements.widget.querySelector("span.u-control").children[1].className, "u-valrep-value", "u-valrep-value class name is not present");
 
                 let textData = widget.elements.widget.childNodes[1].innerText;
-                assert.equal(textData, val,"The Plain text formatting valrep-html data does not match");//Check for visibility
-            }); // Wait for DOM rendering
+                assert.equal(textData, val, "The Plain text formatting valrep-html data does not match");//Check for visibility
+            });
 
         });
         
