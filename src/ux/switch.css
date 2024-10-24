@@ -1,5 +1,6 @@
 .u-switch {
   vertical-align: bottom;
+  align-items: flex-start;
 }
 
 /* Styling the toggle switch for consistent positioning during DOM update interruptions. */
@@ -55,4 +56,12 @@
 .u-switch.u-format-invalid::part(status-message) {
   --type-ramp-base-line-height: 18px;
   color: #d13438;
+}
+
+/* To ensure no margin right is applied when label is empty. */
+.u-switch::part(label) {
+  margin-inline-end: 0;
+}
+.u-switch .u-label-text:not([hidden]) {
+  margin-inline-end: calc(var(--design-unit)* 2px + 2px);
 }
