@@ -241,7 +241,6 @@
                 expect(element).to.have.class("u-checkbox")
                 expect(element).to.have.class("indeterminate")
                 expect(element.getAttribute("current-checked")).equal("false");
-                done();
             });
         });
 
@@ -257,7 +256,6 @@
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
                 assert.equal(labelText, checkBoxLabelText); //Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
-                done();
             });
         });
 
@@ -275,7 +273,6 @@
         }).then(function() {
                 assert(widget.elements.widget.hasAttribute("title"), "Failed to show the title attribute");
                 expect(widget.elements.widget.getAttribute("title")).equal(checkBoxTitle);
-                done();
             });
         });
 
@@ -292,7 +289,6 @@
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
                 assert.equal(labelText, checkBoxLabelText); //Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
-                done();
             });
         });
 
@@ -309,7 +305,6 @@
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
                 assert.equal(labelText, checkBoxLabelText); //Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
-                done();
             });
         });
 
@@ -333,7 +328,6 @@
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
                 assert.equal(labelText, "Changed Label Text"); //Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
-                done();
             });
         });
     });
@@ -357,7 +351,6 @@
                 expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
                 assert.equal(widget.elements.widget.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
                 assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."); //Check for visibility
-                done();
             });
         })
     });
@@ -383,7 +376,6 @@
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden error icon");
                 expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
                 expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide hidden attribute")
-                done();
             });
         })
     })
