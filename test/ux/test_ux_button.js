@@ -9,6 +9,7 @@
   const widgetId = tester.widgetId;
   const widgetName = tester.widgetName;
   const widgetClass = tester.getWidgetClass();
+  const asyncRun = umockup.asyncRun;
 
   /**
    * Function to determine whether the widget class has been loaded.
@@ -160,7 +161,7 @@
   });
 
   describe("Data Update", function () {
-		const asyncRun = umockup.asyncRun;
+		
     let element;
 
     before(function () {
@@ -219,7 +220,7 @@
 
     it("update icon only button", function () {
       let buttonText = '';
-      asyncRun(function() {
+      return asyncRun(function() {
         tester.dataUpdate({
           value: buttonText
         });
@@ -233,7 +234,7 @@
 
     it("update button text and icon will move to last selected slot", function () {
       let buttonText = 'Button';
-      asyncRun(function() {
+      return asyncRun(function() {
         tester.dataUpdate({
           value: buttonText
         });
@@ -247,7 +248,7 @@
 
     it("if icon-position is other than start and end then it should allot default slot to icon", function () {
       let buttonText = 'Button';
-      asyncRun(function() {
+      return asyncRun(function() {
         tester.dataUpdate({
           uniface: {
             "icon-position": "stat"
