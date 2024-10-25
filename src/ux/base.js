@@ -405,28 +405,6 @@ export class Base {
   }
 
   /**
-   * Format Error Text for valrep element.
-   * @param {String} displayFormat
-   * @param {String|null} value
-   * @returns {string}
-   */
-  toFormatValRepErrorText(displayFormat, value) {
-    let text = "";
-    switch (displayFormat) {
-      case "valrep":
-        text = "ERROR: Unable to show representation of value " + (value || null);
-        break;
-      case "val":
-        text = "ERROR: Invalid value " + (value || null);
-        break;
-      case "rep":
-      default:
-        text = "ERROR: Unable to show representation of value";
-    }
-    return text;
-  }
-
-  /**
    * Warning log function.
    * @param {String} functionName
    * @param {String} message

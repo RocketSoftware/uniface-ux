@@ -221,12 +221,11 @@ export class Select extends Widget {
       }
 
       if (!isPlaceholderElementCreated && !rep) {
-        const errorText = this.toFormatValRepErrorText(displayFormat, value);
         // If there is no representation for the non-empty value then show a format error.
         widgetInstance.setProperties({
           "uniface": {
             "format-error": true,
-            "format-error-message": errorText
+            "format-error-message": Select.formatErrorMessage
           }
         });
       } else {

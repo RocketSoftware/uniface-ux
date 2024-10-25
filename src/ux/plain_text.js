@@ -69,26 +69,19 @@ export class PlainText extends Widget {
     }
 
     /**
-     * Formats error message if valrep is not defined.
+     * Returns error message if display-format is valrep based.
      */
-    reformatErrorText(widgetInstance) {
+    getFormatErrorText(widgetInstance) {
       const plainTextFormat = this.getNode(widgetInstance.data.properties, "uniface:plaintext-format");
-      let data = widgetInstance.data.properties;
-      let text = "";
       switch (plainTextFormat) {
         case "valrep-text":
         case "valrep-html":
-          text = `ERROR: Unable to show representation of value ${(data.value || "null")}`;
-          break;
         case "value-only":
-          text = `ERROR: Invalid value ${(data.value || "null")}`;
-          break;
         case "representation-only":
-          text = "ERROR: Unable to show representation of value";
-          break;
+          return PlainText.formatErrorMessage;
         default:
+          return "";
       }
-      return text;
     }
 
     getValueRepresentationAsText(widgetInstance) {
@@ -100,7 +93,7 @@ export class PlainText extends Widget {
       const matchedValrepObj = valrep ? valrep.find((valrepObj) => (valrepObj.value === value)) : undefined;
       const plainTextFormat = this.getNode(widgetInstance.data.properties, "uniface:plaintext-format");
       if (valrep && !matchedValrepObj) {
-        const text = this.reformatErrorText(widgetInstance);
+        const text = this.getFormatErrorText(widgetInstance);
         if (text) {
           widgetInstance.setProperties({
             "uniface": {
