@@ -204,11 +204,11 @@
           }
         });
       }).then(function () {
-          let labelElement = element.querySelector("span.u-label-text");
-          let labelText = labelElement.innerText;
-          expect(selectFieldLabel).equal(labelText);
-          assert(!labelElement.hasAttribute("hidden"), "Failed to show the label text");
-      }); // Wait for DOM rendering
+        let labelElement = element.querySelector("span.u-label-text");
+        let labelText = labelElement.innerText;
+        expect(selectFieldLabel).equal(labelText);
+        assert(!labelElement.hasAttribute("hidden"), "Failed to show the label text");
+      });
 
     });
 
@@ -222,9 +222,9 @@
 
         });
       }).then(function () {
-          let labelPosition = widget.elements.widget.getAttribute('u-label-position');
-          assert.equal(labelPosition, 'before');
-      }); // Wait for DOM rendering
+        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
+        assert.equal(labelPosition, 'before');
+      });
 
     });
 
@@ -248,9 +248,9 @@
 
         });
       }).then(function () {
-          const widget = tester.construct();
-          let labelPosition = widget.elements.widget.getAttribute('u-label-position');
-          assert.equal(labelPosition, 'below');
+        const widget = tester.construct();
+        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
+        assert.equal(labelPosition, 'below');
       });
 
     });
@@ -276,13 +276,13 @@
 
         });
       }).then(function () {
-          const widget = tester.construct();
-          let labelElement = widget.elements.widget.querySelector("span.u-label-text");
-          let labelPosition = widget.elements.widget.getAttribute('u-label-position');
-          assert.equal(labelPosition, 'above');
-          assert(labelElement.hasAttribute("hidden"), "Failed to hide the label text");
-          assert.equal(labelElement.innerText, "");
-          assert.equal(labelElement.getAttribute("slot"), "");
+        const widget = tester.construct();
+        let labelElement = widget.elements.widget.querySelector("span.u-label-text");
+        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
+        assert.equal(labelPosition, 'above');
+        assert(labelElement.hasAttribute("hidden"), "Failed to hide the label text");
+        assert.equal(labelElement.innerText, "");
+        assert.equal(labelElement.getAttribute("slot"), "");
       }); // Wait for DOM rendering
 
     });
@@ -302,7 +302,7 @@
         });
       }).then(function () {
       // ux-select is using disabled attribute instead.
-          expect(element.getAttribute("disabled"));
+        expect(element.getAttribute("disabled"));
       });
     });
 
@@ -312,8 +312,8 @@
           html: { disabled: true }
         });
       }).then(function () {
-          expect(element.getAttribute("disabled"));
-          expect(element.getAttribute("aria-disabled")).equal("true"); 
+        expect(element.getAttribute("disabled"));
+        expect(element.getAttribute("aria-disabled")).equal("true"); 
       });
     });
 
@@ -324,9 +324,9 @@
         });
 
       }).then(function () {
-          let selectOptionArray = element.querySelectorAll("fluent-option");
-          selectOptionArray.forEach(function (node, index) {
-          expect(node.textContent).equal(valRepArray[index].representation);
+        let selectOptionArray = element.querySelectorAll("fluent-option");
+        selectOptionArray.forEach(function (node, index) {
+        expect(node.textContent).equal(valRepArray[index].representation);
         });
       });
     });
@@ -341,10 +341,10 @@
         });
 
       }).then(function () {
-          let selectOptionArray = element.querySelectorAll("fluent-option");
-          selectOptionArray.forEach(function (node, index) {
-          expect(node.textContent).equal(valRepArray[index].value);
-          });
+        let selectOptionArray = element.querySelectorAll("fluent-option");
+        selectOptionArray.forEach(function (node, index) {
+        expect(node.textContent).equal(valRepArray[index].value);
+        });
       });
     });
 
@@ -358,10 +358,10 @@
         });
 
       }).then(function () {
-          let selectOptionArray = element.querySelectorAll("fluent-option");
-          selectOptionArray.forEach(function (node, index) {
-          let formatValrepText = valRepArray[index].representation + " " + valRepArray[index].value;
-          expect(node.textContent).equal(formatValrepText);
+        let selectOptionArray = element.querySelectorAll("fluent-option");
+        selectOptionArray.forEach(function (node, index) {
+        let formatValrepText = valRepArray[index].representation + " " + valRepArray[index].value;
+        expect(node.textContent).equal(formatValrepText);
         });
       });
     });
