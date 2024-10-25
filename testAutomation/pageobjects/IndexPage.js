@@ -1,68 +1,29 @@
 import { BasePage } from './BasePage';
-import { expect } from "@playwright/test";
 
 class IndexPage extends BasePage {
     constructor(page)
 {
     super(page);
-    this.buttonWidget = page.locator("#button");
-    this.checkboxWidget = page.locator("#checkbox");
-    this.numberFieldWidget = page.locator("#number-field");
-    this.plainTextWidget = page.locator("#plain-text");
-    this.selectWidget = page.locator("#select");
-    this.radioGroupWidget = page.locator("#radio-group");
-    this.switchWidget = page.locator("#switch");
-    this.textAreaWidget = page.locator("#text-area");
-    this.textFieldWidget = page.locator("#text-field");
-
+    this.buttonWidgetLink = '#button';
+    this.checkboxWidgetLink = '#checkbox';
+    this.numberFieldWidgetLink = '#number-field';
+    this.radioGroupWidgetLink = '#radio-group';
+    this.selectWidgetLink = '#select';
+    this.switchWidgetLink = '#switch';
+    this.textAreaWidgetLink ='#text-area';
+    this.textFieldWidgetLink = '#text-field';
+    this.baseWidgetLink = '#base';
+    this.widgetClassWidgetLink = '#widget';
+    this.workersClassWidgetLink = '#workers';
+    this.controlBarWidgetLink = '#controlbar'
 }
 
-//Constant Variables
-static indexPageTitle = 'UX widget tests overview';
-
-async clickButtonWidgetLink()
-{   
-    await this.buttonWidget.click();
-}
-
-async clickCheckBoxWidgetLink()
-{
-    await this.checkboxWidget.click();
-}
-
-async clickNumberFieldWidgetLink()
-{
-    await this.numberFieldWidget.click();
-}
-
-async clickPlainTextWidgetLink()
-{
-    await this.plainTextWidget.click();
-}
-
-async clickSelectWidgetLink()
-{
-    await this.selectWidget.click();
-}
-
-async clickRadioGroupWidgetLink()
-{
-    await this.radioGroupWidget.click();
-}
-
-async clickSwitchWidgetLink()
-{
-    await this.switchWidget.click();
-}
-
-async clickTextAreaWidgetLink()
-{
-    await this.textAreaWidget.click();
-}
-
-async clickTextFieldWidgetLink()
-{
-    await this.textFieldWidget.click();
+async openNewPage(selector) {
+    const [newPage] = await Promise.all([
+    this.page.waitForEvent('popup'), // Waits for a new page (popup or tab) to be created
+    this.page.click(selector) // Click on the user-defined selector
+    ]);
+    return newPage;
 }
 
 }
