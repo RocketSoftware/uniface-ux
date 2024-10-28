@@ -155,6 +155,7 @@
         const defaultValues = tester.getDefaultValues();
         const classes = defaultValues.classes;
         let element;
+        
         beforeEach(function() {
             element = tester.element;
             assert(element, "Widget top element is not defined!");
