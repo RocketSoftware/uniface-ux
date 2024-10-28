@@ -20,7 +20,6 @@
     },
     {
       value: "2",
-
       representation: "option two"
     },
     {
