@@ -149,7 +149,7 @@
   describe("Data Init", function () {
     const defaultValues = tester.getDefaultValues();
     const classes = defaultValues.classes;
-    var element;
+    let element;
 
     beforeEach(function () {
       tester.dataInit();
@@ -181,7 +181,7 @@
 
     it("check error message appears when valrep is not defined", function () {
       let errorIconTooltip = element.querySelector('.u-error-icon');
-      expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Unable to show representation of value");
+      expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
     });
 
   });
@@ -384,7 +384,6 @@
   describe('Select onchange event', function () {
     let selectElement, onchangeSpy, widget;
     beforeEach(function () {
-
       widget = tester.createWidget();
       selectElement = tester.element;
 
@@ -417,7 +416,8 @@
     before(function () {
       widget = tester.createWidget();
     });
-    it("reset all property", function () {
+
+    it("reset all properties", function () {
       try {
         widget.dataCleanup(tester.widgetProperties);
       } catch (e) {
@@ -426,4 +426,5 @@
       }
     });
   });
+
 })();
