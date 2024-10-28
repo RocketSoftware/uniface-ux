@@ -3,17 +3,14 @@
 (function() {
     'use strict';
 
-    /**
-     * Default timeout for waiting for DOM rendering (in milliseconds)
-     */
-    const defaultAsyncTimeout = 100; //ms
     const assert = chai.assert;
     const expect = chai.expect;
     const tester = new umockup.WidgetTester();
     const widgetId = tester.widgetId;
     const widgetName = tester.widgetName;
     const widgetClass = tester.getWidgetClass();
- 
+    const asyncRun = umockup.asyncRun;
+
     /**
      * Function to determine whether the widget class has been loaded.
      */
@@ -157,8 +154,8 @@
     describe("Data Init", function() {
         const defaultValues = tester.getDefaultValues();
         const classes = defaultValues.classes;
-        var element;
-
+        let element;
+        
         beforeEach(function() {
             element = tester.element;
             assert(element, "Widget top element is not defined!");
@@ -202,132 +199,131 @@
 
     describe("dataUpdate", function() {
         let widget, element;
+        
         before(function() {
             widget = tester.createWidget();
             element = tester.element;
             assert(element, "Widget top element is not defined!");
         });
 
-        it("set value to 1 and make the checkbox toggle", function(done) {
-            tester.dataUpdate({
-                value: 1
-            });
-            setTimeout(function() {
+        it("set value to 1 and make the checkbox toggle", function() {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    value: 1
+                });
+            }).then(function() {
                 expect(element).to.have.class("checked");
                 expect(element.getAttribute("current-checked")).equal("true");
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
 
-        it("set value to false and make the switch checkbox in unchecked state", function(done) {
-            tester.dataUpdate({
-                value: false
-            });
-            setTimeout(function() {
+        it("set value to false and make the switch checkbox in unchecked state", function() {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    value: false
+                });
+            }).then(function() {
                 expect(element).to.not.have.class("checked");
                 expect(element.getAttribute("current-checked")).equal("false");
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
 
-        it("set value to '' and make the  checkbox in indeterminate state", function(done) {
-            tester.dataUpdate({
-                value: ""
-            });
-            setTimeout(function() {
+        it("set value to '' and make the checkbox in indeterminate state", function() {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    value: ""
+                });
+            }).then(function() {
                 expect(element).to.not.have.class("checked");
                 expect(element).to.have.class("u-checkbox")
                 expect(element).to.have.class("indeterminate")
                 expect(element.getAttribute("current-checked")).equal("false");
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
 
-        it("set label to checkbox", function(done) {
+        it("set label to checkbox", function() {
             let checkBoxLabelText = "Label";
-            tester.dataUpdate({
-                uniface: {
-                    "label-text": checkBoxLabelText
-                }
-            });
-            setTimeout(function() {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    uniface: {
+                        "label-text": checkBoxLabelText
+                    }
+                });
+            }).then(function() {
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
                 assert.equal(labelText, checkBoxLabelText); //Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
 
-
-
-        it("set checkbox html title", function(done) {
+        it("set checkbox html title", function() {
             let checkBoxTitle = "On";
-            tester.dataUpdate({
-                "html": {
-                    "title": checkBoxTitle
-                },
-                value: 1
-            });
-            setTimeout(function() {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    "html": {
+                        "title": checkBoxTitle
+                    },
+                    value: 1
+                });
+            }).then(function() {
                 assert(widget.elements.widget.hasAttribute("title"), "Failed to show the title attribute");
                 expect(widget.elements.widget.getAttribute("title")).equal(checkBoxTitle);
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
 
-        it("set label to checkbox and set value to true", function(done) {
+        it("set label to checkbox and set value to true", function() {
             let checkBoxLabelText = "Label";
-            tester.dataUpdate({
-                value: 1,
-                uniface: {
-                    "label-text": checkBoxLabelText
-                }
-            });
-            setTimeout(function() {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    value: 1,
+                    uniface: {
+                        "label-text": checkBoxLabelText
+                    }
+                });
+            }).then(function() {
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
                 assert.equal(labelText, checkBoxLabelText); //Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
 
-        it("set label to checkbox and set value to false", function(done) {
+        it("set label to checkbox and set value to false", function() {
             let checkBoxLabelText = "Label";
-            tester.dataUpdate({
-                value: 0,
-                uniface: {
-                    "label-text": checkBoxLabelText
-                }
-            });
-            setTimeout(function() {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    value: 0,
+                    uniface: {
+                        "label-text": checkBoxLabelText
+                    }
+                });
+            }).then(function() {
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
                 assert.equal(labelText, checkBoxLabelText); //Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
 
-        it("set label to checkbox and set value to true then change to indeterminate", function(done) {
+        it("set label to checkbox and set value to true then change to indeterminate", function() {
             let checkBoxLabelText = "Label";
-            tester.dataUpdate({
-                value: 1,
-                uniface: {
-                    "label-text": checkBoxLabelText
-                }
-            });
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    value: 1,
+                    uniface: {
+                        "label-text": checkBoxLabelText
+                    }
+                });
 
-            tester.dataUpdate({
-                value: "",
-                uniface: {
-                    "label-text": "Changed Label Text"
-                }
-            });
-            setTimeout(function() {
+                tester.dataUpdate({
+                    value: "",
+                    uniface: {
+                        "label-text": "Changed Label Text"
+                    }
+                });
+            }).then(function() {
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
                 assert.equal(labelText, "Changed Label Text"); //Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
     });
 
@@ -339,18 +335,18 @@
             assert(element, "Widget top element is not defined!");
         });
 
-        it("set invalid value when checkbox checked state is false", function(done) {
-            tester.dataUpdate({
-                value: 123
-            });
-            setTimeout(function() {
+        it("set invalid value when checkbox checked state is false", function() {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    value: 123
+                });
+            }).then(function() {
                 expect(element).to.have.class("u-format-invalid");
                 assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon");
                 expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
                 assert.equal(widget.elements.widget.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
                 assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."); //Check for visibility
-                done();
-            }, defaultAsyncTimeout);
+            });
         })
     });
 
@@ -362,24 +358,25 @@
             assert(element, "Widget top element is not defined!");
         });
 
-        it("set error to false", function(done) {
-            tester.dataUpdate({
-                uniface: {
-                    error: false,
-                    "error-message": ""
-                }
-            });
-            setTimeout(function() {
+        it("set error to false", function() {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    uniface: {
+                        error: false,
+                        "error-message": ""
+                    }
+                });
+            }).then(function() {
                 expect(element).to.not.have.class("u-format-invalid");
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden error icon");
                 expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
                 expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide hidden attribute")
-                done();
-            }, defaultAsyncTimeout);
+            });
         })
     })
 
     describe("reset all properties", function() {
+
         it("reset all property", function() {
             try {
                 tester.dataUpdate(tester.getDefaultValues());
