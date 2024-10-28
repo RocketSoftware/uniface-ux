@@ -175,7 +175,7 @@
 
     it("check error message appears when valrep is not defined", function () {
       let errorIconTooltip = element.querySelector('.u-error-icon');
-      expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Unable to show representation of value");
+      expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
     });
   });
 

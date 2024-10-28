@@ -4,7 +4,7 @@
   /**
      * Default timeout for waiting for DOM rendering (in milliseconds)
      */
-  const defaultAsyncTimeout = 100; // ms
+  const defaultAsyncTimeout = 1000; // ms
 
   const assert = chai.assert;
   const expect = chai.expect;
@@ -21,7 +21,6 @@
     },
     {
       value: "2",
-
       representation: "option two"
     },
     {
@@ -132,16 +131,9 @@
       }
     });
 
-    it("onConnect", function (done) {
+    it("onConnect", function () {
       const element = tester.processLayout();
-      const widget = tester.construct();
-      setTimeout(function () {
-        widget.onConnect(element);
-        assert(element, "Target element is not defined!");
-        assert(widget.elements.widget === element, "widget is not connected");
-        done();
-      }, defaultAsyncTimeout);
-
+      const widget = tester.onConnect();
       assert(element, "Target element is not defined!");
       assert(widget.elements.widget === element, "widget is not connected");
     });
@@ -155,7 +147,7 @@
   describe("Data Init", function () {
     const defaultValues = tester.getDefaultValues();
     const classes = defaultValues.classes;
-    var element;
+    let element;
 
     beforeEach(function () {
       tester.dataInit();
@@ -187,7 +179,7 @@
 
     it("check error message appears when valrep is not defined", function () {
       let errorIconTooltip = element.querySelector('.u-error-icon');
-      expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Unable to show representation of value");
+      expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
     });
 
   });
@@ -220,12 +212,11 @@
 
     it("Set label position before", function (done) {
       const widget = tester.construct();
-      
+
       tester.dataUpdate({
         uniface: {
           "label-position": "before"
         }
-
       });
 
       setTimeout(function () {
@@ -252,7 +243,6 @@
         uniface: {
           "label-position": "below"
         }
-
       });
 
       setTimeout(function () {
@@ -281,7 +271,6 @@
           "label-position": uniface.RESET,
           "label-text": uniface.RESET
         }
-
       });
 
       setTimeout(function () {
@@ -388,7 +377,6 @@
       setTimeout(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("option two");
-
         done();
       }, defaultAsyncTimeout);
     });
@@ -397,7 +385,6 @@
   describe('Select onchange event', function () {
     let selectElement, onchangeSpy, widget;
     beforeEach(function () {
-
       widget = tester.createWidget();
       selectElement = tester.element;
 
@@ -430,7 +417,8 @@
     before(function () {
       widget = tester.createWidget();
     });
-    it("reset all property", function () {
+
+    it("reset all properties", function () {
       try {
         widget.dataCleanup(tester.widgetProperties);
       } catch (e) {
@@ -439,4 +427,5 @@
       }
     });
   });
+
 })();

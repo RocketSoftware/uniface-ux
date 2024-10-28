@@ -61,7 +61,7 @@ export class Switch extends Widget {
       let errorElement = this.getElement(widgetInstance);
       if (errorElement && this.selectorUsingSameErrorSlot) {
         let slotElement = element.querySelector(this.selectorUsingSameErrorSlot);
-        if (formatError || error) {
+        if (formatError || error || slotElement.textContent.trim() === '') {
           slotElement.slot = "";
           slotElement.hidden = true;
         } else {
