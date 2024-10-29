@@ -42,17 +42,6 @@
 
   });
 
-  describe("Uniface Mockup tests", function () {
-
-    it("Get class " + widgetName, function () {
-      const widgetClass = tester.getWidgetClass();
-      assert(widgetClass, `Widget class '${widgetName}' is not defined!
-            Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
-    });
-
-  });
-
-
   describe("Uniface static structure constructor definition", function () {
 
     it('should have a static property structure of type Element', function () {
@@ -133,8 +122,6 @@
       widget.onConnect(element);
       assert(element, "Target element is not defined!");
       assert(widget.elements.widget === element, "widget is not connected");
-      assert(element, "Target element is not defined!");
-      assert(widget.elements.widget === element, "widget is not connected");
     });
   });
 
@@ -205,7 +192,6 @@
         expect(selectFieldLabel).equal(labelText);
         assert(!labelElement.hasAttribute("hidden"), "Failed to show the label text");
       });
-
     });
 
     it("Set label position before", function () {
@@ -215,13 +201,11 @@
           uniface: {
             "label-position": "before"
           }
-
         });
       }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
         assert.equal(labelPosition, 'before');
       });
-
     });
 
     it("check label position before styles", function () {
@@ -241,14 +225,12 @@
           uniface: {
             "label-position": "below"
           }
-
         });
       }).then(function () {
         const widget = tester.construct();
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
         assert.equal(labelPosition, 'below');
       });
-
     });
 
     it("check label position below styles", function () {
@@ -269,7 +251,6 @@
             "label-position": uniface.RESET,
             "label-text": uniface.RESET
           }
-
         });
       }).then(function () {
         const widget = tester.construct();
@@ -279,8 +260,7 @@
         assert(labelElement.hasAttribute("hidden"), "Failed to hide the label text");
         assert.equal(labelElement.innerText, "");
         assert.equal(labelElement.getAttribute("slot"), "");
-      }); // Wait for DOM rendering
-
+      });
     });
 
     it("check reset label position styles", function () {
@@ -297,7 +277,7 @@
           html: { readonly: true }
         });
       }).then(function () {
-      // ux-select is using disabled attribute instead.
+        // ux-select is using disabled attribute instead.
         expect(element.getAttribute("disabled"));
       });
     });
@@ -318,11 +298,10 @@
         tester.dataUpdate({
           valrep: valRepArray
         });
-
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
         selectOptionArray.forEach(function (node, index) {
-        expect(node.textContent).equal(valRepArray[index].representation);
+          expect(node.textContent).equal(valRepArray[index].representation);
         });
       });
     });
@@ -335,7 +314,6 @@
             "display-format": "val"
           }
         });
-
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
         selectOptionArray.forEach(function (node, index) {
@@ -352,12 +330,11 @@
             "display-format": "valrep"
           }
         });
-
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
         selectOptionArray.forEach(function (node, index) {
-        let formatValrepText = valRepArray[index].representation + " " + valRepArray[index].value;
-        expect(node.textContent).equal(formatValrepText);
+          let formatValrepText = valRepArray[index].representation + " " + valRepArray[index].value;
+          expect(node.textContent).equal(formatValrepText);
         });
       });
     });
@@ -379,9 +356,9 @@
   });
 
   describe('Select onchange event', function () {
-    let selectElement, onchangeSpy, widget;
+    let selectElement, onchangeSpy;
     beforeEach(function () {
-      widget = tester.createWidget();
+      tester.createWidget();
       selectElement = tester.element;
 
       // Create a spy for the onchange event
