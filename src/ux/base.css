@@ -78,7 +78,7 @@ fluent-card {
 .u-select[u-label-position][hidden],
 .u-text-field[u-label-position][hidden],
 .u-text-area[u-label-position][hidden] {
-  display: none
+  display: none;
 }
 
 .u-number-field[u-label-position="before"]::part(label),
@@ -137,7 +137,7 @@ fluent-card {
 .u-number-field::part(label),
 .u-select::part(label),
 .u-text-field::part(label),
-.u-text-area::part(label){
+.u-text-area::part(label) {
   margin-bottom: 0;
 }
 
