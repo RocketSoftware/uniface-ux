@@ -1,3 +1,7 @@
+.u-radio-group {
+  display: inline-flex;
+}
+
 .u-radio-group .u-radio {
   margin: calc(var(--design-unit) * .5px) 0;
   align-items: flex-start;
@@ -20,7 +24,8 @@
   padding-inline-end: calc((var(--design-unit) * .5px));
 }
 
-.u-radio-group .u-label-text:not([hidden]){
+.u-radio-group .u-label-text:not([hidden]),
+.u-radio-group .u-error-icon:not([hidden]) {
   margin-bottom: 4px;
 }
 

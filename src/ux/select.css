@@ -11,6 +11,16 @@
   min-height: unset;
 }
 
+.u-select::part(selected-value) {
+  overflow: hidden;
+}
+
+.u-select div[slot=selected-value] {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .u-select.u-readonly::part(label),
 .u-select.u-readonly::part(control) {
   cursor: not-allowed;
@@ -29,6 +39,7 @@
 
 .u-select .u-placeholder {
   color: var(--neutral-base-color);
+  font-style: italic;
 }
 
 .u-select .u-placeholder::after {
