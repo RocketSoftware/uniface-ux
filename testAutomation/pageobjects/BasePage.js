@@ -7,7 +7,7 @@ class BasePage{
   }
 
   async open() {
-    await this.page.goto('http://localhost:8080/ux-widgets/test/index.html');
+    await this.page.goto('./index.html');  // relative to use.baseURL
   }
 
   async verifyPageTitle(expectedTitle) {
@@ -21,11 +21,6 @@ class BasePage{
 
   async waitForSelector(selector) {
     await this.page.waitForSelector(selector);
-  }
-
-  async waitForElement(selector) {
-    await this.page.waitForSelector(selector);
-    console.log(`Element ${selector} is visible`);
   }
 
   async waitForElement(selector) {

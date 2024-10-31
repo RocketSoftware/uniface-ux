@@ -53,12 +53,19 @@ To set up the project locally, follow these steps:
     
 5. Start your Tomcat server with ux-widgets webapp deployed. By default, the URL of index.page is
    hard-corded in testAutomation\pageobjects\BasePage.js as:
+   
      http://localhost:8080/ux-widgets/test/index.html
+  
+  This can be customized locally by environment variable:
+  
+    set UX_WIDGETS_BASE_URL=the_baseURL_of_index.html
+  
+  For example,
+  
+    set UX_WIDGETS_BASE_URL=http://localhost:8080/ux-widgets/test/
+  
+  This will open page http://localhost:8080/ux-widgets/test/index.html
 
-This can be customized locally by environment variable:
-  set UX_WIDGETS_URL=your_local_url_of_index.html
-
-    
 6. Running Tests
 
 	To run the Playwright tests, use the following command:
