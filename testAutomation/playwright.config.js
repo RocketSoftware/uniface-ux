@@ -22,5 +22,4 @@ export default defineConfig({
     video: 'on', // Record video of tests ['on', 'off' or 'retain-on-failure']
     trace: 'off' // Disable tracing
   },
-
-};
+});
