@@ -34,3 +34,7 @@
     padding-inline-start: 4px;
     vertical-align: text-top;
 }
+
+.u-plain-text .u-label-text:after {
+    content: " ";
+}

@@ -69,26 +69,19 @@ export class PlainText extends Widget {
     }
 
     /**
-     * Formats error message if valrep is not defined.
+     * Returns error message if display-format is valrep based.
      */
-    reformatErrorText(widgetInstance) {
+    getFormatErrorText(widgetInstance) {
       const plainTextFormat = this.getNode(widgetInstance.data.properties, "uniface:plaintext-format");
-      let data = widgetInstance.data.properties;
-      let text = "";
       switch (plainTextFormat) {
         case "valrep-text":
         case "valrep-html":
-          text = `ERROR: Unable to show representation of value ${(data.value || "null")}`;
-          break;
         case "value-only":
-          text = `ERROR: Invalid value ${(data.value || "null")}`;
-          break;
         case "representation-only":
-          text = "ERROR: Unable to show representation of value";
-          break;
+          return PlainText.formatErrorMessage;
         default:
+          return "";
       }
-      return text;
     }
 
     getValueRepresentationAsText(widgetInstance) {
@@ -100,7 +93,7 @@ export class PlainText extends Widget {
       const matchedValrepObj = valrep ? valrep.find((valrepObj) => (valrepObj.value === value)) : undefined;
       const plainTextFormat = this.getNode(widgetInstance.data.properties, "uniface:plaintext-format");
       if (valrep && !matchedValrepObj) {
-        const text = this.reformatErrorText(widgetInstance);
+        const text = this.getFormatErrorText(widgetInstance);
         if (text) {
           widgetInstance.setProperties({
             "uniface": {
@@ -119,10 +112,10 @@ export class PlainText extends Widget {
       });
 
       switch (plainTextFormat) {
-        case "valrep-html": {
-          value = `<span class="u-valrep-rep">${matchedValrepObj.representation}</span><span class="u-valrep-value">${value}</span>`;
+        case "valrep-html":
+          // The space between the spans is added intentionally to create spacing between the representation and the value.
+          value = `<span class="u-valrep-rep">${matchedValrepObj.representation}</span> <span class="u-valrep-value">${value}</span>`;
           break;
-        }
         case "valrep-text":
           value = `${matchedValrepObj.representation} (${value})`;
           break;
@@ -209,6 +202,7 @@ export class PlainText extends Widget {
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttribute(this, "html:slot", "slot", "")
   ], [
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
     new this.SlottedPlainTextFormat(this, "span", "u-control", ".u-control"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),

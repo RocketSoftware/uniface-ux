@@ -1,5 +1,10 @@
+.u-radio-group {
+  display: inline-flex;
+}
+
 .u-radio-group .u-radio {
   margin: calc(var(--design-unit) * .5px) 0;
+  align-items: flex-start;
 }
 
 .u-radio-group::part(label) {
@@ -17,6 +22,11 @@
   font-weight: initial;
   font-variation-settings: var(--type-ramp-base-font-variations);
   padding-inline-end: calc((var(--design-unit) * .5px));
+}
+
+.u-radio-group .u-label-text:not([hidden]),
+.u-radio-group .u-error-icon:not([hidden]) {
+  margin-bottom: 4px;
 }
 
 .u-radio-group .u-error-icon::before {

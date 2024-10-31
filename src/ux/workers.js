@@ -228,6 +228,7 @@ export class SlottedElement extends Element {
   }
 
   setIconOrText(element, slot, icon, text) {
+    this.deleteIconClasses(element);
     if (icon) {
       element.hidden = false;
       element.slot = slot;
@@ -237,23 +238,21 @@ export class SlottedElement extends Element {
     } else if (text) {
       element.hidden = false;
       element.slot = slot;
-      Array.from(element.classList).forEach((className) => {
-        if (className.startsWith("ms-")) {
-          element.classList.remove(className);
-        }
-      });
       element.innerText = text;
     } else {
       element.hidden = true;
       // Force to default slot to avoid unwanted paddings and margins.
       element.slot = "";
-      Array.from(element.classList).forEach((className) => {
-        if (className.startsWith("ms-")) {
-          element.classList.remove(className);
-        }
-      });
       element.innerText = "";
     }
+  }
+
+  deleteIconClasses(element) {
+    Array.from(element.classList).forEach((className) => {
+      if (className.startsWith("ms-")) {
+        element.classList.remove(className);
+      }
+    });
   }
 }
 

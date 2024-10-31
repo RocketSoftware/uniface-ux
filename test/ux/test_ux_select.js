@@ -1,17 +1,13 @@
 (function () {
   'use strict';
 
-  /**
-     * Default timeout for waiting for DOM rendering (in milliseconds)
-     */
-  const defaultAsyncTimeout = 100; // ms
-
   const assert = chai.assert;
   const expect = chai.expect;
   const tester = new umockup.WidgetTester();
   const widgetId = tester.widgetId;
   const widgetName = tester.widgetName;
   const widgetClass = tester.getWidgetClass();
+  const asyncRun = umockup.asyncRun;
 
   // custom test variables
   const valRepArray = [
@@ -21,7 +17,6 @@
     },
     {
       value: "2",
-
       representation: "option two"
     },
     {
@@ -32,8 +27,8 @@
 
 
   /**
-       * Function to determine whether the widget class has been loaded.
-       */
+   * Function to determine whether the widget class has been loaded.
+   */
   function verifyWidgetClass(widgetClass) {
     assert(widgetClass, `Widget class '${widgetName}' is not defined!
               Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
@@ -46,17 +41,6 @@
     });
 
   });
-
-  describe("Uniface Mockup tests", function () {
-
-    it("Get class " + widgetName, function () {
-      const widgetClass = tester.getWidgetClass();
-      assert(widgetClass, `Widget class '${widgetName}' is not defined!
-            Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
-    });
-
-  });
-
 
   describe("Uniface static structure constructor definition", function () {
 
@@ -132,16 +116,10 @@
       }
     });
 
-    it("onConnect", function (done) {
+    it("onConnect", function () {
       const element = tester.processLayout();
       const widget = tester.construct();
-      setTimeout(function () {
-        widget.onConnect(element);
-        assert(element, "Target element is not defined!");
-        assert(widget.elements.widget === element, "widget is not connected");
-        done();
-      }, defaultAsyncTimeout);
-
+      widget.onConnect(element);
       assert(element, "Target element is not defined!");
       assert(widget.elements.widget === element, "widget is not connected");
     });
@@ -155,7 +133,7 @@
   describe("Data Init", function () {
     const defaultValues = tester.getDefaultValues();
     const classes = defaultValues.classes;
-    var element;
+    let element;
 
     beforeEach(function () {
       tester.dataInit();
@@ -187,7 +165,7 @@
 
     it("check error message appears when valrep is not defined", function () {
       let errorIconTooltip = element.querySelector('.u-error-icon');
-      expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Unable to show representation of value");
+      expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
     });
 
   });
@@ -200,40 +178,34 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("show label", function (done) {
+    it("show label", function () {
       let selectFieldLabel = 'Label';
-      tester.dataUpdate({
-        uniface: {
-          "label-text": selectFieldLabel
-        }
-      });
-
-      setTimeout(function () {
+      return asyncRun(function() {
+        tester.dataUpdate({
+          uniface: {
+            "label-text": selectFieldLabel
+          }
+        });
+      }).then(function () {
         let labelElement = element.querySelector("span.u-label-text");
         let labelText = labelElement.innerText;
         expect(selectFieldLabel).equal(labelText);
         assert(!labelElement.hasAttribute("hidden"), "Failed to show the label text");
-        done();
-      }, defaultAsyncTimeout); // Wait for DOM rendering
-
+      });
     });
 
-    it("Set label position before", function (done) {
+    it("Set label position before", function () {
       const widget = tester.construct();
-      
-      tester.dataUpdate({
-        uniface: {
-          "label-position": "before"
-        }
-
-      });
-
-      setTimeout(function () {
+      return asyncRun(function() {
+        tester.dataUpdate({
+          uniface: {
+            "label-position": "before"
+          }
+        });
+      }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
         assert.equal(labelPosition, 'before');
-        done();
-      }, defaultAsyncTimeout); // Wait for DOM rendering
-
+      });
     });
 
     it("check label position before styles", function () {
@@ -247,21 +219,18 @@
       assert.equal(alignPropertyValue, "center");
     });
 
-    it("Set label position below", function (done) {
-      tester.dataUpdate({
-        uniface: {
-          "label-position": "below"
-        }
-
-      });
-
-      setTimeout(function () {
+    it("Set label position below", function () {
+      return asyncRun(function() {
+        tester.dataUpdate({
+          uniface: {
+            "label-position": "below"
+          }
+        });
+      }).then(function () {
         const widget = tester.construct();
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
         assert.equal(labelPosition, 'below');
-        done();
-      }, defaultAsyncTimeout); // Wait for DOM rendering
-
+      });
     });
 
     it("check label position below styles", function () {
@@ -275,16 +244,15 @@
       assert.equal(orderPropertyValue, 2);
     });
 
-    it("reset label and its position", function (done) {
-      tester.dataUpdate({
-        uniface: {
-          "label-position": uniface.RESET,
-          "label-text": uniface.RESET
-        }
-
-      });
-
-      setTimeout(function () {
+    it("reset label and its position", function () {
+      return asyncRun(function() {
+        tester.dataUpdate({
+          uniface: {
+            "label-position": uniface.RESET,
+            "label-text": uniface.RESET
+          }
+        });
+      }).then(function () {
         const widget = tester.construct();
         let labelElement = widget.elements.widget.querySelector("span.u-label-text");
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -292,9 +260,7 @@
         assert(labelElement.hasAttribute("hidden"), "Failed to hide the label text");
         assert.equal(labelElement.innerText, "");
         assert.equal(labelElement.getAttribute("slot"), "");
-        done();
-      }, defaultAsyncTimeout); // Wait for DOM rendering
-
+      });
     });
 
     it("check reset label position styles", function () {
@@ -305,100 +271,94 @@
       assert.equal(flexPropertyValue, "column");
     });
 
-    it("Set HTML property readonly to true", function (done) {
-      tester.dataUpdate({
-        html: { readonly: true }
-      });
-      // ux-select is using disabled attribute instead.
-      setTimeout(function () {
+    it("Set HTML property readonly to true", function () {
+      return asyncRun(function() {
+        tester.dataUpdate({
+          html: { readonly: true }
+        });
+      }).then(function () {
+        // ux-select is using disabled attribute instead.
         expect(element.getAttribute("disabled"));
-        done();
-      }, defaultAsyncTimeout);
+      });
     });
 
-    it("Set HTML property disabled to true", function (done) {
-      tester.dataUpdate({
-        html: { disabled: true }
-      });
-
-      setTimeout(function () {
+    it("Set HTML property disabled to true", function () {
+      return asyncRun(function() {
+        tester.dataUpdate({
+          html: { disabled: true }
+        });
+      }).then(function () {
         expect(element.getAttribute("disabled"));
-        expect(element.getAttribute("aria-disabled")).equal("true");
-        done();
-      }, defaultAsyncTimeout);
+        expect(element.getAttribute("aria-disabled")).equal("true"); 
+      });
     });
 
-    it("Set valrep property with default display value as rep", function (done) {
-      tester.dataUpdate({
-        valrep: valRepArray
-      });
-
-      setTimeout(function () {
+    it("Set valrep property with default display value as rep", function () {
+      return asyncRun(function() {
+        tester.dataUpdate({
+          valrep: valRepArray
+        });
+      }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
         selectOptionArray.forEach(function (node, index) {
           expect(node.textContent).equal(valRepArray[index].representation);
         });
-        done();
-      }, defaultAsyncTimeout);
+      });
     });
 
-    it("Set valrep property with default display-format as value", function (done) {
-      tester.dataUpdate({
-        valrep: valRepArray,
-        uniface: {
-          "display-format": "val"
-        }
-      });
-
-      setTimeout(function () {
+    it("Set valrep property with default display-format as value", function () {
+      return asyncRun(function() {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          uniface: {
+            "display-format": "val"
+          }
+        });
+      }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
         selectOptionArray.forEach(function (node, index) {
-          expect(node.textContent).equal(valRepArray[index].value);
+        expect(node.textContent).equal(valRepArray[index].value);
         });
-        done();
-      }, defaultAsyncTimeout);
+      });
     });
 
-    it("Set valrep property with default display value as valrep", function (done) {
-      tester.dataUpdate({
-        valrep: valRepArray,
-        uniface: {
-          "display-format": "valrep"
-        }
-      });
-
-      setTimeout(function () {
+    it("Set valrep property with default display value as valrep", function () {
+      return asyncRun(function() {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          uniface: {
+            "display-format": "valrep"
+          }
+        });
+      }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
         selectOptionArray.forEach(function (node, index) {
           let formatValrepText = valRepArray[index].representation + " " + valRepArray[index].value;
           expect(node.textContent).equal(formatValrepText);
         });
-        done();
-      }, defaultAsyncTimeout);
+      });
     });
 
-    it("Set value to 2 and expect the second option to be selected", function (done) {
-      tester.dataUpdate({
-        valrep: valRepArray,
-        value: "2",
-        uniface: {
-          "display-format": "rep"
-        }
-      });
-      setTimeout(function () {
+    it("Set value to 2 and expect the second option to be selected", function () {
+      return asyncRun(function() {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: "2",
+          uniface: {
+            "display-format": "rep"
+          }
+        });
+      }).then(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("option two");
-
-        done();
-      }, defaultAsyncTimeout);
+      });
     });
   });
 
   describe('Select onchange event', function () {
-    let selectElement, onchangeSpy, widget;
+    let selectElement, onchangeSpy;
     beforeEach(function () {
-
-      widget = tester.createWidget();
+      tester.createWidget();
       selectElement = tester.element;
 
       // Create a spy for the onchange event
@@ -430,7 +390,8 @@
     before(function () {
       widget = tester.createWidget();
     });
-    it("reset all property", function () {
+
+    it("reset all properties", function () {
       try {
         widget.dataCleanup(tester.widgetProperties);
       } catch (e) {
@@ -439,4 +400,5 @@
       }
     });
   });
+
 })();

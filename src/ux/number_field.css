@@ -53,3 +53,7 @@
 .u-number-field.u-invalid .u-error-icon {
   color: #d13438;
 }
+
+.u-number-field[disabled] .u-sw-changebutton::part(control) {
+  opacity: unset;
+}

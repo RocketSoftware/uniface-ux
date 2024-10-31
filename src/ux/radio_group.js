@@ -84,8 +84,6 @@ export class RadioGroup extends Widget {
       super.refresh(widgetInstance);
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
       const value = this.getNode(widgetInstance.data.properties, "value");
-      const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
-      const errorText = this.toFormatValRepErrorText(displayFormat, value);
       let matchedValrepObj = valrep ? valrep.find((valrepObj) => valrepObj.value === value) : undefined;
       if (valrep.length > 0 && (matchedValrepObj || value === "" || value === null)) {
         widgetInstance.setProperties({
@@ -98,7 +96,7 @@ export class RadioGroup extends Widget {
         widgetInstance.setProperties({
           "uniface": {
             "format-error": true,
-            "format-error-message": errorText
+            "format-error-message": RadioGroup.formatErrorMessage
           }
         });
       }
@@ -165,7 +163,6 @@ export class RadioGroup extends Widget {
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
     new HtmlAttributeChoice(this, "uniface:layout", "orientation", ["vertical", "horizontal"], "vertical", true),
     new this.RadioGroupSelectedValue(this, "value", "value", "")
   ], [

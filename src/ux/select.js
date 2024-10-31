@@ -37,31 +37,18 @@ export class Select extends Widget {
   static uiBlocking = "readonly";
 
   /**
-   * Private Worker: HtmlAttributeBoolean ReadOnly/Disabled Attribute.
+   * Private Worker: HtmlAttributeBoolean ReadOnly Attribute.
    * Readonly is not supported by fluent select thus explicitly making it readonly.
-   * @class HtmlAttributeBooleanReadOnlyDisabled
+   * @class HtmlAttributeBooleanReadOnly
    * @extends {HtmlAttributeBoolean}
    */
-  static HtmlAttributeBooleanReadOnlyDisabled = class extends HtmlAttributeBoolean {
-    constructor(widgetClass, propId, attrName, defaultValue, setAsAttribute) {
-      super(widgetClass, propId, attrName, defaultValue, setAsAttribute);
-      this.registerSetter(widgetClass, "html:disabled", this);
-      this.registerDefaultValue(widgetClass, "html:disabled", false);
-    }
+  static HtmlAttributeBooleanReadOnly = class extends HtmlAttributeBoolean {
     refresh(widgetInstance) {
       const element = this.getElement(widgetInstance);
       const readonly = this.toBoolean(this.getNode(widgetInstance.data.properties, "html:readonly"));
-      const disabled = this.toBoolean(this.getNode(widgetInstance.data.properties, "html:disabled"));
-      if (readonly || disabled) {
-        element["disabled"] = true;
-        if (!disabled && readonly) {
-          element.classList.add("u-readonly");
-        } else {
-          element.removeAttribute("readonly");
-          element.classList.remove("u-readonly");
-        }
+      if (readonly) {
+        element.classList.add("u-readonly");
       } else {
-        element["disabled"] = false;
         element.classList.remove("u-readonly");
       }
     }
@@ -210,6 +197,7 @@ export class Select extends Widget {
       let rep;
       const value = this.getNode(widgetInstance.data.properties, "value");
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      const valrepWithNullValue = this.toBoolean(valrep && valrep.some(element => element.value === ""));
       const showPlaceholder = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:show-placeholder"));
       const placeholderText = this.getNode(widgetInstance.data.properties, "uniface:placeholder-text");
       const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
@@ -217,7 +205,7 @@ export class Select extends Widget {
       if (selectedValueElement) {
         selectedValueElement.remove();
       }
-      if ((value === "" || value === null) && showPlaceholder) {
+      if ((value === "" || value === null) && showPlaceholder && !valrepWithNullValue) {
         selectedValueElement = this.createPlaceholderElement(placeholderText, value);
         isPlaceholderElementCreated = true;
       } else {
@@ -233,12 +221,11 @@ export class Select extends Widget {
       }
 
       if (!isPlaceholderElementCreated && !rep) {
-        const errorText = this.toFormatValRepErrorText(displayFormat, value);
         // If there is no representation for the non-empty value then show a format error.
         widgetInstance.setProperties({
           "uniface": {
             "format-error": true,
-            "format-error-message": errorText
+            "format-error-message": Select.formatErrorMessage
           }
         });
       } else {
@@ -266,6 +253,23 @@ export class Select extends Widget {
   };
 
   /**
+   * A special check is needed for the tabindex during the disabled state,
+   * as Fluent automatically sets it to null when disabled and to 0 once the component is no longer disabled.
+   * @class
+   * @extends {HtmlAttributeBoolean}
+   */
+  static HtmlAttributeDisabled = class extends HtmlAttributeBoolean {
+    refresh(widgetInstance) {
+      super.refresh(widgetInstance);
+      const element = this.getElement(widgetInstance);
+      const tabIndexValue = this.getNode(widgetInstance.data.properties, "html:tabindex");
+      window.setTimeout(() => {
+        element["tabIndex"] = tabIndexValue;
+      }, 1000);
+    }
+  };
+
+  /**
    * Widget definition.
    */
   // prettier-ignore
@@ -280,7 +284,8 @@ export class Select extends Widget {
     new HtmlAttributeBoolean(this, undefined, "ariaDisabled", false),
     new HtmlAttributeBoolean(this, undefined, "ariaReadOnly", false),
     new HtmlAttributeBoolean(this, undefined, "ariaExpanded", false),
-    new this.HtmlAttributeBooleanReadOnlyDisabled(this, "html:readonly", "readOnly", false),
+    new this.HtmlAttributeDisabled(this, "html:disabled", "disabled", false),
+    new this.HtmlAttributeBooleanReadOnly(this, "html:readonly", "readOnly", false),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
@@ -519,6 +524,11 @@ export class Select extends Widget {
 
     widgetElement.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
+        const isReadOnly = this.toBoolean(this?.data?.properties?.html?.readonly);
+        if (isReadOnly) {
+          widgetElement.open = false;
+          return;
+        }
         this.popupPreCalc(".listbox", widgetElement);
         const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data.properties, "uniface:popup-position"));
         this.popupPostCalc(".listbox", rect);
@@ -530,8 +540,7 @@ export class Select extends Widget {
   /**
    * Specialized blockUI method because:
    * Select should be in readonly during block state and this property is not defined by fluent.
-   * For this we explicitly need to add u-readonly class to the widget element and make it disabled.
-   * Also checked if widget is already in disabled state then it should not add u-readonly class.
+   * For this we explicitly need to add u-readonly class to the widget element.
    */
   blockUI() {
     this.log("blockUI");
@@ -544,10 +553,7 @@ export class Select extends Widget {
       this.elements.widget.classList.add("u-blocked");
       // Handle different types of UI blocking.
       if (widgetClass.uiBlocking === "readonly") {
-        if (!this.toBoolean(this.data.properties.html.disabled)) {
-          this.elements.widget.classList.add('u-readonly');
-        }
-        this.elements.widget.disabled = true;
+        this.elements.widget.classList.add("u-readonly");
       } else {
         // If uiBlocking has an invalid value, log an error.
         this.error(
@@ -560,7 +566,7 @@ export class Select extends Widget {
   }
 
   /**
-   * Specialized UnblockUI to have readonly/disabled together.
+   * Specialized UnblockUI method to remove u-readonly class.
    */
   unblockUI() {
     this.log("unblockUI");
@@ -572,9 +578,8 @@ export class Select extends Widget {
       // Remove the 'u-blocked' class from the widget element.
       this.elements.widget.classList.remove("u-blocked");
       if (widgetClass.uiBlocking === "readonly") {
-        this.elements.widget.disabled = this.toBoolean(this.data.properties.html.disabled) || this.toBoolean(this.data.properties.html.readonly);
         if (!this.toBoolean(this.data.properties.html.readonly)) {
-          this.elements.widget.classList.remove('u-readonly');
+          this.elements.widget.classList.remove("u-readonly");
         }
       } else {
         this.error("unblockUI()", "Static uiBlocking not defined or invalid value", "No UI blocking");
@@ -611,7 +616,7 @@ export class Select extends Widget {
                           this.getNode(this.defaultValues, "uniface:display-format");
     const value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
     const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
-    const valrepItem  = this.getValrepItem(valrep, value);
+    const valrepItem = this.getValrepItem(valrep, value);
     if (valrepItem) {
       switch (displayFormat) {
         case "valrep":
