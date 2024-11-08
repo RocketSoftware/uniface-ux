@@ -12,7 +12,8 @@ import {
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
   HtmlAttributeMinMax,
-  StyleClass
+  StyleClass,
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -54,6 +55,8 @@ export class NumberField extends Widget {
     new HtmlAttributeBoolean(this, "html:hide-step", "hideStep", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
+    new IgnoreProperty(this, "html:minlength", undefined),
+    new IgnoreProperty(this, "html:maxlength", undefined),
     new HtmlAttributeMinMax(this, "html:min", "html:max", undefined, undefined),
     new StyleClass(this, ["u-number-field", "outline"])
   ], [
