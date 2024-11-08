@@ -1,9 +1,6 @@
 (function () {
     'use strict';
 
-    /**
-     * Default timeout for waiting for DOM rendering (in milliseconds)
-     */
     const assert = chai.assert;
     const expect = chai.expect;
     const tester = new umockup.WidgetTester();
