@@ -7,6 +7,7 @@ class IndexPage extends BasePage {
     this.buttonWidgetLink = '#button';
     this.checkboxWidgetLink = '#checkbox';
     this.numberFieldWidgetLink = '#number-field';
+    this.plainTextWidgetLink = '#plain-text';
     this.radioGroupWidgetLink = '#radio-group';
     this.selectWidgetLink = '#select';
     this.switchWidgetLink = '#switch';
@@ -20,11 +21,12 @@ class IndexPage extends BasePage {
 
 async openNewPage(selector) {
     const [newPage] = await Promise.all([
-    this.page.waitForEvent('popup'), // Waits for a new page (popup or tab) to be created
-    this.page.click(selector) // Click on the user-defined selector
+        this.page.waitForEvent('popup'), // Waits for a new page (popup or tab) to be created
+        this.page.click(selector) // Click on the user-defined selector
     ]);
     return newPage;
 }
 
 }
+
 module.exports = {IndexPage};
