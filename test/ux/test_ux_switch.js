@@ -1,9 +1,5 @@
 (function () {
     'use strict';
-
-    /**
-     * Default timeout for waiting for DOM rendering (in milliseconds)
-     */
     const asyncRun = umockup.asyncRun;
     const assert = chai.assert;
     const expect = chai.expect;
