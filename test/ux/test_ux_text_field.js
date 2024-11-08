@@ -272,7 +272,7 @@
                 let appearanceVal = widget.elements.widget.getAttribute("appearance");
                 assert.equal(appearanceVal, appearance, "appearance is not set to filled");//Check for visibility
                 assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance attribute");
-            }); // Wait for DOM rendering
+            });  
 
         });
 
@@ -290,7 +290,7 @@
                 let appearanceVal = widget.elements.widget.getAttribute("appearance");
                 assert.equal(appearanceVal, appearance, "appearance is not set to outline");//Check for visibility
                 assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance attribute");
-            }); // Wait for DOM rendering
+            });  
 
         });
 
@@ -308,7 +308,7 @@
             }).then(function () {
                 assert(widget.elements.widget.className,"outline u-text-field disabled","Disabled class is not applied");
                 assert(widget.elements.widget.hasAttribute("disabled"), "Failed to show the disabled attribute");
-            }); // Wait for DOM rendering
+            });  
 
         });
 
@@ -324,7 +324,7 @@
             }).then(function () {
                 assert(widget.elements.widget.className,"outline u-text-field","Disabled class is applied");
                 assert(!widget.elements.widget.hasAttribute("disabled"), "Failed to hide the disabled attribute");
-            }); // Wait for DOM rendering
+            });  
 
         });
 
@@ -340,7 +340,7 @@
             }).then(function () {
                 assert(widget.elements.widget.className,"outline u-text-field readonly","readonly class is not applied");
                 assert(widget.elements.widget.hasAttribute("readonly"), "Failed to show the readonly attribute");
-            }); // Wait for DOM rendering
+            });  
 
         });
 
@@ -357,7 +357,7 @@
             }).then(function () {
                 assert(widget.elements.widget.className,"outline u-text-field","readonly class is applied");
                 assert(!widget.elements.widget.hasAttribute("readonly"), "Failed to hide the readonly attribute");
-            }); // Wait for DOM rendering
+            });
 
         });
 
@@ -369,13 +369,11 @@
                     "html": {
                         "hidden": hidden
                     }
-
                 });
             }).then(function () {
                 assert(widget.elements.widget.className,"outline u-text-field hidden","hidden class is not applied");
                 assert(widget.elements.widget.hasAttribute("hidden"), "Failed to show the hidden attribute");
-            }); // Wait for DOM rendering
-
+            });  
         });
 
         it("set hidden to false", function () {
@@ -391,8 +389,7 @@
             }).then(function () {
                 assert(widget.elements.widget.className,"outline u-text-field","hidden class is applied");
                 assert(!widget.elements.widget.hasAttribute("hidden"), "Failed to hide the hidden attribute");
-            }); // Wait for DOM rendering
-
+            });  
         });
 
 
@@ -407,8 +404,7 @@
                 });
             }).then(function () {
                 assert.equal(widget.elements.widget.innerText, prefixTextData, "Prefix data does not match");//Check for visibility
-            }); // Wait for DOM rendering
-
+            });  
         });
 
         it("prefix icon property", function () {
@@ -421,7 +417,7 @@
                 });
             }).then(function () {
                 assert.equal(widget.elements.widget.childNodes[1].className, "u-prefix ms-Icon ms-Icon--Accounts","widget element doesn't has class u-prefix ms-Icon ms-Icon--Accounts");
-            }); // Wait for DOM rendering
+            });  
         });
 
         it("suffix text property", function () {
@@ -435,8 +431,7 @@
                 });
             }).then(function () {
                 assert.equal(widget.elements.widget.innerText, suffixTextData,"Suffix data does not match");//Check for visibility
-            }); // Wait for DOM rendering
-
+            });  
         });
 
         it("suffix icon property", function () {
@@ -449,7 +444,7 @@
                 });
             }).then(function () {
                 assert.equal(widget.elements.widget.childNodes[3].className, "u-suffix ms-Icon ms-Icon--Accounts","widget element doesn't has class u-suffix ms-Icon ms-Icon--Accounts");
-            }); // Wait for DOM rendering
+            });  
         });
 
         it("set pattern '.{2,}'", function () {
@@ -473,11 +468,9 @@
                 assert.equal(widget.elements.widget.getAttribute("pattern"),patternText ,"Failed to show the pattern attribute and value doesnot match");
                 assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
                 assert.equal(widget.elements.widget.getAttribute("title"),title ,"Failed to show the title attribute and value doesnot match");
-
                 assert(widget.elements.widget.hasAttribute("pattern"), "Failed to show the pattern attribute");
                 assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
-
-            }); // Wait for DOM rendering
+            });  
         });
 
         it("set pattern [A-Za-z]{3}", function () {
@@ -503,9 +496,7 @@
                     assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
                     assert(widget.elements.widget.hasAttribute("pattern"), "Failed to show the pattern attribute");
                     assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
-                    //done();
-            }); // Wait for DOM rendering
-
+            });  
         });
 
         it("set placeholder in textField", function () {
@@ -529,7 +520,7 @@
                     assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
                     //assert(widget.elements.widget.hasAttribute("pattern"), "Failed to show the pattern attribute");
                     assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
-            }); // Wait for DOM rendering
+            });  
 
         });
 
@@ -546,7 +537,6 @@
                             "placeholder": placeHolderText,
                             "type": "tel",
                         },
-                        //value: "123456789"
                     });
                 }).then(function () {
                     const event = new window.Event('hover');
@@ -555,7 +545,7 @@
                     assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
                     assert(widget.elements.widget.hasAttribute("type"), "Failed to show the tel attribute");
                     assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
-            }); // Wait for DOM rendering
+            });  
 
         });
 
@@ -581,8 +571,7 @@
                     assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
                     assert(widget.elements.widget.hasAttribute("type"), "Failed to show the email attribute");
                     assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
-            }); // Wait for DOM rendering
-
+            });  
         });
 
         it("set type as password in textField", function () {
@@ -607,8 +596,7 @@
                     assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
                     assert(widget.elements.widget.hasAttribute("type"), "Failed to show the type as password attribute");
                     assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
-            }); // Wait for DOM rendering
-
+            });  
         });
 
         it("set type as url in textField", function () {
@@ -633,8 +621,7 @@
                     assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
                     assert(widget.elements.widget.hasAttribute("type"), "Failed to show the type as url attribute");
                     assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
-            }); // Wait for DOM rendering
-
+            });  
         });
 
         it("set type as date in textField", function () {
@@ -659,8 +646,7 @@
                     assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
                     assert(widget.elements.widget.hasAttribute("type"), "Failed to show the type as date attribute");
                     assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
-            }); // Wait for DOM rendering
-
+            });  
         });
 
         it("set button as subwidget in textField", function () {
@@ -682,7 +668,7 @@
                     assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"),"Failed to show the placeHolderText attribute and value doesnot match");
                     assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("class"),"u-icon ms-Icon ms-Icon--PublicEmail","Subwidget icon Class name doesnot match");
 
-                }); // Wait for DOM rendering
+                });  
 
         });
 
@@ -705,7 +691,7 @@
                     assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"),"Failed to show the placeHolderText attribute and value doesnot match");
                     assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("class"),"u-icon ms-Icon ms-Icon--PublicEmail","Subwidget icon Class name doesnot match");
 
-                }); // Wait for DOM rendering
+                });  
 
         });
 
@@ -722,7 +708,7 @@
                     assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"),"u-sw-changebutton u-button stealth","Subwidget Class name doesnot match");
                     assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"),"Failed to show the placeHolderText attribute and value doesnot match");
 
-                }); // Wait for DOM rendering
+                });  
 
         });
 
@@ -740,7 +726,7 @@
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
                 assert.equal(labelText, textFieldLabel);//Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
-            }); // Wait for DOM rendering
+            });  
 
         });
 
@@ -750,13 +736,11 @@
                     uniface: {
                         "label-position": "before"
                     }
-
                 });
             }).then(function () {
                 let labelPosition = widget.elements.widget.getAttribute('u-label-position');
                 assert.equal(labelPosition, 'before');
-            }); // Wait for DOM rendering
-
+            });
         });
 
         it("check label position before styles", function () {
@@ -775,12 +759,11 @@
                     uniface: {
                         "label-position": "below"
                     }
-
                 });
             }).then(function () {
                 let labelPosition = widget.elements.widget.getAttribute('u-label-position');
                 assert.equal(labelPosition, 'below');
-            }); // Wait for DOM rendering
+            });
         });
 
         it("check label position below styles", function () {
@@ -806,7 +789,7 @@
                 assert.equal(labelPosition, 'above');
                 assert(widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text");
                 assert.equal(widget.elements.widget.querySelector("span.u-label-text").innerText, "");
-            }); // Wait for DOM rendering
+            });
 
         });
 
@@ -841,8 +824,7 @@
                 expect(widget.elements.widget.hasAttribute("minlength"), "Failed to show the minlength attribute");
                 assert.equal(widget.elements.widget.getAttribute("minlength"), minlength ,"Min is not same" + minlength);
                 assert.equal(widget.elements.widget.getAttribute("maxlength"), maxlength ,"Max is not same" + maxlength);
-                //done();
-            }); // Wait for DOM rendering
+            });
         });
 
         it("Set invalid value in text field", function () {
@@ -859,15 +841,12 @@
                 assert.equal(widget.elements.widget.childNodes[2].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
                 assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot"),"end","Slot end  does not match");
                 assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Field Value length mismatch.","Error title doesnot match")
-                //done();
             });
         });
     });
 
     describe("hideError", function () {
         let widget, element;
-        let minlength = 2;
-        let maxlength = 5;
         before(function () {
             widget = tester.createWidget();
             element = tester.createWidget().element;
@@ -892,7 +871,7 @@
         });
     });
 
-    describe("dataCleanup", function () {
+    describe("Reset all properties", function () {
         let widget = tester.createWidget();
         it("reset all property", function () {
             try {

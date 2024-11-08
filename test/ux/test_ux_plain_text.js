@@ -224,7 +224,7 @@
 
 
             return prom.then(function () {
-                assert.equal(widget.elements.widget.childNodes[0].className, "u-prefix ms-Icon ms-Icon--Accounts","widget element doesn't has class u-prefix ms-Icon ms-Icon--Accounts");
+                assert.equal(widget.elements.widget.childNodes[1].className, "u-prefix ms-Icon ms-Icon--Accounts","widget element doesn't has class u-prefix ms-Icon ms-Icon--Accounts");
             }); // Wait for DOM rendering
         });
 
@@ -255,7 +255,7 @@
             });
 
             return prom.then(function () {
-                assert.equal(widget.elements.widget.childNodes[3].className, "u-suffix ms-Icon ms-Icon--Accounts","widget element doesn't has class u-suffix ms-Icon ms-Icon--Accounts");
+                assert.equal(widget.elements.widget.childNodes[4].className, "u-suffix ms-Icon ms-Icon--Accounts","widget element doesn't has class u-suffix ms-Icon ms-Icon--Accounts");
             }); // Wait for DOM rendering
         });
 
@@ -273,7 +273,7 @@
             });
 
             return prom.then(function () {
-                let textData = widget.elements.widget.childNodes[1].innerText;
+                let textData = widget.elements.widget.childNodes[2].innerText;
                 assert.equal(textData, val,"The Plain text formatting  first-line data does not match");//Check for visibility
             }); // Wait for DOM rendering
         });
@@ -292,7 +292,7 @@
             });
 
             return prom.then(function () {
-                let textData = widget.elements.widget.childNodes[1].innerText;
+                let textData = widget.elements.widget.childNodes[2].innerText;
                 assert.equal(textData, val,"The Plain text formatting single-line data does not match");//Check for visibility
             }); // Wait for DOM rendering
         });
@@ -314,7 +314,7 @@
 
             return prom.then(function () {
                 assert.equal(widget.elements.widget.querySelector("span.u-control").className,"u-control" ,"u-control class name is not present");
-                assert.equal(innerHtml, widget.elements.widget.childNodes[1].innerHTML,"The Plain text formatting multi-line data does not match");//Check for visibility
+                assert.equal(innerHtml, widget.elements.widget.childNodes[2].innerHTML,"The Plain text formatting multi-line data does not match");//Check for visibility
             }); // Wait for DOM rendering
         });
 
@@ -340,7 +340,7 @@
 
             return prom.then(function () {
                 assert.equal(widget.elements.widget.querySelector("span.u-control").children[0].className,"u-paragraph" ,"u-paragraph class name is not present");
-                assert.equal(widget.elements.widget.childNodes[1].childElementCount,6,"Paragraph count does not match")
+                assert.equal(widget.elements.widget.childNodes[2].childElementCount,6,"Paragraph count does not match")
                 assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[0].innerText, p1Text,"The Plain text formatting multi-paragraphs data does not match");//Check for visibility
                 assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[1].innerText, p1Text,"The Plain text formatting multi-paragraphs data does not match")
                 assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[2].innerText,p1Text,"The Plain text formatting multi-paragraphs data does not match")
@@ -368,7 +368,7 @@
 
             return prom.then(function () {
                 expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide unchecked message")
-                let textData = widget.elements.widget.childNodes[1].innerText;
+                let textData = widget.elements.widget.childNodes[2].innerText;
                 assert.equal(textData, val,"The Plain text formatting representation-only data does not match");//Check for visibility
             }); // Wait for DOM rendering
 
@@ -391,7 +391,7 @@
 
             return prom.then(function () {
                 expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide error icon")
-                let textData = widget.elements.widget.childNodes[1].innerText;
+                let textData = widget.elements.widget.childNodes[2].innerText;
                 assert.equal(textData, val,"The Plain text formatting valrep-text data does not match");//Check for visibility
             }); // Wait for DOM rendering
 
@@ -415,7 +415,7 @@
                 assert.equal(widget.elements.widget.querySelector("span.u-control").children[0].className, "u-valrep-rep", "u-valrep-rep class name is not present");
                 assert.equal(widget.elements.widget.querySelector("span.u-control").children[1].className, "u-valrep-value", "u-valrep-value class name is not present");
 
-                let textData = widget.elements.widget.childNodes[1].innerText;
+                let textData = widget.elements.widget.childNodes[2].innerText;
                 assert.equal(textData, val, "The Plain text formatting valrep-html data does not match");//Check for visibility
             });
 
@@ -552,7 +552,7 @@
             return prom.then(function () {
                 expect(widget.elements.widget).to.have.class("u-format-invalid");
                 assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
-                assert.equal(widget.elements.widget.childNodes[2].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
+                assert.equal(widget.elements.widget.childNodes[3].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
                 expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"),"Slot end  does not match");
                 assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Fake Validation Error","Error title doesnot match")
             }); // Wait for DOM rendering
