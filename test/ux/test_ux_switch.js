@@ -18,7 +18,6 @@
             assert(widgetClass, `Widget class '${widgetName}' is not defined!
             Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
         });
-
     });
 
     describe("Uniface static structure constructor definition", function () {
@@ -128,7 +127,6 @@
             assert(element, "Widget top element is not defined!");
         });
 
-
         for (const defaultClass in classes) {
             it("check class '" + defaultClass + "'", function () {
                 if (classes[defaultClass]) {
@@ -185,7 +183,6 @@
                
             });
         });
-
         it("set checked message", function () {
             let switchCheckedText = "On";
             return asyncRun(function() {
@@ -318,7 +315,6 @@
             });
         })
     });
-
 
     describe("reset all properties", function () {
         it("reset all property", function () {
