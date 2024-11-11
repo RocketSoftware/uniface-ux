@@ -1,4 +1,5 @@
 (function () {
+  'use strict';
 
     const assert = chai.assert;
     const expect = chai.expect;
@@ -594,6 +595,7 @@
             });
         });
     });
+    
     describe("hideError", function () {
         before(function () {
             widget = tester.createWidget();
