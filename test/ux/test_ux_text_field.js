@@ -9,13 +9,13 @@
     const widgetClass = tester.getWidgetClass();
     const asyncRun = umockup.asyncRun;
 
-     /**
+    /**
      * Function to determine whether the widget class has been loaded.
-    */
-     function verifyWidgetClass(widgetClass) {
+     */
+    function verifyWidgetClass(widgetClass) {
         assert(widgetClass, `Widget class '${widgetName}' is not defined!
               Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
-      }
+    }
 
     describe("Uniface Mockup tests", function () {
 
@@ -24,7 +24,6 @@
         });
 
     });
-
 
     describe("Uniface static structure constructor definition", function () {
 
@@ -40,7 +39,6 @@
             expect(structure.triggerDefines).to.be.an('array');
             expect(structure.isSetter).to.equal(true);
             expect(structure.hidden).to.equal(false);
-
         });
 
     });
@@ -132,6 +130,7 @@
     describe("mapTrigger", function () {
         const element = tester.processLayout();
         const widget = tester.onConnect();
+
         it("mapTrigger", function () {
             widget.mapTrigger("onchange");
             const event = new window.Event('onchange');
@@ -173,11 +172,11 @@
 
     });
 
-
     describe("Data Init", function () {
         const defaultValues = tester.getDefaultValues();
         const classes = defaultValues.classes;
-        var element;
+        let element;
+
         beforeEach(function () {
           tester.dataInit();
           element = tester.element;
@@ -195,12 +194,12 @@
         }
 
         it("check 'hidden' attributes", function () {
-          assert(element.querySelector('span.u-text').hasAttribute('hidden'), "Text span element should be hidden by default");
-          assert(element.querySelector('span.u-icon').hasAttribute('hidden'), "Icon span element should be hidden by default");
+            assert(element.querySelector('span.u-text').hasAttribute('hidden'), "Text span element should be hidden by default");
+            assert(element.querySelector('span.u-icon').hasAttribute('hidden'), "Icon span element should be hidden by default");
         });
 
         it("check widget id", function () {
-          assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
+            assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
         });
 
         it("check 'tabindex' attributes", function () {
@@ -209,8 +208,8 @@
         });
 
         it("check 'size'", function () {
-          let htmlProperties = tester.defaultValues.html;
-          assert.equal(htmlProperties["size"], '20', "Default value of size should be '20'");
+            let htmlProperties = tester.defaultValues.html;
+            assert.equal(htmlProperties["size"], '20', "Default value of size should be '20'");
         });
 
         it("check label-text, label-position ,changebutton", function () {
@@ -218,7 +217,6 @@
             assert.equal(unifaceProperties["changebutton"], false, "Default value of change button should be false");
             assert.equal(unifaceProperties["label-position"], 'above', "Default value of label-position will be above");
             assert.equal(unifaceProperties["label-text"], undefined, "Default value of label-text will be undefined");
-
         });
 
         it("check type attributes", function () {
@@ -240,11 +238,10 @@
             let htmlProperties = tester.defaultValues.changebutton.html;
             assert.equal(htmlProperties["tabindex"], "-1", "Default value of change button tab-index should be -1");
             assert.equal(htmlProperties["appearance"], "stealth", "Default value of change button appearance should be stealth");
-
         });
 
         it("check value", function () {
-          assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
+            assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
         });
 
     });
@@ -263,14 +260,12 @@
                     "html": {
                         "appearance": appearance
                     }
-
                 });
             }).then(function () {
                 let appearanceVal = widget.elements.widget.getAttribute("appearance");
                 assert.equal(appearanceVal, appearance, "appearance is not set to filled");//Check for visibility
                 assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance attribute");
             });  
-
         });
 
         it("set appearance set to outline", function () {
@@ -281,16 +276,13 @@
                     "html": {
                         "appearance": appearance
                     }
-
                 });
             }).then(function () {
                 let appearanceVal = widget.elements.widget.getAttribute("appearance");
                 assert.equal(appearanceVal, appearance, "appearance is not set to outline");//Check for visibility
                 assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance attribute");
             });  
-
         });
-
 
         it("set disabled to true", function () {
             let disabled = true;
@@ -300,13 +292,11 @@
                     "html": {
                         "disabled": disabled
                     }
-
                 });
             }).then(function () {
                 assert(widget.elements.widget.className,"outline u-text-field disabled","Disabled class is not applied");
                 assert(widget.elements.widget.hasAttribute("disabled"), "Failed to show the disabled attribute");
             });  
-
         });
 
         it("set disabled to false", function () {
@@ -322,7 +312,6 @@
                 assert(widget.elements.widget.className,"outline u-text-field","Disabled class is applied");
                 assert(!widget.elements.widget.hasAttribute("disabled"), "Failed to hide the disabled attribute");
             });  
-
         });
 
         it("set readonly to true", function () {
@@ -338,7 +327,6 @@
                 assert(widget.elements.widget.className,"outline u-text-field readonly","readonly class is not applied");
                 assert(widget.elements.widget.hasAttribute("readonly"), "Failed to show the readonly attribute");
             });  
-
         });
 
         it("set readonly to false", function () {
@@ -349,13 +337,11 @@
                     "html": {
                         "readonly": readonly
                     }
-
                 });
             }).then(function () {
                 assert(widget.elements.widget.className,"outline u-text-field","readonly class is applied");
                 assert(!widget.elements.widget.hasAttribute("readonly"), "Failed to hide the readonly attribute");
             });
-
         });
 
         it("set hidden to true", function () {
@@ -381,7 +367,6 @@
                     "html": {
                         "hidden": hidden
                     }
-
                 });
             }).then(function () {
                 assert(widget.elements.widget.className,"outline u-text-field","hidden class is applied");
@@ -475,24 +460,24 @@
             let placeHolderText = "Please match requested format.";
             // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
-                    tester.dataUpdate({
-                        value: ""
-                    });
-                    tester.dataUpdate({
-                        "html": {
-                            "placeholder": placeHolderText,
-                            "pattern": pattern,
-                            "type": "text"
-                        },
-                        value: "abc"
-                    });
-                }).then(function () {
-                    const event = new window.Event('hover');
-                    widget.elements.widget.dispatchEvent(event);
-                    assert.equal(widget.elements.widget.getAttribute("pattern"),pattern ,"Failed to show the pattern attribute and value doesnot match");
-                    assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
-                    assert(widget.elements.widget.hasAttribute("pattern"), "Failed to show the pattern attribute");
-                    assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
+                tester.dataUpdate({
+                    value: ""
+                });
+                tester.dataUpdate({
+                    "html": {
+                        "placeholder": placeHolderText,
+                        "pattern": pattern,
+                        "type": "text"
+                    },
+                    value: "abc"
+                });
+            }).then(function () {
+                const event = new window.Event('hover');
+                widget.elements.widget.dispatchEvent(event);
+                assert.equal(widget.elements.widget.getAttribute("pattern"),pattern ,"Failed to show the pattern attribute and value doesnot match");
+                assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
+                assert(widget.elements.widget.hasAttribute("pattern"), "Failed to show the pattern attribute");
+                assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
             });  
         });
 
@@ -500,74 +485,72 @@
             let placeHolderText = "Please match requested format.";
             // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
-                    tester.dataUpdate({
-                        value: ""
-                    });
-                    tester.dataUpdate({
-                        "html": {
-                            "placeholder": placeHolderText,
-                            "type": "text"
-                        },
-                        //value: "Value input"
-                    });
-                }).then(function () {
-                    const event = new window.Event('hover');
-                    widget.elements.widget.dispatchEvent(event);
-                    //assert.equal(widget.elements.widget.getAttribute("pattern"),pattern ,"Failed to show the pattern attribute and value doesnot match");
-                    assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
-                    //assert(widget.elements.widget.hasAttribute("pattern"), "Failed to show the pattern attribute");
-                    assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
+                tester.dataUpdate({
+                    value: ""
+                });
+                tester.dataUpdate({
+                    "html": {
+                        "placeholder": placeHolderText,
+                        "type": "text"
+                    },
+                    //value: "Value input"
+                });
+            }).then(function () {
+                const event = new window.Event('hover');
+                widget.elements.widget.dispatchEvent(event);
+                //assert.equal(widget.elements.widget.getAttribute("pattern"),pattern ,"Failed to show the pattern attribute and value doesnot match");
+                assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
+                //assert(widget.elements.widget.hasAttribute("pattern"), "Failed to show the pattern attribute");
+                assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
             });  
-
         });
 
         it("set type as tel in textField", function () {
             let placeHolderText = "Input Mobile Number";
             // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
-                    tester.dataUpdate({
-                        uniface:{
-                            "suffix-icon": "AddPhone",
-                            "prefix-text": "Call Me"
-                        },
-                        "html": {
-                            "placeholder": placeHolderText,
-                            "type": "tel",
-                        },
-                    });
-                }).then(function () {
-                    const event = new window.Event('hover');
-                    widget.elements.widget.dispatchEvent(event);
-                    assert.equal(widget.elements.widget.getAttribute("type"), "tel" ,"Failed to show the tel attribute and value does not match");
-                    assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
-                    assert(widget.elements.widget.hasAttribute("type"), "Failed to show the tel attribute");
-                    assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
+                tester.dataUpdate({
+                    uniface:{
+                        "suffix-icon": "AddPhone",
+                        "prefix-text": "Call Me"
+                    },
+                    "html": {
+                        "placeholder": placeHolderText,
+                        "type": "tel",
+                    },
+                });
+            }).then(function () {
+                const event = new window.Event('hover');
+                widget.elements.widget.dispatchEvent(event);
+                assert.equal(widget.elements.widget.getAttribute("type"), "tel" ,"Failed to show the tel attribute and value does not match");
+                assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
+                assert(widget.elements.widget.hasAttribute("type"), "Failed to show the tel attribute");
+                assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
             });  
-
         });
 
         it("set type as email in textField", function () {
             let placeHolderText = "Input Email ID";
             // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
-                    tester.dataUpdate({
-                        uniface:{
-                            "prefix-icon": "PublicEmail",
-                            "suffix-text": "Customer Email Address"
-                        },
-                        "html": {
-                            "placeholder": placeHolderText,
-                            "type": "email", 
-                        },
-                        //value: "test@test.com"
-                    });
-                }).then(function () {
-                    const event = new window.Event('hover');
-                    widget.elements.widget.dispatchEvent(event);
-                    assert.equal(widget.elements.widget.getAttribute("type"), "email" ,"Failed to show the type as email attribute and value does not match");
-                    assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
-                    assert(widget.elements.widget.hasAttribute("type"), "Failed to show the email attribute");
-                    assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
+                tester.dataUpdate({
+                    uniface:{
+                        "prefix-icon": "PublicEmail",
+                        "suffix-text": "Customer Email Address"
+                    },
+                    "html": {
+                        "placeholder": placeHolderText,
+                        "type": "email", 
+                    },
+                    //value: "test@test.com"
+                });
+            }).then(function () {
+                const event = new window.Event('hover');
+                widget.elements.widget.dispatchEvent(event);
+                assert.equal(widget.elements.widget.getAttribute("type"), "email" ,"Failed to show the type as email attribute and value does not match");
+                assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
+                assert(widget.elements.widget.hasAttribute("type"), "Failed to show the email attribute");
+                assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
             });  
         });
 
@@ -575,24 +558,24 @@
             let placeHolderText = "Input Password";
             // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
-                    tester.dataUpdate({
-                        uniface:{
-                            "prefix-icon": "PasswordField",
-                            //"suffix-text": "Customer Email Address"
-                        },
-                        "html": {
-                            "placeholder": placeHolderText,
-                            "type": "password",
-                        },
-                        //value: "test@test.com"
-                    });
-                }).then(function () {
-                    const event = new window.Event('hover');
-                    widget.elements.widget.dispatchEvent(event);
-                    assert.equal(widget.elements.widget.getAttribute("type"), "password" ,"Failed to show the type as password attribute and value does not match");
-                    assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
-                    assert(widget.elements.widget.hasAttribute("type"), "Failed to show the type as password attribute");
-                    assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
+                tester.dataUpdate({
+                    uniface:{
+                        "prefix-icon": "PasswordField",
+                        //"suffix-text": "Customer Email Address"
+                    },
+                    "html": {
+                        "placeholder": placeHolderText,
+                        "type": "password",
+                    },
+                    //value: "test@test.com"
+                });
+            }).then(function () {
+                const event = new window.Event('hover');
+                widget.elements.widget.dispatchEvent(event);
+                assert.equal(widget.elements.widget.getAttribute("type"), "password" ,"Failed to show the type as password attribute and value does not match");
+                assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
+                assert(widget.elements.widget.hasAttribute("type"), "Failed to show the type as password attribute");
+                assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
             });  
         });
 
@@ -600,24 +583,24 @@
             let placeHolderText = "Input url";
             // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
-                    tester.dataUpdate({
-                        uniface:{
-                            "prefix-icon": "URLBlock",
-                            //"suffix-text": "Customer Email Address"
-                        },
-                        "html": {
-                            "placeholder": placeHolderText,
-                            "type": "url",
-                        },
-                        //value: "test@test.com"
-                    });
-                }).then(function () {
-                    const event = new window.Event('hover');
-                    widget.elements.widget.dispatchEvent(event);
-                    assert.equal(widget.elements.widget.getAttribute("type"), "url" ,"Failed to show the tye as url attribute and value does not match");
-                    assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
-                    assert(widget.elements.widget.hasAttribute("type"), "Failed to show the type as url attribute");
-                    assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
+                tester.dataUpdate({
+                    uniface:{
+                        "prefix-icon": "URLBlock",
+                        //"suffix-text": "Customer Email Address"
+                    },
+                    "html": {
+                        "placeholder": placeHolderText,
+                        "type": "url",
+                    },
+                    //value: "test@test.com"
+                });
+            }).then(function () {
+                const event = new window.Event('hover');
+                widget.elements.widget.dispatchEvent(event);
+                assert.equal(widget.elements.widget.getAttribute("type"), "url" ,"Failed to show the tye as url attribute and value does not match");
+                assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
+                assert(widget.elements.widget.hasAttribute("type"), "Failed to show the type as url attribute");
+                assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
             });  
         });
 
@@ -625,88 +608,82 @@
             let placeHolderText = "Input date";
             // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
-                    tester.dataUpdate({
-                        uniface:{
-                            "prefix-icon": "DateTime",
-                            "suffix-text": "Customer Email Address"
-                        },
-                        "html": {
-                            "placeholder": placeHolderText,
-                            "type": "date",
-                        },
-                        //value: "test@test.com"
-                    });
-                }).then(function () {
-                    const event = new window.Event('hover');
-                    widget.elements.widget.dispatchEvent(event);
-                    assert.equal(widget.elements.widget.getAttribute("type"), "date" ,"Failed to show the date attribute and value does not match");
-                    assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
-                    assert(widget.elements.widget.hasAttribute("type"), "Failed to show the type as date attribute");
-                    assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
+                tester.dataUpdate({
+                    uniface:{
+                        "prefix-icon": "DateTime",
+                        "suffix-text": "Customer Email Address"
+                    },
+                    "html": {
+                        "placeholder": placeHolderText,
+                        "type": "date",
+                    },
+                    //value: "test@test.com"
+                });
+            }).then(function () {
+                const event = new window.Event('hover');
+                widget.elements.widget.dispatchEvent(event);
+                assert.equal(widget.elements.widget.getAttribute("type"), "date" ,"Failed to show the date attribute and value does not match");
+                assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
+                assert(widget.elements.widget.hasAttribute("type"), "Failed to show the type as date attribute");
+                assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
             });  
         });
 
         it("set button as subwidget in textField", function () {
             // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
-                    tester.dataUpdate({
-                        uniface:{
-                            "changebutton": true,
-                            "changebutton:icon": "PublicEmail",
-                            "changebutton:icon-position" : "start",
-                            "changebutton:value":"Click Me"
-                        }
-                    });
-                }).then(function () {
-                    const event = new window.Event('hover');
-                    widget.elements.widget.dispatchEvent(event);
-                    assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"),"u-sw-changebutton u-button stealth","Subwidget Class name doesnot match");
-                    assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute('slot'), "start" ,"Failed to show the slot  attribute and value does not match");
-                    assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"),"Failed to show the placeHolderText attribute and value doesnot match");
-                    assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("class"),"u-icon ms-Icon ms-Icon--PublicEmail","Subwidget icon Class name doesnot match");
-
-                });  
-
+                tester.dataUpdate({
+                    uniface:{
+                        "changebutton": true,
+                        "changebutton:icon": "PublicEmail",
+                        "changebutton:icon-position" : "start",
+                        "changebutton:value":"Click Me"
+                    }
+                });
+            }).then(function () {
+                const event = new window.Event('hover');
+                widget.elements.widget.dispatchEvent(event);
+                assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"),"u-sw-changebutton u-button stealth","Subwidget Class name doesnot match");
+                assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute('slot'), "start" ,"Failed to show the slot  attribute and value does not match");
+                assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"),"Failed to show the placeHolderText attribute and value doesnot match");
+                assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("class"),"u-icon ms-Icon ms-Icon--PublicEmail","Subwidget icon Class name doesnot match");
+            });  
         });
 
         it("set button as subwidget in textField with change button icon", function () {
             // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
-                    tester.dataUpdate({
-                        uniface:{
-                            "changebutton": true,
-                            "changebutton:icon": "PublicEmail",
-                            //"changebutton:icon-position" : "start",
-                            //"changebutton:value":"Click Me"
-                        }
-                    });
-                }).then(function () {
-                    const event = new window.Event('hover');
-                    widget.elements.widget.dispatchEvent(event);
-                    assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"),"u-sw-changebutton u-button stealth","Subwidget Class name doesnot match");
-                    assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute('slot'), "start" ,"Failed to show the slot  attribute and value does not match");
-                    assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"),"Failed to show the placeHolderText attribute and value doesnot match");
-                    assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("class"),"u-icon ms-Icon ms-Icon--PublicEmail","Subwidget icon Class name doesnot match");
-
-                });  
-
+                tester.dataUpdate({
+                    uniface:{
+                        "changebutton": true,
+                        "changebutton:icon": "PublicEmail",
+                        //"changebutton:icon-position" : "start",
+                        //"changebutton:value":"Click Me"
+                    }
+                });
+            }).then(function () {
+                const event = new window.Event('hover');
+                widget.elements.widget.dispatchEvent(event);
+                assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"),"u-sw-changebutton u-button stealth","Subwidget Class name doesnot match");
+                assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute('slot'), "start" ,"Failed to show the slot  attribute and value does not match");
+                assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"),"Failed to show the placeHolderText attribute and value doesnot match");
+                assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("class"),"u-icon ms-Icon ms-Icon--PublicEmail","Subwidget icon Class name doesnot match");
+            });  
         });
 
         it("set button as subwidget in textField with change button icon as false", function () {
             // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
-                    tester.dataUpdate({
-                        uniface:{
-                            "changebutton": false,
-                            "changebutton:icon": "PublicEmail",
-                        }
-                    });
-                }).then(function () {
-                    assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"),"u-sw-changebutton u-button stealth","Subwidget Class name doesnot match");
-                    assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"),"Failed to show the placeHolderText attribute and value doesnot match");
-
-                });  
-
+                tester.dataUpdate({
+                    uniface:{
+                        "changebutton": false,
+                        "changebutton:icon": "PublicEmail",
+                    }
+                });
+            }).then(function () {
+                assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"),"u-sw-changebutton u-button stealth","Subwidget Class name doesnot match");
+                assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"),"Failed to show the placeHolderText attribute and value doesnot match");
+            });  
         });
 
         it("show label", function () {
@@ -717,14 +694,12 @@
                     uniface: {
                         "label-text": textFieldLabel
                     }
-
                 });
             }).then(function () {
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
                 assert.equal(labelText, textFieldLabel);//Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
             });  
-
         });
 
         it("Set label position before", function () {
@@ -787,7 +762,6 @@
                 assert(widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text");
                 assert.equal(widget.elements.widget.querySelector("span.u-label-text").innerText, "");
             });
-
         });
 
         it("check reset label position styles", function () {
@@ -799,12 +773,11 @@
     });
 
     describe("showError", function () {
-        let widget, element;
+        let widget;
         let minlength = 2;
         let maxlength = 5;
         before(function () {
             widget = tester.createWidget();
-            element = tester.createWidget().element;
             verifyWidgetClass(widgetClass)
         });
 
@@ -868,9 +841,9 @@
         });
     });
 
-    describe("Reset all properties", function () {
+    describe("dataCleanup", function () {
         let widget = tester.createWidget();
-        it("reset all property", function () {
+        it("reset all properties", function () {
             try {
                 widget.dataCleanup(tester.widgetProperties);
             } catch (e) {
@@ -879,4 +852,5 @@
             }
         });
     });
+
 })();
