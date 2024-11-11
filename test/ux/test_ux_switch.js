@@ -1,5 +1,6 @@
 (function () {
     'use strict';
+
     const asyncRun = umockup.asyncRun;
     const assert = chai.assert;
     const expect = chai.expect;
@@ -31,6 +32,7 @@
         });
 
     });
+
     describe(widgetName + ".processLayout", function () {
         let element;
 
@@ -176,9 +178,9 @@
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
                 assert.equal(labelText, switchLabelText);//Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
-               
             });
         });
+
         it("set checked message", function () {
             let switchCheckedText = "On";
             return asyncRun(function() {
@@ -219,7 +221,6 @@
     describe('Switch onchange event', function () {
         let switchElement, onchangeSpy, widget;
         beforeEach(function () {
-
             widget = tester.createWidget();
             switchElement = tester.element;
 
@@ -312,15 +313,20 @@
         })
     });
 
-    describe("reset all properties", function () {
-        it("reset all property", function () {
-            try {
-                tester.dataUpdate(tester.getDefaultValues());
-            } catch (e) {
-                console.error(e);
-                assert(false, "Failed to call dataCleanup(), exception " + e);
-            }
+    describe("dataCleanup", function () {
+        let widget;
+        before(function () {
+          widget = tester.createWidget();
+        });
+    
+        it("reset all properties", function () {
+          try {
+            widget.dataCleanup(tester.widgetProperties);
+          } catch (e) {
+            console.error(e);
+            assert(false, "Failed to call dataCleanup(), exception " + e);
+          }
         });
     });
-
+    
 })();
