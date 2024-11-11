@@ -210,14 +210,14 @@
 
         it("check 'size'", function () {
           let htmlProperties = tester.defaultValues.html;
-          assert.equal(htmlProperties["size"], '20', "Default value of icon should be '20'");
+          assert.equal(htmlProperties["size"], '20', "Default value of size should be '20'");
         });
 
         it("check label-text, label-position ,changebutton", function () {
             let unifaceProperties = tester.defaultValues.uniface;
             assert.equal(unifaceProperties["changebutton"], false, "Default value of change button should be false");
             assert.equal(unifaceProperties["label-position"], 'above', "Default value of label-position will be above");
-            assert.equal(unifaceProperties["label-text"], undefined, "Default value of label-position will be undefined");
+            assert.equal(unifaceProperties["label-text"], undefined, "Default value of label-text will be undefined");
 
         });
 
@@ -239,7 +239,7 @@
         it("check changebutton tab-index, appearance", function () {
             let htmlProperties = tester.defaultValues.changebutton.html;
             assert.equal(htmlProperties["tabindex"], "-1", "Default value of change button tab-index should be -1");
-            assert.equal(htmlProperties["appearance"], "stealth", "Default value of change button tab-index should be -1");
+            assert.equal(htmlProperties["appearance"], "stealth", "Default value of change button appearance should be stealth");
 
         });
 
@@ -854,11 +854,11 @@
                 tester.dataUpdate({
                     uniface: {
                         error: false,
-                        "error-message": "Field Value length mismatch."
+                        "error-message": ""
                     }
                 });
             }).then(function (){
-            widget.hideError("Field Value length mismatch.");
+            widget.hideError("");
                 expect(widget.elements.widget).to.not.have.class("u-invalid");
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
                 assert(widget.elements.widget.childNodes[2].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
