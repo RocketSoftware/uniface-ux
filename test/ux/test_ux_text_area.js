@@ -21,7 +21,6 @@
         it("Get class " + widgetName, function () {
             verifyWidgetClass(widgetClass);
         });
-
     });
 
     describe("Uniface static structure constructor definition", function () {
@@ -39,7 +38,6 @@
             expect(structure.elementDefines).to.be.an('array');
             expect(structure.triggerDefines).to.be.an('array');
         });
-
     });
 
     describe(widgetName + ".processLayout", function () {
@@ -203,8 +201,7 @@
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
                 assert.equal(labelText, textAreaLabel);//Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
-            }); // Wait for DOM rendering
-
+            });
         });
 
         it("Set label position before", function () {
@@ -217,8 +214,7 @@
             }).then(function () {
                 let labelPosition = widget.elements.widget.getAttribute('u-label-position');
                 assert.equal(labelPosition, 'before', "Label position before is not before");
-            }); // Wait for DOM rendering
-
+            });
         });
 
         it("check label position before styles", function () {
@@ -237,13 +233,11 @@
                     uniface: {
                         "label-position": "below"
                     }
-
                 });
             }).then(function () {
                 let labelPosition = widget.elements.widget.getAttribute('u-label-position');
                 assert.equal(labelPosition, 'below', "Label position below is not below");
-            }); // Wait for DOM rendering
-
+            });
         });
 
         it("check label position below styles", function () {
@@ -269,8 +263,7 @@
                 assert.equal(labelPosition, 'above');
                 assert(widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text");
                 assert.equal(widget.elements.widget.querySelector("span.u-label-text").innerText, "", "Text is not empty");
-            }); // Wait for DOM rendering
-
+            });
         });
 
         it("check reset label position styles", function () {
@@ -292,8 +285,7 @@
             }).then(function () {
                 let resizePropText = widget.elements.widget.getAttribute("resize");
                 assert.equal(resizePropText, resizeProp);//Check for visibility
-            }); // Wait for DOM rendering
-
+            });
         });
 
         it("html resize property when set to both", function () {
@@ -308,8 +300,7 @@
             }).then(function () {
                 let resizePropText = widget.elements.widget.getAttribute("resize");
                 assert.equal(resizePropText, resizeProp);//Check for visibility
-            }); // Wait for DOM rendering
-
+            });
         });
 
         it("html resize property when set to horizontal", function () {
@@ -324,8 +315,7 @@
             }).then(function () {
                 let resizePropText = widget.elements.widget.getAttribute("resize");
                 assert.equal(resizePropText, resizeProp);//Check for visibility
-            }); // Wait for DOM rendering
-
+            });
         });
 
         it("html resize property when set to vertical", function () {
@@ -340,10 +330,8 @@
             }).then(function () {
                 let resizePropText = widget.elements.widget.getAttribute("resize");
                 assert.equal(resizePropText, resizeProp);//Check for visibility
-            },); // Wait for DOM rendering
-
+            },);
         });
-
 
         it("html hidden property when set to true", function () {
             let hiddenProp = true;
@@ -357,8 +345,7 @@
             }).then(function () {
                 let hiddenPropPresent = widget.elements.widget.hasAttribute("hidden");
                 assert.equal(hiddenPropPresent, hiddenProp);//Check for visibility
-            }); // Wait for DOM rendering
-
+            });
         });
 
         it("html hidden property when set to false", function () {
@@ -373,8 +360,7 @@
             }).then(function () {
                 let hiddenPropPresent = widget.elements.widget.hasAttribute("hidden");
                 assert.equal(hiddenPropPresent, hiddenProp);//Check for visibility
-            }); // Wait for DOM rendering
-
+            });
         });
 
         it("check default html cols value", function () {
@@ -386,7 +372,7 @@
                 assert.equal(colsText, defaultColsProp);//Check for visibility
                 let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
                 assert.equal(rowsText, 0);
-            }); // Wait for DOM rendering
+            });
         });
 
         it("html cols property negative integer", function () {
@@ -403,7 +389,7 @@
                 assert.equal(colsText, colsProp);//Check for visibility
                 let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
                 assert.equal(rowsText, 0);
-            }); // Wait for DOM rendering
+            });
         });
 
         it("html cols property positive integer", function () {
@@ -420,7 +406,7 @@
                 assert.equal(colsText, colsProp);//Check for visibility
                 let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
                 assert.equal(rowsText, 0);
-            }); // Wait for DOM rendering
+            });
         });
 
         //html:placeholder property
@@ -431,12 +417,11 @@
                     "html": {
                         "placeholder": placeHolderText
                     }
-
                 });
             }).then(function () {
                 let placeHolderTextDOM = widget.elements.widget.getAttribute('placeholder');
                 assert.equal(placeHolderTextDOM, placeHolderText, "Failed to show placeholder text" + placeHolderText);
-            }); // Wait for DOM rendering
+            });
         });
 
         //html:readonly property
@@ -451,7 +436,7 @@
             }).then(function () {
                 let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute(readOnly), "Failed to show the readonly attribute");
-            }); // Wait for DOM rendering
+            });
         });
 
         //html:readonly property false
@@ -466,9 +451,8 @@
             }).then(function () {
                 let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to hide the readonly attribute");
-            }); // Wait for DOM rendering
+            });
         });
-
 
         //html:disabled property
         it("Set html:disabled property true for textarea", function () {
@@ -480,7 +464,7 @@
             }).then(function () {
                 let disabledProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute(disabled), "Failed to show the disabled attribute");
-            }); // Wait for DOM rendering
+            }); 
         });
 
         //html:disabled property false
@@ -495,7 +479,7 @@
             }).then(function () {
                 let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(!widget.elements.widget.hasAttribute(disabled), "Failed to hide the disabled attribute");
-            }); // Wait for DOM rendering
+            });
         });
 
         //html:appearance outfill property
@@ -506,14 +490,13 @@
                     html: {
                         "appearance": appearanceStyle
                     }
-
                 });
             }).then(function () {
                 let appearanceStyleProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance outfill attribute");
                 let appearanceStylePropertyText = widget.elements.widget.getAttribute('appearance');
                 assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance outfill style" + appearanceStylePropertyText);
-            }); // Wait for DOM rendering
+            });
         });
 
         //html:appearance filled property
@@ -524,27 +507,23 @@
                     html: {
                         "appearance": appearanceStyle
                     }
-
                 });
             }).then(function () {
                 let appearanceStyleProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance filled attribute");
                 let appearanceStylePropertyText = widget.elements.widget.getAttribute('appearance');
                 assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance filled style" + appearanceStylePropertyText);
-            }); // Wait for DOM rendering
+            });
 
         });
-
-
     });
 
     describe("showError", function () {
-        let widget, element;
+        let widget;
         let minlength = 2;
         let maxlength = 5;
         before(function () {
             widget = tester.createWidget();
-            element = tester.createWidget().element;
             verifyWidgetClass(widgetClass)
         });
 
@@ -561,7 +540,7 @@
                 expect(widget.elements.widget.hasAttribute("minlength"), "Failed to show the minlength attribute");
                 assert.equal(widget.elements.widget.getAttribute("minlength"), minlength, "Min is not same" + minlength);
                 assert.equal(widget.elements.widget.getAttribute("maxlength"), maxlength, "Max is not same" + maxlength);
-            }); // Wait for DOM rendering
+            });
         });
 
         it("Set invalid value in text area", function () {
@@ -573,7 +552,6 @@
                     }
                 });
             }).then(function () {
-
                 expect(widget.elements.widget).to.have.class("u-invalid");
                 assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
                 assert.equal(widget.elements.widget.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
@@ -596,9 +574,9 @@
                 assert.equal(colsText, 20);//Check for visibility
                 let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
                 assert.equal(rowsText, rowsProp);
-            }); // Wait for DOM rendering
-
+            });
         });
+
         it("html rows property negative integer", function () {
             let rowsProp = -1;
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
@@ -613,18 +591,15 @@
                 assert.equal(colsText, 20);//Check for visibility
                 let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
                 assert.equal(rowsText, rowsProp);
-            }); // Wait for DOM rendering
+            });
         });
     });
     describe("hideError", function () {
-        let widget, element;
-        let minlength = 2;
-        let maxlength = 5;
         before(function () {
             widget = tester.createWidget();
-            element = tester.createWidget().element;
             verifyWidgetClass(widgetClass)
         });
+
         it("Hide Error Set invalid value in text Area", function () {
             return asyncRun(function() {
             tester.dataUpdate({
@@ -635,7 +610,6 @@
             });
             widget.hideError("Field Value length mismatch.");
         }).then(function () {
-
                 expect(widget.elements.widget).to.not.have.class("u-invalid");
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
                 assert(widget.elements.widget.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
