@@ -1,5 +1,5 @@
 (function () {
-  'use strict';
+    'use strict';
 
     const assert = chai.assert;
     const expect = chai.expect;
@@ -465,7 +465,7 @@
             }).then(function () {
                 let disabledProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute(disabled), "Failed to show the disabled attribute");
-            }); 
+            });
         });
 
         //html:disabled property false
@@ -595,7 +595,7 @@
             });
         });
     });
-    
+
     describe("hideError", function () {
         before(function () {
             widget = tester.createWidget();
@@ -603,15 +603,15 @@
         });
 
         it("Hide Error Set invalid value in text Area", function () {
-            return asyncRun(function() {
-            tester.dataUpdate({
-                uniface: {
-                    error: false,
-                    "error-message": "Field Value length mismatch."
-                }
-            });
-            widget.hideError("Field Value length mismatch.");
-        }).then(function () {
+            return asyncRun(function () {
+                tester.dataUpdate({
+                    uniface: {
+                        error: false,
+                        "error-message": "Field Value length mismatch."
+                    }
+                });
+                widget.hideError("Field Value length mismatch.");
+            }).then(function () {
                 expect(widget.elements.widget).to.not.have.class("u-invalid");
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
                 assert(widget.elements.widget.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
