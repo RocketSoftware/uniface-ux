@@ -3,11 +3,7 @@
 (function () {
   'use strict';
 
-  /**
-     * Default timeout for waiting for DOM rendering (in milliseconds)
-     */
   const defaultAsyncTimeout = 100; // ms
-
   const assert = chai.assert;
   const expect = chai.expect;
   const tester = new umockup.WidgetTester();
@@ -25,7 +21,6 @@
     },
     {
       value: "2",
-
       representation: "option two"
     },
     {
@@ -189,85 +184,79 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("Set Uniface label text", function() {
+    it("Set Uniface label text", function () {
       return asyncRun(function () {
-          tester.dataUpdate({
-              uniface: {
-                "label-text": "Test Label",
-              }
-          });
-          
+        tester.dataUpdate({
+          uniface: {
+            "label-text": "Test Label",
+          }
+        });
       }).then(function () {
         expect(element.querySelector("label.u-label-text").innerText).equal("Test Label");
-        }); 
+      });
     });
 
-    it("Set HTML property readonly to true", function() {
+    it("Set HTML property readonly to true", function () {
       return asyncRun(function () {
-          tester.dataUpdate({
-            html: { readonly: true }
-          });
-          
+        tester.dataUpdate({
+          html: { readonly: true }
+        });
       }).then(function () {
         expect(element.getAttribute("readonly"));
         expect(element.getAttribute("aria-readonly")).equal("true");
-        }); 
+      });
     });
 
-    it("Set HTML property disabled to true", function() {
+    it("Set HTML property disabled to true", function () {
       return asyncRun(function () {
-          tester.dataUpdate({
-            html: { disabled: true }
-          });
-          
+        tester.dataUpdate({
+          html: { disabled: true }
+        });
       }).then(function () {
         expect(element.getAttribute("disabled"));
         expect(element.getAttribute("aria-disabled")).equal("true");
-        }); 
+      });
     });
 
-    it("Set valrep property with default display value as rep", function() {
+    it("Set valrep property with default display value as rep", function () {
       return asyncRun(function () {
-          tester.dataUpdate({
-            valrep: valRepArray
-          });
-          
+        tester.dataUpdate({
+          valrep: valRepArray
+        });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
-          radioButtonArray.forEach(function (node, index) {
-            expect(node.value).equal(valRepArray[index].value);
-            expect(node.querySelector("span").innerText).equal(valRepArray[index].representation);
-          });
-        }); 
+        radioButtonArray.forEach(function (node, index) {
+          expect(node.value).equal(valRepArray[index].value);
+          expect(node.querySelector("span").innerText).equal(valRepArray[index].representation);
+        });
+      });
     });
 
-    it("Set valrep property with default display-format as value", function() {
+    it("Set valrep property with default display-format as value", function () {
       return asyncRun(function () {
-          tester.dataUpdate({
-            valrep: valRepArray,
-            uniface: {
-              "display-format": "val"
-            }
-          });
-          
+        tester.dataUpdate({
+          valrep: valRepArray,
+          uniface: {
+            "display-format": "val"
+          }
+        });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
-            radioButtonArray.forEach(function (node, index) {
-              expect(node.value).equal(valRepArray[index].value);
-              expect(node.querySelector("span").innerText).equal(valRepArray[index].value);
-            });
-        }); 
+        radioButtonArray.forEach(function (node, index) {
+          expect(node.value).equal(valRepArray[index].value);
+          expect(node.querySelector("span").innerText).equal(valRepArray[index].value);
+        });
+      });
     });
 
-    it("Set valrep property with default display value as valrep", function() {
+    it("Set valrep property with default display value as valrep", function () {
       return asyncRun(function () {
-          tester.dataUpdate({
-            valrep: valRepArray,
-                uniface: {
-                  "display-format": "valrep"
-                }
-          });
-          
+        tester.dataUpdate({
+          valrep: valRepArray,
+          uniface: {
+            "display-format": "valrep"
+          }
+        });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
         radioButtonArray.forEach(function (node, index) {
@@ -275,34 +264,33 @@
           expect(node.querySelector("span.u-valrep-representation").innerText).equal(valRepArray[index].representation);
           expect(node.querySelector("span.u-valrep-value").innerText).equal(valRepArray[index].value);
         });
-      }); 
+      });
     });
 
-    it("Set value to 2 and expect the radio button to be checked", function() {
+    it("Set value to 2 and expect the radio button to be checked", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
           value: "2",
         });
-          
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
         radioButtonArray.forEach(function (node, index) {
-          if(valRepArray[index].value === "2") {
+          if (valRepArray[index].value === "2") {
             expect(node.getAttribute("current-checked")).equal("true");
           } else {
             expect(node.getAttribute("current-checked")).equal("false");
           }
         });
-      }); 
+      });
     });
 
-    it("Set layout property to horizontal", function() {
-      let valRepArrayLongText = [ {
+    it("Set layout property to horizontal", function () {
+      let valRepArrayLongText = [{
         value: "0",
         representation: "Option zero, test horizontal css specification changes when there is more than 25 characters."
       }, ...valRepArray];
-      
+
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArrayLongText,
@@ -311,42 +299,40 @@
             "layout": "horizontal"
           }
         });
-          
       }).then(function () {
         expect(element.getAttribute("orientation")).equal("horizontal");
         let radioButtonArray = element.querySelectorAll("fluent-radio");
         radioButtonArray.forEach(function (node, index) {
           let expectedText = valRepArrayLongText[index].representation;
-            if(expectedText.length > 25) {
-              expect(node.querySelector("fluent-tooltip"));
-            } else {
-              expect(node.querySelector("fluent-tooltip")).equal(null);
-            }
-            });
+          if (expectedText.length > 25) {
+            expect(node.querySelector("fluent-tooltip"));
+          } else {
+            expect(node.querySelector("fluent-tooltip")).equal(null);
+          }
         });
-      }); 
-
-  it("Change multiple properties", function() {
-    let selectedValue = "2";
-    
-    return asyncRun(function () {
-      tester.dataUpdate({
-        valrep: valRepArray,
-        value: selectedValue,
-        html: {
-          "disabled": true,
-          "readonly": false
-        },
-        classes: { "ClassA": true },
-        uniface: {
-          "label-text": "Test Label",
-          "display-format": "val",
-          "layout": "horizontal"
-        },
       });
-        
-    }).then(function () {
-      let radioButtonArray = element.querySelectorAll("fluent-radio");
+    });
+
+    it("Change multiple properties", function () {
+      let selectedValue = "2";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: selectedValue,
+          html: {
+            "disabled": true,
+            "readonly": false
+          },
+          classes: { "ClassA": true },
+          uniface: {
+            "label-text": "Test Label",
+            "display-format": "val",
+            "layout": "horizontal"
+          },
+        });
+      }).then(function () {
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
         radioButtonArray.forEach(function (node, index) {
           assert.equal(node.value, valRepArray[index].value);
           assert.equal(node.textContent, valRepArray[index].value);
@@ -363,8 +349,8 @@
         expect(element.getAttribute("aria-disabled")).equal("true");
         expect(element.getAttribute("orientation")).equal("horizontal");
       });
-    }); 
- }); 
+    });
+  });
 
 
   describe('Radio onchange event', function () {
