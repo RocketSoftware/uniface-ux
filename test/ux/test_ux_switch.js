@@ -1,11 +1,7 @@
 (function () {
     'use strict';
 
-    /**
-     * Default timeout for waiting for DOM rendering (in milliseconds)
-     */
-    const defaultAsyncTimeout = 100; //ms
-
+    const asyncRun = umockup.asyncRun;
     const assert = chai.assert;
     const expect = chai.expect;
     const tester = new umockup.WidgetTester();
@@ -19,7 +15,6 @@
             assert(widgetClass, `Widget class '${widgetName}' is not defined!
             Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
         });
-
     });
 
     describe("Uniface static structure constructor definition", function () {
@@ -37,6 +32,7 @@
         });
 
     });
+
     describe(widgetName + ".processLayout", function () {
         let element;
 
@@ -129,7 +125,6 @@
             assert(element, "Widget top element is not defined!");
         });
 
-
         for (const defaultClass in classes) {
             it("check class '" + defaultClass + "'", function () {
                 if (classes[defaultClass]) {
@@ -149,84 +144,83 @@
             assert(element, "Widget top element is not defined!");
         });
 
-        it("set value to 1 and make the switch toggle", function (done) {
-            tester.dataUpdate({
-                value: 1
-            });
-            setTimeout(function () {
+        it("set value to 1 and make the switch toggle", function () {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    value: 1
+                });
+            }).then(function () {
                 expect(element).to.have.class("checked");
                 expect(element.getAttribute("current-checked")).equal("true");
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
 
-        it("set value to false and make the switch toggle in unchecked state", function (done) {
-            tester.dataUpdate({
-                value: false
-            });
-            setTimeout(function () {
+        it("set value to false and make the switch toggle in unchecked state", function () {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    value: false
+                });
+            }).then(function () {
                 expect(element).to.not.have.class("checked");
                 expect(element.getAttribute("current-checked")).equal("false");
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
 
-        it("set label to switch", function (done) {
+        it("set label to switch", function () {
             let switchLabelText = "Label";
-            tester.dataUpdate({
-                uniface: {
-                    "label-text": switchLabelText
-                }
-            });
-            setTimeout(function () {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    uniface: {
+                        "label-text": switchLabelText
+                    }
+                });
+            }).then(function () {
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
                 assert.equal(labelText, switchLabelText);//Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
 
-        it("set checked message", function (done) {
+        it("set checked message", function () {
             let switchCheckedText = "On";
-            tester.dataUpdate({
-                uniface: {
-                    "checked-message": switchCheckedText
-                },
-                value: 1
-            });
-            setTimeout(function () {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    uniface: {
+                        "checked-message": switchCheckedText
+                    },
+                    value: 1
+                });
+            }).then(function () {
                 let checkedText = widget.elements.widget.querySelector("span.u-checked-message").innerText;
                 assert.equal(checkedText, switchCheckedText);//Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message text");
                 expect(widget.elements.widget.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
                 expect(widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide unchecked message")
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
 
-        it("set unchecked message", function (done) {
+        it("set unchecked message", function () {
             let switchUnCheckedText = "Off"
-            tester.dataUpdate({
-                uniface: {
-                    "unchecked-message": switchUnCheckedText
-                },
-                value: 0
-            });
-            setTimeout(function () {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    uniface: {
+                        "unchecked-message": switchUnCheckedText
+                    },
+                    value: 0
+                });
+            }).then(function () {
                 let uncheckedText = widget.elements.widget.querySelector("span.u-unchecked-message").innerText;
                 assert.equal(uncheckedText, switchUnCheckedText);//Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text");
                 expect(widget.elements.widget.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
                 expect(widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message")
-                done();
-            }, defaultAsyncTimeout);
+            });
         });
     });
 
     describe('Switch onchange event', function () {
         let switchElement, onchangeSpy, widget;
         beforeEach(function () {
-
             widget = tester.createWidget();
             switchElement = tester.element;
 
@@ -262,17 +256,17 @@
             assert(element, "Widget top element is not defined!");
         });
 
-        it("set invalid value when switch checked state is false", function (done) {
-            tester.dataUpdate({
-                value: ""
-            });
-            setTimeout(function () {
+        it("set invalid value when switch checked state is false", function () {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    value: ""
+                });
+            }).then(function () {
                 expect(element).to.have.class("u-format-invalid");
                 assert(widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text");
                 expect(widget.elements.widget.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("");
                 expect(widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message")
-                done();
-            }, defaultAsyncTimeout);
+            });
         })
     });
 
@@ -284,50 +278,55 @@
             assert(element, "Widget top element is not defined!");
         });
 
-        it("set error to false with checked and unchecked messages", function (done) {
-            tester.dataUpdate({
-                uniface: {
-                    "checked-message": "On",
-                    "unchecked-message": "Off"
-                },
-                value: 1
-            });
-            setTimeout(function () {
+        it("set error to false with checked and unchecked messages", function () {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    uniface: {
+                        "checked-message": "On",
+                        "unchecked-message": "Off"
+                    },
+                    value: 1
+                });
+            }).then(function () {
                 expect(element).to.not.have.class("u-format-invalid");
                 // If there are checked and unchecked messages to be shown, the slots should not be hidden once the error is removed.
                 assert(!widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the unchecked message slot");
                 expect(widget.elements.widget.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
                 assert(!widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message slot");
                 expect(widget.elements.widget.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
-                done();
-            }, defaultAsyncTimeout);
+            });
         })
 
-        it("set error to false without checked and unchecked messages", function (done) {
-            tester.dataUpdate({
-                value: 1
-            });
-            setTimeout(function () {
+        it("set error to false without checked and unchecked messages", function () {
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    value: 1
+                });
+            }).then(function () {
                 expect(element).to.not.have.class("u-format-invalid");
                 // If there are no messages to show in the slot, they should still be kept hidden even after the error has been removed
                 assert(widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to keep the unchecked message slot hidden");
                 expect(widget.elements.widget.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("");
                 assert(widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to keep the checked message slot hidden");
                 expect(widget.elements.widget.querySelector("span.u-checked-message").getAttribute("slot")).equal("");
-                done();
-            }, defaultAsyncTimeout);
+            });
         })
     });
 
-    describe("reset all properties", function () {
-        it("reset all property", function () {
-            try {
-                tester.dataUpdate(tester.getDefaultValues());
-            } catch (e) {
-                console.error(e);
-                assert(false, "Failed to call dataCleanup(), exception " + e);
-            }
+    describe("dataCleanup", function () {
+        let widget;
+        before(function () {
+          widget = tester.createWidget();
+        });
+    
+        it("reset all properties", function () {
+          try {
+            widget.dataCleanup(tester.widgetProperties);
+          } catch (e) {
+            console.error(e);
+            assert(false, "Failed to call dataCleanup(), exception " + e);
+          }
         });
     });
-
+    
 })();
