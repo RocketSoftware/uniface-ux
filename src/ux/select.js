@@ -96,7 +96,10 @@ export class Select extends Widget {
       this.log("createPlaceholderElement", null);
       const element = document.createElement("div");
       element.setAttribute("value", value);
-      element.innerHTML = '<span class="u-placeholder">' + text + "</span>";
+      const placeholderElement = document.createElement('span');
+      placeholderElement.className = "u-placeholder";
+      placeholderElement.textContent = text;
+      element.appendChild(placeholderElement);
       return element;
     }
 
@@ -117,7 +120,7 @@ export class Select extends Widget {
     createSelectedValrepElement(tagName, val, rep, displayFormat) {
       const selectedValRepElement = document.createElement(tagName);
       selectedValRepElement.setAttribute("value", val);
-      selectedValRepElement.innerHTML = this.getFormattedValrepItemAsHTML(displayFormat, val, rep);
+      selectedValRepElement.appendChild(this.getFormattedValrepItemAsHTML(displayFormat, val, rep));
       return selectedValRepElement;
     }
 
@@ -127,10 +130,10 @@ export class Select extends Widget {
       // If the previous selected option was placeholder, it will not have rep and value span,
       // hence create it. Also, down below remove the placeholder element.
       if (!selectedRepSpan) {
-        selectedValueSlot.innerHTML = this.getFormattedValrepItemAsHTML(displayFormat, val, rep);
+        selectedValueSlot.appendChild(this.getFormattedValrepItemAsHTML(displayFormat, val, rep));
       } else {
         selectedRepSpan ? (selectedRepSpan.innerHTML = rep) : "";
-        selectedValSpan ? (selectedValSpan.innerHTML = val) : "null";
+        selectedValSpan ? (selectedValSpan.textContent = val) : "null";
       }
 
       let selectedPlaceholderSpan = selectedValueSlot.querySelector(".u-placeholder");
@@ -160,7 +163,7 @@ export class Select extends Widget {
         displayFormat,
         selectedValueSlot,
         selectedRepSpan ? selectedRepSpan.innerHTML : "",
-        selectedValSpan ? selectedValSpan.innerHTML : ""
+        selectedValSpan ? selectedValSpan.textContent : ""
       );
       // Always call hideFormatError as we cannot select an invalid option.
       widgetInstance.setProperties({

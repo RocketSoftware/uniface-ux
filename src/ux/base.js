@@ -388,19 +388,27 @@ export class Base {
    * @param {String} displayFormat
    * @param {String | null} value
    * @param {String} representation
-   * @returns {String}
+   * @returns {HTMLElement | DocumentFragment}
    */
   getFormattedValrepItemAsHTML(displayFormat, value, representation) {
+    const valrepRepElement = document.createElement('span');
+    valrepRepElement.className = 'u-valrep-representation';
+    valrepRepElement.innerHTML = representation;
+    const valrepValueElement = document.createElement('span');
+    valrepValueElement.className = 'u-valrep-value';
+    valrepValueElement.textContent = value ? value : "null";
     switch (displayFormat) {
       case "valrep":
-        return (
-          "<span class='u-valrep-representation'>" + representation + "</span> <span class='u-valrep-value u-value'>" + (value ? value : "null") + "</span>"
-        );
+        const fragmentElement = document.createDocumentFragment();
+        fragmentElement.appendChild(valrepRepElement);
+        valrepValueElement.classList.add('u-value');
+        fragmentElement.appendChild(valrepValueElement);
+        return fragmentElement;
       case "val":
-        return "<span class='u-valrep-value'>" + (value ? value : "null") + "</span>";
+        return valrepValueElement;
       case "rep":
       default:
-        return "<span class='u-valrep-representation'>" + representation + "</span>";
+        return valrepRepElement;
     }
   }
 

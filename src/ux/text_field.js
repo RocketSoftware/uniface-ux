@@ -175,7 +175,8 @@ export class TextField extends Widget {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    formattedValue.primaryPlainText = this.getNode(properties, "value");
+    let plainTextValue = this.getNode(properties, "value");
+    formattedValue.primaryPlainText = plainTextValue.replaceAll(/\n/g, " ");
     formattedValue.prefixIcon = this.getNode(properties, "uniface:prefix-icon");
     if (!formattedValue.prefixIcon) {
       formattedValue.prefixText = this.getNode(properties, "uniface:prefix-text");

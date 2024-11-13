@@ -1509,7 +1509,7 @@ export class SlottedElementsByValRep extends Element {
         element.appendChild(childElement);
         childElement.setAttribute("value", valRepObj.value);
         childElement.setAttribute("class", this.styleClass);
-        childElement.innerHTML = this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation);
+        childElement.appendChild(this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation));
       });
     }
   }
