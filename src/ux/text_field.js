@@ -95,7 +95,7 @@ export class TextField extends Widget {
     });
     // Dispatch change event when clicked on change button.
     this.elements.widget.querySelector(".u-sw-changebutton").addEventListener("click", () => {
-      this.elements.widget.dispatchEvent(new Event("change", { "bubbles": false }));
+      this.elements.widget.dispatchEvent(new window.Event("change", { "bubbles": false }));
     });
     return valueUpdaters;
   }

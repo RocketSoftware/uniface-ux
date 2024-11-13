@@ -292,8 +292,8 @@ export class Select extends Widget {
     new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new HtmlAttributeChoice(this, "uniface:popup-position", "u-position", ["above", "below"], "below", true),
     new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ".u-placeholder"),
-    new IgnoreProperty(this, "html:minlength", undefined),
-    new IgnoreProperty(this, "html:maxlength", undefined)
+    new IgnoreProperty(this, "html:minlength"),
+    new IgnoreProperty(this, "html:maxlength")
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),

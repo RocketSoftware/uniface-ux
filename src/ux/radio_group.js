@@ -165,8 +165,8 @@ export class RadioGroup extends Widget {
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "uniface:layout", "orientation", ["vertical", "horizontal"], "vertical", true),
     new this.RadioGroupSelectedValue(this, "value", "value", ""),
-    new IgnoreProperty(this, "html:minlength", undefined),
-    new IgnoreProperty(this, "html:maxlength", undefined)
+    new IgnoreProperty(this, "html:minlength"),
+    new IgnoreProperty(this, "html:maxlength")
   ], [
     new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
     new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "uniface:label-text"),

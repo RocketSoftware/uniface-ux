@@ -202,9 +202,9 @@ export class PlainText extends Widget {
     new HtmlAttribute(this, "html:title", "title", undefined),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttribute(this, "html:slot", "slot", ""),
-    new IgnoreProperty(this, "html:maxlength", undefined),
-    new IgnoreProperty(this, "html:minlength", undefined),
-    new IgnoreProperty(this, "html:readonly", undefined)
+    new IgnoreProperty(this, "html:maxlength"),
+    new IgnoreProperty(this, "html:minlength"),
+    new IgnoreProperty(this, "html:readonly")
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "uniface:prefix-text", "", "uniface:prefix-icon", ""),

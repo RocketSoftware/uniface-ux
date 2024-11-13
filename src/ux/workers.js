@@ -752,7 +752,7 @@ export class IgnoreProperty extends Worker {
    * @param {UPropName} propId
    * @param {UPropValue} defaultValue
    */
-  constructor(widgetClass, propId, defaultValue) {
+  constructor(widgetClass, propId, defaultValue = null) {
     super(widgetClass);
     this.propId = propId;
     this.defaultValue = defaultValue;
