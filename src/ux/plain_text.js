@@ -47,12 +47,7 @@ export class PlainText extends Widget {
      * @param {String} styleClass
      * @param {String} elementQuerySelector
      */
-    constructor(
-      widgetClass,
-      tagName,
-      styleClass,
-      elementQuerySelector
-    ) {
+    constructor(widgetClass, tagName, styleClass, elementQuerySelector) {
       super(widgetClass, tagName, styleClass, elementQuerySelector);
       this.hidden = true;
 
@@ -84,14 +79,25 @@ export class PlainText extends Widget {
       }
     }
 
-    getValueRepresentationAsText(widgetInstance) {
+    /**
+     * Format the text according to the specified format.
+     * If the `valrep` object does not match the expected value, a format error is shown.
+     */
+    setTextAsPlaintextFormat(widgetInstance) {
       let value = this.getNode(widgetInstance.data.properties, "value");
-      if (value && typeof value !== "string") {
-        value = value.toString();
-      }
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
-      const matchedValrepObj = valrep ? valrep.find((valrepObj) => (valrepObj.value === value)) : undefined;
       const plainTextFormat = this.getNode(widgetInstance.data.properties, "uniface:plaintext-format");
+      const element = this.getElement(widgetInstance);
+      element.innerHTML = "";
+      // Convert value to string if it's not a string already.
+      value = value && typeof value !== "string" ? value.toString() : value;
+      if (value) {
+        element.hidden = false;
+      }
+
+      const matchedValrepObj = valrep?.find((valrepObj) => valrepObj.value === value);
+
+      // Handle format errors.
       if (valrep && !matchedValrepObj) {
         const text = this.getFormatErrorText(widgetInstance);
         if (text) {
@@ -101,9 +107,11 @@ export class PlainText extends Widget {
               "format-error-message": text
             }
           });
-          return value;
+          element.textContent = value;
+          return;
         }
       }
+
       widgetInstance.setProperties({
         "uniface": {
           "format-error": false,
@@ -111,69 +119,93 @@ export class PlainText extends Widget {
         }
       });
 
+      // Create elements dynamically for different plain text formats.
       switch (plainTextFormat) {
         case "valrep-html":
-          // The space between the spans is added intentionally to create spacing between the representation and the value.
-          value = `<span class="u-valrep-rep">${matchedValrepObj.representation}</span> <span class="u-valrep-value">${value}</span>`;
+          this.createValrepHtmlElement(matchedValrepObj, value, element);
           break;
         case "valrep-text":
-          value = `${matchedValrepObj.representation} (${value})`;
+          this.createTextElement(`${matchedValrepObj.representation} (${value})`, element);
           break;
         case "representation-only":
-          value = matchedValrepObj.representation;
+          this.createRepElement(matchedValrepObj, element);
           break;
         case "value-only":
-          value = matchedValrepObj.value;
-          break;
-        case "multi-paragraphs":
-          if (value && value.split) {
-            let lines = value.split(/\n/);
-            value = "";
-            for (let i = 0; i < lines.length; i++) {
-              let line = `<p class="u-paragraph">${lines[i]}</p>`;
-              value += line;
-            }
-          }
+          this.createTextElement(matchedValrepObj.value, element);
           break;
         case "multi-line":
+          this.createTextElement(value, element);
+          break;
+        case "multi-paragraphs":
+          this.createMultiParagraphsElement(value, element);
           break;
         case "single-line":
-          if (value && value.replaceAll) {
-            value = value.replaceAll(/\n/g, " ");
-          }
+          this.createTextElement(value?.replaceAll(/\n/g, " ") || value, element);
           break;
-        default: // "first-line".
-          if (value && value.split) {
-            var arr = value.split("\n", 2);
-            if (arr.length > 1) {
-              value = `${arr[0]}...`;
-            }
-          }
+        default: // "first-line" or any other case
+          this.createTextElement(value?.split?.("\n", 2)[0] + (value.includes("\n") ? "..." : ""), element);
           break;
       }
-      return value;
     }
 
-    setTextAsPlaintextFormat(widgetInstance) {
-      // Format html and multi-line formats locally.
-      // Format single-line-text using getValueRepresentationAsText().
-      let value = this.getValueRepresentationAsText(widgetInstance);
-      const plainTextFormat = this.getNode(widgetInstance.data.properties, "uniface:plaintext-format");
-      var element = this.getElement(widgetInstance);
+    /**
+     * Create DOM element for 'valrep-html'.
+     * @param {Object} matchedValrepObj
+     * @param {String} value
+     * @param {HTMLElement} element
+     * @returns HTMLElement
+     */
+    createValrepHtmlElement(matchedValrepObj, value, element) {
+      const valueSpan = document.createElement("span");
+      valueSpan.className = "u-valrep-value";
+      valueSpan.textContent = value;
+      this.createRepElement(matchedValrepObj, element);
+      element.appendChild(document.createTextNode(" ")); // Add space between the spans
+      element.appendChild(valueSpan);
+      return element;
+    }
 
-      switch (plainTextFormat) {
-        case "valrep-html":
-        case "multi-paragraphs":
-          element.innerHTML = value;
-          break;
-        // Other formats are assigned as text.
-        default:
-          element.innerText = value;
-          break;
-      }
-      if (value) {
-        element.hidden = false;
-      }
+    /**
+     * Create DOM element for rep html element.
+     * @param {Object} matchedValrepObj
+     * @param {HTMLElement} element
+     * @returns HTMLElement
+     */
+    createRepElement(matchedValrepObj, element) {
+      const repSpan = document.createElement("span");
+      repSpan.className = "u-valrep-rep";
+      repSpan.innerHTML = matchedValrepObj.representation;
+      element.appendChild(repSpan);
+      return element;
+    }
+
+    /**
+     * Create a text node element.
+     * @param {String} text
+     * @param {HTMLElement} element
+     * @returns HTMLElement
+     */
+    createTextElement(text, element) {
+      return (element.textContent = text);
+    }
+
+    /**
+     * Create a DOM structure for multi-paragraphs.
+     * @param {String} value
+     * @param {HTMLElement} element
+     * @returns HTMLElement
+     */
+    createMultiParagraphsElement(value, element) {
+      const paragraphs = value?.split(/\n/) || [];
+
+      paragraphs.forEach((line) => {
+        const paragraph = document.createElement("p");
+        paragraph.className = "u-paragraph";
+        paragraph.textContent = line;
+        element.appendChild(paragraph);
+      });
+
+      return element;
     }
 
     refresh(widgetInstance) {
@@ -335,7 +367,7 @@ export class PlainText extends Widget {
     let value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
 
     const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
-    const valrepItem  = this.getValrepItem(valrep, value);
+    const valrepItem = this.getValrepItem(valrep, value);
 
     if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
       formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");

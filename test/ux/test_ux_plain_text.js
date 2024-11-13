@@ -492,6 +492,23 @@
                 assert.equal(widget.elements.widget.getAttribute("slot"), slotProp);
             });  
         });
+
+        it("Ensure value is set using textContent", function () {
+            let val = "<img src='x' onError={alert('XSS attack')}/>"
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            return asyncRun(function () {
+                tester.dataUpdate({
+                    "value": val
+                });
+            }).then(function () {
+                let escapedHtmlValue = val
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+                expect(widget.elements.widget.childNodes[2].innerHTML).to.equal(escapedHtmlValue);
+                expect(widget.elements.widget.childNodes[2].textContent).to.equal(val);
+            });
+        });
     });
 
     describe("showError", function () {
