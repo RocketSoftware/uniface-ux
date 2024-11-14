@@ -358,8 +358,7 @@ export class PlainText extends Widget {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    const displayFormat = this.getNode(properties, "uniface:plaintext-format") ||
-                          this.getNode(this.defaultValues, "uniface:plaintext-format");
+    const displayFormat = this.getNode(properties, "uniface:plaintext-format") || this.getNode(this.defaultValues, "uniface:plaintext-format");
     let value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
 
     const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");

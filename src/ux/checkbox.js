@@ -116,7 +116,7 @@ export class Checkbox extends Widget {
           }
           break;
       }
-      throw "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.";
+      throw Checkbox.formatErrorMessage;
     }
 
     /**

@@ -1,5 +1,6 @@
 .u-radio-group {
   display: inline-flex;
+  vertical-align: bottom;
 }
 
 .u-radio-group .u-radio {
@@ -53,17 +54,17 @@
   margin-inline-end: calc((var(--design-unit) * 1px));
 }
 
-.u-radio-group .u-radio .u-valrep-value {
+.u-radio-group .u-radio .u-value {
   color: var(--neutral-base-color);
   font-style: italic;
 }
 
 /* Styling the valrep value to enclose it within parentheses. */
-.u-radio-group .u-radio .u-valrep-value::before {
+.u-radio-group .u-radio .u-value::before {
   content: "(";
 }
 
-.u-radio-group .u-radio .u-valrep-value::after {
+.u-radio-group .u-radio .u-value::after {
   content: ")";
 }
 
