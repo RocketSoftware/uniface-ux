@@ -153,7 +153,6 @@ export class PlainText extends Widget {
      * @param {Object} matchedValrepObj
      * @param {String} value
      * @param {HTMLElement} element
-     * @returns HTMLElement
      */
     createValrepHtmlElement(matchedValrepObj, value, element) {
       const valueSpan = document.createElement("span");
@@ -162,38 +161,33 @@ export class PlainText extends Widget {
       this.createRepElement(matchedValrepObj, element);
       element.appendChild(document.createTextNode(" ")); // Add space between the spans
       element.appendChild(valueSpan);
-      return element;
     }
 
     /**
      * Create DOM element for rep html element.
      * @param {Object} matchedValrepObj
      * @param {HTMLElement} element
-     * @returns HTMLElement
      */
     createRepElement(matchedValrepObj, element) {
       const repSpan = document.createElement("span");
       repSpan.className = "u-valrep-rep";
       repSpan.innerHTML = matchedValrepObj.representation;
       element.appendChild(repSpan);
-      return element;
     }
 
     /**
      * Create a text node element.
      * @param {String} text
      * @param {HTMLElement} element
-     * @returns HTMLElement
      */
     createTextElement(text, element) {
-      return (element.textContent = text);
+      element.textContent = text;
     }
 
     /**
      * Create a DOM structure for multi-paragraphs.
      * @param {String} value
      * @param {HTMLElement} element
-     * @returns HTMLElement
      */
     createMultiParagraphsElement(value, element) {
       const paragraphs = value?.split(/\n/) || [];
@@ -204,8 +198,6 @@ export class PlainText extends Widget {
         paragraph.textContent = line;
         element.appendChild(paragraph);
       });
-
-      return element;
     }
 
     refresh(widgetInstance) {
