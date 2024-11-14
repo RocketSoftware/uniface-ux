@@ -843,36 +843,36 @@
     });
 
     describe("getValueFormatted", function () {
-        let widget, properties, formattedValue;
+        let widget, properties, valueProperty;
         before(function () {
             widget = tester.createWidget();
             properties = tester.widget.data.properties;
         });
 
         it("Verify single line value matches primaryPlainText returned by getValueFormatted", function () {
-            formattedValue = "Single line value";
+            valueProperty = "Single line value";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    value: formattedValue
+                    value: valueProperty
                 });
             }).then(function () {
                 let valueFormatted = widgetClass.getValueFormatted(properties);
-                assert.equal(valueFormatted.primaryPlainText, formattedValue);
+                assert.equal(valueFormatted.primaryPlainText, valueProperty);
             });
         });
 
         it("Verify the value returned by getValueFormatted doesn't include the line breaks", function () {
-            formattedValue = `
-                testing value with multiple lines:
-                line 1,
-                line 2`
+            valueProperty = `testing value with multiple lines:
+line 1,
+line 2`
             return asyncRun(function() {
                 tester.dataUpdate({
-                    value: formattedValue,
+                    value: valueProperty,
                 });
             }).then(function () {
+                const expectedValue = "testing value with multiple lines: line 1, line 2";
                 let valueFormatted = widgetClass.getValueFormatted(properties);
-                assert.equal(valueFormatted.primaryPlainText, formattedValue);
+                assert.equal(valueFormatted.primaryPlainText, expectedValue);
             });
         });
     });
