@@ -597,6 +597,7 @@
     });
 
     describe("hideError", function () {
+        let widget;
         before(function () {
             widget = tester.createWidget();
             verifyWidgetClass(widgetClass)
