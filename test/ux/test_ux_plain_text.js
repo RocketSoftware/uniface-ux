@@ -285,7 +285,7 @@
             let plainTextFormat = 'multi-line';
             let val = `Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles
                       Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles`
-            let innerHtml = `Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles<br>                      Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles`
+            let innerHtml = `Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles\n                      Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles`
                       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
              return asyncRun(function() {
                 tester.dataUpdate({
@@ -491,6 +491,23 @@
                 assert(widget.elements.widget.hasAttribute("slot"),slotPropPresent, "Failed to hide the slot attribute");
                 assert.equal(widget.elements.widget.getAttribute("slot"), slotProp);
             });  
+        });
+
+        it("Ensure value is set using textContent", function () {
+            let val = "<img src='x' onError={alert('XSS attack')}/>"
+            // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            return asyncRun(function () {
+                tester.dataUpdate({
+                    "value": val
+                });
+            }).then(function () {
+                let escapedHtmlValue = val
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+                expect(widget.elements.widget.childNodes[2].innerHTML).to.equal(escapedHtmlValue);
+                expect(widget.elements.widget.childNodes[2].textContent).to.equal(val);
+            });
         });
     });
 
