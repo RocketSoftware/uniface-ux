@@ -843,10 +843,9 @@
     });
 
     describe("getValueFormatted", function () {
-        let widget, properties, widgetClass, formattedValue;
+        let widget, properties, formattedValue;
         before(function () {
             widget = tester.createWidget();
-            widgetClass = tester.getWidgetClass();
             properties = tester.widget.data.properties;
         });
 
@@ -857,7 +856,7 @@
                     value: formattedValue
                 });
             }).then(function () {
-                let valueFormatted = widgetClass.getVsalueFormatted(properties);
+                let valueFormatted = widgetClass.getValueFormatted(properties);
                 assert.equal(valueFormatted.primaryPlainText, formattedValue);
             });
         });
