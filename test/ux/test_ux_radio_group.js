@@ -3,7 +3,6 @@
 (function () {
   'use strict';
 
-  const defaultAsyncTimeout = 100; // ms
   const assert = chai.assert;
   const expect = chai.expect;
   const tester = new umockup.WidgetTester();
@@ -11,7 +10,6 @@
   const widgetName = tester.widgetName;
   const widgetClass = tester.getWidgetClass();
   const asyncRun = umockup.asyncRun;
-
 
   // custom test variables
   const valRepArray = [
