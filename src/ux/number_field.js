@@ -12,7 +12,8 @@ import {
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
   HtmlAttributeMinMax,
-  StyleClass
+  StyleClass,
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -54,6 +55,8 @@ export class NumberField extends Widget {
     new HtmlAttributeBoolean(this, "html:hide-step", "hideStep", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
+    new IgnoreProperty(this, "html:minlength"),
+    new IgnoreProperty(this, "html:maxlength"),
     new HtmlAttributeMinMax(this, "html:min", "html:max", undefined, undefined),
     new StyleClass(this, ["u-number-field", "outline"])
   ], [
@@ -94,7 +97,7 @@ export class NumberField extends Widget {
     });
     // Dispatch change event when clicked on change button.
     this.elements.widget.querySelector(".u-sw-changebutton").addEventListener("click", () => {
-      this.elements.widget.dispatchEvent(new Event("change", { "bubbles": false }));
+      this.elements.widget.dispatchEvent(new window.Event("change", { "bubbles": false }));
     });
     return valueUpdaters;
   }

@@ -7,7 +7,8 @@ import {
   Element,
   SlottedElement,
   SlottedError,
-  HtmlAttribute
+  HtmlAttribute,
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -200,7 +201,10 @@ export class PlainText extends Widget {
     new StyleClass(this, ["u-plain-text"]),
     new HtmlAttribute(this, "html:title", "title", undefined),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new HtmlAttribute(this, "html:slot", "slot", "")
+    new HtmlAttribute(this, "html:slot", "slot", ""),
+    new IgnoreProperty(this, "html:maxlength"),
+    new IgnoreProperty(this, "html:minlength"),
+    new IgnoreProperty(this, "html:readonly")
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "uniface:prefix-text", "", "uniface:prefix-icon", ""),

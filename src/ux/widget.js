@@ -71,8 +71,8 @@ export class Widget extends Base {
    * These static properties define the default on whether to report unsupported properties or triggers.
    * Redefine these properties on specific widgets based on demand.
    */
-  static reportUnsupportedPropertyWarnings = false;
-  static reportUnsupportedTriggerWarnings = false;
+  static reportUnsupportedPropertyWarnings = true;
+  static reportUnsupportedTriggerWarnings = true;
 
   /**
    * Holds the updated data of the widget instance.

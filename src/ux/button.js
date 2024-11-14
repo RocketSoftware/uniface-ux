@@ -9,7 +9,8 @@ import {
   HtmlAttribute,
   HtmlAttributeNumber,
   HtmlAttributeChoice,
-  HtmlAttributeBoolean
+  HtmlAttributeBoolean,
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -187,6 +188,9 @@ export class Button extends Widget {
     new HtmlAttributeChoice(this, "html:appearance", "appearance", ["neutral", "accent", "outline", "lightweight", "stealth"], "neutral"),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
+    new IgnoreProperty(this, "html:minlength"),
+    new IgnoreProperty(this, "html:maxlength"),
+    new IgnoreProperty(this, "html:readonly"),
     new StyleClass(this, ["u-button", "neutral"])
   ], [
     new this.SlottedButtonIcon(this, "u-icon", ".u-icon"),

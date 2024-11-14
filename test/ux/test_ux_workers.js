@@ -2,8 +2,8 @@ import { Button } from "../../src/ux/button.js";
 import { Widget } from "../../src/ux/widget.js";
 import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget, 
     SubWidgetsByProperty , BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean ,
-    HtmlValueAttributeBoolean , HtmlAttributeMinMaxLength , StyleProperty , Worker
- } from "../../src/ux/workers.js"
+    HtmlValueAttributeBoolean , HtmlAttributeMinMaxLength , StyleProperty , Worker, IgnoreProperty
+ } from "../../src/ux/workers.js";
 
 
 (function () {
@@ -1033,6 +1033,41 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
          });
     });
 
+  // ===================================================================================================================
+  // == Testing IgnoreProperty class ========================================================================
+  // ===================================================================================================================
+  describe("Test IgnoreProperty Class", function () {
+    let widgetClass;
+    let propId;
+    let defaultValue;
+    let element;
 
+    beforeEach(function () {
+      Widget.structure = {};
+      Widget.subWidgets = {};
+      Widget.subWidgetWorkers = [];
+      Widget.defaultValues = {};
+      Widget.setters = {};
+      Widget.getters = {};
+      Widget.triggers = {};
+      Widget.uiBlocking = "";
+
+      widgetClass = Widget;
+      propId = "uniface:tri-state";
+      defaultValue = false;
+      element = new IgnoreProperty(widgetClass, propId, defaultValue);
+    });
+
+    it("Should initialize with correct properties", function () {
+      expect(element.widgetClass).to.equal(widgetClass);
+      expect(element.propId).to.equal(propId);
+    });
+
+    it("Check Setters and Default values", function () {
+      let setterKeys = Object.keys(element.widgetClass.setters.uniface);
+      expect(setterKeys[setterKeys.length - 1]).to.equal("tri-state");
+      expect(element.defaultValue).to.equal(defaultValue);
+    });
+  });
     
 })();
