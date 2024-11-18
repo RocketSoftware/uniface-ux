@@ -301,6 +301,7 @@
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
         selectOptionArray.forEach(function (node, index) {
+          console.log("ssa", valRepArray[index].representation)
           expect(node.textContent).equal(valRepArray[index].representation);
         });
       });
@@ -333,9 +334,46 @@
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
         selectOptionArray.forEach(function (node, index) {
-          let formatValrepText = valRepArray[index].representation + " " + valRepArray[index].value;
+          let formatValrepText = valRepArray[index].representation + valRepArray[index].value;
           expect(node.textContent).equal(formatValrepText);
         });
+      });
+    });
+
+    it("Ensure value is set using textContent", function () {
+      const valRepArray1 = [
+        {
+          value: "1",
+          representation: "option one"
+        },
+        {
+          value: "2",
+          representation: "option two"
+        },
+        {
+          value: "3",
+          representation: "option three"
+        },
+        {
+          value: "<script> alert('XSS' attack') </script>",
+          representation: "<script> alert('XSS' attack') </script>"
+        }
+      ];
+      return asyncRun(function() {
+        tester.dataUpdate({
+          valrep: valRepArray1,
+          value: "<script> alert('XSS' attack') </script>",
+          uniface: {
+            "display-format": "valrep"
+          }
+        });
+      }).then(function () {
+          let valStr = "<script> alert('XSS' attack') </script>"
+          let escapedHtmlValue = valStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          assert.equal(element.querySelector('fluent-option.selected .u-valrep-representation').innerHTML, valStr);
+          expect(element.querySelector('fluent-option.selected .u-valrep-representation').innerHTML).equal(valStr);
+          expect(element.querySelector('fluent-option.selected .u-valrep-value').innerHTML).equal(escapedHtmlValue);
+          expect(element.querySelector('fluent-option.selected .u-valrep-value').textContent).equal(valStr);
       });
     });
 
