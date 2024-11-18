@@ -401,19 +401,30 @@
 
         it("check default html cols value", function (done) {
             let defaultColsProp = 20;
+<<<<<<< Updated upstream
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()  
             setTimeout(function () {
+=======
+            return asyncRun(function () {
+                // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+            }).then(function () {
+>>>>>>> Stashed changes
                 let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
                 assert.equal(colsText, defaultColsProp);//Check for visibility
                 let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
                 assert.equal(rowsText, 0);
+<<<<<<< Updated upstream
                 done();
             }, defaultAsyncTimeout); // Wait for DOM rendering
+=======
+            });
+>>>>>>> Stashed changes
         });
 
         it("html cols property negative integer", function (done) {
             let colsProp = -1;
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+<<<<<<< Updated upstream
             tester.dataUpdate({
                 "html": {
                     "cols": colsProp
@@ -421,6 +432,15 @@
             });
 
             setTimeout(function () {
+=======
+            return asyncRun(function () {
+                tester.dataUpdate({
+                    "html": {
+                        "cols": colsProp
+                    }
+                });
+            }).then(function () {
+>>>>>>> Stashed changes
                 let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
                 assert.equal(colsText, colsProp);//Check for visibility
                 let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
@@ -432,6 +452,7 @@
         it("html cols property positive integer", function (done) {
             let colsProp = 25;
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+<<<<<<< Updated upstream
             tester.dataUpdate({
                 "html": {
                     "cols": colsProp
@@ -440,6 +461,15 @@
 
 
             setTimeout(function () {
+=======
+            return asyncRun(function () {
+                tester.dataUpdate({
+                    "html": {
+                        "cols": colsProp
+                    }
+                });
+            }).then(function () {
+>>>>>>> Stashed changes
                 let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
                 assert.equal(colsText, colsProp);//Check for visibility
                 let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
@@ -531,6 +561,7 @@
         //html:appearance outfill property
         it("Set html:appearance outline property true for textarea", function (done) {
             let appearanceStyle = "outline"
+<<<<<<< Updated upstream
             tester.dataUpdate({
                 html: {
                     "appearance": appearanceStyle
@@ -539,6 +570,15 @@
             });
 
             setTimeout(function () {
+=======
+            return asyncRun(function () {
+                tester.dataUpdate({
+                    html: {
+                        "appearance": appearanceStyle
+                    }
+                });
+            }).then(function () {
+>>>>>>> Stashed changes
                 let appearanceStyleProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance outfill attribute");                    
                 let appearanceStylePropertyText = widget.elements.widget.getAttribute('appearance');
