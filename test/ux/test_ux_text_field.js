@@ -1,3 +1,4 @@
+
 (function () {
     'use strict';
 
@@ -837,6 +838,41 @@
                 assert(widget.elements.widget.childNodes[2].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"),  "slot attribute is not present");
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("title"), "title attribute is not present")
+            });
+        });
+    });
+
+    describe("getValueFormatted", function () {
+        let widget, properties, valueProperty;
+        before(function () {
+            widget = tester.createWidget();
+            properties = tester.widget.data.properties;
+        });
+
+        it("Verify single line value matches primaryPlainText returned by getValueFormatted", function () {
+            valueProperty = "Single line value";
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    value: valueProperty
+                });
+            }).then(function () {
+                let valueFormatted = widgetClass.getValueFormatted(properties);
+                assert.equal(valueFormatted.primaryPlainText, valueProperty);
+            });
+        });
+
+        it("Verify the value returned by getValueFormatted doesn't include the line breaks", function () {
+            valueProperty = `testing value with multiple lines:
+line 1,
+line 2`
+            return asyncRun(function() {
+                tester.dataUpdate({
+                    value: valueProperty,
+                });
+            }).then(function () {
+                const expectedValue = "testing value with multiple lines: line 1, line 2";
+                let valueFormatted = widgetClass.getValueFormatted(properties);
+                assert.equal(valueFormatted.primaryPlainText, expectedValue);
             });
         });
     });
