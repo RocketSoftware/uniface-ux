@@ -301,7 +301,6 @@
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
         selectOptionArray.forEach(function (node, index) {
-          console.log("ssa", valRepArray[index].representation)
           expect(node.textContent).equal(valRepArray[index].representation);
         });
       });
