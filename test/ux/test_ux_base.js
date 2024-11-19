@@ -200,6 +200,7 @@ import { Widget } from "../../src/ux/widget.js";
             let valRepString = "<p>this is paragraph</p>"
             let representation = "<p>this is paragraph</p>"
             let formattedValReps = base.getFormattedValrepItemAsHTML(displayFormat,valRepString,representation)
+            expect(formattedValReps.querySelector('.u-valrep-value').className).to.eql('u-valrep-value u-value')
             expect(formattedValReps.querySelector('.u-valrep-representation').textContent).to.eql('this is paragraph')
             expect(formattedValReps.querySelector('.u-valrep-representation').innerHTML).to.eql(representation)
             expect(formattedValReps.querySelector('.u-valrep-value').textContent).to.eql(valRepString)
