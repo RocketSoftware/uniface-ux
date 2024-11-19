@@ -366,14 +366,12 @@
 
         it("check default html cols value", function () {
             let defaultColsProp = 20;
-            return asyncRun(function () {
-                // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-            }).then(function () {
+            {
                 let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
                 assert.equal(colsText, defaultColsProp);//Check for visibility
                 let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
                 assert.equal(rowsText, 0);
-            });
+            }
         });
 
         it("html cols property negative integer", function () {
@@ -385,7 +383,7 @@
                         "cols": colsProp
                     }
                 });
-            }).then(function () {
+            }, 100).then(function () {
                 let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
                 assert.equal(colsText, colsProp);//Check for visibility
                 let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
@@ -402,7 +400,7 @@
                         "cols": colsProp
                     }
                 });
-            }).then(function () {
+            }, 100).then(function () {
                 let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
                 assert.equal(colsText, colsProp);//Check for visibility
                 let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
@@ -492,7 +490,7 @@
                         "appearance": appearanceStyle
                     }
                 });
-            }).then(function () {
+            }, 100).then(function () {
                 let appearanceStyleProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance outfill attribute");
                 let appearanceStylePropertyText = widget.elements.widget.getAttribute('appearance');
