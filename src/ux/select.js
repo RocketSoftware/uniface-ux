@@ -152,12 +152,14 @@ export class Select extends Widget {
       const selectedOptionElement = element.options[element.selectedIndex];
       const selectedRepSpan = selectedOptionElement.querySelector(".u-valrep-representation");
       const selectedValSpan = selectedOptionElement.querySelector(".u-valrep-value");
+      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
       if (selectedOptionElement.style && selectedOptionElement.style.display === "none") {
         return;
       }
       if (selectedValueSlot) {
         selectedValueSlot.setAttribute("value", element.value);
-        widgetInstance.data.properties.value = selectedValueSlot.getAttribute("value");
+        const value = valrep[element.value]?.value;
+        widgetInstance.data.properties.value = value;
       }
       this.reformatValueElement(
         displayFormat,
@@ -201,7 +203,7 @@ export class Select extends Widget {
       let rep;
       const value = this.getNode(widgetInstance.data.properties, "value");
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
-      const valrepWithNullValue = this.toBoolean(valrep && valrep.some(element => element.value === ""));
+      const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
       const showPlaceholder = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:show-placeholder"));
       const placeholderText = this.getNode(widgetInstance.data.properties, "uniface:placeholder-text");
       const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
@@ -209,7 +211,7 @@ export class Select extends Widget {
       if (selectedValueElement) {
         selectedValueElement.remove();
       }
-      if ((value === "" || value === null) && showPlaceholder && !valrepWithNullValue) {
+      if (valueToSet === "" && showPlaceholder) {
         selectedValueElement = this.createPlaceholderElement(placeholderText, value);
         isPlaceholderElementCreated = true;
       } else {
@@ -251,7 +253,10 @@ export class Select extends Widget {
       // available microtask queue, which is typically more immediate and
       // precise than setTimeout().
       window.queueMicrotask(() => {
-        element["value"] = value;
+        const selectElement = document.querySelector("fluent-select");
+        if (selectElement) {
+          selectElement["value"] = valueToSet.toString();
+        }
       });
     }
   };
