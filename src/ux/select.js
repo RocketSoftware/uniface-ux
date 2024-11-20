@@ -253,10 +253,7 @@ export class Select extends Widget {
       // available microtask queue, which is typically more immediate and
       // precise than setTimeout().
       window.queueMicrotask(() => {
-        const selectElement = document.querySelector("fluent-select");
-        if (selectElement) {
-          selectElement["value"] = valueToSet.toString();
-        }
+        element["value"] = valueToSet.toString();
       });
     }
   };
