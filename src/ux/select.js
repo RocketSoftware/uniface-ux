@@ -211,7 +211,7 @@ export class Select extends Widget {
       if (selectedValueElement) {
         selectedValueElement.remove();
       }
-      if (valueToSet === "" && showPlaceholder) {
+      if (valueToSet === -1 && showPlaceholder) {
         selectedValueElement = this.createPlaceholderElement(placeholderText, value);
         isPlaceholderElementCreated = true;
       } else {
