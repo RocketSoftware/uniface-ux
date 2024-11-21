@@ -9,10 +9,10 @@ import {
   HtmlAttribute,
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
-  HtmlAttributeMinMaxLength,
   HtmlAttributeNumber,
   StyleClass,
-  Trigger
+  Trigger,
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -57,9 +57,34 @@ export class RadioGroup extends Widget {
       this.registerSetter(widgetClass, "valrep", this);
     }
 
+    checkEmptyValue(radioWithNoValue, value) {
+      const isRadioSelected = radioWithNoValue.classList.contains('checked');
+      if (value === "" && !isRadioSelected) {
+        radioWithNoValue.classList.add("checked");
+        radioWithNoValue.setAttribute("current-checked", "true");
+        radioWithNoValue.setAttribute("aria-checked", "true");
+      } else if (value !== "" && isRadioSelected) {
+        radioWithNoValue.classList.remove("checked");
+        radioWithNoValue.setAttribute("current-checked", "false");
+        radioWithNoValue.setAttribute("aria-checked", "false");
+      }
+    }
+
     getValue(widgetInstance) {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
       const value = this.getNode(widgetInstance.data.properties, "value");
+      // The Fluent Radio Group doesn't recognize an empty string as a valid value,
+      // so we need to check for an empty string in the valrep and the Uniface value property.
+      // If there is empty string value, the corresponding radio button to be checked. queMicrotask
+      // is used to asynchronously update the three attributes required for a checked
+      // radio button: checked, current-checked, and aria-checked.
+      const radioGroupElement = this.getElement(widgetInstance);
+      const radioWithNoValue = Array.from(radioGroupElement.querySelectorAll(".u-radio")).find((radio) => radio["_value"] === "");
+      if (radioWithNoValue) {
+        window.queueMicrotask(() => {
+          this.checkEmptyValue(radioWithNoValue, value);
+        });
+      }
       return value;
     }
 
@@ -102,7 +127,6 @@ export class RadioGroup extends Widget {
       }
     }
   };
-
 
   /**
    * Private Worker: RadioGroupValRep
@@ -218,7 +242,9 @@ export class RadioGroup extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "uniface:layout", "orientation", ["vertical", "horizontal"], "vertical", true),
-    new this.RadioGroupSelectedValue(this, "value", "value", "")
+    new this.RadioGroupSelectedValue(this, "value", "value", ""),
+    new IgnoreProperty(this, "html:minlength"),
+    new IgnoreProperty(this, "html:maxlength")
   ], [
     new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
     new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
