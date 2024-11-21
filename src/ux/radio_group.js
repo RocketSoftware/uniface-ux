@@ -9,10 +9,10 @@ import {
   HtmlAttribute,
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
+  HtmlAttributeMinMaxLength,
   HtmlAttributeNumber,
   StyleClass,
-  Trigger,
-  IgnoreProperty
+  Trigger
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -57,34 +57,9 @@ export class RadioGroup extends Widget {
       this.registerSetter(widgetClass, "valrep", this);
     }
 
-    checkEmptyValue(radioWithNoValue, value) {
-      const isRadioSelected = radioWithNoValue.classList.contains('checked');
-      if (value === "" && !isRadioSelected) {
-        radioWithNoValue.classList.add("checked");
-        radioWithNoValue.setAttribute("current-checked", "true");
-        radioWithNoValue.setAttribute("aria-checked", "true");
-      } else if (value !== "" && isRadioSelected) {
-        radioWithNoValue.classList.remove("checked");
-        radioWithNoValue.setAttribute("current-checked", "false");
-        radioWithNoValue.setAttribute("aria-checked", "false");
-      }
-    }
-
     getValue(widgetInstance) {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
       const value = this.getNode(widgetInstance.data.properties, "value");
-      // The Fluent Radio Group doesn't recognize an empty string as a valid value,
-      // so we need to check for an empty string in the valrep and the Uniface value property.
-      // If there is empty string value, the corresponding radio button to be checked. queMicrotask
-      // is used to asynchronously update the three attributes required for a checked
-      // radio button: checked, current-checked, and aria-checked.
-      const radioGroupElement = this.getElement(widgetInstance);
-      const radioWithNoValue = Array.from(radioGroupElement.querySelectorAll(".u-radio")).find((radio) => radio["_value"] === "");
-      if (radioWithNoValue) {
-        window.queueMicrotask(() => {
-          this.checkEmptyValue(radioWithNoValue, value);
-        });
-      }
       return value;
     }
 
@@ -128,6 +103,7 @@ export class RadioGroup extends Widget {
     }
   };
 
+
   /**
    * Private Worker: RadioGroupValRep
    * This is specialized worker to accommodate tooltip changes to valrep element.
@@ -162,10 +138,63 @@ export class RadioGroup extends Widget {
       });
     }
 
+    /**
+    * Remove initial fluent-radio element which is created before label element from this worker.
+    */
+    removeInitialRadio(widgetInstance) {
+      let element = this.getElement(widgetInstance);
+      // Find the fluent-radio element that is immediately before the label with class 'u-label-text'
+      const label = element.querySelector('.u-label-text');
+      if (label && label.previousElementSibling && label.previousElementSibling.classList.contains('u-radio')) {
+        label.previousElementSibling.remove();
+      }
+    }
+
+    /**
+     * Hides all valrep elements from this worker.
+     */
+    hideValRepElements(widgetInstance) {
+      let element = this.getElement(widgetInstance);
+      let valrepElements = element.querySelectorAll(this.tagName);
+      valrepElements.forEach((element) => {
+        element.hidden = true;
+      });
+    }
+
+    /**
+     * Creates or unhides all valrep elements from this worker.
+     */
+    createOrUnhideValRepElements(widgetInstance) {
+      let element = this.getElement(widgetInstance);
+      let valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      let displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
+
+      if (valrep.length > 0) {
+        valrep.forEach((valRepObj) => {
+          let childElement = element.querySelector(`${this.tagName}[value="${valRepObj.value}"]`);
+          if (childElement) {
+            // Unhide existing element.
+            childElement.hidden = false;
+            // Update the representation if needed.
+            childElement.innerHTML = this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation);
+          } else {
+            // Create new element.
+            childElement = document.createElement(this.tagName);
+            element.appendChild(childElement);
+            childElement.setAttribute("value", valRepObj.value);
+            childElement.setAttribute("class", this.styleClass);
+            childElement.innerHTML = this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation);
+          }
+        });
+      }
+    }
+
     refresh(widgetInstance) {
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
       if (valrep.length > 0) {
-        super.refresh(widgetInstance);
+        this.removeInitialRadio(widgetInstance);
+        this.hideValRepElements(widgetInstance);
+        this.createOrUnhideValRepElements(widgetInstance);
         this.addTooltipToValrepElement(widgetInstance);
       } else {
         const radioGroupElement = this.getElement(widgetInstance);
@@ -189,9 +218,7 @@ export class RadioGroup extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "uniface:layout", "orientation", ["vertical", "horizontal"], "vertical", true),
-    new this.RadioGroupSelectedValue(this, "value", "value", ""),
-    new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength")
+    new this.RadioGroupSelectedValue(this, "value", "value", "")
   ], [
     new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
     new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
@@ -227,7 +254,7 @@ export class RadioGroup extends Widget {
     /** @type {UValueFormatting} */
     let formattedValue = {};
     const displayFormat = this.getNode(properties, "uniface:display-format") ||
-                          this.getNode(this.defaultValues, "uniface:display-format");
+      this.getNode(this.defaultValues, "uniface:display-format");
     const value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
     const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
     const valrepItem = this.getValrepItem(valrep, value);
