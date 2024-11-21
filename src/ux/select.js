@@ -112,9 +112,8 @@ export class Select extends Widget {
         if (obj) {
           return obj.representation;
         }
-        return "";
       }
-      return null;
+      return "";
     }
 
     createSelectedValrepElement(tagName, val, rep, displayFormat) {
@@ -204,6 +203,7 @@ export class Select extends Widget {
       const value = this.getNode(widgetInstance.data.properties, "value");
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
       const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
+      const isValueEmpty = value === null || value === "";
       const showPlaceholder = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:show-placeholder"));
       const placeholderText = this.getNode(widgetInstance.data.properties, "uniface:placeholder-text");
       const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
@@ -211,14 +211,11 @@ export class Select extends Widget {
       if (selectedValueElement) {
         selectedValueElement.remove();
       }
-      if (valueToSet === -1 && showPlaceholder) {
+      if (valueToSet === -1 && isValueEmpty  && showPlaceholder) {
         selectedValueElement = this.createPlaceholderElement(placeholderText, value);
         isPlaceholderElementCreated = true;
       } else {
         rep = this.getRepresentation(value, valrep);
-        if (rep === null) {
-          rep = "";
-        }
         selectedValueElement = this.createSelectedValrepElement("div", value, rep, displayFormat);
       }
       if (selectedValueElement) {
@@ -226,7 +223,7 @@ export class Select extends Widget {
         element.appendChild(selectedValueElement);
       }
 
-      if (!isPlaceholderElementCreated && !rep) {
+      if (!isPlaceholderElementCreated && valueToSet === -1) {
         // If there is no representation for the non-empty value then show a format error.
         widgetInstance.setProperties({
           "uniface": {
