@@ -194,5 +194,18 @@ import { Widget } from "../../src/ux/widget.js";
             expect(consoleLogSpy.called).to.equal(true)
             sandbox.restore();
         });
+
+        it("getFormattedValrepItemAsHTML", function () {
+            let displayFormat = "valrep"
+            let valRepString = "<p>this is paragraph</p>"
+            let representation = "<p>this is paragraph</p>"
+            let formattedValReps = base.getFormattedValrepItemAsHTML(displayFormat,valRepString,representation)
+            expect(formattedValReps.querySelector('.u-valrep-value').className).to.eql('u-valrep-value u-value')
+            expect(formattedValReps.querySelector('.u-valrep-representation').textContent).to.eql('this is paragraph')
+            expect(formattedValReps.querySelector('.u-valrep-representation').innerHTML).to.eql(representation)
+            expect(formattedValReps.querySelector('.u-valrep-value').textContent).to.eql(valRepString)
+            expect(formattedValReps.querySelector('.u-valrep-value').innerHTML).to.eql('&lt;p&gt;this is paragraph&lt;/p&gt;')
+            expect(formattedValReps.querySelector('.u-valrep-representation').className).to.eql('u-valrep-representation')
+        });
     });
 })();

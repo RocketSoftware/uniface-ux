@@ -741,18 +741,18 @@ export class WidgetForOccurrence extends Worker {
 /**
  * Worker : Used to register setter and default value for properties that do not need to execute any code on refresh.
  * @export
- * @class Dummy
+ * @class IgnoreProperty
  * @extends {Worker}
  */
-export class Dummy extends Worker {
+export class IgnoreProperty extends Worker {
 
   /**
-   * Creates an instance of Dummy
+   * Creates an instance of IgnoreProperty
    * @param {typeof Widget} widgetClass
    * @param {UPropName} propId
    * @param {UPropValue} defaultValue
    */
-  constructor(widgetClass, propId, defaultValue) {
+  constructor(widgetClass, propId, defaultValue = null) {
     super(widgetClass);
     this.propId = propId;
     this.defaultValue = defaultValue;
@@ -1509,7 +1509,7 @@ export class SlottedElementsByValRep extends Element {
         element.appendChild(childElement);
         childElement.setAttribute("value", valRepObj.value);
         childElement.setAttribute("class", this.styleClass);
-        childElement.innerHTML = this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation);
+        childElement.appendChild(this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation));
       });
     }
   }
