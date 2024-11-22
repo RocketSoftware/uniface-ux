@@ -375,11 +375,25 @@
       });
     });
 
-    it("Set value to 2 and expect the second option to be selected", function () {
-      return asyncRun(function() {
+    it("Set value to 22 and expect the second option to be selected", function () {
+      const valRepArray = [
+        {
+          value: "11",
+          representation: "option one",
+        },
+        {
+          value: "22",
+          representation: "option two",
+        },
+        {
+          value: "33",
+          representation: "option three",
+        }
+      ];
+      return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          value: "2",
+          value: "22",
           uniface: {
             "display-format": "rep"
           }
@@ -387,6 +401,115 @@
       }).then(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("option two");
+        const selectOption = element.querySelector("fluent-option.selected");
+        expect(selectOption.value).equal(
+          valRepArray.findIndex((item) => item.value === "22").toString()
+        );
+      });
+    });
+
+    it("Set value to empty string ('') and expect the empty option to be selected", function () {
+      const valRepArrayWithEmpty = [
+        {
+          value: "11",
+          representation: "option one",
+        },
+        {
+          value: "22",
+          representation: "option two",
+        },
+        {
+          value: "33",
+          representation: "option three",
+        },
+        {
+          value: "",
+          representation: "",
+        },
+      ];
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArrayWithEmpty,
+          value: "",
+          uniface: {
+            "display-format": "rep",
+          },
+        });
+      }).then(function () {
+        const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
+        expect(selectedValue.textContent).equal("");
+        const selectOption = element.querySelector("fluent-option.selected");
+        expect(selectOption.value).equal(
+          valRepArrayWithEmpty.findIndex((item) => item.value === "").toString()
+        );
+      });
+    });
+  });
+
+  describe("showError", function () {
+    let selectElement, widget;
+    beforeEach(function () {
+      widget = tester.createWidget();
+      selectElement = tester.element;
+    });
+
+    it("When invalid value is set, should show error and none of the options should be selected", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: "random",
+          "display-format": "valrep",
+        });
+      }).then(function () {
+        const selectedValue = selectElement.querySelector("fluent-option.selected");
+        expect(selectedValue).equal(null);
+        expect(selectElement).to.have.class("u-format-invalid");
+        assert(
+          !widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"),
+          "Failed to show the error icon"
+        );
+        expect(
+          widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")
+        ).equal(
+          "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."
+        );
+        assert.equal(
+          widget.elements.widget.querySelector("span.u-error-icon").className,
+          "u-error-icon ms-Icon ms-Icon--AlertSolid",
+          "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'"
+        );
+        assert.equal(
+          widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"),
+          "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."
+        );
+      });
+    });
+  });
+
+  describe("hideError", function () {
+    let selectElement, widget;
+    beforeEach(function () {
+      widget = tester.createWidget();
+      selectElement = tester.element;
+    });
+
+    it("Set error to false", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          uniface: {
+            "format-error": false,
+            "format-error-message": "",
+          },
+        });
+      }).then(function () {
+        expect(selectElement).to.not.have.class("u-format-invalid");
+        assert(
+          widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"),
+          "Failed to hide the error icon"
+        );
+        expect(
+          widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot")
+        ).equal("");
       });
     });
   });

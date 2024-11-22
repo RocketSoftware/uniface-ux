@@ -2,7 +2,7 @@ import { Button } from "../../src/ux/button.js";
 import { Widget } from "../../src/ux/widget.js";
 import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget, 
     SubWidgetsByProperty , BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean ,
-    HtmlValueAttributeBoolean , HtmlAttributeMinMaxLength , StyleProperty , Worker, IgnoreProperty
+    HtmlValueAttributeBoolean , HtmlAttributeMinMaxLength , StyleProperty , Worker, IgnoreProperty, SlottedElementsByValRep
  } from "../../src/ux/workers.js";
 
 
@@ -1033,41 +1033,126 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
          });
     });
 
-  // ===================================================================================================================
-  // == Testing IgnoreProperty class ========================================================================
-  // ===================================================================================================================
-  describe("Test IgnoreProperty Class", function () {
-    let widgetClass;
-    let propId;
-    let defaultValue;
-    let element;
+    // ===================================================================================================================
+    // == Testing IgnoreProperty class ========================================================================
+    // ===================================================================================================================
+    describe("Test IgnoreProperty Class", function () {
+        let widgetClass;
+        let propId;
+        let defaultValue;
+        let element;
 
-    beforeEach(function () {
-      Widget.structure = {};
-      Widget.subWidgets = {};
-      Widget.subWidgetWorkers = [];
-      Widget.defaultValues = {};
-      Widget.setters = {};
-      Widget.getters = {};
-      Widget.triggers = {};
-      Widget.uiBlocking = "";
+        beforeEach(function () {
+        Widget.structure = {};
+        Widget.subWidgets = {};
+        Widget.subWidgetWorkers = [];
+        Widget.defaultValues = {};
+        Widget.setters = {};
+        Widget.getters = {};
+        Widget.triggers = {};
+        Widget.uiBlocking = "";
 
-      widgetClass = Widget;
-      propId = "uniface:tri-state";
-      defaultValue = false;
-      element = new IgnoreProperty(widgetClass, propId, defaultValue);
+        widgetClass = Widget;
+        propId = "uniface:tri-state";
+        defaultValue = false;
+        element = new IgnoreProperty(widgetClass, propId, defaultValue);
+        });
+
+        it("Should initialize with correct properties", function () {
+        expect(element.widgetClass).to.equal(widgetClass);
+        expect(element.propId).to.equal(propId);
+        });
+
+        it("Check Setters and Default values", function () {
+        let setterKeys = Object.keys(element.widgetClass.setters.uniface);
+        expect(setterKeys[setterKeys.length - 1]).to.equal("tri-state");
+        expect(element.defaultValue).to.equal(defaultValue);
+        });
     });
 
-    it("Should initialize with correct properties", function () {
-      expect(element.widgetClass).to.equal(widgetClass);
-      expect(element.propId).to.equal(propId);
+        // ===================================================================================================================
+    // == Testing SlottedElementsByValRep class ========================================================================
+    // ===================================================================================================================
+    describe("Test SlottedElementsByValRep Class", function () {
+        let widgetClass;
+        let tagName;
+        let styleClass;
+        let elementQuerySelector;
+        let element;
+
+        beforeEach(function () {
+        Widget.structure = {};
+        Widget.subWidgets = {};
+        Widget.subWidgetWorkers = [];
+        Widget.defaultValues = {};
+        Widget.setters = {};
+        Widget.getters = {};
+        Widget.triggers = {};
+        Widget.uiBlocking = "";
+
+        widgetClass = Widget;
+        tagName = "fluent-option";
+        styleClass = "";
+        elementQuerySelector = "";
+        element = new SlottedElementsByValRep(widgetClass, tagName, styleClass, elementQuerySelector);
+        });
+
+        it("Should initialize with correct properties", function () {
+        expect(element.widgetClass).to.equal(widgetClass);
+        expect(element.tagName).to.equal(tagName);
+        expect(element.styleClass).to.equal(styleClass);
+        expect(element.elementQuerySelector).to.equal(elementQuerySelector);
+        });
+
+        it("Check Setters and Default values", function () {
+            let setterKeys = Object.keys(element.widgetClass.setters);
+            let defaultValues = element.widgetClass.defaultValues;
+            let setterKeysForUniface = Object.keys(element.widgetClass.setters.uniface);
+            let defaultValuesForUniface =element.widgetClass.defaultValues.uniface;
+
+            expect(setterKeysForUniface[0]).to.equal("display-format");
+            expect(defaultValuesForUniface["display-format"]).to.equal("rep");
+            expect(setterKeys[0]).to.equal("valrep");
+            expect(defaultValues["valrep"].length).to.equal(0);
     });
 
-    it("Check Setters and Default values", function () {
-      let setterKeys = Object.keys(element.widgetClass.setters.uniface);
-      expect(setterKeys[setterKeys.length - 1]).to.equal("tri-state");
-      expect(element.defaultValue).to.equal(defaultValue);
+    it('should refresh correctly', function () {
+        const valRepArray = [
+            {
+            value: "1",
+            representation: "option one",
+            },
+            {
+            value: "2",
+            representation: "option two",
+            },
+            {
+            value: "3",
+            representation: "option three",
+            },
+        ];
+
+        const widgetInstance = {
+            data: {
+                properties: {
+                    valrep: valRepArray,
+                    uniface: {
+                    "display-format": "val",
+                    },
+                }
+            },
+            elements : {
+                widget: document.createElement("div")
+            } ,
+            getTraceDescription: () => { return "description" }
+        }
+        element.refresh(widgetInstance)
+        let selectOptionArray = widgetInstance.elements.widget.querySelectorAll("fluent-option");
+        expect(selectOptionArray.length).to.equal(valRepArray.length);
+        selectOptionArray.forEach(function(node, index){
+            expect(node.value).to.equal(index.toString());
+        });
     });
-  });
+});
     
 })();
