@@ -1,5 +1,4 @@
 // @ts-check
-/* global uniface globalThis */
 
 import "./typedef.js";
 import "./workers.js";

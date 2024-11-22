@@ -11,9 +11,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
     const expect = chai.expect;
 
-    globalThis.UX_DEFINITIONS = {}
-    globalThis.UX_DEFINITIONS["ufld:FIELD.ENTITY.MODEL"] = "test"
-
     describe("Tests for Workers", function () {
 
         let widgetClass;
