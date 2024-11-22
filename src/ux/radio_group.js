@@ -200,14 +200,16 @@ export class RadioGroup extends Widget {
             // Unhide existing element.
             childElement.hidden = false;
             // Update the representation if needed.
-            childElement.innerHTML = this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation);
+            childElement.innerHTML = '';
+            childElement.appendChild(this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation));
           } else {
             // Create new element.
             childElement = document.createElement(this.tagName);
             element.appendChild(childElement);
             childElement.setAttribute("value", valRepObj.value);
-            childElement.setAttribute("class", this.styleClass);
-            childElement.innerHTML = this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation);
+            childElement.setAttribute("class", "u-radio");
+            childElement.innerHTML = '';
+            childElement.appendChild(this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation));
           }
         });
       }
@@ -246,9 +248,9 @@ export class RadioGroup extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
   ], [
-    new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
     new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label")
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label"),
+    new this.RadioGroupValRep(this, "fluent-radio", "", "")
   ], [
     new Trigger(this, "onchange", "change", true)
   ]);
