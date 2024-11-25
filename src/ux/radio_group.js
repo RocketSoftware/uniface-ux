@@ -57,34 +57,9 @@ export class RadioGroup extends Widget {
       this.registerSetter(widgetClass, "valrep", this);
     }
 
-    checkEmptyValue(radioWithNoValue, value) {
-      const isRadioSelected = radioWithNoValue.classList.contains('checked');
-      if (value === "" && !isRadioSelected) {
-        radioWithNoValue.classList.add("checked");
-        radioWithNoValue.setAttribute("current-checked", "true");
-        radioWithNoValue.setAttribute("aria-checked", "true");
-      } else if (value !== "" && isRadioSelected) {
-        radioWithNoValue.classList.remove("checked");
-        radioWithNoValue.setAttribute("current-checked", "false");
-        radioWithNoValue.setAttribute("aria-checked", "false");
-      }
-    }
-
     getValue(widgetInstance) {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
       const value = this.getNode(widgetInstance.data.properties, "value");
-      // The Fluent Radio Group doesn't recognize an empty string as a valid value,
-      // so we need to check for an empty string in the valrep and the Uniface value property.
-      // If there is empty string value, the corresponding radio button to be checked. queMicrotask
-      // is used to asynchronously update the three attributes required for a checked
-      // radio button: checked, current-checked, and aria-checked.
-      const radioGroupElement = this.getElement(widgetInstance);
-      const radioWithNoValue = Array.from(radioGroupElement.querySelectorAll(".u-radio")).find((radio) => radio["_value"] === "");
-      if (radioWithNoValue) {
-        window.queueMicrotask(() => {
-          this.checkEmptyValue(radioWithNoValue, value);
-        });
-      }
       return value;
     }
 
@@ -98,7 +73,8 @@ export class RadioGroup extends Widget {
         "handler": () => {
           const valrep = this.getNode(widgetInstance.data.properties, "valrep");
           if (valrep && valrep.length > 0) {
-            widgetInstance.setProperties({ "value": element["value"] });
+            const value = valrep[element["value"]]?.value;
+            widgetInstance.setProperties({ "value": value });
           }
         }
       });
@@ -106,11 +82,17 @@ export class RadioGroup extends Widget {
     }
 
     refresh(widgetInstance) {
-      super.refresh(widgetInstance);
+      this.log("refresh", {
+        "widgetInstance": widgetInstance.getTraceDescription(),
+        "attrName": this.attrName
+      });
+
+      const element = this.getElement(widgetInstance);
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
       const value = this.getNode(widgetInstance.data.properties, "value");
-      let matchedValrepObj = valrep ? valrep.find((valrepObj) => valrepObj.value === value) : undefined;
-      if (valrep.length > 0 && (matchedValrepObj || value === "" || value === null)) {
+      const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
+      const isValueEmpty = value === null || value === "";
+      if (valrep.length > 0 && (valueToSet!== -1 || isValueEmpty)) {
         widgetInstance.setProperties({
           "uniface": {
             "format-error": false,
@@ -125,6 +107,7 @@ export class RadioGroup extends Widget {
           }
         });
       }
+      this.setHtmlAttribute(element, valueToSet.toString());
     }
   };
 
