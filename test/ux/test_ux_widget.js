@@ -50,9 +50,6 @@ export class TestWidget extends Widget {
     });
 
     describe("Widget Class methods", function () {
-
-        globalThis.UX_DEFINITIONS = {}
-        globalThis.UX_DEFINITIONS["ufld:FIELD.ENTITY.MODEL"] = "test"
         
         let definitions, returnedProcess , widget, testwidget, consoleLogSpy;
 

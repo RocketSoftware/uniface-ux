@@ -1,5 +1,4 @@
 // @ts-check
-/* global uniface globalThis */
 
 import "./typedef.js";
 import "./workers.js";
@@ -109,12 +108,6 @@ export class Widget extends Base {
       });
     }
 
-    // Workaround: Make Uniface object definitions available to widget onConnect() by element Id.
-    if (elementId) {
-      globalThis.UX_DEFINITIONS = globalThis.UX_DEFINITIONS || {};
-      globalThis.UX_DEFINITIONS[elementId] = objectDefinition;
-    }
-
     return widgetElement;
   }
 
@@ -195,14 +188,6 @@ export class Widget extends Base {
     let widgetClass = this.constructor;
     this.elements.widget = widgetElement;
     this.log("onConnect");
-
-    // Workaround: Until onConnect() provides the object definition as parameter.
-    if (widgetElement.id && objectDefinition === undefined) {
-      // Only get definition -part of element id: "ufld:FIELD.ENTITY.MODEL:INSTANCE.occ.occ" -> "ufld:FIELD.ENTITY.MODEL"
-      const id = widgetElement.id.split(":").slice(0, 2).join(":");
-      // Look up definition from the global UX_DEFINITIONS object.
-      objectDefinition = globalThis.UX_DEFINITIONS[id];
-    }
 
     // Add sub-widget definitions as maintained by sub-widget-workers to widget instance.
     widgetClass.subWidgetWorkers.forEach((subWidgetWorker) => {
