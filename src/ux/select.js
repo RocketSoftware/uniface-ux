@@ -157,6 +157,7 @@ export class Select extends Widget {
       }
       if (selectedValueSlot) {
         selectedValueSlot.setAttribute("value", element.value);
+        // Since the value received will be the corresponding index, find the actual value from valrep.
         const value = valrep[element.value]?.value;
         widgetInstance.data.properties.value = value;
       }
@@ -202,6 +203,7 @@ export class Select extends Widget {
       let rep;
       const value = this.getNode(widgetInstance.data.properties, "value");
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      // Since the index is passed to fluent instead of the actual value, find the index corresponding to the value received.
       const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
       const isValueEmpty = value === null || value === "";
       const showPlaceholder = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:show-placeholder"));

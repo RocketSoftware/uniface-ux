@@ -73,6 +73,7 @@ export class RadioGroup extends Widget {
         "handler": () => {
           const valrep = this.getNode(widgetInstance.data.properties, "valrep");
           if (valrep && valrep.length > 0) {
+            // Since the value received will be the corresponding index, find the actual value from valrep.
             const value = valrep[element["value"]]?.value;
             widgetInstance.setProperties({ "value": value });
           }
@@ -90,6 +91,7 @@ export class RadioGroup extends Widget {
       const element = this.getElement(widgetInstance);
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
       const value = this.getNode(widgetInstance.data.properties, "value");
+      // Since the index is passed to fluent instead of the actual value, find the index corresponding to the value received.
       const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
       const isValueEmpty = value === null || value === "";
       if (valrep.length > 0 && (valueToSet!== -1 || isValueEmpty)) {
