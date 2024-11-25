@@ -375,25 +375,11 @@
       });
     });
 
-    it("Set value to 22 and expect the second option to be selected", function () {
-      const valRepArray = [
-        {
-          value: "11",
-          representation: "option one",
-        },
-        {
-          value: "22",
-          representation: "option two",
-        },
-        {
-          value: "33",
-          representation: "option three",
-        }
-      ];
+    it("Set value to 2 and expect the second option to be selected", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          value: "22",
+          value: "2",
           uniface: {
             "display-format": "rep"
           }
@@ -403,7 +389,7 @@
         expect(selectedValue.textContent).equal("option two");
         const selectOption = element.querySelector("fluent-option.selected");
         expect(selectOption.value).equal(
-          valRepArray.findIndex((item) => item.value === "22").toString()
+          valRepArray.findIndex((item) => item.value === "2").toString()
         );
       });
     });
@@ -411,21 +397,10 @@
     it("Set value to empty string ('') and expect the empty option to be selected", function () {
       const valRepArrayWithEmpty = [
         {
-          value: "11",
-          representation: "option one",
-        },
-        {
-          value: "22",
-          representation: "option two",
-        },
-        {
-          value: "33",
-          representation: "option three",
-        },
-        {
           value: "",
           representation: "",
         },
+        ...valRepArray
       ];
       return asyncRun(function () {
         tester.dataUpdate({
@@ -447,9 +422,8 @@
   });
 
   describe("showError", function () {
-    let selectElement, widget;
+    let selectElement;
     beforeEach(function () {
-      widget = tester.createWidget();
       selectElement = tester.element;
     });
 
@@ -465,21 +439,16 @@
         expect(selectedValue).equal(null);
         expect(selectElement).to.have.class("u-format-invalid");
         assert(
-          !widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"),
+          !selectElement.querySelector("span.u-error-icon").hasAttribute("hidden"),
           "Failed to show the error icon"
         );
-        expect(
-          widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")
-        ).equal(
-          "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."
-        );
         assert.equal(
-          widget.elements.widget.querySelector("span.u-error-icon").className,
+          selectElement.querySelector("span.u-error-icon").className,
           "u-error-icon ms-Icon ms-Icon--AlertSolid",
           "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'"
         );
         assert.equal(
-          widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"),
+          selectElement.querySelector("span.u-error-icon").getAttribute("title"),
           "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."
         );
       });
@@ -487,9 +456,8 @@
   });
 
   describe("hideError", function () {
-    let selectElement, widget;
+    let selectElement;
     beforeEach(function () {
-      widget = tester.createWidget();
       selectElement = tester.element;
     });
 
@@ -504,11 +472,14 @@
       }).then(function () {
         expect(selectElement).to.not.have.class("u-format-invalid");
         assert(
-          widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"),
+          selectElement.querySelector("span.u-error-icon").hasAttribute("hidden"),
           "Failed to hide the error icon"
         );
         expect(
-          widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot")
+          selectElement.querySelector("span.u-error-icon").getAttribute("slot")
+        ).equal("");
+        expect(
+          selectElement.querySelector("span.u-error-icon").getAttribute("title")
         ).equal("");
       });
     });

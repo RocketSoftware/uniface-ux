@@ -1116,7 +1116,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
             expect(defaultValues["valrep"].length).to.equal(0);
     });
 
-    it('should refresh correctly', function () {
+    it('Should refresh correctly', function () {
         const valRepArray = [
             {
             value: "1",
