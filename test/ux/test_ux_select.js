@@ -367,7 +367,7 @@
           }
         });
       }).then(function () {
-          let valStr = "<script> alert('XSS' attack') </script>"
+          let valStr = "<script> alert('XSS' attack') </script>";
           let escapedHtmlValue = valStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
           assert.equal(element.querySelector('fluent-option.selected .u-valrep-representation').innerHTML, valStr);
           expect(element.querySelector('fluent-option.selected .u-valrep-value').innerHTML).equal(escapedHtmlValue);
