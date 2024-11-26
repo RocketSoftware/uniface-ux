@@ -723,7 +723,7 @@
             assert.equal(displayPropertyValue, "inline-flex");
             let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
             let alignPropertyValue = labelStyle.getPropertyValue("align-content");
-            assert.equal(alignPropertyValue, "center")
+            assert.equal(alignPropertyValue, "center");
         });
 
         it("Set label position below", function () {
@@ -746,7 +746,7 @@
             assert.equal(flexPropertyValue, "column");
             let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
             let orderPropertyValue = labelStyle.getPropertyValue("order");
-            assert.equal(orderPropertyValue, 2)
+            assert.equal(orderPropertyValue, 2);
         });
 
         it("reset label and its position", function () {
@@ -779,7 +779,7 @@
         let maxlength = 5;
         before(function () {
             widget = tester.createWidget();
-            verifyWidgetClass(widgetClass)
+            verifyWidgetClass(widgetClass);
         });
 
         it("setting minlength and maxlength", function(){
@@ -811,7 +811,7 @@
                 assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
                 assert.equal(widget.elements.widget.childNodes[2].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
                 assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot"),"end","Slot end  does not match");
-                assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Field Value length mismatch.","Error title doesnot match")
+                assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Field Value length mismatch.","Error title doesnot match");
             });
         });
     });
@@ -821,7 +821,7 @@
         before(function () {
             widget = tester.createWidget();
             element = tester.createWidget().element;
-            verifyWidgetClass(widgetClass)
+            verifyWidgetClass(widgetClass);
         });
         it("Hide Error Set invalid value in text field", function () {
             return asyncRun(function() {
@@ -837,7 +837,7 @@
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
                 assert(widget.elements.widget.childNodes[2].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"),  "slot attribute is not present");
-                assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("title"), "title attribute is not present")
+                assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("title"), "title attribute is not present");
             });
         });
     });
@@ -864,7 +864,7 @@
         it("Verify the value returned by getValueFormatted doesn't include the line breaks", function () {
             valueProperty = `testing value with multiple lines:
 line 1,
-line 2`
+line 2`;
             return asyncRun(function() {
                 tester.dataUpdate({
                     value: valueProperty,
