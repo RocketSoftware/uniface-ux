@@ -162,65 +162,15 @@ export class RadioGroup extends Widget {
       });
     }
 
-    /**
-    * Remove initial fluent-radio element which is created before label element from this worker.
-    */
-    removeInitialRadio(widgetInstance) {
-      let element = this.getElement(widgetInstance);
-      // Find the fluent-radio element that is immediately before the label with class 'u-label-text'
-      const label = element.querySelector('.u-label-text');
-      if (label && label.previousElementSibling && label.previousElementSibling.classList.contains('u-radio')) {
-        label.previousElementSibling.remove();
-      }
-    }
-
-    /**
-     * Hides all valrep elements from this worker.
-     */
-    hideValRepElements(widgetInstance) {
-      let element = this.getElement(widgetInstance);
-      let valrepElements = element.querySelectorAll(this.tagName);
-      valrepElements.forEach((element) => {
-        element.hidden = true;
-      });
-    }
-
-    /**
-     * Creates or unhides all valrep elements from this worker.
-     */
-    createOrUnhideValRepElements(widgetInstance) {
-      let element = this.getElement(widgetInstance);
-      let valrep = this.getNode(widgetInstance.data.properties, "valrep");
-      let displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
-
-      if (valrep.length > 0) {
-        valrep.forEach((valRepObj) => {
-          let childElement = element.querySelector(`${this.tagName}[value="${valRepObj.value}"]`);
-          if (childElement) {
-            // Unhide existing element.
-            childElement.hidden = false;
-            // Update the representation if needed.
-            childElement.innerHTML = '';
-            childElement.appendChild(this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation));
-          } else {
-            // Create new element.
-            childElement = document.createElement(this.tagName);
-            element.appendChild(childElement);
-            childElement.setAttribute("value", valRepObj.value);
-            childElement.setAttribute("class", "u-radio");
-            childElement.innerHTML = '';
-            childElement.appendChild(this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation));
-          }
-        });
-      }
-    }
-
     refresh(widgetInstance) {
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      const value = this.getNode(widgetInstance.data.properties, "value");
+      let matchedValrepObj = valrep ? valrep.find((valrepObj) => valrepObj.value === value) : undefined;
       if (valrep.length > 0) {
-        this.removeInitialRadio(widgetInstance);
-        this.hideValRepElements(widgetInstance);
-        this.createOrUnhideValRepElements(widgetInstance);
+        if (matchedValrepObj) {
+          widgetInstance.elements.widget.valrepChanged = true;
+        }
+        super.refresh(widgetInstance);
         this.addTooltipToValrepElement(widgetInstance);
       } else {
         const radioGroupElement = this.getElement(widgetInstance);
@@ -248,9 +198,9 @@ export class RadioGroup extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
   ], [
+    new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
     new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label"),
-    new this.RadioGroupValRep(this, "fluent-radio", "", "")
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label")
   ], [
     new Trigger(this, "onchange", "change", true)
   ]);
@@ -322,6 +272,12 @@ export class RadioGroup extends Widget {
     let shadowRoot = this.elements.widget.shadowRoot;
     let labelSlot = shadowRoot.querySelector('slot[name="label"]');
     labelSlot.setAttribute("part", "label");
+    this.elements.widget.addEventListener("change", (e) => {
+      if (this.elements.widget.valrepChanged) {
+        e.stopImmediatePropagation();
+      }
+      this.elements.widget.valrepChanged = false;
+    });
     return valueUpdaters;
   }
 }
