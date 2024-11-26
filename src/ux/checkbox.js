@@ -129,7 +129,7 @@ export class Checkbox extends Widget {
       if (!widgetInstance.data.ignoreChangeEvent) {
         event.preventDefault();
         let newValue;
-        const isTriState = widgetInstance.toBoolean(widgetInstance.data.properties.uniface["tri-state"]);
+        const isTriState = widgetInstance.toBoolean(widgetInstance.data.properties["tri-state"]);
         switch (widgetInstance.data.currentValue) {
           case true:
             newValue = false;
@@ -151,16 +151,12 @@ export class Checkbox extends Widget {
 
     clearErrors(widgetInstance) {
       widgetInstance.setProperties({
-        "uniface": {
-          "format-error": false,
-          "format-error-message": ""
-        }
+        "format-error": false,
+        "format-error-message": ""
       });
       widgetInstance.setProperties({
-        "uniface": {
-          "error": false,
-          "error-message": ""
-        }
+        "error": false,
+        "error-message": ""
       });
     }
 
@@ -203,18 +199,14 @@ export class Checkbox extends Widget {
       try {
         newValue = this.fieldValueToTriState(value);
         widgetInstance.setProperties({
-          "uniface": {
-            "format-error": false,
-            "format-error-message": ""
-          }
+          "format-error": false,
+          "format-error-message": ""
         });
       } catch (error) {
         isError = true;
         widgetInstance.setProperties({
-          "uniface": {
-            "format-error": true,
-            "format-error-message": error
-          }
+          "format-error": true,
+          "format-error-message": error
         });
       }
 
@@ -233,7 +225,7 @@ export class Checkbox extends Widget {
     new HtmlAttribute(this, undefined, "role", "checkbox"),
     new HtmlAttribute(this, "html:title", "title", undefined),
     new HtmlAttribute(this, undefined, "currentValue", "on"),
-    new IgnoreProperty(this, "uniface:tri-state", false),
+    new IgnoreProperty(this, "tri-state", false),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new this.HTMLValueAttributeTristate(this, "value", "checked", null),
@@ -246,7 +238,7 @@ export class Checkbox extends Widget {
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeBoolean(this, undefined, "currentChecked", false)
   ], [
-    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "")
   ], [
     new Trigger(this, "onchange", "valuechange", true)
@@ -260,8 +252,8 @@ export class Checkbox extends Widget {
   static getValueFormattedSetters() {
     return [
       "value",
-      "uniface:error",
-      "uniface:error-message"
+      "error",
+      "error-message"
     ];
   }
 
@@ -278,8 +270,8 @@ export class Checkbox extends Widget {
     const value = this.getNode(properties, "value");
     if (value === "") {
       formattedValue.primaryPlainText = "Unset";
-      if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
-        formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+      if (this.toBoolean(this.getNode(properties, "error"))) {
+        formattedValue.errorMessage = this.getNode(properties, "error-message");
       }
     } else {
       try {
@@ -288,8 +280,8 @@ export class Checkbox extends Widget {
         } else {
           formattedValue.primaryPlainText = "Unchecked";
         }
-        if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
-          formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+        if (this.toBoolean(this.getNode(properties, "error"))) {
+          formattedValue.errorMessage = this.getNode(properties, "error-message");
         }
       } catch (err) {
         formattedValue.primaryPlainText = "ERROR";
