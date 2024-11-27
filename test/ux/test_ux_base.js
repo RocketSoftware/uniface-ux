@@ -107,7 +107,7 @@ import { Widget } from "../../src/ux/widget.js";
                         },
                         value: ""
                     }
-                },
+                }
             };
             url = "uniface:icon-position";
             let returnedNode = base.getNode(widgetInstance.data.properties, url);
@@ -137,7 +137,7 @@ import { Widget } from "../../src/ux/widget.js";
                 uniface: {
                     "icon:this-is-bad-data:baddata": "bad",
                     "icon-position": "start"
-                },
+                }
             };
 
             let correctedData = {
