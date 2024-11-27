@@ -27,6 +27,7 @@
         representation: "option three"
         }
     ];
+    
     /**  
      * Function to determine whether the widget class has been loaded.
     */
