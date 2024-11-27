@@ -186,7 +186,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           uniface: {
-            "label-text": "Test Label",
+            "label-text": "Test Label"
           }
         });
       }).then(function () {
@@ -269,7 +269,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          value: "2",
+          value: "2"
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -327,7 +327,7 @@
             "label-text": "Test Label",
             "display-format": "val",
             "layout": "horizontal"
-          },
+          }
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
