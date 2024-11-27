@@ -218,13 +218,13 @@
             return asyncRun(function() {
                 tester.dataUpdate({
                     uniface: {
-                        "changebutton": showApplyButton,
-                    },
+                        "changebutton": showApplyButton
+                    }
                 });
             }).then(function () {
                 let element = widget.elements.widget.querySelector("fluent-button.u-sw-changebutton");
                 if (showApplyButton) {
-                    expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass );
+                    expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
                 } else {
                     assert(element.hasAttribute("hidden"), "Failed to show the hidden attribute for button");
                 }
@@ -263,8 +263,8 @@
                     uniface: {
                         "changebutton": showApplyButton,
                         "changebutton:value": buttonText,
-                        "changebutton:icon": buttonIconName,
-                    },
+                        "changebutton:icon": buttonIconName
+                    }
                 });
             }).then(function () {
                 if (showApplyButton) {
@@ -538,8 +538,8 @@
             return asyncRun(function() {
                 tester.dataUpdate({
                     uniface: {
-                        "prefix-icon": buttonIconName,
-                    },
+                        "prefix-icon": buttonIconName
+                    }
                 });
             }).then(function () {
                 if (showApplyButton) {
@@ -557,8 +557,8 @@
             return asyncRun(function() {
                 tester.dataUpdate({
                     uniface: {
-                        "suffix-icon": buttonIconName,
-                    },
+                        "suffix-icon": buttonIconName
+                    }
                 });
             }).then(function () {
                 if (showApplyButton) {
