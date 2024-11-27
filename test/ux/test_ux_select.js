@@ -388,9 +388,7 @@
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("option two");
         const selectOption = element.querySelector("fluent-option.selected");
-        expect(selectOption.value).equal(
-          valRepArray.findIndex((item) => item.value === "2").toString()
-        );
+        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
       });
     });
 
@@ -398,7 +396,7 @@
       const valRepArrayWithEmpty = [
         {
           value: "",
-          representation: "",
+          representation: ""
         },
         ...valRepArray
       ];
@@ -407,16 +405,14 @@
           valrep: valRepArrayWithEmpty,
           value: "",
           uniface: {
-            "display-format": "rep",
-          },
+            "display-format": "rep"
+          }
         });
       }).then(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("");
         const selectOption = element.querySelector("fluent-option.selected");
-        expect(selectOption.value).equal(
-          valRepArrayWithEmpty.findIndex((item) => item.value === "").toString()
-        );
+        expect(selectOption.value).equal(valRepArrayWithEmpty.findIndex((item) => item.value === "").toString());
       });
     });
   });
@@ -432,25 +428,15 @@
         tester.dataUpdate({
           valrep: valRepArray,
           value: "random",
-          "display-format": "valrep",
+          "display-format": "valrep"
         });
       }).then(function () {
         const selectedValue = selectElement.querySelector("fluent-option.selected");
         expect(selectedValue).equal(null);
         expect(selectElement).to.have.class("u-format-invalid");
-        assert(
-          !selectElement.querySelector("span.u-error-icon").hasAttribute("hidden"),
-          "Failed to show the error icon"
-        );
-        assert.equal(
-          selectElement.querySelector("span.u-error-icon").className,
-          "u-error-icon ms-Icon ms-Icon--AlertSolid",
-          "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'"
-        );
-        assert.equal(
-          selectElement.querySelector("span.u-error-icon").getAttribute("title"),
-          "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."
-        );
+        assert(!selectElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon");
+        assert.equal(selectElement.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'");
+        assert.equal(selectElement.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
       });
     });
   });
@@ -466,21 +452,14 @@
         tester.dataUpdate({
           uniface: {
             "format-error": false,
-            "format-error-message": "",
-          },
+            "format-error-message": ""
+          }
         });
       }).then(function () {
         expect(selectElement).to.not.have.class("u-format-invalid");
-        assert(
-          selectElement.querySelector("span.u-error-icon").hasAttribute("hidden"),
-          "Failed to hide the error icon"
-        );
-        expect(
-          selectElement.querySelector("span.u-error-icon").getAttribute("slot")
-        ).equal("");
-        expect(
-          selectElement.querySelector("span.u-error-icon").getAttribute("title")
-        ).equal("");
+        assert(selectElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon");
+        expect(selectElement.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(selectElement.querySelector("span.u-error-icon").getAttribute("title")).equal("");
       });
     });
   });

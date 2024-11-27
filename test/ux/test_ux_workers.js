@@ -1149,7 +1149,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
         element.refresh(widgetInstance)
         let selectOptionArray = widgetInstance.elements.widget.querySelectorAll("fluent-option");
         expect(selectOptionArray.length).to.equal(valRepArray.length);
-        selectOptionArray.forEach(function(node, index){
+        selectOptionArray.forEach(function (node, index) {
             expect(node.value).to.equal(index.toString());
         });
     });
