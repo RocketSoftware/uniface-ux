@@ -187,7 +187,7 @@
             assert.equal(checkboxProperties["html:disabled"], false, "Default value of disabled  should be false");
             assert.equal(checkboxProperties["html:readonly"], false, "Default value of readonly  should be false");
             assert.equal(checkboxProperties["html:hidden"], false, "Default value of hidden  should be false");
-            assert.equal(checkboxProperties["html:tri-state"], false, "Default value of label-position will be above");
+            assert.equal(checkboxProperties["tri-state"], false, "Default value of label-position will be above");
         });
 
         it("check value", function() {

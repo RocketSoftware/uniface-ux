@@ -149,7 +149,7 @@
     });
 
     it("check 'icon' and 'icon-position'", function () {
-      let unifaceProperties = tester.defaultValues.properties;
+      let unifaceProperties = tester.defaultValues;
       assert.equal(unifaceProperties["icon"], '', "Default value of icon should be ''");
       assert.equal(unifaceProperties["icon-position"], 'start', "Default value of icon-position will be start");
     });
@@ -187,8 +187,10 @@
       let buttonText = 'Button';
       return asyncRun(function () {
         tester.dataUpdate({
-          "value": buttonText,
-          "icon": "Home"
+          value: buttonText,
+          uniface: {
+            icon: "Home"
+          }
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -203,8 +205,10 @@
       let iconPosition = "end";
       return asyncRun(function () {
         tester.dataUpdate({
-          "icon-position": iconPosition,
-          "value": buttonText
+          uniface: {
+           "icon-position": iconPosition,
+          },
+          value: buttonText,
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -218,7 +222,7 @@
       let buttonText = '';
       return asyncRun(function () {
         tester.dataUpdate({
-          "value": buttonText
+          value: buttonText
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -232,7 +236,7 @@
       let buttonText = 'Button';
       return asyncRun(function () {
         tester.dataUpdate({
-          "value": buttonText
+          value: buttonText
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -246,13 +250,15 @@
       let buttonText = 'Button';
       return asyncRun(function () {
         tester.dataUpdate({
-          "icon-position": "stat"
+          uniface: {
+            "icon-position": "stat"
+          }
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
-        expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(tester.defaultValues.properties["icon-position"]);
+        expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(tester.defaultValues["icon-position"]);
       });
     });
 
@@ -326,10 +332,12 @@
     it('should refresh correctly and modify the element text and may be icon if we add icon in button', function () {
       const widgetInstance = {
         ...widgetClass,
-        "data": {
-          "properties": {
+        data: {
+          properties: {
+            uniface: {
             "icon": "",
             "icon-position": "start"
+            }
           },
           "value": ""
         },
@@ -375,10 +383,12 @@
     it('should refresh correctly and modify the element text and may be icon if we add icon in button', function () {
       const widgetInstance = {
         ...widgetClass,
-        "data": {
-          "properties": {
+        data: {
+          properties: {
+            uniface: {
             "icon": "",
             "icon-position": "start"
+            }
           },
           "value": ""
         },
@@ -397,15 +407,17 @@
     it("add icon to test classes are added in the icon slot or not", function () {
       const widgetInstance = {
         ...widgetClass,
-        "data": {
-          "properties": {
+        data: {
+          properties: {
+            uniface: {
             "icon": "Home"
+            }
           },
           "value": ""
         },
 
-        "elements": tester.construct().elements,
-        "getTraceDescription": () => {
+        elements: tester.construct().elements,
+        getTraceDescription: () => {
           return "description";
         }
       };
@@ -420,9 +432,11 @@
     it("test delete icon class functionality in slotted icon element", function () {
       const widgetInstance = {
         ...widgetClass,
-        "data": {
-          "properties": {
-            "icon": ""
+        data: {
+          properties: {
+            uniface: {
+              "icon": ""
+            }
           },
           "value": ""
         },
