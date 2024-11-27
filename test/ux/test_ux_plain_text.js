@@ -118,7 +118,7 @@
                 const widget = tester.construct();
                 assert(widget, "Widget is not defined!");
                 verifyWidgetClass(widgetClass);
-                assert(widgetClass.defaultValues.classes['u-plain-text'], "Class is not defined");
+                assert(widgetClass.defaultValues['class:u-plain-text'], "Class is not defined");
             } catch (e) {
                 assert(false, "Failed to construct new widget, exception " + e);
             }
@@ -137,7 +137,7 @@
       // Data Init
     describe("Data Init", function () {
         const defaultValues = tester.getDefaultValues();
-        const classes = defaultValues.classes;
+        const classes = defaultValues.filter((prop) => prop.startsWith("class:")).map((prop) => prop.slice(6));
         var element;
 
         before(function () {
@@ -445,7 +445,7 @@
 
         //html:title property
         it("Set html:title property for changed Title for plaintext", function () {
-            let title = "changedTitleText"
+            let title = "changedTitleText";
              return asyncRun(function() {
                 tester.dataUpdate({
                     "html": {
@@ -516,7 +516,7 @@
         before(function () {
             widget = tester.createWidget();
             element = tester.createWidget().element;
-            verifyWidgetClass(widgetClass)
+            verifyWidgetClass(widgetClass);
         });
 
         it("setting error in plain text", function(){
@@ -542,7 +542,7 @@
         before(function () {
             widget = tester.createWidget();
             element = tester.createWidget().element;
-            verifyWidgetClass(widgetClass)
+            verifyWidgetClass(widgetClass);
         });
         it("Hide Error Set invalid value in plain text", function () {
              return asyncRun(function() {

@@ -100,7 +100,7 @@
                 const widget = tester.construct();
                 assert(widget, "Widget is not defined!");
                 verifyWidgetClass(widgetClass);
-                assert(widgetClass.defaultValues.classes['u-number-field'], "Class is not defined");
+                assert(widgetClass.defaultValues['class:u-number-field'], "Class is not defined");
             } catch (e) {
                 assert(false, "Failed to construct new widget, exception " + e);
             }
@@ -160,7 +160,7 @@
     // Data Init
     describe("Data Init", function () {
         const defaultValues = tester.getDefaultValues();
-        const classes = defaultValues.classes;
+        const classes = defaultValues.filter((prop) => prop.startsWith("class:")).map((prop) => prop.slice(6));
         let element;
 
         beforeEach(function () {
@@ -190,7 +190,7 @@
         });
 
         it("check prefix, suffix icon and text", function () {
-          let unifaceProperties = tester.defaultValues.uniface;
+          let unifaceProperties = tester.defaultValues;
           assert.equal(unifaceProperties["prefix-icon"], '', "Default value of prefix icon should be ''");
           assert.equal(unifaceProperties["suffix-icon"], '', "Default value of suffix icon should be ''");
           assert.equal(unifaceProperties["prefix-text"], '', "Default value of prefix text should be ''");
@@ -312,7 +312,7 @@
             assert.equal(displayPropertyValue, "inline-flex");
             let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
             let alignPropertyValue = labelStyle.getPropertyValue("align-content");
-            assert.equal(alignPropertyValue, "center", "Label position below is not center")
+            assert.equal(alignPropertyValue, "center", "Label position below is not center");
         });
 
         it("Set label position below", function () {
@@ -577,7 +577,7 @@
         before(function () {
             widget = tester.createWidget();
             element = tester.createWidget().element;
-            verifyWidgetClass(widgetClass)
+            verifyWidgetClass(widgetClass);
         });
 
         it("setting min and max", function(){
@@ -621,7 +621,7 @@
         before(function () {
             widget = tester.createWidget();
             element = tester.createWidget().element;
-            verifyWidgetClass(widgetClass)
+            verifyWidgetClass(widgetClass);
         });
 
         it("Hide Error Set invalid value in number Field", function () {

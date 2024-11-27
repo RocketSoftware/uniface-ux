@@ -110,7 +110,7 @@
         const widget = tester.construct();
         assert(widget, "widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-select'], "Class is not defined");
+        assert(widgetClass.defaultValues['class:u-select'], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -132,7 +132,7 @@
 
   describe("Data Init", function () {
     const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+    const classes = defaultValues.filter((prop) => prop.startsWith("class:")).map((prop) => prop.slice(6));
     let element;
 
     beforeEach(function () {

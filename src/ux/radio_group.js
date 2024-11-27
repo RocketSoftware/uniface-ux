@@ -145,13 +145,13 @@ export class RadioGroup extends Widget {
      */
     constructor(widgetClass, tagName, styleClass, elementQuerySelector) {
       super(widgetClass, tagName, styleClass, elementQuerySelector);
-      this.registerSetter(widgetClass, "uniface:layout", this);
+      this.registerSetter(widgetClass, "layout", this);
       this.registerSetter(widgetClass, "valrep", this);
     }
 
     addTooltipToValrepElement(widgetInstance) {
       const radioGroupElement = this.getElement(widgetInstance);
-      const layout = this.getNode(widgetInstance.data.properties, "uniface:layout");
+      const layout = this.getNode(widgetInstance.data.properties, "layout");
       const valRepRadioElement = radioGroupElement.querySelectorAll("fluent-radio");
       valRepRadioElement.forEach((radioButton) => {
         let label = radioButton.querySelector("span");
@@ -188,13 +188,13 @@ export class RadioGroup extends Widget {
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeChoice(this, "uniface:layout", "orientation", ["vertical", "horizontal"], "vertical", true),
+    new HtmlAttributeChoice(this, "layout", "orientation", ["vertical", "horizontal"], "vertical", true),
     new this.RadioGroupSelectedValue(this, "value", "value", ""),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
   ], [
     new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
-    new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
+    new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label")
   ], [
     new Trigger(this, "onchange", "change", true)
@@ -210,9 +210,9 @@ export class RadioGroup extends Widget {
     return [
       "value",
       "valrep",
-      "uniface:error",
-      "uniface:error-message",
-      "uniface:display-format"
+      "error",
+      "error-message",
+      "display-format"
     ];
   }
 
@@ -226,8 +226,8 @@ export class RadioGroup extends Widget {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    const displayFormat = this.getNode(properties, "uniface:display-format") ||
-                          this.getNode(this.defaultValues, "uniface:display-format");
+    const displayFormat = this.getNode(properties, "display-format") ||
+                          this.getNode(this.defaultValues, "display-format");
     const value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
     const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
     const valrepItem = this.getValrepItem(valrep, value);
@@ -245,8 +245,8 @@ export class RadioGroup extends Widget {
           formattedValue.primaryHtmlText = valrepItem.representation;
           break;
       }
-      if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
-        formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+      if (this.toBoolean(this.getNode(properties, "error"))) {
+        formattedValue.errorMessage = this.getNode(properties, "error-message");
       }
     } else {
       formattedValue.primaryPlainText = "ERROR";

@@ -94,7 +94,7 @@
                 const widget = tester.construct();
                 assert(widget, "Widget is not defined!");
                 verifyWidgetClass(widgetClass);
-                assert(widgetClass.defaultValues.classes['u-checkbox'], "Class is not defined");
+                assert(widgetClass.defaultValues['class:u-checkbox'], "Class is not defined");
             } catch (e) {
                 assert(false, "Failed to construct new widget, exception " + e);
             }
@@ -153,14 +153,13 @@
     // Data Init
     describe("Data Init", function() {
         const defaultValues = tester.getDefaultValues();
-        const classes = defaultValues.classes;
+        const classes = defaultValues.filter((prop) => prop.startsWith("class:")).map((prop) => prop.slice(6));
         let element;
         
         beforeEach(function() {
             element = tester.element;
             assert(element, "Widget top element is not defined!");
         });
-
 
         for (const defaultClass in classes) {
             it("check class '" + defaultClass + "'", function() {
@@ -182,14 +181,13 @@
         });
 
         it("check tri-state, tabindex, hidden , disabled, readonly and title", function() {
-            let htmlProperties = tester.defaultValues.html;
-            let unifaceProperties = tester.defaultValues.uniface;
-            assert.equal(htmlProperties["tabindex"], 0, "Default value of html:tabindex should be 0");
-            assert.equal(htmlProperties["title"], undefined, "Default value of html:title should be undefined");
-            assert.equal(htmlProperties["disabled"], false, "Default value of disabled  should be false");
-            assert.equal(htmlProperties["readonly"], false, "Default value of readonly  should be false");
-            assert.equal(htmlProperties["hidden"], false, "Default value of hidden  should be false");
-            assert.equal(unifaceProperties["tri-state"], false, "Default value of label-position will be above");
+            let checkboxProperties = tester.defaultValues;
+            assert.equal(checkboxProperties["html:tabindex"], 0, "Default value of html:tabindex should be 0");
+            assert.equal(checkboxProperties["html:title"], undefined, "Default value of html:title should be undefined");
+            assert.equal(checkboxProperties["html:disabled"], false, "Default value of disabled  should be false");
+            assert.equal(checkboxProperties["html:readonly"], false, "Default value of readonly  should be false");
+            assert.equal(checkboxProperties["html:hidden"], false, "Default value of hidden  should be false");
+            assert.equal(checkboxProperties["html:tri-state"], false, "Default value of label-position will be above");
         });
 
         it("check value", function() {

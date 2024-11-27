@@ -72,7 +72,7 @@ export class Select extends Widget {
     constructor(widgetClass, styleClass, elementQuerySelector) {
       super(widgetClass);
       // Register a setter for display format, ensuring it also updates the worker's refresh function.
-      this.registerSetter(widgetClass, "uniface:display-format", this);
+      this.registerSetter(widgetClass, "display-format", this);
       this.registerSetter(widgetClass, "valrep", this);
 
       this.registerGetter(widgetClass, "value", this);
@@ -81,13 +81,13 @@ export class Select extends Widget {
 
       // Register a setter for label-text, ensuring it also updates the worker's refresh function.
       // This is to over-ride the behavior of setting the first option as selected on changing the label.
-      this.registerSetter(widgetClass, "uniface:label-text", this);
+      this.registerSetter(widgetClass, "label-text", this);
 
-      this.registerSetter(widgetClass, "uniface:placeholder-text", this);
-      this.registerDefaultValue(widgetClass, "uniface:placeholder-text", "Selected item");
+      this.registerSetter(widgetClass, "placeholder-text", this);
+      this.registerDefaultValue(widgetClass, "placeholder-text", "Selected item");
 
-      this.registerSetter(widgetClass, "uniface:show-placeholder", this);
-      this.registerDefaultValue(widgetClass, "uniface:show-placeholder", false);
+      this.registerSetter(widgetClass, "show-placeholder", this);
+      this.registerDefaultValue(widgetClass, "show-placeholder", false);
       this.styleClass = styleClass;
       this.elementQuerySelector = elementQuerySelector;
     }
@@ -147,7 +147,7 @@ export class Select extends Widget {
       /** @type {HTMLSelectElement} */
       // @ts-ignore
       const element = this.getElement(widgetInstance);
-      const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
+      const displayFormat = this.getNode(widgetInstance.data.properties, "display-format");
       const selectedValueSlot = element.querySelector("[slot='selected-value']");
       const selectedOptionElement = element.options[element.selectedIndex];
       const selectedRepSpan = selectedOptionElement.querySelector(".u-valrep-representation");
@@ -202,9 +202,9 @@ export class Select extends Widget {
       const value = this.getNode(widgetInstance.data.properties, "value");
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
       const valrepWithNullValue = this.toBoolean(valrep && valrep.some(element => element.value === ""));
-      const showPlaceholder = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:show-placeholder"));
-      const placeholderText = this.getNode(widgetInstance.data.properties, "uniface:placeholder-text");
-      const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
+      const showPlaceholder = this.toBoolean(this.getNode(widgetInstance.data.properties, "show-placeholder"));
+      const placeholderText = this.getNode(widgetInstance.data.properties, "placeholder-text");
+      const displayFormat = this.getNode(widgetInstance.data.properties, "display-format");
       let selectedValueElement = widgetInstance.elements.widget.querySelector("[slot='selected-value']");
       if (selectedValueElement) {
         selectedValueElement.remove();
@@ -292,13 +292,13 @@ export class Select extends Widget {
     new this.HtmlAttributeBooleanReadOnly(this, "html:readonly", "readOnly", false),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
-    new HtmlAttributeChoice(this, "uniface:popup-position", "u-position", ["above", "below"], "below", true),
+    new HtmlAttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
+    new HtmlAttributeChoice(this, "popup-position", "u-position", ["above", "below"], "below", true),
     new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ".u-placeholder"),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
   ], [
-    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
     new SlottedElementsByValRep(this, "fluent-option", "", "")
   ], [
@@ -524,19 +524,19 @@ export class Select extends Widget {
     // Compute the position of listbox and opens it.
     widgetElement.addEventListener("click", () => {
       this.popupPreCalc(".listbox", widgetElement);
-      const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data.properties, "uniface:popup-position"));
+      const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data.properties, "popup-position"));
       this.popupPostCalc(".listbox", rect);
     });
 
     widgetElement.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
-        const isReadOnly = this.toBoolean(this?.data?.properties?.html?.readonly);
+        const isReadOnly = this.toBoolean(this?.data?.properties?.readonly);
         if (isReadOnly) {
           widgetElement.open = false;
           return;
         }
         this.popupPreCalc(".listbox", widgetElement);
-        const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data.properties, "uniface:popup-position"));
+        const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data.properties, "popup-position"));
         this.popupPostCalc(".listbox", rect);
       }
     });
@@ -584,7 +584,7 @@ export class Select extends Widget {
       // Remove the 'u-blocked' class from the widget element.
       this.elements.widget.classList.remove("u-blocked");
       if (widgetClass.uiBlocking === "readonly") {
-        if (!this.toBoolean(this.data.properties.html.readonly)) {
+        if (!this.toBoolean(this.data.properties.readonly)) {
           this.elements.widget.classList.remove("u-readonly");
         }
       } else {
@@ -602,9 +602,9 @@ export class Select extends Widget {
     return [
       "value",
       "valrep",
-      "uniface:error",
-      "uniface:error-message",
-      "uniface:display-format"
+      "error",
+      "error-message",
+      "display-format"
     ];
   }
 
@@ -618,8 +618,8 @@ export class Select extends Widget {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    const displayFormat = this.getNode(properties, "uniface:display-format") ||
-                          this.getNode(this.defaultValues, "uniface:display-format");
+    const displayFormat = this.getNode(properties, "display-format") ||
+                          this.getNode(this.defaultValues, "display-format");
     const value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
     const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
     const valrepItem = this.getValrepItem(valrep, value);
@@ -637,8 +637,8 @@ export class Select extends Widget {
           formattedValue.primaryHtmlText = valrepItem.representation;
           break;
       }
-      if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
-        formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+      if (this.toBoolean(this.getNode(properties, "error"))) {
+        formattedValue.errorMessage = this.getNode(properties, "error-message");
       }
     } else {
       formattedValue.primaryPlainText = "ERROR";

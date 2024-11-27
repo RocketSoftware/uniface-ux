@@ -111,7 +111,7 @@
         const widget = tester.construct();
         assert(widget, "widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-radio-group'], "Class is not defined");
+        assert(widgetClass.defaultValues['class:u-radio-group'], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -133,7 +133,7 @@
 
   describe("Data Init", function () {
     const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+    const classes = defaultValues.filter((prop) => prop.startsWith("class:")).map((prop) => prop.slice(6));
     var element;
 
     beforeEach(function () {

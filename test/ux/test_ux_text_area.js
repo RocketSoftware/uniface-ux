@@ -150,7 +150,7 @@
     // Data Init
     describe("Data Init", function () {
         const defaultValues = tester.getDefaultValues();
-        const classes = defaultValues.classes;
+        const classes = defaultValues.filter((prop) => prop.startsWith("class:")).map((prop) => prop.slice(6));
         var element;
 
         beforeEach(function () {
@@ -410,7 +410,7 @@
 
         //html:placeholder property
         it("Set html:placeholder property for textarea", function () {
-            let placeHolderText = "Input the Number"
+            let placeHolderText = "Input the Number";
             return asyncRun(function () {
                 tester.dataUpdate({
                     "html": {
@@ -425,7 +425,7 @@
 
         //html:readonly property
         it("Set html:readonly property true for textarea", function () {
-            let readOnly = "readOnly"
+            let readOnly = "readOnly";
             return asyncRun(function () {
                 tester.dataUpdate({
                     "html": {
@@ -440,7 +440,7 @@
 
         //html:readonly property false
         it("Set html:readonly property false for textarea", function () {
-            let readOnly = "readOnly"
+            let readOnly = "readOnly";
             return asyncRun(function () {
                 tester.dataUpdate({
                     "html": {
@@ -468,7 +468,7 @@
 
         //html:disabled property false
         it("Set html:disabled property false for textarea", function () {
-            let disabled = "disabled"
+            let disabled = "disabled";
             return asyncRun(function () {
                 tester.dataUpdate({
                     html: {
@@ -483,7 +483,7 @@
 
         //html:appearance outfill property
         it("Set html:appearance outline property true for textarea", function () {
-            let appearanceStyle = "outline"
+            let appearanceStyle = "outline";
             return asyncRun(function () {
                 tester.dataUpdate({
                     html: {
@@ -500,7 +500,7 @@
 
         //html:appearance filled property
         it("Set html:appearance filled property true for textarea", function () {
-            let appearanceStyle = "filled"
+            let appearanceStyle = "filled";
             return asyncRun(function () {
                 tester.dataUpdate({
                     html: {
@@ -523,7 +523,7 @@
         let maxlength = 5;
         before(function () {
             widget = tester.createWidget();
-            verifyWidgetClass(widgetClass)
+            verifyWidgetClass(widgetClass);
         });
 
         it("setting minlength and maxlength", function () {

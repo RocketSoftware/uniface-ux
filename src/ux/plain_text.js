@@ -55,8 +55,8 @@ export class PlainText extends Widget {
       this.registerSetter(widgetClass, "valrep", this);
       this.registerDefaultValue(widgetClass, "valrep", []);
 
-      this.registerSetter(widgetClass, "uniface:plaintext-format", this);
-      this.registerDefaultValue(widgetClass, "uniface:plaintext-format", "first-line");
+      this.registerSetter(widgetClass, "plaintext-format", this);
+      this.registerDefaultValue(widgetClass, "plaintext-format", "first-line");
 
       this.registerSetter(widgetClass, "value", this);
       this.registerGetter(widgetClass, "value", this);
@@ -68,7 +68,7 @@ export class PlainText extends Widget {
      * Returns error message if display-format is valrep based.
      */
     getFormatErrorText(widgetInstance) {
-      const plainTextFormat = this.getNode(widgetInstance.data.properties, "uniface:plaintext-format");
+      const plainTextFormat = this.getNode(widgetInstance.data.properties, "plaintext-format");
       switch (plainTextFormat) {
         case "valrep-text":
         case "valrep-html":
@@ -87,7 +87,7 @@ export class PlainText extends Widget {
     setTextAsPlaintextFormat(widgetInstance) {
       let value = this.getNode(widgetInstance.data.properties, "value");
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
-      const plainTextFormat = this.getNode(widgetInstance.data.properties, "uniface:plaintext-format");
+      const plainTextFormat = this.getNode(widgetInstance.data.properties, "plaintext-format");
       const element = this.getElement(widgetInstance);
       element.innerHTML = "";
       // Convert value to string if it's not a string already.
@@ -230,11 +230,11 @@ export class PlainText extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:readonly")
   ], [
-    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
-    new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
+    new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "prefix-text", "", "prefix-icon", ""),
     new this.SlottedPlainTextFormat(this, "span", "u-control", ".u-control"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
-    new SlottedElement(this, "span", "u-suffix", ".u-suffix", "", "uniface:suffix-text", "", "uniface:suffix-icon", "")
+    new SlottedElement(this, "span", "u-suffix", ".u-suffix", "", "suffix-text", "", "suffix-icon", "")
   ]);
 
   /**
@@ -245,13 +245,13 @@ export class PlainText extends Widget {
     return [
       "value",
       "valrep",
-      "uniface:error",
-      "uniface:error-message",
-      "uniface:plaintext-format",
-      "uniface:prefix-icon",
-      "uniface:suffix-icon",
-      "uniface:prefix-text",
-      "uniface:suffix-text"
+      "error",
+      "error-message",
+      "plaintext-format",
+      "prefix-icon",
+      "suffix-icon",
+      "prefix-text",
+      "suffix-text"
     ];
   }
 
@@ -358,14 +358,14 @@ export class PlainText extends Widget {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    const displayFormat = this.getNode(properties, "uniface:plaintext-format") || this.getNode(this.defaultValues, "uniface:plaintext-format");
+    const displayFormat = this.getNode(properties, "plaintext-format") || this.getNode(this.defaultValues, "plaintext-format");
     let value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
 
     const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
     const valrepItem = this.getValrepItem(valrep, value);
 
-    if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
-      formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+    if (this.toBoolean(this.getNode(properties, "error"))) {
+      formattedValue.errorMessage = this.getNode(properties, "error-message");
     }
 
     if (this.isValrepRelatedDisplayProperty(displayFormat) && valrepItem) {
@@ -378,13 +378,13 @@ export class PlainText extends Widget {
       formattedValue.errorMessage = this.formatErrorMessage;
     }
 
-    formattedValue.prefixIcon = this.getNode(properties, "uniface:prefix-icon");
+    formattedValue.prefixIcon = this.getNode(properties, "prefix-icon");
     if (!formattedValue.prefixIcon) {
-      formattedValue.prefixText = this.getNode(properties, "uniface:prefix-text");
+      formattedValue.prefixText = this.getNode(properties, "prefix-text");
     }
-    formattedValue.suffixIcon = this.getNode(properties, "uniface:suffix-icon");
+    formattedValue.suffixIcon = this.getNode(properties, "suffix-icon");
     if (!formattedValue.suffixIcon) {
-      formattedValue.suffixText = this.getNode(properties, "uniface:suffix-text");
+      formattedValue.suffixText = this.getNode(properties, "suffix-text");
     }
     this.staticLog("getValueFormatted", formattedValue);
     return formattedValue;
