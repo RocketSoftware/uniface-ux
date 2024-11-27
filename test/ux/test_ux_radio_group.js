@@ -409,7 +409,6 @@
     let radioElement;
     beforeEach(function () {
       radioElement = tester.element;
-      
     });
 
     it("When invalid value is set, should show error and none of the options should be selected", function () {
