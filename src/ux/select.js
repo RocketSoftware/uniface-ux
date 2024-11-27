@@ -205,7 +205,7 @@ export class Select extends Widget {
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
       // Since the index is passed to fluent instead of the actual value, find the index corresponding to the value received.
       const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
-      const isValueEmpty = value === null || value === "";
+      const isValueEmpty = (value === null || value === "");
       const showPlaceholder = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:show-placeholder"));
       const placeholderText = this.getNode(widgetInstance.data.properties, "uniface:placeholder-text");
       const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
@@ -226,7 +226,6 @@ export class Select extends Widget {
       }
 
       if (!isPlaceholderElementCreated && valueToSet === -1) {
-        // If there is no representation for the non-empty value then show a format error.
         widgetInstance.setProperties({
           "uniface": {
             "format-error": true,

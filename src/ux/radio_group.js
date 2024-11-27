@@ -93,8 +93,8 @@ export class RadioGroup extends Widget {
       const value = this.getNode(widgetInstance.data.properties, "value");
       // Since the index is passed to fluent instead of the actual value, find the index corresponding to the value received.
       const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
-      const isValueEmpty = value === null || value === "";
-      if (valrep.length > 0 && (valueToSet!== -1 || isValueEmpty)) {
+      const isValueEmpty = (value === null || value === "");
+      if (valrep.length > 0 && (valueToSet !== -1 || isValueEmpty)) {
         widgetInstance.setProperties({
           "uniface": {
             "format-error": false,
