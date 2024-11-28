@@ -331,7 +331,7 @@
             }).then(function () {
                 let resizePropText = widget.elements.widget.getAttribute("resize");
                 assert.equal(resizePropText, resizeProp);//Check for visibility
-            },);
+            });
         });
 
         it("html hidden property when set to true", function () {
