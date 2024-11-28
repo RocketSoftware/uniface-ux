@@ -153,7 +153,7 @@ export class RadioGroup extends Widget {
       let matchedValrepObj = valrep ? valrep.find((valrepObj) => valrepObj.value === value) : undefined;
       if (valrep.length > 0) {
         if (matchedValrepObj) {
-          widgetInstance.elements.widget.valrepChanged = true;
+          widgetInstance.elements.widget.valrepUpdated = true;
         }
         super.refresh(widgetInstance);
         this.addTooltipToValrepElement(widgetInstance);
@@ -257,11 +257,13 @@ export class RadioGroup extends Widget {
     let shadowRoot = this.elements.widget.shadowRoot;
     let labelSlot = shadowRoot.querySelector('slot[name="label"]');
     labelSlot.setAttribute("part", "label");
+    // Stop propagating further change events when valrep has been updated.
+    // This is to prevent fluent-radio-group from firing unwanted change events.
     this.elements.widget.addEventListener("change", (e) => {
-      if (this.elements.widget.valrepChanged) {
+      if (this.elements.widget.valrepUpdated) {
         e.stopImmediatePropagation();
       }
-      this.elements.widget.valrepChanged = false;
+      this.elements.widget.valrepUpdated = false;
     });
     return valueUpdaters;
   }
