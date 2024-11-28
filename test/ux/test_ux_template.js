@@ -124,7 +124,7 @@
 
         for (const clazz in classes) {
             it("check class '" + clazz + "'", function () {
-                if ( classes[clazz] ) {
+                if (classes[clazz]) {
                     expect(element).to.have.class(clazz, "widget element has class " + clazz);
                 } else {
                     expect(element).not.to.have.class(clazz, "widget element has no class " + clazz);
@@ -264,7 +264,7 @@
     });
 
     describe("Samples of async test cases", function () {
-		const asyncRun = umockup.asyncRun;
+        const asyncRun = umockup.asyncRun;
         let widget;
 
         beforeEach(function () {

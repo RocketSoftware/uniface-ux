@@ -2,7 +2,7 @@
 
 /**
  * Load fluentUI web components centrally in this JS file.
- * 
+ *
  * Uncomment one of the following locations to import FluentUI from.
  * During the bundling process a local JS file needs to be used.
  */
