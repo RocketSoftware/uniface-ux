@@ -443,7 +443,7 @@
                         "type": "text",
                         "title" : title
                     },
-                    value: 1234,
+                    value: 1234
                 });
             }).then(function () {
                 //const event = new window.Event('hover');
@@ -493,7 +493,7 @@
                     "html": {
                         "placeholder": placeHolderText,
                         "type": "text"
-                    },
+                    }
                     //value: "Value input"
                 });
             }).then(function () {
@@ -517,8 +517,8 @@
                     },
                     "html": {
                         "placeholder": placeHolderText,
-                        "type": "tel",
-                    },
+                        "type": "tel"
+                    }
                 });
             }).then(function () {
                 const event = new window.Event('hover');
@@ -541,8 +541,8 @@
                     },
                     "html": {
                         "placeholder": placeHolderText,
-                        "type": "email", 
-                    },
+                        "type": "email" 
+                    }
                     //value: "test@test.com"
                 });
             }).then(function () {
@@ -561,13 +561,13 @@
             return asyncRun(function() {
                 tester.dataUpdate({
                     uniface:{
-                        "prefix-icon": "PasswordField",
+                        "prefix-icon": "PasswordField"
                         //"suffix-text": "Customer Email Address"
                     },
                     "html": {
                         "placeholder": placeHolderText,
-                        "type": "password",
-                    },
+                        "type": "password"
+                    }
                     //value: "test@test.com"
                 });
             }).then(function () {
@@ -586,13 +586,13 @@
             return asyncRun(function() {
                 tester.dataUpdate({
                     uniface:{
-                        "prefix-icon": "URLBlock",
+                        "prefix-icon": "URLBlock"
                         //"suffix-text": "Customer Email Address"
                     },
                     "html": {
                         "placeholder": placeHolderText,
-                        "type": "url",
-                    },
+                        "type": "url"
+                    }
                     //value: "test@test.com"
                 });
             }).then(function () {
@@ -616,8 +616,8 @@
                     },
                     "html": {
                         "placeholder": placeHolderText,
-                        "type": "date",
-                    },
+                        "type": "date"
+                    }
                     //value: "test@test.com"
                 });
             }).then(function () {
@@ -657,7 +657,7 @@
                 tester.dataUpdate({
                     uniface:{
                         "changebutton": true,
-                        "changebutton:icon": "PublicEmail",
+                        "changebutton:icon": "PublicEmail"
                         //"changebutton:icon-position" : "start",
                         //"changebutton:value":"Click Me"
                     }
@@ -678,7 +678,7 @@
                 tester.dataUpdate({
                     uniface:{
                         "changebutton": false,
-                        "changebutton:icon": "PublicEmail",
+                        "changebutton:icon": "PublicEmail"
                     }
                 });
             }).then(function () {
@@ -867,7 +867,7 @@ line 1,
 line 2`;
             return asyncRun(function() {
                 tester.dataUpdate({
-                    value: valueProperty,
+                    value: valueProperty
                 });
             }).then(function () {
                 const expectedValue = "testing value with multiple lines: line 1, line 2";
