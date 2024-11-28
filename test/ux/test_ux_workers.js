@@ -130,11 +130,11 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
             tagname = "DIV";
             elementQuerySelector = "div";
             styleclass = "styleClass";
-            attributeDefines = [new StyleClass(widgetClass, ["u-switch"]) , new HtmlAttribute(widgetClass, "html:role", "role", "switch"),];
+            attributeDefines = [new StyleClass(widgetClass, ["u-switch"]) , new HtmlAttribute(widgetClass, "html:role", "role", "switch")];
             elementDefines = [new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"), 
                 new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "uniface:checked-message")];
             triggerDefines = [new Trigger(widgetClass, "onchange", "change", true)];
-            element = new Element(widgetClass, tagname, styleclass, elementQuerySelector, attributeDefines, elementDefines, triggerDefines );
+            element = new Element(widgetClass, tagname, styleclass, elementQuerySelector, attributeDefines, elementDefines, triggerDefines);
         });
 
         it("should initialize with correct properties", function () {
@@ -216,7 +216,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
             propIcon = "uniface:icon";
             defaultText = "defaultText";
             defaultIcon = "default.png";
-            slottedElement = new SlottedElement(widgetClass, "", "", "", "", propText, defaultText, propIcon, defaultIcon );
+            slottedElement = new SlottedElement(widgetClass, "", "", "", "", propText, defaultText, propIcon, defaultIcon);
         });
 
         it("should initialize with correct properties", function () {
@@ -293,7 +293,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
                             "error": true,
                             "error-message": "1Bad error",
                             "format-error": true,
-                            "format-error-message": "1Bad Formatting",
+                            "format-error-message": "1Bad Formatting"
                         }
                     }
                 },
@@ -502,7 +502,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
             element = {
                 elements : {
                 widget: document.createElement("div")
-                } ,
+                }
             };
             worker.setHtmlAttribute(element , "new Value");
             expect(element[attrName]).to.equal("new Value");
@@ -829,7 +829,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
             buttonWidget.dataUpdate(widgetInstance.data.properties);
             
             element.refresh(buttonWidget);
-            expect(buttonWidget.data.properties.uniface).to.have.any.keys( "icon","icon-position","format-error","format-error-message");
+            expect(buttonWidget.data.properties.uniface).to.have.any.keys("icon","icon-position","format-error","format-error-message");
             expect(buttonWidget.data.properties.uniface["format-error"]).to.equal(true);
             expect(buttonWidget.data.properties.uniface["format-error-message"]).to.equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");           
         });
@@ -898,7 +898,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
                     }
                 },
                 elements : {
-                    widget: divElement ,
+                    widget: divElement
                 } ,
                 widget : {
                     maxlengthHasBeenSet : ""
