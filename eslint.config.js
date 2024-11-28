@@ -125,6 +125,8 @@ module.exports = [
         "it": "readonly",
         // chai
         "chai": "readonly",
+        // sinon
+        "sinon": "readonly",
         //"setTimeout": "readonly",
         // for umockup
         "umockup": "readonly"
