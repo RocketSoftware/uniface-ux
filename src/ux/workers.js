@@ -222,8 +222,8 @@ export class SlottedElement extends Element {
   refresh(widgetInstance) {
     super.refresh(widgetInstance);
     let element = this.getElement(widgetInstance);
-    let icon = this.getNode(widgetInstance.data.properties, this.iconPropId);
-    let text = this.getNode(widgetInstance.data.properties, this.textPropId);
+    let icon = this.getNode(widgetInstance.data, this.iconPropId);
+    let text = this.getNode(widgetInstance.data, this.textPropId);
     this.setIconOrText(element, this.slot, icon, text);
   }
 
@@ -280,18 +280,18 @@ export class SlottedError extends Element {
     super(widgetClass, tagName, styleClass, elementQuerySelector);
     this.hidden = true;
     this.slot = slot;
-    this.registerSetter(widgetClass, "uniface:error", this);
-    this.registerSetter(widgetClass, "uniface:error-message", this);
-    this.registerSetter(widgetClass, "uniface:format-error", this);
-    this.registerSetter(widgetClass, "uniface:format-error-message", this);
+    this.registerSetter(widgetClass, "error", this);
+    this.registerSetter(widgetClass, "error-message", this);
+    this.registerSetter(widgetClass, "format-error", this);
+    this.registerSetter(widgetClass, "format-error-message", this);
   }
 
   refresh(widgetInstance) {
     super.refresh(widgetInstance);
-    let error = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:error"));
-    let errorMessage = this.getNode(widgetInstance.data.properties, "uniface:error-message");
-    let formatError = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:format-error"));
-    let formatErrorMessage = this.getNode(widgetInstance.data.properties, "uniface:format-error-message");
+    let error = this.toBoolean(this.getNode(widgetInstance.data, "error"));
+    let errorMessage = this.getNode(widgetInstance.data, "error-message");
+    let formatError = this.toBoolean(this.getNode(widgetInstance.data, "format-error"));
+    let formatErrorMessage = this.getNode(widgetInstance.data, "format-error-message");
     let element = widgetInstance.elements.widget;
     let errorElement = this.getElement(widgetInstance);
     if (errorElement) {
@@ -375,7 +375,7 @@ export class SlottedSubWidget extends Element {
       }
       this.slot = slot;
       // Register sub-widget and the property workers that toggle the sub-widget visible attribute.
-      this.propId = `uniface:${subWidgetId}`;
+      this.propId = subWidgetId;
       this.registerSetter(widgetClass, this.propId, this);
       this.registerDefaultValue(widgetClass, this.propId, visible);
       this.registerSubWidget(widgetClass, subWidgetId, this.subWidgetClass, this.styleClass, subWidgetTriggers);
@@ -396,7 +396,7 @@ export class SlottedSubWidget extends Element {
     super.refresh(widgetInstance);
     let widgetElement = widgetInstance.elements.widget;
     let subWidgetElement = this.getElement(widgetInstance);
-    if (this.toBoolean(this.getNode(widgetInstance.data.properties, this.propId))) {
+    if (this.toBoolean(this.getNode(widgetInstance.data, this.propId))) {
       subWidgetElement.hidden = false;
       subWidgetElement.slot = this.slot || "";
       widgetElement.classList.add(`${this.styleClass}-shown`);
@@ -587,7 +587,7 @@ export class SubWidgetsByFields extends Worker {
               if (this.getNode(subWidgetClass.setters, propId)) {
                 const childPropValue = childObjectDefinition.getProperty(propId);
                 childObjectDefinition.setProperty(propId, undefined);
-                if (propId.startsWith("uniface:")) {
+                if (propId?.startsWith("uniface:")) {
                   propId = propId.substring(8);
                 }
                 objectDefinition.setProperty(`${subWidgetId}:${propId}`, childPropValue);
@@ -768,7 +768,7 @@ export class IgnoreProperty extends Worker {
     this.log("refresh", {
       "widgetInstance": widgetInstance.getTraceDescription(),
       "propId": this.propId,
-      "value": this.getNode(widgetInstance.data.properties, this.propId)
+      "value": this.getNode(widgetInstance.data, this.propId)
     });
   }
 }
@@ -786,7 +786,7 @@ export class BaseHtmlAttribute extends Worker {
   /**
    * Creates an instance of BaseHtmlAttribute.
    * @param {typeof Widget} widgetClass
-   * @param {UPropName | undefined} [propId]
+   * @param {UPropName} [propId]
    * @param {String} [attrName]
    * @param {UPropValue} [defaultValue]
    * @param {Boolean} [setAsAttribute]
@@ -796,7 +796,7 @@ export class BaseHtmlAttribute extends Worker {
     super(widgetClass);
     if (arguments.length > 1) {
       // Generate a unique private prop-id.
-      this.propId = propId || `uniface:i${Math.random()}`;
+      this.propId = propId || Math.random().toString();
       if (attrName) {
         this.attrName = attrName;
       }
@@ -900,7 +900,7 @@ export class HtmlAttribute extends BaseHtmlAttribute {
     });
     super.refresh(widgetInstance);
     let element = this.getElement(widgetInstance);
-    let value = this.getNode(widgetInstance.data.properties, this.propId);
+    let value = this.getNode(widgetInstance.data, this.propId);
     this.setHtmlAttribute(element, value);
   }
 }
@@ -921,7 +921,7 @@ export class HtmlAttributeChoice extends BaseHtmlAttribute {
     });
     super.refresh(widgetInstance);
     let element = this.getElement(widgetInstance);
-    let value = this.getNode(widgetInstance.data.properties, this.propId);
+    let value = this.getNode(widgetInstance.data, this.propId);
     if (this.choices.includes(value)) {
       this.setHtmlAttribute(element, value);
     } else {
@@ -947,7 +947,7 @@ export class HtmlAttributeNumber extends BaseHtmlAttribute {
     });
     super.refresh(widgetInstance);
     let element = this.getElement(widgetInstance);
-    let value = this.getNode(widgetInstance.data.properties, this.propId);
+    let value = this.getNode(widgetInstance.data, this.propId);
     if (value !== undefined && value !== null) {
       value = parseInt(value);
       if (this.min !== undefined && this.min !== null && value < this.min) {
@@ -974,7 +974,7 @@ export class HtmlAttributeBoolean extends BaseHtmlAttribute {
     if (this.attrName) {
       super.refresh(widgetInstance);
       let element = this.getElement(widgetInstance);
-      let value = this.getNode(widgetInstance.data.properties, this.propId);
+      let value = this.getNode(widgetInstance.data, this.propId);
       element[this.attrName] = this.toBoolean(value);
     }
   }
@@ -1003,9 +1003,9 @@ export class HtmlAttributeReadonlyDisabled extends Worker {
     });
 
     let element = this.getElement(widgetInstance);
-    let readonly = this.getNode(widgetInstance.data.properties, this.propReadonly);
-    let disabled = this.getNode(widgetInstance.data.properties, this.propDisabled);
-    let uiblocked = this.getNode(widgetInstance.data.properties, this.propUiblocked);
+    let readonly = this.getNode(widgetInstance.data, this.propReadonly);
+    let disabled = this.getNode(widgetInstance.data, this.propDisabled);
+    let uiblocked = this.getNode(widgetInstance.data, this.propUiblocked);
 
     // Ensure widget and control is not disabled before checking validity since html always returns true on checkValidity for disabled field.
     element["disabled"] = false;
@@ -1046,13 +1046,13 @@ export class HtmlValueAttributeBoolean extends BaseHtmlAttribute {
       "event_name": this.valueChangedEventName || "",
       "handler": () => {
         widgetInstance.setProperties({
-          "uniface": {
+          "properties": {
             "format-error": false,
             "format-error-message": ""
           }
         });
         widgetInstance.setProperties({
-          "uniface": {
+          "properties": {
             "error": false,
             "error-message": ""
           }
@@ -1068,19 +1068,19 @@ export class HtmlValueAttributeBoolean extends BaseHtmlAttribute {
       "attrName": this.attrName
     });
     let element = this.getElement(widgetInstance);
-    let value = this.getNode(widgetInstance.data.properties, this.propId);
+    let value = this.getNode(widgetInstance.data, this.propId);
     // Validate value before assigning.
     try {
       this.setHtmlAttribute(element, this.fieldValueToBoolean(value));
       widgetInstance.setProperties({
-        "uniface": {
+        "properties": {
           "format-error": false,
           "format-error-message": ""
         }
       });
     } catch (error) {
       widgetInstance.setProperties({
-        "uniface": {
+        "properties": {
           "format-error": true,
           "format-error-message": error
         }
@@ -1116,7 +1116,7 @@ export class HtmlAttributeMinMaxLength extends Worker {
     }
 
     /** @type {Number|null} */
-    let minlength = parseInt(this.getNode(widgetInstance.data.properties, this.propMin));
+    let minlength = parseInt(this.getNode(widgetInstance.data, this.propMin));
     if (Number.isNaN(minlength)) {
       minlength = null;
     } else if (minlength < 0) {
@@ -1125,7 +1125,7 @@ export class HtmlAttributeMinMaxLength extends Worker {
     }
 
     /** @type {Number|null} */
-    let maxlength = parseInt(this.getNode(widgetInstance.data.properties, this.propMax));
+    let maxlength = parseInt(this.getNode(widgetInstance.data, this.propMax));
     if (Number.isNaN(maxlength)) {
       maxlength = null;
     } else if (maxlength === 0) {
@@ -1194,8 +1194,8 @@ export class HtmlAttributeMinMax extends Worker {
       return;
     }
 
-    let min = this.getNode(widgetInstance.data.properties, this.propMin);
-    let max = this.getNode(widgetInstance.data.properties, this.propMax);
+    let min = this.getNode(widgetInstance.data, this.propMin);
+    let max = this.getNode(widgetInstance.data, this.propMax);
 
     let isMinUndefined = min === undefined;
     let isMaxUndefined = max === undefined;
@@ -1308,7 +1308,7 @@ export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
    */
   refresh(widgetInstance) {
     this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
-    const orgWidgetClassName = this.getNode(widgetInstance.data.properties, this.propId);
+    const orgWidgetClassName = this.getNode(widgetInstance.data, this.propId);
     const orgWidgetClass = UNIFACE.ClassRegistry.get(orgWidgetClassName);
     const element = this.getElement(widgetInstance);
     element.innerHTML = "";
@@ -1316,25 +1316,25 @@ export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
     element.classList.remove("u-hidden");
     element.classList.remove("u-read-only");
     element.classList.remove("u-disabled");
-    element.title = this.getNode(widgetInstance.data.properties, "html:title") || "";
-    if (this.toBoolean(this.getNode(widgetInstance.data.properties, "html:hidden"))) {
+    element.title = this.getNode(widgetInstance.data, "html:title") || "";
+    if (this.toBoolean(this.getNode(widgetInstance.data, "html:hidden"))) {
       element.classList.add("u-hidden");
       element.title = "";
     }
-    if (this.toBoolean(this.getNode(widgetInstance.data.properties, "html:readonly"))) {
+    if (this.toBoolean(this.getNode(widgetInstance.data, "html:readonly"))) {
       element.classList.add("u-read-only");
     }
-    if (this.toBoolean(this.getNode(widgetInstance.data.properties, "html:disabled"))) {
+    if (this.toBoolean(this.getNode(widgetInstance.data, "html:disabled"))) {
       element.classList.add("u-disabled");
     }
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
     if (typeof orgWidgetClass.getValueFormatted == "function") {
-      formattedValue = orgWidgetClass.getValueFormatted(widgetInstance.data.properties);
+      formattedValue = orgWidgetClass.getValueFormatted(widgetInstance.data);
     } else {
       // Fallback if org widget does not provide this function.
-      formattedValue.primaryPlainText = this.getNode(widgetInstance.data.properties, "value");
+      formattedValue.primaryPlainText = this.getNode(widgetInstance.data, "value");
     }
 
     this.appendIconOrTextAtPosition(element, formattedValue, "prefix");
@@ -1376,7 +1376,7 @@ export class HtmlAttributeClass extends Worker {
   refresh(widgetInstance) {
     this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
     let element = this.getElement(widgetInstance);
-    if (this.toBoolean(this.getNode(widgetInstance.data.properties, this.propId))) {
+    if (this.toBoolean(this.getNode(widgetInstance.data, this.propId))) {
       element.classList.add(this.styleClassName);
     } else {
       element.classList.remove(this.styleClassName);
@@ -1390,24 +1390,27 @@ export class HtmlAttributeClass extends Worker {
 export class StyleClass extends Worker {
   constructor(widgetClass, defaultClassList) {
     super(widgetClass);
-    this.registerSetter(widgetClass, "classes", this);
     defaultClassList.forEach((className) => {
-      this.registerDefaultValue(widgetClass, `classes:${className}`, true);
+      this.registerSetter(widgetClass, `class:${className}`, this);
+      this.registerDefaultValue(widgetClass, `class:${className}`, true);
     });
   }
 
   refresh(widgetInstance) {
     this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
     let element = this.getElement(widgetInstance);
-    let classNames = widgetInstance.data.properties.classes;
-    Object.keys(classNames).forEach((className) => {
-      let value = widgetInstance.data.properties.classes[className];
-      if (value) {
-        element.classList.add(className);
-      } else {
-        element.classList.remove(className);
+    for (let property in widgetInstance.data) {
+      if (property.startsWith("class")) {
+        let value = widgetInstance.data[property];
+        let pos = property.search(":");
+        property = property.substring(pos + 1);
+        if (value) {
+          element.classList.add(property);
+        } else {
+          element.classList.remove(property);
+        }
       }
-    });
+    }
   }
 }
 
