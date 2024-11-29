@@ -54,6 +54,7 @@ export class RadioGroup extends Widget {
      */
     constructor(widgetClass, propId, attrName, defaultValue) {
       super(widgetClass, propId, attrName, defaultValue);
+      this.registerSetter(widgetClass, "uniface:display-format", this);
       this.registerSetter(widgetClass, "valrep", this);
     }
 
