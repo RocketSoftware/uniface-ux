@@ -72,7 +72,7 @@ export class Button extends Widget {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
       super.refresh(widgetInstance);
       let element = this.getElement(widgetInstance);
-      let text = this.getNode(widgetInstance.data.properties, "value");
+      let text = this.getNode(widgetInstance.data, "value");
       if (text) {
         element.hidden = false;
         element.innerText = text;
@@ -84,7 +84,7 @@ export class Button extends Widget {
 
     getValue(widgetInstance) {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
-      let text = this.getNode(widgetInstance.data.properties, "value");
+      let text = this.getNode(widgetInstance.data, "value");
       return text;
     }
 
@@ -142,9 +142,9 @@ export class Button extends Widget {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
       super.refresh(widgetInstance);
       let element = this.getElement(widgetInstance);
-      let text = this.getNode(widgetInstance.data.properties, "value");
-      let icon = this.getNode(widgetInstance.data.properties, "icon");
-      let iconPosition = this.getNode(widgetInstance.data.properties, "icon-position");
+      let text = this.getNode(widgetInstance.data, "value");
+      let icon = this.getNode(widgetInstance.data, "icon");
+      let iconPosition = this.getNode(widgetInstance.data, "icon-position");
       let defaultIconPosition = this.getNode(this.widgetClass.defaultValues, "icon-position");
       if (iconPosition !== "start" && iconPosition !== "end") {
         iconPosition = defaultIconPosition;
