@@ -321,9 +321,9 @@ export class Widget extends Base {
     //   }
     // });
 
-    // Get default property values.
+    // Get deep copy of default property values.
     /** @type {UData} */
-    let data = widgetClass.defaultValues;
+    let data = window.structuredClone(widgetClass.defaultValues);
 
     // Iterate sub-widgets and call their dataInit() followed by their dataUpdate() with default values targeted at the sub-widgets.
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
