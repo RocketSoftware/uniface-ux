@@ -386,6 +386,8 @@
 
       // Add the onchange event listener to the radio element
       radioElement.addEventListener('onchange', onchangeSpy);
+      // Add the change event listener to the radio-group element.
+      tester.element.addEventListener('change', onchangeSpy);
     });
 
     // Clean up after each test
@@ -402,6 +404,97 @@
 
       // Assert that the onchange event handler was called once
       expect(onchangeSpy.calledOnce).to.be.true;
+    });
+
+    // Test case for not firing change event with initial value.
+    it('should not invoke the onchange event handler when a radio button has initial value', function () {
+
+      let initialValue = "2";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: initialValue
+        });
+      }).then(function () {
+        // Assert that the change event handler was called not twice.
+        // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
+        expect(onchangeSpy.calledTwice).to.be.false;
+      });
+    });
+
+    // Test case for not firing change event on display-format property changes with initial value.
+    it('should not invoke the onchange event handler when display-format is changed with an initial value', function () {
+      let initialValue = "2";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: initialValue
+        });
+      }).then(function () {
+        // Change the display-format property.
+        tester.element.setAttribute('display-format', 'valrep');
+        // Assert that the change event handler was not called twice.
+        // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
+        expect(onchangeSpy.calledTwice).to.be.false;
+      });
+    });
+
+    // Test case for not firing change event on layout property changes with initial value.
+    it('should not invoke the onchange event handler when layout is changed with an initial value', function () {
+      let initialValue = "2";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: initialValue
+        });
+      }).then(function () {
+        // Change the layout property.
+        tester.element.setAttribute('layout', 'horizontal');
+        // Assert that the change event handler was not called twice.
+        // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
+        expect(onchangeSpy.calledTwice).to.be.false;
+      });
+    });
+
+    // Test case for not firing change event on valrep property changes with initial value.
+    it('should not invoke the onchange event handler when valrep is changed with an initial value', function () {
+      let initialValue = "2";
+      const valRepArray2 = [
+        {
+          value: "1",
+          representation: "option one"
+        },
+        {
+          value: "2",
+          representation: "option two"
+        },
+        {
+          value: "3",
+          representation: "option three"
+        },
+        {
+          value: "4",
+          representation: "option four"
+        }
+      ];
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: initialValue
+        });
+      }).then(function () {
+        // Update the valrep with new valRepArray2. 
+        tester.dataUpdate({
+          valrep: valRepArray2
+        });
+      }).then(function () {
+        // Assert that the change event handler was not called thrice.
+        // The change event will be invoked twice in onConnect but it should not propogate further hence we check calledTwice.
+        expect(onchangeSpy.calledThrice).to.be.false;
+      });
     });
   });
 

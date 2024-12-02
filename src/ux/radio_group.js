@@ -54,6 +54,8 @@ export class RadioGroup extends Widget {
      */
     constructor(widgetClass, propId, attrName, defaultValue) {
       super(widgetClass, propId, attrName, defaultValue);
+      // Register a setter for display format, ensuring it also updates the worker's refresh function.
+      this.registerSetter(widgetClass, "uniface:display-format", this);
       this.registerSetter(widgetClass, "valrep", this);
     }
 
@@ -149,7 +151,12 @@ export class RadioGroup extends Widget {
 
     refresh(widgetInstance) {
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      const value = this.getNode(widgetInstance.data.properties, "value");
+      let matchedValrepObj = valrep ? valrep.find((valrepObj) => valrepObj.value === value) : undefined;
       if (valrep.length > 0) {
+        if (matchedValrepObj) {
+          widgetInstance.elements.widget.valrepUpdated = true;
+        }
         super.refresh(widgetInstance);
         this.addTooltipToValrepElement(widgetInstance);
       } else {
@@ -212,7 +219,7 @@ export class RadioGroup extends Widget {
     /** @type {UValueFormatting} */
     let formattedValue = {};
     const displayFormat = this.getNode(properties, "uniface:display-format") ||
-                          this.getNode(this.defaultValues, "uniface:display-format");
+      this.getNode(this.defaultValues, "uniface:display-format");
     const value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
     const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
     const valrepItem = this.getValrepItem(valrep, value);
@@ -252,6 +259,14 @@ export class RadioGroup extends Widget {
     let shadowRoot = this.elements.widget.shadowRoot;
     let labelSlot = shadowRoot.querySelector('slot[name="label"]');
     labelSlot.setAttribute("part", "label");
+    // Stop propagating further change events when valrep has been updated.
+    // This is to prevent fluent-radio-group from firing unwanted change events.
+    this.elements.widget.addEventListener("change", (e) => {
+      if (this.elements.widget.valrepUpdated) {
+        e.stopImmediatePropagation();
+      }
+      this.elements.widget.valrepUpdated = false;
+    });
     return valueUpdaters;
   }
 }
