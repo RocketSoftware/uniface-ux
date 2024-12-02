@@ -31,8 +31,8 @@
           "size:label-text": "Label",
           "last:html:appearance": "accent",
           "last:style:padding": "10px",
-          "last:class:classA": "true",
-        },
+          "last:class:classA": "true"
+        }
     };
     
     const MOCK_CONTROLS = {
@@ -43,51 +43,51 @@
           "widget-cleanup-properties": {},
           "widget-properties": {
             classes: {
-              classA: "true",
+              classA: "true"
             },
             html: {
-              appearance: "accent",
+              appearance: "accent"
             },
             style: {
-              padding: "10px",
+              padding: "10px"
             },
-            value: "a",
-          },
+            value: "a"
+          }
         },
         size: {
           "widget-properties": {
             uniface: {
-              "label-text": "Label",
+              "label-text": "Label"
             },
             valrep: [
               {
                 value: "1",
-                representation: "a",
+                representation: "a"
               },
               {
                 value: "10",
-                representation: "10",
+                representation: "10"
               },
               {
                 value: "25",
-                representation: "25",
+                representation: "25"
               },
               {
                 value: "50",
-                representation: "50",
+                representation: "50"
               },
               {
                 value: "100",
-                representation: "100",
-              },
+                representation: "100"
+              }
             ],
-            value: "1",
+            value: "1"
           },
           "widget-cleanup-properties": {},
           "widget-class": "UX.Select",
           "overflow-behavior": "hide",
-          "overflow-index": "2",
-        },
+          "overflow-index": "2"
+        }
     };
 
 
@@ -255,6 +255,7 @@
             });
         });
     });
+    
     /*
     */
 

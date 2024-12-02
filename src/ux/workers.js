@@ -1501,16 +1501,19 @@ export class SlottedElementsByValRep extends Element {
 
   /**
    * Creates all valrep elements from this worker.
+   * Since fluent uses empty string to clear the selection, presence of an empty string as an actual valid option causes confusion.
+   * So, when setting the value attribute of fluent-option elements, we use the corresponding index as the value.
+   * And this will be mapped back to its original value before storing and sending to Uniface.
    */
   createValRepElements(widgetInstance) {
     let element = this.getElement(widgetInstance);
     let valrep = this.getNode(widgetInstance.data.properties, "valrep");
     let displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
     if (valrep.length > 0) {
-      valrep.forEach((valRepObj) => {
+      valrep.forEach((valRepObj, index) => {
         const childElement = document.createElement(this.tagName);
         element.appendChild(childElement);
-        childElement.setAttribute("value", valRepObj.value);
+        childElement.setAttribute("value", index);
         childElement.setAttribute("class", this.styleClass);
         childElement.appendChild(this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation));
       });

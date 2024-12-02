@@ -21,8 +21,8 @@
   const MOCK_START_CONTROLS_ONLY_DEFINITION = {
     properties: {
       "controls-start": "first",
-      "first:widget-class": "UX.Button",
-    },
+      "first:widget-class": "UX.Button"
+    }
   };
 
   const MOCK_EMPTY_START_CONTROLS_DEFINITION = {
@@ -31,8 +31,8 @@
       "controls-center": "size",
       "controls-end": "goto",
       "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select",
-    },
+      "size:widget-class": "UX.Select"
+    }
   };
 
   const MOCK_UNDEFINED_START_CONTROLS_DEFINITION = {
@@ -40,8 +40,8 @@
       "controls-center": "goto",
       "controls-end": "size",
       "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select",
-    },
+      "size:widget-class": "UX.Select"
+    }
   };
 
   const MOCK_EMPTY_CENTER_CONTROLS_DEFINITION = {
@@ -50,8 +50,8 @@
       "controls-center": "",
       "controls-end": "size",
       "info:widget-class": "UX.PlainText",
-      "size:widget-class": "UX.Select",
-    },
+      "size:widget-class": "UX.Select"
+    }
   };
 
   const MOCK_UNDEFINED_CENTER_CONTROLS_DEFINITION = {
@@ -59,8 +59,8 @@
       "controls-start": "info",
       "controls-end": "size",
       "info:widget-class": "UX.PlainText",
-      "size:widget-class": "UX.Select",
-    },
+      "size:widget-class": "UX.Select"
+    }
   };
 
   const MOCK_EMPTY_END_CONTROLS_DEFINITION = {
@@ -69,8 +69,8 @@
       "controls-center": "goto",
       "controls-end": "",
       "info:widget-class": "UX.PlainText",
-      "goto:widget-class": "UX.NumberField",
-    },
+      "goto:widget-class": "UX.NumberField"
+    }
   };
 
   const MOCK_UNDEFINED_END_CONTROLS_DEFINITION = {
@@ -78,8 +78,8 @@
       "controls-start": "info",
       "controls-center": "goto",
       "info:widget-class": "UX.PlainText",
-      "goto:widget-class": "UX.NumberField",
-    },
+      "goto:widget-class": "UX.NumberField"
+    }
   };
 
   const MOCK_START_CENTER_END_CONTROLS_DEFINITION = {
@@ -90,8 +90,8 @@
       "info:widget-class": "UX.PlainText",
       "goto:widget-class": "UX.NumberField",
       "size:widget-class": "UX.Select",
-      "first:widget-class": "UX.Button",
-    },
+      "first:widget-class": "UX.Button"
+    }
   };
 
   const MOCK_EMPTY_START_CENTER_END_CONTROLS_DEFINITION = {
@@ -101,16 +101,16 @@
       "controls-end": "",
       "info:widget-class": "UX.PlainText",
       "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select",
-    },
+      "size:widget-class": "UX.Select"
+    }
   };
 
   const MOCK_UNDEFINED_START_CENTER_END_CONTROLS_DEFINITION = {
     properties: {
       "info:widget-class": "UX.PlainText",
       "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select",
-    },
+      "size:widget-class": "UX.Select"
+    }
   };
 
   const MOCK_CONTROLS_WITHOUT_ANY_PROPERTIES_DEFINITION = {
@@ -119,8 +119,8 @@
       "controls-center": "size",
       "controls-end": "goto",
       "last:widget-class": "UX.Button",
-      "last:value": "Last",
-    },
+      "last:value": "Last"
+    }
   };
 
   const MOCK_CONTROLS_PROPERTIES_DEFINITION = {
@@ -139,23 +139,23 @@
       "size:label-text": "Label",
       "last:html:appearance": "accent",
       "last:style:padding": "10px",
-      "last:class:classA": "true",
-    },
+      "last:class:classA": "true"
+    }
   };
 
   const MOCK_TOOLBAR_DATA = {
     uniface: {
-      "label-text": "Label",
+      "label-text": "Label"
     },
     html: {
-      orientation: "vertical",
+      orientation: "vertical"
     },
     style: {
-      padding: "10px",
+      padding: "10px"
     },
     class: {
-      classC: "true",
-    },
+      classC: "true"
+    }
   };
 
   const MOCK_TOOLBAR_CONTROLS_DATA = {
@@ -169,8 +169,8 @@
       "size:label-text": "Label",
       "first:html:appearance": "accent",
       "first:value": "Go",
-      "size:valrep": "1=a10=1025=2550=50100=100",
-    },
+      "size:valrep": "1=a10=1025=2550=50100=100"
+    }
   };
 
   const MOCK_CONTROLS = {
@@ -181,65 +181,65 @@
       "widget-cleanup-properties": {},
       "widget-properties": {
         classes: {
-          classA: "true",
+          classA: "true"
         },
         html: {
-          appearance: "accent",
+          appearance: "accent"
         },
         style: {
-          padding: "10px",
+          padding: "10px"
         },
-        value: "a",
-      },
+        value: "a"
+      }
     },
     size: {
       "widget-properties": {
         uniface: {
-          "label-text": "Label",
+          "label-text": "Label"
         },
         valrep: [
           {
             value: "1",
-            representation: "a",
+            representation: "a"
           },
           {
             value: "10",
-            representation: "10",
+            representation: "10"
           },
           {
             value: "25",
-            representation: "25",
+            representation: "25"
           },
           {
             value: "50",
-            representation: "50",
+            representation: "50"
           },
           {
             value: "100",
-            representation: "100",
-          },
+            representation: "100"
+          }
         ],
-        value: "1",
+        value: "1"
       },
       "widget-cleanup-properties": {},
       "widget-class": "UX.Select",
       "overflow-behavior": "hide",
-      "overflow-index": "2",
-    },
+      "overflow-index": "2"
+    }
   };
 
   const MOCK_TOOLBAR_DEFAULT_PROPERTIES = {
     html: {
       "aria-orientation": "horizontal",
       orientation: "horizontal",
-      role: "toolbar",
+      role: "toolbar"
     },
     classes: {
-      "u-toolbar": true,
+      "u-toolbar": true
     },
     uniface: {
-      "label-text": "",
-    },
+      "label-text": ""
+    }
   };
 
   describe("processLayout()", function () {
@@ -543,7 +543,7 @@
       let mockDataNames = {
         html: new Set(["orientation"]),
         style: new Set(["padding"]),
-        class: new Set(["classC"]),
+        class: new Set(["classC"])
       };
       toolbarWidget.onConnect(widgetElement);
       toolbarWidget.dataInit();
@@ -558,7 +558,7 @@
 
     it("should reset control's html properties", function (done) {
       let mockDataNames = {
-        uniface: new Set(["first:html:appearance"]),
+        uniface: new Set(["first:html:appearance"])
       };
       toolbarWidget.onConnect(widgetElement);
       toolbarWidget.dataInit();
@@ -577,7 +577,7 @@
 
     it("should reset control's style properties", function () {
       let mockDataNames = {
-        uniface: new Set(["size:style:padding"]),
+        uniface: new Set(["size:style:padding"])
       };
       toolbarWidget.onConnect(widgetElement);
       toolbarWidget.dataInit();
@@ -593,7 +593,7 @@
 
     it("should reset control's class properties", function () {
       let mockDataNames = {
-        uniface: new Set(["goto:class:classGoto"]),
+        uniface: new Set(["goto:class:classGoto"])
       };
       toolbarWidget.onConnect(widgetElement);
       toolbarWidget.dataInit();
@@ -608,7 +608,7 @@
 
     it("should reset control's uniface properties", function () {
       let mockDataNames = {
-        uniface: new Set(["goto:label-text"]),
+        uniface: new Set(["goto:label-text"])
       };
       toolbarWidget.onConnect(widgetElement);
       toolbarWidget.dataInit();
@@ -626,7 +626,7 @@
 
     it("should reset control's value property", function () {
       let mockDataNames = {
-        uniface: new Set(["first:value"]),
+        uniface: new Set(["first:value"])
       };
       toolbarWidget.onConnect(widgetElement);
       toolbarWidget.dataInit();
@@ -644,7 +644,7 @@
 
     it("should reset control's valrep property", function () {
       let mockDataNames = {
-        uniface: new Set(["size:valrep"]),
+        uniface: new Set(["size:valrep"])
       };
       toolbarWidget.onConnect(widgetElement);
       toolbarWidget.dataInit();
@@ -749,9 +749,9 @@
             "widget-properties": {},
             "widget-cleanup-properties": {
               html: new Set(["appearance"]),
-              value: "",
-            },
-          },
+              value: ""
+            }
+          }
         };
         widgetElement = toolbar.processLayout(placeholderEl, MOCK_START_CONTROLS_ONLY_DEFINITION);
         node = parentNode.children[0];

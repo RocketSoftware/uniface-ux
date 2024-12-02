@@ -1,7 +1,17 @@
 /* global module */
 
 module.exports = [
-  {
+  { // Declare ignores
+    // This object is only for ignore. do not add any other properties
+    "ignores": [
+      "dist/",
+      "node_modules/", 
+      "src/fluentui/",
+      "test/modules/", 
+      "testAutomation/"
+    ]
+  },
+  { // default rules
     "languageOptions": {
       "ecmaVersion": 2022,
       "sourceType": "module",
@@ -84,10 +94,50 @@ module.exports = [
       "comma-dangle": ["warn", "never"]
     }
   },
-  {
-    "files": ["utest/widgets/*.js"],
-    "parserOptions": {
-      "ecmaVersion": 2022
+  { // Rules for project root, Node.js module
+    "files": ["*.js"],
+    "languageOptions": {
+      "globals": {
+        // Node.js
+        "__dirname": "readonly",
+        "require": "readonly",
+        "module": "readonly"
+      }
+    },
+    "rules": {
+      "indent": "off", 
+      //"no-console": "on",
+      "no-trailing-spaces": "off",
+      "spaced-comment": "off",
+      "quote-props": "off"
+    }
+  },
+  { // Rules for test/ux
+    "files": ["test/ux/*.js"],
+    "languageOptions": {
+      "globals": {
+        // mocha
+        "after": "readonly",
+        "afterEach": "readonly",
+        "before": "readonly",
+        "beforeEach": "readonly",
+        "describe": "readonly",
+        "it": "readonly",
+        // chai
+        "chai": "readonly",
+        // sinon
+        "sinon": "readonly",
+        //"setTimeout": "readonly",
+        // for umockup
+        "umockup": "readonly"
+      }
+    },
+    "rules": {
+      "indent": "off", 
+      //"no-console": "on",
+      "no-trailing-spaces": "off",
+      "spaced-comment": "off",
+      "quote-props": "off"
     }
   }
 ];

@@ -161,7 +161,6 @@
   });
 
   describe("Data Update", function () {
-		
     let element;
 
     before(function () {
@@ -208,7 +207,7 @@
           uniface: {
             "icon-position": iconPosition
           },
-          value: buttonText,
+          value: buttonText
         });
       }).then(function () { 
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -252,7 +251,7 @@
         tester.dataUpdate({
           uniface: {
             "icon-position": "stat"
-          },
+          }
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -344,7 +343,7 @@
         elements: tester.construct().elements,
         getTraceDescription: () => {
           return "description";
-        },
+        }
       };
 
       instance.refresh(widgetInstance);
@@ -395,7 +394,7 @@
         elements: tester.construct().elements,
         getTraceDescription: () => {
           return "description";
-        },
+        }
       };
 
       instance.refresh(widgetInstance);
@@ -410,7 +409,7 @@
         data: {
           properties: {
             uniface: {
-              "icon": "Home",
+              "icon": "Home"
             },
             value: ""
           }
@@ -434,7 +433,7 @@
         data: {
           properties: {
             uniface: {
-              "icon": "",
+              "icon": ""
             },
             value: ""
           }

@@ -84,7 +84,7 @@
             it("check u-error-icon", function () {
                 assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
             });
-        })
+        });
 
     });
 
@@ -123,7 +123,7 @@
         const event = new window.Event('onchange');
         element.dispatchEvent(event);
         assert(widget.elements.widget === element, "widget is not connected");
-    })
+    });
 
     describe('Number Field onchange event', function () {
         let numberElement, onChangeSpy;
@@ -218,13 +218,13 @@
             return asyncRun(function() {
                 tester.dataUpdate({
                     uniface: {
-                        "changebutton": showApplyButton,
-                    },
+                        "changebutton": showApplyButton
+                    }
                 });
             }).then(function () {
                 let element = widget.elements.widget.querySelector("fluent-button.u-sw-changebutton");
                 if (showApplyButton) {
-                    expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass );
+                    expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
                 } else {
                     assert(element.hasAttribute("hidden"), "Failed to show the hidden attribute for button");
                 }
@@ -263,8 +263,8 @@
                     uniface: {
                         "changebutton": showApplyButton,
                         "changebutton:value": buttonText,
-                        "changebutton:icon": buttonIconName,
-                    },
+                        "changebutton:icon": buttonIconName
+                    }
                 });
             }).then(function () {
                 if (showApplyButton) {
@@ -312,7 +312,7 @@
             assert.equal(displayPropertyValue, "inline-flex");
             let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
             let alignPropertyValue = labelStyle.getPropertyValue("align-content");
-            assert.equal(alignPropertyValue, "center", "Label position below is not center")
+            assert.equal(alignPropertyValue, "center", "Label position below is not center");
         });
 
         it("Set label position below", function () {
@@ -335,7 +335,7 @@
             assert.equal(flexPropertyValue, "column");
             let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
             let orderPropertyValue = labelStyle.getPropertyValue("order");
-            assert.equal(orderPropertyValue, 2, "Labelposition below is not in order")
+            assert.equal(orderPropertyValue, 2, "Labelposition below is not in order");
         });
 
         it("reset label and its position", function () {
@@ -538,12 +538,12 @@
             return asyncRun(function() {
                 tester.dataUpdate({
                     uniface: {
-                        "prefix-icon": buttonIconName,
-                    },
+                        "prefix-icon": buttonIconName
+                    }
                 });
             }).then(function () {
                 if (showApplyButton) {
-                    let element = widget.elements.widget.querySelector("span.u-prefix ms-Icon ms-Icon--AddHome[slot='start']")
+                    let element = widget.elements.widget.querySelector("span.u-prefix ms-Icon ms-Icon--AddHome[slot='start']");
                     assert(widget.elements.widget.querySelector("span.u-prefix").hasAttribute("slot"), "Failed to show the slot attribute");
                 }
             });
@@ -557,12 +557,12 @@
             return asyncRun(function() {
                 tester.dataUpdate({
                     uniface: {
-                        "suffix-icon": buttonIconName,
-                    },
+                        "suffix-icon": buttonIconName
+                    }
                 });
             }).then(function () {
                 if (showApplyButton) {
-                    let element = widget.elements.widget.querySelector("span.u-suffix ms-Icon ms-Icon--AddHome[slot='end']")
+                    let element = widget.elements.widget.querySelector("span.u-suffix ms-Icon ms-Icon--AddHome[slot='end']");
                     assert(widget.elements.widget.querySelector("span.u-suffix").hasAttribute("slot"), "Failed to show the slot attribute");
                 }
             });
@@ -577,7 +577,7 @@
         before(function () {
             widget = tester.createWidget();
             element = tester.createWidget().element;
-            verifyWidgetClass(widgetClass)
+            verifyWidgetClass(widgetClass);
         });
 
         it("setting min and max", function(){
@@ -610,7 +610,7 @@
                 assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
                 assert(widget.elements.widget.childNodes[2].className, appliedClassNames, "widget element doesn't has correct class names");
                 assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot"), "end", "Slot end does not match");
-                assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Field Value length mismatch.", "Error title doesnot match")
+                assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Field Value length mismatch.", "Error title doesnot match");
             });
         });
     });
@@ -621,7 +621,7 @@
         before(function () {
             widget = tester.createWidget();
             element = tester.createWidget().element;
-            verifyWidgetClass(widgetClass)
+            verifyWidgetClass(widgetClass);
         });
 
         it("Hide Error Set invalid value in number Field", function () {

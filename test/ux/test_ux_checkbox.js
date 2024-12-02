@@ -79,7 +79,7 @@
             it("check u-error-icon", function() {
                 assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
             });
-        })
+        });
     });
 
     describe("Create widget", function() {
@@ -235,8 +235,8 @@
                 });
             }).then(function() {
                 expect(element).to.not.have.class("checked");
-                expect(element).to.have.class("u-checkbox")
-                expect(element).to.have.class("indeterminate")
+                expect(element).to.have.class("u-checkbox");
+                expect(element).to.have.class("indeterminate");
                 expect(element.getAttribute("current-checked")).equal("false");
             });
         });
@@ -347,7 +347,7 @@
                 assert.equal(widget.elements.widget.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
                 assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."); //Check for visibility
             });
-        })
+        });
     });
 
     describe("hideError", function() {
@@ -370,10 +370,10 @@
                 expect(element).to.not.have.class("u-format-invalid");
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden error icon");
                 expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
-                expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide hidden attribute")
+                expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide hidden attribute");
             });
-        })
-    })
+        });
+    });
 
     describe("reset all properties", function() {
 
