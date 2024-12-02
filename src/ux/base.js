@@ -491,6 +491,12 @@ export class Base {
     };
   })();
 
+  /**
+   * Extracts sub-widget data from the original data object and removes the corresponding
+   * properties from original data object.
+   * @param {Object} data - The source object containing properties to extract.
+   * @returns {Object} An object containing the extracted sub-widget data.
+   */
   getSubWidgetData(data, subWidgetPropPrefix) {
     let subWidgetData;
     for (let property in data) {
@@ -500,6 +506,7 @@ export class Base {
           subWidgetData = subWidgetData || {};
           let key = property.substring(pos + 1);
           subWidgetData[key] = data[property];
+          // Remove the property from the original data to avoid duplication.
           delete data[property];
         }
       }
