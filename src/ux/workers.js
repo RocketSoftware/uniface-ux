@@ -1390,8 +1390,8 @@ export class HtmlAttributeClass extends Worker {
 export class StyleClass extends Worker {
   constructor(widgetClass, defaultClassList) {
     super(widgetClass);
+    this.registerSetter(widgetClass, "class", this);
     defaultClassList.forEach((className) => {
-      this.registerSetter(widgetClass, `class:${className}`, this);
       this.registerDefaultValue(widgetClass, `class:${className}`, true);
     });
   }
@@ -1428,11 +1428,16 @@ export class StyleProperty extends Worker {
 
   refresh(widgetInstance) {
     this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
-    let styleProperty = widgetInstance.data.properties.style;
     let element = this.getElement(widgetInstance);
-    Object.keys(styleProperty).forEach((key) => {
-      element.style[key] = styleProperty[key];
-    });
+
+    for (let property in widgetInstance.data) {
+      if (property.startsWith("style")) {
+        let value = widgetInstance.data[property];
+        let pos = property.search(":");
+        property = property.substring(pos + 1);
+        element.style[property] = value || "";
+      }
+    }
   }
 }
 

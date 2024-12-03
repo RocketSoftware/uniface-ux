@@ -130,7 +130,7 @@ export class TextField extends Widget {
     });
     // Add the 'u-blocked' class to the widget element.
     this.elements.widget.classList.add("u-blocked");
-    this.setProperties({"uiblocked": true});
+    this.setProperties({ "uiblocked": true });
   }
 
   /**

@@ -308,7 +308,7 @@ export class Widget extends Base {
 
     // Get deep copy of default property values.
     /** @type {UData} */
-    let data = window.structuredClone(widgetClass.defaultValues);
+    let data = globalThis.structuredClone(widgetClass.defaultValues);
 
     // Iterate sub-widgets and call their dataInit() followed by their dataUpdate() with default values targeted at the sub-widgets.
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
@@ -547,7 +547,7 @@ export class Widget extends Base {
         } else {
           this.data[property] = data[property];
         }
-        let setter = widgetSetters[property];
+        let setter = property.startsWith("class") ? widgetSetters["class"] : property.startsWith("style") ? widgetSetters["style"] : widgetSetters[property];
         if (setter) {
           setters.add(setter);
         } else if (reportUnsupportedPropertyWarnings) {
