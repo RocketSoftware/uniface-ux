@@ -180,7 +180,6 @@
         });
         
         it("empty initial value", function () {
-            let resizeProp = 'none';
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
                 tester.dataUpdate({
@@ -513,10 +512,9 @@
     });
 
     describe("showError", function () {
-        let widget, element;
+        let widget;
         before(function () {
             widget = tester.createWidget();
-            element = tester.createWidget().element;
             verifyWidgetClass(widgetClass);
         });
 
@@ -539,10 +537,9 @@
     });
     
     describe("hideError", function () {
-        let widget, element;
+        let widget;
         before(function () {
             widget = tester.createWidget();
-            element = tester.createWidget().element;
             verifyWidgetClass(widgetClass);
         });
         it("Hide Error Set invalid value in plain text", function () {
