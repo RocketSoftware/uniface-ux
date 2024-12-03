@@ -375,10 +375,9 @@
 
 
   describe('Radio onchange event', function () {
-    let radioElement, onchangeSpy, widget;
+    let radioElement, onchangeSpy;
     beforeEach(function () {
 
-      widget = tester.createWidget();
       radioElement = tester.element.querySelector("fluent-radio");
 
       // Create a spy for the onchange event
@@ -534,7 +533,7 @@
           uniface: {
             "format-error": false,
             "format-error-message": ""
-          },
+          }
         });
       }).then(function () {
         expect(radioElement).to.not.have.class("u-format-invalid");
