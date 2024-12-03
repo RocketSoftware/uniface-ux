@@ -178,9 +178,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
         let propIcon;
         let defaultIcon;
         let slottedElement;
-        let tagname;
-        let styleclass;
-        let elementQuerySelector;
 
         const widgetInstance = {
             data: {
@@ -211,7 +208,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
             Widget.uiBlocking = ""; 
 
             widgetClass = Widget;
-            tagname = "DIV";
             propText = "uniface:text";
             propIcon = "uniface:icon";
             defaultText = "defaultText";
@@ -407,7 +403,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
         let elementQuerySelector;
         let propId;
         let element;
-        let definitions;
 
         beforeEach(function () {
             Widget.structure = {};
@@ -463,7 +458,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
         let defaultValue;
         let worker;
         let element;
-        let layout;
         let value;
 
         beforeEach(function () {
@@ -509,20 +503,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
          });
 
          //Refresh doesn't do anything
-         it("check refresh" , function () {
-            const widgetInstance = {
-                data: {
-                    properties: {
-                        uniface: {
-                            "undefined" : true
-                        }
-                    }
-                },
-                elements : {
-                    widget: document.createElement("div")
-                } ,
-                getTraceDescription: () => { return "description" ;}
-            };
+         it("check refresh" , function () {           
             worker.refresh({});
          });
 
@@ -1141,9 +1122,9 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
             elements : {
                 widget: document.createElement("div")
             } ,
-            getTraceDescription: () => { return "description" }
-        }
-        element.refresh(widgetInstance)
+            getTraceDescription: () => { return "description"; }
+        };
+        element.refresh(widgetInstance);
         let selectOptionArray = widgetInstance.elements.widget.querySelectorAll("fluent-option");
         expect(selectOptionArray.length).to.equal(valRepArray.length);
         selectOptionArray.forEach(function (node, index) {
