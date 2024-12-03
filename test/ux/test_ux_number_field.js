@@ -386,7 +386,6 @@
                     }
                 });
             }).then(function () {
-                let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute(readOnly), "Failed to show the readonly attribute");
             });
         });
@@ -401,7 +400,6 @@
                     }
                 });
             }).then(function () {
-                let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to hide the readonly attribute");
             });
         });
@@ -414,7 +412,6 @@
                     "html":{"disabled": true}
                 });
             }).then(function () {
-                let disabledProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute(disabled), "Failed to show the disabled attribute");
             });
         });
@@ -429,7 +426,6 @@
                     }
                 });
             }).then(function () {
-                let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(!widget.elements.widget.hasAttribute(disabled), "Failed to hide the disabled attribute");
             });
         });
@@ -444,7 +440,6 @@
                     }
                 });
             }).then(function () {
-                let appearanceStyleProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance outfill attribute");
                 let appearanceStylePropertyText = widget.elements.widget.getAttribute('appearance');
                 assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance outfill style" + appearanceStylePropertyText);
@@ -461,7 +456,6 @@
                     }
                 });
             }).then(function () {
-                let appearanceStyleProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance filled attribute");
                 let appearanceStylePropertyText = widget.elements.widget.getAttribute('appearance');
                 assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance filled style" + appearanceStylePropertyText);
@@ -478,7 +472,6 @@
                     }
                 });
             }).then(function () {
-                let hidestepProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(widget.elements.widget.hasAttribute('hide-step'), "Failed to show the hide-step attribute");
             });
         });
@@ -493,7 +486,6 @@
                     }
                 });
             }).then(function () {
-                let hidestepProperty = window.getComputedStyle(widget.elements.widget, null);
                 assert(!widget.elements.widget.hasAttribute('hide-step'), "Failed to hide the hide-step attribute");
             });
         });
@@ -532,7 +524,6 @@
 
         it("prefix-icon button icon", function () {
             let showApplyButton = true;
-            let appliedButtonClass = "u-icon ms-Icon ms-Icon--AddHome";
             let buttonIconName = "AddHome";
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
@@ -543,7 +534,6 @@
                 });
             }).then(function () {
                 if (showApplyButton) {
-                    let element = widget.elements.widget.querySelector("span.u-prefix ms-Icon ms-Icon--AddHome[slot='start']");
                     assert(widget.elements.widget.querySelector("span.u-prefix").hasAttribute("slot"), "Failed to show the slot attribute");
                 }
             });
@@ -551,7 +541,6 @@
 
         it("suffix-icon button icon", function () {
             let showApplyButton = true;
-            let appliedButtonClass = "u-icon ms-Icon ms-Icon--AddHome";
             let buttonIconName = "AddHome";
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
@@ -562,7 +551,6 @@
                 });
             }).then(function () {
                 if (showApplyButton) {
-                    let element = widget.elements.widget.querySelector("span.u-suffix ms-Icon ms-Icon--AddHome[slot='end']");
                     assert(widget.elements.widget.querySelector("span.u-suffix").hasAttribute("slot"), "Failed to show the slot attribute");
                 }
             });
@@ -570,13 +558,12 @@
     });
 
     describe("showError", function () {
-        let widget, element;
+        let widget;
         let minlength = 2;
         let maxlength = 5;
 
         before(function () {
             widget = tester.createWidget();
-            element = tester.createWidget().element;
             verifyWidgetClass(widgetClass);
         });
 
@@ -616,11 +603,10 @@
     });
 
     describe("hideError", function () {
-        let widget, element;
+        let widget;
 
         before(function () {
             widget = tester.createWidget();
-            element = tester.createWidget().element;
             verifyWidgetClass(widgetClass);
         });
 
