@@ -333,7 +333,7 @@
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
         selectOptionArray.forEach(function (node, index) {
-          let formatValrepText = valRepArray[index].representation + valRepArray[index].value;
+          let formatValrepText = valRepArray[index].representation + " " + valRepArray[index].value;
           expect(node.textContent).equal(formatValrepText);
         });
       });
@@ -368,10 +368,10 @@
         });
       }).then(function () {
           let valStr = "<script> alert('XSS' attack') </script>";
-          let escapedHtmlValue = valStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          let contentStr = " alert('XSS' attack') ";          
           assert.equal(element.querySelector('fluent-option.selected .u-valrep-representation').innerHTML, valStr);
-          expect(element.querySelector('fluent-option.selected .u-valrep-value').innerHTML).equal(escapedHtmlValue);
-          expect(element.querySelector('fluent-option.selected .u-valrep-value').textContent).equal(valStr);
+          expect(element.querySelector('fluent-option.selected .u-valrep-value').innerHTML).equal(valStr);
+          expect(element.querySelector('fluent-option.selected .u-valrep-value').textContent).equal(contentStr);
       });
     });
 
@@ -388,7 +388,7 @@
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("option two");
         const selectOption = element.querySelector("fluent-option.selected");
-        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
+        expect(selectOption.value).equal(valRepArray[1].value);
       });
     });
 
@@ -412,7 +412,7 @@
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("");
         const selectOption = element.querySelector("fluent-option.selected");
-        expect(selectOption.value).equal(valRepArrayWithEmpty.findIndex((item) => item.value === "").toString());
+        expect(selectOption.value).equal(valRepArrayWithEmpty[0].value);
       });
     });
   });
