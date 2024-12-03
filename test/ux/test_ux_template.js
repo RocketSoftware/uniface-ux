@@ -96,7 +96,6 @@
             try {
                 const widget = tester.construct();
                 assert(widget, "widget is not defined!");
-                const widgetClass = tester.getWidgetClass();
             } catch (e) {
                 assert(false, "Failed to construct new widget, exception " + e);
             }
