@@ -161,7 +161,6 @@
   });
 
   describe("Data Update", function () {
-
     let element;
 
     before(function () {
@@ -208,7 +207,7 @@
           uniface: {
            "icon-position": iconPosition,
           },
-          value: buttonText,
+          value: buttonText
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -410,10 +409,10 @@
         data: {
           properties: {
             uniface: {
-            "icon": "Home"
-            }
-          },
-          "value": ""
+              "icon": "Home"
+            },
+            value: ""
+          }
         },
 
         elements: tester.construct().elements,
@@ -436,9 +435,9 @@
           properties: {
             uniface: {
               "icon": ""
-            }
-          },
-          "value": ""
+            },
+            value: ""
+          }
         },
         "elements": tester.construct().elements,
         "getTraceDescription": () => {

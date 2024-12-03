@@ -102,7 +102,7 @@
             const element = tester.processLayout();
             const widget = tester.onConnect();
             assert(widget.elements.widget.shadowRoot.querySelector("slot[name='switch']").hasAttribute("part"), "Attribute is added to defined slot element");
-            assert(widget.elements.widget.shadowRoot.querySelector("slot[name='switch']").getAttribute("part") === "switch-toggle", "Attribute value is not switch-toggle")
+            assert(widget.elements.widget.shadowRoot.querySelector("slot[name='switch']").getAttribute("part") === "switch-toggle", "Attribute value is not switch-toggle");
             assert(element, "Target element is not defined!");
             assert(widget.elements.widget === element, "widget is not connected");
         });
@@ -112,7 +112,7 @@
     describe("mapTrigger", function () {
         const widget = tester.onConnect();
         widget.mapTrigger("onchange");
-    })
+    });
 
     describe("dataInit", function () {
         const defaultValues = tester.getDefaultValues();
@@ -195,7 +195,7 @@
                 assert.equal(checkedText, switchCheckedText);//Check for visibility
                 assert(!widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message text");
                 expect(widget.elements.widget.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
-                expect(widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide unchecked message")
+                expect(widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
             });
         });
 
@@ -267,7 +267,7 @@
                 expect(widget.elements.widget.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("");
                 expect(widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
             });
-        })
+        });
     });
 
     describe("hideError", function () {
@@ -295,7 +295,7 @@
                 assert(!widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message slot");
                 expect(widget.elements.widget.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
             });
-        })
+        });
 
         it("set error to false without checked and unchecked messages", function () {
             return asyncRun(function() {
@@ -310,7 +310,7 @@
                 assert(widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to keep the checked message slot hidden");
                 expect(widget.elements.widget.querySelector("span.u-checked-message").getAttribute("slot")).equal("");
             });
-        })
+        });
     });
 
     describe("dataCleanup", function () {

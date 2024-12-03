@@ -23,23 +23,8 @@ export class Base {
    * @param {Worker} worker - Specified the worker.
    */
   registerSetter(widgetClass, propId, worker) {
-    let pos = propId.search(":");
-    if (pos > 0) {
-      let prefix = propId.substring(0, pos);
-      propId = propId.substring(pos + 1);
-      if (!widgetClass.setters[prefix]) {
-        widgetClass.setters[prefix] = {};
-      }
-      if (!widgetClass.setters[prefix][propId]) {
-        widgetClass.setters[prefix][propId] = [];
-      }
-      widgetClass.setters[prefix][propId].push(worker);
-    } else {
-      if (!widgetClass.setters[propId]) {
-        widgetClass.setters[propId] = [];
-      }
-      widgetClass.setters[propId].push(worker);
-    }
+    widgetClass.setters[propId] = widgetClass.setters[propId] || [];
+    widgetClass.setters[propId].push(worker);
   }
 
   /**
@@ -52,17 +37,7 @@ export class Base {
    * @param {Worker} worker - Specifies the worker.
    */
   registerGetter(widgetClass, propId, worker) {
-    let pos = propId.search(":");
-    if (pos > 0) {
-      let prefix = propId.substring(0, pos);
-      propId = propId.substring(pos + 1);
-      if (!widgetClass.getters[prefix]) {
-        widgetClass.getters[prefix] = {};
-      }
-      widgetClass.getters[prefix][propId] = worker;
-    } else {
-      widgetClass.getters[propId] = worker;
-    }
+    widgetClass.getters[propId] = worker;
   }
 
   /**
@@ -74,16 +49,7 @@ export class Base {
    * @param {UPropValue} defaultValue - Specifies the default value.
    */
   registerDefaultValue(widgetClass, propId, defaultValue) {
-    let node = widgetClass.defaultValues;
-    let ids = propId.split(":");
-    let i;
-    for (i = 0; i < ids.length - 1; i++) {
-      if (node[ids[i]] === undefined) {
-        node[ids[i]] = {};
-      }
-      node = node[ids[i]];
-    }
-    node[ids[i]] = defaultValue;
+    widgetClass.defaultValues[propId] = defaultValue;
   }
 
   /**
@@ -136,7 +102,7 @@ export class Base {
   /**
    * Looks up the node within node as specified by propId.
    * @param {UData} node
-   * @param {UPropName|undefined} propId
+   * @param {UPropName} propId
    * @return {Object}
    */
   getNode(node, propId) {
@@ -146,22 +112,11 @@ export class Base {
   /**
    * Looks up the node within node as specified by propId.
    * @param {UData} node
-   * @param {UPropName|undefined} propId
+   * @param {UPropName} propId
    * @return {Object}
    */
   static getNode(node, propId) {
-    if (propId) {
-      let url = propId.split(":");
-      for (let i = 0; i < url.length; i++) {
-        node = node[url[i]];
-        if (node === undefined) {
-          return undefined;
-        }
-      }
-      return node;
-    } else {
-      return undefined;
-    }
+    return propId ? node[propId] : undefined;
   }
 
   /**
@@ -238,58 +193,6 @@ export class Base {
         break;
     }
     throw this.formatErrorMessage;
-  }
-
-  /**
-   * Fix properties data.
-   * @param {UData} data
-   * @return {UData}
-   */
-  fixData(data) {
-    return Base.fixData(data);
-  }
-
-  /**
-   * Fix properties data.
-   * @param {UData} data
-   * @return {UData}
-   */
-  static fixData(data) {
-    let newData = {};
-    for (let key in data) {
-      if (key === "uniface") {
-        newData.uniface = newData.uniface || {};
-        for (let key in data.uniface) {
-          let prefixes = key.split(":");
-          if (prefixes.length === 1) {
-            newData.uniface[key] = data.uniface[key];
-          } else {
-            let newDataNode = newData;
-            let prefix;
-            let i;
-            for (i = 0; i < prefixes.length - 1; i++) {
-              prefix = prefixes[i];
-              let id = prefix === "class" ? "classes" : prefix;
-              newDataNode[id] = newDataNode[id] || {};
-              newDataNode = newDataNode[id];
-            }
-            if (prefixes[i] === "valrep") {
-              newDataNode[prefixes[i]] = this.getFormattedValrep(data.uniface[key]);
-            } else if (prefix === "class") {
-              newDataNode[prefixes[i]] = this.toBoolean(data.uniface[key]);
-            } else if (prefix === "html" || prefix === "style" || prefixes[i] === "value") {
-              newDataNode[prefixes[i]] = data.uniface[key];
-            } else {
-              newDataNode.uniface = newDataNode.uniface || {};
-              newDataNode = newDataNode.uniface[prefixes[i]] = data.uniface[key];
-            }
-          }
-        }
-      } else {
-        newData[key] = data[key];
-      }
-    }
-    return newData;
   }
 
   /**
@@ -391,17 +294,17 @@ export class Base {
    * @returns {HTMLElement | DocumentFragment}
    */
   getFormattedValrepItemAsHTML(displayFormat, value, representation) {
-    const valrepRepElement = document.createElement('span');
-    valrepRepElement.className = 'u-valrep-representation';
+    const valrepRepElement = document.createElement("span");
+    valrepRepElement.className = "u-valrep-representation";
     valrepRepElement.innerHTML = representation;
-    const valrepValueElement = document.createElement('span');
-    valrepValueElement.className = 'u-valrep-value';
+    const valrepValueElement = document.createElement("span");
+    valrepValueElement.className = "u-valrep-value";
     valrepValueElement.textContent = value ? value : "null";
     switch (displayFormat) {
       case "valrep":
         const fragmentElement = document.createDocumentFragment();
         fragmentElement.appendChild(valrepRepElement);
-        valrepValueElement.classList.add('u-value');
+        valrepValueElement.classList.add("u-value");
         fragmentElement.appendChild(valrepValueElement);
         return fragmentElement;
       case "val":
@@ -430,5 +333,184 @@ export class Base {
    */
   error(functionName, message, consequence) {
     console.error(`${this.constructor.name}.${functionName}: ${message} - ${consequence}.`);
+  }
+
+  dataConversionUtil = (function () {
+    function flatToNested(flat) {
+      const result = {};
+      for (const key in flat.properties) {
+        const value = flat.properties[key];
+        const key_parts = key.split(":");
+        if (key_parts.length === 1) {
+          // only if the property key does not have any colon,
+          // we assume it is a "uniface:" property.
+          if (!result.uniface) {
+            result.uniface = {};
+          }
+          result.uniface[key] = value;
+        } else if (key_parts.length === 2 && key_parts[0] === "class") {
+          if (!result.classes) {
+            result.classes = {};
+          }
+          result.classes[key_parts[1]] = value;
+        } else {
+          let sub_obj = result;
+          for (let i = 0; i < key_parts.length; i++) {
+            const part_key = key_parts[i];
+            if (!sub_obj[part_key]) {
+              sub_obj[part_key] = {};
+            }
+            if (i === key_parts.length - 1) {
+              sub_obj[part_key] = value;
+            } else {
+              sub_obj = sub_obj[part_key];
+            }
+          }
+        }
+      }
+      if (flat.value !== undefined) {
+        result.value = flat.value;
+      }
+      if (flat.valrep !== undefined) {
+        result.valrep = flat.valrep;
+      }
+      return result;
+    }
+
+    function flattenProps(obj, prefix) {
+      let data = {};
+      let separate = {};
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          const value = obj[key];
+          const newKey = prefix ? `${prefix}:${key}` : key;
+
+          if (key === "value" || key === "valrep") {
+            if (prefix !== undefined) {
+              throw new Error(`Inner level ${newKey} property not (or not yet) supported`);
+            }
+            separate[key] = value;
+          } else if (key === "classes") {
+            for (const cls in value) {
+              data[`class:${cls}`] = value[cls];
+            }
+          } else if (typeof value === "object" && Object.keys(value).length > 0) {
+            if (key === "uniface") {
+              let props = flattenProps(value).data;
+              data = { ...data, ...props };
+            } else {
+              let props = {};
+              let flattenedProps = flattenProps(value, newKey).data;
+              for (const n in flattenedProps) {
+                props[`${key}:${n}`] = flattenedProps[n];
+              }
+              data = { ...data, ...props };
+            }
+          } else {
+            data[key] = value;
+          }
+        }
+      }
+      let result = {};
+      result.data = data;
+      if (!prefix && Object.keys(separate).length > 0) {
+        result.separate = separate;
+      }
+      return result;
+    }
+
+    function nestedToWrapper(obj) {
+      const result = flattenProps(obj);
+      // Return a wrapper around the flat object.
+      // Add a toString() function as a debugging aid.
+      return {
+        "getPropertyNames": function () {
+          return Object.keys(result.data);
+        },
+        "getProperty": function (propertyName) {
+          return result.data[propertyName];
+        },
+        "getValue": function () {
+          return result.separate?.value;
+        },
+        "getValRep": function () {
+          return result.separate?.valrep;
+        },
+        "toString": function () {
+          let s = "";
+          if (this.getPropertyNames().length > 0) {
+            let propsString = "";
+            for (let i = 0; i < this.getPropertyNames().length; i++) {
+              let prop = this.getPropertyNames()[i];
+              propsString = `${propsString}    "${prop}": ${this.getProperty(prop)}\n`;
+            }
+            s = `  properties: {\n${propsString}  }\n`;
+          }
+          if (this.getValue()) {
+            s = `${s}  value: ${this.getValue()}\n`;
+          }
+          if (this.getValRep()) {
+            let valrepString = "";
+            let valrep = this.getValRep();
+            for (let i = 0; i < valrep.length; i++) {
+              valrepString = `${valrepString}    ${valrep[i].value} = ${valrep[i].representation}\n`;
+            }
+            s = `${s}  valrep: {\n${valrepString}  }\n`;
+          }
+          return `{\n${s}\n}`;
+        },
+        "toObject": function () {
+          let flat = {};
+          if (this.getPropertyNames().length > 0) {
+            for (let i = 0; i < this.getPropertyNames().length; i++) {
+              let prop = this.getPropertyNames()[i];
+              flat[prop] = this.getProperty(prop);
+            }
+          }
+          if (this.getValue() !== undefined) {
+            flat.value = this.getValue();
+          }
+          if (this.getValRep() !== undefined) {
+            flat.valrep = this.getValRep();
+          }
+          return flat;
+        }
+      };
+    }
+
+    function nestedToWrapperToFlat(obj) {
+      let wrapper = nestedToWrapper(obj);
+      let flatData = wrapper.toObject();
+      return flatData;
+    }
+
+    // The actual utility functions:
+    return {
+      "toFlat": nestedToWrapperToFlat,
+      "toNested": flatToNested
+    };
+  })();
+
+  /**
+   * Extracts sub-widget data from the original data object and removes the corresponding
+   * properties from original data object.
+   * @param {Object} data - The source object containing properties to extract.
+   * @returns {Object} An object containing the extracted sub-widget data.
+   */
+  getSubWidgetData(data, subWidgetPropPrefix) {
+    let subWidgetData;
+    for (let property in data) {
+      if (property.startsWith(subWidgetPropPrefix)) {
+        let pos = property.search(":");
+        if (pos > 0) {
+          subWidgetData = subWidgetData || {};
+          let key = property.substring(pos + 1);
+          subWidgetData[key] = data[property];
+          // Remove the property from the original data to avoid duplication.
+          delete data[property];
+        }
+      }
+    }
+    return subWidgetData;
   }
 }

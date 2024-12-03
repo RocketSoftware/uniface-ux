@@ -186,7 +186,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           uniface: {
-            "label-text": "Test Label",
+            "label-text": "Test Label"
           }
         });
       }).then(function () {
@@ -224,7 +224,7 @@
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
         radioButtonArray.forEach(function (node, index) {
-          expect(node.value).equal(valRepArray[index].value);
+          expect(node.value).equal(index.toString());
           expect(node.querySelector("span").innerText).equal(valRepArray[index].representation);
         });
       });
@@ -241,7 +241,7 @@
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
         radioButtonArray.forEach(function (node, index) {
-          expect(node.value).equal(valRepArray[index].value);
+          expect(node.value).equal(index.toString());
           expect(node.querySelector("span").innerText).equal(valRepArray[index].value);
         });
       });
@@ -258,7 +258,7 @@
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
         radioButtonArray.forEach(function (node, index) {
-          expect(node.value).equal(valRepArray[index].value);
+          expect(node.value).equal(index.toString());
           expect(node.querySelector("span.u-valrep-representation").innerText).equal(valRepArray[index].representation);
           expect(node.querySelector("span.u-valrep-value").innerText).equal(valRepArray[index].value);
         });
@@ -269,12 +269,35 @@
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          value: "2",
+          value: "2"
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
         radioButtonArray.forEach(function (node, index) {
           if (valRepArray[index].value === "2") {
+            expect(node.getAttribute("current-checked")).equal("true");
+          } else {
+            expect(node.getAttribute("current-checked")).equal("false");
+          }
+        });
+      });
+    });
+
+    it("Set value to empty string ('') and expect the radio button to be checked", function () {
+      let valRepArrayWithEmptyOption = [{
+        value: "",
+        representation: "Empty Option"
+      }, ...valRepArray];
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArrayWithEmptyOption,
+          value: ""
+        });
+      }).then(function () {
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        radioButtonArray.forEach(function (node, index) {
+          if (valRepArrayWithEmptyOption[index].value === "") {
             expect(node.getAttribute("current-checked")).equal("true");
           } else {
             expect(node.getAttribute("current-checked")).equal("false");
@@ -327,12 +350,12 @@
             "label-text": "Test Label",
             "display-format": "val",
             "layout": "horizontal"
-          },
+          }
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
         radioButtonArray.forEach(function (node, index) {
-          assert.equal(node.value, valRepArray[index].value);
+          assert.equal(node.value, index);
           assert.equal(node.textContent, valRepArray[index].value);
           if (selectedValue === valRepArray[index].value) {
             expect(node.getAttribute("current-checked")).equal("true");
@@ -363,6 +386,8 @@
 
       // Add the onchange event listener to the radio element
       radioElement.addEventListener('onchange', onchangeSpy);
+      // Add the change event listener to the radio-group element.
+      tester.element.addEventListener('change', onchangeSpy);
     });
 
     // Clean up after each test
@@ -380,14 +405,144 @@
       // Assert that the onchange event handler was called once
       expect(onchangeSpy.calledOnce).to.be.true;
     });
+
+    // Test case for not firing change event with initial value.
+    it('should not invoke the onchange event handler when a radio button has initial value', function () {
+
+      let initialValue = "2";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: initialValue
+        });
+      }).then(function () {
+        // Assert that the change event handler was called not twice.
+        // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
+        expect(onchangeSpy.calledTwice).to.be.false;
+      });
+    });
+
+    // Test case for not firing change event on display-format property changes with initial value.
+    it('should not invoke the onchange event handler when display-format is changed with an initial value', function () {
+      let initialValue = "2";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: initialValue
+        });
+      }).then(function () {
+        // Change the display-format property.
+        tester.element.setAttribute('display-format', 'valrep');
+        // Assert that the change event handler was not called twice.
+        // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
+        expect(onchangeSpy.calledTwice).to.be.false;
+      });
+    });
+
+    // Test case for not firing change event on layout property changes with initial value.
+    it('should not invoke the onchange event handler when layout is changed with an initial value', function () {
+      let initialValue = "2";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: initialValue
+        });
+      }).then(function () {
+        // Change the layout property.
+        tester.element.setAttribute('layout', 'horizontal');
+        // Assert that the change event handler was not called twice.
+        // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
+        expect(onchangeSpy.calledTwice).to.be.false;
+      });
+    });
+
+    // Test case for not firing change event on valrep property changes with initial value.
+    it('should not invoke the onchange event handler when valrep is changed with an initial value', function () {
+      let initialValue = "2";
+      const valRepArray2 = [
+        {
+          value: "1",
+          representation: "option one"
+        },
+        {
+          value: "2",
+          representation: "option two"
+        },
+        {
+          value: "3",
+          representation: "option three"
+        },
+        {
+          value: "4",
+          representation: "option four"
+        }
+      ];
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: initialValue
+        });
+      }).then(function () {
+        // Update the valrep with new valRepArray2. 
+        tester.dataUpdate({
+          valrep: valRepArray2
+        });
+      }).then(function () {
+        // Assert that the change event handler was not called thrice.
+        // The change event will be invoked twice in onConnect but it should not propogate further hence we check calledTwice.
+        expect(onchangeSpy.calledThrice).to.be.false;
+      });
+    });
   });
 
-  describe("Show Error", function () {
-    it("not required", function () { });
+  describe("showError", function () {
+    let radioElement;
+    beforeEach(function () {
+      radioElement = tester.element;
+    });
+
+    it("When invalid value is set, should show error and none of the options should be selected", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: "random",
+          "display-format": "valrep"
+        });
+      }).then(function () {
+        const selectedOption = radioElement.querySelector("fluent-radio[current-checked=true]");
+        expect(selectedOption).equal(null);
+        expect(radioElement).to.have.class("u-format-invalid");
+        assert(!radioElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon");
+        assert.equal(radioElement.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'");
+        assert.equal(radioElement.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+      });
+    });
   });
 
-  describe("Hide Error", function () {
-    it("not required", function () { });
+  describe("hideError", function () {
+    let radioElement;
+    beforeEach(function () {
+      radioElement = tester.element;
+    });
+
+    it("Set error to false", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          uniface: {
+            "format-error": false,
+            "format-error-message": ""
+          },
+        });
+      }).then(function () {
+        expect(radioElement).to.not.have.class("u-format-invalid");
+        assert(radioElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon");
+        expect(radioElement.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(radioElement.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+      });
+    });
   });
 
   describe("reset all properties", function () {

@@ -111,9 +111,9 @@ export class TextField extends Widget {
     let html5ValidationMessage;
     if (!this.elements.widget.control.checkValidity()) {
       html5ValidationMessage = this.elements.widget.control.validationMessage;
-    } else if (this.data.properties["html:minlength"] > 0 && this.elements.widget.value.length < this.data.properties["html:minlength"]) {
+    } else if (this.data["html:minlength"] > 0 && this.elements.widget.value.length < this.data["html:minlength"]) {
       // HTML5 minlength validation errors are not detected by fluent, Hence we manually add the HTML5 minlength validation message.
-      html5ValidationMessage = `Please lengthen this text to ${this.data.properties["html:minlength"]} characters or more (you are currently using ${this.elements.widget.value.length} characters).`;
+      html5ValidationMessage = `Please lengthen this text to ${this.data["html:minlength"]} characters or more (you are currently using ${this.elements.widget.value.length} characters).`;
     }
     return html5ValidationMessage;
   }
@@ -130,7 +130,7 @@ export class TextField extends Widget {
     });
     // Add the 'u-blocked' class to the widget element.
     this.elements.widget.classList.add("u-blocked");
-    this.setProperties({ "uniface": { "uiblocked": true } });
+    this.setProperties({ "uiblocked": true });
   }
 
   /**
@@ -145,7 +145,7 @@ export class TextField extends Widget {
     });
     // Remove the 'u-blocked' class from the widget element.
     this.elements.widget.classList.remove("u-blocked");
-    this.setProperties({ "uniface": { "uiblocked": false } });
+    this.setProperties({ "uiblocked": false });
   }
 
   /**

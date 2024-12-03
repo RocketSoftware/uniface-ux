@@ -75,7 +75,7 @@
             it("check u-error-icon", function () {
                 assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
             });
-        })
+        });
     });
 
     describe("Create widget", function () {
@@ -113,7 +113,7 @@
         const event = new window.Event('onchange');
         element.dispatchEvent(event);
         assert(widget.elements.widget === element, "widget is not connected");
-    })
+    });
 
     describe('Text Area onchange event', function () {
         let textAreaElement, onChangeSpy;
@@ -225,7 +225,7 @@
             assert.equal(displayPropertyValue, "inline-flex");
             let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
             let alignPropertyValue = labelStyle.getPropertyValue("align-content");
-            assert.equal(alignPropertyValue, "center", "Label position below is not center")
+            assert.equal(alignPropertyValue, "center", "Label position below is not center");
         });
 
         it("Set label position below", function () {
@@ -248,7 +248,7 @@
             assert.equal(flexPropertyValue, "column");
             let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
             let orderPropertyValue = labelStyle.getPropertyValue("order");
-            assert.equal(orderPropertyValue, 2, "Labelposition below is not in order")
+            assert.equal(orderPropertyValue, 2, "Labelposition below is not in order");
         });
 
         it("reset label and its position", function () {
@@ -331,7 +331,7 @@
             }).then(function () {
                 let resizePropText = widget.elements.widget.getAttribute("resize");
                 assert.equal(resizePropText, resizeProp);//Check for visibility
-            },);
+            });
         });
 
         it("html hidden property when set to true", function () {
@@ -455,7 +455,7 @@
 
         //html:disabled property
         it("Set html:disabled property true for textarea", function () {
-            let disabled = "disabled"
+            let disabled = "disabled";
             return asyncRun(function () {
                 tester.dataUpdate({
                     "html": { "disabled": true }
@@ -555,7 +555,7 @@
                 assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
                 assert.equal(widget.elements.widget.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
                 assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot"), "end", "Slot end  does not match");
-                assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Field Value length mismatch.", "Error title doesnot match")
+                assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Field Value length mismatch.", "Error title doesnot match");
             });
         });
 
@@ -598,7 +598,7 @@
         let widget;
         before(function () {
             widget = tester.createWidget();
-            verifyWidgetClass(widgetClass)
+            verifyWidgetClass(widgetClass);
         });
 
         it("Hide Error Set invalid value in text Area", function () {
@@ -615,7 +615,7 @@
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
                 assert(widget.elements.widget.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
                 assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"), "slot attribute is not present");
-                assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("title"), "title attribute is not present")
+                assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("title"), "title attribute is not present");
             });
         });
     });
