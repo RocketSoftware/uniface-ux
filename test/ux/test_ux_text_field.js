@@ -860,9 +860,7 @@
         });
 
         it("Verify the value returned by getValueFormatted doesn't include the line breaks", function () {
-            valueProperty = `testing value with multiple lines:
-line 1,
-line 2`;
+            valueProperty = `testing value with multiple lines: line 1, line 2`;
             return asyncRun(function() {
                 tester.dataUpdate({
                     value: valueProperty
