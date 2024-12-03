@@ -246,7 +246,6 @@
                 await asyncRun(function() {
                     tester.processLayout(null, MOCK_CONTROLS_PROPERTIES_DEFINITION);
                     tester.dataInit();
-                    let widgetElement = tester.element;
                     toolbarWidget = tester.widget;
                     toolbarWidget.invokeControlFunction("dataUpdate", MOCK_CONTROLS);
                 });

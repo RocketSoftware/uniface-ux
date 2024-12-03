@@ -817,10 +817,9 @@
     });
 
     describe("hideError", function () {
-        let widget, element;
+        let widget;
         before(function () {
             widget = tester.createWidget();
-            element = tester.createWidget().element;
             verifyWidgetClass(widgetClass);
         });
         it("Hide Error Set invalid value in text field", function () {
@@ -843,9 +842,8 @@
     });
 
     describe("getValueFormatted", function () {
-        let widget, properties, valueProperty;
+        let properties, valueProperty;
         before(function () {
-            widget = tester.createWidget();
             properties = tester.widget.data.properties;
         });
 
