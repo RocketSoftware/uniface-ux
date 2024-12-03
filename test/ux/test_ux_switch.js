@@ -219,9 +219,8 @@
     });
 
     describe('Switch onchange event', function () {
-        let switchElement, onchangeSpy, widget;
+        let switchElement, onchangeSpy;
         beforeEach(function () {
-            widget = tester.createWidget();
             switchElement = tester.element;
 
             // Create a spy for the onchange event
