@@ -205,7 +205,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           uniface: {
-           "icon-position": iconPosition,
+           "icon-position": iconPosition
           },
           value: buttonText
         });
@@ -340,8 +340,8 @@
           },
           value: ""
         },
-        "elements": tester.construct().elements,
-        "getTraceDescription": () => {
+        elements: tester.construct().elements,
+        getTraceDescription: () => {
           return "description";
         }
       };
@@ -391,8 +391,8 @@
           },
           value: ""
         },
-        "elements": tester.construct().elements,
-        "getTraceDescription": () => {
+        elements: tester.construct().elements,
+        getTraceDescription: () => {
           return "description";
         }
       };
