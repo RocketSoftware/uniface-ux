@@ -205,7 +205,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           uniface: {
-           "icon-position": iconPosition
+            "icon-position": iconPosition
           },
           value: buttonText
         });
@@ -385,11 +385,11 @@
         data: {
           properties: {
             uniface: {
-            "icon": "",
-            "icon-position": "start"
-            }
+              "icon": "",
+              "icon-position": "start"
+            },
+            value: ""
           },
-          value: ""
         },
         elements: tester.construct().elements,
         getTraceDescription: () => {
