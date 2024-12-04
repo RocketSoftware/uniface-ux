@@ -151,12 +151,16 @@ export class Checkbox extends Widget {
 
     clearErrors(widgetInstance) {
       widgetInstance.setProperties({
-        "format-error": false,
-        "format-error-message": ""
+        "uniface": {
+          "format-error": false,
+          "format-error-message": ""
+        }
       });
       widgetInstance.setProperties({
-        "error": false,
-        "error-message": ""
+        "uniface": {
+          "error": false,
+          "error-message": ""
+        }
       });
     }
 
@@ -199,14 +203,18 @@ export class Checkbox extends Widget {
       try {
         newValue = this.fieldValueToTriState(value);
         widgetInstance.setProperties({
-          "format-error": false,
-          "format-error-message": ""
+          "uniface": {
+            "format-error": false,
+            "format-error-message": ""
+          }
         });
       } catch (error) {
         isError = true;
         widgetInstance.setProperties({
-          "format-error": true,
-          "format-error-message": error
+          "uniface": {
+            "format-error": true,
+            "format-error-message": error
+          }
         });
       }
 

@@ -133,7 +133,7 @@
 
   describe("Data Init", function () {
     const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.filter((prop) => prop.startsWith("class:")).map((prop) => prop.slice(6));
+    const classes = defaultValues.classes;
     var element;
 
     beforeEach(function () {

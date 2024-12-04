@@ -173,7 +173,7 @@
       let buttonText = 'Button';
       return asyncRun(function () {
         tester.dataUpdate({
-          "value": buttonText
+          value: buttonText
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -338,7 +338,7 @@
             "icon-position": "start"
             }
           },
-          "value": ""
+          value: ""
         },
         "elements": tester.construct().elements,
         "getTraceDescription": () => {
@@ -389,7 +389,7 @@
             "icon-position": "start"
             }
           },
-          "value": ""
+          value: ""
         },
         "elements": tester.construct().elements,
         "getTraceDescription": () => {
@@ -439,8 +439,8 @@
             value: ""
           }
         },
-        "elements": tester.construct().elements,
-        "getTraceDescription": () => {
+        elements: tester.construct().elements,
+        getTraceDescription: () => {
           return "description";
         }
       };
