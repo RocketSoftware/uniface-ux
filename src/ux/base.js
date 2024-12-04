@@ -335,6 +335,7 @@ export class Base {
     console.error(`${this.constructor.name}.${functionName}: ${message} - ${consequence}.`);
   }
 
+  // TODO: Remove this function when backend starts sending flattened data.
   dataConversionUtil = (function () {
     function flatToNested(flat) {
       const result = {};
