@@ -1393,7 +1393,7 @@ export class StyleClass extends Worker {
     let element = this.getElement(widgetInstance);
     for (let property in widgetInstance.data) {
       if (property.startsWith("class")) {
-        let value = widgetInstance.data[property];
+        let value = this.toBoolean(widgetInstance.data[property]);
         let pos = property.search(":");
         property = property.substring(pos + 1);
         if (value) {
