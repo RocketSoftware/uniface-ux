@@ -1098,16 +1098,16 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
         const valRepArray = [
             {
             value: "1",
-            representation: "option one",
+            representation: "option one"
             },
             {
             value: "2",
-            representation: "option two",
+            representation: "option two"
             },
             {
             value: "3",
-            representation: "option three",
-            },
+            representation: "option three"
+            }
         ];
 
         const widgetInstance = {
@@ -1115,8 +1115,8 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
                 properties: {
                     valrep: valRepArray,
                     uniface: {
-                    "display-format": "val",
-                    },
+                    "display-format": "val"
+                    }
                 }
             },
             elements : {
