@@ -485,7 +485,7 @@
           value: initialValue
         });
       }).then(function () {
-        // Update the valrep with new valRepArray2. 
+        // Update the valrep with new valRepArray2.
         tester.dataUpdate({
           valrep: valRepArray2
         });

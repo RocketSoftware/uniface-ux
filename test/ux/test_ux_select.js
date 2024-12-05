@@ -289,7 +289,7 @@
         });
       }).then(function () {
         expect(element.getAttribute("disabled"));
-        expect(element.getAttribute("aria-disabled")).equal("true"); 
+        expect(element.getAttribute("aria-disabled")).equal("true");
       });
     });
 
@@ -317,7 +317,7 @@
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
         selectOptionArray.forEach(function (node, index) {
-        expect(node.textContent).equal(valRepArray[index].value);
+          expect(node.textContent).equal(valRepArray[index].value);
         });
       });
     });
@@ -367,11 +367,11 @@
           }
         });
       }).then(function () {
-          let valStr = "<script> alert('XSS' attack') </script>";
-          let contentStr = " alert('XSS' attack') ";          
-          assert.equal(element.querySelector('fluent-option.selected .u-valrep-representation').innerHTML, valStr);
-          expect(element.querySelector('fluent-option.selected .u-valrep-value').innerHTML).equal(valStr);
-          expect(element.querySelector('fluent-option.selected .u-valrep-value').textContent).equal(contentStr);
+        let valStr = "<script> alert('XSS' attack') </script>";
+        let contentStr = " alert('XSS' attack') ";
+        assert.equal(element.querySelector('fluent-option.selected .u-valrep-representation').innerHTML, valStr);
+        expect(element.querySelector('fluent-option.selected .u-valrep-value').innerHTML).equal(valStr);
+        expect(element.querySelector('fluent-option.selected .u-valrep-value').textContent).equal(contentStr);
       });
     });
 

@@ -6,7 +6,7 @@
   /**
    * Default timeout for waiting for DOM rendering (in milliseconds)
    */
-  const defaultAsyncTimeout = 100; //ms
+  const defaultAsyncTimeout = 100; // ms
 
   const expect = chai.expect;
   const toolbar = UNIFACE.ClassRegistry.get("UX.Toolbar");
