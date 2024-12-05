@@ -175,7 +175,7 @@
         tester.dataUpdate({
           value: buttonText
         });
-      }).then(function () { 
+      }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(element.querySelector('span.u-icon').hasAttribute("hidden"), "Icon Element should be hidden");
@@ -191,7 +191,7 @@
             icon: "Home"
           }
         });
-      }).then(function () { 
+      }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
@@ -209,7 +209,7 @@
           },
           value: buttonText
         });
-      }).then(function () { 
+      }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
