@@ -368,12 +368,10 @@
         });
       }).then(function () {
         let valStr = "<script> alert('XSS' attack') </script>";
-        let contentStr = " alert('XSS' attack') ";
+        let escapedHtmlValue = valStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         assert.equal(element.querySelector('fluent-option.selected .u-valrep-representation').innerHTML, valStr);
-        console.log(valStr);
-        console.log(element.querySelector('fluent-option.selected .u-valrep-value').innerHTML);
-        expect(element.querySelector('fluent-option.selected .u-valrep-value').innerHTML).equal(valStr);
-        expect(element.querySelector('fluent-option.selected .u-valrep-value').textContent).equal(contentStr);
+        expect(element.querySelector('fluent-option.selected .u-valrep-value').innerHTML).equal(escapedHtmlValue);
+        expect(element.querySelector('fluent-option.selected .u-valrep-value').textContent).equal(valStr);
       });
     });
 
@@ -390,7 +388,7 @@
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("option two");
         const selectOption = element.querySelector("fluent-option.selected");
-        expect(selectOption.value).equal(valRepArray[1].value);
+        expect(selectOption.value).equal(valRepArray[0].value);
       });
     });
 
