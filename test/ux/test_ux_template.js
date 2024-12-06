@@ -1,6 +1,6 @@
-/**
- * Test ux-widget
- */
+// This template is not in use anymore
+/* eslint-disable */
+
 (function () {
   'use strict';
 

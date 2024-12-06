@@ -1,6 +1,6 @@
-/**
- * Test ux-widget
- */
+// UX widget is not supported yet
+/* eslint-disable */
+
 (function () {
   'use strict';
 

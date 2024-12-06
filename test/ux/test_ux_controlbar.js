@@ -1,3 +1,6 @@
+// UX widget is not supported yet
+/* eslint-disable */
+
 // !!! This test currently does not use the test framework !!!
 
 (function () {
