@@ -411,6 +411,7 @@
   describe("showError", function () {
     let selectElement;
     beforeEach(function () {
+      tester.createWidget();
       selectElement = tester.element;
     });
 
@@ -435,6 +436,7 @@
   describe("hideError", function () {
     let selectElement;
     beforeEach(function () {
+      tester.createWidget();
       selectElement = tester.element;
     });
 

@@ -221,6 +221,7 @@
   describe('Switch onchange event', function () {
     let switchElement, onchangeSpy;
     beforeEach(function () {
+      tester.createWidget();
       switchElement = tester.element;
 
       // Create a spy for the onchange event

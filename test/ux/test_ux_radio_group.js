@@ -69,7 +69,6 @@
     describe("Checks", function () {
 
       before(function () {
-
         verifyWidgetClass(widgetClass);
         element = tester.processLayout();
       });
@@ -375,7 +374,7 @@
   describe('Radio onchange event', function () {
     let radioElement, onchangeSpy;
     beforeEach(function () {
-
+      tester.createWidget();
       radioElement = tester.element.querySelector("fluent-radio");
 
       // Create a spy for the onchange event
@@ -405,7 +404,6 @@
 
     // Test case for not firing change event with initial value.
     it('should not invoke the onchange event handler when a radio button has initial value', function () {
-
       let initialValue = "2";
 
       return asyncRun(function () {
@@ -498,6 +496,7 @@
   describe("showError", function () {
     let radioElement;
     beforeEach(function () {
+      tester.createWidget();
       radioElement = tester.element;
     });
 
@@ -522,6 +521,7 @@
   describe("hideError", function () {
     let radioElement;
     beforeEach(function () {
+      tester.createWidget();
       radioElement = tester.element;
     });
 
