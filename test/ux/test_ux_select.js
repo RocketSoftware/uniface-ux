@@ -341,33 +341,22 @@
 
     it("Ensure value is set using textContent", function () {
       const valRepArray1 = [
+        ...valRepArray,
         {
-          value: "1",
-          representation: "option one"
-        },
-        {
-          value: "2",
-          representation: "option two"
-        },
-        {
-          value: "3",
-          representation: "option three"
-        },
-        {
-          value: "<script> alert('XSS' attack') </script>",
-          representation: "<script> alert('XSS' attack') </script>"
+          value: "<script> alert('XSS attack') </script>",
+          representation: "<script> alert('XSS attack') </script>"
         }
       ];
       return asyncRun(function() {
         tester.dataUpdate({
           valrep: valRepArray1,
-          value: "<script> alert('XSS' attack') </script>",
+          value: "<script> alert('XSS attack') </script>",
           uniface: {
             "display-format": "valrep"
           }
         });
       }).then(function () {
-        let valStr = "<script> alert('XSS' attack') </script>";
+        let valStr = "<script> alert('XSS attack') </script>";
         let escapedHtmlValue = valStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         assert.equal(element.querySelector('fluent-option.selected .u-valrep-representation').innerHTML, valStr);
         expect(element.querySelector('fluent-option.selected .u-valrep-value').innerHTML).equal(escapedHtmlValue);
@@ -387,8 +376,9 @@
       }).then(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("option two");
+        // find index of expected value and compare against index of selected option
         const selectOption = element.querySelector("fluent-option.selected");
-        expect(selectOption.value).equal(valRepArray[0].value);
+        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
       });
     });
 
@@ -411,8 +401,9 @@
       }).then(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("");
+        // find index of expected value and compare against index of selected option
         const selectOption = element.querySelector("fluent-option.selected");
-        expect(selectOption.value).equal(valRepArrayWithEmpty[0].value);
+        expect(selectOption.value).equal(valRepArrayWithEmpty.findIndex((item) => item.value === "").toString());
       });
     });
   });
