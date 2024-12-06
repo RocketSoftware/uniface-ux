@@ -5,9 +5,9 @@ module.exports = [
     // This object is only for ignore. do not add any other properties
     "ignores": [
       "dist/",
-      "node_modules/", 
+      "node_modules/",
       "src/fluentui/",
-      "test/modules/", 
+      "test/modules/",
       "testAutomation/"
     ]
   },
@@ -105,10 +105,6 @@ module.exports = [
       }
     },
     "rules": {
-      "indent": "off", 
-      //"no-console": "on",
-      "no-trailing-spaces": "off",
-      "spaced-comment": "off",
       "quote-props": "off"
     }
   },
@@ -127,16 +123,12 @@ module.exports = [
         "chai": "readonly",
         // sinon
         "sinon": "readonly",
-        //"setTimeout": "readonly",
         // for umockup
         "umockup": "readonly"
       }
     },
     "rules": {
-      "indent": "off", 
-      //"no-console": "on",
-      "no-trailing-spaces": "off",
-      "spaced-comment": "off",
+      // "no-console": "error",
       "quote-props": "off"
     }
   }
