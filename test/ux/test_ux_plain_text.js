@@ -1,9 +1,6 @@
-/* global UNIFACE uniface UX _uf */
-// Source code for refactored plain text in git lab repo
-// Branch Name: UNI-39226_automated_mocha_tests_uxPlainText
-// https://gitlab.com/Uniface/sources/ux-widgets/-/tree/UNI-38937_automated_mocha_tests_uxPlainText
-
 (function () {
+  'use strict';
+
   const assert = chai.assert;
   const expect = chai.expect;
   const tester = new umockup.WidgetTester();
@@ -11,6 +8,7 @@
   const widgetName = tester.widgetName;
   const widgetClass = tester.getWidgetClass();
   const asyncRun = umockup.asyncRun;
+
   // custom test variables
   const valRepArray = [
     {
@@ -19,7 +17,6 @@
     },
     {
       value: "2",
-
       representation: "option two"
     },
     {
