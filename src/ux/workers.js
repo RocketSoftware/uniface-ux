@@ -1046,16 +1046,12 @@ export class HtmlValueAttributeBoolean extends BaseHtmlAttribute {
       "event_name": this.valueChangedEventName || "",
       "handler": () => {
         widgetInstance.setProperties({
-          "properties": {
-            "format-error": false,
-            "format-error-message": ""
-          }
+          "format-error": false,
+          "format-error-message": ""
         });
         widgetInstance.setProperties({
-          "properties": {
-            "error": false,
-            "error-message": ""
-          }
+          "error": false,
+          "error-message": ""
         });
       }
     });
@@ -1073,17 +1069,13 @@ export class HtmlValueAttributeBoolean extends BaseHtmlAttribute {
     try {
       this.setHtmlAttribute(element, this.fieldValueToBoolean(value));
       widgetInstance.setProperties({
-        "properties": {
-          "format-error": false,
-          "format-error-message": ""
-        }
+        "format-error": false,
+        "format-error-message": ""
       });
     } catch (error) {
       widgetInstance.setProperties({
-        "properties": {
-          "format-error": true,
-          "format-error-message": error
-        }
+        "format-error": true,
+        "format-error-message": error
       });
     }
   }
