@@ -44,7 +44,7 @@ module.exports = [
       "no-console": "off",
       "no-const-assign": "warn",
       "no-extra-semi": "warn",
-      "semi": 2,
+      "semi": "error",
       "no-fallthrough": "warn",
       "no-eval": "error",
       "no-redeclare": "off",
@@ -128,7 +128,6 @@ module.exports = [
       }
     },
     "rules": {
-      // "no-console": "error",
       "quote-props": "off"
     }
   }

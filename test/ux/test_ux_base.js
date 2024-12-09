@@ -155,7 +155,15 @@ import { Widget } from "../../src/ux/widget.js";
       };
 
       expect(base.fixData("TESTBASIC")).to.eql({
-        0: 'T', 1: 'E',  2: 'S', 3: 'T', 4: 'B', 5: 'A',  6: 'S', 7: 'I', 8: 'C'
+        0: 'T',
+        1: 'E',
+        2: 'S',
+        3: 'T',
+        4: 'B',
+        5: 'A',
+        6: 'S',
+        7: 'I',
+        8: 'C'
       });
 
       let returnData = base.fixData(UData);
