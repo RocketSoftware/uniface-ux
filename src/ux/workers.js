@@ -1461,7 +1461,7 @@ export class Trigger extends Worker {
  * This setter adds an element to your widget, where:
  * - the element is added as a child according the structure.
  * - the element is being slotted into the web-component (the parent element).
- * @export
+ * @export+
  * @class SlottedElementsByValRep
  * @extends {Element}
  */
@@ -1481,8 +1481,8 @@ export class SlottedElementsByValRep extends Element {
     this.registerSetter(widgetClass, "valrep", this);
     this.registerDefaultValue(widgetClass, "valrep", []);
 
-    this.registerSetter(widgetClass, "uniface:display-format", this);
-    this.registerDefaultValue(widgetClass, "uniface:display-format", "rep");
+    this.registerSetter(widgetClass, "display-format", this);
+    this.registerDefaultValue(widgetClass, "display-format", "rep");
   }
 
   /**
@@ -1505,7 +1505,7 @@ export class SlottedElementsByValRep extends Element {
   createValRepElements(widgetInstance) {
     let element = this.getElement(widgetInstance);
     let valrep = this.getNode(widgetInstance.data.properties, "valrep");
-    let displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
+    let displayFormat = this.getNode(widgetInstance.data.properties, "display-format");
     if (valrep.length > 0) {
       valrep.forEach((valRepObj, index) => {
         const childElement = document.createElement(this.tagName);
