@@ -112,6 +112,8 @@ module.exports = [
     "files": ["test/ux/*.js"],
     "languageOptions": {
       "globals": {
+        "Element": "readonly",
+        "uniface": "readonly",
         // mocha
         "after": "readonly",
         "afterEach": "readonly",
