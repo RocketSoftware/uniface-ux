@@ -549,7 +549,7 @@ export class Widget extends Base {
             this.data.properties[prefix] = this.data.properties[prefix] ?? {};
             for(const property in data[prefix]) {
               // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
-              // eslint-disable-next-line eqeqeq
+              // eslint-disable-next-line eqeqeq, no-undef
               if (data[prefix][property] == uniface.RESET) {
                 this.data.properties[prefix][property] = widgetClass.defaultValues[
                   prefix
@@ -587,7 +587,7 @@ export class Widget extends Base {
           case "value":
           case "valrep":
             // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
-            // eslint-disable-next-line eqeqeq
+            // eslint-disable-next-line eqeqeq, no-undef
             if (data[prefix] == uniface.RESET) {
               this.data.properties[prefix] = widgetClass.defaultValues[prefix];
             } else {
