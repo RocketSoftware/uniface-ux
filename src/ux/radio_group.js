@@ -290,7 +290,7 @@ export class RadioGroup extends Widget {
    */
   dataUpdate(data) {
     super.dataUpdate(data);
-    if (data.value && data.value !== "") {
+    if (data.value) {
       this.elements.widget.isInitialValueEmpty = false;
       this.setProperties(data);
     }
