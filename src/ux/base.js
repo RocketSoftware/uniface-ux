@@ -20,7 +20,7 @@ export class Base {
    * dataInit() and dataUpdate() call this worker (via setProperties()) to make the widget react to the property change.
    * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
-   * @param {Worker} worker - Specified the worker.
+   * @param {Worker} worker - Specifies the worker.
    */
   registerSetter(widgetClass, propId, worker) {
     widgetClass.setters[propId] = widgetClass.setters[propId] || [];
