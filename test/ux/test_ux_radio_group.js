@@ -182,6 +182,17 @@
       assert(element, "Widget top element is not defined!");
     });
 
+    it("Set HTML property hidden to true", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          html: { hidden: true }
+        });
+      }).then(function () {
+        expect(element.getAttribute("hidden"));
+        expect(window.getComputedStyle(element).display).equal("none");
+      });
+    });
+    
     it("Set Uniface label text", function () {
       return asyncRun(function () {
         tester.dataUpdate({
