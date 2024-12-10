@@ -371,6 +371,28 @@
         expect(element.getAttribute("orientation")).equal("horizontal");
       });
     });
+
+    it("Set value to empty string ('') on checked radio button and expect the radio button to be unchecked", function () {
+      let selectedValue = "2";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: selectedValue
+        });
+      }).then(function () {
+        // Update the valrep with new valRepArray2. 
+        tester.dataUpdate({
+          value: ''
+        });
+      }).then(function () {
+
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        radioButtonArray.forEach(function (node, index) {
+          expect(node.getAttribute("current-checked")).equal("false");
+        });
+      });
+    });
   });
 
 
