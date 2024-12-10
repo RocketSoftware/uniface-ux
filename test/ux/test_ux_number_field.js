@@ -160,7 +160,14 @@
     // Data Init
     describe("Data Init", function () {
         const defaultValues = tester.getDefaultValues();
-        const classes = defaultValues.classes;
+        const classes = Object.keys(defaultValues).reduce((acc, key) => {
+            if (key.startsWith("class:")) {
+                let newKey = key.replace("class:", "");
+                acc[newKey] = defaultValues[key];
+            }
+            return acc;
+        }, {});
+
         let element;
 
         beforeEach(function () {
@@ -217,9 +224,7 @@
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "changebutton": showApplyButton
-                    }
+                    "changebutton": showApplyButton
                 });
             }).then(function () {
                 let element = widget.elements.widget.querySelector("fluent-button.u-sw-changebutton");
@@ -237,9 +242,7 @@
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "changebutton": showApplyButton
-                    }
+                    "changebutton": showApplyButton
                 });
             }).then(function () {
                 let element = widget.elements.widget.querySelector("fluent-button.u-sw-changebutton");
@@ -260,11 +263,9 @@
             return asyncRun(function() {
                 tester.dataUpdate({
                     "icon": buttonIconName,
-                    uniface: {
-                        "changebutton": showApplyButton,
-                        "changebutton:value": buttonText,
-                        "changebutton:icon": buttonIconName
-                    }
+                    "changebutton": showApplyButton,
+                    "changebutton:value": buttonText,
+                    "changebutton:icon": buttonIconName
                 });
             }).then(function () {
                 if (showApplyButton) {
@@ -281,9 +282,7 @@
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "label-text": numberFieldLabel
-                    }
+                    "label-text": numberFieldLabel
                 });
             }).then(function () {
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
@@ -295,9 +294,7 @@
         it("Set label position before", function () {
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "label-position": "before"
-                    }
+                    "label-position": "before"
                 });
             }).then(function () {
                 let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -318,9 +315,7 @@
         it("Set label position below", function () {
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "label-position": "below"
-                    }
+                    "label-position": "below"
                 });
             }).then(function () {
                 let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -341,10 +336,8 @@
         it("reset label and its position", function () {
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "label-position": uniface.RESET,
-                        "label-text": uniface.RESET
-                    }
+                    "label-position": uniface.RESET,
+                    "label-text": uniface.RESET
                 });
             }).then(function () {
                 let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -366,9 +359,7 @@
             let placeHolderText = "Input the Number";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    "html": {
-                        "placeholder": placeHolderText
-                    }
+                        "html:placeholder": placeHolderText
                 });
             }).then(function () {
                 let placeHolderTextDOM = widget.elements.widget.getAttribute('placeholder');
@@ -381,9 +372,7 @@
             let readOnly = "readOnly";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    "html": {
-                        "readonly": true
-                    }
+                    "html:readonly": true
                 });
             }).then(function () {
                 let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
@@ -396,9 +385,7 @@
             let readOnly = "readOnly";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    "html": {
-                        "readonly": false
-                    }
+                    "html:readonly": false
                 });
             }).then(function () {
                 let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
@@ -411,7 +398,7 @@
             let disabled = "disabled";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    "html":{"disabled": true}
+                    "html:disabled": true
                 });
             }).then(function () {
                 let disabledProperty = window.getComputedStyle(widget.elements.widget, null);
@@ -424,9 +411,7 @@
             let disabled = "disabled";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    html: {
-                        "disabled": false
-                    }
+                    "html:disabled": false
                 });
             }).then(function () {
                 let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
@@ -439,9 +424,7 @@
             let appearanceStyle = "filled";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    html: {
-                        "appearance": appearanceStyle
-                    }
+                    "html:appearance": appearanceStyle
                 });
             }).then(function () {
                 let appearanceStyleProperty = window.getComputedStyle(widget.elements.widget, null);
@@ -456,9 +439,7 @@
             let appearanceStyle = "outline";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    html: {
-                        "appearance": appearanceStyle
-                    }
+                    "html:appearance": appearanceStyle
                 });
             }).then(function () {
                 let appearanceStyleProperty = window.getComputedStyle(widget.elements.widget, null);
@@ -473,9 +454,7 @@
             let hideStep = true;
             return asyncRun(function() {
                 tester.dataUpdate({
-                    html: {
-                        "hide-step": hideStep
-                    }
+                    "html:hide-step": hideStep
                 });
             }).then(function () {
                 let hidestepProperty = window.getComputedStyle(widget.elements.widget, null);
@@ -488,9 +467,7 @@
             let hideStep = false;
             return asyncRun(function() {
                 tester.dataUpdate({
-                    html: {
-                        "hide-step": hideStep
-                    }
+                    "html:hide-step": hideStep
                 });
             }).then(function () {
                 let hidestepProperty = window.getComputedStyle(widget.elements.widget, null);
@@ -503,9 +480,7 @@
             let prefixTextData = "PrefixMe";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "prefix-text": prefixTextData
-                    }
+                    "prefix-text": prefixTextData
                 });
             }).then(function () {
                 assert('start',widget.elements.widget.querySelector("span.u-prefix").getAttribute("slot"), "Slot is not at the start");
@@ -519,9 +494,7 @@
             let suffixTextData = "Suffix Me";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "suffix-text": suffixTextData
-                    }
+                    "suffix-text": suffixTextData
                 });
             }).then(function () {
                 assert(widget.elements.widget.querySelector("span.u-suffix").getAttribute("slot"), 'end', "Slot is not at the end");
@@ -537,9 +510,7 @@
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "prefix-icon": buttonIconName
-                    }
+                    "prefix-icon": buttonIconName
                 });
             }).then(function () {
                 if (showApplyButton) {
@@ -556,9 +527,7 @@
             // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "suffix-icon": buttonIconName
-                    }
+                    "suffix-icon": buttonIconName
                 });
             }).then(function () {
                 if (showApplyButton) {
@@ -583,10 +552,8 @@
         it("setting min and max", function(){
             return asyncRun(function() {
                 tester.dataUpdate({
-                    "html": {
-                    "min": minlength,
-                    "max": maxlength
-                    }
+                    "html:min": minlength,
+                    "html:max": maxlength
                 });
             }).then(function () {
                 expect(widget.elements.widget.hasAttribute("max"), "Failed to show the max attribute");
@@ -600,10 +567,8 @@
             const appliedClassNames = "u-error-icon ms-Icon ms-Icon--AlertSolid";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        error: true,
-                        "error-message": "Field Value length mismatch."
-                    }
+                    error: true,
+                    "error-message": "Field Value length mismatch."
                 });
             }).then(function () {
                 expect(widget.elements.widget).to.have.class("u-invalid");
@@ -628,10 +593,8 @@
             const appliedClassNames = "u-error-icon ms-Icon ms-Icon--AlertSolid";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        error: false,
-                        "error-message": "Field Value length mismatch."
-                    }
+                    error: false,
+                    "error-message": "Field Value length mismatch."
                 });
                 widget.hideError("Field Value length mismatch.");
             }).then(function () {
