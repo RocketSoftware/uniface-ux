@@ -93,20 +93,29 @@ export class RadioGroup extends Widget {
       const element = this.getElement(widgetInstance);
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
       const value = this.getNode(widgetInstance.data.properties, "value");
+      const valRepRadioElement = element.querySelectorAll("fluent-radio");
+      let emptyValrepObj = valrep ? valrep.find((valrepObj) => valrepObj.value === '') : undefined;
       // Since the index is passed to fluent instead of the actual value, find the index corresponding to the value received.
       const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
-      if (!widgetInstance.elements.widget.isInitialValueEmpty && valueToSet === -1) {
+      const isValueEmpty = (value === null || value === "");
+      if (valrep.length > 0 && (valueToSet !== -1 || isValueEmpty)) {
+        if (isValueEmpty && !emptyValrepObj) {
+          valRepRadioElement.forEach(radioButton => {
+            // @ts-ignore
+            radioButton.checked = false;
+          });
+        }
         widgetInstance.setProperties({
           "uniface": {
-            "format-error": true,
-            "format-error-message": RadioGroup.formatErrorMessage
+            "format-error": false,
+            "format-error-message": ""
           }
         });
       } else {
         widgetInstance.setProperties({
           "uniface": {
-            "format-error": false,
-            "format-error-message": ""
+            "format-error": true,
+            "format-error-message": RadioGroup.formatErrorMessage
           }
         });
       }
@@ -267,33 +276,6 @@ export class RadioGroup extends Widget {
       this.elements.widget.valrepUpdated = false;
     });
     return valueUpdaters;
-  }
-
-  /**
-   * Private Uniface API method - dataInit.
-   * This method is used for the radio group class to check if the initial value is empty.
-   * It checks if the initial value is empty and updates the isInitialValueEmpty flag accordingly.
-   */
-  dataInit() {
-    super.dataInit();
-    if (this.data.properties.value === '') {
-      this.elements.widget.isInitialValueEmpty = true;
-    } else {
-      this.elements.widget.isInitialValueEmpty = false;
-    }
-  }
-
-  /**
-   * Private Uniface API method - dataUpdate.
-   * This method is used for the radio group class to reset the isInitialValueEmpty flag.
-   * It ensures the flag is set to false if the data value is not empty.
-   */
-  dataUpdate(data) {
-    super.dataUpdate(data);
-    if (data.value) {
-      this.elements.widget.isInitialValueEmpty = false;
-      this.setProperties(data);
-    }
   }
 }
 
