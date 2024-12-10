@@ -120,7 +120,14 @@
 
   describe("Data Init", function () {
     const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+    const classes = Object.keys(defaultValues).reduce((acc, key) => {
+      if (key.startsWith("class:")) {
+        let newKey = key.replace("class:", "");
+        acc[newKey] = defaultValues[key];
+      }
+      return acc;
+    }, {});
+
     var element;
 
     beforeEach(function () {
@@ -187,9 +194,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           value: buttonText,
-          uniface: {
-            icon: "Home"
-          }
+          icon: "Home"
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -204,9 +209,7 @@
       let iconPosition = "end";
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "icon-position": iconPosition
-          },
+          "icon-position": iconPosition,
           value: buttonText
         });
       }).then(function () {
@@ -241,7 +244,7 @@
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
-        expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(tester.widget.data.properties["icon-position"]);
+        expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(tester.widget.data["icon-position"]);
       });
     });
 
@@ -249,9 +252,7 @@
       let buttonText = 'Button';
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "icon-position": "stat"
-          }
+          "icon-position": "stat"
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -332,12 +333,8 @@
       const widgetInstance = {
         ...widgetClass,
         data: {
-          properties: {
-            uniface: {
-            "icon": "",
-            "icon-position": "start"
-            }
-          },
+          "icon": "",
+          "icon-position": "start",
           value: ""
         },
         elements: tester.construct().elements,
@@ -383,13 +380,9 @@
       const widgetInstance = {
         ...widgetClass,
         data: {
-          properties: {
-            uniface: {
-              "icon": "",
-              "icon-position": "start"
-            },
-            value: ""
-          },
+          "icon": "",
+          "icon-position": "start",
+          value: ""
         },
         elements: tester.construct().elements,
         getTraceDescription: () => {
@@ -407,12 +400,8 @@
       const widgetInstance = {
         ...widgetClass,
         data: {
-          properties: {
-            uniface: {
-              "icon": "Home"
-            },
-            value: ""
-          }
+          "icon": "Home",
+          value: ""
         },
 
         elements: tester.construct().elements,
@@ -432,12 +421,8 @@
       const widgetInstance = {
         ...widgetClass,
         data: {
-          properties: {
-            uniface: {
-              "icon": ""
-            },
-            value: ""
-          }
+          "icon": "",
+          value: ""
         },
         elements: tester.construct().elements,
         getTraceDescription: () => {

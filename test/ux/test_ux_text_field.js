@@ -570,15 +570,15 @@
                 tester.dataUpdate({
                     "prefix-icon": "DateTime",
                     "suffix-text": "Customer Email Address",
-                    "placeholder": placeHolderText,
-                    "type": "date"
+                    "html:placeholder": placeHolderText,
+                    "html:type": "date"
                     //value: "test@test.com"
                 });
             }).then(function () {
                 const event = new window.Event('hover');
                 widget.elements.widget.dispatchEvent(event);
                 assert.equal(widget.elements.widget.getAttribute("type"), "date" ,"Failed to show the date attribute and value does not match");
-                assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
+                assert.equal(widget.elements.widget.getAttribute("placeholder"), placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
                 assert(widget.elements.widget.hasAttribute("type"), "Failed to show the type as date attribute");
                 assert(widget.elements.widget.hasAttribute("placeholder"),"Failed to show the placeHolderText attribute and value doesnot match");
             });  
@@ -780,7 +780,7 @@
         let widget, properties, valueProperty;
         before(function () {
             widget = tester.createWidget();
-            properties = tester.widget.data.properties;
+            properties = tester.widget.data;
         });
 
         it("Verify single line value matches primaryPlainText returned by getValueFormatted", function () {

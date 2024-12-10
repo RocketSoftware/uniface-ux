@@ -116,7 +116,13 @@
 
     describe("dataInit", function () {
         const defaultValues = tester.getDefaultValues();
-        const classes = defaultValues.classes;
+        const classes = Object.keys(defaultValues).reduce((acc, key) => {
+            if (key.startsWith("class:")) {
+                let newKey = key.replace("class:", "");
+                acc[newKey] = defaultValues[key];
+            }
+            return acc;
+        }, {});
         var element;
 
         beforeEach(function () {
@@ -170,9 +176,7 @@
             let switchLabelText = "Label";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "label-text": switchLabelText
-                    }
+                    "label-text": switchLabelText
                 });
             }).then(function () {
                 let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
@@ -185,9 +189,7 @@
             let switchCheckedText = "On";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "checked-message": switchCheckedText
-                    },
+                    "checked-message": switchCheckedText,
                     value: 1
                 });
             }).then(function () {
@@ -203,9 +205,7 @@
             let switchUnCheckedText = "Off";
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "unchecked-message": switchUnCheckedText
-                    },
+                    "unchecked-message": switchUnCheckedText,
                     value: 0
                 });
             }).then(function () {
@@ -281,10 +281,8 @@
         it("set error to false with checked and unchecked messages", function () {
             return asyncRun(function() {
                 tester.dataUpdate({
-                    uniface: {
-                        "checked-message": "On",
-                        "unchecked-message": "Off"
-                    },
+                    "checked-message": "On",
+                    "unchecked-message": "Off",
                     value: 1
                 });
             }).then(function () {
