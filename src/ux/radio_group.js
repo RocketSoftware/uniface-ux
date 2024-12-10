@@ -99,6 +99,7 @@ export class RadioGroup extends Widget {
       const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
       const isValueEmpty = (value === null || value === "");
       if (valrep.length > 0 && (valueToSet !== -1 || isValueEmpty)) {
+        // Manually clear the checked state when value is empty and empty value not present in valrep.
         if (isValueEmpty && !emptyValrepObj) {
           valRepRadioElement.forEach(radioButton => {
             // @ts-ignore
