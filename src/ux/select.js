@@ -178,7 +178,11 @@ export class Select extends Widget {
 
     getValue(widgetInstance) {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
-      const value = this.getNode(widgetInstance.data.properties, "value");
+      const element = this.getElement(widgetInstance);
+      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      // When the user event triggers,
+      // the getValue function is called first, so the value should be read directly from the element instead of the data properties.
+      const value = valrep[element["value"]]?.value;
       return value;
     }
 
@@ -213,7 +217,7 @@ export class Select extends Widget {
       if (selectedValueElement) {
         selectedValueElement.remove();
       }
-      if (valueToSet === -1 && isValueEmpty  && showPlaceholder) {
+      if (valueToSet === -1 && isValueEmpty && showPlaceholder) {
         selectedValueElement = this.createPlaceholderElement(placeholderText, value);
         isPlaceholderElementCreated = true;
       } else {
@@ -619,7 +623,7 @@ export class Select extends Widget {
     /** @type {UValueFormatting} */
     let formattedValue = {};
     const displayFormat = this.getNode(properties, "uniface:display-format") ||
-                          this.getNode(this.defaultValues, "uniface:display-format");
+      this.getNode(this.defaultValues, "uniface:display-format");
     const value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
     const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
     const valrepItem = this.getValrepItem(valrep, value);

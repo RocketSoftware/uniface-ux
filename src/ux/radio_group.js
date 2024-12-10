@@ -61,7 +61,11 @@ export class RadioGroup extends Widget {
 
     getValue(widgetInstance) {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
-      const value = this.getNode(widgetInstance.data.properties, "value");
+      const element = this.getElement(widgetInstance);
+      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      // When the user event triggers,
+      // the getValue function is called first, so the value should be read directly from the element instead of the data properties.
+      const value = valrep[element["value"]]?.value;
       return value;
     }
 
