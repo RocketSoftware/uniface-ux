@@ -1,3 +1,6 @@
+// UX widget is not supported yet
+/* eslint-disable */
+
 // !!! This test currently does not use the test framework !!!
 
 (function () {
@@ -6,7 +9,7 @@
   /**
    * Default timeout for waiting for DOM rendering (in milliseconds)
    */
-  const defaultAsyncTimeout = 100; //ms
+  const defaultAsyncTimeout = 100; // ms
 
   const expect = chai.expect;
   const controlbar = UNIFACE.ClassRegistry.get("UX.Controlbar");

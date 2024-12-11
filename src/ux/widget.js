@@ -542,7 +542,7 @@ export class Widget extends Base {
     if (data) {
       for (const property in data) {
         // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
-        // eslint-disable-next-line eqeqeq
+        // eslint-disable-next-line eqeqeq, no-undef
         if (data[property] == uniface.RESET) {
           this.data[property] = defaultValues[property];
         } else {

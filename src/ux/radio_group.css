@@ -8,6 +8,10 @@
   align-items: flex-start;
 }
 
+.u-radio-group[hidden] {
+  display: none;
+}
+
 .u-radio-group::part(label) {
   display: inline-flex;
   align-items: center;

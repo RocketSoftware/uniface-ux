@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 (function () {
   'use strict';
 
@@ -71,7 +69,6 @@
     describe("Checks", function () {
 
       before(function () {
-
         verifyWidgetClass(widgetClass);
         element = tester.processLayout();
       });
@@ -182,6 +179,17 @@
       assert(element, "Widget top element is not defined!");
     });
 
+    it("Set HTML property hidden to true", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          html: { hidden: true }
+        });
+      }).then(function () {
+        expect(element.getAttribute("hidden"));
+        expect(window.getComputedStyle(element).display).equal("none");
+      });
+    });
+    
     it("Set Uniface label text", function () {
       return asyncRun(function () {
         tester.dataUpdate({
@@ -375,10 +383,9 @@
 
 
   describe('Radio onchange event', function () {
-    let radioElement, onchangeSpy, widget;
+    let radioElement, onchangeSpy;
     beforeEach(function () {
-
-      widget = tester.createWidget();
+      tester.createWidget();
       radioElement = tester.element.querySelector("fluent-radio");
 
       // Create a spy for the onchange event
@@ -408,7 +415,6 @@
 
     // Test case for not firing change event with initial value.
     it('should not invoke the onchange event handler when a radio button has initial value', function () {
-
       let initialValue = "2";
 
       return asyncRun(function () {
@@ -486,7 +492,7 @@
           value: initialValue
         });
       }).then(function () {
-        // Update the valrep with new valRepArray2. 
+        // Update the valrep with new valRepArray2.
         tester.dataUpdate({
           valrep: valRepArray2
         });
@@ -501,6 +507,7 @@
   describe("showError", function () {
     let radioElement;
     beforeEach(function () {
+      tester.createWidget();
       radioElement = tester.element;
     });
 
@@ -525,6 +532,7 @@
   describe("hideError", function () {
     let radioElement;
     beforeEach(function () {
+      tester.createWidget();
       radioElement = tester.element;
     });
 
@@ -534,7 +542,7 @@
           uniface: {
             "format-error": false,
             "format-error-message": ""
-          },
+          }
         });
       }).then(function () {
         expect(radioElement).to.not.have.class("u-format-invalid");
