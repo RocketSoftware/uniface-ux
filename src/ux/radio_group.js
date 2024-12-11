@@ -61,7 +61,11 @@ export class RadioGroup extends Widget {
 
     getValue(widgetInstance) {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
-      const value = this.getNode(widgetInstance.data.properties, "value");
+      const element = this.getElement(widgetInstance);
+      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      // When the user event triggers,
+      // the getValue function is called first, so the value should be read directly from the element instead of the data properties.
+      const value = valrep[element["value"]]?.value;
       return value;
     }
 
@@ -93,10 +97,17 @@ export class RadioGroup extends Widget {
       const element = this.getElement(widgetInstance);
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
       const value = this.getNode(widgetInstance.data.properties, "value");
+      const valRepRadioElement = element.querySelectorAll("fluent-radio");
       // Since the index is passed to fluent instead of the actual value, find the index corresponding to the value received.
       const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
       const isValueEmpty = (value === null || value === "");
       if (valrep.length > 0 && (valueToSet !== -1 || isValueEmpty)) {
+        // Manually clear the checked state when value is empty and empty value not present in valrep.
+        if (isValueEmpty && valueToSet === -1) {
+          valRepRadioElement.forEach(radioButton => {
+            radioButton["checked"] = false;
+          });
+        }
         widgetInstance.setProperties({
           "uniface": {
             "format-error": false,
