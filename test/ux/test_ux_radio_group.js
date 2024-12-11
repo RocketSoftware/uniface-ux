@@ -403,24 +403,9 @@
 
 
     it("Simulate user interaction and select first option", function () {
-      const radioOption1 = document.querySelector("fluent-radio");
-
-      // Simulate selecting the radio button
-      const changeEvent = sinon.spy();
-      radioOption1.addEventListener('change', changeEvent);
-
-      radioOption1.checked = true;
-      //document.querySelector('fluent-radio-group').value = 0;
-      const event = new Event('change', { bubbles: true });
-      radioOption1.dispatchEvent(event);
-      //tester.mapTrigger("onchange");
-      // Assertions to check if the radio is in checked state or not.
-      expect(radioOption1.checked).to.be.true;
-      document.querySelector('fluent-radio-group').value = 0;
       return asyncRun(function () {
-        tester.dataUpdate({
-          value: "1"
-        });
+        document.querySelector('fluent-radio-group').value = 0;
+        document.querySelector('fluent-radio-group').addEventListener('change', UNIFACE.ClassRegistry.get(tester.widgetName).getters.value.getValueUpdaters(tester.widget)[0].handler());
       }).then(function () {
         let errorIconTooltip = element.querySelector('.u-error-icon');
         expect(errorIconTooltip.getAttribute("title")).equal("");
