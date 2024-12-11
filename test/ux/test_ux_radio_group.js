@@ -405,6 +405,7 @@
     let element;
     before(function () {
       tester.createWidget();
+      tester.bindUpdatorsEvent();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });

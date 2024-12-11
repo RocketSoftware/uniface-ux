@@ -361,12 +361,18 @@
         if (!this.widget || !this.widget.elements) {
           const element = this.processLayout.apply(this, this.layoutArgs);
           const widget = this.construct();
-          let updaters = widget.onConnect(element);
-          updaters.forEach((updater) => {
-            element.addEventListener(updater.event_name, updater.handler);
-          });
+          widget.onConnect(element);
         }
         return this.widget;
+      }
+
+      bindUpdatorsEvent() {
+        const element = this.processLayout.apply(this, this.layoutArgs);
+        const widget = this.construct();
+        let updaters = widget.onConnect(element);
+        updaters.forEach((updater) => {
+          element.addEventListener(updater.event_name, updater.handler);
+        });
       }
 
       dataInit() {
