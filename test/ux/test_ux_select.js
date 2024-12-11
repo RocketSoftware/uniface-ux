@@ -1,3 +1,4 @@
+/* global UNIFACE */
 (function () {
   'use strict';
 
@@ -453,6 +454,53 @@
         assert(selectElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon");
         expect(selectElement.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
         expect(selectElement.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+      });
+    });
+  });
+
+  describe('Invalid state, user interaction and again set to invalid state', function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    it("Set invalid initial value", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: "0"
+        });
+      }).then(function () {
+        let errorIconTooltip = element.querySelector('.u-error-icon');
+        expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+      });
+    });
+
+    it("Simulate user interaction and select first option", function () {
+      return asyncRun(function () {
+        document.querySelector('fluent-option').selected = true;
+        document.querySelector('fluent-select').addEventListener('change', UNIFACE.ClassRegistry.get(tester.widgetName).getters.value.getValueUpdaters(tester.widget)[0].handler());
+      }).then(function () {
+        let errorIconTooltip = element.querySelector('.u-error-icon');
+        expect(errorIconTooltip.getAttribute("title")).equal("");
+      });
+
+    });
+
+    it("Now again set the same invalid value", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: "0"
+        });
+      }).then(function () {
+        const selectOption1 = document.querySelector("fluent-option");
+        // Assertions to check if the select is in selected state or not.
+        expect(selectOption1.selected).to.be.false;
+        let errorIconTooltip = element.querySelector('.u-error-icon');
+        expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
       });
     });
   });

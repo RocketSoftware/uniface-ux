@@ -1,3 +1,4 @@
+/* global UNIFACE */
 (function () {
   'use strict';
 
@@ -189,7 +190,7 @@
         expect(window.getComputedStyle(element).display).equal("none");
       });
     });
-    
+
     it("Set Uniface label text", function () {
       return asyncRun(function () {
         tester.dataUpdate({
