@@ -1,3 +1,4 @@
+/* global UNIFACE */
 (function () {
   'use strict';
 
@@ -189,7 +190,7 @@
         expect(window.getComputedStyle(element).display).equal("none");
       });
     });
-    
+
     it("Set Uniface label text", function () {
       return asyncRun(function () {
         tester.dataUpdate({
@@ -400,6 +401,62 @@
     });
   });
 
+  describe('Invalid state, user interaction and again set to invalid state', function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    it("Set invalid initial value", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: "0"
+        });
+      }).then(function () {
+        let errorIconTooltip = element.querySelector('.u-error-icon');
+        expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+      });
+    });
+
+
+    it("Simulate user interaction and select first option", function () {
+      return asyncRun(function () {
+        const firstRadioOption = document.querySelector('fluent-radio');
+
+        // Simulate click event on radio group widget.
+        firstRadioOption.click();
+      }).then(function () {
+        let errorIconTooltip = element.querySelector('.u-error-icon');
+        expect(errorIconTooltip.getAttribute("title")).equal("");
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        radioButtonArray.forEach(function (node, index) {
+          if (valRepArray[index].value === "1") {
+            expect(node.getAttribute("current-checked")).equal("true");
+          } else {
+            expect(node.getAttribute("current-checked")).equal("false");
+          }
+        });
+      });
+    });
+
+    it("Now again set the same invalid value", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: "0"
+        });
+      }).then(function () {
+        const radioOption1 = document.querySelector("fluent-radio");
+        // Assertions to check if the radio is in un checked state or not.
+        expect(radioOption1.checked).to.be.false;
+        let errorIconTooltip = element.querySelector('.u-error-icon');
+        expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+      });
+    });
+  });
 
   describe('Radio onchange event', function () {
     let radioElement, onchangeSpy;

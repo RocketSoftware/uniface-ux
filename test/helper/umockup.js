@@ -361,7 +361,10 @@
         if (!this.widget || !this.widget.elements) {
           const element = this.processLayout.apply(this, this.layoutArgs);
           const widget = this.construct();
-          widget.onConnect(element);
+          let updaters = widget.onConnect(element);
+          updaters.forEach((updater) => {
+            element.addEventListener(updater.event_name, updater.handler);
+          });
         }
         return this.widget;
       }
