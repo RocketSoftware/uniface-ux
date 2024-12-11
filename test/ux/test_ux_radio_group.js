@@ -379,6 +379,25 @@
         expect(element.getAttribute("orientation")).equal("horizontal");
       });
     });
+
+    it("Set value to empty string ('') when there is a checked option and expect the radio button to get unchecked", function () {
+      let selectedValue = "2";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: selectedValue
+        });
+      }).then(function () {
+        // Set the value to empty string.
+        tester.dataUpdate({
+          value: ''
+        });
+      }).then(function () {
+        // Check that there is no checked item.
+        expect(node.getAttribute("fluent-radio[current-checked=true]")).equal(null);
+      });
+    });
   });
 
 
