@@ -280,7 +280,6 @@ export class Widget extends Base {
   dataInit() {
     this.data = {};
     this.data.id = Math.random();
-    this.data.properties = {};
 
     /** @type {Object} */
     let widgetClass = this.constructor;
