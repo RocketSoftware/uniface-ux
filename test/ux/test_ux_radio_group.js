@@ -372,7 +372,7 @@
       });
     });
 
-    it("Set value to empty string ('') on checked radio button and expect the radio button to be unchecked", function () {
+    it("Set value to empty string ('') when there is a checked option and expect the radio button to get unchecked", function () {
       let selectedValue = "2";
 
       return asyncRun(function () {
@@ -381,23 +381,20 @@
           value: selectedValue
         });
       }).then(function () {
-        // Update the valrep with new valRepArray2. 
+        // Set the value to empty string.
         tester.dataUpdate({
           value: ''
         });
       }).then(function () {
-
-        let radioButtonArray = element.querySelectorAll("fluent-radio");
-        radioButtonArray.forEach(function (node, index) {
-          expect(node.getAttribute("current-checked")).equal("false");
-        });
+        // Check that there is no checked item.
+        expect(node.getAttribute("fluent-radio[current-checked=true]")).equal(null);
       });
     });
   });
 
 
   describe('Radio onchange event', function () {
-    let radioElement, onchangeSpy, widget;
+    let radioElement, onchangeSpy;
     beforeEach(function () {
 
       widget = tester.createWidget();
@@ -556,7 +553,7 @@
           uniface: {
             "format-error": false,
             "format-error-message": ""
-          },
+          }
         });
       }).then(function () {
         expect(radioElement).to.not.have.class("u-format-invalid");
