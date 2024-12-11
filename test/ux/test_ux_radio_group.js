@@ -405,13 +405,22 @@
 
     it("Simulate user interaction and select first option", function () {
       return asyncRun(function () {
-        document.querySelector('fluent-radio-group').value = 0;
-        document.querySelector('fluent-radio-group').addEventListener('change', UNIFACE.ClassRegistry.get(tester.widgetName).getters.value.getValueUpdaters(tester.widget)[0].handler());
+        const firstRadioOption = document.querySelector('fluent-radio');
+
+        // Simulate click event on radio group widget.
+        firstRadioOption.click();
       }).then(function () {
         let errorIconTooltip = element.querySelector('.u-error-icon');
         expect(errorIconTooltip.getAttribute("title")).equal("");
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        radioButtonArray.forEach(function (node, index) {
+          if (valRepArray[index].value === "1") {
+            expect(node.getAttribute("current-checked")).equal("true");
+          } else {
+            expect(node.getAttribute("current-checked")).equal("false");
+          }
+        });
       });
-
     });
 
     it("Now again set the same invalid value", function () {
