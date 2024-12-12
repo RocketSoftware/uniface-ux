@@ -1,4 +1,3 @@
-/* global UNIFACE */
 (function () {
   'use strict';
 
