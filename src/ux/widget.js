@@ -205,6 +205,7 @@ export class Widget extends Base {
       const subWidgetClass = subWidgetDefinition.class;
       const subWidgetElement = widgetElement.querySelector(`.${subWidgetStyleClass}`);
       this.subWidgets[subWidgetId] = new subWidgetClass();
+      this.subWidgets[subWidgetId].parentWidget = this;
       let subWidgetUpdaters = this.subWidgets[subWidgetId].onConnect(subWidgetElement) || [];
       subWidgetUpdaters.forEach((subWidgetUpdater) => {
         if (subWidgetUpdater !== undefined) {
@@ -222,6 +223,21 @@ export class Widget extends Base {
       }
     });
     return valueUpdaters;
+  }
+
+  /**
+   * Will be invoked from complex widgets like controlbar to add content to the overflow-menu.
+   * Returns an object that contains the text, icon and css classnames of individual menu items.
+   * Can be specialized in individual widget classes.
+   */
+  getMenuItem() {
+    const properties = this.data.properties;
+    const widgetClass = this.getNode(properties, "uniface:widget-class");
+    return {
+      "text": `ERROR: ${widgetClass ?? ""} not supported as menu-item!`,
+      "icon": "Blocked",
+      "classNames": "u-not-supported"
+    };
   }
 
   /**
