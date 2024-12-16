@@ -127,18 +127,16 @@ export class Select extends Widget {
       const selectedRepSpan = selectedValueSlot.querySelector(".u-valrep-representation");
       const selectedValSpan = selectedValueSlot.querySelector(".u-valrep-value");
       // If the previous selected option was placeholder, it will not have rep and value span,
-      // hence create it. Also, down below remove the placeholder element.
-      if (!selectedRepSpan) {
+      // hence create it. Also, remove the placeholder element.
+      let selectedPlaceholderSpan = selectedValueSlot.querySelector(".u-placeholder");
+      if (selectedPlaceholderSpan) {
+        selectedPlaceholderSpan.remove();
         selectedValueSlot.appendChild(this.getFormattedValrepItemAsHTML(displayFormat, val, rep));
       } else {
         selectedRepSpan ? (selectedRepSpan.innerHTML = rep) : "";
         selectedValSpan ? (selectedValSpan.textContent = val) : "null";
       }
 
-      let selectedPlaceholderSpan = selectedValueSlot.querySelector(".u-placeholder");
-      if (selectedPlaceholderSpan) {
-        selectedPlaceholderSpan.remove();
-      }
     }
 
     updateValueElement(widgetInstance) {
