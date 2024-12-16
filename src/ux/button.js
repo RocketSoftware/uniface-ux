@@ -10,7 +10,8 @@ import {
   HtmlAttributeNumber,
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
-  IgnoreProperty
+  IgnoreProperty,
+  SubWidgetOverFlow
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -191,6 +192,8 @@ export class Button extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new IgnoreProperty(this, "html:readonly"),
+    new SubWidgetOverFlow(this, "uniface:overflow-behavior", "overflow-behavior", undefined),
+    new SubWidgetOverFlow(this, "uniface:overflow-index", "overflow-index", undefined),
     new StyleClass(this, ["u-button", "neutral"])
   ], [
     new this.SlottedButtonIcon(this, "u-icon", ".u-icon"),
@@ -227,6 +230,19 @@ export class Button extends Widget {
     formattedValue.prefixIcon = this.getNode(properties, "uniface:icon");
     this.staticLog("getValueFormatted", formattedValue);
     return formattedValue;
+  }
+
+  /**
+   * Will be invoked from complex widgets like controlbar to add content to the overflow-menu.
+   * Returns an object that contains the text, icon and css classnames of individual menu items.
+   */
+  getMenuItem() {
+    const properties = this.data.properties;
+    return {
+      "text": this.getNode(properties, "value") ?? "",
+      "icon": this.getNode(properties, "uniface:icon") ?? "",
+      "classNames": ""
+    };
   }
 
   /**
