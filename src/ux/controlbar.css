@@ -20,10 +20,11 @@
   flex-shrink: 0;
 }
 
-.u-start-section>*,
-.u-center-section>*,
-.u-end-section>* {
-  margin: 0 4px;
+.u-start-section > *,
+.u-center-section > *,
+.u-end-section > * {
+  margin-inline-start: 4px;
+  margin-inline-end: 4px;
 }
 
 .u-controlbar[u-orientation="vertical"] {
@@ -41,4 +42,45 @@
 .u-controlbar .u-number-field::part(label),
 .u-controlbar .u-text-area::part(label) {
   white-space: nowrap;
+}
+
+.u-controlbar .u-overflow-container {
+  position: relative;
+}
+
+.u-controlbar .u-overflow-menu {
+  position: absolute;
+  width: max-content;
+  top: 100%;
+  right: 0;
+  z-index: 100;
+}
+
+.u-controlbar .u-controlbar-item.u-overflown-item {
+  display: none;
+}
+
+.u-controlbar .u-menu-item {
+  white-space: normal;
+  height: auto;
+  padding: 5px calc((10 + (var(--design-unit) * 2 * var(--density))) * 1px);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.u-controlbar .u-menu-item .u-prefix-icon {
+  margin-inline-end: 11px;
+}
+
+.u-controlbar .u-menu-item .u-suffix-icon {
+  margin-inline-start: 11px;
+}
+
+.u-controlbar .u-menu-item[hidden] {
+  display: none;
+}
+
+.u-controlbar .u-menu-item .u-not-supported {
+  cursor: default;
+  color: #d83b01;
 }
