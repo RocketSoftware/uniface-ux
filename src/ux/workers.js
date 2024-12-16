@@ -466,6 +466,10 @@ export class SubWidgetsByProperty extends Element {
             element = subWidgetClass.processLayout(element, objectDefinition);
             let subWidgetStyleClass = `u-sw-${subWidgetId}`;
             element.classList.add(subWidgetStyleClass);
+            if (this.styleClass) {
+              element.classList.add(this.styleClass);
+            }
+            element.setAttribute("sub-widget-id", subWidgetId);
             elements.push(element);
           } else {
             this.warn(
@@ -523,6 +527,41 @@ export class SubWidgetsByProperty extends Element {
   getValueUpdaters(widgetInstance) {
     this.log("getValueUpdaters", { "widgetInstance": widgetInstance.getTraceDescription() });
     return;
+  }
+}
+
+/**
+ * Worker: SubWidgetOverFlow.
+ * This worker is used to register all properties that are related to the overflow behavior of the widget.
+ * Whenever the registered properties are updated, it calls a setProperties with an update of the property "overflow-updated".
+ * This helps to keep track of whenever a property related to the overflow behavior is updated.
+ * @export
+ * @class SubWidgetOverFlow
+ * @extends {Worker}
+ */
+export class SubWidgetOverFlow extends Worker {
+  constructor(widgetClass, propId, attrName, defaultValue) {
+    super(widgetClass);
+    this.propId = propId;
+    this.defaultValue = defaultValue;
+    this.attrName = attrName;
+    this.registerSetter(widgetClass, this.propId, this);
+    this.registerDefaultValue(widgetClass, this.propId, defaultValue);
+  }
+  refresh(widgetInstance) {
+    const element = this.getElement(widgetInstance);
+    const currentValue = this.getNode(widgetInstance.data.properties, this.propId);
+    if (currentValue === undefined || currentValue === null) {
+      return;
+    }
+    element.setAttribute(this.attrName, currentValue);
+    if (widgetInstance.parentWidget) {
+      widgetInstance.parentWidget.setProperties({
+        "uniface": {
+          "overflow-updated": this.attrName
+        }
+      });
+    }
   }
 }
 
