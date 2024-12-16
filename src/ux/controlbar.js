@@ -112,7 +112,7 @@ export class Controlbar extends Widget {
       itemsToHideOrMove.sort((a, b) => {
         const valueA = Number(a.getAttribute("overflow-index"));
         const valueB = Number(b.getAttribute("overflow-index"));
-        return valueB - valueA;
+        return valueA - valueB;
       });
 
       // Get the width of the controlbar items.
