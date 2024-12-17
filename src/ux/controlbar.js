@@ -27,7 +27,7 @@ export class Controlbar extends Widget {
 
   /**
    * Private Worker: HandleOverFlowWorker.
-   * Handles the horizontal responsiveness of the controlbar based on overflow-behavior and overflow-index.
+   * Handles the horizontal responsiveness of the controlbar based on overflow-behavior and priority.
    * @class HandleOverFlowWorker
    * @extends {Worker}
    */
@@ -50,7 +50,7 @@ export class Controlbar extends Widget {
     }
 
     /**
-     * Helper - Handles the horizontal responsiveness of the controlbar based on overflow-behavior and overflow-index.
+     * Helper - Handles the horizontal responsiveness of the controlbar based on overflow-behavior and priority.
      */
     handleOverflow(widgetInstance) {
       const element = this.getElement(widgetInstance);
@@ -103,8 +103,8 @@ export class Controlbar extends Widget {
         return;
       }
       itemsToHideOrMove.sort((a, b) => {
-        const valueA = Number(a.getAttribute("overflow-index"));
-        const valueB = Number(b.getAttribute("overflow-index"));
+        const valueA = Number(a.getAttribute("priority"));
+        const valueB = Number(b.getAttribute("priority"));
         return valueA - valueB;
       });
 
@@ -169,9 +169,9 @@ export class Controlbar extends Widget {
       }
       if (indexToBreak < itemsToHideOrMove.length) {
         let index = indexToBreak;
-        const overFlowIndex = itemsToHideOrMove[indexToBreak].getAttribute("overflow-index");
+        const overFlowIndex = itemsToHideOrMove[indexToBreak].getAttribute("priority");
         while (index >= 0) {
-          const prevOverFlowIndex = itemsToHideOrMove[index].getAttribute("overflow-index");
+          const prevOverFlowIndex = itemsToHideOrMove[index].getAttribute("priority");
           if (overFlowIndex === prevOverFlowIndex) {
             indexToBreak = index;
             index--;
@@ -316,7 +316,7 @@ export class Controlbar extends Widget {
         "u-start-section",
         ".u-start-section",
         [],
-        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "controls-start")]
+        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-start")]
       ),
       new Element(
         this,
@@ -324,7 +324,7 @@ export class Controlbar extends Widget {
         "u-center-section",
         ".u-center-section",
         [],
-        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "controls-center")]
+        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-center")]
       ),
       new Element(
         this,
@@ -332,7 +332,7 @@ export class Controlbar extends Widget {
         "u-end-section",
         ".u-end-section",
         [],
-        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "controls-end")]
+        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-end")]
       )
     ]
   );

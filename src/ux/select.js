@@ -303,7 +303,7 @@ export class Select extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new SubWidgetOverFlow(this, "uniface:overflow-behavior", "overflow-behavior", undefined),
-    new SubWidgetOverFlow(this, "uniface:overflow-index", "overflow-index", undefined)
+    new SubWidgetOverFlow(this, "uniface:priority", "priority", undefined)
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
