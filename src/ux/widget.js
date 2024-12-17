@@ -1,5 +1,4 @@
 // @ts-check
-/* global uniface globalThis */
 
 import "./typedef.js";
 import "./workers.js";
@@ -71,8 +70,8 @@ export class Widget extends Base {
    * These static properties define the default on whether to report unsupported properties or triggers.
    * Redefine these properties on specific widgets based on demand.
    */
-  static reportUnsupportedPropertyWarnings = false;
-  static reportUnsupportedTriggerWarnings = false;
+  static reportUnsupportedPropertyWarnings = true;
+  static reportUnsupportedTriggerWarnings = true;
 
   /**
    * Holds the updated data of the widget instance.
@@ -107,12 +106,6 @@ export class Widget extends Base {
       skeletonWidgetElement.classList.forEach((styleClass) => {
         objectDefinition.setProperty(`class:${styleClass}`, true);
       });
-    }
-
-    // Workaround: Make Uniface object definitions available to widget onConnect() by element Id.
-    if (elementId) {
-      globalThis.UX_DEFINITIONS = globalThis.UX_DEFINITIONS || {};
-      globalThis.UX_DEFINITIONS[elementId] = objectDefinition;
     }
 
     return widgetElement;
@@ -195,14 +188,6 @@ export class Widget extends Base {
     let widgetClass = this.constructor;
     this.elements.widget = widgetElement;
     this.log("onConnect");
-
-    // Workaround: Until onConnect() provides the object definition as parameter.
-    if (widgetElement.id && objectDefinition === undefined) {
-      // Only get definition -part of element id: "ufld:FIELD.ENTITY.MODEL:INSTANCE.occ.occ" -> "ufld:FIELD.ENTITY.MODEL"
-      const id = widgetElement.id.split(":").slice(0, 2).join(":");
-      // Look up definition from the global UX_DEFINITIONS object.
-      objectDefinition = globalThis.UX_DEFINITIONS[id];
-    }
 
     // Add sub-widget definitions as maintained by sub-widget-workers to widget instance.
     widgetClass.subWidgetWorkers.forEach((subWidgetWorker) => {
@@ -564,7 +549,7 @@ export class Widget extends Base {
             this.data.properties[prefix] = this.data.properties[prefix] ?? {};
             for(const property in data[prefix]) {
               // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
-              // eslint-disable-next-line eqeqeq
+              // eslint-disable-next-line eqeqeq, no-undef
               if (data[prefix][property] == uniface.RESET) {
                 this.data.properties[prefix][property] = widgetClass.defaultValues[
                   prefix
@@ -602,7 +587,7 @@ export class Widget extends Base {
           case "value":
           case "valrep":
             // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
-            // eslint-disable-next-line eqeqeq
+            // eslint-disable-next-line eqeqeq, no-undef
             if (data[prefix] == uniface.RESET) {
               this.data.properties[prefix] = widgetClass.defaultValues[prefix];
             } else {

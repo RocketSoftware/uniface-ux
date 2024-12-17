@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 (function () {
   'use strict';
 
@@ -161,7 +159,6 @@
   });
 
   describe("Data Update", function () {
-		
     let element;
 
     before(function () {
@@ -176,7 +173,7 @@
         tester.dataUpdate({
           value: buttonText
         });
-      }).then(function () { 
+      }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(element.querySelector('span.u-icon').hasAttribute("hidden"), "Icon Element should be hidden");
@@ -192,7 +189,7 @@
             icon: "Home"
           }
         });
-      }).then(function () { 
+      }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
@@ -208,9 +205,9 @@
           uniface: {
             "icon-position": iconPosition
           },
-          value: buttonText,
+          value: buttonText
         });
-      }).then(function () { 
+      }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
@@ -252,7 +249,7 @@
         tester.dataUpdate({
           uniface: {
             "icon-position": "stat"
-          },
+          }
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -344,7 +341,7 @@
         elements: tester.construct().elements,
         getTraceDescription: () => {
           return "description";
-        },
+        }
       };
 
       instance.refresh(widgetInstance);
@@ -395,7 +392,7 @@
         elements: tester.construct().elements,
         getTraceDescription: () => {
           return "description";
-        },
+        }
       };
 
       instance.refresh(widgetInstance);
@@ -410,7 +407,7 @@
         data: {
           properties: {
             uniface: {
-              "icon": "Home",
+              "icon": "Home"
             },
             value: ""
           }
@@ -434,7 +431,7 @@
         data: {
           properties: {
             uniface: {
-              "icon": "",
+              "icon": ""
             },
             value: ""
           }

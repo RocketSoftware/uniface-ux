@@ -741,18 +741,18 @@ export class WidgetForOccurrence extends Worker {
 /**
  * Worker : Used to register setter and default value for properties that do not need to execute any code on refresh.
  * @export
- * @class Dummy
+ * @class IgnoreProperty
  * @extends {Worker}
  */
-export class Dummy extends Worker {
+export class IgnoreProperty extends Worker {
 
   /**
-   * Creates an instance of Dummy
+   * Creates an instance of IgnoreProperty
    * @param {typeof Widget} widgetClass
    * @param {UPropName} propId
    * @param {UPropValue} defaultValue
    */
-  constructor(widgetClass, propId, defaultValue) {
+  constructor(widgetClass, propId, defaultValue = null) {
     super(widgetClass);
     this.propId = propId;
     this.defaultValue = defaultValue;
@@ -1498,18 +1498,21 @@ export class SlottedElementsByValRep extends Element {
 
   /**
    * Creates all valrep elements from this worker.
+   * Since fluent uses empty string to clear the selection, presence of an empty string as an actual valid option causes confusion.
+   * So, when setting the value attribute of fluent-option elements, we use the corresponding index as the value.
+   * And this will be mapped back to its original value before storing and sending to Uniface.
    */
   createValRepElements(widgetInstance) {
     let element = this.getElement(widgetInstance);
     let valrep = this.getNode(widgetInstance.data.properties, "valrep");
     let displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
     if (valrep.length > 0) {
-      valrep.forEach((valRepObj) => {
+      valrep.forEach((valRepObj, index) => {
         const childElement = document.createElement(this.tagName);
         element.appendChild(childElement);
-        childElement.setAttribute("value", valRepObj.value);
+        childElement.setAttribute("value", index);
         childElement.setAttribute("class", this.styleClass);
-        childElement.innerHTML = this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation);
+        childElement.appendChild(this.getFormattedValrepItemAsHTML(displayFormat, valRepObj.value, valRepObj.representation));
       });
     }
   }

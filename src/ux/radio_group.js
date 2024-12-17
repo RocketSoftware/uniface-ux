@@ -9,10 +9,10 @@ import {
   HtmlAttribute,
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
-  HtmlAttributeMinMaxLength,
   HtmlAttributeNumber,
   StyleClass,
-  Trigger
+  Trigger,
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -54,12 +54,18 @@ export class RadioGroup extends Widget {
      */
     constructor(widgetClass, propId, attrName, defaultValue) {
       super(widgetClass, propId, attrName, defaultValue);
+      // Register a setter for display format, ensuring it also updates the worker's refresh function.
+      this.registerSetter(widgetClass, "uniface:display-format", this);
       this.registerSetter(widgetClass, "valrep", this);
     }
 
     getValue(widgetInstance) {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
-      const value = this.getNode(widgetInstance.data.properties, "value");
+      const element = this.getElement(widgetInstance);
+      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      // When the user event triggers,
+      // the getValue function is called first, so the value should be read directly from the element instead of the data properties.
+      const value = valrep[element["value"]]?.value;
       return value;
     }
 
@@ -73,7 +79,9 @@ export class RadioGroup extends Widget {
         "handler": () => {
           const valrep = this.getNode(widgetInstance.data.properties, "valrep");
           if (valrep && valrep.length > 0) {
-            widgetInstance.setProperties({ "value": element["value"] });
+            // Since the value received will be the corresponding index, find the actual value from valrep.
+            const value = valrep[element["value"]]?.value;
+            widgetInstance.setProperties({ "value": value });
           }
         }
       });
@@ -81,11 +89,25 @@ export class RadioGroup extends Widget {
     }
 
     refresh(widgetInstance) {
-      super.refresh(widgetInstance);
+      this.log("refresh", {
+        "widgetInstance": widgetInstance.getTraceDescription(),
+        "attrName": this.attrName
+      });
+
+      const element = this.getElement(widgetInstance);
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
       const value = this.getNode(widgetInstance.data.properties, "value");
-      let matchedValrepObj = valrep ? valrep.find((valrepObj) => valrepObj.value === value) : undefined;
-      if (valrep.length > 0 && (matchedValrepObj || value === "" || value === null)) {
+      const valRepRadioElement = element.querySelectorAll("fluent-radio");
+      // Since the index is passed to fluent instead of the actual value, find the index corresponding to the value received.
+      const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
+      const isValueEmpty = (value === null || value === "");
+      if (valrep.length > 0 && (valueToSet !== -1 || isValueEmpty)) {
+        // Manually clear the checked state when value is empty and empty value not present in valrep.
+        if (isValueEmpty && valueToSet === -1) {
+          valRepRadioElement.forEach(radioButton => {
+            radioButton["checked"] = false;
+          });
+        }
         widgetInstance.setProperties({
           "uniface": {
             "format-error": false,
@@ -100,9 +122,9 @@ export class RadioGroup extends Widget {
           }
         });
       }
+      this.setHtmlAttribute(element, valueToSet.toString());
     }
   };
-
 
   /**
    * Private Worker: RadioGroupValRep
@@ -137,9 +159,15 @@ export class RadioGroup extends Widget {
         }
       });
     }
+
     refresh(widgetInstance) {
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      const value = this.getNode(widgetInstance.data.properties, "value");
+      let matchedValrepObj = valrep ? valrep.find((valrepObj) => valrepObj.value === value) : undefined;
       if (valrep.length > 0) {
+        if (matchedValrepObj) {
+          widgetInstance.elements.widget.valrepUpdated = true;
+        }
         super.refresh(widgetInstance);
         this.addTooltipToValrepElement(widgetInstance);
       } else {
@@ -164,7 +192,9 @@ export class RadioGroup extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "uniface:layout", "orientation", ["vertical", "horizontal"], "vertical", true),
-    new this.RadioGroupSelectedValue(this, "value", "value", "")
+    new this.RadioGroupSelectedValue(this, "value", "value", ""),
+    new IgnoreProperty(this, "html:minlength"),
+    new IgnoreProperty(this, "html:maxlength")
   ], [
     new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
     new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
@@ -200,10 +230,10 @@ export class RadioGroup extends Widget {
     /** @type {UValueFormatting} */
     let formattedValue = {};
     const displayFormat = this.getNode(properties, "uniface:display-format") ||
-                          this.getNode(this.defaultValues, "uniface:display-format");
+      this.getNode(this.defaultValues, "uniface:display-format");
     const value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
     const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
-    const valrepItem  = this.getValrepItem(valrep, value);
+    const valrepItem = this.getValrepItem(valrep, value);
     if (valrepItem) {
       switch (displayFormat) {
         case "valrep":
@@ -240,6 +270,14 @@ export class RadioGroup extends Widget {
     let shadowRoot = this.elements.widget.shadowRoot;
     let labelSlot = shadowRoot.querySelector('slot[name="label"]');
     labelSlot.setAttribute("part", "label");
+    // Stop propagating further change events when valrep has been updated.
+    // This is to prevent fluent-radio-group from firing unwanted change events.
+    this.elements.widget.addEventListener("change", (e) => {
+      if (this.elements.widget.valrepUpdated) {
+        e.stopImmediatePropagation();
+      }
+      this.elements.widget.valrepUpdated = false;
+    });
     return valueUpdaters;
   }
 }

@@ -12,7 +12,8 @@ import {
   HtmlAttributeNumber,
   HtmlAttributeBoolean,
   SlottedElement,
-  HtmlAttributeChoice
+  HtmlAttributeChoice,
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -95,7 +96,10 @@ export class Select extends Widget {
       this.log("createPlaceholderElement", null);
       const element = document.createElement("div");
       element.setAttribute("value", value);
-      element.innerHTML = '<span class="u-placeholder">' + text + "</span>";
+      const placeholderElement = document.createElement('span');
+      placeholderElement.className = "u-placeholder";
+      placeholderElement.textContent = text;
+      element.appendChild(placeholderElement);
       return element;
     }
 
@@ -108,15 +112,14 @@ export class Select extends Widget {
         if (obj) {
           return obj.representation;
         }
-        return "";
       }
-      return null;
+      return "";
     }
 
     createSelectedValrepElement(tagName, val, rep, displayFormat) {
       const selectedValRepElement = document.createElement(tagName);
       selectedValRepElement.setAttribute("value", val);
-      selectedValRepElement.innerHTML = this.getFormattedValrepItemAsHTML(displayFormat, val, rep);
+      selectedValRepElement.appendChild(this.getFormattedValrepItemAsHTML(displayFormat, val, rep));
       return selectedValRepElement;
     }
 
@@ -126,10 +129,10 @@ export class Select extends Widget {
       // If the previous selected option was placeholder, it will not have rep and value span,
       // hence create it. Also, down below remove the placeholder element.
       if (!selectedRepSpan) {
-        selectedValueSlot.innerHTML = this.getFormattedValrepItemAsHTML(displayFormat, val, rep);
+        selectedValueSlot.appendChild(this.getFormattedValrepItemAsHTML(displayFormat, val, rep));
       } else {
         selectedRepSpan ? (selectedRepSpan.innerHTML = rep) : "";
-        selectedValSpan ? (selectedValSpan.innerHTML = val) : "null";
+        selectedValSpan ? (selectedValSpan.textContent = val) : "null";
       }
 
       let selectedPlaceholderSpan = selectedValueSlot.querySelector(".u-placeholder");
@@ -148,18 +151,21 @@ export class Select extends Widget {
       const selectedOptionElement = element.options[element.selectedIndex];
       const selectedRepSpan = selectedOptionElement.querySelector(".u-valrep-representation");
       const selectedValSpan = selectedOptionElement.querySelector(".u-valrep-value");
+      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
       if (selectedOptionElement.style && selectedOptionElement.style.display === "none") {
         return;
       }
       if (selectedValueSlot) {
         selectedValueSlot.setAttribute("value", element.value);
-        widgetInstance.data.properties.value = selectedValueSlot.getAttribute("value");
+        // Since the value received will be the corresponding index, find the actual value from valrep.
+        const value = valrep[element.value]?.value;
+        widgetInstance.data.properties.value = value;
       }
       this.reformatValueElement(
         displayFormat,
         selectedValueSlot,
         selectedRepSpan ? selectedRepSpan.innerHTML : "",
-        selectedValSpan ? selectedValSpan.innerHTML : ""
+        selectedValSpan ? selectedValSpan.textContent : ""
       );
       // Always call hideFormatError as we cannot select an invalid option.
       widgetInstance.setProperties({
@@ -172,7 +178,11 @@ export class Select extends Widget {
 
     getValue(widgetInstance) {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
-      const value = this.getNode(widgetInstance.data.properties, "value");
+      const element = this.getElement(widgetInstance);
+      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      // When the user event triggers,
+      // the getValue function is called first, so the value should be read directly from the element instead of the data properties.
+      const value = valrep[element["value"]]?.value;
       return value;
     }
 
@@ -197,7 +207,9 @@ export class Select extends Widget {
       let rep;
       const value = this.getNode(widgetInstance.data.properties, "value");
       const valrep = this.getNode(widgetInstance.data.properties, "valrep");
-      const valrepWithNullValue = this.toBoolean(valrep && valrep.some(element => element.value === ""));
+      // Since the index is passed to fluent instead of the actual value, find the index corresponding to the value received.
+      const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
+      const isValueEmpty = (value === null || value === "");
       const showPlaceholder = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:show-placeholder"));
       const placeholderText = this.getNode(widgetInstance.data.properties, "uniface:placeholder-text");
       const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
@@ -205,14 +217,11 @@ export class Select extends Widget {
       if (selectedValueElement) {
         selectedValueElement.remove();
       }
-      if ((value === "" || value === null) && showPlaceholder && !valrepWithNullValue) {
+      if (valueToSet === -1 && isValueEmpty && showPlaceholder) {
         selectedValueElement = this.createPlaceholderElement(placeholderText, value);
         isPlaceholderElementCreated = true;
       } else {
         rep = this.getRepresentation(value, valrep);
-        if (rep === null) {
-          rep = "";
-        }
         selectedValueElement = this.createSelectedValrepElement("div", value, rep, displayFormat);
       }
       if (selectedValueElement) {
@@ -220,8 +229,7 @@ export class Select extends Widget {
         element.appendChild(selectedValueElement);
       }
 
-      if (!isPlaceholderElementCreated && !rep) {
-        // If there is no representation for the non-empty value then show a format error.
+      if (!isPlaceholderElementCreated && valueToSet === -1) {
         widgetInstance.setProperties({
           "uniface": {
             "format-error": true,
@@ -247,7 +255,7 @@ export class Select extends Widget {
       // available microtask queue, which is typically more immediate and
       // precise than setTimeout().
       window.queueMicrotask(() => {
-        element["value"] = value;
+        element["value"] = valueToSet.toString();
       });
     }
   };
@@ -290,7 +298,9 @@ export class Select extends Widget {
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new HtmlAttributeChoice(this, "uniface:popup-position", "u-position", ["above", "below"], "below", true),
-    new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ".u-placeholder")
+    new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ".u-placeholder"),
+    new IgnoreProperty(this, "html:minlength"),
+    new IgnoreProperty(this, "html:maxlength")
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
@@ -613,7 +623,7 @@ export class Select extends Widget {
     /** @type {UValueFormatting} */
     let formattedValue = {};
     const displayFormat = this.getNode(properties, "uniface:display-format") ||
-                          this.getNode(this.defaultValues, "uniface:display-format");
+      this.getNode(this.defaultValues, "uniface:display-format");
     const value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
     const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
     const valrepItem = this.getValrepItem(valrep, value);

@@ -95,7 +95,7 @@ export class TextField extends Widget {
     });
     // Dispatch change event when clicked on change button.
     this.elements.widget.querySelector(".u-sw-changebutton").addEventListener("click", () => {
-      this.elements.widget.dispatchEvent(new Event("change", { "bubbles": false }));
+      this.elements.widget.dispatchEvent(new window.Event("change", { "bubbles": false }));
     });
     return valueUpdaters;
   }
@@ -175,7 +175,8 @@ export class TextField extends Widget {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    formattedValue.primaryPlainText = this.getNode(properties, "value");
+    let plainTextValue = this.getNode(properties, "value");
+    formattedValue.primaryPlainText = plainTextValue.replaceAll(/\n/g, " ");
     formattedValue.prefixIcon = this.getNode(properties, "uniface:prefix-icon");
     if (!formattedValue.prefixIcon) {
       formattedValue.prefixText = this.getNode(properties, "uniface:prefix-text");

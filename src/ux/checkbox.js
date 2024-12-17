@@ -11,7 +11,7 @@ import {
   SlottedElement,
   SlottedError,
   HtmlAttributeNumber,
-  Dummy
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -116,7 +116,7 @@ export class Checkbox extends Widget {
           }
           break;
       }
-      throw "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.";
+      throw Checkbox.formatErrorMessage;
     }
 
     /**
@@ -233,7 +233,9 @@ export class Checkbox extends Widget {
     new HtmlAttribute(this, undefined, "role", "checkbox"),
     new HtmlAttribute(this, "html:title", "title", undefined),
     new HtmlAttribute(this, undefined, "currentValue", "on"),
-    new Dummy(this, "uniface:tri-state", false),
+    new IgnoreProperty(this, "uniface:tri-state", false),
+    new IgnoreProperty(this, "html:minlength"),
+    new IgnoreProperty(this, "html:maxlength"),
     new this.HTMLValueAttributeTristate(this, "value", "checked", null),
     new HtmlAttributeBoolean(this, undefined, "ariaChecked", false),
     new HtmlAttributeBoolean(this, undefined, "ariaRequired", false),
