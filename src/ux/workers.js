@@ -540,18 +540,19 @@ export class SubWidgetsByProperty extends Element {
  * @extends {Worker}
  */
 export class SubWidgetOverFlow extends Worker {
-  constructor(widgetClass, propId, attrName, defaultValue) {
+  constructor(widgetClass, propId, attrName, defaultValue, choices) {
     super(widgetClass);
     this.propId = propId;
     this.defaultValue = defaultValue;
     this.attrName = attrName;
+    this.choices = choices;
     this.registerSetter(widgetClass, this.propId, this);
     this.registerDefaultValue(widgetClass, this.propId, defaultValue);
   }
   refresh(widgetInstance) {
     const element = this.getElement(widgetInstance);
     const currentValue = this.getNode(widgetInstance.data.properties, this.propId);
-    if (currentValue === undefined || currentValue === null) {
+    if (this.choices && !this.choices.includes(currentValue)) {
       return;
     }
     element.setAttribute(this.attrName, currentValue);

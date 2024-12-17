@@ -235,7 +235,8 @@ export class Widget extends Base {
     const widgetClass = this.getNode(properties, "uniface:widget-class");
     return {
       "text": `ERROR: ${widgetClass ?? ""} not supported as menu-item!`,
-      "icon": "Blocked",
+      "prefixIcon": "Blocked",
+      "suffixIcon": "",
       "classNames": "u-not-supported"
     };
   }
