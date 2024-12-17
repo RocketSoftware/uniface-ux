@@ -341,6 +341,7 @@ export class Controlbar extends Widget {
       const menuItem = document.createElement("fluent-menu-item");
       menuItem.classList.add("u-menu-item");
       menuItem.setAttribute("role", "menuitem");
+      menuItem.setAttribute("tabindex", "-1");
       menuItem.setAttribute("item-id", controlId);
       menuItem.hidden = true;
       overflowMenu.append(menuItem);
