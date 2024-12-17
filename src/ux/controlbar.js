@@ -97,7 +97,8 @@ export class Controlbar extends Widget {
       // Handle 'move' or 'hide' overflow-behavior.
       const itemsToHideOrMove = controlBarItems.filter((item) => {
         const overflowBehavior = item.getAttribute("overflow-behavior");
-        return overflowBehavior === "move" || overflowBehavior === "hide" || overflowBehavior === null;
+        const isHidden = item.hasAttribute("hidden");
+        return !isHidden && (overflowBehavior === "move" || overflowBehavior === "hide" || overflowBehavior === null);
       });
       if (!itemsToHideOrMove.length) {
         return;
@@ -122,7 +123,7 @@ export class Controlbar extends Widget {
           let item = itemsToHideOrMove[index];
           item.classList.add("u-overflown-item");
           const overflowBehavior = item.getAttribute("overflow-behavior");
-          if (overflowBehavior === "move") {
+          if (overflowBehavior === "move" || overflowBehavior === null) {
             const subWidgetId = item.getAttribute("sub-widget-id");
             const menuItem = widgetInstance.elements.overflowMenu.querySelector(`[item-id="${subWidgetId}"]`);
             if (!item.hasAttribute("hidden")) {
