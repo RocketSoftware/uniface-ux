@@ -70,16 +70,9 @@ export class Controlbar extends Widget {
         })
         .filter((item) => item);
 
-      // Handle overflow when overflow-behavior is not defined or has invalid value.
+      // Handle overflow when overflow-behavior is "none".
       let contentWidth = 0;
-      const itemsToAlwaysShow = controlBarItems.filter(
-        (item) =>
-          !(
-            item.getAttribute("overflow-behavior") === "menu" ||
-            item.getAttribute("overflow-behavior") === "move" ||
-            item.getAttribute("overflow-behavior") === "hide"
-          )
-      );
+      const itemsToAlwaysShow = controlBarItems.filter((item) => item.getAttribute("overflow-behavior") === "none");
       for (let item of itemsToAlwaysShow) {
         if (!item.hasAttribute("hidden")) {
           const itemWidth = this.getItemWidth(item);
@@ -104,7 +97,7 @@ export class Controlbar extends Widget {
       // Handle 'move' or 'hide' overflow-behavior.
       const itemsToHideOrMove = controlBarItems.filter((item) => {
         const overflowBehavior = item.getAttribute("overflow-behavior");
-        return overflowBehavior === "move" || overflowBehavior === "hide";
+        return overflowBehavior === "move" || overflowBehavior === "hide" || overflowBehavior === null;
       });
       if (!itemsToHideOrMove.length) {
         return;
@@ -204,15 +197,17 @@ export class Controlbar extends Widget {
         textElement.innerText = value.text;
         element.appendChild(textElement);
       }
-      if (value["icon"]) {
+      if (value.prefixIcon) {
         let iconElement = document.createElement("span");
-        iconElement.classList.add(`u-${iconPosition}-icon`, "ms-Icon", `ms-Icon--${value.icon}`);
+        iconElement.classList.add(`u-prefix-icon`, "ms-Icon", `ms-Icon--${value.prefixIcon}`);
         classNames && iconElement.classList.add(classNames);
-        if (iconPosition === "prefix") {
-          element.insertBefore(iconElement, element.firstChild);
-        } else if (iconPosition === "suffix") {
-          element.appendChild(iconElement);
-        }
+        element.insertBefore(iconElement, element.firstChild);
+      }
+      if (value.suffixIcon) {
+        let iconElement = document.createElement("span");
+        iconElement.classList.add(`u-suffix-icon`, "ms-Icon", `ms-Icon--${value.suffixIcon}`);
+        classNames && iconElement.classList.add(classNames);
+        element.appendChild(iconElement);
       }
     }
 
@@ -317,7 +312,7 @@ export class Controlbar extends Widget {
     ]
   );
 
-  createOverflowContainer() {
+  static createOverflowContainer() {
     // Create the overflowContainer.
     const overflowContainer = document.createElement("div");
     overflowContainer.classList.add("u-overflow-container");
@@ -326,7 +321,7 @@ export class Controlbar extends Widget {
     return overflowContainer;
   }
 
-  createOverflowButton() {
+  static createOverflowButton() {
     // Create the overflowButton.
     const overflowButton = document.createElement("fluent-button");
     overflowButton.textContent = "...";
@@ -335,13 +330,14 @@ export class Controlbar extends Widget {
     return overflowButton;
   }
 
-  createOverflowMenuAndMenuItems(controls) {
+  static createOverflowMenuAndMenuItems(controls) {
     // Create the overflowMenu.
     const overflowMenu = document.createElement("fluent-menu");
     overflowMenu.classList.add("u-overflow-menu");
     overflowMenu.classList.add("u-menu");
     overflowMenu.hidden = true;
-    for (const controlId in controls) {
+    for (const item of controls) {
+      const controlId = item.getAttribute("sub-widget-id");
       const menuItem = document.createElement("fluent-menu-item");
       menuItem.classList.add("u-menu-item");
       menuItem.setAttribute("role", "menuitem");
@@ -355,22 +351,6 @@ export class Controlbar extends Widget {
   onConnect(widgetElement, objectDefinition) {
     const valueUpdaters = super.onConnect(widgetElement, objectDefinition);
 
-    // Create overflow container.
-    const overflowContainer = this.createOverflowContainer();
-    // Create overflow button.
-    const overflowButton = this.createOverflowButton();
-    const controls = this.subWidgets ?? {};
-    // Create overflow menu and menu items.
-    const overflowMenu = this.createOverflowMenuAndMenuItems(controls);
-    overflowButton.addEventListener("click", () => {
-      overflowMenu.hidden = !overflowMenu.hidden;
-    });
-    // Add overflow button to overflow menu and overflow menu to overflow container.
-    overflowContainer.append(overflowButton);
-    overflowContainer.append(overflowMenu);
-    // Add overflow container to the widget element.
-    widgetElement.append(overflowContainer);
-
     // Handle horizontal responsive behavior of controlbar based on screen size.
     // Create a ResizeObserver instance.
     const ro = new window.ResizeObserver(() => {
@@ -383,12 +363,34 @@ export class Controlbar extends Widget {
     // Observe the controlbar for changes in screen size.
     ro.observe(widgetElement);
 
-    this.elements.overflowButton = overflowButton;
-    this.elements.overflowMenu = overflowMenu;
-    this.elements.overflowContainer = overflowContainer;
+    this.elements.overflowButton = this.elements.widget.querySelector(".u-overflow-button");
+    this.elements.overflowMenu = this.elements.widget.querySelector(".u-overflow-menu");
+    this.elements.overflowContainer = this.elements.widget.querySelector(".u-overflow-container");
     this.elements.overflowMenuItems = Array.from(widgetElement.querySelectorAll(".u-overflow-container .u-menu-item"));
     this.elements.controlbarItems = Array.from(widgetElement.querySelectorAll(":scope > :not(.u-overflow-container) > *"));
     return valueUpdaters;
+  }
+
+  static processLayout(skeletonWidgetElement, objectDefinition) {
+    let widgetElement = super.processLayout(skeletonWidgetElement, objectDefinition);
+
+    // Create overflow container.
+    const overflowContainer = Controlbar.createOverflowContainer();
+    // Create overflow button.
+    const overflowButton = Controlbar.createOverflowButton();
+    const controls = widgetElement.querySelectorAll(":scope > * > *");
+    // Create overflow menu and menu items.
+    const overflowMenu = Controlbar.createOverflowMenuAndMenuItems(controls);
+    overflowButton.addEventListener("click", () => {
+      overflowMenu.hidden = !overflowMenu.hidden;
+    });
+    // Add overflow button to overflow menu and overflow menu to overflow container.
+    overflowContainer.append(overflowButton);
+    overflowContainer.append(overflowMenu);
+    // Add overflow container to the widget element.
+    widgetElement.append(overflowContainer);
+
+    return widgetElement;
   }
 }
 UNIFACE.ClassRegistry.add("UX.Controlbar", Controlbar);
