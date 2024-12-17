@@ -11,7 +11,8 @@ import {
   HtmlAttributeBoolean,
   SlottedElement,
   HtmlValueAttributeBoolean,
-  IgnoreProperty
+  IgnoreProperty,
+  SubWidgetOverFlow
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -93,7 +94,9 @@ export class Switch extends Widget {
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength")
+    new IgnoreProperty(this, "html:maxlength"),
+    new SubWidgetOverFlow(this, "uniface:overflow-behavior", "overflow-behavior", undefined, ["none", "move", "menu", "hide"]),
+    new SubWidgetOverFlow(this, "uniface:priority", "priority", undefined, ["1", "2", "3", "4", "5", "6", "7", "8"])
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text", ""),
     new SlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "uniface:checked-message"),

@@ -13,7 +13,8 @@ import {
   HtmlAttributeBoolean,
   HtmlAttributeMinMax,
   StyleClass,
-  IgnoreProperty
+  IgnoreProperty,
+  SubWidgetOverFlow
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -58,6 +59,8 @@ export class NumberField extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new HtmlAttributeMinMax(this, "html:min", "html:max", undefined, undefined),
+    new SubWidgetOverFlow(this, "uniface:overflow-behavior", "overflow-behavior", undefined, ["none", "move", "menu", "hide"]),
+    new SubWidgetOverFlow(this, "uniface:priority", "priority", undefined, ["1", "2", "3", "4", "5", "6", "7", "8"]),
     new StyleClass(this, ["u-number-field", "outline"])
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
