@@ -1483,6 +1483,8 @@ export class SlottedElementsByValRep extends Element {
 
     this.registerSetter(widgetClass, "display-format", this);
     this.registerDefaultValue(widgetClass, "display-format", "rep");
+    this.registerSetter(widgetClass, "display-format", this);
+    this.registerDefaultValue(widgetClass, "display-format", "rep");
   }
 
   /**
@@ -1504,8 +1506,8 @@ export class SlottedElementsByValRep extends Element {
    */
   createValRepElements(widgetInstance) {
     let element = this.getElement(widgetInstance);
-    let valrep = this.getNode(widgetInstance.data.properties, "valrep");
-    let displayFormat = this.getNode(widgetInstance.data.properties, "display-format");
+    let valrep = this.getNode(widgetInstance.data, "valrep");
+    let displayFormat = this.getNode(widgetInstance.data, "display-format");
     if (valrep.length > 0) {
       valrep.forEach((valRepObj, index) => {
         const childElement = document.createElement(this.tagName);

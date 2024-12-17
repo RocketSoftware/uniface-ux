@@ -1,5 +1,4 @@
-/* eslint-disable no-undef */
-
+/* global UNIFACE */
 (function () {
   'use strict';
 
@@ -71,7 +70,6 @@
     describe("Checks", function () {
 
       before(function () {
-
         verifyWidgetClass(widgetClass);
         element = tester.processLayout();
       });
@@ -180,6 +178,17 @@
       tester.createWidget();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
+    });
+
+    it("Set HTML property hidden to true", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          html: { hidden: true }
+        });
+      }).then(function () {
+        expect(element.getAttribute("hidden"));
+        expect(window.getComputedStyle(element).display).equal("none");
+      });
     });
 
     it("Set Uniface label text", function () {
@@ -371,14 +380,88 @@
         expect(element.getAttribute("orientation")).equal("horizontal");
       });
     });
+
+    it("Set value to empty string ('') when there is a checked option and expect the radio button to get unchecked", function () {
+      let selectedValue = "2";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: selectedValue
+        });
+      }).then(function () {
+        // Set the value to empty string.
+        tester.dataUpdate({
+          value: ''
+        });
+      }).then(function () {
+        // Check that there is no checked item.
+        expect(node.getAttribute("fluent-radio[current-checked=true]")).equal(null);
+      });
+    });
   });
 
+  describe('Invalid state, user interaction and again set to invalid state', function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    it("Set invalid initial value", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: "0"
+        });
+      }).then(function () {
+        let errorIconTooltip = element.querySelector('.u-error-icon');
+        expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+      });
+    });
+
+
+    it("Simulate user interaction and select first option", function () {
+      return asyncRun(function () {
+        const firstRadioOption = document.querySelector('fluent-radio');
+
+        // Simulate click event on radio group widget.
+        firstRadioOption.click();
+      }).then(function () {
+        let errorIconTooltip = element.querySelector('.u-error-icon');
+        expect(errorIconTooltip.getAttribute("title")).equal("");
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        radioButtonArray.forEach(function (node, index) {
+          if (valRepArray[index].value === "1") {
+            expect(node.getAttribute("current-checked")).equal("true");
+          } else {
+            expect(node.getAttribute("current-checked")).equal("false");
+          }
+        });
+      });
+    });
+
+    it("Now again set the same invalid value", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: "0"
+        });
+      }).then(function () {
+        const radioOption1 = document.querySelector("fluent-radio");
+        // Assertions to check if the radio is in un checked state or not.
+        expect(radioOption1.checked).to.be.false;
+        let errorIconTooltip = element.querySelector('.u-error-icon');
+        expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+      });
+    });
+  });
 
   describe('Radio onchange event', function () {
-    let radioElement, onchangeSpy, widget;
+    let radioElement, onchangeSpy;
     beforeEach(function () {
-
-      widget = tester.createWidget();
+      tester.createWidget();
       radioElement = tester.element.querySelector("fluent-radio");
 
       // Create a spy for the onchange event
@@ -408,7 +491,6 @@
 
     // Test case for not firing change event with initial value.
     it('should not invoke the onchange event handler when a radio button has initial value', function () {
-
       let initialValue = "2";
 
       return asyncRun(function () {
@@ -486,7 +568,7 @@
           value: initialValue
         });
       }).then(function () {
-        // Update the valrep with new valRepArray2. 
+        // Update the valrep with new valRepArray2.
         tester.dataUpdate({
           valrep: valRepArray2
         });
@@ -501,6 +583,7 @@
   describe("showError", function () {
     let radioElement;
     beforeEach(function () {
+      tester.createWidget();
       radioElement = tester.element;
     });
 
@@ -525,6 +608,7 @@
   describe("hideError", function () {
     let radioElement;
     beforeEach(function () {
+      tester.createWidget();
       radioElement = tester.element;
     });
 
@@ -534,7 +618,7 @@
           uniface: {
             "format-error": false,
             "format-error-message": ""
-          },
+          }
         });
       }).then(function () {
         expect(radioElement).to.not.have.class("u-format-invalid");

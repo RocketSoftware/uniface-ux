@@ -1,3 +1,4 @@
+/* global UNIFACE */
 (function () {
   'use strict';
 
@@ -289,7 +290,7 @@
         });
       }).then(function () {
         expect(element.getAttribute("disabled"));
-        expect(element.getAttribute("aria-disabled")).equal("true"); 
+        expect(element.getAttribute("aria-disabled")).equal("true");
       });
     });
 
@@ -317,7 +318,7 @@
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
         selectOptionArray.forEach(function (node, index) {
-        expect(node.textContent).equal(valRepArray[index].value);
+          expect(node.textContent).equal(valRepArray[index].value);
         });
       });
     });
@@ -341,37 +342,26 @@
 
     it("Ensure value is set using textContent", function () {
       const valRepArray1 = [
+        ...valRepArray,
         {
-          value: "1",
-          representation: "option one"
-        },
-        {
-          value: "2",
-          representation: "option two"
-        },
-        {
-          value: "3",
-          representation: "option three"
-        },
-        {
-          value: "<script> alert('XSS' attack') </script>",
-          representation: "<script> alert('XSS' attack') </script>"
+          value: "<script> alert('XSS attack') </script>",
+          representation: "<script> alert('XSS attack') </script>"
         }
       ];
       return asyncRun(function() {
         tester.dataUpdate({
           valrep: valRepArray1,
-          value: "<script> alert('XSS' attack') </script>",
+          value: "<script> alert('XSS attack') </script>",
           uniface: {
             "display-format": "valrep"
           }
         });
       }).then(function () {
-          let valStr = "<script> alert('XSS' attack') </script>";
-          let escapedHtmlValue = valStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          assert.equal(element.querySelector('fluent-option.selected .u-valrep-representation').innerHTML, valStr);
-          expect(element.querySelector('fluent-option.selected .u-valrep-value').innerHTML).equal(escapedHtmlValue);
-          expect(element.querySelector('fluent-option.selected .u-valrep-value').textContent).equal(valStr);
+        let valStr = "<script> alert('XSS attack') </script>";
+        let escapedHtmlValue = valStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        assert.equal(element.querySelector('fluent-option.selected .u-valrep-representation').innerHTML, valStr);
+        expect(element.querySelector('fluent-option.selected .u-valrep-value').innerHTML).equal(escapedHtmlValue);
+        expect(element.querySelector('fluent-option.selected .u-valrep-value').textContent).equal(valStr);
       });
     });
 
@@ -387,6 +377,7 @@
       }).then(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("option two");
+        // find index of expected value and compare against index of selected option
         const selectOption = element.querySelector("fluent-option.selected");
         expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
       });
@@ -411,6 +402,7 @@
       }).then(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("");
+        // find index of expected value and compare against index of selected option
         const selectOption = element.querySelector("fluent-option.selected");
         expect(selectOption.value).equal(valRepArrayWithEmpty.findIndex((item) => item.value === "").toString());
       });
@@ -420,6 +412,7 @@
   describe("showError", function () {
     let selectElement;
     beforeEach(function () {
+      tester.createWidget();
       selectElement = tester.element;
     });
 
@@ -444,6 +437,7 @@
   describe("hideError", function () {
     let selectElement;
     beforeEach(function () {
+      tester.createWidget();
       selectElement = tester.element;
     });
 
@@ -460,6 +454,71 @@
         assert(selectElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon");
         expect(selectElement.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
         expect(selectElement.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+      });
+    });
+  });
+
+  describe("Invalid state, user interaction and again set to invalid state", function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    it("Set invalid initial value", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: "0"
+        });
+      }).then(function () {
+        let errorIconTooltip = element.querySelector(".u-error-icon");
+        expect(errorIconTooltip.getAttribute("title")).equal(
+          "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."
+        );
+      });
+    });
+
+    it("Simulate user interaction and select first option", function () {
+      return asyncRun(function () {
+        const selectElement = document.querySelector("fluent-select");
+
+        // Simulate click event on select widget.
+        selectElement.click();
+
+        // Programmatically select an option and dispatch the change event.
+        const optionToSelect = selectElement.options[0]; // Index of the desired option (Option 1).
+        optionToSelect.selected = true; // Mark the option as selected.
+
+        // Dispatch the change event.
+        const event = new window.Event("change", { bubbles: true });
+        selectElement.dispatchEvent(event);
+      }).then(function () {
+        let errorIconTooltip = element.querySelector(".u-error-icon");
+        expect(errorIconTooltip.getAttribute("title")).equal("");
+        const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
+        expect(selectedValue.textContent).equal("option one");
+        // Find index of expected value and compare against index of selected option.
+        const selectOption = element.querySelector("fluent-option.selected");
+        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "1").toString());
+      });
+    });
+
+    it("Now again set the same invalid value", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: "0"
+        });
+      }).then(function () {
+        const selectOption1 = document.querySelector("fluent-option");
+        // Assertions to check if the select is in selected state or not.
+        expect(selectOption1.selected).to.be.false;
+        let errorIconTooltip = element.querySelector(".u-error-icon");
+        expect(errorIconTooltip.getAttribute("title")).equal(
+          "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."
+        );
       });
     });
   });

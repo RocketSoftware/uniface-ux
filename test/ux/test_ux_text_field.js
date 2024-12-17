@@ -1,112 +1,112 @@
 
 (function () {
-    'use strict';
+  'use strict';
 
-    const assert = chai.assert;
-    const expect = chai.expect;
-    const tester = new umockup.WidgetTester();
-    const widgetId = tester.widgetId;
-    const widgetName = tester.widgetName;
-    const widgetClass = tester.getWidgetClass();
-    const asyncRun = umockup.asyncRun;
+  const assert = chai.assert;
+  const expect = chai.expect;
+  const tester = new umockup.WidgetTester();
+  const widgetId = tester.widgetId;
+  const widgetName = tester.widgetName;
+  const widgetClass = tester.getWidgetClass();
+  const asyncRun = umockup.asyncRun;
 
-    /**
+  /**
      * Function to determine whether the widget class has been loaded.
      */
-    function verifyWidgetClass(widgetClass) {
-        assert(widgetClass, `Widget class '${widgetName}' is not defined!
+  function verifyWidgetClass(widgetClass) {
+    assert(widgetClass, `Widget class '${widgetName}' is not defined!
               Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
-    }
+  }
 
-    describe("Uniface Mockup tests", function () {
+  describe("Uniface Mockup tests", function () {
 
-        it("Get class " + widgetName, function () {
-            verifyWidgetClass(widgetClass);
-        });
+    it("Get class " + widgetName, function () {
+      verifyWidgetClass(widgetClass);
+    });
+
+  });
+
+  describe("Uniface static structure constructor definition", function () {
+
+    it('should have a static property structure of type Element', function () {
+      verifyWidgetClass(widgetClass);
+      const structure = widgetClass.structure;
+      expect(structure.constructor).to.be.an.instanceof(Element.constructor);
+      expect(structure.tagName).to.equal('fluent-text-field');
+      expect(structure.styleClass).to.equal('');
+      expect(structure.elementQuerySelector).to.equal('');
+      expect(structure.attributeDefines).to.be.an('array');
+      expect(structure.elementDefines).to.be.an('array');
+      expect(structure.triggerDefines).to.be.an('array');
+      expect(structure.isSetter).to.equal(true);
+      expect(structure.hidden).to.equal(false);
+    });
+
+  });
+
+  describe(widgetName + ".processLayout", function () {
+    let element;
+
+    it("processLayout", function () {
+      element = tester.processLayout();
+      expect(element).to.have.tagName(tester.uxTagName);
+    });
+
+    describe("Checks", function () {
+
+      before(function () {
+        element = tester.processLayout();
+      });
+
+      it("check instance of HTMLElement", function () {
+        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+      });
+
+      it("check tagName", function () {
+        expect(element).to.have.tagName(tester.uxTagName);
+      });
+
+      it("check id", function () {
+        expect(element).to.have.id(widgetId);
+      });
+
+      it("check u-label-text", function () {
+        assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element");
+      });
+
+      it("check u-prefix", function () {
+        assert(element.querySelector("span.u-prefix"), "Widget misses or has incorrect u-prefix element");
+      });
+
+      it("check u-suffix", function () {
+        assert(element.querySelector("span.u-suffix"), "Widget misses or has incorrect u-suffix element");
+      });
+
+      it("check u-error-icon", function () {
+        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
+      });
+
+      it("check u-sw-changebutton", function () {
+        assert(element.querySelector("fluent-button.u-sw-changebutton"), "Widget misses or has incorrect u-sw-changebutton element");
+      });
+
+      it("check u-icon", function () {
+        assert(element.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
+      });
+
+      it("check u-text", function () {
+        assert(element.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
+      });
 
     });
 
-    describe("Uniface static structure constructor definition", function () {
+  });
 
-        it('should have a static property structure of type Element', function () {
-            verifyWidgetClass(widgetClass);
-            const structure = widgetClass.structure;
-            expect(structure.constructor).to.be.an.instanceof(Element.constructor);
-            expect(structure.tagName).to.equal('fluent-text-field');
-            expect(structure.styleClass).to.equal('');
-            expect(structure.elementQuerySelector).to.equal('');
-            expect(structure.attributeDefines).to.be.an('array');
-            expect(structure.elementDefines).to.be.an('array');
-            expect(structure.triggerDefines).to.be.an('array');
-            expect(structure.isSetter).to.equal(true);
-            expect(structure.hidden).to.equal(false);
-        });
+  describe("Create widget", function () {
 
+    before(function () {
+      tester.construct();
     });
-
-    describe(widgetName + ".processLayout", function () {
-        let element;
-
-        it("processLayout", function () {
-            element = tester.processLayout();
-            expect(element).to.have.tagName(tester.uxTagName);
-        });
-
-        describe("Checks", function () {
-
-            before(function () {
-                element = tester.processLayout();
-            });
-
-            it("check instance of HTMLElement", function () {
-                expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
-            });
-
-            it("check tagName", function () {
-                expect(element).to.have.tagName(tester.uxTagName);
-            });
-
-            it("check id", function () {
-                expect(element).to.have.id(widgetId);
-            });
-
-            it("check u-label-text", function () {
-                assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element");
-            });
-
-            it("check u-prefix", function () {
-                assert(element.querySelector("span.u-prefix"), "Widget misses or has incorrect u-prefix element");
-            });
-
-            it("check u-suffix", function () {
-                assert(element.querySelector("span.u-suffix"), "Widget misses or has incorrect u-suffix element");
-            });
-
-            it("check u-error-icon", function () {
-                assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
-            });
-
-            it("check u-sw-changebutton", function () {
-                assert(element.querySelector("fluent-button.u-sw-changebutton"), "Widget misses or has incorrect u-sw-changebutton element");
-            });
-
-            it("check u-icon", function () {
-                assert(element.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
-            });
-
-            it("check u-text", function () {
-                assert(element.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
-            });
-
-        });
-
-    });
-
-    describe("Create widget", function () {
-
-        before(function () {
-            tester.construct();
-        });
 
         it("constructor", function () {
             try {
@@ -119,59 +119,59 @@
             }
         });
 
-        it("onConnect", function () {
-            const element = tester.processLayout();
-            const widget = tester.onConnect();
-            assert(element, "Target element is not defined!");
-            assert(widget.elements.widget === element, "widget is not connected");
-        });
-
+    it("onConnect", function () {
+      const element = tester.processLayout();
+      const widget = tester.onConnect();
+      assert(element, "Target element is not defined!");
+      assert(widget.elements.widget === element, "widget is not connected");
     });
 
-    describe("mapTrigger", function () {
-        const element = tester.processLayout();
-        const widget = tester.onConnect();
+  });
 
-        it("mapTrigger", function () {
-            widget.mapTrigger("onchange");
-            const event = new window.Event('onchange');
-            element.dispatchEvent(event);
-            assert(widget.elements.widget === element, "widget is not connected");
-        });
+  describe("mapTrigger", function () {
+    const element = tester.processLayout();
+    const widget = tester.onConnect();
 
+    it("mapTrigger", function () {
+      widget.mapTrigger("onchange");
+      const event = new window.Event('onchange');
+      element.dispatchEvent(event);
+      assert(widget.elements.widget === element, "widget is not connected");
     });
 
-    describe('Text Field onchange event', function () {
-        let textFieldElement, onChangeSpy;
+  });
 
-        beforeEach(function () {
-          tester.createWidget();
-          textFieldElement = tester.element;
+  describe('Text Field onchange event', function () {
+    let textFieldElement, onChangeSpy;
 
-          // Create a spy for the onchange event
-          onChangeSpy = sinon.spy();
+    beforeEach(function () {
+      tester.createWidget();
+      textFieldElement = tester.element;
 
-          // Add the onchange event listener to the number field element
-          textFieldElement.addEventListener('onchange', onChangeSpy);
-        });
+      // Create a spy for the onchange event
+      onChangeSpy = sinon.spy();
 
-        // Clean up after each test
-        afterEach(function () {
-          // Restore the spy to its original state
-          sinon.restore();
-        });
-
-        // Test case for the on change event
-        it('should call the onchange event handler when the Text Field  is changed', function () {
-          // Simulate a onchange event
-          const event = new window.Event('onchange');
-          textFieldElement.dispatchEvent(event);
-
-          // Assert that the onchange event handler was called once
-          expect(onChangeSpy.calledOnce).to.be.true;
-        });
-
+      // Add the onchange event listener to the number field element
+      textFieldElement.addEventListener('onchange', onChangeSpy);
     });
+
+    // Clean up after each test
+    afterEach(function () {
+      // Restore the spy to its original state
+      sinon.restore();
+    });
+
+    // Test case for the on change event
+    it('should call the onchange event handler when the Text Field  is changed', function () {
+      // Simulate a onchange event
+      const event = new window.Event('onchange');
+      textFieldElement.dispatchEvent(event);
+
+      // Assert that the onchange event handler was called once
+      expect(onChangeSpy.calledOnce).to.be.true;
+    });
+
+  });
 
     describe("Data Init", function () {
         const defaultValues = tester.getDefaultValues();
@@ -184,35 +184,35 @@
         }, {});
         let element;
 
-        beforeEach(function () {
-          tester.dataInit();
-          element = tester.element;
-          assert(element, "Widget top element is not defined!");
-        });
+    beforeEach(function () {
+      tester.dataInit();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
 
-        for (const defaultClass in classes) {
-          it("check class '" + defaultClass + "'", function () {
-            if (classes[defaultClass]) {
-              expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
-            } else {
-              expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
-            }
-          });
+    for (const defaultClass in classes) {
+      it("check class '" + defaultClass + "'", function () {
+        if (classes[defaultClass]) {
+          expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+        } else {
+          expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
         }
+      });
+    }
 
-        it("check 'hidden' attributes", function () {
-            assert(element.querySelector('span.u-text').hasAttribute('hidden'), "Text span element should be hidden by default");
-            assert(element.querySelector('span.u-icon').hasAttribute('hidden'), "Icon span element should be hidden by default");
-        });
+    it("check 'hidden' attributes", function () {
+      assert(element.querySelector('span.u-text').hasAttribute('hidden'), "Text span element should be hidden by default");
+      assert(element.querySelector('span.u-icon').hasAttribute('hidden'), "Icon span element should be hidden by default");
+    });
 
-        it("check widget id", function () {
-            assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
-        });
+    it("check widget id", function () {
+      assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
+    });
 
-        it("check 'tabindex' attributes", function () {
-            assert(element.hasAttribute('tabindex'), "tabindex element should be present by default");
-            assert.equal(element.getAttribute('tabindex'), "0", "tabindex element should be outline by default");
-        });
+    it("check 'tabindex' attributes", function () {
+      assert(element.hasAttribute('tabindex'), "tabindex element should be present by default");
+      assert.equal(element.getAttribute('tabindex'), "0", "tabindex element should be outline by default");
+    });
 
         it("check 'size'", function () {
             assert.equal(defaultValues["html:size"], '20', "Default value of size should be '20'");
@@ -224,15 +224,15 @@
             assert.equal(defaultValues["label-text"], undefined, "Default value of label-text will be undefined");
         });
 
-        it("check type attributes", function () {
-            assert(element.hasAttribute('type'), "Text span element should be hidden by default");
-            assert.equal(element.getAttribute('type'), "text", "Type element should be text by default");
-        });
+    it("check type attributes", function () {
+      assert(element.hasAttribute('type'), "Text span element should be hidden by default");
+      assert.equal(element.getAttribute('type'), "text", "Type element should be text by default");
+    });
 
-        it("check appearance attributes", function () {
-            assert(element.hasAttribute('appearance'), "appearance element should be present by default");
-            assert.equal(element.getAttribute('appearance'), "outline", "appearance element should be outline by default");
-        });
+    it("check appearance attributes", function () {
+      assert(element.hasAttribute('appearance'), "appearance element should be present by default");
+      assert.equal(element.getAttribute('appearance'), "outline", "appearance element should be outline by default");
+    });
 
         it("check changebutton icon-position", function () {
             assert.equal(defaultValues["changebutton:icon-position"], 'end', "Default value of change button icon-position should be end");
@@ -243,17 +243,17 @@
             assert.equal(defaultValues["changebutton:html:appearance"], "stealth", "Default value of change button appearance should be stealth");
         });
 
-        it("check value", function () {
-            assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
-        });
-
+    it("check value", function () {
+      assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
     });
 
-    describe("dataUpdate", function () {
-        let widget;
-        before(function () {
-            widget = tester.createWidget();
-        });
+  });
+
+  describe("dataUpdate", function () {
+    let widget;
+    before(function () {
+      widget = tester.createWidget();
+    });
 
         it("set appearance set to filled", function () {
             let appearance = 'filled';
@@ -660,15 +660,15 @@
             });
         });
 
-        it("check label position before styles", function () {
-            //if u-label-position attribute is added element display is changed
-            let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
-            let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
-            assert.equal(displayPropertyValue, "inline-flex");
-            let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
-            let alignPropertyValue = labelStyle.getPropertyValue("align-content");
-            assert.equal(alignPropertyValue, "center");
-        });
+    it("check label position before styles", function () {
+      // if u-label-position attribute is added element display is changed
+      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
+      assert.equal(displayPropertyValue, "inline-flex");
+      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
+      let alignPropertyValue = labelStyle.getPropertyValue("align-content");
+      assert.equal(alignPropertyValue, "center");
+    });
 
         it("Set label position below", function () {
             return asyncRun(function() {
@@ -681,15 +681,15 @@
             });
         });
 
-        it("check label position below styles", function () {
-            //if u-label-position attribute is added element display is changed
-            let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
-            let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
-            assert.equal(flexPropertyValue, "column");
-            let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
-            let orderPropertyValue = labelStyle.getPropertyValue("order");
-            assert.equal(orderPropertyValue, 2);
-        });
+    it("check label position below styles", function () {
+      // if u-label-position attribute is added element display is changed
+      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
+      assert.equal(flexPropertyValue, "column");
+      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
+      let orderPropertyValue = labelStyle.getPropertyValue("order");
+      assert.equal(orderPropertyValue, 2);
+    });
 
         it("reset label and its position", function () {
             return asyncRun(function() {
@@ -705,22 +705,22 @@
             });
         });
 
-        it("check reset label position styles", function () {
-            //if u-label-position attribute is added element display is changed
-            let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
-            let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
-            assert.equal(flexPropertyValue, "column");
-        });
+    it("check reset label position styles", function () {
+      // if u-label-position attribute is added element display is changed
+      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
+      assert.equal(flexPropertyValue, "column");
     });
+  });
 
-    describe("showError", function () {
-        let widget;
-        let minlength = 2;
-        let maxlength = 5;
-        before(function () {
-            widget = tester.createWidget();
-            verifyWidgetClass(widgetClass);
-        });
+  describe("showError", function () {
+    let widget;
+    let minlength = 2;
+    let maxlength = 5;
+    before(function () {
+      widget = tester.createWidget();
+      verifyWidgetClass(widgetClass);
+    });
 
         it("setting minlength and maxlength", function(){
             return asyncRun(function() {
@@ -783,44 +783,42 @@
             properties = tester.widget.data;
         });
 
-        it("Verify single line value matches primaryPlainText returned by getValueFormatted", function () {
-            valueProperty = "Single line value";
-            return asyncRun(function() {
-                tester.dataUpdate({
-                    value: valueProperty
-                });
-            }).then(function () {
-                let valueFormatted = widgetClass.getValueFormatted(properties);
-                assert.equal(valueFormatted.primaryPlainText, valueProperty);
-            });
+    it("Verify single line value matches primaryPlainText returned by getValueFormatted", function () {
+      valueProperty = "Single line value";
+      return asyncRun(function() {
+        tester.dataUpdate({
+          value: valueProperty
         });
-
-        it("Verify the value returned by getValueFormatted doesn't include the line breaks", function () {
-            valueProperty = `testing value with multiple lines:
-line 1,
-line 2`;
-            return asyncRun(function() {
-                tester.dataUpdate({
-                    value: valueProperty
-                });
-            }).then(function () {
-                const expectedValue = "testing value with multiple lines: line 1, line 2";
-                let valueFormatted = widgetClass.getValueFormatted(properties);
-                assert.equal(valueFormatted.primaryPlainText, expectedValue);
-            });
-        });
+      }).then(function () {
+        let valueFormatted = widgetClass.getValueFormatted(properties);
+        assert.equal(valueFormatted.primaryPlainText, valueProperty);
+      });
     });
 
-    describe("dataCleanup", function () {
-        let widget = tester.createWidget();
-        it("reset all properties", function () {
-            try {
-                widget.dataCleanup(tester.widgetProperties);
-            } catch (e) {
-                console.error(e);
-                assert(false, "Failed to call dataCleanup(), exception " + e);
-            }
+    it("Verify the value returned by getValueFormatted doesn't include the line breaks", function () {
+      valueProperty = `testing value with multiple lines: line 1, line 2`;
+      return asyncRun(function() {
+        tester.dataUpdate({
+          value: valueProperty
         });
+      }).then(function () {
+        const expectedValue = "testing value with multiple lines: line 1, line 2";
+        let valueFormatted = widgetClass.getValueFormatted(properties);
+        assert.equal(valueFormatted.primaryPlainText, expectedValue);
+      });
     });
+  });
+
+  describe("dataCleanup", function () {
+    let widget = tester.createWidget();
+    it("reset all properties", function () {
+      try {
+        widget.dataCleanup(tester.widgetProperties);
+      } catch (e) {
+        console.error(e);
+        assert(false, "Failed to call dataCleanup(), exception " + e);
+      }
+    });
+  });
 
 })();
