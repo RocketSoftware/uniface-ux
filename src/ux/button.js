@@ -238,12 +238,11 @@ export class Button extends Widget {
    */
   getMenuItem() {
     const properties = this.data.properties;
-    return {
-      "text": this.getNode(properties, "value") ?? "",
-      "prefixIcon": this.getNode(properties, "uniface:icon") ?? "",
-      "suffixIcon": "",
-      "classNames": ""
+    let formattedValue = {
+      ...Button.getValueFormatted(properties),
+      "isNotSupported" : false
     };
+    return formattedValue;
   }
 
   /**

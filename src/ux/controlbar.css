@@ -69,11 +69,11 @@
   cursor: pointer;
 }
 
-.u-controlbar .u-menu-item .u-prefix-icon {
+.u-controlbar .u-menu-item .u-prefix {
   margin-inline-end: 11px;
 }
 
-.u-controlbar .u-menu-item .u-suffix-icon {
+.u-controlbar .u-menu-item .u-suffix {
   margin-inline-start: 11px;
 }
 
@@ -81,7 +81,8 @@
   display: none;
 }
 
-.u-controlbar .u-menu-item .u-not-supported {
+.u-controlbar .u-menu-item.u-not-supported,
+.u-controlbar .u-menu-item.u-invalid {
   cursor: default;
   color: #d83b01;
 }

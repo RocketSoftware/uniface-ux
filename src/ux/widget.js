@@ -229,15 +229,21 @@ export class Widget extends Base {
    * Will be invoked from complex widgets like controlbar to add content to the overflow-menu.
    * Returns an object that contains the text, icon and css classnames of individual menu items.
    * Can be specialized in individual widget classes.
+   * @return {UValueFormatting}
    */
   getMenuItem() {
     const properties = this.data.properties;
     const widgetClass = this.getNode(properties, "uniface:widget-class");
     return {
-      "text": `ERROR: ${widgetClass ?? ""} not supported as menu-item!`,
+      "primaryPlainText": `ERROR: ${widgetClass ?? ""} not supported as menu-item!`,
+      "secondaryPlainText": "",
+      "primaryHtmlText": "",
+      "prefixText": "",
+      "suffixText": "",
       "prefixIcon": "Blocked",
       "suffixIcon": "",
-      "classNames": "u-not-supported"
+      "errorMessage": "",
+      "isNotSupported": true
     };
   }
 

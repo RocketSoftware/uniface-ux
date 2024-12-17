@@ -8,7 +8,8 @@ import {
   SlottedElement,
   SlottedError,
   HtmlAttribute,
-  IgnoreProperty
+  IgnoreProperty,
+  SubWidgetOverFlow
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -228,7 +229,9 @@ export class PlainText extends Widget {
     new HtmlAttribute(this, "html:slot", "slot", ""),
     new IgnoreProperty(this, "html:maxlength"),
     new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:readonly")
+    new IgnoreProperty(this, "html:readonly"),
+    new SubWidgetOverFlow(this, "uniface:overflow-behavior", "overflow-behavior", undefined, ["none", "move", "menu", "hide"]),
+    new SubWidgetOverFlow(this, "uniface:overflow-index", "overflow-index", undefined, ["1", "2", "3", "4", "5", "6", "7", "8"])
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
@@ -387,6 +390,15 @@ export class PlainText extends Widget {
       formattedValue.suffixText = this.getNode(properties, "uniface:suffix-text");
     }
     this.staticLog("getValueFormatted", formattedValue);
+    return formattedValue;
+  }
+
+  getMenuItem() {
+    const properties = this.data.properties;
+    let formattedValue = {
+      ...PlainText.getValueFormatted(properties),
+      "isNotSupported" : false
+    };
     return formattedValue;
   }
 }

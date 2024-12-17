@@ -188,26 +188,51 @@ export class Controlbar extends Widget {
      */
     appendIconAndTextInMenuItem(element, value) {
       element.innerHTML = "";
-      const iconPosition = value.iconPosition ?? "prefix";
-      const classNames = value.classNames ?? "";
-      if (value.text) {
+      if (value.isNotSupported) {
+        element.classList.add("u-not-supported");
+      }
+      if (value.primaryPlainText) {
         let textElement = document.createElement("span");
-        textElement.classList.add(`u-${iconPosition}-text`);
-        classNames && textElement.classList.add(classNames);
-        textElement.innerText = value.text;
+        textElement.innerText = value.primaryPlainText;
+        element.appendChild(textElement);
+      } else if (value.primaryHtmlText) {
+        let textElement = document.createElement("span");
+        textElement.innerHTML = value.primaryHtmlText;
         element.appendChild(textElement);
       }
+      if (value.secondaryPlainText) {
+        let textElement = document.createElement("span");
+        textElement.classList.add("u-suffix");
+        textElement.innerText = value.secondaryPlainText;
+        element.appendChild(textElement);
+      }
+      if (value.errorMessage) {
+        element.classList.add("u-invalid");
+        let iconElement = document.createElement("span");
+        iconElement.classList.add(`u-suffix`, "ms-Icon", `ms-Icon--AlertSolid`);
+        iconElement.setAttribute("title", value.errorMessage);
+        element.appendChild(iconElement);
+      }
+
       if (value.prefixIcon) {
         let iconElement = document.createElement("span");
-        iconElement.classList.add(`u-prefix-icon`, "ms-Icon", `ms-Icon--${value.prefixIcon}`);
-        classNames && iconElement.classList.add(classNames);
+        iconElement.classList.add(`u-prefix`, "ms-Icon", `ms-Icon--${value.prefixIcon}`);
         element.insertBefore(iconElement, element.firstChild);
+      } else if (value.prefixText) {
+        let textElement = document.createElement("span");
+        textElement.innerText = value.prefixText;
+        textElement.classList.add(`u-prefix`);
+        element.insertBefore(textElement, element.firstChild);
       }
       if (value.suffixIcon) {
         let iconElement = document.createElement("span");
-        iconElement.classList.add(`u-suffix-icon`, "ms-Icon", `ms-Icon--${value.suffixIcon}`);
-        classNames && iconElement.classList.add(classNames);
+        iconElement.classList.add(`u-suffix`, "ms-Icon", `ms-Icon--${value.suffixIcon}`);
         element.appendChild(iconElement);
+      } else if (value.suffixText) {
+        let textElement = document.createElement("span");
+        textElement.innerText = value.suffixText;
+        textElement.classList.add(`u-suffix`);
+        element.appendChild(textElement);
       }
     }
 
