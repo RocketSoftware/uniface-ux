@@ -506,7 +506,7 @@ export class Base {
         if (pos > 0) {
           subWidgetData = subWidgetData || {};
           let key = property.substring(pos + 1);
-          subWidgetData[key] = data[property];
+          subWidgetData[key] = key === "valrep" ? this.getFormattedValrep(data[property]) : data[property];
           // Remove the property from the original data to avoid duplication.
           delete data[property];
         }
