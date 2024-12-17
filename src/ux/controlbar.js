@@ -317,7 +317,7 @@ export class Controlbar extends Widget {
         "u-start-section",
         ".u-start-section",
         [],
-        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-start")]
+        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "controls-start")]
       ),
       new Element(
         this,
@@ -325,7 +325,7 @@ export class Controlbar extends Widget {
         "u-center-section",
         ".u-center-section",
         [],
-        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-center")]
+        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "controls-center")]
       ),
       new Element(
         this,
@@ -333,7 +333,7 @@ export class Controlbar extends Widget {
         "u-end-section",
         ".u-end-section",
         [],
-        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-end")]
+        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "controls-end")]
       )
     ]
   );
