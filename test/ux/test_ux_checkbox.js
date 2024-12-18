@@ -199,7 +199,7 @@
 
   describe("dataUpdate", function() {
     let widget, element;
-        
+
     before(function() {
       widget = tester.createWidget();
       element = tester.element;
@@ -251,7 +251,7 @@
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, checkBoxLabelText); //Check for visibility
+        assert.equal(labelText, checkBoxLabelText); // Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
       });
     });
@@ -282,7 +282,7 @@
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, checkBoxLabelText); //Check for visibility
+        assert.equal(labelText, checkBoxLabelText); // Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
       });
     });
@@ -292,11 +292,13 @@
       return asyncRun(function() {
         tester.dataUpdate({
           value: 0,
-          "label-text": checkBoxLabelText
+          uniface: {
+            "label-text": checkBoxLabelText
+          }
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, checkBoxLabelText); //Check for visibility
+        assert.equal(labelText, checkBoxLabelText); // Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
       });
     });
@@ -306,16 +308,20 @@
       return asyncRun(function() {
         tester.dataUpdate({
           value: 1,
-          "label-text": checkBoxLabelText
+          uniface: {
+            "label-text": checkBoxLabelText
+          }
         });
 
         tester.dataUpdate({
           value: "",
-          "label-text": "Changed Label Text"
+          uniface: {
+            "label-text": "Changed Label Text"
+          }
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, "Changed Label Text"); //Check for visibility
+        assert.equal(labelText, "Changed Label Text"); // Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
       });
     });
@@ -335,13 +341,11 @@
           value: 123
         });
       }).then(function() {
-
-        console.log(element, tester, 'tester');
         expect(element).to.have.class("u-format-invalid");
         assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon");
         expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
         assert.equal(widget.elements.widget.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
-        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."); //Check for visibility
+        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."); // Check for visibility
       });
     });
   });
@@ -357,8 +361,10 @@
     it("set error to false", function() {
       return asyncRun(function() {
         tester.dataUpdate({
-          error: false,
-          "error-message": ""
+          uniface: {
+            error: false,
+            "error-message": ""
+          }
         });
       }).then(function() {
         expect(element).to.not.have.class("u-format-invalid");
@@ -370,29 +376,14 @@
   });
 
   describe("reset all properties", function() {
-
     it("reset all property", function() {
       try {
-        console.log(tester.getDefaultValues());
-        tester.dataUpdate(tester.getDefaultValues());
+        tester.dataUpdate(tester.widgetProperties);
       } catch (e) {
         console.error(e);
         assert(false, "Failed to call dataCleanup(), exception " + e);
       }
     });
   });
-
-  //   describe("dataCleanup", function () {
-  //   let widget = tester.createWidget();
-  //   it("reset all properties", function () {
-  //     try {
-  //       widget.dataCleanup(tester.widgetProperties);
-  //     } catch (e) {
-  //       console.error(e);
-  //       assert(false, "Failed to call dataCleanup(), exception " + e);
-  //     }
-  //   });
-  // });
-
 
 })();
