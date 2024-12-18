@@ -329,8 +329,6 @@ export class Widget extends Base {
    * @param {UData} data
    */
   dataUpdate(data) {
-    // TODO: Remove below line when backend starts sending flattened data.
-    data = this.dataConversionUtil.toFlat(data);
     this.log("dataUpdate", data);
 
     // Send property data to sub-widgets.
