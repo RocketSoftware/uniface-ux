@@ -68,7 +68,7 @@ export class PlainText extends Widget {
      * Returns error message if display-format is valrep based.
      */
     getFormatErrorText(widgetInstance) {
-      const plainTextFormat = this.getNode(widgetInstance.data.properties, "plaintext-format");
+      const plainTextFormat = this.getNode(widgetInstance.data, "plaintext-format");
       switch (plainTextFormat) {
         case "valrep-text":
         case "valrep-html":
@@ -85,9 +85,9 @@ export class PlainText extends Widget {
      * If the `valrep` object does not match the expected value, a format error is shown.
      */
     setTextAsPlaintextFormat(widgetInstance) {
-      let value = this.getNode(widgetInstance.data.properties, "value");
-      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
-      const plainTextFormat = this.getNode(widgetInstance.data.properties, "plaintext-format");
+      let value = this.getNode(widgetInstance.data, "value");
+      const valrep = this.getNode(widgetInstance.data, "valrep");
+      const plainTextFormat = this.getNode(widgetInstance.data, "plaintext-format");
       const element = this.getElement(widgetInstance);
       element.innerHTML = "";
       // Convert value to string if it's not a string already.
@@ -103,10 +103,8 @@ export class PlainText extends Widget {
         const text = this.getFormatErrorText(widgetInstance);
         if (text) {
           widgetInstance.setProperties({
-            "uniface": {
-              "format-error": true,
-              "format-error-message": text
-            }
+            "format-error": true,
+            "format-error-message": text
           });
           element.textContent = value;
           return;
@@ -114,10 +112,8 @@ export class PlainText extends Widget {
       }
 
       widgetInstance.setProperties({
-        "uniface": {
-          "format-error": false,
-          "format-error-message": ""
-        }
+        "format-error": false,
+        "format-error-message": ""
       });
 
       // Create elements dynamically for different plain text formats.
@@ -207,7 +203,7 @@ export class PlainText extends Widget {
 
     getValue(widgetInstance) {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
-      let text = this.getNode(widgetInstance.data.properties, "value");
+      let text = this.getNode(widgetInstance.data, "value");
       return text;
     }
 

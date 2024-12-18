@@ -129,7 +129,7 @@ export class Checkbox extends Widget {
       if (!widgetInstance.data.ignoreChangeEvent) {
         event.preventDefault();
         let newValue;
-        const isTriState = widgetInstance.toBoolean(widgetInstance.data.properties["tri-state"]);
+        const isTriState = widgetInstance.toBoolean(widgetInstance.data["tri-state"]);
         switch (widgetInstance.data.currentValue) {
           case true:
             newValue = false;
@@ -151,16 +151,12 @@ export class Checkbox extends Widget {
 
     clearErrors(widgetInstance) {
       widgetInstance.setProperties({
-        "uniface": {
-          "format-error": false,
-          "format-error-message": ""
-        }
+        "format-error": false,
+        "format-error-message": ""
       });
       widgetInstance.setProperties({
-        "uniface": {
-          "error": false,
-          "error-message": ""
-        }
+        "error": false,
+        "error-message": ""
       });
     }
 
@@ -196,25 +192,21 @@ export class Checkbox extends Widget {
         "widgetInstance": widgetInstance.getTraceDescription(),
         "attrName": this.attrName
       });
-      const value = widgetInstance.data.properties.value;
+      const value = widgetInstance.data.value;
       let newValue = value;
       let isError = false;
 
       try {
         newValue = this.fieldValueToTriState(value);
         widgetInstance.setProperties({
-          "uniface": {
-            "format-error": false,
-            "format-error-message": ""
-          }
+          "format-error": false,
+          "format-error-message": ""
         });
       } catch (error) {
         isError = true;
         widgetInstance.setProperties({
-          "uniface": {
-            "format-error": true,
-            "format-error-message": error
-          }
+          "format-error": true,
+          "format-error-message": error
         });
       }
 

@@ -56,8 +56,8 @@ export class Switch extends Widget {
 
     refresh(widgetInstance) {
       super.refresh(widgetInstance);
-      let error = this.toBoolean(this.getNode(widgetInstance.data.properties, "error"));
-      let formatError = this.toBoolean(this.getNode(widgetInstance.data.properties, "format-error"));
+      let error = this.toBoolean(this.getNode(widgetInstance.data, "error"));
+      let formatError = this.toBoolean(this.getNode(widgetInstance.data, "format-error"));
       let element = widgetInstance.elements.widget;
       let errorElement = this.getElement(widgetInstance);
       if (errorElement && this.selectorUsingSameErrorSlot) {

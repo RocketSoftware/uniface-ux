@@ -94,7 +94,7 @@
         const widget = tester.construct();
         assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-checkbox'], "Class is not defined");
+        assert(widgetClass.defaultValues['class:u-checkbox'], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -182,14 +182,14 @@
     });
 
     it("check tri-state, tabindex, hidden , disabled, readonly and title", function() {
-      let htmlProperties = tester.defaultValues.html;
-      let unifaceProperties = tester.defaultValues.uniface;
-      assert.equal(htmlProperties["tabindex"], 0, "Default value of html:tabindex should be 0");
-      assert.equal(htmlProperties["title"], undefined, "Default value of html:title should be undefined");
-      assert.equal(htmlProperties["disabled"], false, "Default value of disabled  should be false");
-      assert.equal(htmlProperties["readonly"], false, "Default value of readonly  should be false");
-      assert.equal(htmlProperties["hidden"], false, "Default value of hidden  should be false");
-      assert.equal(unifaceProperties["tri-state"], false, "Default value of label-position will be above");
+      let defaultProperties = tester.defaultValues;
+
+      assert.equal(defaultProperties["html:tabindex"], 0, "Default value of html:tabindex should be 0");
+      assert.equal(defaultProperties["html:title"], undefined, "Default value of html:title should be undefined");
+      assert.equal(defaultProperties["html:disabled"], false, "Default value of disabled  should be false");
+      assert.equal(defaultProperties["html:readonly"], false, "Default value of readonly  should be false");
+      assert.equal(defaultProperties["html:hidden"], false, "Default value of hidden  should be false");
+      assert.equal(defaultProperties["tri-state"], false, "Default value of label-position will be above");
     });
 
     it("check value", function() {
@@ -292,9 +292,7 @@
       return asyncRun(function() {
         tester.dataUpdate({
           value: 0,
-          uniface: {
-            "label-text": checkBoxLabelText
-          }
+          "label-text": checkBoxLabelText
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
@@ -308,16 +306,12 @@
       return asyncRun(function() {
         tester.dataUpdate({
           value: 1,
-          uniface: {
-            "label-text": checkBoxLabelText
-          }
+          "label-text": checkBoxLabelText
         });
 
         tester.dataUpdate({
           value: "",
-          uniface: {
-            "label-text": "Changed Label Text"
-          }
+          "label-text": "Changed Label Text"
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
@@ -341,6 +335,8 @@
           value: 123
         });
       }).then(function() {
+
+        console.log(element, tester, 'tester');
         expect(element).to.have.class("u-format-invalid");
         assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon");
         expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
@@ -361,10 +357,8 @@
     it("set error to false", function() {
       return asyncRun(function() {
         tester.dataUpdate({
-          uniface: {
-            error: false,
-            "error-message": ""
-          }
+          error: false,
+          "error-message": ""
         });
       }).then(function() {
         expect(element).to.not.have.class("u-format-invalid");
@@ -379,6 +373,7 @@
 
     it("reset all property", function() {
       try {
+        console.log(tester.getDefaultValues());
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
@@ -386,5 +381,18 @@
       }
     });
   });
+
+  //   describe("dataCleanup", function () {
+  //   let widget = tester.createWidget();
+  //   it("reset all properties", function () {
+  //     try {
+  //       widget.dataCleanup(tester.widgetProperties);
+  //     } catch (e) {
+  //       console.error(e);
+  //       assert(false, "Failed to call dataCleanup(), exception " + e);
+  //     }
+  //   });
+  // });
+
 
 })();

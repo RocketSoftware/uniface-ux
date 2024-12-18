@@ -1461,7 +1461,7 @@ export class Trigger extends Worker {
  * This setter adds an element to your widget, where:
  * - the element is added as a child according the structure.
  * - the element is being slotted into the web-component (the parent element).
- * @export+
+ * @export
  * @class SlottedElementsByValRep
  * @extends {Element}
  */
@@ -1481,8 +1481,6 @@ export class SlottedElementsByValRep extends Element {
     this.registerSetter(widgetClass, "valrep", this);
     this.registerDefaultValue(widgetClass, "valrep", []);
 
-    this.registerSetter(widgetClass, "display-format", this);
-    this.registerDefaultValue(widgetClass, "display-format", "rep");
     this.registerSetter(widgetClass, "display-format", this);
     this.registerDefaultValue(widgetClass, "display-format", "rep");
   }

@@ -46,7 +46,7 @@ export class Select extends Widget {
   static HtmlAttributeBooleanReadOnly = class extends HtmlAttributeBoolean {
     refresh(widgetInstance) {
       const element = this.getElement(widgetInstance);
-      const readonly = this.toBoolean(this.getNode(widgetInstance.data.properties, "html:readonly"));
+      const readonly = this.toBoolean(this.getNode(widgetInstance.data, "html:readonly"));
       if (readonly) {
         element.classList.add("u-readonly");
       } else {
@@ -146,12 +146,12 @@ export class Select extends Widget {
       /** @type {HTMLSelectElement} */
       // @ts-ignore
       const element = this.getElement(widgetInstance);
-      const displayFormat = this.getNode(widgetInstance.data.properties, "display-format");
+      const displayFormat = this.getNode(widgetInstance.data, "display-format");
       const selectedValueSlot = element.querySelector("[slot='selected-value']");
       const selectedOptionElement = element.options[element.selectedIndex];
       const selectedRepSpan = selectedOptionElement.querySelector(".u-valrep-representation");
       const selectedValSpan = selectedOptionElement.querySelector(".u-valrep-value");
-      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      const valrep = this.getNode(widgetInstance.data, "valrep");
       if (selectedOptionElement.style && selectedOptionElement.style.display === "none") {
         return;
       }
@@ -159,7 +159,7 @@ export class Select extends Widget {
         selectedValueSlot.setAttribute("value", element.value);
         // Since the value received will be the corresponding index, find the actual value from valrep.
         const value = valrep[element.value]?.value;
-        widgetInstance.data.properties.value = value;
+        widgetInstance.data.value = value;
       }
       this.reformatValueElement(
         displayFormat,
@@ -169,16 +169,18 @@ export class Select extends Widget {
       );
       // Always call hideFormatError as we cannot select an invalid option.
       widgetInstance.setProperties({
-        "uniface": {
-          "format-error": false,
-          "format-error-message": ""
-        }
+        "format-error": false,
+        "format-error-message": ""
       });
     }
 
     getValue(widgetInstance) {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
-      const value = this.getNode(widgetInstance.data.properties, "value");
+      const element = this.getElement(widgetInstance);
+      const valrep = this.getNode(widgetInstance.data, "valrep");
+      // When the user event triggers,
+      // the getValue function is called first, so the value should be read directly from the element instead of the data properties.
+      const value = valrep[element["value"]]?.value;
       return value;
     }
 
@@ -201,19 +203,19 @@ export class Select extends Widget {
       let isPlaceholderElementCreated = false;
       const element = this.getElement(widgetInstance);
       let rep;
-      const value = this.getNode(widgetInstance.data.properties, "value");
-      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+      const value = this.getNode(widgetInstance.data, "value");
+      const valrep = this.getNode(widgetInstance.data, "valrep");
       // Since the index is passed to fluent instead of the actual value, find the index corresponding to the value received.
       const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
       const isValueEmpty = (value === null || value === "");
-      const showPlaceholder = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:show-placeholder"));
-      const placeholderText = this.getNode(widgetInstance.data.properties, "uniface:placeholder-text");
-      const displayFormat = this.getNode(widgetInstance.data.properties, "uniface:display-format");
+      const showPlaceholder = this.toBoolean(this.getNode(widgetInstance.data, "show-placeholder"));
+      const placeholderText = this.getNode(widgetInstance.data, "placeholder-text");
+      const displayFormat = this.getNode(widgetInstance.data, "display-format");
       let selectedValueElement = widgetInstance.elements.widget.querySelector("[slot='selected-value']");
       if (selectedValueElement) {
         selectedValueElement.remove();
       }
-      if (valueToSet === -1 && isValueEmpty  && showPlaceholder) {
+      if (valueToSet === -1 && isValueEmpty && showPlaceholder) {
         selectedValueElement = this.createPlaceholderElement(placeholderText, value);
         isPlaceholderElementCreated = true;
       } else {
@@ -227,17 +229,13 @@ export class Select extends Widget {
 
       if (!isPlaceholderElementCreated && valueToSet === -1) {
         widgetInstance.setProperties({
-          "uniface": {
-            "format-error": true,
-            "format-error-message": Select.formatErrorMessage
-          }
+          "format-error": true,
+          "format-error-message": Select.formatErrorMessage
         });
       } else {
         widgetInstance.setProperties({
-          "uniface": {
-            "format-error": false,
-            "format-error-message": ""
-          }
+          "format-error": false,
+          "format-error-message": ""
         });
       }
       // When the value doesn't match any of the options in the option list
@@ -266,7 +264,7 @@ export class Select extends Widget {
     refresh(widgetInstance) {
       super.refresh(widgetInstance);
       const element = this.getElement(widgetInstance);
-      const tabIndexValue = this.getNode(widgetInstance.data.properties, "html:tabindex");
+      const tabIndexValue = this.getNode(widgetInstance.data, "html:tabindex");
       window.setTimeout(() => {
         element["tabIndex"] = tabIndexValue;
       }, 1000);
@@ -524,19 +522,19 @@ export class Select extends Widget {
     // Compute the position of listbox and opens it.
     widgetElement.addEventListener("click", () => {
       this.popupPreCalc(".listbox", widgetElement);
-      const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data.properties, "popup-position"));
+      const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data, "popup-position"));
       this.popupPostCalc(".listbox", rect);
     });
 
     widgetElement.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
-        const isReadOnly = this.toBoolean(this?.data?.properties?.readonly);
+        const isReadOnly = this.toBoolean(this.data["html:readonly"]);
         if (isReadOnly) {
           widgetElement.open = false;
           return;
         }
         this.popupPreCalc(".listbox", widgetElement);
-        const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data.properties, "popup-position"));
+        const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data, "popup-position"));
         this.popupPostCalc(".listbox", rect);
       }
     });
@@ -584,7 +582,7 @@ export class Select extends Widget {
       // Remove the 'u-blocked' class from the widget element.
       this.elements.widget.classList.remove("u-blocked");
       if (widgetClass.uiBlocking === "readonly") {
-        if (!this.toBoolean(this.data.properties.readonly)) {
+        if (!this.toBoolean(this.data["html:readonly"])) {
           this.elements.widget.classList.remove("u-readonly");
         }
       } else {

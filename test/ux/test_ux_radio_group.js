@@ -1,4 +1,3 @@
-/* global UNIFACE */
 (function () {
   'use strict';
 
@@ -131,7 +130,13 @@
 
   describe("Data Init", function () {
     const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+    const classes = Object.keys(defaultValues).reduce((acc, key) => {
+      if (key.startsWith("class:")) {
+        let newKey = key.replace("class:", "");
+        acc[newKey] = defaultValues[key];
+      }
+      return acc;
+    }, {});
     var element;
 
     beforeEach(function () {
@@ -183,7 +188,7 @@
     it("Set HTML property hidden to true", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          html: { hidden: true }
+          "html:hidden": true
         });
       }).then(function () {
         expect(element.getAttribute("hidden"));
@@ -194,9 +199,7 @@
     it("Set Uniface label text", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-text": "Test Label"
-          }
+          "label-text": "Test Label"
         });
       }).then(function () {
         expect(element.querySelector("label.u-label-text").innerText).equal("Test Label");
@@ -206,7 +209,7 @@
     it("Set HTML property readonly to true", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          html: { readonly: true }
+          "html:readonly": true
         });
       }).then(function () {
         expect(element.getAttribute("readonly"));
@@ -217,7 +220,7 @@
     it("Set HTML property disabled to true", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          html: { disabled: true }
+          "html:disabled": true
         });
       }).then(function () {
         expect(element.getAttribute("disabled"));
@@ -243,9 +246,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          uniface: {
-            "display-format": "val"
-          }
+          "display-format": "val"
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -260,9 +261,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          uniface: {
-            "display-format": "valrep"
-          }
+          "display-format": "valrep"
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -324,10 +323,8 @@
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArrayLongText,
-          uniface: {
-            "display-format": "rep",
-            "layout": "horizontal"
-          }
+          "display-format": "rep",
+          "layout": "horizontal"
         });
       }).then(function () {
         expect(element.getAttribute("orientation")).equal("horizontal");
@@ -350,16 +347,12 @@
         tester.dataUpdate({
           valrep: valRepArray,
           value: selectedValue,
-          html: {
-            "disabled": true,
-            "readonly": false
-          },
-          classes: { "ClassA": true },
-          uniface: {
-            "label-text": "Test Label",
-            "display-format": "val",
-            "layout": "horizontal"
-          }
+          "html:disabled": true,
+          "html:readonly": false,
+          "class:ClassA": true,
+          "label-text": "Test Label",
+          "display-format": "val",
+          "layout": "horizontal"
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -380,23 +373,41 @@
         expect(element.getAttribute("orientation")).equal("horizontal");
       });
     });
+  });
 
-    it("Set value to empty string ('') when there is a checked option and expect the radio button to get unchecked", function () {
-      let selectedValue = "2";
+  describe('Ensure setting value to empty clears the selection if empty value is not one of the options', function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
 
+    it("Set a valid initial value and ensure the corresponding element is checked", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          value: selectedValue
+          value: "2"
         });
       }).then(function () {
-        // Set the value to empty string.
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        radioButtonArray.forEach(function (node, index) {
+          if (valRepArray[index].value === "2") {
+            expect(node.getAttribute("current-checked")).equal("true");
+          } else {
+            expect(node.getAttribute("current-checked")).equal("false");
+          }
+        });
+      });
+    });
+
+    it("Set value to empty string ('') and ensure there is no checked element", function () {
+      return asyncRun(function () {
         tester.dataUpdate({
           value: ''
         });
       }).then(function () {
-        // Check that there is no checked item.
-        expect(node.getAttribute("fluent-radio[current-checked=true]")).equal(null);
+        expect(element.querySelector("fluent-radio[current-checked=true]")).equal(null);
       });
     });
   });
@@ -615,10 +626,8 @@
     it("Set error to false", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "format-error": false,
-            "format-error-message": ""
-          }
+          "format-error": false,
+          "format-error-message": ""
         });
       }).then(function () {
         expect(radioElement).to.not.have.class("u-format-invalid");

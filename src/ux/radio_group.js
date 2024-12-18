@@ -55,13 +55,17 @@ export class RadioGroup extends Widget {
     constructor(widgetClass, propId, attrName, defaultValue) {
       super(widgetClass, propId, attrName, defaultValue);
       // Register a setter for display format, ensuring it also updates the worker's refresh function.
-      this.registerSetter(widgetClass, "uniface:display-format", this);
+      this.registerSetter(widgetClass, "display-format", this);
       this.registerSetter(widgetClass, "valrep", this);
     }
 
     getValue(widgetInstance) {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
-      const value = this.getNode(widgetInstance.data.properties, "value");
+      const element = this.getElement(widgetInstance);
+      const valrep = this.getNode(widgetInstance.data, "valrep");
+      // When the user event triggers,
+      // the getValue function is called first, so the value should be read directly from the element instead of the data properties.
+      const value = valrep[element["value"]]?.value;
       return value;
     }
 
@@ -73,7 +77,7 @@ export class RadioGroup extends Widget {
         "element": element,
         "event_name": "change",
         "handler": () => {
-          const valrep = this.getNode(widgetInstance.data.properties, "valrep");
+          const valrep = this.getNode(widgetInstance.data, "valrep");
           if (valrep && valrep.length > 0) {
             // Since the value received will be the corresponding index, find the actual value from valrep.
             const value = valrep[element["value"]]?.value;
@@ -91,24 +95,27 @@ export class RadioGroup extends Widget {
       });
 
       const element = this.getElement(widgetInstance);
-      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
-      const value = this.getNode(widgetInstance.data.properties, "value");
+      const valrep = this.getNode(widgetInstance.data, "valrep");
+      const value = this.getNode(widgetInstance.data, "value");
+      const valRepRadioElement = element.querySelectorAll("fluent-radio");
       // Since the index is passed to fluent instead of the actual value, find the index corresponding to the value received.
       const valueToSet = valrep.findIndex((item) => item.value === value) ?? "";
       const isValueEmpty = (value === null || value === "");
       if (valrep.length > 0 && (valueToSet !== -1 || isValueEmpty)) {
+        // Manually clear the checked state when value is empty and empty value not present in valrep.
+        if (isValueEmpty && valueToSet === -1) {
+          valRepRadioElement.forEach(radioButton => {
+            radioButton["checked"] = false;
+          });
+        }
         widgetInstance.setProperties({
-          "uniface": {
-            "format-error": false,
-            "format-error-message": ""
-          }
+          "format-error": false,
+          "format-error-message": ""
         });
       } else {
         widgetInstance.setProperties({
-          "uniface": {
-            "format-error": true,
-            "format-error-message": RadioGroup.formatErrorMessage
-          }
+          "format-error": true,
+          "format-error-message": RadioGroup.formatErrorMessage
         });
       }
       this.setHtmlAttribute(element, valueToSet.toString());
@@ -138,7 +145,7 @@ export class RadioGroup extends Widget {
 
     addTooltipToValrepElement(widgetInstance) {
       const radioGroupElement = this.getElement(widgetInstance);
-      const layout = this.getNode(widgetInstance.data.properties, "layout");
+      const layout = this.getNode(widgetInstance.data, "layout");
       const valRepRadioElement = radioGroupElement.querySelectorAll("fluent-radio");
       valRepRadioElement.forEach((radioButton) => {
         let label = radioButton.querySelector("span");
@@ -150,8 +157,8 @@ export class RadioGroup extends Widget {
     }
 
     refresh(widgetInstance) {
-      const valrep = this.getNode(widgetInstance.data.properties, "valrep");
-      const value = this.getNode(widgetInstance.data.properties, "value");
+      const valrep = this.getNode(widgetInstance.data, "valrep");
+      const value = this.getNode(widgetInstance.data, "value");
       let matchedValrepObj = valrep ? valrep.find((valrepObj) => valrepObj.value === value) : undefined;
       if (valrep.length > 0) {
         if (matchedValrepObj) {
@@ -219,7 +226,7 @@ export class RadioGroup extends Widget {
     /** @type {UValueFormatting} */
     let formattedValue = {};
     const displayFormat = this.getNode(properties, "display-format") ||
-                          this.getNode(this.defaultValues, "display-format");
+      this.getNode(this.defaultValues, "display-format");
     const value = this.getNode(properties, "value") || this.getNode(this.defaultValues, "value");
     const valrep = this.getNode(properties, "valrep") || this.getNode(this.defaultValues, "valrep");
     const valrepItem = this.getValrepItem(valrep, value);
