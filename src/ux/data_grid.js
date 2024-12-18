@@ -37,10 +37,10 @@ export class DataGridCollection extends Widget {
     new Worker.StyleClass(this, ["u-datagrid-container"]),
     new Worker.HtmlAttribute(this, "html:title", "title", undefined),
     new Worker.HtmlAttribute(this, "html:base-layer-luminance", "baseLayerLuminance", undefined, false),
-    new Worker.HtmlAttributeChoice(this, "uniface:responsive-type", "u-responsive-type", ["horizontal-scroll", "wrap"], "horizontal-scroll", true),
+    new Worker.HtmlAttributeChoice(this, "responsive-type", "u-responsive-type", ["horizontal-scroll", "wrap"], "horizontal-scroll", true),
     new Worker.HtmlAttributeClass(this, "html:hidden", "u-hidden", false)
   ], [
-    new Worker.SlottedElement(this, "span", "u-datagrid-labeltext", ".u-datagrid-labeltext", "", "uniface:label-text", ""),
+    new Worker.SlottedElement(this, "span", "u-datagrid-labeltext", ".u-datagrid-labeltext", "", "label-text", ""),
     new Worker.Element(this, "fluent-data-grid", "u-datagrid", ".u-datagrid", [
       new Worker.HtmlAttribute(this, undefined, "role", "grid", false),
       new Worker.HtmlAttribute(this, undefined, "tabIndex", "0", false),
@@ -52,7 +52,7 @@ export class DataGridCollection extends Widget {
         new Worker.HtmlAttribute(this, undefined, "role", "row", false),
         new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", false)
       ], [
-        new Worker.SubWidgetsByFields(this, "uniface:exclude", "UX.DataGridColumnHeader")
+        new Worker.SubWidgetsByFields(this, "exclude", "UX.DataGridColumnHeader")
       ]),
       new Worker.WidgetForOccurrence(this, "span", "uocc:{{getName()}}")
     ])
@@ -92,10 +92,10 @@ export class DataGridColumnHeader extends Widget {
     new Worker.StyleClass(this, ["u-datagrid-header-cell"]),
     new Worker.HtmlAttribute(this, undefined, "grid-column", "auto", true),
     new Worker.HtmlAttribute(this, undefined, "cell-type", "columnheader", true),
-    new Worker.HtmlAttribute(this, "uniface:column-title", "title", undefined, true),
+    new Worker.HtmlAttribute(this, "column-title", "title", undefined, true),
     new Worker.HtmlAttributeNumber(this, undefined, "tabIndex", -1, undefined, -1, true)
   ], [
-    new Worker.SlottedElement(this, "span", "control-bar", ".control-bar", "", "uniface:label-text", "")
+    new Worker.SlottedElement(this, "span", "control-bar", ".control-bar", "", "label-text", "")
   ]);
 }
 UNIFACE.ClassRegistry.add("UX.DataGridColumnHeader", DataGridColumnHeader);
@@ -131,7 +131,7 @@ export class DataGridOccurrence extends Widget {
     new Worker.HtmlAttribute(this, undefined, "role", "row", false),
     new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", false)
   ], [
-    new Worker.WidgetsByFields(this, "span","uniface:exclude", "ufld:{{getName()}}")
+    new Worker.WidgetsByFields(this, "span","exclude", "ufld:{{getName()}}")
   ]);
 }
 UNIFACE.ClassRegistry.add("UX.DataGridOccurrence", DataGridOccurrence);
@@ -172,7 +172,7 @@ export class DataGridField extends Widget {
     new Worker.StyleClass(this, ["u-datagrid-content-cell"]),
     new Worker.HtmlAttribute(this, undefined, "grid-column", "auto", true),
     new Worker.HtmlAttribute(this, undefined, "cell-type", "default", false),
-    new Worker.HtmlAttributeFormattedValue(this, "uniface:org-widget-class")
+    new Worker.HtmlAttributeFormattedValue(this, "org-widget-class")
   ]);
 
   /**
@@ -190,13 +190,13 @@ export class DataGridField extends Widget {
       "html:disabled",
       "html:readonly",
       "html:hidden",
-      "uniface:value",
-      "uniface:error",
-      "uniface:error-message"
+      "value",
+      "error",
+      "error-message"
     ];
     super.setProperties(data);
-    const objectClassNamePropId = "uniface:org-widget-class";
-    const objectWidgetName = this.getNode(this.data.properties, objectClassNamePropId);
+    const objectClassNamePropId = "org-widget-class";
+    const objectWidgetName = this.getNode(this.data, objectClassNamePropId);
     if (objectWidgetName) {
       const objectWidgetClass = UNIFACE.ClassRegistry.get(objectWidgetName);
       let formattedValueChange = false;
