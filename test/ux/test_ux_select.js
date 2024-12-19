@@ -1,4 +1,3 @@
-/* global UNIFACE */
 (function () {
   'use strict';
 
@@ -462,6 +461,7 @@
     let element;
     before(function () {
       tester.createWidget();
+      tester.bindUpdatorsEventToElement();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
