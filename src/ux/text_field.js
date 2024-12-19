@@ -13,8 +13,7 @@ import {
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
   HtmlAttributeReadonlyDisabled,
-  HtmlAttributeMinMaxLength,
-  SubWidgetOverFlow
+  HtmlAttributeMinMaxLength
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -57,8 +56,6 @@ export class TextField extends Widget {
     new HtmlAttributeReadonlyDisabled(this, "html:readonly", "html:disabled", "uniface:uiblocked", false, false, false),
     new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
     new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
-    new SubWidgetOverFlow(this, "uniface:overflow-behavior", "overflow-behavior", undefined, ["none", "move", "menu", "hide"]),
-    new SubWidgetOverFlow(this, "uniface:priority", "priority", undefined, ["1", "2", "3", "4", "5", "6", "7", "8"]),
     new StyleClass(this, ["u-text-field", "outline"])
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),

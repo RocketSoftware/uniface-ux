@@ -12,8 +12,7 @@ import {
   HtmlAttributeNumber,
   StyleClass,
   Trigger,
-  IgnoreProperty,
-  SubWidgetOverFlow
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -195,9 +194,7 @@ export class RadioGroup extends Widget {
     new HtmlAttributeChoice(this, "uniface:layout", "orientation", ["vertical", "horizontal"], "vertical", true),
     new this.RadioGroupSelectedValue(this, "value", "value", ""),
     new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength"),
-    new SubWidgetOverFlow(this, "uniface:overflow-behavior", "overflow-behavior", undefined, ["none", "move", "menu", "hide"]),
-    new SubWidgetOverFlow(this, "uniface:priority", "priority", undefined, ["1", "2", "3", "4", "5", "6", "7", "8"])
+    new IgnoreProperty(this, "html:maxlength")
   ], [
     new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
     new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "uniface:label-text"),

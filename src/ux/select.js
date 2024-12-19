@@ -13,8 +13,7 @@ import {
   HtmlAttributeBoolean,
   SlottedElement,
   HtmlAttributeChoice,
-  IgnoreProperty,
-  SubWidgetOverFlow
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -301,9 +300,7 @@ export class Select extends Widget {
     new HtmlAttributeChoice(this, "uniface:popup-position", "u-position", ["above", "below"], "below", true),
     new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ".u-placeholder"),
     new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength"),
-    new SubWidgetOverFlow(this, "uniface:overflow-behavior", "overflow-behavior", undefined),
-    new SubWidgetOverFlow(this, "uniface:priority", "priority", undefined)
+    new IgnoreProperty(this, "html:maxlength")
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "uniface:label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),

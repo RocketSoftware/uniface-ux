@@ -11,8 +11,7 @@ import {
   SlottedElement,
   SlottedError,
   HtmlAttributeNumber,
-  IgnoreProperty,
-  SubWidgetOverFlow
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -245,9 +244,7 @@ export class Checkbox extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeBoolean(this, undefined, "currentChecked", false),
-    new SubWidgetOverFlow(this, "uniface:overflow-behavior", "overflow-behavior", undefined, ["none", "move", "menu", "hide"]),
-    new SubWidgetOverFlow(this, "uniface:priority", "priority", undefined, ["1", "2", "3", "4", "5", "6", "7", "8"])
+    new HtmlAttributeBoolean(this, undefined, "currentChecked", false)
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "")

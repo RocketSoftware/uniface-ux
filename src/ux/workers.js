@@ -531,42 +531,6 @@ export class SubWidgetsByProperty extends Element {
 }
 
 /**
- * Worker: SubWidgetOverFlow.
- * This worker is used to register all properties that are related to the overflow behavior of the widget.
- * Whenever the registered properties are updated, it calls a setProperties with an update of the property "overflow-updated".
- * This helps to keep track of whenever a property related to the overflow behavior is updated.
- * @export
- * @class SubWidgetOverFlow
- * @extends {Worker}
- */
-export class SubWidgetOverFlow extends Worker {
-  constructor(widgetClass, propId, attrName, defaultValue, choices) {
-    super(widgetClass);
-    this.propId = propId;
-    this.defaultValue = defaultValue;
-    this.attrName = attrName;
-    this.choices = choices;
-    this.registerSetter(widgetClass, this.propId, this);
-    this.registerDefaultValue(widgetClass, this.propId, defaultValue);
-  }
-  refresh(widgetInstance) {
-    const element = this.getElement(widgetInstance);
-    const currentValue = this.getNode(widgetInstance.data.properties, this.propId);
-    if (this.choices && !this.choices.includes(currentValue)) {
-      return;
-    }
-    element.setAttribute(this.attrName, currentValue);
-    if (widgetInstance.parentWidget) {
-      widgetInstance.parentWidget.setProperties({
-        "uniface": {
-          "overflow-updated": this.attrName
-        }
-      });
-    }
-  }
-}
-
-/**
  * Worker: Creates a sub-widget for every child object of type field in objectDefinition.
  * The widget definition is established during processLayout() and cannot be changed afterwards.
  * An exclude property, of which the id is specified by propId, allows exclusion of fields to this process.

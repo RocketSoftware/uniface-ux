@@ -8,8 +8,7 @@ import {
   SlottedElement,
   SlottedError,
   HtmlAttribute,
-  IgnoreProperty,
-  SubWidgetOverFlow
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -229,9 +228,7 @@ export class PlainText extends Widget {
     new HtmlAttribute(this, "html:slot", "slot", ""),
     new IgnoreProperty(this, "html:maxlength"),
     new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:readonly"),
-    new SubWidgetOverFlow(this, "uniface:overflow-behavior", "overflow-behavior", undefined, ["none", "move", "menu", "hide"]),
-    new SubWidgetOverFlow(this, "uniface:priority", "priority", undefined, ["1", "2", "3", "4", "5", "6", "7", "8"])
+    new IgnoreProperty(this, "html:readonly")
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
