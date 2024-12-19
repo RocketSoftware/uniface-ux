@@ -65,7 +65,6 @@
   height: auto;
   padding: 5px calc((10 + (var(--design-unit) * 2 * var(--density))) * 1px);
   display: flex;
-  justify-content: flex-end;
   cursor: pointer;
 }
 
