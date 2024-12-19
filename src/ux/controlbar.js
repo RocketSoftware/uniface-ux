@@ -101,30 +101,29 @@ export class Controlbar extends Widget {
         const isHidden = item.hasAttribute("hidden");
         return !isHidden && (overflowBehavior === "move" || overflowBehavior === "hide" || overflowBehavior === null);
       });
-      if (!itemsToHideOrMove.length) {
-        return;
+
+      if (itemsToHideOrMove.length) {
+        itemsToHideOrMove.sort((a, b) => {
+          const valueA = Number(this.getPropertyValue(a, "priority"));
+          const valueB = Number(this.getPropertyValue(b, "priority"));
+          return valueA - valueB;
+        });
+
+        // Get the width of the controlbar items.
+        const controlbarWidth = this.getItemInnerWidth(widget);
+        const allContentWidth = this.getItemsWidth(widget, widgetInstance.elements.overflowButton);
+
+        // Check if there is an overflow condition when all menu items without hidden property are shown.
+        // If there is calculate the index of the item which can cause overflow and show all items in the sorted list with index
+        // less than said index and hide the rest from menu and instead show them as menu items.
+        if (allContentWidth > controlbarWidth) {
+          const indexToBreak = this.findItemsToHide(controlbarWidth, widgetInstance.elements.overflowButton, itemsToHideOrMove, contentWidth);
+          this.showControlbarItems(itemsToHideOrMove.slice(0, indexToBreak), overflowMenu);
+          this.moveControlBarItemsToMenu(itemsToHideOrMove.slice(indexToBreak, itemsToHideOrMove.length), overflowMenu, subWidgetsMap);
+        } else {
+          this.showControlbarItems(itemsToHideOrMove, overflowMenu);
+        }
       }
-      itemsToHideOrMove.sort((a, b) => {
-        const valueA = Number(this.getPropertyValue(a, "priority"));
-        const valueB = Number(this.getPropertyValue(b, "priority"));
-        return valueA - valueB;
-      });
-
-      // Get the width of the controlbar items.
-      const controlbarWidth = this.getItemInnerWidth(widget);
-      const allContentWidth = this.getItemsWidth(widget, widgetInstance.elements.overflowButton);
-
-      // Check if there is an overflow condition when all menu items without hidden property are shown.
-      // If there is calculate the index of the item which can cause overflow and show all items in the sorted list with index
-      // less than said index and hide the rest from menu and instead show them as menu items.
-      if (allContentWidth > controlbarWidth) {
-        const indexToBreak = this.findItemsToHide(controlbarWidth, widgetInstance.elements.overflowButton, itemsToHideOrMove, contentWidth);
-        this.showControlbarItems(itemsToHideOrMove.slice(0, indexToBreak), overflowMenu);
-        this.moveControlBarItemsToMenu(itemsToHideOrMove.slice(indexToBreak, itemsToHideOrMove.length), overflowMenu, subWidgetsMap);
-      } else {
-        this.showControlbarItems(itemsToHideOrMove, overflowMenu);
-      }
-
       // Show the overflow button if there is at least one visible item in the overflow menu.
       if (element.querySelector(".u-overflow-menu .u-menu-item:not([hidden])")) {
         widget.classList.add("u-overflowed");
