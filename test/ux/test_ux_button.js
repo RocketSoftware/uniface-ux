@@ -194,7 +194,9 @@
       return asyncRun(function () {
         tester.dataUpdate({
           value: buttonText,
-          icon: "Home"
+          uniface: {
+            icon: "Home"
+          }
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -209,7 +211,9 @@
       let iconPosition = "end";
       return asyncRun(function () {
         tester.dataUpdate({
-          "icon-position": iconPosition,
+          uniface: {
+            "icon-position": iconPosition
+          },
           value: buttonText
         });
       }).then(function () {
@@ -252,7 +256,9 @@
       let buttonText = 'Button';
       return asyncRun(function () {
         tester.dataUpdate({
-          "icon-position": "stat"
+          uniface: {
+            "icon-position": "stat"
+          }
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -403,7 +409,6 @@
           "icon": "Home",
           value: ""
         },
-
         elements: tester.construct().elements,
         getTraceDescription: () => {
           return "description";
@@ -438,10 +443,14 @@
     });
   });
 
+
   describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {
-        tester.dataUpdate(tester.getDefaultValues());
+        //  Need to replace defaultValues with original unstructured data
+        let defaultValues = tester.defaultValues;
+        let formattedDefaultValues = tester.widget.dataConversionUtil.toNested(defaultValues);
+        tester.dataUpdate(formattedDefaultValues);
       } catch (e) {
         console.error(e);
         assert(false, "Failed to reset the properties, exception " + e);

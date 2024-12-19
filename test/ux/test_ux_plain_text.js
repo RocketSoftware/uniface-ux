@@ -175,7 +175,6 @@
       assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
     });
   });
-
   describe("dataUpdate", function () {
     let widget;
     before(function () {
@@ -183,63 +182,70 @@
     });
 
     it("empty initial value", function () {
-      let resizeProp = 'none';
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
-          "value": ""
+          "value" : ""
         });
       }).then(function () { // check result
         let value = widget.data.value;
-        assert.equal(value, "", 'Value is not same');//Check for visibility
+        assert.equal(value, "", 'Value is not same');// Check for visibility
       });
     });
 
     it("prefix text property", function () {
       let prefixTextData = 'prefixTextData';
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
-          "prefix-text": prefixTextData
+          "uniface": {
+            "prefix-text": prefixTextData
+          }
         });
       }).then(function () {
-        assert.equal(widget.elements.widget.innerText, prefixTextData, "Prefix data does not match");//Check for visibility
+        assert.equal(widget.elements.widget.innerText, prefixTextData, "Prefix data does not match");// Check for visibility
       });
 
     });
 
     it("prefix icon property", function () {
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
-          "prefix-icon": "Accounts"
+          "uniface": {
+            "prefix-icon": "Accounts"
+          }
         });
       }).then(function () {
-        assert.equal(widget.elements.widget.childNodes[1].className, "u-prefix ms-Icon ms-Icon--Accounts", "widget element doesn't has class u-prefix ms-Icon ms-Icon--Accounts");
+        assert.equal(widget.elements.widget.childNodes[1].className, "u-prefix ms-Icon ms-Icon--Accounts","widget element doesn't has class u-prefix ms-Icon ms-Icon--Accounts");
       });
     });
 
     it("suffix text property", function () {
       let suffixTextData = 'suffixTextData';
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
-          "suffix-text": suffixTextData
+          "uniface": {
+            "suffix-text": suffixTextData
+          }
         });
       }).then(function () {
-        assert.equal(widget.elements.widget.innerText, suffixTextData, "Suffix data does not match");//Check for visibility
+        assert.equal(widget.elements.widget.innerText, suffixTextData,"Suffix data does not match");// Check for visibility
       });
 
     });
 
     it("suffix icon property", function () {
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
-          "suffix-icon": "Accounts"
+          "uniface": {
+            "suffix-icon": "Accounts"
+          }
         });
       }).then(function () {
-        assert.equal(widget.elements.widget.childNodes[4].className, "u-suffix ms-Icon ms-Icon--Accounts", "widget element doesn't has class u-suffix ms-Icon ms-Icon--Accounts");
+        assert.equal(widget.elements.widget.childNodes[4].className, "u-suffix ms-Icon ms-Icon--Accounts","widget element doesn't has class u-suffix ms-Icon ms-Icon--Accounts");
       });
     });
 
@@ -247,14 +253,16 @@
       let plainTextFormat = 'first-line';
       let val = "Once you have all the widgets ready, the rest was mostly about setting the css styles";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
           "value": val,
-          "plaintext-format": plainTextFormat
+          "uniface": {
+            "plaintext-format": plainTextFormat
+          }
         });
       }).then(function () {
         let textData = widget.elements.widget.childNodes[2].innerText;
-        assert.equal(textData, val, "The Plain text formatting  first-line data does not match");//Check for visibility
+        assert.equal(textData, val,"The Plain text formatting  first-line data does not match");// Check for visibility
       });
     });
 
@@ -262,14 +270,16 @@
       let plainTextFormat = 'single-line';
       let val = "Single Line Once you have all the widgets ready, the rest was mostly about setting the css styles";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
           "value": val,
-          "plaintext-format": plainTextFormat
+          "uniface": {
+            "plaintext-format": plainTextFormat
+          }
         });
       }).then(function () {
         let textData = widget.elements.widget.childNodes[2].innerText;
-        assert.equal(textData, val, "The Plain text formatting single-line data does not match");//Check for visibility
+        assert.equal(textData, val,"The Plain text formatting single-line data does not match");// Check for visibility
       });
     });
 
@@ -277,22 +287,25 @@
       let plainTextFormat = 'multi-line';
       let val = `Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles
                       Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
-      let innerHtml = `Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles\n                      Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
+      let innerHtml = `Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles
+                      Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
           "value": val,
-          "plaintext-format": plainTextFormat
+          "uniface": {
+            "plaintext-format": plainTextFormat
+          }
         });
       }).then(function () {
-        assert.equal(widget.elements.widget.querySelector("span.u-control").className, "u-control", "u-control class name is not present");
-        assert.equal(innerHtml, widget.elements.widget.childNodes[2].innerHTML, "The Plain text formatting multi-line data does not match");//Check for visibility
+        assert.equal(widget.elements.widget.querySelector("span.u-control").className,"u-control" ,"u-control class name is not present");
+        assert.equal(innerHtml, widget.elements.widget.childNodes[2].innerHTML,"The Plain text formatting multi-line data does not match");// Check for visibility
       });
     });
 
     it("plainTextFormat property when set to multi-paragraphs", function () {
       let plainTextFormat = 'multi-paragraphs';
-      let val = `Multi paragraphs Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles Single Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles
+      let val =   `Multi paragraphs Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles Single Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles
                         Multi paragraphs Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles Single Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles
                         Multi paragraphs Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles Single Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles
                         Multi paragraphs Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles Single Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles
@@ -300,20 +313,22 @@
                         Multi paragraphs Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles Single Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
       let p1Text = "Multi paragraphs Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles Single Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
           "value": val,
-          "plaintext-format": plainTextFormat
+          "uniface": {
+            "plaintext-format": plainTextFormat
+          }
         });
       }).then(function () {
-        assert.equal(widget.elements.widget.querySelector("span.u-control").children[0].className, "u-paragraph", "u-paragraph class name is not present");
-        assert.equal(widget.elements.widget.childNodes[2].childElementCount, 6, "Paragraph count does not match");
-        assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[0].innerText, p1Text, "The Plain text formatting multi-paragraphs data does not match");//Check for visibility
-        assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[1].innerText, p1Text, "The Plain text formatting multi-paragraphs data does not match");
-        assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[2].innerText, p1Text, "The Plain text formatting multi-paragraphs data does not match");
-        assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[3].innerText, p1Text, "The Plain text formatting multi-paragraphs data does not match");
-        assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[4].innerText, p1Text, "The Plain text formatting multi-paragraphs data does not match");
-        assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[5].innerText, p1Text, "The Plain text formatting multi-paragraphs data does not match");
+        assert.equal(widget.elements.widget.querySelector("span.u-control").children[0].className,"u-paragraph" ,"u-paragraph class name is not present");
+        assert.equal(widget.elements.widget.childNodes[2].childElementCount,6,"Paragraph count does not match");
+        assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[0].innerText, p1Text,"The Plain text formatting multi-paragraphs data does not match");// Check for visibility
+        assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[1].innerText, p1Text,"The Plain text formatting multi-paragraphs data does not match");
+        assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[2].innerText,p1Text,"The Plain text formatting multi-paragraphs data does not match");
+        assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[3].innerText,p1Text,"The Plain text formatting multi-paragraphs data does not match");
+        assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[4].innerText,p1Text,"The Plain text formatting multi-paragraphs data does not match");
+        assert.equal(widget.elements.widget.querySelectorAll("p.u-paragraph")[5].innerText,p1Text,"The Plain text formatting multi-paragraphs data does not match");
       });
 
     });
@@ -322,16 +337,18 @@
       let plainTextFormat = 'representation-only';
       let val = "option one";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
           valrep: valRepArray,
-          value: 1,
-          "plaintext-format": plainTextFormat
+          value : 1,
+          "uniface": {
+            "plaintext-format": plainTextFormat
+          }
         });
       }).then(function () {
         expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide unchecked message");
         let textData = widget.elements.widget.childNodes[2].innerText;
-        assert.equal(textData, val, "The Plain text formatting representation-only data does not match");//Check for visibility
+        assert.equal(textData, val,"The Plain text formatting representation-only data does not match");// Check for visibility
       });
 
     });
@@ -340,16 +357,18 @@
       let plainTextFormat = 'valrep-text';
       let val = "option one (1)";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
           valrep: valRepArray,
-          value: 1,
-          "plaintext-format": plainTextFormat
+          value : 1,
+          "uniface": {
+            "plaintext-format": plainTextFormat
+          }
         });
       }).then(function () {
         expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide error icon");
         let textData = widget.elements.widget.childNodes[2].innerText;
-        assert.equal(textData, val, "The Plain text formatting valrep-text data does not match");//Check for visibility
+        assert.equal(textData, val,"The Plain text formatting valrep-text data does not match");// Check for visibility
       });
 
     });
@@ -358,11 +377,13 @@
     it("plainTextFormat property when set to valrep-html", function () {
       let plainTextFormat = 'valrep-html';
       let val = "option one 1";
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
           valrep: valRepArray,
-          value: 1,
-          "plaintext-format": plainTextFormat
+          value : 1,
+          "uniface": {
+            "plaintext-format": plainTextFormat
+          }
         });
       }).then(function () {
         expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide error icon");
@@ -379,13 +400,15 @@
     it("html hidden property when set to true", function () {
       let hiddenProp = true;
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
-          "html:hidden": hiddenProp
+          "html": {
+            "hidden": hiddenProp
+          }
         });
       }).then(function () {
         let hiddenPropPresent = widget.elements.widget.hasAttribute("hidden");
-        assert.equal(hiddenPropPresent, hiddenProp, "Failed to hide the hidden attribute");//Check for visibility
+        assert.equal(hiddenPropPresent, hiddenProp, "Failed to hide the hidden attribute");// Check for visibility
       });
 
     });
@@ -394,42 +417,48 @@
     it("html hidden property when set to false", function () {
       let hiddenProp = false;
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
-          "html:hidden": hiddenProp
+          "html": {
+            "hidden": hiddenProp
+          }
         });
       }).then(function () {
         let hiddenPropPresent = widget.elements.widget.hasAttribute("hidden");
-        assert.equal(hiddenPropPresent, hiddenProp, "Failed to show the hidden attribute");//Check for visibility
+        assert.equal(hiddenPropPresent, hiddenProp, "Failed to show the hidden attribute");// Check for visibility
       });
 
     });
 
-    //html:title property
+    // html:title property
     it("Set html:title property true for plaintext", function () {
       let title = "titleText";
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
-          "html:title": title
+          "html": {
+            "title": title
+          }
         });
       }).then(function () {
         let titleProperty = window.getComputedStyle(widget.elements.widget, null);
-        assert(widget.elements.widget.hasAttribute("title"), titleProperty, "Failed to show the title attribute");
-        assert.equal(widget.elements.widget.getAttribute("title"), title);//Check for visibility
+        assert(widget.elements.widget.hasAttribute("title"),titleProperty, "Failed to show the title attribute");
+        assert.equal(widget.elements.widget.getAttribute("title"), title);// Check for visibility
       });
     });
 
-    //html:title property
+    // html:title property
     it("Set html:title property for changed Title for plaintext", function () {
       let title = "changedTitleText";
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
-          "html:title": title
+          "html": {
+            "title": title
+          }
         });
       }).then(function () {
         let titleProperty = window.getComputedStyle(widget.elements.widget, null);
-        assert(widget.elements.widget.hasAttribute("title"), titleProperty, "Failed to hide the title attribute");
-        assert.equal(widget.elements.widget.getAttribute("title"), title);//Check for visibility
+        assert(widget.elements.widget.hasAttribute("title"),titleProperty, "Failed to hide the title attribute");
+        assert.equal(widget.elements.widget.getAttribute("title"), title);// Check for visibility
       });
     });
 
@@ -437,14 +466,16 @@
     it("html slot property when set to end", function () {
       let slotProp = "end";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
-          "html:slot": slotProp
+          "html": {
+            "slot": slotProp
+          }
         });
       }).then(function () {
         let slotPropPresent = widget.elements.widget.hasAttribute("slot");
-        assert(widget.elements.widget.hasAttribute("slot"), slotPropPresent, "Failed to hide the slot attribute");
-        assert.equal(widget.elements.widget.getAttribute("slot"), slotProp);//Check for visibility
+        assert(widget.elements.widget.hasAttribute("slot"),slotPropPresent, "Failed to hide the slot attribute");
+        assert.equal(widget.elements.widget.getAttribute("slot"), slotProp);// Check for visibility
       });
 
     });
@@ -452,13 +483,15 @@
     it("html slot property when set to start", function () {
       let slotProp = "start";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
-          "html:slot": slotProp
+          "html": {
+            "slot": slotProp
+          }
         });
       }).then(function () {
         let slotPropPresent = widget.elements.widget.hasAttribute("slot");
-        assert(widget.elements.widget.hasAttribute("slot"), slotPropPresent, "Failed to hide the slot attribute");
+        assert(widget.elements.widget.hasAttribute("slot"),slotPropPresent, "Failed to hide the slot attribute");
         assert.equal(widget.elements.widget.getAttribute("slot"), slotProp);
       });
     });
@@ -488,43 +521,47 @@
       verifyWidgetClass(widgetClass);
     });
 
-    it("setting error in plain text", function () {
-      return asyncRun(function () {
+    it("setting error in plain text", function(){
+      return asyncRun(function() {
         tester.dataUpdate({
-          "format-error": true,
-          "format-error-message": "Fake Validation Error"
+          uniface: {
+            "format-error": true,
+            "format-error-message": "Fake Validation Error"
+          }
         });
       }).then(function () {
         expect(widget.elements.widget).to.have.class("u-format-invalid");
         assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
-        assert.equal(widget.elements.widget.childNodes[3].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
-        expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"), "Slot end  does not match");
-        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Fake Validation Error", "Error title doesnot match");
+        assert.equal(widget.elements.widget.childNodes[3].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
+        expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"),"Slot end  does not match");
+        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Fake Validation Error","Error title doesnot match");
       });
     });
   });
 
   describe("hideError", function () {
-    let widget, element;
+    let widget;
     before(function () {
       widget = tester.createWidget();
-      element = tester.createWidget().element;
       verifyWidgetClass(widgetClass);
     });
     it("Hide Error Set invalid value in plain text", function () {
-      return asyncRun(function () {
+      return asyncRun(function() {
         tester.dataUpdate({
-          error: false,
-          "error-message": "Field Value length mismatch."
+          uniface: {
+            error: false,
+            "error-message": "Field Value length mismatch."
+          }
         });
       }).then(function () {
         widget.hideError("Field Value length mismatch.");
         expect(widget.elements.widget).to.not.have.class("u-invalid");
         assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
-        assert(widget.elements.widget.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
-        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"), "slot attribute is not present");
+        assert(widget.elements.widget.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid","widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
+        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"),  "slot attribute is not present");
         assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("title"), "title attribute is not present");
       });
     });
   });
+
 })();

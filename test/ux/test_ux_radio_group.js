@@ -188,7 +188,7 @@
     it("Set HTML property hidden to true", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "html:hidden": true
+          html: { hidden: true }
         });
       }).then(function () {
         expect(element.getAttribute("hidden"));
@@ -199,7 +199,9 @@
     it("Set Uniface label text", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "label-text": "Test Label"
+          uniface: {
+            "label-text": "Test Label"
+          }
         });
       }).then(function () {
         expect(element.querySelector("label.u-label-text").innerText).equal("Test Label");
@@ -209,7 +211,7 @@
     it("Set HTML property readonly to true", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "html:readonly": true
+          html: { readonly: true }
         });
       }).then(function () {
         expect(element.getAttribute("readonly"));
@@ -220,7 +222,7 @@
     it("Set HTML property disabled to true", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "html:disabled": true
+          html: { disabled: true }
         });
       }).then(function () {
         expect(element.getAttribute("disabled"));
@@ -246,7 +248,9 @@
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          "display-format": "val"
+          uniface: {
+            "display-format": "val"
+          }
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -261,7 +265,9 @@
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          "display-format": "valrep"
+          uniface: {
+            "display-format": "valrep"
+          }
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -323,8 +329,10 @@
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArrayLongText,
-          "display-format": "rep",
-          "layout": "horizontal"
+          uniface: {
+            "display-format": "rep",
+            "layout": "horizontal"
+          }
         });
       }).then(function () {
         expect(element.getAttribute("orientation")).equal("horizontal");
@@ -347,12 +355,16 @@
         tester.dataUpdate({
           valrep: valRepArray,
           value: selectedValue,
-          "html:disabled": true,
-          "html:readonly": false,
-          "class:ClassA": true,
-          "label-text": "Test Label",
-          "display-format": "val",
-          "layout": "horizontal"
+          html: {
+            "disabled": true,
+            "readonly": false
+          },
+          classes: { "ClassA": true },
+          uniface: {
+            "label-text": "Test Label",
+            "display-format": "val",
+            "layout": "horizontal"
+          }
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -627,8 +639,10 @@
     it("Set error to false", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "format-error": false,
-          "format-error-message": ""
+          uniface: {
+            "format-error": false,
+            "format-error-message": ""
+          }
         });
       }).then(function () {
         expect(radioElement).to.not.have.class("u-format-invalid");
