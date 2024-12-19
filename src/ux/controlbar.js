@@ -36,16 +36,12 @@ export class Controlbar extends Widget {
       super(widgetClass);
       this.propId = propId;
       this.defaultValue = defaultValue;
+      this.overflowPropertiesMap = {};
       this.registerSetter(widgetClass, this.propId, this);
       this.registerDefaultValue(widgetClass, this.propId, defaultValue);
     }
 
     refresh(widgetInstance) {
-      const element = this.getElement(widgetInstance);
-      const overflowContainer = element.querySelector(".u-overflow-container");
-      if (!overflowContainer) {
-        return;
-      }
       this.handleOverflow(widgetInstance);
     }
 
@@ -56,17 +52,23 @@ export class Controlbar extends Widget {
       const element = this.getElement(widgetInstance);
       const overflowMenu = widgetInstance.elements.overflowMenu;
       const widget = widgetInstance.elements.widget;
+      const properties = widgetInstance.data.properties.uniface;
 
       // Create a map of subwidgets with their ids as key and the widgetInstance as value.
       // Also create a list of controlbarItems where each item is the corresponding HTML elements.
       let subWidgetsMap = {};
       const subWidgets = Object.values(widgetInstance?.subWidgets);
+      this.overflowPropertiesMap = {};
       let controlBarItems = subWidgets
         .map((subWidget) => {
           const subWidgetElement = this.getElement(subWidget);
           const subWidgetId = subWidgetElement?.getAttribute("sub-widget-id");
           if (subWidgetId) {
             subWidgetsMap[subWidgetId] = subWidget;
+            this.overflowPropertiesMap[subWidgetId] = {
+              "overflow-behavior": this.validatePropertyValue("overflow-behavior", properties[`${subWidgetId}_overflow-behavior`]),
+              "priority": this.validatePropertyValue("priority", properties[`${subWidgetId}_priority`])
+            };
           }
           return subWidgetElement;
         })
@@ -74,7 +76,10 @@ export class Controlbar extends Widget {
 
       let contentWidth = 0;
       // Handle overflow when overflow-behavior is "none".
-      const itemsToAlwaysShow = controlBarItems.filter((item) => item.getAttribute("overflow-behavior") === "none");
+      const itemsToAlwaysShow = controlBarItems.filter((item) => {
+        const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
+        return overflowBehavior === "none";
+      });
       for (let item of itemsToAlwaysShow) {
         if (!item.hasAttribute("hidden")) {
           const itemWidth = this.getItemWidth(item);
@@ -84,12 +89,15 @@ export class Controlbar extends Widget {
       }
 
       // Handle 'menu' overflow-behavior.
-      const itemsAlwaysInMenu = controlBarItems.filter((item) => item.getAttribute("overflow-behavior") === "menu" && !item.hasAttribute("hidden"));
+      const itemsAlwaysInMenu = controlBarItems.filter((item) => {
+        const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
+        return overflowBehavior === "menu" && !item.hasAttribute("hidden");
+      });
       this.moveControlBarItemsToMenu(itemsAlwaysInMenu, overflowMenu, subWidgetsMap);
 
       // Handle 'move' or 'hide' overflow-behavior.
       const itemsToHideOrMove = controlBarItems.filter((item) => {
-        const overflowBehavior = item.getAttribute("overflow-behavior");
+        const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
         const isHidden = item.hasAttribute("hidden");
         return !isHidden && (overflowBehavior === "move" || overflowBehavior === "hide" || overflowBehavior === null);
       });
@@ -97,8 +105,8 @@ export class Controlbar extends Widget {
         return;
       }
       itemsToHideOrMove.sort((a, b) => {
-        const valueA = Number(a.getAttribute("priority"));
-        const valueB = Number(b.getAttribute("priority"));
+        const valueA = Number(this.getPropertyValue(a, "priority"));
+        const valueB = Number(this.getPropertyValue(b, "priority"));
         return valueA - valueB;
       });
 
@@ -130,6 +138,30 @@ export class Controlbar extends Widget {
       }
     }
 
+    getPropertyValue(item, property) {
+      const id = item.getAttribute("sub-widget-id");
+      return this.overflowPropertiesMap[id][property];
+    }
+
+    validatePropertyValue(property, value) {
+      const validOverFlowBehavior = ["move", "hide", "menu", "none"];
+      switch (property) {
+        case "priority":
+          if (!isNaN(value) && value > 0) {
+            return value;
+          }
+          break;
+        case "overflow-behavior":
+          if (validOverFlowBehavior.includes(value)) {
+            return value;
+          }
+          break;
+        default:
+          break;
+      }
+      return null;
+    }
+
     /**
      * Helper - Find the index of the element at which the controlbar items starts to overflow.
      * It takes 4 arguments, the inner width of the controlbar, the overflowButton item, the width taken up by items that are always
@@ -149,10 +181,10 @@ export class Controlbar extends Widget {
         }
       }
       if (indexToBreak < itemsToHideOrMove.length) {
-        let index = indexToBreak;
-        const overFlowIndex = itemsToHideOrMove[indexToBreak].getAttribute("priority");
+        const overFlowIndex = this.getPropertyValue(itemsToHideOrMove[indexToBreak], "priority");
+        let index = indexToBreak - 1;
         while (index >= 0) {
-          const prevOverFlowIndex = itemsToHideOrMove[index].getAttribute("priority");
+          const prevOverFlowIndex = this.getPropertyValue(itemsToHideOrMove[index], "priority");
           if (overFlowIndex === prevOverFlowIndex) {
             indexToBreak = index;
             index--;
@@ -224,7 +256,7 @@ export class Controlbar extends Widget {
     showControlbarItems(items, overflowMenu) {
       for (const item of items) {
         item.classList.remove("u-overflown-item");
-        const overflowBehavior = item.getAttribute("overflow-behavior");
+        const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
         if (overflowBehavior === "move" || overflowBehavior === null) {
           const subWidgetId = item.getAttribute("sub-widget-id");
           const menuItem = overflowMenu.querySelector(`[item-id="${subWidgetId}"]`);
@@ -241,7 +273,7 @@ export class Controlbar extends Widget {
     moveControlBarItemsToMenu(items, overflowMenu, subWidgetsMap) {
       for (const item of items) {
         item.classList.add("u-overflown-item");
-        const overflowBehavior = item.getAttribute("overflow-behavior");
+        const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
         if (overflowBehavior !== "hide") {
           const subWidgetId = item.getAttribute("sub-widget-id");
           const menuItem = overflowMenu.querySelector(`[item-id="${subWidgetId}"]`);
@@ -306,7 +338,7 @@ export class Controlbar extends Widget {
     [
       new HtmlAttributeChoice(this, "uniface:orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
       new StyleClass(this, ["u-controlbar"]),
-      new this.HandleOverFlowWorker(this, "uniface:overflow-updated", false)
+      new this.HandleOverFlowWorker(this, "uniface:widget-resize", false)
     ],
     [
       new Element(
@@ -381,13 +413,15 @@ export class Controlbar extends Widget {
     const ro = new window.ResizeObserver(() => {
       this.setProperties({
         "uniface": {
-          "overflow-updated": true
+          "widget-resize": true
         }
       });
     });
     // Observe the controlbar for changes in screen size.
     ro.observe(widgetElement);
-
+    this.workers = {
+      "overflow": new Controlbar.HandleOverFlowWorker(Controlbar, "uniface:overflow-property", null)
+    };
     this.elements.overflowButton = this.elements.widget.querySelector(".u-overflow-button");
     this.elements.overflowMenu = this.elements.widget.querySelector(".u-overflow-menu");
     this.elements.overflowContainer = this.elements.widget.querySelector(".u-overflow-container");
@@ -403,9 +437,9 @@ export class Controlbar extends Widget {
     const overflowContainer = Controlbar.createOverflowContainer();
     // Create overflow button.
     const overflowButton = Controlbar.createOverflowButton();
-    const controls = widgetElement.querySelectorAll(":scope > * > *");
+    const subWidgets = widgetElement.querySelectorAll(":scope > * > *");
     // Create overflow menu and menu items.
-    const overflowMenu = Controlbar.createOverflowMenuAndMenuItems(controls);
+    const overflowMenu = Controlbar.createOverflowMenuAndMenuItems(subWidgets);
     overflowButton.addEventListener("click", () => {
       overflowMenu.hidden = !overflowMenu.hidden;
     });
@@ -416,6 +450,29 @@ export class Controlbar extends Widget {
     widgetElement.append(overflowContainer);
 
     return widgetElement;
+  }
+
+  getSubWidgetIds() {
+    const subWidgets = Object.values(this.subWidgets);
+    const subWidgetIds = subWidgets.map((subWidget) => {
+      const subWidgetElement = subWidget.elements.widget;
+      const subWidgetId = subWidgetElement?.getAttribute("sub-widget-id");
+      return subWidgetId;
+    });
+    return subWidgetIds;
+  }
+
+  setProperties(data) {
+    super.setProperties(data);
+    console.log(this);
+    const subWidgetIds = this.getSubWidgetIds();
+    const overflowProperties = subWidgetIds.flatMap((item) => [`${item}_${"overflow-behavior"}`, `${item}_${"priority"}`]);
+    const unifaceProperties = data.uniface ?? {};
+    for (const property in unifaceProperties) {
+      if (overflowProperties.includes(property)) {
+        this.workers?.overflow.refresh(this);
+      }
+    }
   }
 }
 UNIFACE.ClassRegistry.add("UX.Controlbar", Controlbar);
