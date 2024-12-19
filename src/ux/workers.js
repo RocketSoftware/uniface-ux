@@ -587,13 +587,10 @@ export class SubWidgetsByFields extends Worker {
               if (this.getNode(subWidgetClass.setters, propId)) {
                 const childPropValue = childObjectDefinition.getProperty(propId);
                 childObjectDefinition.setProperty(propId, undefined);
-                if (propId?.startsWith("uniface:")) {
-                  propId = propId.substring(8);
-                }
                 objectDefinition.setProperty(`${subWidgetId}:${propId}`, childPropValue);
               }
             });
-            childObjectDefinition.setProperty("uniface:org-widget-class", childObjectDefinition.getWidgetClass());
+            childObjectDefinition.setProperty("org-widget-class", childObjectDefinition.getWidgetClass());
             childObjectDefinition.setWidgetClass("UX.DataGridField");
           }
         });

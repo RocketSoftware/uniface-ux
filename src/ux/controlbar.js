@@ -2,7 +2,6 @@
 /* global UNIFACE */
 import { Widget } from "./widget.js";
 import { Element, StyleClass, SubWidgetsByProperty, HtmlAttributeChoice } from "./workers.js";
-import "https://unpkg.com/@fluentui/web-components";
 
 /**
  * Controlbar Widget
