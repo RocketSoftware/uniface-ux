@@ -460,16 +460,26 @@ export class Controlbar extends Widget {
   }
 
   setProperties(data) {
-    super.setProperties(data);
     const subWidgetIds = this.getSubWidgetIds();
     const overflowProperties = subWidgetIds.flatMap((item) => [`${item}_${"overflow-behavior"}`, `${item}_${"priority"}`]);
     const unifaceProperties = data.uniface ?? {};
     const setter = Controlbar.setters["uniface"]["widget-resize"][0];
+    let invokeRefresh = false;
     for (const property in unifaceProperties) {
       if (overflowProperties.includes(property)) {
-        setter?.refresh(this);
+        // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
+        // eslint-disable-next-line eqeqeq, no-undef
+        if (unifaceProperties[property] == uniface.RESET) {
+          this.data.properties.uniface[property] = Controlbar.defaultValues.uniface[property] ?? null;
+        } else {
+          this.data.properties.uniface[property] = data.uniface[property];
+        }
+        delete unifaceProperties[property];
+        invokeRefresh = true;
       }
     }
+    invokeRefresh && setter?.refresh(this);
+    super.setProperties(data);
   }
 }
 UNIFACE.ClassRegistry.add("UX.Controlbar", Controlbar);
