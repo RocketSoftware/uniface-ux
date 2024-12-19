@@ -419,9 +419,7 @@ export class Controlbar extends Widget {
     });
     // Observe the controlbar for changes in screen size.
     ro.observe(widgetElement);
-    this.workers = {
-      "overflow": new Controlbar.HandleOverFlowWorker(Controlbar, "uniface:overflow-property", null)
-    };
+
     this.elements.overflowButton = this.elements.widget.querySelector(".u-overflow-button");
     this.elements.overflowMenu = this.elements.widget.querySelector(".u-overflow-menu");
     this.elements.overflowContainer = this.elements.widget.querySelector(".u-overflow-container");
@@ -464,13 +462,13 @@ export class Controlbar extends Widget {
 
   setProperties(data) {
     super.setProperties(data);
-    console.log(this);
     const subWidgetIds = this.getSubWidgetIds();
     const overflowProperties = subWidgetIds.flatMap((item) => [`${item}_${"overflow-behavior"}`, `${item}_${"priority"}`]);
     const unifaceProperties = data.uniface ?? {};
+    const setter = Controlbar.setters["uniface"]["widget-resize"][0];
     for (const property in unifaceProperties) {
       if (overflowProperties.includes(property)) {
-        this.workers?.overflow.refresh(this);
+        setter?.refresh(this);
       }
     }
   }
