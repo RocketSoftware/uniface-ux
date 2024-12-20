@@ -596,7 +596,7 @@
       });
     });
 
-    it("Simulate user interaction and select third option", function () {
+    it("Simulate user interaction and select third option, placeholder slot should be null", function () {
       return asyncRun(function () {
         const selectElement = document.querySelector("fluent-select");
         // Simulate click event on select widget.
