@@ -272,7 +272,7 @@
       return asyncRun(function() {
         tester.dataUpdate({
           value: 1,
-            "label-text": checkBoxLabelText
+          "label-text": checkBoxLabelText
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
