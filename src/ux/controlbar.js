@@ -344,7 +344,6 @@ export class Controlbar extends Widget {
       const menuItem = document.createElement("fluent-menu-item");
       menuItem.classList.add("u-menu-item");
       menuItem.setAttribute("role", "menuitem");
-      menuItem.setAttribute("tabindex", "-1");
       menuItem.setAttribute("item-id", controlId);
       menuItem.hidden = true;
       overflowMenu.append(menuItem);
@@ -369,6 +368,14 @@ export class Controlbar extends Widget {
 
     this.elements.overflowButton = this.elements.widget.querySelector(".u-overflow-button");
     this.elements.overflowMenu = this.elements.widget.querySelector(".u-overflow-menu");
+
+    // Hide the menu on clicking outside.
+    document.addEventListener("click", (event) => {
+      if (!this.elements.overflowMenu.contains(event.target) && !this.elements.overflowButton.contains(event.target)) {
+        this.elements.overflowMenu.setAttribute("hidden", true);
+      }
+    });
+
     this.elements.overflowContainer = this.elements.widget.querySelector(".u-overflow-container");
     this.elements.overflowMenuItems = Array.from(widgetElement.querySelectorAll(".u-overflow-container .u-menu-item"));
     this.elements.controlbarItems = Array.from(widgetElement.querySelectorAll(":scope > :not(.u-overflow-container) > *"));
