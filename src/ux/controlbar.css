@@ -68,6 +68,10 @@
   cursor: pointer;
 }
 
+.u-controlbar .u-menu-item::part(content){
+  display: flex;
+}
+
 .u-controlbar .u-menu-item .u-prefix {
   margin-inline-end: 11px;
 }
