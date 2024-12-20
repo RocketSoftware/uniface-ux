@@ -205,7 +205,6 @@ export class Widget extends Base {
       const subWidgetClass = subWidgetDefinition.class;
       const subWidgetElement = widgetElement.querySelector(`.${subWidgetStyleClass}`);
       this.subWidgets[subWidgetId] = new subWidgetClass();
-      this.subWidgets[subWidgetId].parentWidget = this;
       let subWidgetUpdaters = this.subWidgets[subWidgetId].onConnect(subWidgetElement) || [];
       subWidgetUpdaters.forEach((subWidgetUpdater) => {
         if (subWidgetUpdater !== undefined) {
