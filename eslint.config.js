@@ -5,7 +5,9 @@ module.exports = [
     // This object is only for ignore. do not add any other properties
     "ignores": [
       "dist/",
+      "node_modules/",
       "src/fluentui/",
+      "test/modules/",
       "testAutomation/"
     ]
   },
@@ -103,10 +105,6 @@ module.exports = [
       }
     },
     "rules": {
-      "indent": "off", 
-      //"no-console": "on",
-      "no-trailing-spaces": "off",
-      "spaced-comment": "off",
       "quote-props": "off"
     }
   },
