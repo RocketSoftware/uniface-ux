@@ -56,6 +56,11 @@
   z-index: 100;
 }
 
+[dir="rtl"] .u-controlbar .u-overflow-menu{
+  right: unset;
+  left: 0;
+}
+
 .u-controlbar .u-controlbar-item.u-overflown-item {
   display: none;
 }
