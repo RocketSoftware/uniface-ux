@@ -142,6 +142,7 @@
       });
     }
   });
+  
   describe("dataUpdate", function () {
     let widget, element;
     before(function () {
@@ -151,7 +152,7 @@
     });
 
     it("set value to 1 and make the switch toggle", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
           value: 1
         });
@@ -162,7 +163,7 @@
     });
 
     it("set value to false and make the switch toggle in unchecked state", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
           value: false
         });
@@ -174,31 +175,27 @@
 
     it("set label to switch", function () {
       let switchLabelText = "Label";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-text": switchLabelText
-          }
+          "label-text": switchLabelText
         });
       }).then(function () {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, switchLabelText);// Check for visibility
+        assert.equal(labelText, switchLabelText);//Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
       });
     });
 
     it("set checked message", function () {
       let switchCheckedText = "On";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "checked-message": switchCheckedText
-          },
+          "checked-message": switchCheckedText,
           value: 1
         });
       }).then(function () {
         let checkedText = widget.elements.widget.querySelector("span.u-checked-message").innerText;
-        assert.equal(checkedText, switchCheckedText);// Check for visibility
+        assert.equal(checkedText, switchCheckedText);//Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message text");
         expect(widget.elements.widget.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
         expect(widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
@@ -207,16 +204,14 @@
 
     it("set unchecked message", function () {
       let switchUnCheckedText = "Off";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "unchecked-message": switchUnCheckedText
-          },
+          "unchecked-message": switchUnCheckedText,
           value: 0
         });
       }).then(function () {
         let uncheckedText = widget.elements.widget.querySelector("span.u-unchecked-message").innerText;
-        assert.equal(uncheckedText, switchUnCheckedText);// Check for visibility
+        assert.equal(uncheckedText, switchUnCheckedText);//Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text");
         expect(widget.elements.widget.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
         expect(widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
@@ -263,7 +258,7 @@
     });
 
     it("set invalid value when switch checked state is false", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
           value: ""
         });
@@ -285,12 +280,10 @@
     });
 
     it("set error to false with checked and unchecked messages", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "checked-message": "On",
-            "unchecked-message": "Off"
-          },
+          "checked-message": "On",
+          "unchecked-message": "Off",
           value: 1
         });
       }).then(function () {
@@ -304,7 +297,7 @@
     });
 
     it("set error to false without checked and unchecked messages", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
           value: 1
         });
@@ -319,19 +312,13 @@
     });
   });
 
-
-  describe("dataCleanup", function () {
-    let widget;
-    before(function () {
-      widget = tester.createWidget();
-    });
-
+  describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {
-        widget.dataCleanup(tester.widgetProperties);
+        tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, "Failed to reset the properties, exception " + e);
       }
     });
   });

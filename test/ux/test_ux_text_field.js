@@ -260,13 +260,11 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "appearance": appearance
-          }
+          "html:appearance": appearance
         });
       }).then(function () {
         let appearanceVal = widget.elements.widget.getAttribute("appearance");
-        assert.equal(appearanceVal, appearance, "appearance is not set to filled");// Check for visibility
+        assert.equal(appearanceVal, appearance, "appearance is not set to filled");//Check for visibility
         assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance attribute");
       });
     });
@@ -276,13 +274,11 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "appearance": appearance
-          }
+          "html:appearance": appearance
         });
       }).then(function () {
         let appearanceVal = widget.elements.widget.getAttribute("appearance");
-        assert.equal(appearanceVal, appearance, "appearance is not set to outline");// Check for visibility
+        assert.equal(appearanceVal, appearance, "appearance is not set to outline");//Check for visibility
         assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance attribute");
       });
     });
@@ -292,9 +288,7 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "disabled": disabled
-          }
+          "html:disabled": disabled
         });
       }).then(function () {
         assert(widget.elements.widget.className, "outline u-text-field disabled", "Disabled class is not applied");
@@ -307,9 +301,7 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "disabled": disabled
-          }
+          "html:disabled": disabled
         });
       }).then(function () {
         assert(widget.elements.widget.className, "outline u-text-field", "Disabled class is applied");
@@ -322,9 +314,7 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "readonly": readonly
-          }
+          "html:readonly": readonly
         });
       }).then(function () {
         assert(widget.elements.widget.className, "outline u-text-field readonly", "readonly class is not applied");
@@ -337,9 +327,7 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "readonly": readonly
-          }
+          "html:readonly": readonly
         });
       }).then(function () {
         assert(widget.elements.widget.className, "outline u-text-field", "readonly class is applied");
@@ -352,10 +340,9 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "hidden": hidden
-          }
-        });
+          "html:hidden": hidden
+        }
+        );
       }).then(function () {
         assert(widget.elements.widget.className, "outline u-text-field hidden", "hidden class is not applied");
         assert(widget.elements.widget.hasAttribute("hidden"), "Failed to show the hidden attribute");
@@ -367,9 +354,7 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "hidden": hidden
-          }
+          "html:hidden": hidden
         });
       }).then(function () {
         assert(widget.elements.widget.className, "outline u-text-field", "hidden class is applied");
@@ -383,12 +368,11 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "uniface": {
-            "prefix-text": prefixTextData
-          }
-        });
+          "prefix-text": prefixTextData
+        }
+        );
       }).then(function () {
-        assert.equal(widget.elements.widget.innerText, prefixTextData, "Prefix data does not match");// Check for visibility
+        assert.equal(widget.elements.widget.innerText, prefixTextData, "Prefix data does not match");//Check for visibility
       });
     });
 
@@ -396,9 +380,7 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "uniface": {
-            "prefix-icon": "Accounts"
-          }
+          "prefix-icon": "Accounts"
         });
       }).then(function () {
         assert.equal(widget.elements.widget.childNodes[1].className, "u-prefix ms-Icon ms-Icon--Accounts", "widget element doesn't has class u-prefix ms-Icon ms-Icon--Accounts");
@@ -410,12 +392,10 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "uniface": {
-            "suffix-text": suffixTextData
-          }
+          "suffix-text": suffixTextData
         });
       }).then(function () {
-        assert.equal(widget.elements.widget.innerText, suffixTextData, "Suffix data does not match");// Check for visibility
+        assert.equal(widget.elements.widget.innerText, suffixTextData, "Suffix data does not match");//Check for visibility
       });
     });
 
@@ -423,9 +403,7 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "uniface": {
-            "suffix-icon": "Accounts"
-          }
+          "suffix-icon": "Accounts"
         });
       }).then(function () {
         assert.equal(widget.elements.widget.childNodes[3].className, "u-suffix ms-Icon ms-Icon--Accounts", "widget element doesn't has class u-suffix ms-Icon ms-Icon--Accounts");
@@ -439,17 +417,15 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "placeholder": placeHolderText,
-            "pattern": patternText,
-            "type": "text",
-            "title": title
-          },
+          "html:placeholder": placeHolderText,
+          "html:pattern": patternText,
+          "html:type": "text",
+          "html:title": title,
           value: 1234
         });
       }).then(function () {
-        // const event = new window.Event('hover');
-        // widget.elements.widget.dispatchEvent(event);
+        //const event = new window.Event('hover');
+        //widget.elements.widget.dispatchEvent(event);
         assert.equal(widget.elements.widget.getAttribute("pattern"), patternText, "Failed to show the pattern attribute and value doesnot match");
         assert.equal(widget.elements.widget.getAttribute("placeholder"), placeHolderText, "Failed to show the placeHolderText attribute and value doesnot match");
         assert.equal(widget.elements.widget.getAttribute("title"), title, "Failed to show the title attribute and value doesnot match");
@@ -467,11 +443,9 @@
           value: ""
         });
         tester.dataUpdate({
-          "html": {
-            "placeholder": placeHolderText,
-            "pattern": pattern,
-            "type": "text"
-          },
+          "html:placeholder": placeHolderText,
+          "html:pattern": pattern,
+          "html:type": "text",
           value: "abc"
         });
       }).then(function () {
@@ -492,18 +466,16 @@
           value: ""
         });
         tester.dataUpdate({
-          "html": {
-            "placeholder": placeHolderText,
-            "type": "text"
-          }
-          // value: "Value input"
+          "html:placeholder": placeHolderText,
+          "html:type": "text"
+          //value: "Value input"
         });
       }).then(function () {
         const event = new window.Event('hover');
         widget.elements.widget.dispatchEvent(event);
-        // assert.equal(widget.elements.widget.getAttribute("pattern"),pattern ,"Failed to show the pattern attribute and value doesnot match");
+        //assert.equal(widget.elements.widget.getAttribute("pattern"),pattern ,"Failed to show the pattern attribute and value doesnot match");
         assert.equal(widget.elements.widget.getAttribute("placeholder"), placeHolderText, "Failed to show the placeHolderText attribute and value doesnot match");
-        // assert(widget.elements.widget.hasAttribute("pattern"), "Failed to show the pattern attribute");
+        //assert(widget.elements.widget.hasAttribute("pattern"), "Failed to show the pattern attribute");
         assert(widget.elements.widget.hasAttribute("placeholder"), "Failed to show the placeHolderText attribute and value doesnot match");
       });
     });
@@ -513,14 +485,10 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "suffix-icon": "AddPhone",
-            "prefix-text": "Call Me"
-          },
-          "html": {
-            "placeholder": placeHolderText,
-            "type": "tel"
-          }
+          "suffix-icon": "AddPhone",
+          "prefix-text": "Call Me",
+          "html:placeholder": placeHolderText,
+          "html:type": "tel"
         });
       }).then(function () {
         const event = new window.Event('hover');
@@ -537,15 +505,11 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "prefix-icon": "PublicEmail",
-            "suffix-text": "Customer Email Address"
-          },
-          "html": {
-            "placeholder": placeHolderText,
-            "type": "email"
-          }
-          // value: "test@test.com"
+          "prefix-icon": "PublicEmail",
+          "suffix-text": "Customer Email Address",
+          "html:placeholder": placeHolderText,
+          "html:type": "email",
+          //value: "test@test.com"
         });
       }).then(function () {
         const event = new window.Event('hover');
@@ -562,15 +526,11 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "prefix-icon": "PasswordField"
-            // "suffix-text": "Customer Email Address"
-          },
-          "html": {
-            "placeholder": placeHolderText,
-            "type": "password"
-          }
-          // value: "test@test.com"
+          "prefix-icon": "PasswordField",
+          //"suffix-text": "Customer Email Address",
+          "html:placeholder": placeHolderText,
+          "html:type": "password"
+          //value: "test@test.com"
         });
       }).then(function () {
         const event = new window.Event('hover');
@@ -587,15 +547,11 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "prefix-icon": "URLBlock"
-            // "suffix-text": "Customer Email Address"
-          },
-          "html": {
-            "placeholder": placeHolderText,
-            "type": "url"
-          }
-          // value: "test@test.com"
+          "prefix-icon": "URLBlock",
+          //"suffix-text": "Customer Email Address",
+          "html:placeholder": placeHolderText,
+          "html:type": "url"
+          //value: "test@test.com"
         });
       }).then(function () {
         const event = new window.Event('hover');
@@ -612,15 +568,11 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "prefix-icon": "DateTime",
-            "suffix-text": "Customer Email Address"
-          },
-          "html": {
-            "placeholder": placeHolderText,
-            "type": "date"
-          }
-          // value: "test@test.com"
+          "prefix-icon": "DateTime",
+          "suffix-text": "Customer Email Address",
+          "html:placeholder": placeHolderText,
+          "html:type": "date"
+          //value: "test@test.com"
         });
       }).then(function () {
         const event = new window.Event('hover');
@@ -636,12 +588,10 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "changebutton": true,
-            "changebutton:icon": "PublicEmail",
-            "changebutton:icon-position": "start",
-            "changebutton:value": "Click Me"
-          }
+          "changebutton": true,
+          "changebutton:icon": "PublicEmail",
+          "changebutton:icon-position": "start",
+          "changebutton:value": "Click Me"
         });
       }).then(function () {
         const event = new window.Event('hover');
@@ -657,12 +607,10 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "changebutton": true,
-            "changebutton:icon": "PublicEmail"
-            // "changebutton:icon-position" : "start",
-            // "changebutton:value":"Click Me"
-          }
+          "changebutton": true,
+          "changebutton:icon": "PublicEmail"
+          //"changebutton:icon-position" : "start",
+          //"changebutton:value":"Click Me"
         });
       }).then(function () {
         const event = new window.Event('hover');
@@ -678,10 +626,8 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "changebutton": false,
-            "changebutton:icon": "PublicEmail"
-          }
+          "changebutton": false,
+          "changebutton:icon": "PublicEmail"
         });
       }).then(function () {
         assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth", "Subwidget Class name doesnot match");
@@ -694,13 +640,11 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-text": textFieldLabel
-          }
+          "label-text": textFieldLabel
         });
       }).then(function () {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, textFieldLabel);// Check for visibility
+        assert.equal(labelText, textFieldLabel);//Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
       });
     });
@@ -708,9 +652,7 @@
     it("Set label position before", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": "before"
-          }
+          "label-position": "before"
         });
       }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -731,9 +673,7 @@
     it("Set label position below", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": "below"
-          }
+          "label-position": "below"
         });
       }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -754,10 +694,8 @@
     it("reset label and its position", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": uniface.RESET,
-            "label-text": uniface.RESET
-          }
+          "label-position": uniface.RESET,
+          "label-text": uniface.RESET
         });
       }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -787,10 +725,8 @@
     it("setting minlength and maxlength", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "minlength": minlength,
-            "maxlength": maxlength
-          }
+          "html:minlength": minlength,
+          "html:maxlength": maxlength
         });
       }).then(function () {
         expect(widget.elements.widget.hasAttribute("maxlength"), "Failed to show the maxlength attribute");
@@ -803,10 +739,8 @@
     it("Set invalid value in text field", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            error: true,
-            "error-message": "Field Value length mismatch."
-          }
+          error: true,
+          "error-message": "Field Value length mismatch."
         });
       }).then(function () {
         expect(widget.elements.widget).to.have.class("u-invalid");
@@ -819,18 +753,17 @@
   });
 
   describe("hideError", function () {
-    let widget;
+    let widget, element;
     before(function () {
       widget = tester.createWidget();
+      element = tester.createWidget().element;
       verifyWidgetClass(widgetClass);
     });
     it("Hide Error Set invalid value in text field", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            error: false,
-            "error-message": ""
-          }
+          error: false,
+          "error-message": ""
         });
       }).then(function () {
         widget.hideError("");
@@ -844,8 +777,9 @@
   });
 
   describe("getValueFormatted", function () {
-    let properties, valueProperty;
+    let widget, properties, valueProperty;
     before(function () {
+      widget = tester.createWidget();
       properties = tester.widget.data;
     });
 
@@ -875,15 +809,13 @@
     });
   });
 
-
-  describe("dataCleanup", function () {
-    let widget = tester.createWidget();
+  describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {
-        widget.dataCleanup(tester.widgetProperties);
+        tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, "Failed to reset the properties, exception " + e);
       }
     });
   });

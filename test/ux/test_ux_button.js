@@ -120,6 +120,7 @@
 
   describe("Data Init", function () {
     const defaultValues = tester.getDefaultValues();
+    
     const classes = Object.keys(defaultValues).reduce((acc, key) => {
       if (key.startsWith("class:")) {
         let newKey = key.replace("class:", "");
@@ -194,9 +195,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           value: buttonText,
-          uniface: {
-            icon: "Home"
-          }
+          icon: "Home"
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -211,9 +210,7 @@
       let iconPosition = "end";
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "icon-position": iconPosition
-          },
+          "icon-position": iconPosition,
           value: buttonText
         });
       }).then(function () {
@@ -256,9 +253,7 @@
       let buttonText = 'Button';
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "icon-position": "stat"
-          }
+          "icon-position": "stat"
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -409,6 +404,7 @@
           "icon": "Home",
           value: ""
         },
+
         elements: tester.construct().elements,
         getTraceDescription: () => {
           return "description";
@@ -443,14 +439,10 @@
     });
   });
 
-
   describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {
-        //  Need to replace defaultValues with original unstructured data
-        let defaultValues = tester.defaultValues;
-        let formattedDefaultValues = tester.widget.dataConversionUtil.toNested(defaultValues);
-        tester.dataUpdate(formattedDefaultValues);
+        tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
         assert(false, "Failed to reset the properties, exception " + e);

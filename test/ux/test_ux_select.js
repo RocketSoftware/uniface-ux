@@ -132,7 +132,13 @@
 
   describe("Data Init", function () {
     const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+    const classes = Object.keys(defaultValues).reduce((acc, key) => {
+      if (key.startsWith("class:")) {
+        let newKey = key.replace("class:", "");
+        acc[newKey] = defaultValues[key];
+      }
+      return acc;
+    }, {});
     let element;
 
     beforeEach(function () {
@@ -180,11 +186,9 @@
 
     it("show label", function () {
       let selectFieldLabel = 'Label';
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-text": selectFieldLabel
-          }
+          "label-text": selectFieldLabel
         });
       }).then(function () {
         let labelElement = element.querySelector("span.u-label-text");
@@ -196,11 +200,9 @@
 
     it("Set label position before", function () {
       const widget = tester.construct();
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": "before"
-          }
+          "label-position": "before"
         });
       }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -220,11 +222,9 @@
     });
 
     it("Set label position below", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": "below"
-          }
+          "label-position": "below"
         });
       }).then(function () {
         const widget = tester.construct();
@@ -245,12 +245,10 @@
     });
 
     it("reset label and its position", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": uniface.RESET,
-            "label-text": uniface.RESET
-          }
+          "label-position": uniface.RESET,
+          "label-text": uniface.RESET
         });
       }).then(function () {
         const widget = tester.construct();
@@ -272,9 +270,9 @@
     });
 
     it("Set HTML property readonly to true", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          html: { readonly: true }
+          "html:readonly": true
         });
       }).then(function () {
         // ux-select is using disabled attribute instead.
@@ -283,9 +281,9 @@
     });
 
     it("Set HTML property disabled to true", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          html: { disabled: true }
+          "html:disabled": true
         });
       }).then(function () {
         expect(element.getAttribute("disabled"));
@@ -294,7 +292,7 @@
     });
 
     it("Set valrep property with default display value as rep", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray
         });
@@ -307,12 +305,10 @@
     });
 
     it("Set valrep property with default display-format as value", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          uniface: {
-            "display-format": "val"
-          }
+          "display-format": "val"
         });
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
@@ -323,12 +319,10 @@
     });
 
     it("Set valrep property with default display value as valrep", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          uniface: {
-            "display-format": "valrep"
-          }
+          "display-format": "valrep"
         });
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
@@ -347,7 +341,7 @@
           representation: "<script> alert('XSS attack') </script>"
         }
       ];
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray1,
           value: "<script> alert('XSS attack') </script>",
@@ -369,9 +363,7 @@
         tester.dataUpdate({
           valrep: valRepArray,
           value: "2",
-          uniface: {
-            "display-format": "rep"
-          }
+          "display-format": "rep"
         });
       }).then(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
@@ -394,9 +386,7 @@
         tester.dataUpdate({
           valrep: valRepArrayWithEmpty,
           value: "",
-          uniface: {
-            "display-format": "rep"
-          }
+          "display-format": "rep"
         });
       }).then(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
@@ -443,10 +433,8 @@
     it("Set error to false", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "format-error": false,
-            "format-error-message": ""
-          }
+          "format-error": false,
+          "format-error-message": ""
         });
       }).then(function () {
         expect(selectElement).to.not.have.class("u-format-invalid");

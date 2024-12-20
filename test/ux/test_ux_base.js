@@ -124,26 +124,6 @@ import { Widget } from "../../src/ux/widget.js";
       expect(base.fieldValueToBoolean(0)).to.equal(false);
     });
 
-    it("DataConversion Utils Flatten Property ", function () {
-      let data = {
-        value: 56,
-        uniface: {
-          "icon:this-is-bad-data:baddata": "bad",
-          "icon-position": "start"
-        }
-      };
-
-      let correctedData = {
-        value: 56,
-        "icon-position": "start",
-        "icon:this-is-bad-data:baddata": "bad"
-      };
-
-      let returnData = base.dataConversionUtil.toFlat(data);
-      expect(returnData).to.eql(correctedData);
-
-    });
-
     it("getFormattedValrep", function () {
       let valRepString = "valrep1=value1valrep2=value2";
       let formattedValReps = base.getFormattedValrep(valRepString);
