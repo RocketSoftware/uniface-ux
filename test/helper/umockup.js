@@ -361,14 +361,26 @@
         if (!this.widget || !this.widget.elements) {
           const element = this.processLayout.apply(this, this.layoutArgs);
           const widget = this.construct();
-          let updaters = widget.onConnect(element);
-          updaters.forEach((updater) => {
-            element.addEventListener(updater.event_name, updater.handler);
-          });
+          widget.onConnect(element);
         }
         return this.widget;
       }
       
+      bindUpdatorsEventToElement() {
+        const element = this.processLayout.apply(this, this.layoutArgs);
+        const widget = this.construct();
+        let updaters = widget.onConnect(element);
+        updaters.forEach((updater) => {
+          element.addEventListener(updater.event_name, updater.handler);
+        });
+      }
+
+
+      /** The Widgets onConnect API method returns an array of event descriptions that indicate,
+       * when a value has changed, enabling Uniface to respond accordingly.
+       * bindUpdatorsEventToElement method binds the returned updaters to elements using addEventListener.
+       * This will allow element to react on defined event type on user interaction.
+       */
       bindUpdatorsEventToElement() {
         const element = this.processLayout.apply(this, this.layoutArgs);
         const widget = this.construct();
