@@ -556,7 +556,7 @@
         // Simulate click event on select widget.
         selectElement.click();
         // Programmatically select an option and dispatch the change event.
-        const optionToSelect = selectElement.options[1]; // Index of the desired option (Option 1).
+        const optionToSelect = selectElement.options[1]; // Index of the desired option (Option 2).
         optionToSelect.selected = true; // Mark the option as selected.
         // Dispatch the change event.
         const event = new window.Event("change", { bubbles: true });
@@ -602,7 +602,7 @@
         // Simulate click event on select widget.
         selectElement.click();
         // Programmatically select an option and dispatch the change event.
-        const optionToSelect = selectElement.options[2]; // Index of the desired option (Option 1).
+        const optionToSelect = selectElement.options[2]; // Index of the desired option (Option 3).
         optionToSelect.selected = true; // Mark the option as selected.
         // Dispatch the change event.
         const event = new window.Event("change", { bubbles: true });
