@@ -89,6 +89,7 @@ export class Controlbar extends Widget {
       }
 
       // Handle 'move' or 'hide' overflow-behavior.
+      // The variable priorityMap is used to keep items with same priority together so they can be processed together.
       let priorityMap = {};
       let itemsToHideOrMoveWithNoPriority = [];
       for (const item of controlBarItems) {
@@ -112,9 +113,7 @@ export class Controlbar extends Widget {
       if (priorityList.length || itemsToHideOrMoveWithNoPriority.length) {
         // Sort in descending order, so that elements with lower priority(higher number) is first.
         priorityList.sort((a, b) => {
-          const valueA = Number(a);
-          const valueB = Number(b);
-          return valueB - valueA;
+          return Number(b) - Number(a);
         });
         // For items with priority not specified, the order in which they should be moved/hidden is the reverse of the order in which they appear in the DOM.
         itemsToHideOrMoveWithNoPriority.reverse();
@@ -129,10 +128,10 @@ export class Controlbar extends Widget {
           overflowButton.removeAttribute("hidden");
         }
         // No priority specified means they have the lowest priority and hence should be the first to be moved/hidden.
-        this.rearrangeItemsOnOverflow(itemsToHideOrMoveWithNoPriority, element, overflowMenu, false);
+        this.handleOverflow(itemsToHideOrMoveWithNoPriority, element, overflowMenu, false);
         // Then elements with priority specified will be moved/hidden after in the order of sorted priority.
         for (const priority of priorityList) {
-          this.rearrangeItemsOnOverflow(priorityMap[priority], element, overflowMenu);
+          this.handleOverflow(priorityMap[priority], element, overflowMenu);
         }
       }
       // Show the overflow button if there is at least one visible item in the overflow menu.
@@ -198,18 +197,19 @@ export class Controlbar extends Widget {
     }
 
     /**
-     * Helper - Can handle overflow in two ways.
-     * If processTogether is set to true (default), then if there is currently an overflow, move all elements in the list to the overflow menu.
-     * Else if there is an overflow, keep moving items to the overflow menu one by one.
+     * Helper - Receives a list of items and based on whether there is an overflow or not, move the items to the overflow menu.
+     * Can either process the items separately or together, this is decided by the processTogether argument, whose default is true.
      */
-    rearrangeItemsOnOverflow(items, element, overflowMenu, processTogether = true) {
+    handleOverflow(items, element, overflowMenu, processTogether = true) {
       if (processTogether) {
+        // If there is currently an overflow, move all elements in the list to the overflow menu.
         if (this.checkOverflow(element)) {
           for (const item of items) {
             this.moveItemToMenu(item, overflowMenu);
           }
         }
       } else {
+        // As long as there is an overflow, keep moving items to the overflow menu one by one.
         for (const item of items) {
           if (this.checkOverflow(element)) {
             this.moveItemToMenu(item, overflowMenu);
