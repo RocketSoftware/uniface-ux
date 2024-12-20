@@ -523,8 +523,7 @@
     });
   });
 
-  describe("Set valrep and display format to val and set intial value to be selected, user interaction  and check values in selected element", function () {
-
+  describe("Set valrep, display format to val and set a initial value, user interaction and check values in selected element", function () {
     let element;
     before(function () {
       tester.createWidget();
@@ -533,45 +532,61 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("Set value  to 2 and expect the second option to be selected", function () {
+    it("Set placeholder value and no initial value and expect placeholder value to be shown", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          value: "2",
+          uniface: {
+            "display-format": "val",
+            "placeholder-text": "Select",
+            "show-placeholder": true
+          }
+        });
+      }).then(function () {
+        const selectedValue = element.querySelector("div[slot=selected-value]");
+        expect(selectedValue.textContent).equal("Select");
+      });
+    });
+
+    it("Set valrep and initial value to 1", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          value: "1",
           uniface: {
             "display-format": "val"
           }
         });
       }).then(function () {
-      const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
-      expect(selectedValue.textContent).equal("2");
-      // find index of expected value and compare against index of selected option
-      const selectOption = element.querySelector("fluent-option.selected");
-      expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
+        const selectedValue = element.querySelector("div[slot=selected-value]");
+        expect(selectedValue.textContent).equal("1");
+        // Find index of expected value and compare against index of selected option.
+        const selectOption = element.querySelector("fluent-option.selected");
+        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "1").toString());
       });
     });
 
-    it("Simulate user interaction and select first option", function () {
+    it("Simulate user interaction and select second option", function () {
       return asyncRun(function () {
         const selectElement = document.querySelector("fluent-select");
         // Simulate click event on select widget.
         selectElement.click();
         // Programmatically select an option and dispatch the change event.
-        const optionToSelect = selectElement.options[0]; // Index of the desired option (Option 1).
+        const optionToSelect = selectElement.options[1]; // Index of the desired option (Option 1).
         optionToSelect.selected = true; // Mark the option as selected.
         // Dispatch the change event.
         const event = new window.Event("change", { bubbles: true });
         selectElement.dispatchEvent(event);
       }).then(function () {
-      const selectedValue = element.querySelector("[slot='selected-value']");
-      expect(selectedValue.textContent).equal("1");
-      const selectOption = element.querySelector("fluent-option.selected");
-      expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "1").toString());
+        const selectedValue = element.querySelector("div[slot=selected-value]");
+        expect(selectedValue.textContent).equal("2");
+        // Find index of expected value and compare against index of selected option.
+        const selectOption = element.querySelector("fluent-option.selected");
+        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
       });
     });
-
-
   });
+
   describe('Select onchange event', function () {
     let selectElement, onchangeSpy;
     beforeEach(function () {
