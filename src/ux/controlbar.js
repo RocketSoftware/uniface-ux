@@ -68,8 +68,8 @@ export class Controlbar extends Widget {
           if (subWidgetId) {
             subWidgetsMap[subWidgetId] = subWidget;
             this.overflowPropertiesMap[subWidgetId] = {
-              "overflow-behavior": this.validatePropertyValue("overflow-behavior", properties[`${subWidgetId}_overflow-behavior`]),
-              "priority": this.validatePropertyValue("priority", properties[`${subWidgetId}_priority`]),
+              "overflow-behavior": properties[`${subWidgetId}_overflow-behavior`] ?? null,
+              "priority": properties[`${subWidgetId}_priority`] ?? null,
               "widget-instance": subWidget
             };
           }
@@ -156,25 +156,6 @@ export class Controlbar extends Widget {
     getPropertyValue(item, property) {
       const id = item.getAttribute("sub-widget-id");
       return this.overflowPropertiesMap[id][property];
-    }
-
-    validatePropertyValue(property, value) {
-      const validOverFlowBehavior = ["move", "hide", "menu", "none"];
-      switch (property) {
-        case "priority":
-          if (!isNaN(value) && value > 0) {
-            return value;
-          }
-          break;
-        case "overflow-behavior":
-          if (validOverFlowBehavior.includes(value)) {
-            return value;
-          }
-          break;
-        default:
-          break;
-      }
-      return null;
     }
 
     /**
@@ -405,6 +386,36 @@ export class Controlbar extends Widget {
     return widgetElement;
   }
 
+  checkSuffix(property) {
+    if (property.endsWith("_overflow-behavior")) {
+      return "_overflow-behavior";
+    } else if (property.endsWith("_priority")) {
+      return "_priority";
+    } else {
+      return null;
+    }
+  }
+
+  validatePropertyValue(property, value) {
+    const validOverFlowBehavior = ["move", "hide", "menu", "none"];
+    const propertyType = this.checkSuffix(property);
+    switch (propertyType) {
+      case "_priority":
+        if (!isNaN(value) && value > 0) {
+          return true;
+        }
+        break;
+      case "_overflow-behavior":
+        if (validOverFlowBehavior.includes(value)) {
+          return true;
+        }
+        break;
+      default:
+        break;
+    }
+    return false;
+  }
+
   getSubWidgetIds() {
     const subWidgets = Object.values(this.subWidgets);
     const subWidgetIds = subWidgets.map((subWidget) => {
@@ -423,15 +434,19 @@ export class Controlbar extends Widget {
     let invokeRefresh = false;
     for (const property in unifaceProperties) {
       if (overflowProperties.includes(property)) {
+        const value = unifaceProperties[property];
         // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
         // eslint-disable-next-line eqeqeq, no-undef
-        if (unifaceProperties[property] == uniface.RESET) {
+        if (value == uniface.RESET) {
           this.data.properties.uniface[property] = Controlbar.defaultValues.uniface[property] ?? null;
+          invokeRefresh = true;
+        } else if (this.validatePropertyValue(property, value)) {
+          this.data.properties.uniface[property] = value;
+          invokeRefresh = true;
         } else {
-          this.data.properties.uniface[property] = data.uniface[property];
+          this.warn("setProperties", `Property '${property}' is given invalid value '(${value})'`, "Ignored");
         }
-        delete unifaceProperties[property];
-        invokeRefresh = true;
+        delete data.uniface[property];
       }
     }
     invokeRefresh && setter?.refresh(this);
