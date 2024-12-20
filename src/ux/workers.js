@@ -1424,7 +1424,7 @@ export class StyleProperty extends Worker {
         let value = widgetInstance.data[property];
         let pos = property.search(":");
         property = property.substring(pos + 1);
-        element.style[property] = value || "";
+        element.style[property] = value || "unset";
       }
     }
   }
