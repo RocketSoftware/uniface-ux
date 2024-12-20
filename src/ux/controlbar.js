@@ -50,15 +50,17 @@ export class Controlbar extends Widget {
      */
     handleOverflow(widgetInstance) {
       const element = this.getElement(widgetInstance);
-      const overflowMenu = widgetInstance.elements.overflowMenu;
       const widget = widgetInstance.elements.widget;
+      const overflowMenu = widgetInstance.elements.overflowMenu;
+      const overflowButton = widgetInstance.elements.overflowButton;
       const properties = widgetInstance.data.properties.uniface;
+      const subWidgets = Object.values(widgetInstance?.subWidgets);
 
       // Create a map of subwidgets with their ids as key and the widgetInstance as value.
-      // Also create a list of controlbarItems where each item is the corresponding HTML elements.
       let subWidgetsMap = {};
-      const subWidgets = Object.values(widgetInstance?.subWidgets);
+      // Create a map of for accessing overflow related properties easily. Will be a nested object of the which maps the sub-widget-id of each sub-widget to its overflow-behavior and priority values
       this.overflowPropertiesMap = {};
+      // Also create a list of controlbarItems where each item is the corresponding HTML elements.
       let controlBarItems = subWidgets
         .map((subWidget) => {
           const subWidgetElement = this.getElement(subWidget);
@@ -67,25 +69,21 @@ export class Controlbar extends Widget {
             subWidgetsMap[subWidgetId] = subWidget;
             this.overflowPropertiesMap[subWidgetId] = {
               "overflow-behavior": this.validatePropertyValue("overflow-behavior", properties[`${subWidgetId}_overflow-behavior`]),
-              "priority": this.validatePropertyValue("priority", properties[`${subWidgetId}_priority`])
+              "priority": this.validatePropertyValue("priority", properties[`${subWidgetId}_priority`]),
+              "widget-instance": subWidget
             };
           }
           return subWidgetElement;
         })
         .filter((item) => item);
 
-      let contentWidth = 0;
       // Handle overflow when overflow-behavior is "none".
       const itemsToAlwaysShow = controlBarItems.filter((item) => {
         const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
         return overflowBehavior === "none";
       });
       for (let item of itemsToAlwaysShow) {
-        if (!item.hasAttribute("hidden")) {
-          const itemWidth = this.getItemWidth(item);
-          contentWidth += itemWidth;
-        }
-        item.removeAttribute("overflown-item");
+        this.showControlbarItem(item, overflowMenu);
       }
 
       // Handle 'menu' overflow-behavior.
@@ -93,50 +91,68 @@ export class Controlbar extends Widget {
         const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
         return overflowBehavior === "menu" && !item.hasAttribute("hidden");
       });
-      this.moveControlBarItemsToMenu(itemsAlwaysInMenu, overflowMenu, subWidgetsMap);
+      for (const item of itemsAlwaysInMenu) {
+        this.moveItemToMenu(item, overflowMenu);
+      }
 
       // Handle 'move' or 'hide' overflow-behavior.
       const itemsToHideOrMove = controlBarItems.filter((item) => {
         const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
+        const priority = this.getPropertyValue(item, "priority");
         const isHidden = item.hasAttribute("hidden");
-        return !isHidden && (overflowBehavior === "move" || overflowBehavior === "hide" || overflowBehavior === null);
+        return !isHidden && priority && (overflowBehavior === "move" || overflowBehavior === "hide" || overflowBehavior === null);
       });
 
-      if (itemsToHideOrMove.length) {
+      // Handle 'move' or 'hide' overflow-behavior for item with no priority specified.
+      const itemsToHideOrMoveWithNoPriority = controlBarItems.filter((item) => {
+        const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
+        const priority = this.getPropertyValue(item, "priority");
+        const isHidden = item.hasAttribute("hidden");
+        return !isHidden && !priority && (overflowBehavior === "move" || overflowBehavior === "hide" || overflowBehavior === null);
+      });
+
+      if (itemsToHideOrMove.length || itemsToHideOrMoveWithNoPriority.length) {
+        // Sort in descending order, so that elements with lower priority(higher number) is first.
         itemsToHideOrMove.sort((a, b) => {
           const valueA = Number(this.getPropertyValue(a, "priority"));
           const valueB = Number(this.getPropertyValue(b, "priority"));
-          return valueA - valueB;
+          return valueB - valueA;
         });
+        // For items with priority not specified, the order in which they should be moved/hidden is the reverse of the order in which they appear in the DOM.
+        itemsToHideOrMoveWithNoPriority.reverse();
 
-        // Get the width of the controlbar items.
-        const controlbarWidth = this.getItemInnerWidth(widget);
-        const allContentWidth = this.getItemsWidth(widget, widgetInstance.elements.overflowButton);
-
-        // Check if there is an overflow condition when all menu items without hidden property are shown.
-        // If there is calculate the index of the item which can cause overflow and show all items in the sorted list with index
-        // less than said index and hide the rest from menu and instead show them as menu items.
-        if (allContentWidth > controlbarWidth) {
-          const indexToBreak = this.findItemsToHide(controlbarWidth, widgetInstance.elements.overflowButton, itemsToHideOrMove, contentWidth);
-          this.showControlbarItems(itemsToHideOrMove.slice(0, indexToBreak), overflowMenu);
-          this.moveControlBarItemsToMenu(itemsToHideOrMove.slice(indexToBreak, itemsToHideOrMove.length), overflowMenu, subWidgetsMap);
-        } else {
-          this.showControlbarItems(itemsToHideOrMove, overflowMenu);
+        // Show all items
+        for (const item of itemsToHideOrMoveWithNoPriority.concat(itemsToHideOrMove)) {
+          this.showControlbarItem(item, overflowMenu);
         }
+        // Check if overflow
+        if (this.checkOverflow(element)) {
+          // If there is an overflow, the overflow button needs to be displayed, so when checking if there is an overflow the space occupied by the button is also included.
+          overflowButton.removeAttribute("hidden");
+        }
+
+        // No priority specified means they have the lowest priority and hence should be the first to be moved/hidden.
+        this.rearrangeItemsOnOverflow(itemsToHideOrMoveWithNoPriority, element, overflowMenu);
+        // Then elements with priority specified will be moved/hidden after.
+        this.rearrangeItemsOnOverflow(itemsToHideOrMove, element, overflowMenu);
       }
       // Show the overflow button if there is at least one visible item in the overflow menu.
       if (element.querySelector(".u-overflow-menu .u-menu-item:not([hidden])")) {
         widget.classList.add("u-overflowed");
-        widgetInstance.elements.overflowButton.removeAttribute("hidden");
+        overflowButton.removeAttribute("hidden");
         widgetInstance.elements.overflowContainer.removeAttribute("hidden");
       } else {
         widget.classList.remove("u-overflowed");
-        widgetInstance.elements.overflowButton.hidden = true;
+        overflowButton.hidden = true;
         overflowMenu.hidden = true;
         widgetInstance.elements.overflowContainer.hidden = true;
       }
     }
 
+    /**
+     * Helper - Returns the value of a given property of a particulat sub-widget.
+     * Only useful for properties of the format "[sub-widget-id]_[property-name]".
+     */
     getPropertyValue(item, property) {
       const id = item.getAttribute("sub-widget-id");
       return this.overflowPropertiesMap[id][property];
@@ -162,37 +178,54 @@ export class Controlbar extends Widget {
     }
 
     /**
-     * Helper - Find the index of the element at which the controlbar items starts to overflow.
-     * It takes 4 arguments, the inner width of the controlbar, the overflowButton item, the width taken up by items that are always
-     * present it the controlbar.
-     * The remaining available width is calculated and the index of the item which will result in overflow in returned.
+     * Helper - Hide the item in the controlbar and show the corresponding item in the overflow-menu.
+     * The items passed to this method can have overflow behavior hide, move or null.
+     * Except for hide, rest should be moved to overflow-menu.
      */
-    findItemsToHide(controlbarWidth, overflowButton, itemsToHideOrMove, contentWidth) {
-      let availableSpace = controlbarWidth - contentWidth - this.getItemWidth(overflowButton);
-      let indexToBreak = itemsToHideOrMove.length;
-      for (let index = 0; index < itemsToHideOrMove.length; index++) {
-        let item = itemsToHideOrMove[index];
-        const itemWidth = this.getItemWidth(item);
-        availableSpace -= itemWidth;
-        if (availableSpace < 0) {
-          indexToBreak = index;
-          break;
+    moveItemToMenu(item, overflowMenu) {
+      item.classList.add("u-overflown-item");
+      const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
+      if (overflowBehavior !== "hide") {
+        const subWidgetId = item.getAttribute("sub-widget-id");
+        const menuItem = overflowMenu.querySelector(`[item-id="${subWidgetId}"]`);
+        menuItem.removeAttribute("hidden");
+        const value = this.overflowPropertiesMap[subWidgetId]["widget-instance"].getMenuItem();
+        this.appendIconAndTextInMenuItem(menuItem, value);
+      }
+    }
+
+    /**
+     * Helper - Hide the item in the overflow menu and show the corresponding item in the controlbar.
+     */
+    showControlbarItem(item, overflowMenu) {
+      item.classList.remove("u-overflown-item");
+      const subWidgetId = item.getAttribute("sub-widget-id");
+      const menuItem = overflowMenu.querySelector(`[item-id="${subWidgetId}"]`);
+      menuItem.setAttribute("hidden", "");
+    }
+
+    /**
+     * Helper - Checks if there is currently an overflow condition.
+     */
+    checkOverflow(element) {
+      let currentOverflow = element.style.overflow;
+      if (!currentOverflow || currentOverflow === "visible") {
+        element.style.overflow = "hidden";
+      }
+      let isOverflowing = element.clientWidth < element.scrollWidth;
+      element.style.overflow = currentOverflow;
+      return isOverflowing;
+    }
+
+    /**
+     * Helper - As long as there is an overflow, keep moving items to the overflow menu one by one.
+     */
+    rearrangeItemsOnOverflow(items, element, overflowMenu) {
+      for (const item of items) {
+        if (this.checkOverflow(element)) {
+          this.moveItemToMenu(item, overflowMenu);
         }
       }
-      if (indexToBreak < itemsToHideOrMove.length) {
-        const overFlowIndex = this.getPropertyValue(itemsToHideOrMove[indexToBreak], "priority");
-        let index = indexToBreak - 1;
-        while (index >= 0) {
-          const prevOverFlowIndex = this.getPropertyValue(itemsToHideOrMove[index], "priority");
-          if (overFlowIndex === prevOverFlowIndex) {
-            indexToBreak = index;
-            index--;
-          } else {
-            break;
-          }
-        }
-      }
-      return indexToBreak;
     }
 
     /**
@@ -246,83 +279,6 @@ export class Controlbar extends Widget {
         textElement.classList.add(`u-suffix`);
         element.appendChild(textElement);
       }
-    }
-
-    /**
-     * Helper - In the case of underflow, show the controlbar items upto a given index.
-     * The index is previously calculated, such that showing items upto this index won't result in overflow.
-     */
-    showControlbarItems(items, overflowMenu) {
-      for (const item of items) {
-        item.classList.remove("u-overflown-item");
-        const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
-        if (overflowBehavior === "move" || overflowBehavior === null) {
-          const subWidgetId = item.getAttribute("sub-widget-id");
-          const menuItem = overflowMenu.querySelector(`[item-id="${subWidgetId}"]`);
-          menuItem.setAttribute("hidden", "");
-        }
-      }
-    }
-
-    /**
-     * Helper - Hide the items in the controlbar and show the corresponding items in overflow-menu.
-     * The items passed to this method can have overflow behavior hide, move or null.
-     * Except for hide, rest should be moved to overflow-menu.
-     */
-    moveControlBarItemsToMenu(items, overflowMenu, subWidgetsMap) {
-      for (const item of items) {
-        item.classList.add("u-overflown-item");
-        const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
-        if (overflowBehavior !== "hide") {
-          const subWidgetId = item.getAttribute("sub-widget-id");
-          const menuItem = overflowMenu.querySelector(`[item-id="${subWidgetId}"]`);
-          menuItem.removeAttribute("hidden");
-          const value = subWidgetsMap[subWidgetId].getMenuItem();
-          this.appendIconAndTextInMenuItem(menuItem, value);
-        }
-      }
-    }
-
-    /**
-     * Helper - Get the total width of all the controlbar items.
-     */
-    getItemsWidth(widget, overflowButton) {
-      let totalWidth = 0;
-      const itemsRemaining = Array.from(widget.querySelectorAll(":scope > :not(.u-overflow-container) > :not([hidden])"));
-      if (!overflowButton.hasAttribute("hidden")) {
-        itemsRemaining.push(overflowButton);
-      }
-      itemsRemaining.forEach((item) => {
-        const itemWidth = this.getItemWidth(item);
-        totalWidth += itemWidth;
-      });
-      return totalWidth;
-    }
-
-    /**
-     * Helper - Get the inner-width of an element, ie width excluding border, margins and paddings.
-     */
-    getItemInnerWidth(element) {
-      const style = window.getComputedStyle(element);
-      const paddingLeft = parseInt(style.paddingLeft);
-      const paddingRight = parseInt(style.paddingRight);
-      const innerWidth = element.clientWidth - paddingLeft - paddingRight;
-      return innerWidth;
-    }
-
-    /**
-     * Helper - Get the width of a controlbar item.
-     */
-    getItemWidth(item) {
-      let itemWidth = 0;
-      const originalDisplay = item.style.display;
-      // Temporarily show the item to measure its width
-      item.style.display = "block";
-      const ItemCSSStyleSet = window.getComputedStyle(item);
-      itemWidth = item.offsetWidth + parseFloat(ItemCSSStyleSet.marginInlineStart) + parseFloat(ItemCSSStyleSet.marginInlineEnd);
-      // Revert the display property to its original value
-      item.style.display = originalDisplay;
-      return itemWidth;
     }
   };
 
