@@ -42,13 +42,6 @@ export class Controlbar extends Widget {
     }
 
     refresh(widgetInstance) {
-      this.handleOverflow(widgetInstance);
-    }
-
-    /**
-     * Helper - Handles the horizontal responsiveness of the controlbar based on overflow-behavior and priority.
-     */
-    handleOverflow(widgetInstance) {
       const element = this.getElement(widgetInstance);
       const widget = widgetInstance.elements.widget;
       const overflowMenu = widgetInstance.elements.overflowMenu;
@@ -96,33 +89,38 @@ export class Controlbar extends Widget {
       }
 
       // Handle 'move' or 'hide' overflow-behavior.
-      const itemsToHideOrMove = controlBarItems.filter((item) => {
+      let priorityMap = {};
+      let itemsToHideOrMoveWithNoPriority = [];
+      for (const item of controlBarItems) {
         const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
         const priority = this.getPropertyValue(item, "priority");
         const isHidden = item.hasAttribute("hidden");
-        return !isHidden && priority && (overflowBehavior === "move" || overflowBehavior === "hide" || overflowBehavior === null);
-      });
+        if (!isHidden && (overflowBehavior === "move" || overflowBehavior === "hide" || overflowBehavior === null)) {
+          if (priority) {
+            if (priorityMap[priority]) {
+              priorityMap[priority].push(item);
+            } else {
+              priorityMap[priority] = [item];
+            }
+          } else {
+            itemsToHideOrMoveWithNoPriority.push(item);
+          }
+        }
+      }
 
-      // Handle 'move' or 'hide' overflow-behavior for item with no priority specified.
-      const itemsToHideOrMoveWithNoPriority = controlBarItems.filter((item) => {
-        const overflowBehavior = this.getPropertyValue(item, "overflow-behavior");
-        const priority = this.getPropertyValue(item, "priority");
-        const isHidden = item.hasAttribute("hidden");
-        return !isHidden && !priority && (overflowBehavior === "move" || overflowBehavior === "hide" || overflowBehavior === null);
-      });
-
-      if (itemsToHideOrMove.length || itemsToHideOrMoveWithNoPriority.length) {
+      let priorityList = Object.keys(priorityMap);
+      if (priorityList.length || itemsToHideOrMoveWithNoPriority.length) {
         // Sort in descending order, so that elements with lower priority(higher number) is first.
-        itemsToHideOrMove.sort((a, b) => {
-          const valueA = Number(this.getPropertyValue(a, "priority"));
-          const valueB = Number(this.getPropertyValue(b, "priority"));
+        priorityList.sort((a, b) => {
+          const valueA = Number(a);
+          const valueB = Number(b);
           return valueB - valueA;
         });
         // For items with priority not specified, the order in which they should be moved/hidden is the reverse of the order in which they appear in the DOM.
         itemsToHideOrMoveWithNoPriority.reverse();
 
         // Show all items
-        for (const item of itemsToHideOrMoveWithNoPriority.concat(itemsToHideOrMove)) {
+        for (const item of itemsToHideOrMoveWithNoPriority.concat(Object.values(priorityMap).flat())) {
           this.showControlbarItem(item, overflowMenu);
         }
         // Check if overflow
@@ -130,11 +128,12 @@ export class Controlbar extends Widget {
           // If there is an overflow, the overflow button needs to be displayed, so when checking if there is an overflow the space occupied by the button is also included.
           overflowButton.removeAttribute("hidden");
         }
-
         // No priority specified means they have the lowest priority and hence should be the first to be moved/hidden.
-        this.rearrangeItemsOnOverflow(itemsToHideOrMoveWithNoPriority, element, overflowMenu);
-        // Then elements with priority specified will be moved/hidden after.
-        this.rearrangeItemsOnOverflow(itemsToHideOrMove, element, overflowMenu);
+        this.rearrangeItemsOnOverflow(itemsToHideOrMoveWithNoPriority, element, overflowMenu, false);
+        // Then elements with priority specified will be moved/hidden after in the order of sorted priority.
+        for (const priority of priorityList) {
+          this.rearrangeItemsOnOverflow(priorityMap[priority], element, overflowMenu);
+        }
       }
       // Show the overflow button if there is at least one visible item in the overflow menu.
       if (element.querySelector(".u-overflow-menu .u-menu-item:not([hidden])")) {
@@ -199,12 +198,24 @@ export class Controlbar extends Widget {
     }
 
     /**
-     * Helper - As long as there is an overflow, keep moving items to the overflow menu one by one.
+     * Helper - Can handle overflow in two ways.
+     * If processTogether is set to true (default), then if there is currently an overflow, move all elements in the list to the overflow menu.
+     * Else if there is an overflow, keep moving items to the overflow menu one by one.
      */
-    rearrangeItemsOnOverflow(items, element, overflowMenu) {
-      for (const item of items) {
+    rearrangeItemsOnOverflow(items, element, overflowMenu, processTogether = true) {
+      if (processTogether) {
         if (this.checkOverflow(element)) {
-          this.moveItemToMenu(item, overflowMenu);
+          for (const item of items) {
+            this.moveItemToMenu(item, overflowMenu);
+          }
+        }
+      } else {
+        for (const item of items) {
+          if (this.checkOverflow(element)) {
+            this.moveItemToMenu(item, overflowMenu);
+          } else {
+            break;
+          }
         }
       }
     }
