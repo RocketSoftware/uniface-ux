@@ -5,9 +5,7 @@ module.exports = [
     // This object is only for ignore. do not add any other properties
     "ignores": [
       "dist/",
-      "node_modules/", 
       "src/fluentui/",
-      "test/modules/", 
       "testAutomation/"
     ]
   },
@@ -44,7 +42,7 @@ module.exports = [
       "no-console": "off",
       "no-const-assign": "warn",
       "no-extra-semi": "warn",
-      "semi": 2,
+      "semi": "error",
       "no-fallthrough": "warn",
       "no-eval": "error",
       "no-redeclare": "off",
@@ -116,6 +114,8 @@ module.exports = [
     "files": ["test/ux/*.js"],
     "languageOptions": {
       "globals": {
+        "Element": "readonly",
+        "uniface": "readonly",
         // mocha
         "after": "readonly",
         "afterEach": "readonly",
@@ -127,16 +127,11 @@ module.exports = [
         "chai": "readonly",
         // sinon
         "sinon": "readonly",
-        //"setTimeout": "readonly",
         // for umockup
         "umockup": "readonly"
       }
     },
     "rules": {
-      "indent": "off", 
-      //"no-console": "on",
-      "no-trailing-spaces": "off",
-      "spaced-comment": "off",
       "quote-props": "off"
     }
   }

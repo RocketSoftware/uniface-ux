@@ -16,222 +16,139 @@
   let placeholderEl = document.createElement("span");
   let node;
 
-  const MOCK_EMPTY_DEFINITION = { properties: {} };
+  const MOCK_EMPTY_DEFINITION = {};
 
   const MOCK_START_CONTROLS_ONLY_DEFINITION = {
-    properties: {
-      "controls-start": "first",
-      "first:widget-class": "UX.Button"
-    }
+    "controls-start": "first",
+    "first:widget-class": "UX.Button"
   };
 
   const MOCK_EMPTY_START_CONTROLS_DEFINITION = {
-    properties: {
-      "controls-start": "",
-      "controls-center": "size",
-      "controls-end": "goto",
-      "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select"
-    }
+    "controls-start": "",
+    "controls-center": "size",
+    "controls-end": "goto",
+    "goto:widget-class": "UX.NumberField",
+    "size:widget-class": "UX.Select"
   };
 
   const MOCK_UNDEFINED_START_CONTROLS_DEFINITION = {
-    properties: {
-      "controls-center": "goto",
-      "controls-end": "size",
-      "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select"
-    }
+    "controls-center": "goto",
+    "controls-end": "size",
+    "goto:widget-class": "UX.NumberField",
+    "size:widget-class": "UX.Select"
   };
 
   const MOCK_EMPTY_CENTER_CONTROLS_DEFINITION = {
-    properties: {
-      "controls-start": "info",
-      "controls-center": "",
-      "controls-end": "size",
-      "info:widget-class": "UX.PlainText",
-      "size:widget-class": "UX.Select"
-    }
+    "controls-start": "info",
+    "controls-center": "",
+    "controls-end": "size",
+    "info:widget-class": "UX.PlainText",
+    "size:widget-class": "UX.Select"
   };
 
   const MOCK_UNDEFINED_CENTER_CONTROLS_DEFINITION = {
-    properties: {
-      "controls-start": "info",
-      "controls-end": "size",
-      "info:widget-class": "UX.PlainText",
-      "size:widget-class": "UX.Select"
-    }
+    "controls-start": "info",
+    "controls-end": "size",
+    "info:widget-class": "UX.PlainText",
+    "size:widget-class": "UX.Select"
   };
 
   const MOCK_EMPTY_END_CONTROLS_DEFINITION = {
-    properties: {
-      "controls-start": "info",
-      "controls-center": "goto",
-      "controls-end": "",
-      "info:widget-class": "UX.PlainText",
-      "goto:widget-class": "UX.NumberField"
-    }
+    "controls-start": "info",
+    "controls-center": "goto",
+    "controls-end": "",
+    "info:widget-class": "UX.PlainText",
+    "goto:widget-class": "UX.NumberField"
   };
 
   const MOCK_UNDEFINED_END_CONTROLS_DEFINITION = {
-    properties: {
-      "controls-start": "info",
-      "controls-center": "goto",
-      "info:widget-class": "UX.PlainText",
-      "goto:widget-class": "UX.NumberField"
-    }
+    "controls-start": "info",
+    "controls-center": "goto",
+    "info:widget-class": "UX.PlainText",
+    "goto:widget-class": "UX.NumberField"
   };
 
   const MOCK_START_CENTER_END_CONTROLS_DEFINITION = {
-    properties: {
-      "controls-start": "info",
-      "controls-center": "goto",
-      "controls-end": "sizefirst",
-      "info:widget-class": "UX.PlainText",
-      "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select",
-      "first:widget-class": "UX.Button"
-    }
+    "controls-start": "info",
+    "controls-center": "goto",
+    "controls-end": "sizefirst",
+    "info:widget-class": "UX.PlainText",
+    "goto:widget-class": "UX.NumberField",
+    "size:widget-class": "UX.Select",
+    "first:widget-class": "UX.Button"
   };
 
   const MOCK_EMPTY_START_CENTER_END_CONTROLS_DEFINITION = {
-    properties: {
-      "controls-start": "",
-      "controls-center": "",
-      "controls-end": "",
-      "info:widget-class": "UX.PlainText",
-      "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select"
-    }
+    "controls-start": "",
+    "controls-center": "",
+    "controls-end": "",
+    "info:widget-class": "UX.PlainText",
+    "goto:widget-class": "UX.NumberField",
+    "size:widget-class": "UX.Select"
   };
 
   const MOCK_UNDEFINED_START_CENTER_END_CONTROLS_DEFINITION = {
-    properties: {
-      "info:widget-class": "UX.PlainText",
-      "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select"
-    }
+    "info:widget-class": "UX.PlainText",
+    "goto:widget-class": "UX.NumberField",
+    "size:widget-class": "UX.Select"
   };
 
   const MOCK_CONTROLS_WITHOUT_ANY_PROPERTIES_DEFINITION = {
-    properties: {
-      "controls-start": "first",
-      "controls-center": "size",
-      "controls-end": "goto",
-      "last:widget-class": "UX.Button",
-      "last:value": "Last"
-    }
+    "controls-start": "first",
+    "controls-center": "size",
+    "controls-end": "goto",
+    "last:widget-class": "UX.Button",
+    "last:value": "Last"
   };
 
   const MOCK_CONTROLS_PROPERTIES_DEFINITION = {
-    properties: {
-      "controls-start": "size",
-      "controls-end": "last",
-      "last:widget-class": "UX.Button",
-      "size:widget-class": "UX.Select",
-      "last:overflow-behavior": "none",
-      "size:overflow-behavior": "hide",
-      "last:overflow-index": "1",
-      "size:overflow-index": "2",
-      "last:value": "a",
-      "size:value": "1",
-      "size:valrep": "1=a10=1025=2550=50100=100",
-      "size:label-text": "Label",
-      "last:html:appearance": "accent",
-      "last:style:padding": "10px",
-      "last:class:classA": "true"
-    }
+    "controls-start": "size",
+    "controls-end": "last",
+    "last:widget-class": "UX.Button",
+    "size:widget-class": "UX.Select",
+    "last:value": "a",
+    "size:value": "1",
+    "size:valrep": "1=a10=1025=2550=50100=100",
+    "size:label-text": "Label",
+    "last:html:appearance": "accent",
+    "last:style:padding": "10px",
+    "last:class:classA": "true"
   };
 
   const MOCK_CONTROLBAR_DATA = {
-    uniface: {
-      orientation: "vertical"
-    },
-    style: {
-      padding: "10px"
-    },
-    classes: {
-      classC: "true"
-    }
+    orientation: "vertical",
+    "style:padding": "10px",
+    "class:classC": "true"
   };
 
   const MOCK_CONTROLBAR_CONTROLS_DATA = {
-    uniface: {
-      "size:html:disabled": "true",
-      "goto:html:hide-step": "true",
-      "size:style:min-width": "100px",
-      "goto:style:margin": "5px",
-      "size:class:classA": "true",
-      "goto:class:classB": "true",
-      "size:label-text": "Label",
-      "first:html:appearance": "accent",
-      "first:value": "Go",
-      "size:valrep": "1=a10=1025=2550=50100=100"
-    }
+    "size:html:disabled": "true",
+    "goto:html:hide-step": "true",
+    "size:style:min-width": "100px",
+    "goto:style:margin": "5px",
+    "size:class:classA": "true",
+    "goto:class:classB": "true",
+    "size:label-text": "Label",
+    "first:html:appearance": "accent",
+    "first:value": "Go",
+    "size:valrep": "1=a10=1025=2550=50100=100"
   };
 
   const MOCK_CONTROLS = {
-    last: {
-      "overflow-behavior": "none",
-      "overflow-index": "1",
-      "widget-class": "UX.Button",
-      "widget-cleanup-properties": {},
-      "widget-properties": {
-        classes: {
-          classA: "true"
-        },
-        html: {
-          appearance: "accent"
-        },
-        style: {
-          padding: "10px"
-        },
-        value: "a"
-      }
-    },
-    size: {
-      "widget-properties": {
-        uniface: {
-          "label-text": "Label"
-        },
-        valrep: [
-          {
-            value: "1",
-            representation: "a"
-          },
-          {
-            value: "10",
-            representation: "10"
-          },
-          {
-            value: "25",
-            representation: "25"
-          },
-          {
-            value: "50",
-            representation: "50"
-          },
-          {
-            value: "100",
-            representation: "100"
-          }
-        ],
-        value: "1"
-      },
-      "widget-cleanup-properties": {},
-      "widget-class": "UX.Select",
-      "overflow-behavior": "hide",
-      "overflow-index": "2"
-    }
+    "last:widget-class": "something",
+    "last:class:classA": "true",
+    "last:html:appearance": "accent",
+    "last:value": "a",
+    "size:label-text": "Label",
+    "size:valrep": "1=a10=1025=2550=50100=100",
+    value: "1",
+    "size:widget-cleanup-properties": {},
+    "size:widget-class": "UX.Select"
   };
 
   const MOCK_CONTROLBAR_DEFAULT_PROPERTIES = {
-    classes: {
-      "u-controlbar": true
-    },
-    uniface: {
-      orientation: "horizontal"
-    }
+    "class:u-controlbar": true,
+    orientation: "horizontal"
   };
 
   describe("processLayout()", function () {
@@ -804,7 +721,7 @@
       });
 
       describe(" when the control of the properties passed is part of controlIds", function () {
-        it("should group the controls widget-class, overflow-behavior, overflow-index, value, valrep,html,style,class and uniface properties correctly", function () {
+        it("should group the controls widget-class,value, valrep,html,style,class and uniface properties correctly", function () {
           widgetElement = controlbar.processLayout(placeholderEl, MOCK_CONTROLS_PROPERTIES_DEFINITION);
           node = parentNode.children[0];
           parentNode.replaceChild(widgetElement, node);
