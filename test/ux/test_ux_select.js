@@ -532,22 +532,6 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("Set placeholder value and no initial value and expect placeholder value to be shown", function () {
-      return asyncRun(function () {
-        tester.dataUpdate({
-          valrep: valRepArray,
-          uniface: {
-            "display-format": "val",
-            "placeholder-text": "Select",
-            "show-placeholder": true
-          }
-        });
-      }).then(function () {
-        const selectedValue = element.querySelector("div[slot=selected-value]");
-        expect(selectedValue.textContent).equal("Select");
-      });
-    });
-
     it("Set valrep and initial value to 1", function () {
       return asyncRun(function () {
         tester.dataUpdate({
@@ -583,6 +567,54 @@
         // Find index of expected value and compare against index of selected option.
         const selectOption = element.querySelector("fluent-option.selected");
         expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
+      });
+    });
+  });
+
+  describe("Set placeholder and change the value with user interaction", function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      tester.bindUpdatorsEventToElement();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    it("Set placeholder with no initial value and expect placeholder to be shown", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          valrep: valRepArray,
+          uniface: {
+            "display-format": "val",
+            "placeholder-text": "Select",
+            "show-placeholder": true
+          }
+        });
+      }).then(function () {
+        const selectedValue = element.querySelector("div[slot=selected-value]");
+        expect(selectedValue.textContent).equal("Select");
+      });
+    });
+
+    it("Simulate user interaction and select third option", function () {
+      return asyncRun(function () {
+        const selectElement = document.querySelector("fluent-select");
+        // Simulate click event on select widget.
+        selectElement.click();
+        // Programmatically select an option and dispatch the change event.
+        const optionToSelect = selectElement.options[2]; // Index of the desired option (Option 1).
+        optionToSelect.selected = true; // Mark the option as selected.
+        // Dispatch the change event.
+        const event = new window.Event("change", { bubbles: true });
+        selectElement.dispatchEvent(event);
+      }).then(function () {
+        const selectedValue = element.querySelector("div[slot=selected-value]");
+        expect(selectedValue.textContent).equal("3");
+        // Find index of expected value and compare against index of selected option.
+        const selectOption = element.querySelector("fluent-option.selected");
+        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "3").toString());
+        const placeholderSlot = selectedValue.querySelector(".u-placeholder");
+        expect(placeholderSlot).equal(null);
       });
     });
   });
