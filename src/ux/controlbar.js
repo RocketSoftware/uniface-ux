@@ -224,52 +224,71 @@ export class Controlbar extends Widget {
      * Helper - Set the value of the menu item by appending the text and icon element if it's available.
      */
     appendIconAndTextInMenuItem(element, value) {
+      // Clear the element's content.
       element.innerHTML = "";
+
+      // Helper function to create and append elements.
+      const createElement = (tag, classNames = [], text = "", isHTML = false) => {
+        const el = document.createElement(tag);
+        if (classNames.length) {
+          el.classList.add(...classNames);
+        }
+        if (isHTML) {
+          el.innerHTML = text;
+        } else {
+          el.innerText = text;
+        }
+        return el;
+      };
+
+      // Handle not supported state.
       if (value.isNotSupported) {
         element.classList.add("u-not-supported");
       }
+
+      // Append primary text (plain or HTML).
       if (value.primaryPlainText) {
-        let textElement = document.createElement("span");
-        textElement.innerText = value.primaryPlainText;
-        element.appendChild(textElement);
+        element.appendChild(createElement("span", [], value.primaryPlainText));
       } else if (value.primaryHtmlText) {
-        let textElement = document.createElement("span");
-        textElement.innerHTML = value.primaryHtmlText;
-        element.appendChild(textElement);
-      }
-      if (value.secondaryPlainText) {
-        let textElement = document.createElement("span");
-        textElement.classList.add("u-suffix");
-        textElement.innerText = value.secondaryPlainText;
-        element.appendChild(textElement);
-      }
-      if (value.errorMessage) {
-        element.classList.add("u-invalid");
-        let iconElement = document.createElement("span");
-        iconElement.classList.add(`u-suffix`, "ms-Icon", `ms-Icon--AlertSolid`);
-        iconElement.setAttribute("title", value.errorMessage);
-        element.appendChild(iconElement);
+        element.appendChild(createElement("span", [], value.primaryHtmlText, true));
       }
 
-      if (value.prefixIcon) {
-        let iconElement = document.createElement("span");
-        iconElement.classList.add(`u-prefix`, "ms-Icon", `ms-Icon--${value.prefixIcon}`);
-        element.insertBefore(iconElement, element.firstChild);
-      } else if (value.prefixText) {
-        let textElement = document.createElement("span");
-        textElement.innerText = value.prefixText;
-        textElement.classList.add(`u-prefix`);
-        element.insertBefore(textElement, element.firstChild);
+      // Append secondary text.
+      if (value.secondaryPlainText) {
+        element.appendChild(createElement("span", ["u-suffix"], value.secondaryPlainText));
       }
+
+      // Handle error state.
+      if (value.errorMessage) {
+        element.classList.add("u-invalid");
+        element.appendChild(
+          createElement("span", ["u-suffix", "ms-Icon", "ms-Icon--AlertSolid"], "")
+            .setAttribute("title", value.errorMessage)
+        );
+      }
+
+      // Append prefix icon or text.
+      if (value.prefixIcon) {
+        element.insertBefore(
+          createElement("span", ["u-prefix", "ms-Icon", `ms-Icon--${value.prefixIcon}`]),
+          element.firstChild
+        );
+      } else if (value.prefixText) {
+        element.insertBefore(
+          createElement("span", ["u-prefix"], value.prefixText),
+          element.firstChild
+        );
+      }
+
+      // Append suffix icon or text.
       if (value.suffixIcon) {
-        let iconElement = document.createElement("span");
-        iconElement.classList.add(`u-suffix`, "ms-Icon", `ms-Icon--${value.suffixIcon}`);
-        element.appendChild(iconElement);
+        element.appendChild(
+          createElement("span", ["u-suffix", "ms-Icon", `ms-Icon--${value.suffixIcon}`])
+        );
       } else if (value.suffixText) {
-        let textElement = document.createElement("span");
-        textElement.innerText = value.suffixText;
-        textElement.classList.add(`u-suffix`);
-        element.appendChild(textElement);
+        element.appendChild(
+          createElement("span", ["u-suffix"], value.suffixText)
+        );
       }
     }
   };
