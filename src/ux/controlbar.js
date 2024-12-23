@@ -369,6 +369,11 @@ export class Controlbar extends Widget {
     this.elements.overflowButton = this.elements.widget.querySelector(".u-overflow-button");
     this.elements.overflowMenu = this.elements.widget.querySelector(".u-overflow-menu");
 
+    // Show or hide the overflow menu by clicking the overflow menu button.
+    this.elements.overflowButton.addEventListener("click", () => {
+      this.elements.overflowMenu.hidden = !this.elements.overflowMenu.hidden;
+    });
+
     // Hide the menu on clicking outside.
     document.addEventListener("click", (event) => {
       if (!this.elements.overflowMenu.contains(event.target) && !this.elements.overflowButton.contains(event.target)) {
@@ -392,9 +397,6 @@ export class Controlbar extends Widget {
     const subWidgets = widgetElement.querySelectorAll(":scope > * > *");
     // Create overflow menu and menu items.
     const overflowMenu = Controlbar.createOverflowMenuAndMenuItems(subWidgets);
-    overflowButton.addEventListener("click", () => {
-      overflowMenu.hidden = !overflowMenu.hidden;
-    });
     // Add overflow button to overflow menu and overflow menu to overflow container.
     overflowContainer.append(overflowButton);
     overflowContainer.append(overflowMenu);
