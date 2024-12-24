@@ -1,0 +1,22 @@
+stages:
+  - build
+
+include:
+  - project: 'Uniface/tools/defaults'
+    ref: master
+    file: '.gitlab-ci-defaults.yml'
+
+build:
+  stage: build
+  extends: .uxwidgets
+  variables:
+    CONTAINER_RELEASE_IMAGE_REPO: $CI_REGISTRY/$CI_PROJECT_PATH
+  tags:
+    - docker-uniface-local
+  script:
+    - echo "Build CSS/JS bundles"
+    - npm install
+    - npm run build:prod
+  artifacts:
+    paths:
+      - dist/
