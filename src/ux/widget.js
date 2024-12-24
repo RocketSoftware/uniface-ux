@@ -533,7 +533,7 @@ export class Widget extends Base {
     const defaultValues = widgetClass.defaultValues;
     const widgetSetters = widgetClass.setters;
     const reportUnsupportedPropertyWarnings = widgetClass.reportUnsupportedPropertyWarnings;
-    let setters = new Set();
+    let setOfSetters = new Set();
     this.log("setProperties", data);
 
     if (data) {
@@ -545,18 +545,20 @@ export class Widget extends Base {
         } else {
           this.data[property] = data[property];
         }
-        let setter = property.startsWith("class") ? widgetSetters["class"] : property.startsWith("style") ? widgetSetters["style"] : widgetSetters[property];
-        if (setter) {
-          setters.add(setter);
+        let setters = property.startsWith("class") ? widgetSetters["class"] : property.startsWith("style") ? widgetSetters["style"] : widgetSetters[property];
+        if (setters) {
+          setOfSetters.add(setters);
         } else if (reportUnsupportedPropertyWarnings) {
           this.warn("setProperties(data)", `Widget does not support property '${property}'`, "Ignored");
         }
       }
     }
     let visistedWorker = new Map();
-    setters.forEach((setterList) => {
+    setOfSetters.forEach((setterList) => {
       setterList.forEach((setter) => {
-        // We have to do this because set only add element based on refrence check. Two arrays will have different refrences.
+        // A setter may occur in several items in setOfSetters.
+        // To make sure that we only execute each setter's refresh() only once,
+        // we need to keep track of which one we already visited.
         if (!visistedWorker[setter.constructor.name]) {
           visistedWorker[setter.constructor.name] = 1;
           setter.refresh(this);
