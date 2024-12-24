@@ -553,14 +553,14 @@ export class Widget extends Base {
         }
       }
     }
-    let visistedWorker = new Map();
+    let visitedSetter = new Map();
     setOfSetters.forEach((setterList) => {
       setterList.forEach((setter) => {
         // A setter may occur in several items in setOfSetters.
         // To make sure that we only execute each setter's refresh() only once,
         // we need to keep track of which one we already visited.
-        if (!visistedWorker[setter.constructor.name]) {
-          visistedWorker[setter.constructor.name] = 1;
+        if (!visitedSetter[setter.constructor.name]) {
+          visitedSetter[setter.constructor.name] = 1;
           setter.refresh(this);
         }
       });
