@@ -25,7 +25,7 @@ export class Base {
    * @param {Worker} worker - Specifies the worker.
    */
   registerSetter(widgetClass, propId, worker) {
-    widgetClass.setters[propId] = widgetClass.setters[propId] || [];
+    widgetClass.setters[propId] ??= [];
     widgetClass.setters[propId].push(worker);
   }
 
