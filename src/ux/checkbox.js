@@ -152,9 +152,7 @@ export class Checkbox extends Widget {
     clearErrors(widgetInstance) {
       widgetInstance.setProperties({
         "format-error": false,
-        "format-error-message": ""
-      });
-      widgetInstance.setProperties({
+        "format-error-message": "",
         "error": false,
         "error-message": ""
       });

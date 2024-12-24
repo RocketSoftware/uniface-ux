@@ -553,9 +553,14 @@ export class Widget extends Base {
         }
       }
     }
+    let visistedWorker = new Map();
     setters.forEach((setterList) => {
       setterList.forEach((setter) => {
-        setter.refresh(this);
+        // We have to do this because set only add element based on refrence check. Two arrays will have different refrences.
+        if (!visistedWorker[setter.constructor.name]) {
+          visistedWorker[setter.constructor.name] = 1;
+          setter.refresh(this);
+        }
       });
     });
   }
