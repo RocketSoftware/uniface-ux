@@ -3,7 +3,7 @@ stages:
 
 include:
   - project: 'Uniface/tools/defaults'
-    ref: bundling
+    ref: master
     file: '.gitlab-ci-defaults.yml'
 
 build:
@@ -14,7 +14,7 @@ build:
   tags:
     - docker-uniface-local
   script:
-    - echo "Buildings webpack with Nodejs and Playwright"
+    - echo "Build CSS/JS bundles"
     - npm install
     - npm run build:prod
   artifacts:
