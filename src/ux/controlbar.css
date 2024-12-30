@@ -1,0 +1,44 @@
+.u-controlbar {
+  font-family: var(--body-font);
+  font-size: var(--type-ramp-base-font-size);
+  line-height: var(--type-ramp-base-line-height);
+  font-weight: initial;
+  font-variation-settings: var(--type-ramp-base-font-variations);
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  width: 100%;
+}
+
+.u-start-section,
+.u-center-section,
+.u-end-section {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.u-start-section>*,
+.u-center-section>*,
+.u-end-section>* {
+  margin: 0 4px;
+}
+
+.u-controlbar[u-orientation="vertical"] {
+  flex-direction: column;
+}
+
+.u-start-section:empty,
+.u-center-section:empty,
+.u-end-section:empty {
+  display: none;
+}
+
+.u-controlbar .u-select::part(label),
+.u-controlbar .u-text-field::part(label),
+.u-controlbar .u-number-field::part(label),
+.u-controlbar .u-text-area::part(label) {
+  white-space: nowrap;
+}

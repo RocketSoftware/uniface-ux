@@ -51,19 +51,19 @@ export class TextField extends Widget {
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
     new HtmlAttributeChoice(this, "html:type", "type", ["text", "email", "password", "tel", "url", "date"], "text"),
-    new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
+    new HtmlAttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new HtmlAttributeReadonlyDisabled(this, "html:readonly", "html:disabled", "uniface:uiblocked", false, false, false),
+    new HtmlAttributeReadonlyDisabled(this, "html:readonly", "html:disabled", "uiblocked", false, false, false),
     new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
     new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
     new StyleClass(this, ["u-text-field", "outline"])
   ], [
-    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
-    new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
+    new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
-    new SlottedElement(this, "span", "u-suffix", ".u-suffix", "end", "uniface:suffix-text", "", "uniface:suffix-icon", ""),
+    new SlottedElement(this, "span", "u-suffix", ".u-suffix", "end", "suffix-text", "", "suffix-icon", ""),
     new SlottedSubWidget(this, "span", "", "", "end", "changebutton", "UX.Button", {
-      "uniface:icon-position": "end",
+      "icon-position": "end",
       "html:tabindex": "-1",
       "html:appearance": "stealth"
     }, false, [
@@ -111,9 +111,9 @@ export class TextField extends Widget {
     let html5ValidationMessage;
     if (!this.elements.widget.control.checkValidity()) {
       html5ValidationMessage = this.elements.widget.control.validationMessage;
-    } else if (this.data.properties.html.minlength > 0 && this.elements.widget.value.length < this.data.properties.html.minlength) {
+    } else if (this.data["html:minlength"] > 0 && this.elements.widget.value.length < this.data["html:minlength"]) {
       // HTML5 minlength validation errors are not detected by fluent, Hence we manually add the HTML5 minlength validation message.
-      html5ValidationMessage = `Please lengthen this text to ${this.data.properties.html.minlength} characters or more (you are currently using ${this.elements.widget.value.length} characters).`;
+      html5ValidationMessage = `Please lengthen this text to ${this.data["html:minlength"]} characters or more (you are currently using ${this.elements.widget.value.length} characters).`;
     }
     return html5ValidationMessage;
   }
@@ -130,7 +130,7 @@ export class TextField extends Widget {
     });
     // Add the 'u-blocked' class to the widget element.
     this.elements.widget.classList.add("u-blocked");
-    this.setProperties({ "uniface": { "uiblocked": true } });
+    this.setProperties({ "uiblocked": true });
   }
 
   /**
@@ -145,7 +145,7 @@ export class TextField extends Widget {
     });
     // Remove the 'u-blocked' class from the widget element.
     this.elements.widget.classList.remove("u-blocked");
-    this.setProperties({ "uniface": { "uiblocked": false } });
+    this.setProperties({ "uiblocked": false });
   }
 
   /**
@@ -156,12 +156,12 @@ export class TextField extends Widget {
   static getValueFormattedSetters() {
     return [
       "value",
-      "uniface:error",
-      "uniface:error-message",
-      "uniface:prefix-icon",
-      "uniface:prefix-text",
-      "uniface:suffix-icon",
-      "uniface:suffix-text"
+      "error",
+      "error-message",
+      "prefix-icon",
+      "prefix-text",
+      "suffix-icon",
+      "suffix-text"
     ];
   }
 
@@ -177,16 +177,16 @@ export class TextField extends Widget {
     let formattedValue = {};
     let plainTextValue = this.getNode(properties, "value");
     formattedValue.primaryPlainText = plainTextValue.replaceAll(/\n/g, " ");
-    formattedValue.prefixIcon = this.getNode(properties, "uniface:prefix-icon");
+    formattedValue.prefixIcon = this.getNode(properties, "prefix-icon");
     if (!formattedValue.prefixIcon) {
-      formattedValue.prefixText = this.getNode(properties, "uniface:prefix-text");
+      formattedValue.prefixText = this.getNode(properties, "prefix-text");
     }
-    formattedValue.suffixIcon = this.getNode(properties, "uniface:suffix-icon");
+    formattedValue.suffixIcon = this.getNode(properties, "suffix-icon");
     if (!formattedValue.suffixIcon) {
-      formattedValue.suffixText = this.getNode(properties, "uniface:suffix-text");
+      formattedValue.suffixText = this.getNode(properties, "suffix-text");
     }
-    if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
-      formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+    if (this.toBoolean(this.getNode(properties, "error"))) {
+      formattedValue.errorMessage = this.getNode(properties, "error-message");
     }
     this.staticLog("getValueFormatted", formattedValue);
     return formattedValue;
