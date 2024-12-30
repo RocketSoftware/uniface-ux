@@ -343,7 +343,7 @@ export class Base {
    * @param {Object} data - The source object containing properties to extract.
    * @returns {Object} An object containing the extracted sub-widget data.
    */
-  getSubWidgetData(data, subWidgetPropPrefix) {
+  extractSubWidgetData(data, subWidgetPropPrefix) {
     let subWidgetData;
     for (let property in data) {
       if (property.startsWith(subWidgetPropPrefix)) {
