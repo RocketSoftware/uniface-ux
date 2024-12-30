@@ -30,12 +30,6 @@
   flex-direction: column;
 }
 
-.u-start-section:empty,
-.u-center-section:empty,
-.u-end-section:empty {
-  display: none;
-}
-
 .u-controlbar .u-select::part(label),
 .u-controlbar .u-text-field::part(label),
 .u-controlbar .u-number-field::part(label),
