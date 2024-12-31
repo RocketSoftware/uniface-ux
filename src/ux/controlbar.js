@@ -88,7 +88,7 @@ export class Controlbar extends Widget {
         this.moveItemToMenu(subWidget, overflowMenu);
       }
 
-      // Handle 'move' or 'hide' overflow-behavior.
+      // Handle "move" or "hide" overflow-behavior.
       // The variable priorityMap is used to keep subWidgets with same priority together so they can be processed together.
       let priorityMap = {};
       let subWidgetsToHideOrMoveWithNoPriority = [];
