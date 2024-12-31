@@ -390,11 +390,15 @@ export class PlainText extends Widget {
     return formattedValue;
   }
 
+  /**
+   * Will be invoked from complex widgets like controlbar to add content to the overflow-menu.
+   * Returns an object that contains the text, icon and css classnames of individual menu items.
+   */
   getMenuItem() {
     const properties = this.data.properties;
     let formattedValue = {
       ...PlainText.getValueFormatted(properties),
-      "isNotSupported" : false
+      "isNotSupported": false
     };
     return formattedValue;
   }

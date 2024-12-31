@@ -226,6 +226,8 @@ export class Widget extends Base {
 
   /**
    * Will be invoked from complex widgets like controlbar to add content to the overflow-menu.
+   * Widgets that cannot be displayed as menu items,
+   * will appear as a label or show an error message indicating they are not supported in a menu.
    * Returns an object that contains the text, icon and css classnames of individual menu items.
    * Can be specialized in individual widget classes.
    * @return {UValueFormatting}

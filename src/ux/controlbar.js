@@ -49,12 +49,12 @@ export class Controlbar extends Widget {
       const properties = widgetInstance.data.properties.uniface;
       const subWidgets = Object.values(widgetInstance?.subWidgets);
 
-      // Create a map of subwidgets with their ids as key and the widgetInstance as value.
+      // Create a map of subWidgets with their ids as key and the widgetInstance as value.
       let subWidgetsMap = {};
-      // Create a map of for accessing overflow related properties easily. Will be a nested object of the which maps the sub-widget-id of each sub-widget to its overflow-behavior and priority values
+      // Create a map of for accessing overflow related properties easily. Will be a nested object of the which maps the sub-widget-id of each sub-widget to its overflow-behavior and priority values.
       this.overflowPropertiesMap = {};
-      // Also create a list of controlbarSubwidgets where each subwidget is the corresponding HTML elements.
-      let controlbarSubwidgets = subWidgets
+      // Also create a list of controlbarSubwidgets where each subWidget is the corresponding HTML elements.
+      let controlbarSubWidgets = subWidgets
         .map((subWidget) => {
           const subWidgetElement = this.getElement(subWidget);
           const subWidgetId = subWidgetElement?.getAttribute("sub-widget-id");
@@ -68,59 +68,59 @@ export class Controlbar extends Widget {
           }
           return subWidgetElement;
         })
-        .filter((subwidgets) => subwidgets);
+        .filter((subWidgets) => subWidgets);
 
       // Handle overflow when overflow-behavior is "none".
-      const subwidgetsToAlwaysShow = controlbarSubwidgets.filter((subwidget) => {
-        const overflowBehavior = this.getPropertyValue(subwidget, "overflow-behavior");
+      const subWidgetsToAlwaysShow = controlbarSubWidgets.filter((subWidget) => {
+        const overflowBehavior = this.getPropertyValue(subWidget, "overflow-behavior");
         return overflowBehavior === "none";
       });
-      for (let subwidget of subwidgetsToAlwaysShow) {
-        this.showControlbarSubwidget(subwidget, overflowMenu);
+      for (let subWidget of subWidgetsToAlwaysShow) {
+        this.showControlbarSubwidget(subWidget, overflowMenu);
       }
 
       // Handle 'menu' overflow-behavior.
-      const subwidgetsAlwaysInMenu = controlbarSubwidgets.filter((subwidget) => {
-        const overflowBehavior = this.getPropertyValue(subwidget, "overflow-behavior");
-        return overflowBehavior === "menu" && !subwidget.hasAttribute("hidden");
+      const subWidgetsAlwaysInMenu = controlbarSubWidgets.filter((subWidget) => {
+        const overflowBehavior = this.getPropertyValue(subWidget, "overflow-behavior");
+        return overflowBehavior === "menu" && !subWidget.hasAttribute("hidden");
       });
-      for (const subwidget of subwidgetsAlwaysInMenu) {
-        this.moveItemToMenu(subwidget, overflowMenu);
+      for (const subWidget of subWidgetsAlwaysInMenu) {
+        this.moveItemToMenu(subWidget, overflowMenu);
       }
 
       // Handle 'move' or 'hide' overflow-behavior.
-      // The variable priorityMap is used to keep subwidgets with same priority together so they can be processed together.
+      // The variable priorityMap is used to keep subWidgets with same priority together so they can be processed together.
       let priorityMap = {};
-      let subwidgetsToHideOrMoveWithNoPriority = [];
-      for (const subwidget of controlbarSubwidgets) {
-        const overflowBehavior = this.getPropertyValue(subwidget, "overflow-behavior");
-        const priority = this.getPropertyValue(subwidget, "priority");
-        const isHidden = subwidget.hasAttribute("hidden");
+      let subWidgetsToHideOrMoveWithNoPriority = [];
+      for (const subWidget of controlbarSubWidgets) {
+        const overflowBehavior = this.getPropertyValue(subWidget, "overflow-behavior");
+        const priority = this.getPropertyValue(subWidget, "priority");
+        const isHidden = subWidget.hasAttribute("hidden");
         if (!isHidden && (overflowBehavior === "move" || overflowBehavior === "hide" || overflowBehavior === null)) {
           if (priority) {
             if (priorityMap[priority]) {
-              priorityMap[priority].push(subwidget);
+              priorityMap[priority].push(subWidget);
             } else {
-              priorityMap[priority] = [subwidget];
+              priorityMap[priority] = [subWidget];
             }
           } else {
-            subwidgetsToHideOrMoveWithNoPriority.push(subwidget);
+            subWidgetsToHideOrMoveWithNoPriority.push(subWidget);
           }
         }
       }
 
       let priorityList = Object.keys(priorityMap);
-      if (priorityList.length || subwidgetsToHideOrMoveWithNoPriority.length) {
+      if (priorityList.length || subWidgetsToHideOrMoveWithNoPriority.length) {
         // Sort in descending order, so that elements with lower priority(higher number) is first.
         priorityList.sort((a, b) => {
           return Number(b) - Number(a);
         });
-        // For subwidgets with priority not specified, the order in which they should be moved/hidden is the reverse of the order in which they appear in the DOM.
-        subwidgetsToHideOrMoveWithNoPriority.reverse();
+        // For subWidgets with priority not specified, the order in which they should be moved/hidden is the reverse of the order in which they appear in the DOM.
+        subWidgetsToHideOrMoveWithNoPriority.reverse();
 
         // Show all items.
-        for (const subwidget of subwidgetsToHideOrMoveWithNoPriority.concat(Object.values(priorityMap).flat())) {
-          this.showControlbarSubwidget(subwidget, overflowMenu);
+        for (const subWidget of subWidgetsToHideOrMoveWithNoPriority.concat(Object.values(priorityMap).flat())) {
+          this.showControlbarSubwidget(subWidget, overflowMenu);
         }
         // Check if overflow.
         if (this.checkOverflow(element)) {
@@ -128,13 +128,13 @@ export class Controlbar extends Widget {
           overflowButton.removeAttribute("hidden");
         }
         // No priority specified means they have the lowest priority and hence should be the first to be moved/hidden.
-        this.handleOverflow(subwidgetsToHideOrMoveWithNoPriority, element, overflowMenu, false);
+        this.handleOverflow(subWidgetsToHideOrMoveWithNoPriority, element, overflowMenu, false);
         // Then elements with priority specified will be moved/hidden after in the order of sorted priority.
         for (const priority of priorityList) {
           this.handleOverflow(priorityMap[priority], element, overflowMenu);
         }
       }
-      // Show the overflow button if there is at least one visible subwidget in the overflow menu.
+      // Show the overflow button if there is at least one visible subWidget in the overflow menu.
       if (element.querySelector(".u-overflow-menu .u-menu-item:not([hidden])")) {
         widget.classList.add("u-overflowed");
         overflowButton.removeAttribute("hidden");
@@ -151,21 +151,21 @@ export class Controlbar extends Widget {
      * Helper - Returns the value of a given property of a particular sub-widget.
      * Only useful for properties of the format "[sub-widget-id]_[property-name]".
      */
-    getPropertyValue(subwidget, property) {
-      const id = subwidget.getAttribute("sub-widget-id");
+    getPropertyValue(subWidget, property) {
+      const id = subWidget.getAttribute("sub-widget-id");
       return this.overflowPropertiesMap[id][property];
     }
 
     /**
-     * Helper - Hide the subwidget in the controlbar and show the corresponding subwidget in the overflow-menu.
-     * The subwidgets passed to this method can have overflow behavior hide, move or null.
+     * Helper - Hide the subWidget in the controlbar and show the corresponding subWidget in the overflow-menu.
+     * The subWidgets passed to this method can have overflow behavior hide, move or null.
      * Except for hide, rest should be moved to overflow-menu.
      */
-    moveItemToMenu(subwidget, overflowMenu) {
-      subwidget.classList.add("u-overflown-item");
-      const overflowBehavior = this.getPropertyValue(subwidget, "overflow-behavior");
+    moveItemToMenu(subWidget, overflowMenu) {
+      subWidget.classList.add("u-overflown-item");
+      const overflowBehavior = this.getPropertyValue(subWidget, "overflow-behavior");
       if (overflowBehavior !== "hide") {
-        const subWidgetId = subwidget.getAttribute("sub-widget-id");
+        const subWidgetId = subWidget.getAttribute("sub-widget-id");
         const menuItem = overflowMenu.querySelector(`[item-id="${subWidgetId}"]`);
         menuItem.removeAttribute("hidden");
         const value = this.overflowPropertiesMap[subWidgetId]["widget-instance"].getMenuItem();
@@ -174,11 +174,11 @@ export class Controlbar extends Widget {
     }
 
     /**
-     * Helper - Hide the subwidget in the overflow menu and show the corresponding subwidget in the controlbar.
+     * Helper - Hide the subWidget in the overflow menu and show the corresponding subWidget in the controlbar.
      */
-    showControlbarSubwidget(subwidget, overflowMenu) {
-      subwidget.classList.remove("u-overflown-item");
-      const subWidgetId = subwidget.getAttribute("sub-widget-id");
+    showControlbarSubwidget(subWidget, overflowMenu) {
+      subWidget.classList.remove("u-overflown-item");
+      const subWidgetId = subWidget.getAttribute("sub-widget-id");
       const menuItem = overflowMenu.querySelector(`[item-id="${subWidgetId}"]`);
       menuItem.setAttribute("hidden", "");
     }
@@ -197,22 +197,22 @@ export class Controlbar extends Widget {
     }
 
     /**
-     * Helper - Receives a list of subwidgets and based on whether there is an overflow or not, move the subwidgets to the overflow menu.
-     * Can either process the subwidgets separately or together, this is decided by the processTogether argument, whose default is true.
+     * Helper - Receives a list of subWidgets and based on whether there is an overflow or not, move the subWidgets to the overflow menu.
+     * Can either process the subWidgets separately or together, this is decided by the processTogether argument, whose default is true.
      */
-    handleOverflow(subwidgets, element, overflowMenu, processTogether = true) {
+    handleOverflow(subWidgets, element, overflowMenu, processTogether = true) {
       if (processTogether) {
         // If there is currently an overflow, move all elements in the list to the overflow menu.
         if (this.checkOverflow(element)) {
-          for (const subwidget of subwidgets) {
-            this.moveItemToMenu(subwidget, overflowMenu);
+          for (const subWidget of subWidgets) {
+            this.moveItemToMenu(subWidget, overflowMenu);
           }
         }
       } else {
-        // As long as there is an overflow, keep moving subwidgets to the overflow menu one by one.
-        for (const subwidget of subwidgets) {
+        // As long as there is an overflow, keep moving subWidgets to the overflow menu one by one.
+        for (const subWidget of subWidgets) {
           if (this.checkOverflow(element)) {
-            this.moveItemToMenu(subwidget, overflowMenu);
+            this.moveItemToMenu(subWidget, overflowMenu);
           } else {
             break;
           }
@@ -352,18 +352,18 @@ export class Controlbar extends Widget {
     return overflowButton;
   }
 
-  static createOverflowMenuAndMenuItems(controls) {
+  static createOverflowMenuAndMenuItems(subWidgets) {
     // Create the overflowMenu.
     const overflowMenu = document.createElement("fluent-menu");
     overflowMenu.classList.add("u-overflow-menu");
     overflowMenu.classList.add("u-menu");
     overflowMenu.hidden = true;
-    for (const item of controls) {
-      const controlId = item.getAttribute("sub-widget-id");
+    for (const item of subWidgets) {
+      const subWidgetsId = item.getAttribute("sub-widget-id");
       const menuItem = document.createElement("fluent-menu-item");
       menuItem.classList.add("u-menu-item");
       menuItem.setAttribute("role", "menuitem");
-      menuItem.setAttribute("item-id", controlId);
+      menuItem.setAttribute("item-id", subWidgetsId);
       menuItem.hidden = true;
       overflowMenu.append(menuItem);
     }
@@ -402,7 +402,7 @@ export class Controlbar extends Widget {
 
     this.elements.overflowContainer = this.elements.widget.querySelector(".u-overflow-container");
     this.elements.overflowMenuItems = Array.from(widgetElement.querySelectorAll(".u-overflow-container .u-menu-item"));
-    this.elements.controlbarSubwidgets = Array.from(widgetElement.querySelectorAll(":scope > :not(.u-overflow-container) > *"));
+    this.elements.controlbarSubWidgets = Array.from(widgetElement.querySelectorAll(".u-controlbar-item"));
     return valueUpdaters;
   }
 
@@ -410,12 +410,12 @@ export class Controlbar extends Widget {
     let widgetElement = super.processLayout(skeletonWidgetElement, objectDefinition);
 
     // Create overflow container.
-    const overflowContainer = Controlbar.createOverflowContainer();
+    const overflowContainer = this.createOverflowContainer();
     // Create overflow button.
-    const overflowButton = Controlbar.createOverflowButton();
-    const subWidgets = widgetElement.querySelectorAll(":scope > * > *");
+    const overflowButton = this.createOverflowButton();
+    const subWidgets = widgetElement.querySelectorAll(".u-controlbar-item");
     // Create overflow menu and menu items.
-    const overflowMenu = Controlbar.createOverflowMenuAndMenuItems(subWidgets);
+    const overflowMenu = this.createOverflowMenuAndMenuItems(subWidgets);
     // Add overflow button to overflow menu and overflow menu to overflow container.
     overflowContainer.append(overflowButton);
     overflowContainer.append(overflowMenu);
@@ -465,9 +465,17 @@ export class Controlbar extends Widget {
     return subWidgetIds;
   }
 
+
+  /**
+   * A specialized setProperties method for the controlbar widget to avoid registering
+   * "overflow-behavior" and "priority" properties under individual widgets.
+   * These properties do not have a dedicated setter, so the method reuses the setter registered for the "window-resize" property.
+   * This specialized implementation validates the properties and invokes the worker's refresh method.
+   * @param {UData} data
+   */
   setProperties(data) {
     const subWidgetIds = this.getSubWidgetIds();
-    const overflowProperties = subWidgetIds.flatMap((subwidget) => [`${subwidget}_${"overflow-behavior"}`, `${subwidget}_${"priority"}`]);
+    const overflowProperties = subWidgetIds.flatMap((subWidget) => [`${subWidget}_${"overflow-behavior"}`, `${subWidget}_${"priority"}`]);
     const unifaceProperties = data.uniface ?? {};
     const setter = Controlbar.setters["uniface"]["widget-resize"][0];
     let invokeRefresh = false;
