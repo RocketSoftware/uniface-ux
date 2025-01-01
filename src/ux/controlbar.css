@@ -20,21 +20,15 @@
   flex-shrink: 0;
 }
 
-.u-controlbar .u-start-section>*,
-.u-controlbar .u-center-section>*,
-.u-controlbar .u-end-section>* {
+.u-controlbar .u-start-section > *,
+.u-controlbar .u-center-section > *,
+.u-controlbar .u-end-section > * {
   margin-inline-start: 4px;
   margin-inline-end: 4px;
 }
 
 .u-controlbar[u-orientation="vertical"] {
   flex-direction: column;
-}
-
-.u-controlbar .u-start-section:empty,
-.u-controlbar .u-center-section:empty,
-.u-controlbar .u-end-section:empty {
-  display: none;
 }
 
 .u-controlbar .u-select::part(label),

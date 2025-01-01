@@ -469,7 +469,7 @@ export class Controlbar extends Widget {
   /**
    * A specialized setProperties method for the controlbar widget to avoid registering
    * "overflow-behavior" and "priority" properties under individual widgets.
-   * These properties do not have a dedicated setter, so the method reuses the setter registered for the "window-resize" property.
+   * These properties do not have a dedicated setter, so the method reuses the setter registered for the "widget-resize" property.
    * This specialized implementation validates the properties and invokes the worker's refresh method.
    * @param {UData} data
    */
