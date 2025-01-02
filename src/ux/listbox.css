@@ -1,0 +1,29 @@
+/* For setting the disabled styles */
+.u-listbox[disabled] {
+  cursor: not-allowed;
+  opacity: var(--disabled-opacity);
+}
+
+.u-listbox[disabled] fluent-option {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Styling for when display-format is valrep */
+.u-listbox .u-valrep-representation:not(:empty) {
+  margin-inline-end: calc((var(--design-unit) * 3px) + 2px);
+}
+
+.u-listbox .u-value {
+  color: var(--neutral-base-color);
+  font-style: italic;
+}
+
+/* Styling the valrep value to enclose it within parentheses. */
+.u-listbox .u-value::before {
+  content: "(";
+}
+
+.u-listbox .u-value::after {
+  content: ")";
+}
