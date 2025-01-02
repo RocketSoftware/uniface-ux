@@ -25,6 +25,7 @@ import "./switch.js";
 import "./text_area.js";
 import "./text_field.js";
 import "./controlbar.js";
+import "./listbox.js";
 
 // The UX entity level widgets to include
 import "./data_grid.js";
