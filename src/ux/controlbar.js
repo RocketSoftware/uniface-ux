@@ -296,42 +296,22 @@ export class Controlbar extends Widget {
   /**
    * Widget definition.
    */
-  static structure = new Element(
-    this,
-    "div",
-    "",
-    "",
-    [
-      new HtmlAttributeChoice(this, "uniface:orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
-      new StyleClass(this, ["u-controlbar"]),
-      new this.HandleOverFlowWorker(this, "uniface:widget-resize", false)
-    ],
-    [
-      new Element(
-        this,
-        "div",
-        "u-start-section",
-        ".u-start-section",
-        [],
-        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "controls-start")]
-      ),
-      new Element(
-        this,
-        "div",
-        "u-center-section",
-        ".u-center-section",
-        [],
-        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "controls-center")]
-      ),
-      new Element(
-        this,
-        "div",
-        "u-end-section",
-        ".u-end-section",
-        [],
-        [new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "controls-end")]
-      )
-    ]
+  // prettier-ignore
+  static structure = new Element(this, "div", "", "", [
+    new HtmlAttributeChoice(this, "uniface:orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
+    new StyleClass(this, ["u-controlbar"]),
+    new this.HandleOverFlowWorker(this, "uniface:widget-resize", false)
+  ], [
+    new Element(this, "div", "u-start-section", ".u-start-section", [], [
+      new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "controls-start")]
+    ),
+    new Element(this, "div", "u-center-section", ".u-center-section", [], [
+      new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "controls-center")]
+    ),
+    new Element(this, "div", "u-end-section", ".u-end-section", [], [
+      new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "controls-end")]
+    )
+  ]
   );
 
   static createOverflowContainer() {
