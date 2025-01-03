@@ -148,8 +148,7 @@ export class Controlbar extends Widget {
     }
 
     /**
-     * Helper - Returns the value of a given property of a particular sub-widget.
-     * Only useful for properties of the format "[sub-widget-id]_[property-name]".
+     * Helper - Returns the value of a given property of a particular sub-widget from overflowPropertiesMap.
      */
     getPropertyValue(subWidget, property) {
       const id = subWidget.getAttribute("sub-widget-id");
