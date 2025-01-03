@@ -1,10 +1,25 @@
 stages:
+  - lint
   - build
 
 include:
-  - project: 'Uniface/tools/defaults'
+  - project: Uniface/tools/defaults
     ref: master
-    file: '.gitlab-ci-defaults.yml'
+    file: .gitlab-ci-defaults.yml
+
+lint:
+  stage: lint
+  extends: .uxwidgets
+  tags:
+    - docker-uniface-local
+  script:
+    # copy pre-installed modules
+    - cp -R /app/node_modules node_modules
+    # install correct set of modules
+    - npm install --no-update --no-fund
+    - echo "Lint repository"
+    # do not allow warnings
+    - npx eslint . --max-warnings=0
 
 build:
   stage: build
@@ -14,8 +29,11 @@ build:
   tags:
     - docker-uniface-local
   script:
+    # copy pre-installed modules
+    - cp -R /app/node_modules node_modules
+    # install correct set of modules
+    - npm install --no-update --no-fund
     - echo "Build CSS/JS bundles"
-    - npm install
     - npm run build:prod
   artifacts:
     paths:
