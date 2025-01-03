@@ -235,7 +235,9 @@ export class Widget extends Base {
   getMenuItem() {
     const properties = this.data.properties;
     const widgetClass = this.getNode(properties, "uniface:widget-class");
-    return {
+
+    /** @type {UValueFormatting} */
+    const formattedValue = {
       "primaryPlainText": `ERROR: ${widgetClass ?? ""} not supported as menu-item!`,
       "secondaryPlainText": "",
       "primaryHtmlText": "",
@@ -246,6 +248,8 @@ export class Widget extends Base {
       "errorMessage": "",
       "isNotSupported": true
     };
+    this.log("getMenuItem", formattedValue);
+    return formattedValue;
   }
 
   /**

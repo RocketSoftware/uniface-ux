@@ -232,13 +232,17 @@ export class Button extends Widget {
   /**
    * Will be invoked from complex widgets like controlbar to add content to the overflow-menu.
    * Returns an object that contains the text, icon and css classnames of individual menu items.
+   * @return {UValueFormatting}
    */
   getMenuItem() {
     const properties = this.data.properties;
+
+    /** @type {UValueFormatting} */
     let formattedValue = {
       ...Button.getValueFormatted(properties),
-      "isNotSupported" : false
+      "isNotSupported": false
     };
+    this.log("getMenuItem", formattedValue);
     return formattedValue;
   }
 

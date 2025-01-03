@@ -51,7 +51,7 @@ export class Controlbar extends Widget {
 
       // Create a map of subWidgets with their ids as key and the widgetInstance as value.
       let subWidgetsMap = {};
-      // Create a map of for accessing overflow related properties easily. Will be a nested object of the which maps the sub-widget-id of each sub-widget to its overflow-behavior and priority values.
+      // Create a map for easily accessing overflow related properties. It will be a nested object that maps the sub-widget-id of each sub-widget to its overflow behavior and priority values.
       this.overflowPropertiesMap = {};
       // Also create a list of controlbarSubwidgets where each subWidget is the corresponding HTML elements.
       let controlbarSubWidgets = subWidgets

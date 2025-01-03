@@ -54,7 +54,7 @@
   display: none;
 }
 
-.u-controlbar .u-menu-item {
+.u-controlbar .u-overflow-menu .u-menu-item {
   white-space: normal;
   height: auto;
   padding: 5px calc((10 + (var(--design-unit) * 2 * var(--density))) * 1px);
@@ -62,24 +62,24 @@
   cursor: pointer;
 }
 
-.u-controlbar .u-menu-item::part(content) {
+.u-controlbar .u-overflow-menu .u-menu-item::part(content) {
   display: flex;
 }
 
-.u-controlbar .u-menu-item .u-prefix {
+.u-controlbar .u-overflow-menu .u-menu-item .u-prefix {
   margin-inline-end: 11px;
 }
 
-.u-controlbar .u-menu-item .u-suffix {
+.u-controlbar .u-overflow-menu .u-menu-item .u-suffix {
   margin-inline-start: 11px;
 }
 
-.u-controlbar .u-menu-item[hidden] {
+.u-controlbar .u-overflow-menu .u-menu-item[hidden] {
   display: none;
 }
 
-.u-controlbar .u-menu-item.u-not-supported,
-.u-controlbar .u-menu-item.u-invalid {
+.u-controlbar .u-overflow-menu .u-menu-item.u-not-supported,
+.u-controlbar .u-overflow-menu .u-menu-item.u-invalid {
   cursor: default;
   color: #d83b01;
 }
