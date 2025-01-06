@@ -60,32 +60,30 @@ export class Listbox extends Widget {
 
   /**
    * Private Uniface API method - onConnect.
-   * This method is used for the list box class since we need to add a change event
-   * for the listbox when user interaction occurs.
+   * This method is used for the list box class since we need to add a change event for the listbox when user interaction occurs.
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
     // Add event listeners for user interactions.
-    widgetElement.addEventListener('click', handleSelectionChange);
-    widgetElement.addEventListener('keydown', handleSelectionChange);
+    widgetElement.addEventListener("click", handleSelectionChange);
+    widgetElement.addEventListener("keydown", handleSelectionChange);
     // Store the original selectedIndex value.
     let previousSelectedIndex = widgetElement.selectedIndex;
 
-    // Function to handle selection change
+    // Function to handle selection change.
     function handleSelectionChange() {
-      if (widgetElement.hasAttribute('readonly') || widgetElement.hasAttribute('disabled')) {
+      if (widgetElement.hasAttribute("readonly") || widgetElement.hasAttribute("disabled")) {
         widgetElement.selectedIndex = previousSelectedIndex;
         return; // Do nothing if the listbox is readonly or disabled.
       }
       if (widgetElement.selectedIndex !== previousSelectedIndex) {
         previousSelectedIndex = widgetElement.selectedIndex;
-        const event = new window.Event('change');
+        const event = new window.Event("change");
         widgetElement.dispatchEvent(event);
       }
     }
     return valueUpdaters;
   }
 }
-
 
 UNIFACE.ClassRegistry.add("UX.Listbox", Listbox);
