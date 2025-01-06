@@ -49,6 +49,7 @@
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
     });
+
     describe("Checks", function () {
 
       before(function () {
@@ -119,7 +120,6 @@
     let textAreaElement, onChangeSpy;
 
     beforeEach(function () {
-
       tester.createWidget();
       textAreaElement = tester.element;
 
@@ -157,7 +157,6 @@
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
-
 
     for (const defaultClass in classes) {
       it("check class '" + defaultClass + "'", function () {
@@ -383,7 +382,7 @@
             "cols": colsProp
           }
         });
-      }, 100).then(function () {
+      }).then(function () {
         let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
         assert.equal(colsText, colsProp);// Check for visibility
         let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
@@ -400,7 +399,7 @@
             "cols": colsProp
           }
         });
-      }, 100).then(function () {
+      }).then(function () {
         let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
         assert.equal(colsText, colsProp);// Check for visibility
         let rowsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("rows");
@@ -486,7 +485,7 @@
             "appearance": appearanceStyle
           }
         });
-      }, 100).then(function () {
+      }).then(function () {
         assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance outfill attribute");
         let appearanceStylePropertyText = widget.elements.widget.getAttribute("appearance");
         assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance outfill style" + appearanceStylePropertyText);
@@ -507,7 +506,6 @@
         let appearanceStylePropertyText = widget.elements.widget.getAttribute("appearance");
         assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance filled style" + appearanceStylePropertyText);
       });
-
     });
   });
 
