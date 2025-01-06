@@ -4,7 +4,7 @@
   opacity: var(--disabled-opacity);
 }
 
-.u-listbox[disabled] fluent-option{
+.u-listbox[disabled] fluent-option {
   cursor: not-allowed;
   pointer-events: none;
 }
