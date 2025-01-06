@@ -14,6 +14,7 @@ export default defineConfig({
     ['allure-playwright'] // Allure reporter
   ],
   use: {
+    baseURL: process.env.UX_WIDGETS_BASE_URL || 'http://localhost:8080/ux-widgets/test/',
     headless: true, // Run tests in headless mode
     viewport: { width: 1280, height: 720 }, // Set viewport size
     ignoreHTTPSErrors: true, // Ignore HTTPS errors

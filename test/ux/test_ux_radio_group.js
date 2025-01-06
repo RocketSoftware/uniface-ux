@@ -1,4 +1,3 @@
-/* global UNIFACE */
 (function () {
   'use strict';
 
@@ -380,23 +379,41 @@
         expect(element.getAttribute("orientation")).equal("horizontal");
       });
     });
+  });
 
-    it("Set value to empty string ('') when there is a checked option and expect the radio button to get unchecked", function () {
-      let selectedValue = "2";
+  describe('Ensure setting value to empty clears the selection if empty value is not one of the options', function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
 
+    it("Set a valid initial value and ensure the corresponding element is checked", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          value: selectedValue
+          value: "2"
         });
       }).then(function () {
-        // Set the value to empty string.
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        radioButtonArray.forEach(function (node, index) {
+          if (valRepArray[index].value === "2") {
+            expect(node.getAttribute("current-checked")).equal("true");
+          } else {
+            expect(node.getAttribute("current-checked")).equal("false");
+          }
+        });
+      });
+    });
+
+    it("Set value to empty string ('') and ensure there is no checked element", function () {
+      return asyncRun(function () {
         tester.dataUpdate({
           value: ''
         });
       }).then(function () {
-        // Check that there is no checked item.
-        expect(node.getAttribute("fluent-radio[current-checked=true]")).equal(null);
+        expect(element.querySelector("fluent-radio[current-checked=true]")).equal(null);
       });
     });
   });
@@ -405,6 +422,7 @@
     let element;
     before(function () {
       tester.createWidget();
+      tester.bindUpdatorsEventToElement();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
