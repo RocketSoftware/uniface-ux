@@ -225,6 +225,34 @@ export class Widget extends Base {
   }
 
   /**
+   * Will be invoked from complex widgets like controlbar to add content to the overflow-menu.
+   * Widgets that cannot be displayed as menu items,
+   * will appear as a label or show an error message indicating they are not supported in a menu.
+   * Returns an object that contains the text, icon and css classnames of individual menu items.
+   * Can be specialized in individual widget classes.
+   * @return {UValueFormatting}
+   */
+  getMenuItem() {
+    const properties = this.data.properties;
+    const widgetClass = this.getNode(properties, "uniface:widget-class");
+
+    /** @type {UValueFormatting} */
+    const formattedValue = {
+      "primaryPlainText": `ERROR: ${widgetClass ?? ""} not supported as menu-item!`,
+      "secondaryPlainText": "",
+      "primaryHtmlText": "",
+      "prefixText": "",
+      "suffixText": "",
+      "prefixIcon": "Blocked",
+      "suffixIcon": "",
+      "errorMessage": "",
+      "isNotSupported": true
+    };
+    this.log("getMenuItem", formattedValue);
+    return formattedValue;
+  }
+
+  /**
    * Use this method to map a Uniface trigger to an event of your (sub) widget.
    * @param {String} triggerName
    * @return {TriggerMapping|undefined} [triggerMapping].

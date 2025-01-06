@@ -466,6 +466,10 @@ export class SubWidgetsByProperty extends Element {
             element = subWidgetClass.processLayout(element, objectDefinition);
             let subWidgetStyleClass = `u-sw-${subWidgetId}`;
             element.classList.add(subWidgetStyleClass);
+            if (this.styleClass) {
+              element.classList.add(this.styleClass);
+            }
+            element.setAttribute("sub-widget-id", subWidgetId);
             elements.push(element);
           } else {
             this.warn(
