@@ -972,7 +972,11 @@ export class HtmlAttributeBoolean extends BaseHtmlAttribute {
       super.refresh(widgetInstance);
       let element = this.getElement(widgetInstance);
       let value = this.getNode(widgetInstance.data, this.propId);
-      element[this.attrName] = this.toBoolean(value);
+      if (this.setAsAttribute) {
+        element.setAttribute(this.attrName, this.toBoolean(value));
+      } else {
+        element[this.attrName] =  this.toBoolean(value);
+      }
     }
   }
 }

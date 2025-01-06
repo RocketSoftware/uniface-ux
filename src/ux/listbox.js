@@ -47,6 +47,7 @@ export class Listbox extends Widget {
     new HtmlAttributeBoolean(this, undefined, "ariaReadOnly", false),
     new HtmlAttributeBoolean(this, undefined, "ariaExpanded", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
+    new HtmlAttributeBoolean(this, "html:readonly", "readonly", false, true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new IgnoreProperty(this, "html:minlength"),
@@ -54,7 +55,37 @@ export class Listbox extends Widget {
   ], [
     new SlottedElementsByValRep(this, "fluent-option", "", "")
   ], [
-    new Trigger(this, "onchange", "click", true)
+    new Trigger(this, "onchange", "change", true)
   ]);
+
+  /**
+   * Private Uniface API method - onConnect.
+   * This method is used for the list box class since we need to add a change event
+   * for the listbox when user interaction occurs.
+   */
+  onConnect(widgetElement, objectDefinition) {
+    let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
+    // Add event listeners for user interactions.
+    widgetElement.addEventListener('click', handleSelectionChange);
+    widgetElement.addEventListener('keydown', handleSelectionChange);
+    // Store the original selectedIndex value.
+    let previousSelectedIndex = widgetElement.selectedIndex;
+
+    // Function to handle selection change
+    function handleSelectionChange() {
+      if (widgetElement.hasAttribute('readonly') || widgetElement.hasAttribute('disabled')) {
+        widgetElement.selectedIndex = previousSelectedIndex;
+        return; // Do nothing if the listbox is readonly or disabled.
+      }
+      if (widgetElement.selectedIndex !== previousSelectedIndex) {
+        previousSelectedIndex = widgetElement.selectedIndex;
+        const event = new window.Event('change');
+        widgetElement.dispatchEvent(event);
+      }
+    }
+    return valueUpdaters;
+  }
 }
+
+
 UNIFACE.ClassRegistry.add("UX.Listbox", Listbox);
