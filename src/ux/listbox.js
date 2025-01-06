@@ -60,7 +60,7 @@ export class Listbox extends Widget {
 
   /**
    * Private Uniface API method - onConnect.
-   * This method is used for the list box class since we need to add a change event for the listbox when user interaction occurs.
+   * This method is used for the Listbox class since we need to add a change event for the listbox when user interaction occurs.
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
@@ -83,6 +83,52 @@ export class Listbox extends Widget {
       }
     }
     return valueUpdaters;
+  }
+
+  /**
+   * Specialized blockUI method because:
+   * Listbox should be in readonly during block state.
+   * For this we explicitly need to add readonly as an attribute because it is not supported as a property.
+   */
+  blockUI() {
+    this.log("blockUI");
+
+    /** @type {Object} */
+    let widgetClass = this.constructor;
+    // Check if uiBlocking is defined in the constructor.
+    if (widgetClass.uiBlocking) {
+      // Add the 'u-blocked' class to the widget element.
+      this.elements.widget.classList.add("u-blocked");
+      if (widgetClass.uiBlocking === "readonly") {
+        // Add the readonly attribute to the widget element.
+        this.elements.widget.setAttribute("readonly", "true");
+      } else {
+        // If uiBlocking has an invalid value, log an error.
+        this.error("blockUI()", "Static uiBlocking not defined or invalid value", "No UI blocking");
+      }
+    }
+  }
+
+  /**
+   * Specialized UnblockUI method to remove the readonly attribute.
+   */
+  unblockUI() {
+    this.log("unblockUI");
+
+    /** @type {Object} */
+    const widgetClass = this.constructor;
+    // Check if uiBlocking is defined in the constructor.
+    if (widgetClass.uiBlocking) {
+      // Remove the 'u-blocked' class from the widget element.
+      this.elements.widget.classList.remove("u-blocked");
+      if (widgetClass.uiBlocking === "readonly") {
+        if (!this.toBoolean(this.data["html:readonly"])) {
+          this.elements.widget.removeAttribute("readonly");
+        }
+      } else {
+        this.error("unblockUI()", "Static uiBlocking not defined or invalid value", "No UI blocking");
+      }
+    }
   }
 }
 
