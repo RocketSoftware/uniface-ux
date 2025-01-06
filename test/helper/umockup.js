@@ -1,4 +1,4 @@
-/* global _uf MutationObserver UNIFACE URLSearchParams clearTimeout setTimeout*/
+/* global _uf MutationObserver UNIFACE URLSearchParams clearTimeout setTimeout  */
 (function (global) {
   "use strict";
 
@@ -210,8 +210,8 @@
    * Run asynchronous test actions via MutationObserver.
    *
    * @param {Function} testFunction a function including test actions;
-   * @param {Function} callbackFunction a callback function;
-   * @param {Number} idleTime the idle time to waiting next round of callback;
+   * @param {Function} callbackFunction optional, a callback function;
+   * @param {Number} idleTime optional, the idle time to waiting next round of callback;
    * @returns a promise.
    */
   async function asyncRunMO(testFunction, callbackFunction, idleTime) {
@@ -226,7 +226,7 @@
     debugLog("asyncRunMO");
 
     if (typeof callbackFunction !== "function") {
-      callbackFunction = function (records, observer, resolve, _reject) {
+      callbackFunction = function (_records, observer, resolve, _reject) {
         const _count = ++count;
         debugLog("Callback " + _count);
         setTimeout(function () {
@@ -262,17 +262,45 @@
   }
 
   /**
+   * Run asynchronous test actions using requestAnimationFrame.
+   *
+   * @param {Function} testFunction a function including test actions;
+   * @returns a promise.
+   */
+  async function asyncRunAF(testFunction) {
+
+    debugLog("asyncRunAF");
+
+    return new Promise(function(resolve, _reject) {
+      function callback(_timestamp) {
+        debugLog("Callback done");
+
+        resolve();  // resolve immediately
+      }
+
+      // Call the function that updates the DOM
+      testFunction();
+
+      // Ask browser to callback before next repaint
+      window.requestAnimationFrame(callback);
+    });
+  }
+
+  /**
    * The helper function for running asynchronous test actions.
    *
    * @param {Function} testFunction a function including test actions;
-   * @param {Function} option optional, if option is a number, it calls
-   *                   asyncRunST(testFunction, option); otherwise, it calls
-   *                   asyncRunMO(testFunction, option).
-   * @param {Number}   idleTime the idle time to waiting next round of callback;
+   * @param {Function | Number} option optional,
+   *   no option (or zero):   asyncRunAF(testFunction),
+   *   for Number:            asyncRunST(testFunction, option),
+   *   else:                  asyncRunMO(testFunction, option, idleTime);
+   * @param {Number}   idleTime optional, the idle time to waiting next round of callback;
    * @returns a promise.
    */
   async function asyncRun(testFunction, option, idleTime) {
-    if (typeof option === "number") {
+    if (!option) {
+      return asyncRunAF(testFunction);
+    } else if (typeof option === "number") {
       return asyncRunST(testFunction, option);
     } else {
       return asyncRunMO(testFunction, option, idleTime);
