@@ -1,3 +1,6 @@
+// UX widget is not supported yet
+/* eslint-disable */
+
 // !!! This test currently does not use the test framework !!!
 
 (function () {
@@ -6,345 +9,232 @@
   /**
    * Default timeout for waiting for DOM rendering (in milliseconds)
    */
-  const defaultAsyncTimeout = 100; //ms
+  const defaultAsyncTimeout = 100; // ms
 
   const expect = chai.expect;
   const controlbar = UNIFACE.ClassRegistry.get("UX.Controlbar");
   let controlbarWidget;
   let widgetElement;
-
   let parentNode = document.getElementById("widget-container");
   let placeholderEl = document.createElement("span");
   let node;
 
-  const MOCK_EMPTY_DEFINITION = {
-    "getChildDefinitions": function () { },
-    "getName": function () { },
-    "getProperty": function (propertyName) {
-      switch (propertyName) { }
-      return undefined;
-    },
-    "getPropertyNames": function () { },
-    "getShortName": function () { },
-    "getType": function () { },
-    "getWidgetClass": function () { },
-    "setProperty": function (propertyName, propertyValue) { },
-    "setWidgetClass": function (widgetClass) { }
-  };
+  const MOCK_EMPTY_DEFINITION = { properties: {} };
 
   const MOCK_START_CONTROLS_ONLY_DEFINITION = {
-    "getChildDefinitions": function () { },
-    "getName": function () { },
-    "getProperty": function (propertyName) {
-      switch (propertyName) {
-        case "controls-start":
-          return "first";
-        case "first:widget-class":
-          return "UX.Button";
-      }
-    },
-    "getPropertyNames": function () { },
-    "getShortName": function () { },
-    "getType": function () { },
-    "getWidgetClass": function () { },
-    "setProperty": function (propertyName, propertyValue) { },
-    "setWidgetClass": function (widgetClass) { }
+    properties: {
+      "controls-start": "first",
+      "first:widget-class": "UX.Button"
+    }
   };
 
   const MOCK_EMPTY_START_CONTROLS_DEFINITION = {
-    "getChildDefinitions": function () { },
-    "getName": function () { },
-    "getProperty": function (propertyName) {
-      switch (propertyName) {
-        case "controls-start":
-          return undefined;
-      }
-    },
-    "getPropertyNames": function () { },
-    "getShortName": function () { },
-    "getType": function () { },
-    "getWidgetClass": function () { },
-    "setProperty": function (propertyName, propertyValue) { },
-    "setWidgetClass": function (widgetClass) { }
+    properties: {
+      "controls-start": "",
+      "controls-center": "size",
+      "controls-end": "goto",
+      "goto:widget-class": "UX.NumberField",
+      "size:widget-class": "UX.Select"
+    }
   };
 
   const MOCK_UNDEFINED_START_CONTROLS_DEFINITION = {
-    "getChildDefinitions": function () { },
-    "getName": function () { },
-    "getProperty": function (propertyName) {
-      switch (propertyName) {
-        case "controls-center":
-          return "goto";
-        case "controls-end":
-          return "size";
-        case "goto:widget-class":
-          return "UX.NumberField";
-        case "size:widget-class":
-          return "UX.Select";
-      }
-    },
-    "getPropertyNames": function () { },
-    "getShortName": function () { },
-    "getType": function () { },
-    "getWidgetClass": function () { },
-    "setProperty": function (propertyName, propertyValue) { },
-    "setWidgetClass": function (widgetClass) { }
+    properties: {
+      "controls-center": "goto",
+      "controls-end": "size",
+      "goto:widget-class": "UX.NumberField",
+      "size:widget-class": "UX.Select"
+    }
   };
 
   const MOCK_EMPTY_CENTER_CONTROLS_DEFINITION = {
-    "getChildDefinitions": function () { },
-    "getName": function () { },
-    "getProperty": function (propertyName) {
-      switch (propertyName) {
-        case "controls-center":
-          return undefined;
-      }
-    },
-    "getPropertyNames": function () { },
-    "getShortName": function () { },
-    "getType": function () { },
-    "getWidgetClass": function () { },
-    "setProperty": function (propertyName, propertyValue) { },
-    "setWidgetClass": function (widgetClass) { }
+    properties: {
+      "controls-start": "info",
+      "controls-center": "",
+      "controls-end": "size",
+      "info:widget-class": "UX.PlainText",
+      "size:widget-class": "UX.Select"
+    }
   };
 
   const MOCK_UNDEFINED_CENTER_CONTROLS_DEFINITION = {
-    "getChildDefinitions": function () { },
-    "getName": function () { },
-    "getProperty": function (propertyName) {
-      switch (propertyName) {
-        case "controls-start":
-          return "info";
-        case "controls-end":
-          return "size";
-        case "info:widget-class":
-          return "UX.PlainText";
-        case "size:widget-class":
-          return "UX.Select";
-      }
-    },
-    "getPropertyNames": function () { },
-    "getShortName": function () { },
-    "getType": function () { },
-    "getWidgetClass": function () { },
-    "setProperty": function (propertyName, propertyValue) { },
-    "setWidgetClass": function (widgetClass) { }
+    properties: {
+      "controls-start": "info",
+      "controls-end": "size",
+      "info:widget-class": "UX.PlainText",
+      "size:widget-class": "UX.Select"
+    }
   };
 
   const MOCK_EMPTY_END_CONTROLS_DEFINITION = {
-    "getChildDefinitions": function () { },
-    "getName": function () { },
-    "getProperty": function (propertyName) {
-      switch (propertyName) {
-        case "controls-end":
-          return undefined;
-      }
-    },
-    "getPropertyNames": function () { },
-    "getShortName": function () { },
-    "getType": function () { },
-    "getWidgetClass": function () { },
-    "setProperty": function (propertyName, propertyValue) { },
-    "setWidgetClass": function (widgetClass) { }
+    properties: {
+      "controls-start": "info",
+      "controls-center": "goto",
+      "controls-end": "",
+      "info:widget-class": "UX.PlainText",
+      "goto:widget-class": "UX.NumberField"
+    }
   };
 
   const MOCK_UNDEFINED_END_CONTROLS_DEFINITION = {
-    "getChildDefinitions": function () { },
-    "getName": function () { },
-    "getProperty": function (propertyName) {
-      switch (propertyName) {
-        case "controls-start":
-          return "info";
-        case "controls-center":
-          return "goto";
-        case "info:widget-class":
-          return "UX.PlainText";
-        case "goto:widget-class":
-          return "UX.NumberField";
-      }
-    },
-    "getPropertyNames": function () { },
-    "getShortName": function () { },
-    "getType": function () { },
-    "getWidgetClass": function () { },
-    "setProperty": function (propertyName, propertyValue) { },
-    "setWidgetClass": function (widgetClass) { }
+    properties: {
+      "controls-start": "info",
+      "controls-center": "goto",
+      "info:widget-class": "UX.PlainText",
+      "goto:widget-class": "UX.NumberField"
+    }
   };
 
   const MOCK_START_CENTER_END_CONTROLS_DEFINITION = {
-    "getChildDefinitions": function () { },
-    "getName": function () { },
-    "getProperty": function (propertyName) {
-      switch (propertyName) {
-        case "controls-start":
-          return "info";
-        case "controls-center":
-          return "goto";
-        case "controls-end":
-          return "size";
-        case "info:widget-class":
-          return "UX.PlainText";
-        case "goto:widget-class":
-          return "UX.NumberField";
-        case "size:widget-class":
-          return "UX.Select";
-      }
-    },
-    "getPropertyNames": function () { },
-    "getShortName": function () { },
-    "getType": function () { },
-    "getWidgetClass": function () { },
-    "setProperty": function (propertyName, propertyValue) { },
-    "setWidgetClass": function (widgetClass) { }
+    properties: {
+      "controls-start": "info",
+      "controls-center": "goto",
+      "controls-end": "sizefirst",
+      "info:widget-class": "UX.PlainText",
+      "goto:widget-class": "UX.NumberField",
+      "size:widget-class": "UX.Select",
+      "first:widget-class": "UX.Button"
+    }
   };
 
   const MOCK_EMPTY_START_CENTER_END_CONTROLS_DEFINITION = {
-    "getChildDefinitions": function () { },
-    "getName": function () { },
-    "getProperty": function (propertyName) {
-      switch (propertyName) {
-        case "controls-start":
-          return undefined;
-        case "controls-center":
-          return undefined;
-        case "controls-end":
-          return undefined;
-      }
-    },
-    "getPropertyNames": function () { },
-    "getShortName": function () { },
-    "getType": function () { },
-    "getWidgetClass": function () { },
-    "setProperty": function (propertyName, propertyValue) { },
-    "setWidgetClass": function (widgetClass) { }
+    properties: {
+      "controls-start": "",
+      "controls-center": "",
+      "controls-end": "",
+      "info:widget-class": "UX.PlainText",
+      "goto:widget-class": "UX.NumberField",
+      "size:widget-class": "UX.Select"
+    }
   };
 
   const MOCK_UNDEFINED_START_CENTER_END_CONTROLS_DEFINITION = {
-    "getChildDefinitions": function () { },
-    "getName": function () { },
-    "getProperty": function (propertyName) {
-      switch (propertyName) {
-        case "controls-start":
-          return undefined;
-        case "controls-center":
-          return undefined;
-        case "controls-end":
-          return undefined;
-        case "info:widget-class":
-          return "UX.PlainText";
-        case "goto:widget-class":
-          return "UX.NumberField";
-        case "size:widget-class":
-          return "UX.Select";
-      }
-    },
-    "getPropertyNames": function () { },
-    "getShortName": function () { },
-    "getType": function () { },
-    "getWidgetClass": function () { },
-    "setProperty": function (propertyName, propertyValue) { },
-    "setWidgetClass": function (widgetClass) { }
+    properties: {
+      "info:widget-class": "UX.PlainText",
+      "goto:widget-class": "UX.NumberField",
+      "size:widget-class": "UX.Select"
+    }
   };
 
   const MOCK_CONTROLS_WITHOUT_ANY_PROPERTIES_DEFINITION = {
-    "getChildDefinitions": function () { },
-    "getName": function () { },
-    "getProperty": function (propertyName) {
-      switch (propertyName) {
-        case "controls-start":
-          return "first";
-        case "controls-center":
-          return "size";
-        case "controls-end":
-          return "goto";
-        case "last:widget-class":
-          return "UX.Button";
-        case "last:value":
-          return "Last";
-      }
-    },
-    "getPropertyNames": function () { },
-    "getShortName": function () { },
-    "getType": function () { },
-    "getWidgetClass": function () { },
-    "setProperty": function (propertyName, propertyValue) { },
-    "setWidgetClass": function (widgetClass) { }
+    properties: {
+      "controls-start": "first",
+      "controls-center": "size",
+      "controls-end": "goto",
+      "last:widget-class": "UX.Button",
+      "last:value": "Last"
+    }
   };
 
   const MOCK_CONTROLS_PROPERTIES_DEFINITION = {
-    "getChildDefinitions": function () { },
-    "getName": function () { },
-    "getProperty": function (propertyName) {
-      switch (propertyName) {
-        case "controls-start":
-          return "size";
-        case "controls-center":
-          return undefined;
-        case "controls-end":
-          return "last";
-        case "last:widget-class":
-          return "UX.Button";
-        case "size:widget-class":
-          return "UX.Select";
-        case "last:value":
-          return "a";
-        case "size:value":
-          return "1";
-        case "size:valrep":
-          return "1=a10=1025=2550=50100=100";
-        case "size:label-text":
-          return "Label";
-        case "last:html:appearance":
-          return "accent";
-        case "last:style:padding":
-          return "10px";
-        case "last:class:classA":
-          return "true";
-      }
-    },
-    "getPropertyNames": function () { },
-    "getShortName": function () { },
-    "getType": function () { },
-    "getWidgetClass": function () { },
-    "setProperty": function (propertyName, propertyValue) { },
-    "setWidgetClass": function (widgetClass) { }
+    properties: {
+      "controls-start": "size",
+      "controls-end": "last",
+      "last:widget-class": "UX.Button",
+      "size:widget-class": "UX.Select",
+      "last:overflow-behavior": "none",
+      "size:overflow-behavior": "hide",
+      "last:overflow-index": "1",
+      "size:overflow-index": "2",
+      "last:value": "a",
+      "size:value": "1",
+      "size:valrep": "1=a10=1025=2550=50100=100",
+      "size:label-text": "Label",
+      "last:html:appearance": "accent",
+      "last:style:padding": "10px",
+      "last:class:classA": "true"
+    }
   };
 
   const MOCK_CONTROLBAR_DATA = {
-    orientation: "vertical",
-    "style:padding": "10px",
-    "class:classC": "true"
+    uniface: {
+      orientation: "vertical"
+    },
+    style: {
+      padding: "10px"
+    },
+    classes: {
+      classC: "true"
+    }
   };
 
   const MOCK_CONTROLBAR_CONTROLS_DATA = {
-    "size:html:disabled": "true",
-    "goto:html:hide-step": "true",
-    "size:style:min-width": "100px",
-    "goto:style:margin": "5px",
-    "size:class:classA": "true",
-    "goto:class:classB": "true",
-    "size:label-text": "Label",
-    "first:html:appearance": "accent",
-    "first:value": "Go",
-    "size:valrep": "1=a10=1025=2550=50100=100"
+    uniface: {
+      "size:html:disabled": "true",
+      "goto:html:hide-step": "true",
+      "size:style:min-width": "100px",
+      "goto:style:margin": "5px",
+      "size:class:classA": "true",
+      "goto:class:classB": "true",
+      "size:label-text": "Label",
+      "first:html:appearance": "accent",
+      "first:value": "Go",
+      "size:valrep": "1=a10=1025=2550=50100=100"
+    }
   };
 
   const MOCK_CONTROLS = {
-    "last:widget-class": "something",
-    "last:class:classA": "true",
-    "last:html:appearance": "accent",
-    "last:value": "a",
-    "size:label-text": "Label",
-    "size:valrep": "1=a10=1025=2550=50100=100",
-    value: "1",
-    "size:widget-cleanup-properties": {},
-    "size:widget-class": "UX.Select"
+    last: {
+      "overflow-behavior": "none",
+      "overflow-index": "1",
+      "widget-class": "UX.Button",
+      "widget-cleanup-properties": {},
+      "widget-properties": {
+        classes: {
+          classA: "true"
+        },
+        html: {
+          appearance: "accent"
+        },
+        style: {
+          padding: "10px"
+        },
+        value: "a"
+      }
+    },
+    size: {
+      "widget-properties": {
+        uniface: {
+          "label-text": "Label"
+        },
+        valrep: [
+          {
+            value: "1",
+            representation: "a"
+          },
+          {
+            value: "10",
+            representation: "10"
+          },
+          {
+            value: "25",
+            representation: "25"
+          },
+          {
+            value: "50",
+            representation: "50"
+          },
+          {
+            value: "100",
+            representation: "100"
+          }
+        ],
+        value: "1"
+      },
+      "widget-cleanup-properties": {},
+      "widget-class": "UX.Select",
+      "overflow-behavior": "hide",
+      "overflow-index": "2"
+    }
   };
 
   const MOCK_CONTROLBAR_DEFAULT_PROPERTIES = {
-    value: null,
-    "class:u-controlbar": true,
-    orientation: "horizontal"
+    classes: {
+      "u-controlbar": true
+    },
+    uniface: {
+      orientation: "horizontal"
+    }
   };
 
   describe("processLayout()", function () {
@@ -353,6 +243,7 @@
       widgetElement = controlbar.processLayout(placeholder, MOCK_EMPTY_DEFINITION);
 
       expect(widgetElement).to.have.tagName("div");
+      expect(widgetElement).equal(placeholder);
     });
 
     it("should have correct tagName when the placeholder is not 'div", function () {
@@ -467,13 +358,14 @@
       parentNode.replaceChild(widgetElement, node);
     });
     it("should add widgetElement(which is passed as parameter) to widget property of elements object", function () {
-      controlbarWidget.onConnect(widgetElement, MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+      controlbarWidget.onConnect(widgetElement);
+
       expect(controlbarWidget.elements.widget).to.deep.equal(widgetElement);
     });
 
     it("refernces to control elements should be added", function () {
       let mockControlIds = new Set(["info", "goto", "size"]);
-      controlbarWidget.onConnect(widgetElement, MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+      controlbarWidget.onConnect(widgetElement);
 
       mockControlIds.forEach((controlId) => {
         expect(controlbarWidget[controlId]).not.to.be.null;
@@ -487,14 +379,11 @@
       node = parentNode.children[0];
       parentNode.replaceChild(widgetElement, node);
 
-      controlbarWidget.onConnect(widgetElement, MOCK_EMPTY_DEFINITION);
+      controlbarWidget.onConnect(widgetElement);
       controlbarWidget.dataInit();
 
-      for (let key in controlbar.defaultValues) {
-        if (key.startsWith("class")) {
-          let className = key.replace("class:", "");
-          expect(widgetElement.classList.contains(className)).to.be.true;
-        }
+      for (let key in controlbar.defaultValues.classes) {
+        expect(widgetElement.classList.contains(key)).to.be.true;
       }
     });
   });
@@ -507,75 +396,101 @@
         parentNode.replaceChild(widgetElement, node);
       });
 
-      it("if there is change in any class properties, should be reflected on the widgetElement", function () {
-        controlbarWidget.onConnect(widgetElement, MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+      it("if there is change in any style properties, should be reflected on the widgetElement", function () {
+        controlbarWidget.onConnect(widgetElement);
         controlbarWidget.dataInit();
         controlbarWidget.dataUpdate(MOCK_CONTROLBAR_DATA);
 
-        for (let key in MOCK_CONTROLBAR_DATA) {
-          if (key.startsWith("class")) {
-            let keyName = key.replace("class:", "");
-            expect(widgetElement.classList.contains(keyName)).to.be.true;
-          }
+        for (let key in MOCK_CONTROLBAR_DATA.style) {
+          expect(window.getComputedStyle(widgetElement).getPropertyValue(key)).to.equal(MOCK_CONTROLBAR_DATA.style[key]);
         }
       });
 
-      it("if there is any change in control's html properties, should be reflected on the control", function () {
-        controlbarWidget.onConnect(widgetElement, MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+      it("if there is change in any class properties, should be reflected on the widgetElement", function () {
+        controlbarWidget.onConnect(widgetElement);
+        controlbarWidget.dataInit();
+        controlbarWidget.dataUpdate(MOCK_CONTROLBAR_DATA);
+        console.log(widgetElement);
+
+        for (let key in MOCK_CONTROLBAR_DATA.classes) {
+          expect(widgetElement.classList.contains(key)).to.be.true;
+        }
+      });
+
+      it("if there is any change in control's html properties, should be reflected on the control", function (done) {
+        controlbarWidget.onConnect(widgetElement);
         controlbarWidget.dataInit();
         controlbarWidget.dataUpdate(MOCK_CONTROLBAR_CONTROLS_DATA);
-        for (let key in MOCK_CONTROLBAR_CONTROLS_DATA) {
+
+        setTimeout(function () {
+          for (let key in MOCK_CONTROLBAR_CONTROLS_DATA.uniface) {
+            let [mainKey, ...subKeys] = key.split(":");
+            if (subKeys[0] === "html") {
+              expect(controlbarWidget[mainKey].element.getAttribute(subKeys[1])).not.to.be.null;
+            }
+          }
+          done();
+        }, defaultAsyncTimeout);
+      });
+
+      it("if there is any change in control's style properties, should be reflected on the control", function () {
+        controlbarWidget.onConnect(widgetElement);
+        controlbarWidget.dataInit();
+        controlbarWidget.dataUpdate(MOCK_CONTROLBAR_CONTROLS_DATA);
+
+        for (let key in MOCK_CONTROLBAR_CONTROLS_DATA.uniface) {
           let [mainKey, ...subKeys] = key.split(":");
-          if (subKeys.includes('html')) {
-            expect(controlbarWidget[key].element.getAttribute(subKeys[1])).not.to.be.null;
+          if (subKeys[0] === "style") {
+            expect(window.getComputedStyle(controlbarWidget[mainKey].element).getPropertyValue(subKeys[1])).to.equal(MOCK_CONTROLBAR_CONTROLS_DATA.uniface[key]);
           }
         }
       });
-
 
       it("if there is any change in control's class properties, should be reflected on the control", function () {
-        controlbarWidget.onConnect(widgetElement, MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        controlbarWidget.onConnect(widgetElement);
         controlbarWidget.dataInit();
         controlbarWidget.dataUpdate(MOCK_CONTROLBAR_CONTROLS_DATA);
 
-        for (let key in MOCK_CONTROLBAR_CONTROLS_DATA) {
-          if (key.startsWith("style")) {
-            let keyName = key.replace("style:", "");
-            expect(controlbarWidget[key].element.classList.contains(keyName)).to.be.true;
+        for (let key in MOCK_CONTROLBAR_CONTROLS_DATA.uniface) {
+          let [mainKey, ...subKeys] = key.split(":");
+          if (subKeys[0] === "class") {
+            expect(controlbarWidget[mainKey].element.classList.contains(subKeys[1])).to.be.true;
           }
         }
       });
 
       it("if there is any change in control's uniface properties, should be reflected on the control", function () {
-        controlbarWidget.onConnect(widgetElement, MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        controlbarWidget.onConnect(widgetElement);
         controlbarWidget.dataInit();
         controlbarWidget.dataUpdate(MOCK_CONTROLBAR_CONTROLS_DATA);
 
-        for (let key in MOCK_CONTROLBAR_CONTROLS_DATA) {
-          if (key.startsWith("label-text")) {
-            expect(controlbarWidget[key].element.querySelector(".u-label-text").textContent).to.equal(MOCK_CONTROLBAR_CONTROLS_DATA[key]);
+        for (let key in MOCK_CONTROLBAR_CONTROLS_DATA.uniface) {
+          let [mainKey, ...subKeys] = key.split(":");
+          if (subKeys[0] === "label-text") {
+            expect(controlbarWidget[mainKey].element.querySelector(".u-label-text").textContent).to.equal(MOCK_CONTROLBAR_CONTROLS_DATA.uniface[key]);
           }
         }
       });
 
       it("if there is any change in control's value property, should be reflected on the control", function () {
-        controlbarWidget.onConnect(widgetElement, MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        controlbarWidget.onConnect(widgetElement);
         controlbarWidget.dataInit();
         controlbarWidget.dataUpdate(MOCK_CONTROLBAR_CONTROLS_DATA);
 
-        for (let key in MOCK_CONTROLBAR_CONTROLS_DATA) {
-          if (key.startsWith("value")) {
-            expect(controlbarWidget[key].widget.elements.buttonTextElement.textContent).to.equal(MOCK_CONTROLBAR_CONTROLS_DATA[key]);
+        for (let key in MOCK_CONTROLBAR_CONTROLS_DATA.uniface) {
+          let [mainKey, ...subKeys] = key.split(":");
+          if (subKeys[0] === "value") {
+            expect(controlbarWidget[mainKey].widget.elements.buttonTextElement.textContent).to.equal(MOCK_CONTROLBAR_CONTROLS_DATA.uniface[key]);
           }
         }
       });
 
       it("if there is any change in control's valrep property, should be reflected on the control", function () {
-        controlbarWidget.onConnect(widgetElement, MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        controlbarWidget.onConnect(widgetElement);
         controlbarWidget.dataInit();
         controlbarWidget.dataUpdate(MOCK_CONTROLBAR_CONTROLS_DATA);
 
-        for (let key in MOCK_CONTROLBAR_CONTROLS_DATA) {
+        for (let key in MOCK_CONTROLBAR_CONTROLS_DATA.uniface) {
           let [mainKey, subKeys] = key.split(":");
           if (subKeys[0] === "valrep") {
             let formattedValrep = toolbar.getFormattedValrep(MOCK_CONTROLBAR_CONTROLS_DATA.uniface[key]);
@@ -601,7 +516,7 @@
         style: new Set(["padding"]),
         class: new Set(["classC"])
       };
-      controlbarWidget.onConnect(widgetElement, MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+      controlbarWidget.onConnect(widgetElement);
       controlbarWidget.dataInit();
       controlbarWidget.dataUpdate(MOCK_CONTROLBAR_DATA);
       controlbarWidget.dataCleanup(mockDataNames);
@@ -793,7 +708,7 @@
         controlbarWidget.invokeControlFunction("dataUpdate", MOCK_CONTROLS);
 
         setTimeout(function () {
-          expect(controlbarWidget["last"].element.getAttribute("appearance")).to.equal(MOCK_CONTROLS.last["last:html:appearance"]);
+          expect(controlbarWidget["last"].element.getAttribute("appearance")).to.equal(MOCK_CONTROLS.last["widget-properties"].html.appearance);
           done();
         }, defaultAsyncTimeout);
       });
@@ -892,7 +807,7 @@
       });
 
       describe(" when the control of the properties passed is part of controlIds", function () {
-        it("should group the controls widget-class,value, valrep,html,style,class and uniface properties correctly", function () {
+        it("should group the controls widget-class, overflow-behavior, overflow-index, value, valrep,html,style,class and uniface properties correctly", function () {
           widgetElement = controlbar.processLayout(placeholderEl, MOCK_CONTROLS_PROPERTIES_DEFINITION);
           node = parentNode.children[0];
           parentNode.replaceChild(widgetElement, node);

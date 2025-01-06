@@ -153,7 +153,14 @@
   // Data Init
   describe("Data Init", function() {
     const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+    const classes = Object.keys(defaultValues).reduce((accumulator, key) => {
+      if (key.startsWith("class:")) {
+        let newKey = key.replace("class:", "");
+        accumulator[newKey] = defaultValues[key];
+      }
+      return accumulator;
+    }, {});
+    
     let element;
         
     beforeEach(function() {

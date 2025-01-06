@@ -112,13 +112,14 @@
 
   describe("dataInit", function () {
     const defaultValues = tester.getDefaultValues();
-    // Creates an array of all the properties that start with "class:" from the defaultValues object
-    const classes = Object.keys(defaultValues).reduce((acc, key) => {
+    //Extracts and transforms keys from the `defaultValues` object that start with "class:".
+    //The "class:" prefix is removed from the keys and the resulting key-value pairs are added to a new object.
+    const classes = Object.keys(defaultValues).reduce((accumulator, key) => {
       if (key.startsWith("class:")) {
         let newKey = key.replace("class:", "");
-        acc[newKey] = defaultValues[key];
+        accumulator[newKey] = defaultValues[key];
       }
-      return acc;
+      return accumulator;
     }, {});
     var element;
 
