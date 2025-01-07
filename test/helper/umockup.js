@@ -61,7 +61,7 @@
               // original implementation, will cause error if called in mockup env.
               layout = UNIFACE.widget.custom_widget_container.callStaticPluginFunction("processLayout", customPluginClass, args);
             } else {
-              layout = customPluginClass.processLayout.apply(customPluginClass, args);
+              layout = customPluginClass.processLayout.apply(customPluginClass, [args[0], _uf.getObjectDefinition(args[1])]);
             }
           }
         } else {
@@ -100,6 +100,23 @@
         }
         return node;
       }
+    },
+
+    /**
+     * Get the UX-definition object,
+     * and define its getter functions and setter functions.
+     * @param {Object} defs The properties defined for the widget
+     * @returns {Object} Return definition object
+     */
+    "getObjectDefinition": function (defs) {
+      return {
+        "getProperty": function (propertyName) {
+          return defs.properties[propertyName];
+        },
+        "setProperty": function (propertyName, propertyValue) {
+          defs.properties[propertyName] = propertyValue;
+        }
+      };
     },
 
     "uconsole" : (function() {
@@ -337,6 +354,8 @@
           if (args.length) {
             if (!args[0]) {
               args[0] = document.getElementById(this.widgetId);
+            } else {
+              args.unshift(document.getElementById(this.widgetId));
             }
           } else {
             args = [document.getElementById(this.widgetId)];
@@ -361,7 +380,7 @@
         if (!this.widget || !this.widget.elements) {
           const element = this.processLayout.apply(this, this.layoutArgs);
           const widget = this.construct();
-          widget.onConnect(element);
+          widget.onConnect(element, _uf.getObjectDefinition(this.layoutArgs[1]));
         }
         return this.widget;
       }
