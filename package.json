@@ -8,7 +8,7 @@
     "build": "npm run build:prod",
     "build:dev": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
-    "lint": "npx eslint . --max-warnings=0",
+    "lint": "eslint . --max-warnings=0",
     "watch": "webpack -- watch --progress --config webpack.dev.js"
   },
   "author": "Rocket Software B.V.",
