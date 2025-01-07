@@ -61,7 +61,7 @@
               // original implementation, will cause error if called in mockup env.
               layout = UNIFACE.widget.custom_widget_container.callStaticPluginFunction("processLayout", customPluginClass, args);
             } else {
-              layout = customPluginClass.processLayout.apply(customPluginClass, [args[0], _uf.getObjectDefinition(args[1])]);
+              layout = customPluginClass.processLayout.apply(customPluginClass, [args[0], _uf.getObjectDefinition(args[1], true)]);
             }
           }
         } else {
@@ -108,15 +108,34 @@
      * @param {Object} defs The properties defined for the widget
      * @returns {Object} Return definition object
      */
-    "getObjectDefinition": function (defs) {
-      return {
-        "getProperty": function (propertyName) {
+    "getObjectDefinition" : function (defs, isUpdatable = false) {
+      const definition = {
+        "getProperty" : function (propertyName) {
           return defs.properties[propertyName];
         },
-        "setProperty": function (propertyName, propertyValue) {
-          defs.properties[propertyName] = propertyValue;
+        "getPropertyNames" : function () {
+          // This  relies on the syntax and valrep-range having been translated into html properties.
+          var propertyNames;
+          var prop;
+          if (Object.keys(defs.properties).length > 0) {
+            propertyNames = [];
+            for (prop in defs.properties) {
+              if (defs.properties.hasOwnProperty(prop)) {
+                propertyNames.push(externalizePropertyName(prop));
+              }
+            }
+            // Make sure that the property names are in a defined order.
+            propertyNames.sort();
+          }
+          return propertyNames;
         }
       };
+      if (isUpdatable) {
+        definition.setProperty = function (propertyName, propertyValue) {
+          defs.properties[propertyName] = propertyValue;
+        };
+      }
+      return definition;
     },
 
     "uconsole" : (function() {
@@ -183,6 +202,25 @@
     const paramString = urlString.split("?")[1];
     const queryString = new URLSearchParams(paramString);
     return queryString.get(name);
+  }
+
+  function externalizePropertyName(propertyName) {
+    var colon = propertyName.indexOf(":");
+    if (colon > 0) {
+      var prefix = propertyName.slice(0, colon).toLowerCase();
+      if (prefix === "class") {
+        // Return lower case "class:" followed by case sensitive name.
+        return prefix + propertyName.slice(colon);
+      }
+      if (prefix === "html" || prefix === "style") {
+        // Property name is case insensitive. Return it in lower case.
+        return propertyName.toLowerCase();
+      }
+    }
+    // The property name has no known prefix.
+    // It's external name will have "uniface:" as prefix.
+    // Later will remove the uniface prefix as well as a part of flattend data structure.
+    return "uniface:" + propertyName.toLowerCase();
   }
 
   function getWidgetName() {
@@ -352,9 +390,7 @@
         let args = [...arguments];
         if (!this.uxTagName) {
           if (args.length) {
-            if (!args[0]) {
-              args[0] = document.getElementById(this.widgetId);
-            } else {
+            if (!(args[0] instanceof HTMLElement)) {
               args.unshift(document.getElementById(this.widgetId));
             }
           } else {
