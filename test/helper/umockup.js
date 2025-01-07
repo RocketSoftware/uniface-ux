@@ -105,8 +105,9 @@
     /**
      * Get the UX-definition object,
      * and define its getter functions and setter functions.
-     * @param {Object} defs The properties defined for the widget
-     * @returns {Object} Return definition object
+     * @param {Object} defs The properties defined for the widget.
+     * @param {Boolean} isUpdatable Allowed only in process layout.
+     * @returns {Object} Return definition object.
      */
     "getObjectDefinition" : function (defs, isUpdatable = false) {
       const definition = {
