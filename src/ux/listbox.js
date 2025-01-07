@@ -9,7 +9,8 @@ import {
   HtmlAttribute,
   HtmlAttributeNumber,
   HtmlAttributeBoolean,
-  IgnoreProperty
+  IgnoreProperty,
+  Worker
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -34,6 +35,36 @@ export class Listbox extends Widget {
   static uiBlocking = "readonly";
 
   /**
+   * Private Worker: Used to handle changes in value and valrep.
+   * As part of basic implementation, will only update the previousSelectedIndex property in refresh method.
+   * @class ListboxValue
+   * @extends {Worker}
+   */
+  static ListboxValue = class extends Worker {
+
+    /**
+     * Creates an instance of ListboxValue.
+     * @param {typeof Widget} widgetClass
+     * @param {String} propId
+     * @param {String} defaultValue
+     */
+    constructor(widgetClass, propId, defaultValue) {
+      super(widgetClass);
+      this.registerSetter(widgetClass, propId, this);
+      this.registerDefaultValue(widgetClass, propId, defaultValue);
+      // Register a setter for valrep, ensuring it also updates the worker's refresh function.
+      this.registerSetter(widgetClass, "valrep", this);
+    }
+
+    refresh(widgetInstance) {
+      this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
+      // Should be set to -1 only if newly selected value is not part of valrep.
+      // Now setting to -1 by default as value hook up is not yet implemented.
+      widgetInstance.previousSelectedIndex = -1;
+    }
+  };
+
+  /**
    * Widget definition.
    */
   // prettier-ignore
@@ -41,7 +72,7 @@ export class Listbox extends Widget {
     new StyleClass(this, ["u-listbox"]),
     new HtmlAttribute(this, "html:title", "title", undefined),
     new HtmlAttribute(this, undefined, "role", "listbox"),
-    new HtmlAttribute(this, undefined, "ariaActivedescendant", ""),
+    new HtmlAttribute(this, undefined, "ariaActiveDescendant", ""),
     new HtmlAttribute(this, undefined, "ariaControls", ""),
     new HtmlAttributeBoolean(this, undefined, "ariaDisabled", false),
     new HtmlAttributeBoolean(this, undefined, "ariaReadOnly", false),
@@ -50,6 +81,7 @@ export class Listbox extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readonly", false, true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new this.ListboxValue(this, "value", ""),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
   ], [
@@ -67,17 +99,18 @@ export class Listbox extends Widget {
     // Add event listeners for user interactions.
     widgetElement.addEventListener("click", handleSelectionChange);
     widgetElement.addEventListener("keydown", handleSelectionChange);
+    let widgetInstance = this;
     // Store the original selectedIndex value.
-    let previousSelectedIndex = widgetElement.selectedIndex;
+    widgetInstance.previousSelectedIndex = widgetElement.selectedIndex;
 
     // Function to handle selection change.
     function handleSelectionChange() {
       if (widgetElement.hasAttribute("readonly") || widgetElement.hasAttribute("disabled")) {
-        widgetElement.selectedIndex = previousSelectedIndex;
+        widgetElement.selectedIndex = widgetInstance.previousSelectedIndex;
         return; // Do nothing if the listbox is readonly or disabled.
       }
-      if (widgetElement.selectedIndex !== previousSelectedIndex) {
-        previousSelectedIndex = widgetElement.selectedIndex;
+      if (widgetElement.selectedIndex !== widgetInstance.previousSelectedIndex) {
+        widgetInstance.previousSelectedIndex = widgetElement.selectedIndex;
         const event = new window.Event("change");
         widgetElement.dispatchEvent(event);
       }
