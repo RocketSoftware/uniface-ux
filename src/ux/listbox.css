@@ -1,3 +1,7 @@
+.u-listbox {
+  vertical-align: bottom;
+}
+
 /* For setting the disabled styles */
 .u-listbox[disabled] {
   cursor: not-allowed;
