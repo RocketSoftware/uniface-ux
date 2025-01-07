@@ -153,7 +153,7 @@ export class Button extends Widget {
       deleteIconClasses();
       if (icon) {
         element.hidden = false;
-        element.classList.add(`ms-Icon`, `ms-Icon--${icon}`);
+        element.classList.add("ms-Icon", `ms-Icon--${icon}`);
         // Set the iconPosition if there is buttonText.
         if (text) {
           element.setAttribute("slot", iconPosition);
