@@ -1,6 +1,6 @@
 
 (function () {
-  'use strict';
+  "use strict";
 
   const assert = chai.assert;
   const expect = chai.expect;
@@ -28,16 +28,16 @@
 
   describe("Uniface static structure constructor definition", function () {
 
-    it('should have a static property structure of type Element', function () {
+    it("should have a static property structure of type Element", function () {
       verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
       expect(structure.constructor).to.be.an.instanceof(Element.constructor);
-      expect(structure.tagName).to.equal('fluent-text-field');
-      expect(structure.styleClass).to.equal('');
-      expect(structure.elementQuerySelector).to.equal('');
-      expect(structure.attributeDefines).to.be.an('array');
-      expect(structure.elementDefines).to.be.an('array');
-      expect(structure.triggerDefines).to.be.an('array');
+      expect(structure.tagName).to.equal("fluent-text-field");
+      expect(structure.styleClass).to.equal("");
+      expect(structure.elementQuerySelector).to.equal("");
+      expect(structure.attributeDefines).to.be.an("array");
+      expect(structure.elementDefines).to.be.an("array");
+      expect(structure.triggerDefines).to.be.an("array");
       expect(structure.isSetter).to.equal(true);
       expect(structure.hidden).to.equal(false);
     });
@@ -113,7 +113,7 @@
         const widget = tester.construct();
         assert(widget, "widget is not defined!");
         const widgetClass = tester.getWidgetClass();
-        assert(widgetClass.defaultValues.classes['u-text-field'], "Class is not defined");
+        assert(widgetClass.defaultValues.classes["u-text-field"], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -134,14 +134,14 @@
 
     it("mapTrigger", function () {
       widget.mapTrigger("onchange");
-      const event = new window.Event('onchange');
+      const event = new window.Event("onchange");
       element.dispatchEvent(event);
       assert(widget.elements.widget === element, "widget is not connected");
     });
 
   });
 
-  describe('Text Field onchange event', function () {
+  describe("Text Field onchange event", function () {
     let textFieldElement, onChangeSpy;
 
     beforeEach(function () {
@@ -152,7 +152,7 @@
       onChangeSpy = sinon.spy();
 
       // Add the onchange event listener to the number field element
-      textFieldElement.addEventListener('onchange', onChangeSpy);
+      textFieldElement.addEventListener("onchange", onChangeSpy);
     });
 
     // Clean up after each test
@@ -162,9 +162,9 @@
     });
 
     // Test case for the on change event
-    it('should call the onchange event handler when the Text Field  is changed', function () {
+    it("should call the onchange event handler when the Text Field  is changed", function () {
       // Simulate a onchange event
-      const event = new window.Event('onchange');
+      const event = new window.Event("onchange");
       textFieldElement.dispatchEvent(event);
 
       // Assert that the onchange event handler was called once
@@ -195,8 +195,8 @@
     }
 
     it("check 'hidden' attributes", function () {
-      assert(element.querySelector('span.u-text').hasAttribute('hidden'), "Text span element should be hidden by default");
-      assert(element.querySelector('span.u-icon').hasAttribute('hidden'), "Icon span element should be hidden by default");
+      assert(element.querySelector("span.u-text").hasAttribute("hidden"), "Text span element should be hidden by default");
+      assert(element.querySelector("span.u-icon").hasAttribute("hidden"), "Icon span element should be hidden by default");
     });
 
     it("check widget id", function () {
@@ -204,35 +204,35 @@
     });
 
     it("check 'tabindex' attributes", function () {
-      assert(element.hasAttribute('tabindex'), "tabindex element should be present by default");
-      assert.equal(element.getAttribute('tabindex'), "0", "tabindex element should be outline by default");
+      assert(element.hasAttribute("tabindex"), "tabindex element should be present by default");
+      assert.equal(element.getAttribute("tabindex"), "0", "tabindex element should be outline by default");
     });
 
     it("check 'size'", function () {
       let htmlProperties = tester.defaultValues.html;
-      assert.equal(htmlProperties["size"], '20', "Default value of size should be '20'");
+      assert.equal(htmlProperties["size"], "20", "Default value of size should be '20'");
     });
 
     it("check label-text, label-position ,changebutton", function () {
       let unifaceProperties = tester.defaultValues.uniface;
       assert.equal(unifaceProperties["changebutton"], false, "Default value of change button should be false");
-      assert.equal(unifaceProperties["label-position"], 'above', "Default value of label-position will be above");
+      assert.equal(unifaceProperties["label-position"], "above", "Default value of label-position will be above");
       assert.equal(unifaceProperties["label-text"], undefined, "Default value of label-text will be undefined");
     });
 
     it("check type attributes", function () {
-      assert(element.hasAttribute('type'), "Text span element should be hidden by default");
-      assert.equal(element.getAttribute('type'), "text", "Type element should be text by default");
+      assert(element.hasAttribute("type"), "Text span element should be hidden by default");
+      assert.equal(element.getAttribute("type"), "text", "Type element should be text by default");
     });
 
     it("check appearance attributes", function () {
-      assert(element.hasAttribute('appearance'), "appearance element should be present by default");
-      assert.equal(element.getAttribute('appearance'), "outline", "appearance element should be outline by default");
+      assert(element.hasAttribute("appearance"), "appearance element should be present by default");
+      assert.equal(element.getAttribute("appearance"), "outline", "appearance element should be outline by default");
     });
 
     it("check changebutton icon-position", function () {
       let unifaceProperties = tester.defaultValues.changebutton.uniface;
-      assert.equal(unifaceProperties["icon-position"], 'end', "Default value of change button icon-position should be end");
+      assert.equal(unifaceProperties["icon-position"], "end", "Default value of change button icon-position should be end");
     });
 
     it("check changebutton tab-index, appearance", function () {
@@ -242,7 +242,7 @@
     });
 
     it("check value", function () {
-      assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
+      assert.equal(tester.defaultValues.value, "", "Default value of attribute value should be ''");
     });
 
   });
@@ -254,7 +254,7 @@
     });
 
     it("set appearance set to filled", function () {
-      let appearance = 'filled';
+      let appearance = "filled";
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function() {
         tester.dataUpdate({
@@ -270,7 +270,7 @@
     });
 
     it("set appearance set to outline", function () {
-      let appearance = 'outline';
+      let appearance = "outline";
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function() {
         tester.dataUpdate({
@@ -377,7 +377,7 @@
 
 
     it("prefix text property", function () {
-      let prefixTextData = 'prefixTextData';
+      let prefixTextData = "prefixTextData";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function() {
         tester.dataUpdate({
@@ -404,7 +404,7 @@
     });
 
     it("suffix text property", function () {
-      let suffixTextData = 'suffixTextData';
+      let suffixTextData = "suffixTextData";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function() {
         tester.dataUpdate({
@@ -473,7 +473,7 @@
           value: "abc"
         });
       }).then(function () {
-        const event = new window.Event('hover');
+        const event = new window.Event("hover");
         widget.elements.widget.dispatchEvent(event);
         assert.equal(widget.elements.widget.getAttribute("pattern"),pattern ,"Failed to show the pattern attribute and value doesnot match");
         assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
@@ -497,7 +497,7 @@
           // value: "Value input"
         });
       }).then(function () {
-        const event = new window.Event('hover');
+        const event = new window.Event("hover");
         widget.elements.widget.dispatchEvent(event);
         // assert.equal(widget.elements.widget.getAttribute("pattern"),pattern ,"Failed to show the pattern attribute and value doesnot match");
         assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
@@ -521,7 +521,7 @@
           }
         });
       }).then(function () {
-        const event = new window.Event('hover');
+        const event = new window.Event("hover");
         widget.elements.widget.dispatchEvent(event);
         assert.equal(widget.elements.widget.getAttribute("type"), "tel" ,"Failed to show the tel attribute and value does not match");
         assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
@@ -546,7 +546,7 @@
           // value: "test@test.com"
         });
       }).then(function () {
-        const event = new window.Event('hover');
+        const event = new window.Event("hover");
         widget.elements.widget.dispatchEvent(event);
         assert.equal(widget.elements.widget.getAttribute("type"), "email" ,"Failed to show the type as email attribute and value does not match");
         assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
@@ -571,7 +571,7 @@
           // value: "test@test.com"
         });
       }).then(function () {
-        const event = new window.Event('hover');
+        const event = new window.Event("hover");
         widget.elements.widget.dispatchEvent(event);
         assert.equal(widget.elements.widget.getAttribute("type"), "password" ,"Failed to show the type as password attribute and value does not match");
         assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
@@ -596,7 +596,7 @@
           // value: "test@test.com"
         });
       }).then(function () {
-        const event = new window.Event('hover');
+        const event = new window.Event("hover");
         widget.elements.widget.dispatchEvent(event);
         assert.equal(widget.elements.widget.getAttribute("type"), "url" ,"Failed to show the tye as url attribute and value does not match");
         assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
@@ -621,7 +621,7 @@
           // value: "test@test.com"
         });
       }).then(function () {
-        const event = new window.Event('hover');
+        const event = new window.Event("hover");
         widget.elements.widget.dispatchEvent(event);
         assert.equal(widget.elements.widget.getAttribute("type"), "date" ,"Failed to show the date attribute and value does not match");
         assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText ,"Failed to show the placeHolderText attribute and value doesnot match");
@@ -642,10 +642,10 @@
           }
         });
       }).then(function () {
-        const event = new window.Event('hover');
+        const event = new window.Event("hover");
         widget.elements.widget.dispatchEvent(event);
         assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"),"u-sw-changebutton u-button stealth","Subwidget Class name doesnot match");
-        assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute('slot'), "start" ,"Failed to show the slot  attribute and value does not match");
+        assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("slot"), "start" ,"Failed to show the slot  attribute and value does not match");
         assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"),"Failed to show the placeHolderText attribute and value doesnot match");
         assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("class"),"u-icon ms-Icon ms-Icon--PublicEmail","Subwidget icon Class name doesnot match");
       });
@@ -663,10 +663,10 @@
           }
         });
       }).then(function () {
-        const event = new window.Event('hover');
+        const event = new window.Event("hover");
         widget.elements.widget.dispatchEvent(event);
         assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"),"u-sw-changebutton u-button stealth","Subwidget Class name doesnot match");
-        assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute('slot'), "start" ,"Failed to show the slot  attribute and value does not match");
+        assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("slot"), "start" ,"Failed to show the slot  attribute and value does not match");
         assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"),"Failed to show the placeHolderText attribute and value doesnot match");
         assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("class"),"u-icon ms-Icon ms-Icon--PublicEmail","Subwidget icon Class name doesnot match");
       });
@@ -688,7 +688,7 @@
     });
 
     it("show label", function () {
-      let textFieldLabel = 'Label';
+      let textFieldLabel = "Label";
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function() {
         tester.dataUpdate({
@@ -711,8 +711,8 @@
           }
         });
       }).then(function () {
-        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
-        assert.equal(labelPosition, 'before');
+        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        assert.equal(labelPosition, "before");
       });
     });
 
@@ -721,7 +721,7 @@
       let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
       let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
       assert.equal(displayPropertyValue, "inline-flex");
-      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
+      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector(".label"), null);
       let alignPropertyValue = labelStyle.getPropertyValue("align-content");
       assert.equal(alignPropertyValue, "center");
     });
@@ -734,8 +734,8 @@
           }
         });
       }).then(function () {
-        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
-        assert.equal(labelPosition, 'below');
+        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        assert.equal(labelPosition, "below");
       });
     });
 
@@ -744,7 +744,7 @@
       let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
       let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
       assert.equal(flexPropertyValue, "column");
-      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
+      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector(".label"), null);
       let orderPropertyValue = labelStyle.getPropertyValue("order");
       assert.equal(orderPropertyValue, 2);
     });
@@ -758,8 +758,8 @@
           }
         });
       }).then(function () {
-        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
-        assert.equal(labelPosition, 'above');
+        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        assert.equal(labelPosition, "above");
         assert(widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text");
         assert.equal(widget.elements.widget.querySelector("span.u-label-text").innerText, "");
       });
@@ -860,7 +860,7 @@
     });
 
     it("Verify the value returned by getValueFormatted doesn't include the line breaks", function () {
-      valueProperty = `testing value with multiple lines: line 1, line 2`;
+      valueProperty = "testing value with multiple lines: line 1, line 2";
       return asyncRun(function() {
         tester.dataUpdate({
           value: valueProperty

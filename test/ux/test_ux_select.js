@@ -1,5 +1,5 @@
 (function () {
-  'use strict';
+  "use strict";
 
   const assert = chai.assert;
   const expect = chai.expect;
@@ -44,16 +44,16 @@
 
   describe("Uniface static structure constructor definition", function () {
 
-    it('should have a static property structure of type Element', function () {
+    it("should have a static property structure of type Element", function () {
       verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
       expect(structure.constructor).to.be.an.instanceof(Element.constructor);
-      expect(structure.tagName).to.equal('fluent-select');
-      expect(structure.styleClass).to.equal('');
-      expect(structure.elementQuerySelector).to.equal('');
-      expect(structure.attributeDefines).to.be.an('array');
-      expect(structure.elementDefines).to.be.an('array');
-      expect(structure.triggerDefines).to.be.an('array');
+      expect(structure.tagName).to.equal("fluent-select");
+      expect(structure.styleClass).to.equal("");
+      expect(structure.elementQuerySelector).to.equal("");
+      expect(structure.attributeDefines).to.be.an("array");
+      expect(structure.elementDefines).to.be.an("array");
+      expect(structure.triggerDefines).to.be.an("array");
     });
 
   });
@@ -110,7 +110,7 @@
         const widget = tester.construct();
         assert(widget, "widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-select'], "Class is not defined");
+        assert(widgetClass.defaultValues.classes["u-select"], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -152,7 +152,7 @@
     }
 
     it("check 'hidden' attributes", function () {
-      assert.notEqual(element.querySelector('span.u-label-text').getAttribute('hidden'), null);
+      assert.notEqual(element.querySelector("span.u-label-text").getAttribute("hidden"), null);
     });
 
     it("check widget id", function () {
@@ -164,7 +164,7 @@
     });
 
     it("check error message appears when valrep is not defined", function () {
-      let errorIconTooltip = element.querySelector('.u-error-icon');
+      let errorIconTooltip = element.querySelector(".u-error-icon");
       expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
     });
 
@@ -179,7 +179,7 @@
     });
 
     it("show label", function () {
-      let selectFieldLabel = 'Label';
+      let selectFieldLabel = "Label";
       return asyncRun(function() {
         tester.dataUpdate({
           uniface: {
@@ -203,8 +203,8 @@
           }
         });
       }).then(function () {
-        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
-        assert.equal(labelPosition, 'before');
+        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        assert.equal(labelPosition, "before");
       });
     });
 
@@ -214,7 +214,7 @@
       let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
       let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
       assert.equal(displayPropertyValue, "inline-flex");
-      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
+      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector(".label"), null);
       let alignPropertyValue = labelStyle.getPropertyValue("align-content");
       assert.equal(alignPropertyValue, "center");
     });
@@ -228,8 +228,8 @@
         });
       }).then(function () {
         const widget = tester.construct();
-        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
-        assert.equal(labelPosition, 'below');
+        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        assert.equal(labelPosition, "below");
       });
     });
 
@@ -239,7 +239,7 @@
       let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
       let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
       assert.equal(flexPropertyValue, "column");
-      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
+      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector(".label"), null);
       let orderPropertyValue = labelStyle.getPropertyValue("order");
       assert.equal(orderPropertyValue, 2);
     });
@@ -255,8 +255,8 @@
       }).then(function () {
         const widget = tester.construct();
         let labelElement = widget.elements.widget.querySelector("span.u-label-text");
-        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
-        assert.equal(labelPosition, 'above');
+        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        assert.equal(labelPosition, "above");
         assert(labelElement.hasAttribute("hidden"), "Failed to hide the label text");
         assert.equal(labelElement.innerText, "");
         assert.equal(labelElement.getAttribute("slot"), "");
@@ -357,10 +357,10 @@
         });
       }).then(function () {
         let valStr = "<script> alert('XSS attack') </script>";
-        let escapedHtmlValue = valStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        assert.equal(element.querySelector('fluent-option.selected .u-valrep-representation').innerHTML, valStr);
-        expect(element.querySelector('fluent-option.selected .u-valrep-value').innerHTML).equal(escapedHtmlValue);
-        expect(element.querySelector('fluent-option.selected .u-valrep-value').textContent).equal(valStr);
+        let escapedHtmlValue = valStr.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        assert.equal(element.querySelector("fluent-option.selected .u-valrep-representation").innerHTML, valStr);
+        expect(element.querySelector("fluent-option.selected .u-valrep-value").innerHTML).equal(escapedHtmlValue);
+        expect(element.querySelector("fluent-option.selected .u-valrep-value").textContent).equal(valStr);
       });
     });
 
@@ -619,7 +619,7 @@
     });
   });
 
-  describe('Select onchange event', function () {
+  describe("Select onchange event", function () {
     let selectElement, onchangeSpy;
     beforeEach(function () {
       tester.createWidget();
@@ -629,7 +629,7 @@
       onchangeSpy = sinon.spy();
 
       // Add the onchange event listener to the select element
-      selectElement.addEventListener('onchange', onchangeSpy);
+      selectElement.addEventListener("onchange", onchangeSpy);
     });
 
     // Clean up after each test
@@ -639,9 +639,9 @@
     });
 
     // Test case for the onchange event
-    it('should call the onchange event handler when a select option is clicked', function () {
+    it("should call the onchange event handler when a select option is clicked", function () {
       // Simulate a change event
-      const event = new window.Event('onchange');
+      const event = new window.Event("onchange");
       selectElement.dispatchEvent(event);
 
       // Assert that the onchange event handler was called once

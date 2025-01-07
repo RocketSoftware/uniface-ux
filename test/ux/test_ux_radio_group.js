@@ -1,5 +1,5 @@
 (function () {
-  'use strict';
+  "use strict";
 
   const assert = chai.assert;
   const expect = chai.expect;
@@ -43,16 +43,16 @@
 
   describe("Uniface static structure constructor definition", function () {
 
-    it('should have a static property structure of type Element', function () {
+    it("should have a static property structure of type Element", function () {
       verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
       expect(structure.constructor).to.be.an.instanceof(Element.constructor);
-      expect(structure.tagName).to.equal('fluent-radio-group');
-      expect(structure.styleClass).to.equal('');
-      expect(structure.elementQuerySelector).to.equal('');
-      expect(structure.attributeDefines).to.be.an('array');
-      expect(structure.elementDefines).to.be.an('array');
-      expect(structure.triggerDefines).to.be.an('array');
+      expect(structure.tagName).to.equal("fluent-radio-group");
+      expect(structure.styleClass).to.equal("");
+      expect(structure.elementQuerySelector).to.equal("");
+      expect(structure.attributeDefines).to.be.an("array");
+      expect(structure.elementDefines).to.be.an("array");
+      expect(structure.triggerDefines).to.be.an("array");
     });
 
   });
@@ -108,7 +108,7 @@
         const widget = tester.construct();
         assert(widget, "widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-radio-group'], "Class is not defined");
+        assert(widgetClass.defaultValues.classes["u-radio-group"], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -150,7 +150,7 @@
     }
 
     it("check 'hidden' attributes", function () {
-      assert(element.querySelector('label.u-label-text').hasAttribute('hidden'), "Label Text element should be hidden by default");
+      assert(element.querySelector("label.u-label-text").hasAttribute("hidden"), "Label Text element should be hidden by default");
     });
 
     it("check widget id", function () {
@@ -162,11 +162,11 @@
     });
 
     it("check for single unselected radio button placeholder", function () {
-      expect(element.querySelector('fluent-radio').getAttribute("aria-checked")).equal("false");
+      expect(element.querySelector("fluent-radio").getAttribute("aria-checked")).equal("false");
     });
 
     it("check error message appears when valrep is not defined", function () {
-      let errorIconTooltip = element.querySelector('.u-error-icon');
+      let errorIconTooltip = element.querySelector(".u-error-icon");
       expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
     });
   });
@@ -381,7 +381,7 @@
     });
   });
 
-  describe('Ensure setting value to empty clears the selection if empty value is not one of the options', function () {
+  describe("Ensure setting value to empty clears the selection if empty value is not one of the options", function () {
     let element;
     before(function () {
       tester.createWidget();
@@ -410,7 +410,7 @@
     it("Set value to empty string ('') and ensure there is no checked element", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          value: ''
+          value: ""
         });
       }).then(function () {
         expect(element.querySelector("fluent-radio[current-checked=true]")).equal(null);
@@ -418,7 +418,7 @@
     });
   });
 
-  describe('Invalid state, user interaction and again set to invalid state', function () {
+  describe("Invalid state, user interaction and again set to invalid state", function () {
     let element;
     before(function () {
       tester.createWidget();
@@ -434,7 +434,7 @@
           value: "0"
         });
       }).then(function () {
-        let errorIconTooltip = element.querySelector('.u-error-icon');
+        let errorIconTooltip = element.querySelector(".u-error-icon");
         expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
       });
     });
@@ -442,12 +442,12 @@
 
     it("Simulate user interaction and select first option", function () {
       return asyncRun(function () {
-        const firstRadioOption = document.querySelector('fluent-radio');
+        const firstRadioOption = document.querySelector("fluent-radio");
 
         // Simulate click event on radio group widget.
         firstRadioOption.click();
       }).then(function () {
-        let errorIconTooltip = element.querySelector('.u-error-icon');
+        let errorIconTooltip = element.querySelector(".u-error-icon");
         expect(errorIconTooltip.getAttribute("title")).equal("");
         let radioButtonArray = element.querySelectorAll("fluent-radio");
         radioButtonArray.forEach(function (node, index) {
@@ -470,13 +470,13 @@
         const radioOption1 = document.querySelector("fluent-radio");
         // Assertions to check if the radio is in un checked state or not.
         expect(radioOption1.checked).to.be.false;
-        let errorIconTooltip = element.querySelector('.u-error-icon');
+        let errorIconTooltip = element.querySelector(".u-error-icon");
         expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
       });
     });
   });
 
-  describe('Radio onchange event', function () {
+  describe("Radio onchange event", function () {
     let radioElement, onchangeSpy;
     beforeEach(function () {
       tester.createWidget();
@@ -486,9 +486,9 @@
       onchangeSpy = sinon.spy();
 
       // Add the onchange event listener to the radio element
-      radioElement.addEventListener('onchange', onchangeSpy);
+      radioElement.addEventListener("onchange", onchangeSpy);
       // Add the change event listener to the radio-group element.
-      tester.element.addEventListener('change', onchangeSpy);
+      tester.element.addEventListener("change", onchangeSpy);
     });
 
     // Clean up after each test
@@ -498,9 +498,9 @@
     });
 
     // Test case for the onchange event
-    it('should call the onchange event handler when a radio button is clicked', function () {
+    it("should call the onchange event handler when a radio button is clicked", function () {
       // Simulate a change event
-      const event = new window.Event('onchange');
+      const event = new window.Event("onchange");
       radioElement.dispatchEvent(event);
 
       // Assert that the onchange event handler was called once
@@ -508,7 +508,7 @@
     });
 
     // Test case for not firing change event with initial value.
-    it('should not invoke the onchange event handler when a radio button has initial value', function () {
+    it("should not invoke the onchange event handler when a radio button has initial value", function () {
       let initialValue = "2";
 
       return asyncRun(function () {
@@ -524,7 +524,7 @@
     });
 
     // Test case for not firing change event on display-format property changes with initial value.
-    it('should not invoke the onchange event handler when display-format is changed with an initial value', function () {
+    it("should not invoke the onchange event handler when display-format is changed with an initial value", function () {
       let initialValue = "2";
 
       return asyncRun(function () {
@@ -534,7 +534,7 @@
         });
       }).then(function () {
         // Change the display-format property.
-        tester.element.setAttribute('display-format', 'valrep');
+        tester.element.setAttribute("display-format", "valrep");
         // Assert that the change event handler was not called twice.
         // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
         expect(onchangeSpy.calledTwice).to.be.false;
@@ -542,7 +542,7 @@
     });
 
     // Test case for not firing change event on layout property changes with initial value.
-    it('should not invoke the onchange event handler when layout is changed with an initial value', function () {
+    it("should not invoke the onchange event handler when layout is changed with an initial value", function () {
       let initialValue = "2";
 
       return asyncRun(function () {
@@ -552,7 +552,7 @@
         });
       }).then(function () {
         // Change the layout property.
-        tester.element.setAttribute('layout', 'horizontal');
+        tester.element.setAttribute("layout", "horizontal");
         // Assert that the change event handler was not called twice.
         // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
         expect(onchangeSpy.calledTwice).to.be.false;
@@ -560,7 +560,7 @@
     });
 
     // Test case for not firing change event on valrep property changes with initial value.
-    it('should not invoke the onchange event handler when valrep is changed with an initial value', function () {
+    it("should not invoke the onchange event handler when valrep is changed with an initial value", function () {
       let initialValue = "2";
       const valRepArray2 = [
         {

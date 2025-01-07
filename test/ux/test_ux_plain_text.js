@@ -1,5 +1,5 @@
 (function () {
-  'use strict';
+  "use strict";
 
   const assert = chai.assert;
   const expect = chai.expect;
@@ -43,18 +43,18 @@
 
   describe("Uniface static structure constructor definition", function () {
 
-    it('should have a static property structure of type Element', function () {
+    it("should have a static property structure of type Element", function () {
       verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
       expect(structure.constructor).to.be.an.instanceof(Element.constructor);
-      expect(structure.tagName).to.equal('span');
-      expect(structure.styleClass).to.equal('');
+      expect(structure.tagName).to.equal("span");
+      expect(structure.styleClass).to.equal("");
       expect(structure.isSetter).to.equal(true);
       expect(structure.hidden).to.equal(false);
-      expect(structure.elementQuerySelector).to.equal('');
-      expect(structure.attributeDefines).to.be.an('array');
-      expect(structure.elementDefines).to.be.an('array');
-      expect(structure.triggerDefines).to.be.an('undefined');
+      expect(structure.elementQuerySelector).to.equal("");
+      expect(structure.attributeDefines).to.be.an("array");
+      expect(structure.elementDefines).to.be.an("array");
+      expect(structure.triggerDefines).to.be.an("undefined");
     });
 
   });
@@ -116,7 +116,7 @@
         const widget = tester.construct();
         assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-plain-text'], "Class is not defined");
+        assert(widgetClass.defaultValues.classes["u-plain-text"], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -155,10 +155,10 @@
     }
 
     it("check 'hidden' attributes", function () {
-      assert(element.querySelector('span.u-prefix').hasAttribute('hidden'), "Plain Text span.u-prefix element should be hidden by default");
-      assert(element.querySelector('span.u-control').hasAttribute('hidden'), "Plain Text span.u-control element should be hidden by default");
-      assert(element.querySelector('span.u-suffix').hasAttribute('hidden'), "Plain Text span.u-suffix element should be hidden by default");
-      assert(element.querySelector('span.u-error-icon').hasAttribute('hidden'), "Icon span element should be hidden by default");
+      assert(element.querySelector("span.u-prefix").hasAttribute("hidden"), "Plain Text span.u-prefix element should be hidden by default");
+      assert(element.querySelector("span.u-control").hasAttribute("hidden"), "Plain Text span.u-control element should be hidden by default");
+      assert(element.querySelector("span.u-suffix").hasAttribute("hidden"), "Plain Text span.u-suffix element should be hidden by default");
+      assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Icon span element should be hidden by default");
     });
 
     it("check widget id", function () {
@@ -166,7 +166,7 @@
     });
 
     it("check value", function () {
-      assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
+      assert.equal(tester.defaultValues.value, "", "Default value of attribute value should be ''");
     });
   });
 
@@ -184,12 +184,12 @@
         });
       }).then(function () { // check result
         let value = widget.data.properties.value;
-        assert.equal(value, "", 'Value is not same');// Check for visibility
+        assert.equal(value, "", "Value is not same");// Check for visibility
       });
     });
 
     it("prefix text property", function () {
-      let prefixTextData = 'prefixTextData';
+      let prefixTextData = "prefixTextData";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function() {
         tester.dataUpdate({
@@ -217,7 +217,7 @@
     });
 
     it("suffix text property", function () {
-      let suffixTextData = 'suffixTextData';
+      let suffixTextData = "suffixTextData";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function() {
         tester.dataUpdate({
@@ -245,7 +245,7 @@
     });
 
     it("plainTextFormat property when set to first-line", function () {
-      let plainTextFormat = 'first-line';
+      let plainTextFormat = "first-line";
       let val = "Once you have all the widgets ready, the rest was mostly about setting the css styles";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function() {
@@ -262,7 +262,7 @@
     });
 
     it("plainTextFormat property when set to single-line", function () {
-      let plainTextFormat = 'single-line';
+      let plainTextFormat = "single-line";
       let val = "Single Line Once you have all the widgets ready, the rest was mostly about setting the css styles";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function() {
@@ -279,7 +279,7 @@
     });
 
     it("plainTextFormat property when set to multi-line", function () {
-      let plainTextFormat = 'multi-line';
+      let plainTextFormat = "multi-line";
       let val = `Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles
                       Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
       let innerHtml = `Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles
@@ -299,7 +299,7 @@
     });
 
     it("plainTextFormat property when set to multi-paragraphs", function () {
-      let plainTextFormat = 'multi-paragraphs';
+      let plainTextFormat = "multi-paragraphs";
       let val =   `Multi paragraphs Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles Single Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles
                         Multi paragraphs Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles Single Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles
                         Multi paragraphs Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles Single Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles
@@ -329,7 +329,7 @@
     });
 
     it("plainTextFormat property when set to representation-only", function () {
-      let plainTextFormat = 'representation-only';
+      let plainTextFormat = "representation-only";
       let val = "option one";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function() {
@@ -349,7 +349,7 @@
     });
 
     it("plainTextFormat property when set to valrep-text", function () {
-      let plainTextFormat = 'valrep-text';
+      let plainTextFormat = "valrep-text";
       let val = "option one (1)";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function() {
@@ -370,7 +370,7 @@
 
 
     it("plainTextFormat property when set to valrep-html", function () {
-      let plainTextFormat = 'valrep-html';
+      let plainTextFormat = "valrep-html";
       let val = "option one 1";
       return asyncRun(function() {
         tester.dataUpdate({
@@ -500,9 +500,9 @@
         });
       }).then(function () {
         let escapedHtmlValue = val
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;');
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
         expect(widget.elements.widget.childNodes[2].innerHTML).to.equal(escapedHtmlValue);
         expect(widget.elements.widget.childNodes[2].textContent).to.equal(val);
       });
