@@ -40,7 +40,9 @@ import {
         elements: {
           widget: document.createElement("div")
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
       element = worker.getElement(widgetInstance);
       expect(element).to.have.tagName("div");
@@ -83,8 +85,8 @@ import {
     it('should refresh correctly and modify the element classes', function () {
       const widgetInstance = {
         data: {
-          class1: true,
-          class2: false
+          "class1": true,
+          "class2": false
         },
         getTraceDescription: sinon.stub().returns('description')
       };
@@ -175,9 +177,6 @@ import {
     let propIcon;
     let defaultIcon;
     let slottedElement;
-    let tagname;
-    let styleclass;
-    let elementQuerySelector;
 
     const widgetInstance = {
       data: {
@@ -189,7 +188,9 @@ import {
       elements: {
         widget: document.createElement("div")
       },
-      getTraceDescription: () => { return "description"; }
+      getTraceDescription: () => {
+        return "description";
+      }
     };
 
 
@@ -204,7 +205,6 @@ import {
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      tagname = "DIV";
       propText = "text";
       propIcon = "icon";
       defaultText = "defaultText";
@@ -289,7 +289,9 @@ import {
         elements: {
           widget: document.createElement("div")
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
 
       slottedError.refresh(widgetInstance);
@@ -308,7 +310,7 @@ import {
       slottedError.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.hidden).to.equal(true);
       expect(widgetInstance.elements.widget.title).to.equal("");
-      // expect(widgetInstance.elements.widget.classList).to.have.lengthOf(0);
+      expect(widgetInstance.elements.widget.classList).to.have.lengthOf(0);
 
     });
   });
@@ -366,7 +368,9 @@ import {
         elements: {
           widget: document.createElement("div")
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
 
       slottedWidget.elementQuerySelector = "";
@@ -393,7 +397,6 @@ import {
     let elementQuerySelector;
     let propId;
     let element;
-    let definitions;
 
     beforeEach(function () {
       Widget.structure = {};
@@ -432,7 +435,7 @@ import {
     //             "six:widget-class": "UX.Button",
     //             "three:widget-class": "UX.Button",
     //             "two:widget-class": "UX.Button"
-    //         } , 
+    //         } ,
     //     }
     //     let layoutElement = element.getLayout(definitions)
     //  });
@@ -449,7 +452,6 @@ import {
     let defaultValue;
     let worker;
     let element;
-    let layout;
     let value;
 
     beforeEach(function () {
@@ -494,17 +496,8 @@ import {
       expect(element[attrName]).to.equal("new Value");
     });
 
-    //Refresh doesn't do anything
+    // Refresh doesn't do anything
     it("check refresh", function () {
-      const widgetInstance = {
-        data: {
-          "undefined": true
-        },
-        elements: {
-          widget: document.createElement("div")
-        },
-        getTraceDescription: () => { return "description"; }
-      };
       worker.refresh({});
     });
 
@@ -513,19 +506,23 @@ import {
         elements: {
           widget: document.createElement("div")
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
       value = worker.getValue(widgetInstance);
       expect(value).to.equal("inherit");
     });
 
-    //getValueUpdaters doesn't do anything
+    // getValueUpdaters doesn't do anything
     it("check getValueUpdaters", function () {
       const widgetInstance = {
         elements: {
           widget: [document.createElement("div"), document.createElement("span")]
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
       value = worker.getValueUpdaters(widgetInstance);
     });
@@ -572,7 +569,9 @@ import {
         elements: {
           widget: document.createElement("div")
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
       element.refresh(widgetInstance);
       expect(widgetInstance.elements.widget).to.have.all.keys('button');
@@ -624,7 +623,9 @@ import {
         elements: {
           widget: document.createElement("div")
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
       element.refresh(widgetInstance);
       expect(widgetInstance.elements.widget).to.have.all.keys('button');
@@ -679,7 +680,9 @@ import {
         elements: {
           widget: document.createElement("div")
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
       element.refresh(widgetInstance);
       expect(widgetInstance.elements.widget).to.have.all.keys('newReturnNumber');
@@ -728,7 +731,9 @@ import {
         elements: {
           widget: document.createElement("div")
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
       element.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.button).to.equal(true);
@@ -784,7 +789,9 @@ import {
         elements: {
           widget: document.createElement("div")
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
       buttonWidget.onConnect(returnedProcess, "");
       buttonWidget.dataInit();
@@ -861,7 +868,9 @@ import {
         widget: {
           maxlengthHasBeenSet: ""
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
       expect(widgetInstance.widget.maxlengthHasBeenSet).to.equal("");
       element.refresh(widgetInstance);
@@ -925,7 +934,9 @@ import {
         elements: {
           widget: document.createElement("div")
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
       element.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.outerHTML).to.equal('<div style="color: red;"></div>');
@@ -975,7 +986,9 @@ import {
         elements: {
           widget: document.createElement("div")
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
       let returnMapping = element.getTriggerMapping(widgetInstance);
       expect(returnMapping.event_name).to.equal(eventName);
@@ -1071,16 +1084,16 @@ import {
       const valRepArray = [
         {
           value: "1",
-          representation: "option one",
+          representation: "option one"
         },
         {
           value: "2",
-          representation: "option two",
+          representation: "option two"
         },
         {
           value: "3",
-          representation: "option three",
-        },
+          representation: "option three"
+        }
       ];
 
       const widgetInstance = {
@@ -1091,7 +1104,9 @@ import {
         elements: {
           widget: document.createElement("div")
         },
-        getTraceDescription: () => { return "description"; }
+        getTraceDescription: () => {
+          return "description";
+        }
       };
       let selectOptionArray = widgetInstance.elements.widget.querySelectorAll("fluent-option");
       expect(selectOptionArray.length).to.equal(valRepArray.length);

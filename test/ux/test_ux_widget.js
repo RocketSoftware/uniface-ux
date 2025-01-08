@@ -51,7 +51,7 @@ export class TestWidget extends Widget {
 
   describe("Widget Class methods", function () {
 
-    let definitions, returnedProcess, widget, testwidget, consoleLogSpy;
+    let definitions, returnedProcess, testwidget, consoleLogSpy;
 
     definitions = {
       "widget_class": "Widget",

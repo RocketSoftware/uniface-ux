@@ -38,7 +38,6 @@
 
     it("processLayout", function () {
       element = tester.processLayout();
-      console.log(tester, element);
       expect(element).to.have.tagName(tester.uxTagName);
     });
 
@@ -116,14 +115,7 @@
   });
 
   describe("Data Init", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = Object.keys(defaultValues).reduce((accumulator, key) => {
-      if (key.startsWith("class:")) {
-        let newKey = key.replace("class:", "");
-        accumulator[newKey] = defaultValues[key];
-      }
-      return accumulator;
-    }, {});
+    const classes = tester.getDefaultClasses();
 
     var element;
 
@@ -143,7 +135,7 @@
       });
     }
   });
-  
+
   describe("dataUpdate", function () {
     let widget, element;
     before(function () {
@@ -182,7 +174,7 @@
         });
       }).then(function () {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, switchLabelText);//Check for visibility
+        assert.equal(labelText, switchLabelText);// Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
       });
     });
@@ -196,7 +188,7 @@
         });
       }).then(function () {
         let checkedText = widget.elements.widget.querySelector("span.u-checked-message").innerText;
-        assert.equal(checkedText, switchCheckedText);//Check for visibility
+        assert.equal(checkedText, switchCheckedText);// Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message text");
         expect(widget.elements.widget.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
         expect(widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
@@ -212,7 +204,7 @@
         });
       }).then(function () {
         let uncheckedText = widget.elements.widget.querySelector("span.u-unchecked-message").innerText;
-        assert.equal(uncheckedText, switchUnCheckedText);//Check for visibility
+        assert.equal(uncheckedText, switchUnCheckedText);// Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text");
         expect(widget.elements.widget.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
         expect(widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");

@@ -129,14 +129,7 @@
   });
 
   describe("Data Init", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = Object.keys(defaultValues).reduce((accumulator, key) => {
-      if (key.startsWith("class:")) {
-        let newKey = key.replace("class:", "");
-        accumulator[newKey] = defaultValues[key];
-      }
-      return accumulator;
-    }, {});
+    const classes = tester.getDefaultClasses();
     var element;
 
     beforeEach(function () {
@@ -416,6 +409,7 @@
     let element;
     before(function () {
       tester.createWidget();
+      tester.bindUpdatorsEventToElement();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });

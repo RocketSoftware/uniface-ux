@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 (function () {
   'use strict';
 
@@ -119,16 +117,7 @@
   });
 
   describe("Data Init", function () {
-    const defaultValues = tester.getDefaultValues();
-
-    const classes = Object.keys(defaultValues).reduce((accumulator, key) => {
-      if (key.startsWith("class:")) {
-        let newKey = key.replace("class:", "");
-        accumulator[newKey] = defaultValues[key];
-      }
-      return accumulator;
-    }, {});
-
+    const classes = tester.getDefaultClasses();
     var element;
 
     beforeEach(function () {
@@ -157,9 +146,8 @@
     });
 
     it("check 'icon' and 'icon-position'", function () {
-      let unifaceProperties = tester.defaultValues;
-      assert.equal(unifaceProperties["icon"], '', "Default value of icon should be ''");
-      assert.equal(unifaceProperties["icon-position"], 'start', "Default value of icon-position will be start");
+      assert.equal(tester.defaultValues["icon"], '', "Default value of icon should be ''");
+      assert.equal(tester.defaultValues["icon-position"], 'start', "Default value of icon-position will be start");
     });
 
     it("check value", function () {

@@ -111,16 +111,8 @@
   });
 
   describe("dataInit", function () {
-    const defaultValues = tester.getDefaultValues();
-    //Extracts and transforms keys from the `defaultValues` object that start with "class:".
-    //The "class:" prefix is removed from the keys and the resulting key-value pairs are added to a new object.
-    const classes = Object.keys(defaultValues).reduce((accumulator, key) => {
-      if (key.startsWith("class:")) {
-        let newKey = key.replace("class:", "");
-        accumulator[newKey] = defaultValues[key];
-      }
-      return accumulator;
-    }, {});
+    // Defines the classes from the widget's defaultValues.
+    const classes = tester.getDefaultClasses();
     var element;
 
     beforeEach(function () {
@@ -243,7 +235,7 @@
         "html:appearance": "accent",
         "style:background-color": "green",
         "classes:ClassA": true,
-        icon: "IncomingCall",
+        "icon": "IncomingCall",
         'icon-position': "start"
       });
 
@@ -335,7 +327,7 @@
   });
 
 
-  describe("reset all properties", function () {
+  describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());

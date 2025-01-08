@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 (function () {
   'use strict';
 
@@ -152,17 +150,9 @@
 
   // Data Init
   describe("Data Init", function() {
-    const defaultValues = tester.getDefaultValues();
-    const classes = Object.keys(defaultValues).reduce((accumulator, key) => {
-      if (key.startsWith("class:")) {
-        let newKey = key.replace("class:", "");
-        accumulator[newKey] = defaultValues[key];
-      }
-      return accumulator;
-    }, {});
-    
+    const classes = tester.getDefaultClasses();
     let element;
-        
+
     beforeEach(function() {
       element = tester.element;
       assert(element, "Widget top element is not defined!");
@@ -189,14 +179,13 @@
     });
 
     it("check tri-state, tabindex, hidden , disabled, readonly and title", function() {
-      let defaultProperties = tester.defaultValues;
 
-      assert.equal(defaultProperties["html:tabindex"], 0, "Default value of html:tabindex should be 0");
-      assert.equal(defaultProperties["html:title"], undefined, "Default value of html:title should be undefined");
-      assert.equal(defaultProperties["html:disabled"], false, "Default value of disabled  should be false");
-      assert.equal(defaultProperties["html:readonly"], false, "Default value of readonly  should be false");
-      assert.equal(defaultProperties["html:hidden"], false, "Default value of hidden  should be false");
-      assert.equal(defaultProperties["tri-state"], false, "Default value of label-position will be above");
+      assert.equal(tester.defaultValues["html:tabindex"], 0, "Default value of html:tabindex should be 0");
+      assert.equal(tester.defaultValues["html:title"], undefined, "Default value of html:title should be undefined");
+      assert.equal(tester.defaultValues["html:disabled"], false, "Default value of disabled  should be false");
+      assert.equal(tester.defaultValues["html:readonly"], false, "Default value of readonly  should be false");
+      assert.equal(tester.defaultValues["html:hidden"], false, "Default value of hidden  should be false");
+      assert.equal(tester.defaultValues["tri-state"], false, "Default value of label-position will be above");
     });
 
     it("check value", function() {
@@ -206,7 +195,7 @@
 
   describe("dataUpdate", function() {
     let widget, element;
-        
+
     before(function() {
       widget = tester.createWidget();
       element = tester.element;
@@ -256,7 +245,7 @@
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, checkBoxLabelText); //Check for visibility
+        assert.equal(labelText, checkBoxLabelText); // Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
       });
     });
@@ -283,7 +272,7 @@
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, checkBoxLabelText); //Check for visibility
+        assert.equal(labelText, checkBoxLabelText); // Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
       });
     });
@@ -297,7 +286,7 @@
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, checkBoxLabelText); //Check for visibility
+        assert.equal(labelText, checkBoxLabelText); // Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
       });
     });
@@ -316,7 +305,7 @@
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, "Changed Label Text"); //Check for visibility
+        assert.equal(labelText, "Changed Label Text"); // Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
       });
     });
@@ -341,7 +330,7 @@
         assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon");
         expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
         assert.equal(widget.elements.widget.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
-        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."); //Check for visibility
+        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."); // Check for visibility
       });
     });
   });

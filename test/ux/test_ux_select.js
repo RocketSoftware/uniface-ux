@@ -131,14 +131,7 @@
   });
 
   describe("Data Init", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = Object.keys(defaultValues).reduce((accumulator, key) => {
-      if (key.startsWith("class:")) {
-        let newKey = key.replace("class:", "");
-        accumulator[newKey] = defaultValues[key];
-      }
-      return accumulator;
-    }, {});
+    const classes = tester.getDefaultClasses();
     let element;
 
     beforeEach(function () {
@@ -345,9 +338,7 @@
         tester.dataUpdate({
           valrep: valRepArray1,
           value: "<script> alert('XSS attack') </script>",
-          uniface: {
-            "display-format": "valrep"
-          }
+          "display-format": "valrep"
         });
       }).then(function () {
         let valStr = "<script> alert('XSS attack') </script>";
@@ -525,9 +516,7 @@
         tester.dataUpdate({
           valrep: valRepArray,
           value: "1",
-          uniface: {
-            "display-format": "val"
-          }
+          "display-format": "val"
         });
       }).then(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");
@@ -572,11 +561,9 @@
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
-          uniface: {
-            "display-format": "val",
-            "placeholder-text": "Select",
-            "show-placeholder": true
-          }
+          "display-format": "val",
+          "placeholder-text": "Select",
+          "show-placeholder": true
         });
       }).then(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");

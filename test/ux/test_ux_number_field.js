@@ -159,14 +159,7 @@
 
   // Data Init
   describe("Data Init", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = Object.keys(defaultValues).reduce((accumulator, key) => {
-      if (key.startsWith("class:")) {
-        let newKey = key.replace("class:", "");
-        accumulator[newKey] = defaultValues[key];
-      }
-      return accumulator;
-    }, {});
+    const classes = tester.getDefaultClasses();
 
     let element;
 
@@ -272,7 +265,7 @@
           let element = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--AddHome[slot='end']");
           assert.equal(element.className, appliedButtonClass, "widget element doesn't has class " + appliedButtonClass);
           let labelText = widget.elements.widget.querySelector("span.u-text").innerText;
-          assert.equal(labelText, buttonText, "Button Text does not match");  //Check for visibility
+          assert.equal(labelText, buttonText, "Button Text does not match");  // Check for visibility
         }
       });
     });
@@ -286,7 +279,7 @@
         });
       }).then(function () {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, numberFieldLabel);  //Check for visibility
+        assert.equal(labelText, numberFieldLabel);  // Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
       });
     });
@@ -354,7 +347,7 @@
       assert.equal(flexPropertyValue, "column");
     });
 
-    //html:placeholder property
+    // html:placeholder property
     it("Set html:placeholder property for numberField", function () {
       let placeHolderText = "Input the Number";
       return asyncRun(function () {
@@ -367,7 +360,7 @@
       });
     });
 
-    //html:readonly property
+    // html:readonly property
     it("Set html:readonly property true for numberField", function () {
       let readOnly = "readOnly";
       return asyncRun(function () {
@@ -375,12 +368,11 @@
           "html:readonly": true
         });
       }).then(function () {
-        let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(widget.elements.widget.hasAttribute(readOnly), "Failed to show the readonly attribute");
       });
     });
 
-    //html:readonly property false
+    // html:readonly property false
     it("Set html:readonly property false for numberField", function () {
       let readOnly = "readOnly";
       return asyncRun(function () {
@@ -388,12 +380,11 @@
           "html:readonly": false
         });
       }).then(function () {
-        let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to hide the readonly attribute");
       });
     });
 
-    //html:disabled property
+    // html:disabled property
     it("Set html:disabled property true for numberField", function () {
       let disabled = "disabled";
       return asyncRun(function () {
@@ -401,12 +392,11 @@
           "html:disabled": true
         });
       }).then(function () {
-        let disabledProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(widget.elements.widget.hasAttribute(disabled), "Failed to show the disabled attribute");
       });
     });
 
-    //html:disabled property false
+    // html:disabled property false
     it("Set html:disabled property false for numberField", function () {
       let disabled = "disabled";
       return asyncRun(function () {
@@ -414,12 +404,11 @@
           "html:disabled": false
         });
       }).then(function () {
-        let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(!widget.elements.widget.hasAttribute(disabled), "Failed to hide the disabled attribute");
       });
     });
 
-    //html:appearance outfill property
+    // html:appearance outfill property
     it("Set html:appearance outline property true for numberField", function () {
       let appearanceStyle = "filled";
       return asyncRun(function () {
@@ -427,14 +416,13 @@
           "html:appearance": appearanceStyle
         });
       }).then(function () {
-        let appearanceStyleProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance outfill attribute");
         let appearanceStylePropertyText = widget.elements.widget.getAttribute('appearance');
         assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance outfill style" + appearanceStylePropertyText);
       });
     });
 
-    //html:appearance filled property
+    // html:appearance filled property
     it("Set html:appearance filled property true for numberField", function () {
       let appearanceStyle = "outline";
       return asyncRun(function () {
@@ -442,14 +430,13 @@
           "html:appearance": appearanceStyle
         });
       }).then(function () {
-        let appearanceStyleProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance filled attribute");
         let appearanceStylePropertyText = widget.elements.widget.getAttribute('appearance');
         assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance filled style" + appearanceStylePropertyText);
       });
     });
 
-    //html:hide-step true property
+    // html:hide-step true property
     it("Set html:hide-step property true for numberField", function () {
       let hideStep = true;
       return asyncRun(function () {
@@ -457,12 +444,11 @@
           "html:hide-step": hideStep
         });
       }).then(function () {
-        let hidestepProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(widget.elements.widget.hasAttribute('hide-step'), "Failed to show the hide-step attribute");
       });
     });
 
-    //html:hide-step false property
+    // html:hide-step false property
     it("Set html:hide-step property false for numberField", function () {
       let hideStep = false;
       return asyncRun(function () {
@@ -470,7 +456,6 @@
           "html:hide-step": hideStep
         });
       }).then(function () {
-        let hidestepProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(!widget.elements.widget.hasAttribute('hide-step'), "Failed to hide the hide-step attribute");
       });
     });
@@ -505,7 +490,6 @@
 
     it("prefix-icon button icon", function () {
       let showApplyButton = true;
-      let appliedButtonClass = "u-icon ms-Icon ms-Icon--AddHome";
       let buttonIconName = "AddHome";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
@@ -514,7 +498,6 @@
         });
       }).then(function () {
         if (showApplyButton) {
-          let element = widget.elements.widget.querySelector("span.u-prefix ms-Icon ms-Icon--AddHome[slot='start']");
           assert(widget.elements.widget.querySelector("span.u-prefix").hasAttribute("slot"), "Failed to show the slot attribute");
         }
       });
@@ -522,7 +505,6 @@
 
     it("suffix-icon button icon", function () {
       let showApplyButton = true;
-      let appliedButtonClass = "u-icon ms-Icon ms-Icon--AddHome";
       let buttonIconName = "AddHome";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
@@ -531,7 +513,6 @@
         });
       }).then(function () {
         if (showApplyButton) {
-          let element = widget.elements.widget.querySelector("span.u-suffix ms-Icon ms-Icon--AddHome[slot='end']");
           assert(widget.elements.widget.querySelector("span.u-suffix").hasAttribute("slot"), "Failed to show the slot attribute");
         }
       });

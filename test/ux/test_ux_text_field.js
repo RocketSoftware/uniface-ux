@@ -175,13 +175,7 @@
 
   describe("Data Init", function () {
     const defaultValues = tester.getDefaultValues();
-    const classes = Object.keys(defaultValues).reduce((accumulator, key) => {
-      if (key.startsWith("class:")) {
-        let newKey = key.replace("class:", "");
-        accumulator[newKey] = defaultValues[key];
-      }
-      return accumulator;
-    }, {});
+    const classes = tester.getDefaultClasses();
     let element;
 
     beforeEach(function () {
@@ -264,7 +258,7 @@
         });
       }).then(function () {
         let appearanceVal = widget.elements.widget.getAttribute("appearance");
-        assert.equal(appearanceVal, appearance, "appearance is not set to filled");//Check for visibility
+        assert.equal(appearanceVal, appearance, "appearance is not set to filled");// Check for visibility
         assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance attribute");
       });
     });
@@ -278,7 +272,7 @@
         });
       }).then(function () {
         let appearanceVal = widget.elements.widget.getAttribute("appearance");
-        assert.equal(appearanceVal, appearance, "appearance is not set to outline");//Check for visibility
+        assert.equal(appearanceVal, appearance, "appearance is not set to outline");// Check for visibility
         assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance attribute");
       });
     });
@@ -372,7 +366,7 @@
         }
         );
       }).then(function () {
-        assert.equal(widget.elements.widget.innerText, prefixTextData, "Prefix data does not match");//Check for visibility
+        assert.equal(widget.elements.widget.innerText, prefixTextData, "Prefix data does not match");// Check for visibility
       });
     });
 
@@ -395,7 +389,7 @@
           "suffix-text": suffixTextData
         });
       }).then(function () {
-        assert.equal(widget.elements.widget.innerText, suffixTextData, "Suffix data does not match");//Check for visibility
+        assert.equal(widget.elements.widget.innerText, suffixTextData, "Suffix data does not match");// Check for visibility
       });
     });
 
@@ -424,8 +418,8 @@
           value: 1234
         });
       }).then(function () {
-        //const event = new window.Event('hover');
-        //widget.elements.widget.dispatchEvent(event);
+        // const event = new window.Event('hover');
+        // widget.elements.widget.dispatchEvent(event);
         assert.equal(widget.elements.widget.getAttribute("pattern"), patternText, "Failed to show the pattern attribute and value doesnot match");
         assert.equal(widget.elements.widget.getAttribute("placeholder"), placeHolderText, "Failed to show the placeHolderText attribute and value doesnot match");
         assert.equal(widget.elements.widget.getAttribute("title"), title, "Failed to show the title attribute and value doesnot match");
@@ -468,14 +462,14 @@
         tester.dataUpdate({
           "html:placeholder": placeHolderText,
           "html:type": "text"
-          //value: "Value input"
+          // value: "Value input"
         });
       }).then(function () {
         const event = new window.Event('hover');
         widget.elements.widget.dispatchEvent(event);
-        //assert.equal(widget.elements.widget.getAttribute("pattern"),pattern ,"Failed to show the pattern attribute and value doesnot match");
+        // assert.equal(widget.elements.widget.getAttribute("pattern"),pattern ,"Failed to show the pattern attribute and value doesnot match");
         assert.equal(widget.elements.widget.getAttribute("placeholder"), placeHolderText, "Failed to show the placeHolderText attribute and value doesnot match");
-        //assert(widget.elements.widget.hasAttribute("pattern"), "Failed to show the pattern attribute");
+        // assert(widget.elements.widget.hasAttribute("pattern"), "Failed to show the pattern attribute");
         assert(widget.elements.widget.hasAttribute("placeholder"), "Failed to show the placeHolderText attribute and value doesnot match");
       });
     });
@@ -508,8 +502,8 @@
           "prefix-icon": "PublicEmail",
           "suffix-text": "Customer Email Address",
           "html:placeholder": placeHolderText,
-          "html:type": "email",
-          //value: "test@test.com"
+          "html:type": "email"
+          // value: "test@test.com"
         });
       }).then(function () {
         const event = new window.Event('hover');
@@ -527,10 +521,10 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "prefix-icon": "PasswordField",
-          //"suffix-text": "Customer Email Address",
+          // "suffix-text": "Customer Email Address",
           "html:placeholder": placeHolderText,
           "html:type": "password"
-          //value: "test@test.com"
+          // value: "test@test.com"
         });
       }).then(function () {
         const event = new window.Event('hover');
@@ -548,10 +542,10 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "prefix-icon": "URLBlock",
-          //"suffix-text": "Customer Email Address",
+          // "suffix-text": "Customer Email Address",
           "html:placeholder": placeHolderText,
           "html:type": "url"
-          //value: "test@test.com"
+          // value: "test@test.com"
         });
       }).then(function () {
         const event = new window.Event('hover');
@@ -572,7 +566,7 @@
           "suffix-text": "Customer Email Address",
           "html:placeholder": placeHolderText,
           "html:type": "date"
-          //value: "test@test.com"
+          // value: "test@test.com"
         });
       }).then(function () {
         const event = new window.Event('hover');
@@ -609,8 +603,8 @@
         tester.dataUpdate({
           "changebutton": true,
           "changebutton:icon": "PublicEmail"
-          //"changebutton:icon-position" : "start",
-          //"changebutton:value":"Click Me"
+          // "changebutton:icon-position" : "start",
+          // "changebutton:value":"Click Me"
         });
       }).then(function () {
         const event = new window.Event('hover');
@@ -644,7 +638,7 @@
         });
       }).then(function () {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, textFieldLabel);//Check for visibility
+        assert.equal(labelText, textFieldLabel);// Check for visibility
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
       });
     });
@@ -753,10 +747,9 @@
   });
 
   describe("hideError", function () {
-    let widget, element;
+    let widget;
     before(function () {
       widget = tester.createWidget();
-      element = tester.createWidget().element;
       verifyWidgetClass(widgetClass);
     });
     it("Hide Error Set invalid value in text field", function () {
@@ -777,9 +770,8 @@
   });
 
   describe("getValueFormatted", function () {
-    let widget, properties, valueProperty;
+    let properties, valueProperty;
     before(function () {
-      widget = tester.createWidget();
       properties = tester.widget.data;
     });
 

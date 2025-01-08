@@ -149,14 +149,7 @@
 
   // Data Init
   describe("Data Init", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = Object.keys(defaultValues).reduce((accumulator, key) => {
-      if (key.startsWith("class:")) {
-        let newKey = key.replace("class:", "");
-        accumulator[newKey] = defaultValues[key];
-      }
-      return accumulator;
-    }, {});
+    const classes = tester.getDefaultClasses();
 
     var element;
 
@@ -412,7 +405,6 @@
           "html:readonly": true
         });
       }).then(function () {
-        let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(widget.elements.widget.hasAttribute(readOnly), "Failed to show the readonly attribute");
       });
     });
@@ -425,7 +417,6 @@
           "html:readonly": false
         });
       }).then(function () {
-        let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to hide the readonly attribute");
       });
     });
@@ -438,7 +429,6 @@
           "html:disabled": true
         });
       }).then(function () {
-        let disabledProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(widget.elements.widget.hasAttribute(disabled), "Failed to show the disabled attribute");
       });
     });
@@ -451,7 +441,6 @@
           "html:disabled": false
         });
       }).then(function () {
-        let readOnlyProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(!widget.elements.widget.hasAttribute(disabled), "Failed to hide the disabled attribute");
       });
     });
@@ -464,7 +453,6 @@
           "html:appearance": appearanceStyle
         });
       }, 100).then(function () {
-        let appearanceStyleProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance outfill attribute");
         let appearanceStylePropertyText = widget.elements.widget.getAttribute('appearance');
         assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance outfill style" + appearanceStylePropertyText);
@@ -479,7 +467,6 @@
           "html:appearance": appearanceStyle
         });
       }).then(function () {
-        let appearanceStyleProperty = window.getComputedStyle(widget.elements.widget, null);
         assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance filled attribute");
         let appearanceStylePropertyText = widget.elements.widget.getAttribute('appearance');
         assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance filled style" + appearanceStylePropertyText);
