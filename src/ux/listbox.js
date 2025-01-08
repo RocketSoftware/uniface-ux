@@ -86,7 +86,7 @@ export class Listbox extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
   ], [
-    new SlottedElementsByValRep(this, "fluent-option", "", "")
+    new SlottedElementsByValRep(this, "fluent-option", "u-option", "")
   ], [
     new Trigger(this, "onchange", "change", true)
   ]);
