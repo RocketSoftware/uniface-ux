@@ -37,13 +37,13 @@ export class Listbox extends Widget {
   /**
    * Private Worker: Used to handle changes in value and valrep.
    * As part of basic implementation, will only update the previousSelectedIndex property in refresh method.
-   * @class ListboxValue
+   * @class ListboxSelectedValue
    * @extends {Worker}
    */
-  static ListboxValue = class extends Worker {
+  static ListboxSelectedValue = class extends Worker {
 
     /**
-     * Creates an instance of ListboxValue.
+     * Creates an instance of ListboxSelectedValue.
      * @param {typeof Widget} widgetClass
      * @param {String} propId
      * @param {String} defaultValue
@@ -82,7 +82,7 @@ export class Listbox extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readonly", false, true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new this.ListboxValue(this, "value", ""),
+    new this.ListboxSelectedValue(this, "value", ""),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
   ], [
