@@ -12,16 +12,16 @@
   // custom test variables
   const valRepArray = [
     {
-      value: "1",
-      representation: "option one"
+      "value": "1",
+      "representation": "option one"
     },
     {
-      value: "2",
-      representation: "option two"
+      "value": "2",
+      "representation": "option two"
     },
     {
-      value: "3",
-      representation: "option three"
+      "value": "3",
+      "representation": "option three"
     }
   ];
 
@@ -317,8 +317,8 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: 1,
+          "valrep": valRepArray,
+          "value": 1,
           "plaintext-format": plainTextFormat
         });
       }).then(function () {
@@ -335,8 +335,8 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: 1,
+          "valrep": valRepArray,
+          "value": 1,
           "plaintext-format": plainTextFormat
         });
       }).then(function () {
@@ -353,8 +353,8 @@
       let val = "option one 1";
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: 1,
+          "valrep": valRepArray,
+          "value": 1,
           "plaintext-format": plainTextFormat
         });
       }).then(function () {
@@ -506,7 +506,7 @@
     it("Hide Error Set invalid value in plain text", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          error: false,
+          "error": false,
           "error-message": "Field Value length mismatch."
         });
       }).then(function () {

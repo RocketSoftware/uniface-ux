@@ -501,7 +501,7 @@
     it("Set invalid value in text area", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          error: true,
+          "error": true,
           "error-message": "Field Value length mismatch."
         });
       }).then(function () {
@@ -554,7 +554,7 @@
     it("Hide Error Set invalid value in text Area", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          error: false,
+          "error": false,
           "error-message": "Field Value length mismatch."
         });
         widget.hideError("Field Value length mismatch.");

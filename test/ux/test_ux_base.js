@@ -96,10 +96,10 @@ import { Widget } from "../../src/ux/widget.js";
     it("getNode", function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
+        "data": {
           "uniface": "",
           "icon-position": "start",
-          value: ""
+          "value": ""
         }
       };
       url = "icon-position";

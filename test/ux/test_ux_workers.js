@@ -37,10 +37,10 @@ import {
 
     it("testing getElement", function () {
       const widgetInstance = {
-        elements: {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -84,11 +84,11 @@ import {
 
     it('should refresh correctly and modify the element classes', function () {
       const widgetInstance = {
-        data: {
+        "data": {
           "class1": true,
           "class2": false
         },
-        getTraceDescription: sinon.stub().returns('description')
+        "getTraceDescription": sinon.stub().returns('description')
       };
       const element = document.createElement('div');
       sinon.stub(instance, 'getElement').returns(element);
@@ -179,16 +179,16 @@ import {
     let slottedElement;
 
     const widgetInstance = {
-      data: {
+      "data": {
         "icon": "testicon.png",
         "icon-position": "start",
         "text": "defaultText",
-        value: ""
+        "value": ""
       },
-      elements: {
-        widget: document.createElement("div")
+      "elements": {
+        "widget": document.createElement("div")
       },
-      getTraceDescription: () => {
+      "getTraceDescription": () => {
         return "description";
       }
     };
@@ -280,16 +280,16 @@ import {
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
+        "data": {
           "error": true,
           "error-message": "1Bad error",
           "format-error": true,
           "format-error-message": "1Bad Formatting"
         },
-        elements: {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -362,13 +362,13 @@ import {
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
+        "data": {
           "undefined": true
         },
-        elements: {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -488,8 +488,8 @@ import {
 
     it("Check setHtmlAttribute", function () {
       element = {
-        elements: {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         }
       };
       worker.setHtmlAttribute(element, "new Value");
@@ -503,10 +503,10 @@ import {
 
     it("check getValue", function () {
       const widgetInstance = {
-        elements: {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -517,10 +517,10 @@ import {
     // getValueUpdaters doesn't do anything
     it("check getValueUpdaters", function () {
       const widgetInstance = {
-        elements: {
-          widget: [document.createElement("div"), document.createElement("span")]
+        "elements": {
+          "widget": [document.createElement("div"), document.createElement("span")]
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -563,13 +563,13 @@ import {
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
+        "data": {
           "icon-position": "start-end"
         },
-        elements: {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -617,13 +617,13 @@ import {
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
+        "data": {
           "icon-position": "start-end"
         },
-        elements: {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -674,13 +674,13 @@ import {
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
+        "data": {
           "numberValue": "126"
         },
-        elements: {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -725,13 +725,13 @@ import {
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
+        "data": {
           "icon-position": "1-start-end"
         },
-        elements: {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -783,13 +783,13 @@ import {
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
+        "data": {
           "icon-position": "1-start-end"
         },
-        elements: {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -857,18 +857,18 @@ import {
       divElement.value = "";
 
       const widgetInstance = {
-        data: {
+        "data": {
           "min": "12",
           "max": "100",
-          value: ""
+          "value": ""
         },
-        elements: {
-          widget: divElement
+        "elements": {
+          "widget": divElement
         },
-        widget: {
-          maxlengthHasBeenSet: ""
+        "widget": {
+          "maxlengthHasBeenSet": ""
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -903,8 +903,8 @@ import {
 
       widgetClass = Widget;
       property = {
-        id: "propertyClass",
-        value: 26
+        "id": "propertyClass",
+        "value": 26
       };
       element = new StyleProperty(widgetClass, property);
     });
@@ -928,13 +928,13 @@ import {
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
+        "data": {
           "style:color": "red"
         },
-        elements: {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -983,10 +983,10 @@ import {
 
     it("Check getTriggerMapping functionality", function () {
       const widgetInstance = {
-        elements: {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -1083,31 +1083,32 @@ import {
     it('Should refresh correctly', function () {
       const valRepArray = [
         {
-          value: "1",
-          representation: "option one"
+          "value": "1",
+          "representation": "option one"
         },
         {
-          value: "2",
-          representation: "option two"
+          "value": "2",
+          "representation": "option two"
         },
         {
-          value: "3",
-          representation: "option three"
+          "value": "3",
+          "representation": "option three"
         }
       ];
 
       const widgetInstance = {
-        data: {
-          valrep: valRepArray,
+        "data": {
+          "valrep": valRepArray,
           "display-format": "val"
         },
-        elements: {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         },
-        getTraceDescription: () => {
+        "getTraceDescription": () => {
           return "description";
         }
       };
+      element.refresh(widgetInstance);
       let selectOptionArray = widgetInstance.elements.widget.querySelectorAll("fluent-option");
       expect(selectOptionArray.length).to.equal(valRepArray.length);
       selectOptionArray.forEach(function (node, index) {

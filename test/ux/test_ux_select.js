@@ -12,16 +12,16 @@
   // custom test variables
   const valRepArray = [
     {
-      value: "1",
-      representation: "option one"
+      "value": "1",
+      "representation": "option one"
     },
     {
-      value: "2",
-      representation: "option two"
+      "value": "2",
+      "representation": "option two"
     },
     {
-      value: "3",
-      representation: "option three"
+      "value": "3",
+      "representation": "option three"
     }
   ];
 
@@ -287,7 +287,7 @@
     it("Set valrep property with default display value as rep", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray
+          "valrep": valRepArray
         });
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
@@ -300,7 +300,7 @@
     it("Set valrep property with default display-format as value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
+          "valrep": valRepArray,
           "display-format": "val"
         });
       }).then(function () {
@@ -314,7 +314,7 @@
     it("Set valrep property with default display value as valrep", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
+          "valrep": valRepArray,
           "display-format": "valrep"
         });
       }).then(function () {
@@ -330,14 +330,14 @@
       const valRepArray1 = [
         ...valRepArray,
         {
-          value: "<script> alert('XSS attack') </script>",
-          representation: "<script> alert('XSS attack') </script>"
+          "value": "<script> alert('XSS attack') </script>",
+          "representation": "<script> alert('XSS attack') </script>"
         }
       ];
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray1,
-          value: "<script> alert('XSS attack') </script>",
+          "valrep": valRepArray1,
+          "value": "<script> alert('XSS attack') </script>",
           "display-format": "valrep"
         });
       }).then(function () {
@@ -352,8 +352,8 @@
     it("Set value to 2 and expect the second option to be selected", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "2",
+          "valrep": valRepArray,
+          "value": "2",
           "display-format": "rep"
         });
       }).then(function () {
@@ -368,15 +368,15 @@
     it("Set value to empty string ('') and expect the empty option to be selected", function () {
       const valRepArrayWithEmpty = [
         {
-          value: "",
-          representation: ""
+          "value": "",
+          "representation": ""
         },
         ...valRepArray
       ];
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArrayWithEmpty,
-          value: "",
+          "valrep": valRepArrayWithEmpty,
+          "value": "",
           "display-format": "rep"
         });
       }).then(function () {
@@ -399,8 +399,8 @@
     it("When invalid value is set, should show error and none of the options should be selected", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "random",
+          "valrep": valRepArray,
+          "value": "random",
           "display-format": "valrep"
         });
       }).then(function () {
@@ -448,8 +448,8 @@
     it("Set invalid initial value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "0"
+          "valrep": valRepArray,
+          "value": "0"
         });
       }).then(function () {
         let errorIconTooltip = element.querySelector(".u-error-icon");
@@ -471,7 +471,7 @@
         optionToSelect.selected = true; // Mark the option as selected.
 
         // Dispatch the change event.
-        const event = new window.Event("change", { bubbles: true });
+        const event = new window.Event("change", { "bubbles": true });
         selectElement.dispatchEvent(event);
       }).then(function () {
         let errorIconTooltip = element.querySelector(".u-error-icon");
@@ -487,8 +487,8 @@
     it("Now again set the same invalid value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "0"
+          "valrep": valRepArray,
+          "value": "0"
         });
       }).then(function () {
         const selectOption1 = document.querySelector("fluent-option");
@@ -514,8 +514,8 @@
     it("Set valrep and initial value to 1", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "1",
+          "valrep": valRepArray,
+          "value": "1",
           "display-format": "val"
         });
       }).then(function () {
@@ -536,7 +536,7 @@
         const optionToSelect = selectElement.options[1]; // Index of the desired option (Option 2).
         optionToSelect.selected = true; // Mark the option as selected.
         // Dispatch the change event.
-        const event = new window.Event("change", { bubbles: true });
+        const event = new window.Event("change", { "bubbles": true });
         selectElement.dispatchEvent(event);
       }).then(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");
@@ -560,7 +560,7 @@
     it("Set placeholder with no initial value and expect placeholder to be shown", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
+          "valrep": valRepArray,
           "display-format": "val",
           "placeholder-text": "Select",
           "show-placeholder": true
@@ -580,7 +580,7 @@
         const optionToSelect = selectElement.options[2]; // Index of the desired option (Option 3).
         optionToSelect.selected = true; // Mark the option as selected.
         // Dispatch the change event.
-        const event = new window.Event("change", { bubbles: true });
+        const event = new window.Event("change", { "bubbles": true });
         selectElement.dispatchEvent(event);
       }).then(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");

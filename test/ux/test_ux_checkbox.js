@@ -205,7 +205,7 @@
     it("set value to 1 and make the checkbox toggle", function() {
       return asyncRun(function() {
         tester.dataUpdate({
-          value: 1
+          "value": 1
         });
       }).then(function() {
         expect(element).to.have.class("checked");
@@ -216,7 +216,7 @@
     it("set value to false and make the switch checkbox in unchecked state", function() {
       return asyncRun(function() {
         tester.dataUpdate({
-          value: false
+          "value": false
         });
       }).then(function() {
         expect(element).to.not.have.class("checked");
@@ -227,7 +227,7 @@
     it("set value to '' and make the checkbox in indeterminate state", function() {
       return asyncRun(function() {
         tester.dataUpdate({
-          value: ""
+          "value": ""
         });
       }).then(function() {
         expect(element).to.not.have.class("checked");
@@ -255,7 +255,7 @@
       return asyncRun(function() {
         tester.dataUpdate({
           "html:title": checkBoxTitle,
-          value: 1
+          "value": 1
         });
       }).then(function() {
         assert(widget.elements.widget.hasAttribute("title"), "Failed to show the title attribute");
@@ -267,7 +267,7 @@
       let checkBoxLabelText = "Label";
       return asyncRun(function() {
         tester.dataUpdate({
-          value: 1,
+          "value": 1,
           "label-text": checkBoxLabelText
         });
       }).then(function() {
@@ -281,7 +281,7 @@
       let checkBoxLabelText = "Label";
       return asyncRun(function() {
         tester.dataUpdate({
-          value: 0,
+          "value": 0,
           "label-text": checkBoxLabelText
         });
       }).then(function() {
@@ -295,12 +295,12 @@
       let checkBoxLabelText = "Label";
       return asyncRun(function() {
         tester.dataUpdate({
-          value: 1,
+          "value": 1,
           "label-text": checkBoxLabelText
         });
 
         tester.dataUpdate({
-          value: "",
+          "value": "",
           "label-text": "Changed Label Text"
         });
       }).then(function() {
@@ -322,7 +322,7 @@
     it("set invalid value when checkbox checked state is false", function() {
       return asyncRun(function() {
         tester.dataUpdate({
-          value: 123
+          "value": 123
         });
       }).then(function() {
 
@@ -346,7 +346,7 @@
     it("set error to false", function() {
       return asyncRun(function() {
         tester.dataUpdate({
-          error: false,
+          "error": false,
           "error-message": ""
         });
       }).then(function() {

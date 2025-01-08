@@ -169,7 +169,7 @@
       let buttonText = 'Button';
       return asyncRun(function () {
         tester.dataUpdate({
-          value: buttonText
+          "value": buttonText
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -182,8 +182,8 @@
       let buttonText = 'Button';
       return asyncRun(function () {
         tester.dataUpdate({
-          value: buttonText,
-          icon: "Home"
+          "value": buttonText,
+          "icon": "Home"
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -199,7 +199,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "icon-position": iconPosition,
-          value: buttonText
+          "value": buttonText
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -213,7 +213,7 @@
       let buttonText = '';
       return asyncRun(function () {
         tester.dataUpdate({
-          value: buttonText
+          "value": buttonText
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -227,7 +227,7 @@
       let buttonText = 'Button';
       return asyncRun(function () {
         tester.dataUpdate({
-          value: buttonText
+          "value": buttonText
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -321,13 +321,13 @@
     it('should refresh correctly and modify the element text and may be icon if we add icon in button', function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
+        "data": {
           "icon": "",
           "icon-position": "start",
-          value: ""
+          "value": ""
         },
-        elements: tester.construct().elements,
-        getTraceDescription: () => {
+        "elements": tester.construct().elements,
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -368,13 +368,13 @@
     it('should refresh correctly and modify the element text and may be icon if we add icon in button', function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
+        "data": {
           "icon": "",
           "icon-position": "start",
-          value: ""
+          "value": ""
         },
-        elements: tester.construct().elements,
-        getTraceDescription: () => {
+        "elements": tester.construct().elements,
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -388,13 +388,13 @@
     it("add icon to test classes are added in the icon slot or not", function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
+        "data": {
           "icon": "Home",
-          value: ""
+          "value": ""
         },
 
-        elements: tester.construct().elements,
-        getTraceDescription: () => {
+        "elements": tester.construct().elements,
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -409,12 +409,12 @@
     it("test delete icon class functionality in slotted icon element", function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
+        "data": {
           "icon": "",
-          value: ""
+          "value": ""
         },
-        elements: tester.construct().elements,
-        getTraceDescription: () => {
+        "elements": tester.construct().elements,
+        "getTraceDescription": () => {
           return "description";
         }
       };

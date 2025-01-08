@@ -190,12 +190,11 @@
     });
 
     it("check prefix, suffix icon and text", function () {
-      let unifaceProperties = tester.defaultValues;
-      assert.equal(unifaceProperties["prefix-icon"], '', "Default value of prefix icon should be ''");
-      assert.equal(unifaceProperties["suffix-icon"], '', "Default value of suffix icon should be ''");
-      assert.equal(unifaceProperties["prefix-text"], '', "Default value of prefix text should be ''");
-      assert.equal(unifaceProperties["suffix-text"], '', "Default value of suffix text should be ''");
-      assert.equal(unifaceProperties["label-position"], 'above', "Default value of label-position will be above");
+      assert.equal(tester.defaultValues["prefix-icon"], '', "Default value of prefix icon should be ''");
+      assert.equal(tester.defaultValues["suffix-icon"], '', "Default value of suffix icon should be ''");
+      assert.equal(tester.defaultValues["prefix-text"], '', "Default value of prefix text should be ''");
+      assert.equal(tester.defaultValues["suffix-text"], '', "Default value of suffix text should be ''");
+      assert.equal(tester.defaultValues["label-position"], 'above', "Default value of label-position will be above");
     });
 
     it("check value", function () {
@@ -547,7 +546,7 @@
       const appliedClassNames = "u-error-icon ms-Icon ms-Icon--AlertSolid";
       return asyncRun(function () {
         tester.dataUpdate({
-          error: true,
+          "error": true,
           "error-message": "Field Value length mismatch."
         });
       }).then(function () {
@@ -572,7 +571,7 @@
       const appliedClassNames = "u-error-icon ms-Icon ms-Icon--AlertSolid";
       return asyncRun(function () {
         tester.dataUpdate({
-          error: false,
+          "error": false,
           "error-message": "Field Value length mismatch."
         });
         widget.hideError("Field Value length mismatch.");

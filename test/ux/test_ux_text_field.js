@@ -415,7 +415,7 @@
           "html:pattern": patternText,
           "html:type": "text",
           "html:title": title,
-          value: 1234
+          "value": 1234
         });
       }).then(function () {
         // const event = new window.Event('hover');
@@ -434,13 +434,13 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          value: ""
+          "value": ""
         });
         tester.dataUpdate({
           "html:placeholder": placeHolderText,
           "html:pattern": pattern,
           "html:type": "text",
-          value: "abc"
+          "value": "abc"
         });
       }).then(function () {
         const event = new window.Event('hover');
@@ -457,7 +457,7 @@
       // Calling mock dataUpdate to have updated widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          value: ""
+          "value": ""
         });
         tester.dataUpdate({
           "html:placeholder": placeHolderText,
@@ -733,7 +733,7 @@
     it("Set invalid value in text field", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          error: true,
+          "error": true,
           "error-message": "Field Value length mismatch."
         });
       }).then(function () {
@@ -755,7 +755,7 @@
     it("Hide Error Set invalid value in text field", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          error: false,
+          "error": false,
           "error-message": ""
         });
       }).then(function () {
@@ -779,7 +779,7 @@
       valueProperty = "Single line value";
       return asyncRun(function () {
         tester.dataUpdate({
-          value: valueProperty
+          "value": valueProperty
         });
       }).then(function () {
         let valueFormatted = widgetClass.getValueFormatted(properties);
@@ -791,7 +791,7 @@
       valueProperty = `testing value with multiple lines: line 1, line 2`;
       return asyncRun(function () {
         tester.dataUpdate({
-          value: valueProperty
+          "value": valueProperty
         });
       }).then(function () {
         const expectedValue = "testing value with multiple lines: line 1, line 2";

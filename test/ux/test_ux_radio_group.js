@@ -12,16 +12,16 @@
   // custom test variables
   const valRepArray = [
     {
-      value: "1",
-      representation: "option one"
+      "value": "1",
+      "representation": "option one"
     },
     {
-      value: "2",
-      representation: "option two"
+      "value": "2",
+      "representation": "option two"
     },
     {
-      value: "3",
-      representation: "option three"
+      "value": "3",
+      "representation": "option three"
     }
   ];
 
@@ -224,7 +224,7 @@
     it("Set valrep property with default display value as rep", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray
+          "valrep": valRepArray
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -238,7 +238,7 @@
     it("Set valrep property with default display-format as value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
+          "valrep": valRepArray,
           "display-format": "val"
         });
       }).then(function () {
@@ -253,7 +253,7 @@
     it("Set valrep property with default display value as valrep", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
+          "valrep": valRepArray,
           "display-format": "valrep"
         });
       }).then(function () {
@@ -269,8 +269,8 @@
     it("Set value to 2 and expect the radio button to be checked", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "2"
+          "valrep": valRepArray,
+          "value": "2"
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -286,14 +286,14 @@
 
     it("Set value to empty string ('') and expect the radio button to be checked", function () {
       let valRepArrayWithEmptyOption = [{
-        value: "",
-        representation: "Empty Option"
+        "value": "",
+        "representation": "Empty Option"
       }, ...valRepArray];
 
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArrayWithEmptyOption,
-          value: ""
+          "valrep": valRepArrayWithEmptyOption,
+          "value": ""
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -309,13 +309,13 @@
 
     it("Set layout property to horizontal", function () {
       let valRepArrayLongText = [{
-        value: "0",
-        representation: "Option zero, test horizontal css specification changes when there is more than 25 characters."
+        "value": "0",
+        "representation": "Option zero, test horizontal css specification changes when there is more than 25 characters."
       }, ...valRepArray];
 
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArrayLongText,
+          "valrep": valRepArrayLongText,
           "display-format": "rep",
           "layout": "horizontal"
         });
@@ -338,8 +338,8 @@
 
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: selectedValue,
+          "valrep": valRepArray,
+          "value": selectedValue,
           "html:disabled": true,
           "html:readonly": false,
           "class:ClassA": true,
@@ -379,8 +379,8 @@
     it("Set a valid initial value and ensure the corresponding element is checked", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "2"
+          "valrep": valRepArray,
+          "value": "2"
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -397,7 +397,7 @@
     it("Set value to empty string ('') and ensure there is no checked element", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          value: ''
+          "value": ''
         });
       }).then(function () {
         expect(element.querySelector("fluent-radio[current-checked=true]")).equal(null);
@@ -417,8 +417,8 @@
     it("Set invalid initial value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "0"
+          "valrep": valRepArray,
+          "value": "0"
         });
       }).then(function () {
         let errorIconTooltip = element.querySelector('.u-error-icon');
@@ -450,8 +450,8 @@
     it("Now again set the same invalid value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "0"
+          "valrep": valRepArray,
+          "value": "0"
         });
       }).then(function () {
         const radioOption1 = document.querySelector("fluent-radio");
@@ -500,8 +500,8 @@
 
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: initialValue
+          "valrep": valRepArray,
+          "value": initialValue
         });
       }).then(function () {
         // Assert that the change event handler was called not twice.
@@ -516,8 +516,8 @@
 
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: initialValue
+          "valrep": valRepArray,
+          "value": initialValue
         });
       }).then(function () {
         // Change the display-format property.
@@ -534,8 +534,8 @@
 
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: initialValue
+          "valrep": valRepArray,
+          "value": initialValue
         });
       }).then(function () {
         // Change the layout property.
@@ -551,31 +551,31 @@
       let initialValue = "2";
       const valRepArray2 = [
         {
-          value: "1",
-          representation: "option one"
+          "value": "1",
+          "representation": "option one"
         },
         {
-          value: "2",
-          representation: "option two"
+          "value": "2",
+          "representation": "option two"
         },
         {
-          value: "3",
-          representation: "option three"
+          "value": "3",
+          "representation": "option three"
         },
         {
-          value: "4",
-          representation: "option four"
+          "value": "4",
+          "representation": "option four"
         }
       ];
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: initialValue
+          "valrep": valRepArray,
+          "value": initialValue
         });
       }).then(function () {
         // Update the valrep with new valRepArray2.
         tester.dataUpdate({
-          valrep: valRepArray2
+          "valrep": valRepArray2
         });
       }).then(function () {
         // Assert that the change event handler was not called thrice.
@@ -595,8 +595,8 @@
     it("When invalid value is set, should show error and none of the options should be selected", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "random",
+          "valrep": valRepArray,
+          "value": "random",
           "display-format": "valrep"
         });
       }).then(function () {

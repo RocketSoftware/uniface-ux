@@ -147,7 +147,7 @@
     it("set value to 1 and make the switch toggle", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          value: 1
+          "value": 1
         });
       }).then(function () {
         expect(element).to.have.class("checked");
@@ -158,7 +158,7 @@
     it("set value to false and make the switch toggle in unchecked state", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          value: false
+          "value": false
         });
       }).then(function () {
         expect(element).to.not.have.class("checked");
@@ -184,7 +184,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "checked-message": switchCheckedText,
-          value: 1
+          "value": 1
         });
       }).then(function () {
         let checkedText = widget.elements.widget.querySelector("span.u-checked-message").innerText;
@@ -200,7 +200,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "unchecked-message": switchUnCheckedText,
-          value: 0
+          "value": 0
         });
       }).then(function () {
         let uncheckedText = widget.elements.widget.querySelector("span.u-unchecked-message").innerText;
@@ -253,7 +253,7 @@
     it("set invalid value when switch checked state is false", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          value: ""
+          "value": ""
         });
       }).then(function () {
         expect(element).to.have.class("u-format-invalid");
@@ -277,7 +277,7 @@
         tester.dataUpdate({
           "checked-message": "On",
           "unchecked-message": "Off",
-          value: 1
+          "value": 1
         });
       }).then(function () {
         expect(element).to.not.have.class("u-format-invalid");
@@ -292,7 +292,7 @@
     it("set error to false without checked and unchecked messages", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          value: 1
+          "value": 1
         });
       }).then(function () {
         expect(element).to.not.have.class("u-format-invalid");
