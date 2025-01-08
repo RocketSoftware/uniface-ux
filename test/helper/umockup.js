@@ -372,7 +372,7 @@
     /**
      * Helper class for testing widget.
      */
-    "WidgetTester": class {
+    "WidgetTester" : class {
 
       // widget, element, uxTagName;
 
