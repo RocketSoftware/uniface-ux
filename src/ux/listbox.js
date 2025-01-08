@@ -93,7 +93,7 @@ export class Listbox extends Widget {
 
   /**
    * Private Uniface API method - onConnect.
-   * Used to add a change event for the listbox when user interaction occurs.
+   * Specialized onConnect method to add a change event for the listbox when user interaction occurs.
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
@@ -121,8 +121,8 @@ export class Listbox extends Widget {
   }
 
   /**
-   * Specialized blockUI method because:
-   * Listbox should be in readonly during block state.
+   * Private Uniface API method - blockUI.
+   * Specialized blockUI method to set the widget in readonly state during UI blocking.
    * For this we explicitly need to add readonly as an attribute because it is not supported as a property.
    */
   blockUI() {
@@ -145,7 +145,8 @@ export class Listbox extends Widget {
   }
 
   /**
-   * Specialized UnblockUI method to remove the readonly attribute.
+   * Private Uniface API method - unblockUI.
+   * Specialized unblockUI method to explicitly remove the readonly attribute.
    */
   unblockUI() {
     this.log("unblockUI");
