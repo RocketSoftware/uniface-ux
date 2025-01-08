@@ -2,10 +2,6 @@
   vertical-align: bottom;
 }
 
-.u-listbox.empty {
-  padding: 15px 100px;
-}
-
 /* For setting the disabled styles */
 .u-listbox[disabled] {
   cursor: not-allowed;

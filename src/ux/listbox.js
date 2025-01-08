@@ -58,19 +58,10 @@ export class Listbox extends Widget {
 
     refresh(widgetInstance) {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
-      const element = this.getElement(widgetInstance);
-      const valrep = this.getNode(widgetInstance.data, "valrep");
 
       // Should be set to -1 only if newly selected value is not part of valrep.
       // Now setting to -1 by default as value hook up is not yet implemented.
       widgetInstance.previousSelectedIndex = -1;
-
-      // When no valrep options available, show an empty box.
-      if (valrep.length) {
-        element.classList.remove("empty");
-      } else {
-        element.classList.add("empty");
-      }
     }
   };
 
