@@ -105,7 +105,8 @@ module.exports = [
       }
     },
     "rules": {
-      "quote-props": "off"
+      "quote-props": "off",
+      "quotes": "off"
     }
   },
   { // Rules for test/ux
@@ -128,9 +129,6 @@ module.exports = [
         // for umockup
         "umockup": "readonly"
       }
-    },
-    "rules": {
-      "quote-props": "off"
     }
   }
 ];
