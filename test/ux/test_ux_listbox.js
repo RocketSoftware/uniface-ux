@@ -217,7 +217,7 @@
       });
     });
 
-    it("Set HTML property Title", function () {
+    it("Set HTML property title", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:title" : "On"
@@ -228,7 +228,7 @@
       });
     });
 
-    it("Set HTML  property Tabindex to -1 ", function () {
+    it("Set HTML  property tabindex to -1 ", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:tabindex" : -1
@@ -239,7 +239,7 @@
       });
     });
 
-    it("Set HTML  property Tabindex to 0", function () {
+    it("Set HTML  property tabindex to 0", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:tabindex" : 0
@@ -250,7 +250,7 @@
       });
     });
 
-    it("Set HTML  property Tabindex to 1", function () {
+    it("Set HTML  property tabindex to 1", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:tabindex" : 1
