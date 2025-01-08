@@ -1,4 +1,8 @@
-/* For setting the disabled styles */
+.u-listbox {
+  vertical-align: bottom;
+}
+
+/* Styling for disabled and readonly states */
 .u-listbox[disabled] {
   cursor: not-allowed;
   opacity: var(--disabled-opacity);
@@ -18,13 +22,10 @@
 }
 
 /* Styling for when display-format is valrep */
-.u-listbox .u-valrep-representation:not(:empty) {
-  margin-inline-end: calc((var(--design-unit) * 3px) + 2px);
-}
-
 .u-listbox .u-value {
   color: var(--neutral-base-color);
   font-style: italic;
+  margin-inline-start: calc((var(--design-unit) * 3px) + 2px);
 }
 
 /* Styling the valrep value to enclose it within parentheses. */
