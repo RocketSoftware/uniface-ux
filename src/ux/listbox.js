@@ -93,7 +93,7 @@ export class Listbox extends Widget {
 
   /**
    * Private Uniface API method - onConnect.
-   * This method is used for the Listbox class since we need to add a change event for the listbox when user interaction occurs.
+   * Used to add a change event for the listbox when user interaction occurs.
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
@@ -107,8 +107,9 @@ export class Listbox extends Widget {
     // Function to handle selection change.
     function handleSelectionChange() {
       if (widgetElement.hasAttribute("readonly") || widgetElement.hasAttribute("disabled")) {
+        // If listbox is in readonly or disabled state, reset the selectedIndex and return, do not fire a change event.
         widgetElement.selectedIndex = widgetInstance.previousSelectedIndex;
-        return; // Do nothing if the listbox is readonly or disabled.
+        return;
       }
       if (widgetElement.selectedIndex !== widgetInstance.previousSelectedIndex) {
         widgetInstance.previousSelectedIndex = widgetElement.selectedIndex;
