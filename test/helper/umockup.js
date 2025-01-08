@@ -61,7 +61,7 @@
               // original implementation, will cause error if called in mockup env.
               layout = UNIFACE.widget.custom_widget_container.callStaticPluginFunction("processLayout", customPluginClass, args);
             } else {
-              layout = customPluginClass.processLayout.apply(customPluginClass, [args[0], _uf.getObjectDefinition(args[1], true)]);
+              layout = customPluginClass.processLayout.apply(customPluginClass, [args[0], _uf.createUxDefinitions(args[1], true)]);
             }
           }
         } else {
@@ -103,13 +103,13 @@
     },
 
     /**
-     * Get the UX-definition object,
+     * This is a mock function same as uniface to create the UX-definition object
      * and define its getter functions and setter functions.
      * @param {Object} defs The properties defined for the widget.
      * @param {Boolean} isUpdatable Allowed only in process layout.
      * @returns {Object} Return definition object.
      */
-    "getObjectDefinition" : function (defs, isUpdatable = false) {
+    "createUxDefinitions ": function (defs, isUpdatable = false) {
       const definition = {
         "getProperty" : function (propertyName) {
           return defs.properties[propertyName];
@@ -372,7 +372,7 @@
     /**
      * Helper class for testing widget.
      */
-    "WidgetTester" : class {
+    "WidgetTester": class {
 
       // widget, element, uxTagName;
 
@@ -391,6 +391,11 @@
         let args = [...arguments];
         if (!this.uxTagName) {
           if (args.length) {
+            // This is to check explicitly if null param is passed.
+            if (!args[0]) {
+              args[0] = document.getElementById(this.widgetId);
+            }
+            // This will always keep a check that first parameter should always be HTML element.
             if (!(args[0] instanceof HTMLElement)) {
               args.unshift(document.getElementById(this.widgetId));
             }
@@ -417,7 +422,7 @@
         if (!this.widget || !this.widget.elements) {
           const element = this.processLayout.apply(this, this.layoutArgs);
           const widget = this.construct();
-          widget.onConnect(element, _uf.getObjectDefinition(this.layoutArgs[1]));
+          widget.onConnect(element, _uf.createUxDefinitions(this.layoutArgs[1]));
         }
         return this.widget;
       }
