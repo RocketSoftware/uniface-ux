@@ -9,7 +9,7 @@
   const widgetClass = tester.getWidgetClass();
   const asyncRun = umockup.asyncRun;
 
-  // custom test variables
+  // Custom test variables
   const valRepArray = [
     {
       value: "1",
@@ -27,11 +27,11 @@
 
 
   /**
-     * Function to determine whether the widget class has been loaded.
-     */
+       * Function to determine whether the widget class has been loaded.
+       */
   function verifyWidgetClass(widgetClass) {
     assert(widgetClass, `Widget class '${widgetName}' is not defined!
-                Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
+                  Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
   }
 
   describe("Uniface Mockup tests", function () {
@@ -85,7 +85,6 @@
       it("check id", function () {
         expect(element).to.have.id(widgetId);
       });
-
 
     });
 
@@ -147,7 +146,6 @@
       assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
     });
 
-
   });
 
   describe("dataUpdate", function () {
@@ -167,6 +165,7 @@
         expect(element.getAttribute("readonly"));
       });
     });
+
     it("Set HTML property readonly to false", function () {
       return asyncRun(function() {
         tester.dataUpdate({
@@ -207,6 +206,7 @@
         expect(window.getComputedStyle(element).display).equal("none");
       });
     });
+
     it("Set HTML property hidden to false", function () {
       return asyncRun(function() {
         tester.dataUpdate({
@@ -214,7 +214,6 @@
         });
       }).then(function () {
         expect(!element.getAttribute("hidden"));
-        // expect(window.getComputedStyle(element).display).equal("none");
       });
     });
 
@@ -237,9 +236,9 @@
       }).then(function () {
         expect(element.getAttribute("tabindex"));
         expect(element.tabIndex).equal(-1);
-
       });
     });
+
     it("Set HTML  property Tabindex to 0", function () {
       return asyncRun(function() {
         tester.dataUpdate({
@@ -248,9 +247,9 @@
       }).then(function () {
         expect(element.getAttribute("tabindex"));
         expect(element.tabIndex).equal(0);
-
       });
     });
+
     it("Set HTML  property Tabindex to 1", function () {
       return asyncRun(function() {
         tester.dataUpdate({
@@ -259,7 +258,6 @@
       }).then(function () {
         expect(element.getAttribute("tabindex"));
         expect(element.tabIndex).equal(1);
-
       });
     });
 
@@ -281,7 +279,6 @@
         tester.dataUpdate({
           valrep: valRepArray,
           "display-format": "val"
-
         });
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
