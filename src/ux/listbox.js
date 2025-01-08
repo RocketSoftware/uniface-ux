@@ -123,7 +123,7 @@ export class Listbox extends Widget {
   /**
    * Private Uniface API method - blockUI.
    * Specialized blockUI method to set the widget in readonly state during UI blocking.
-   * For this we explicitly need to add readonly as an attribute because it is not supported as a property.
+   * We explicitly need to add readonly as an attribute because it is not supported as a property.
    */
   blockUI() {
     this.log("blockUI");
