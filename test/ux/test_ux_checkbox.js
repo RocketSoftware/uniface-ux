@@ -358,14 +358,13 @@
     });
   });
 
-  describe("reset all properties", function() {
-
-    it("reset all property", function() {
+  describe("Reset all properties", function () {
+    it("reset all properties", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, "Failed to reset the properties, exception " + e);
       }
     });
   });

@@ -26,8 +26,8 @@
   ];
 
   /**
-       * Function to determine whether the widget class has been loaded.
-      */
+     * Function to determine whether the widget class has been loaded.
+     */
   function verifyWidgetClass(widgetClass) {
     assert(widgetClass, `Widget class '${widgetName}' is not defined!
               Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
