@@ -184,7 +184,7 @@
   }
 
   const defaultAsyncTimeout = 100; // ms
-  let defaultIdleTime = 15; // ms
+  let defaultIdleTime = 25; // ms
 
   /**
    * Run asynchronous test actions via setTimeout.
