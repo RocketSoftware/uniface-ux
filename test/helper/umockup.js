@@ -109,7 +109,7 @@
      * @param {Boolean} isUpdatable Allowed only in process layout.
      * @returns {Object} Return definition object.
      */
-    "createUxDefinitions ": function (defs, isUpdatable = false) {
+    "createUxDefinitions" : function (defs, isUpdatable = false) {
       const definition = {
         "getProperty" : function (propertyName) {
           return defs.properties[propertyName];
