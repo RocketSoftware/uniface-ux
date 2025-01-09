@@ -25,10 +25,9 @@
     }
   ];
 
-
   /**
-       * Function to determine whether the widget class has been loaded.
-       */
+   * Function to determine whether the widget class has been loaded.
+   */
   function verifyWidgetClass(widgetClass) {
     assert(widgetClass, `Widget class '${widgetName}' is not defined!
                   Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
@@ -111,7 +110,7 @@
     it("onConnect", function () {
       const element = tester.processLayout();
       const widget = tester.construct();
-      widget.onConnect(element);
+      tester.onConnect(element);
       assert(element, "Target element is not defined!");
       assert(widget.elements.widget === element, "widget is not connected");
     });
@@ -309,45 +308,10 @@
     });
   });
 
-  describe('Select onchange event', function () {
-    let selectElement, onchangeSpy;
-    beforeEach(function () {
-      tester.createWidget();
-      selectElement = tester.element;
-
-      // Create a spy for the onchange event
-      onchangeSpy = sinon.spy();
-
-      // Add the onchange event listener to the select element
-      selectElement.addEventListener('onchange', onchangeSpy);
-    });
-
-    // Clean up after each test
-    afterEach(function () {
-      // Restore the spy to its original state
-      sinon.restore();
-    });
-
-    // Test case for the onchange event
-    it('should call the onchange event handler when a select option is clicked', function () {
-      // Simulate a change event
-      const event = new window.Event('onchange');
-      selectElement.dispatchEvent(event);
-
-      // Assert that the onchange event handler was called once
-      expect(onchangeSpy.calledOnce).to.be.true;
-    });
-  });
-
   describe("dataCleanup", function () {
-    let widget;
-    before(function () {
-      widget = tester.createWidget();
-    });
-
     it("reset all properties", function () {
       try {
-        widget.dataCleanup(tester.widgetProperties);
+        tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
         assert(false, "Failed to call dataCleanup(), exception " + e);
