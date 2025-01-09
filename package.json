@@ -4,10 +4,11 @@
   "description": "Uniface UX widgets",
   "main": "webpack.prod.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: can not run tests\" && exit 1",
     "build": "npm run build:prod",
     "build:dev": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
+    "lint": "eslint . --max-warnings=0",
     "watch": "webpack -- watch --progress --config webpack.dev.js"
   },
   "author": "Rocket Software B.V.",

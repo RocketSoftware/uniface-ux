@@ -12,16 +12,16 @@
   // custom test variables
   const valRepArray = [
     {
-      value: "1",
-      representation: "option one"
+      "value": "1",
+      "representation": "option one"
     },
     {
-      value: "2",
-      representation: "option two"
+      "value": "2",
+      "representation": "option two"
     },
     {
-      value: "3",
-      representation: "option three"
+      "value": "3",
+      "representation": "option three"
     }
   ];
 
@@ -110,7 +110,7 @@
         const widget = tester.construct();
         assert(widget, "widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-select'], "Class is not defined");
+        assert(widgetClass.defaultValues['class:u-select'], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -131,8 +131,7 @@
   });
 
   describe("Data Init", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+    const classes = tester.getDefaultClasses();
     let element;
 
     beforeEach(function () {
@@ -180,11 +179,9 @@
 
     it("show label", function () {
       let selectFieldLabel = 'Label';
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-text": selectFieldLabel
-          }
+          "label-text": selectFieldLabel
         });
       }).then(function () {
         let labelElement = element.querySelector("span.u-label-text");
@@ -196,11 +193,9 @@
 
     it("Set label position before", function () {
       const widget = tester.construct();
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": "before"
-          }
+          "label-position": "before"
         });
       }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -220,11 +215,9 @@
     });
 
     it("Set label position below", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": "below"
-          }
+          "label-position": "below"
         });
       }).then(function () {
         const widget = tester.construct();
@@ -245,12 +238,10 @@
     });
 
     it("reset label and its position", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": uniface.RESET,
-            "label-text": uniface.RESET
-          }
+          "label-position": uniface.RESET,
+          "label-text": uniface.RESET
         });
       }).then(function () {
         const widget = tester.construct();
@@ -272,9 +263,9 @@
     });
 
     it("Set HTML property readonly to true", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          html: { readonly: true }
+          "html:readonly": true
         });
       }).then(function () {
         // ux-select is using disabled attribute instead.
@@ -283,9 +274,9 @@
     });
 
     it("Set HTML property disabled to true", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          html: { disabled: true }
+          "html:disabled": true
         });
       }).then(function () {
         expect(element.getAttribute("disabled"));
@@ -294,9 +285,9 @@
     });
 
     it("Set valrep property with default display value as rep", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray
+          "valrep": valRepArray
         });
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
@@ -307,12 +298,10 @@
     });
 
     it("Set valrep property with default display-format as value", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          uniface: {
-            "display-format": "val"
-          }
+          "valrep": valRepArray,
+          "display-format": "val"
         });
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
@@ -323,12 +312,10 @@
     });
 
     it("Set valrep property with default display value as valrep", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          uniface: {
-            "display-format": "valrep"
-          }
+          "valrep": valRepArray,
+          "display-format": "valrep"
         });
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
@@ -343,17 +330,15 @@
       const valRepArray1 = [
         ...valRepArray,
         {
-          value: "<script> alert('XSS attack') </script>",
-          representation: "<script> alert('XSS attack') </script>"
+          "value": "<script> alert('XSS attack') </script>",
+          "representation": "<script> alert('XSS attack') </script>"
         }
       ];
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray1,
-          value: "<script> alert('XSS attack') </script>",
-          uniface: {
-            "display-format": "valrep"
-          }
+          "valrep": valRepArray1,
+          "value": "<script> alert('XSS attack') </script>",
+          "display-format": "valrep"
         });
       }).then(function () {
         let valStr = "<script> alert('XSS attack') </script>";
@@ -367,11 +352,9 @@
     it("Set value to 2 and expect the second option to be selected", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "2",
-          uniface: {
-            "display-format": "rep"
-          }
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "rep"
         });
       }).then(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
@@ -385,18 +368,16 @@
     it("Set value to empty string ('') and expect the empty option to be selected", function () {
       const valRepArrayWithEmpty = [
         {
-          value: "",
-          representation: ""
+          "value": "",
+          "representation": ""
         },
         ...valRepArray
       ];
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArrayWithEmpty,
-          value: "",
-          uniface: {
-            "display-format": "rep"
-          }
+          "valrep": valRepArrayWithEmpty,
+          "value": "",
+          "display-format": "rep"
         });
       }).then(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
@@ -418,8 +399,8 @@
     it("When invalid value is set, should show error and none of the options should be selected", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "random",
+          "valrep": valRepArray,
+          "value": "random",
           "display-format": "valrep"
         });
       }).then(function () {
@@ -443,10 +424,8 @@
     it("Set error to false", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "format-error": false,
-            "format-error-message": ""
-          }
+          "format-error": false,
+          "format-error-message": ""
         });
       }).then(function () {
         expect(selectElement).to.not.have.class("u-format-invalid");
@@ -469,8 +448,8 @@
     it("Set invalid initial value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "0"
+          "valrep": valRepArray,
+          "value": "0"
         });
       }).then(function () {
         let errorIconTooltip = element.querySelector(".u-error-icon");
@@ -492,7 +471,7 @@
         optionToSelect.selected = true; // Mark the option as selected.
 
         // Dispatch the change event.
-        const event = new window.Event("change", { bubbles: true });
+        const event = new window.Event("change", { "bubbles": true });
         selectElement.dispatchEvent(event);
       }).then(function () {
         let errorIconTooltip = element.querySelector(".u-error-icon");
@@ -508,8 +487,8 @@
     it("Now again set the same invalid value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "0"
+          "valrep": valRepArray,
+          "value": "0"
         });
       }).then(function () {
         const selectOption1 = document.querySelector("fluent-option");
@@ -519,6 +498,98 @@
         expect(errorIconTooltip.getAttribute("title")).equal(
           "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."
         );
+      });
+    });
+  });
+
+  describe("Set valrep, display format to val and set a initial value, user interaction and check values in selected element", function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      tester.bindUpdatorsEventToElement();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    it("Set valrep and initial value to 1", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "value": "1",
+          "display-format": "val"
+        });
+      }).then(function () {
+        const selectedValue = element.querySelector("div[slot=selected-value]");
+        expect(selectedValue.textContent).equal("1");
+        // Find index of expected value and compare against index of selected option.
+        const selectOption = element.querySelector("fluent-option.selected");
+        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "1").toString());
+      });
+    });
+
+    it("Simulate user interaction and select second option", function () {
+      return asyncRun(function () {
+        const selectElement = document.querySelector("fluent-select");
+        // Simulate click event on select widget.
+        selectElement.click();
+        // Programmatically select an option and dispatch the change event.
+        const optionToSelect = selectElement.options[1]; // Index of the desired option (Option 2).
+        optionToSelect.selected = true; // Mark the option as selected.
+        // Dispatch the change event.
+        const event = new window.Event("change", { "bubbles": true });
+        selectElement.dispatchEvent(event);
+      }).then(function () {
+        const selectedValue = element.querySelector("div[slot=selected-value]");
+        expect(selectedValue.textContent).equal("2");
+        // Find index of expected value and compare against index of selected option.
+        const selectOption = element.querySelector("fluent-option.selected");
+        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
+      });
+    });
+  });
+
+  describe("Set placeholder and change the value with user interaction", function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      tester.bindUpdatorsEventToElement();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    it("Set placeholder with no initial value and expect placeholder to be shown", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "display-format": "val",
+          "placeholder-text": "Select",
+          "show-placeholder": true
+        });
+      }).then(function () {
+        const selectedValue = element.querySelector("div[slot=selected-value]");
+        expect(selectedValue.textContent).equal("Select");
+      });
+    });
+
+    it("Simulate user interaction and select third option, placeholder slot should be null", function () {
+      return asyncRun(function () {
+        const selectElement = document.querySelector("fluent-select");
+        // Simulate click event on select widget.
+        selectElement.click();
+        // Programmatically select an option and dispatch the change event.
+        const optionToSelect = selectElement.options[2]; // Index of the desired option (Option 3).
+        optionToSelect.selected = true; // Mark the option as selected.
+        // Dispatch the change event.
+        const event = new window.Event("change", { "bubbles": true });
+        selectElement.dispatchEvent(event);
+      }).then(function () {
+        const selectedValue = element.querySelector("div[slot=selected-value]");
+        expect(selectedValue.textContent).equal("3");
+        // Find index of expected value and compare against index of selected option.
+        const selectOption = element.querySelector("fluent-option.selected");
+        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "3").toString());
+        const placeholderSlot = selectedValue.querySelector(".u-placeholder");
+        expect(placeholderSlot).equal(null);
       });
     });
   });

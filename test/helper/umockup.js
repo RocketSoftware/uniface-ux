@@ -184,7 +184,7 @@
   }
 
   const defaultAsyncTimeout = 100; // ms
-  let defaultIdleTime = 15; // ms
+  let defaultIdleTime = 25; // ms
 
   /**
    * Run asynchronous test actions via setTimeout.
@@ -400,6 +400,19 @@
           }
         }
         return this.defaultValues;
+      }
+
+      getDefaultClasses() {
+        const widgetClass = this.getWidgetClass();
+        this.defaultValues = widgetClass.defaultValues;
+        const classes = Object.keys(this.defaultValues).reduce((accumulator, key) => {
+          if (key.startsWith("class:")) {
+            let newKey = key.replace("class:", "");
+            accumulator[newKey] = this.defaultValues[key];
+          }
+          return accumulator;
+        }, {});
+        return classes;
       }
 
       dataUpdate(data) {
