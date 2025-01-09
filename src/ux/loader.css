@@ -22,6 +22,9 @@
 @import "./base.css";
 @import "./button.css";
 @import "./checkbox.css";
+@import "./controlbar.css";
+@import "./data_grid.css";
+@import "./listbox.css";
 @import "./number_field.css";
 @import "./plain_text.css";
 @import "./radio_group.css";
@@ -29,7 +32,3 @@
 @import "./switch.css";
 @import "./text_area.css";
 @import "./text_field.css";
-@import "./controlbar.css";
-@import "./listbox.css";
-
-@import "./data_grid.css";
