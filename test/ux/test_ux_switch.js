@@ -1,5 +1,5 @@
 (function () {
-  'use strict';
+  "use strict";
 
   const asyncRun = umockup.asyncRun;
   const assert = chai.assert;
@@ -19,16 +19,16 @@
 
   describe("Uniface static structure constructor definition", function () {
 
-    it('should have a static property structure of type Element', function () {
+    it("should have a static property structure of type Element", function () {
       const widgetClass = tester.getWidgetClass();
       const structure = widgetClass.structure;
       expect(structure.constructor).to.be.an.instanceof(Element.constructor);
-      expect(structure.tagName).to.equal('fluent-switch');
-      expect(structure.styleClass).to.equal('');
-      expect(structure.elementQuerySelector).to.equal('');
-      expect(structure.attributeDefines).to.be.an('array');
-      expect(structure.elementDefines).to.be.an('array');
-      expect(structure.triggerDefines).to.be.an('array');
+      expect(structure.tagName).to.equal("fluent-switch");
+      expect(structure.styleClass).to.equal("");
+      expect(structure.elementQuerySelector).to.equal("");
+      expect(structure.attributeDefines).to.be.an("array");
+      expect(structure.elementDefines).to.be.an("array");
+      expect(structure.triggerDefines).to.be.an("array");
     });
 
   });
@@ -92,7 +92,7 @@
         const widget = tester.construct();
         assert(widget, "widget is not defined!");
         const widgetClass = tester.getWidgetClass();
-        assert(widgetClass.defaultValues.classes['u-switch'], "Class is not defined");
+        assert(widgetClass.defaultValues.classes["u-switch"], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -218,7 +218,7 @@
     });
   });
 
-  describe('Switch onchange event', function () {
+  describe("Switch onchange event", function () {
     let switchElement, onchangeSpy;
     beforeEach(function () {
       tester.createWidget();
@@ -228,7 +228,7 @@
       onchangeSpy = sinon.spy();
 
       // Add the onchange event listener to the switch element
-      switchElement.addEventListener('onchange', onchangeSpy);
+      switchElement.addEventListener("onchange", onchangeSpy);
     });
 
     // Clean up after each test
@@ -238,9 +238,9 @@
     });
 
     // Test case for the onchange event
-    it('should call the onchange event handler when the switch is toggled', function () {
+    it("should call the onchange event handler when the switch is toggled", function () {
       // Simulate a change event
-      const event = new window.Event('onchange');
+      const event = new window.Event("onchange");
       switchElement.dispatchEvent(event);
 
       // Assert that the onchange event handler was called once

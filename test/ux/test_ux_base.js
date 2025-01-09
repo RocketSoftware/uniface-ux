@@ -4,14 +4,14 @@ import { Worker } from "../../src/ux/workers.js";
 import { Widget } from "../../src/ux/widget.js";
 
 (function () {
-  'use strict';
+  "use strict";
 
   const expect = chai.expect;
   const sandbox = sinon.createSandbox();
 
   describe("Base constructor properly defined", function () {
 
-    it('constructor', function () {
+    it("constructor", function () {
       let base = new Base();
       expect(base.constructor.name).to.equal("Base");
     });
@@ -155,15 +155,15 @@ import { Widget } from "../../src/ux/widget.js";
       };
 
       expect(base.fixData("TESTBASIC")).to.eql({
-        0: 'T',
-        1: 'E',
-        2: 'S',
-        3: 'T',
-        4: 'B',
-        5: 'A',
-        6: 'S',
-        7: 'I',
-        8: 'C'
+        0: "T",
+        1: "E",
+        2: "S",
+        3: "T",
+        4: "B",
+        5: "A",
+        6: "S",
+        7: "I",
+        8: "C"
       });
 
       let returnData = base.fixData(UData);
@@ -176,7 +176,7 @@ import { Widget } from "../../src/ux/widget.js";
       let formattedValReps = base.getFormattedValrep(valRepString);
 
       expect(formattedValReps).to.have.lengthOf(2);
-      expect(Object.keys(formattedValReps[0])).to.eql([ 'value', 'representation' ]);
+      expect(Object.keys(formattedValReps[0])).to.eql([ "value", "representation" ]);
 
       expect(formattedValReps[0].value).to.eql("valrep1");
       expect(formattedValReps[0].representation).to.eql("value1");
@@ -189,7 +189,7 @@ import { Widget } from "../../src/ux/widget.js";
       functionName = "tooBoolean";
       message = "Function does not return that value";
       consequence = "Aborting";
-      consoleLogSpy = sandbox.spy(console, 'warn');
+      consoleLogSpy = sandbox.spy(console, "warn");
       base.warn(functionName, message, consequence);
       expect(consoleLogSpy.called).to.equal(true);
       sandbox.restore();
@@ -199,7 +199,7 @@ import { Widget } from "../../src/ux/widget.js";
       functionName = "tooBoolean";
       message = "Function does not return that value";
       consequence = "Aborting";
-      consoleLogSpy = sandbox.spy(console, 'error');
+      consoleLogSpy = sandbox.spy(console, "error");
       base.error(functionName, message, consequence);
       expect(consoleLogSpy.called).to.equal(true);
       sandbox.restore();
@@ -210,12 +210,12 @@ import { Widget } from "../../src/ux/widget.js";
       let valRepString = "<p>this is paragraph</p>";
       let representation = "<p>this is paragraph</p>";
       let formattedValReps = base.getFormattedValrepItemAsHTML(displayFormat,valRepString,representation);
-      expect(formattedValReps.querySelector('.u-valrep-value').className).to.eql('u-valrep-value u-value');
-      expect(formattedValReps.querySelector('.u-valrep-representation').textContent).to.eql('this is paragraph');
-      expect(formattedValReps.querySelector('.u-valrep-representation').innerHTML).to.eql(representation);
-      expect(formattedValReps.querySelector('.u-valrep-value').textContent).to.eql(valRepString);
-      expect(formattedValReps.querySelector('.u-valrep-value').innerHTML).to.eql('&lt;p&gt;this is paragraph&lt;/p&gt;');
-      expect(formattedValReps.querySelector('.u-valrep-representation').className).to.eql('u-valrep-representation');
+      expect(formattedValReps.querySelector(".u-valrep-value").className).to.eql("u-valrep-value u-value");
+      expect(formattedValReps.querySelector(".u-valrep-representation").textContent).to.eql("this is paragraph");
+      expect(formattedValReps.querySelector(".u-valrep-representation").innerHTML).to.eql(representation);
+      expect(formattedValReps.querySelector(".u-valrep-value").textContent).to.eql(valRepString);
+      expect(formattedValReps.querySelector(".u-valrep-value").innerHTML).to.eql("&lt;p&gt;this is paragraph&lt;/p&gt;");
+      expect(formattedValReps.querySelector(".u-valrep-representation").className).to.eql("u-valrep-representation");
     });
   });
 })();

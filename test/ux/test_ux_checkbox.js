@@ -1,5 +1,5 @@
 (function() {
-  'use strict';
+  "use strict";
 
   const assert = chai.assert;
   const expect = chai.expect;
@@ -27,17 +27,17 @@
 
   describe("Uniface static structure constructor definition", function() {
 
-    it('should have a static property structure of type Element', function() {
+    it("should have a static property structure of type Element", function() {
       verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
       expect(structure.constructor).to.be.an.instanceof(Element.constructor);
-      expect(structure.tagName).to.equal('fluent-checkbox');
-      expect(structure.styleClass).to.equal('');
-      expect(structure.elementQuerySelector).to.equal('');
+      expect(structure.tagName).to.equal("fluent-checkbox");
+      expect(structure.styleClass).to.equal("");
+      expect(structure.elementQuerySelector).to.equal("");
       expect(structure.hidden).to.equal(false);
-      expect(structure.attributeDefines).to.be.an('array');
-      expect(structure.elementDefines).to.be.an('array');
-      expect(structure.triggerDefines).to.be.an('array');
+      expect(structure.attributeDefines).to.be.an("array");
+      expect(structure.elementDefines).to.be.an("array");
+      expect(structure.triggerDefines).to.be.an("array");
     });
 
   });
@@ -92,7 +92,7 @@
         const widget = tester.construct();
         assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-checkbox'], "Class is not defined");
+        assert(widgetClass.defaultValues.classes["u-checkbox"], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -112,12 +112,12 @@
     const element = tester.processLayout();
     const widget = tester.onConnect();
     widget.mapTrigger("onchange");
-    const event = new window.Event('onchange');
+    const event = new window.Event("onchange");
     element.dispatchEvent(event);
     assert(widget.elements.widget === element, "widget is not connected");
   });
 
-  describe('CheckBox onchange event', function() {
+  describe("CheckBox onchange event", function() {
     let checkBoxElement, onchangeSpy;
     beforeEach(function() {
 
@@ -127,7 +127,7 @@
       onchangeSpy = sinon.spy();
 
       // Add the onchange event listener to the check Box Element
-      checkBoxElement.addEventListener('onchange', onchangeSpy);
+      checkBoxElement.addEventListener("onchange", onchangeSpy);
     });
 
     // Clean up after each test
@@ -137,9 +137,9 @@
     });
 
     // Test case for the onchange event
-    it('should call the onchange event handler when the checkbox is clicked', function() {
+    it("should call the onchange event handler when the checkbox is clicked", function() {
       // Simulate a  onchange event
-      const event = new window.Event('onchange');
+      const event = new window.Event("onchange");
       checkBoxElement.dispatchEvent(event);
 
       // Assert that the onchange event handler was called once
@@ -171,8 +171,8 @@
     }
 
     it("check 'hidden' attributes", function() {
-      assert(element.querySelector('span.u-label-text').hasAttribute('hidden'), "Label Text span element should be hidden by default");
-      assert(element.querySelector('span.u-error-icon').hasAttribute('hidden'), "Icon span element should be hidden by default");
+      assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label Text span element should be hidden by default");
+      assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Icon span element should be hidden by default");
     });
 
     it("check widget id", function() {

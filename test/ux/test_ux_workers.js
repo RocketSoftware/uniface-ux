@@ -7,7 +7,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
 
 (function () {
-  'use strict';
+  "use strict";
 
   const expect = chai.expect;
 
@@ -67,21 +67,21 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      defaultClassList = ['class1', 'class2'];
+      defaultClassList = ["class1", "class2"];
       instance = new StyleClass(widgetClass, defaultClassList);
     });
 
-    it('should initialize with the correct properties', function () {
+    it("should initialize with the correct properties", function () {
       expect(instance.widgetClass).to.equal(widgetClass);
     });
 
-    it('should register default class values', function () {
+    it("should register default class values", function () {
       defaultClassList.forEach((className) => {
         expect(instance.widgetClass.defaultValues.classes[className]).to.be.true;
       });
     });
 
-    it('should refresh correctly and modify the element classes', function () {
+    it("should refresh correctly and modify the element classes", function () {
       const widgetInstance = {
         data: {
           properties: {
@@ -91,15 +91,15 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
             }
           }
         },
-        getTraceDescription: sinon.stub().returns('description')
+        getTraceDescription: sinon.stub().returns("description")
       };
-      const element = document.createElement('div');
-      sinon.stub(instance, 'getElement').returns(element);
+      const element = document.createElement("div");
+      sinon.stub(instance, "getElement").returns(element);
 
       instance.refresh(widgetInstance);
 
-      expect(element.classList.contains('class1')).to.be.true;
-      expect(element.classList.contains('class2')).to.be.false;
+      expect(element.classList.contains("class1")).to.be.true;
+      expect(element.classList.contains("class2")).to.be.false;
     });
   });
 
@@ -163,7 +163,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       let layoutElement = element.getLayout(definitions);
 
       expect(layoutElement).to.have.tagName("DIV");
-      expect(layoutElement).to.have.class('styleClass');
+      expect(layoutElement).to.have.class("styleClass");
       expect(layoutElement.querySelector("u-label-text"));
       expect(layoutElement.querySelector("u-checked-message"));
     });
@@ -232,7 +232,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(slottedElement.widgetClass.defaultValues.uniface.text).to.equal(defaultText);
     });
 
-    it('should refresh correctly', function () {
+    it("should refresh correctly", function () {
       slottedElement.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.hidden).to.equal(false);
       expect(widgetInstance.elements.widget.classList[0]).to.equal("ms-Icon");
@@ -285,7 +285,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(setters).to.include(errorArray[3]);
     });
 
-    it('should refresh correctly', function () {
+    it("should refresh correctly", function () {
       const widgetInstance = {
         data: {
           properties: {
@@ -365,12 +365,12 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     it("Check Generate Layout", function () {
       let layoutElement = slottedWidget.getLayout();
 
-      expect(layoutElement).to.have.class('u-sw-undefined');
+      expect(layoutElement).to.have.class("u-sw-undefined");
       expect(layoutElement.hidden).to.equal(true);
-      expect(layoutElement).to.have.tagName('FLUENT-BUTTON');
+      expect(layoutElement).to.have.tagName("FLUENT-BUTTON");
     });
 
-    it('should refresh correctly', function () {
+    it("should refresh correctly", function () {
       const widgetInstance = {
         data: {
           properties: {
@@ -575,7 +575,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
 
-    it('should refresh correctly', function () {
+    it("should refresh correctly", function () {
       const widgetInstance = {
         data: {
           properties: {
@@ -592,7 +592,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
         }
       };
       element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget).to.have.all.keys('button');
+      expect(widgetInstance.elements.widget).to.have.all.keys("button");
       expect(widgetInstance.elements.widget.button).to.equal("start-end");
     });
   });
@@ -633,7 +633,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
 
-    it('should refresh correctly', function () {
+    it("should refresh correctly", function () {
       const widgetInstance = {
         data: {
           properties: {
@@ -650,7 +650,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
         }
       };
       element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget).to.have.all.keys('button');
+      expect(widgetInstance.elements.widget).to.have.all.keys("button");
       expect(widgetInstance.elements.widget.button).to.equal("start-end");
     });
   });
@@ -694,7 +694,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
 
-    it('should refresh correctly', function () {
+    it("should refresh correctly", function () {
       const widgetInstance = {
         data: {
           properties: {
@@ -711,7 +711,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
         }
       };
       element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget).to.have.all.keys('newReturnNumber');
+      expect(widgetInstance.elements.widget).to.have.all.keys("newReturnNumber");
       expect(widgetInstance.elements.widget.newReturnNumber).to.equal(126);
     });
   });
@@ -749,7 +749,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
 
-    it('should refresh correctly', function () {
+    it("should refresh correctly", function () {
       const widgetInstance = {
         data: {
           properties: {
@@ -811,7 +811,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(element.widgetClass).to.equal(widgetClass);
     });
 
-    it('should refresh correctly', function () {
+    it("should refresh correctly", function () {
       const widgetInstance = {
         data: {
           properties: {
@@ -885,7 +885,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
 
-    it('should refresh correctly', function () {
+    it("should refresh correctly", function () {
 
       divElement = document.createElement("div");
       divElement.value = "";
@@ -964,7 +964,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
 
-    it('should refresh correctly', function () {
+    it("should refresh correctly", function () {
       const widgetInstance = {
         data: {
           properties: {
@@ -981,7 +981,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
         }
       };
       element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget.outerHTML).to.equal('<div style="color: red;"></div>');
+      expect(widgetInstance.elements.widget.outerHTML).to.equal("<div style=\"color: red;\"></div>");
     });
   });
 
@@ -1122,7 +1122,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(defaultValues["valrep"].length).to.equal(0);
     });
 
-    it('Should refresh correctly', function () {
+    it("Should refresh correctly", function () {
       const valRepArray = [
         {
           value: "1",

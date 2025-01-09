@@ -1,5 +1,5 @@
 (function () {
-  'use strict';
+  "use strict";
 
   const assert = chai.assert;
   const expect = chai.expect;
@@ -27,16 +27,16 @@
 
   describe("Uniface static structure constructor definition", function () {
 
-    it('should have a static property structure of type Element', function () {
+    it("should have a static property structure of type Element", function () {
       verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
       expect(structure.constructor).to.be.an.instanceof(Element.constructor);
-      expect(structure.tagName).to.equal('fluent-number-field');
-      expect(structure.styleClass).to.equal('');
-      expect(structure.elementQuerySelector).to.equal('');
-      expect(structure.attributeDefines).to.be.an('array');
-      expect(structure.elementDefines).to.be.an('array');
-      expect(structure.triggerDefines).to.be.an('array');
+      expect(structure.tagName).to.equal("fluent-number-field");
+      expect(structure.styleClass).to.equal("");
+      expect(structure.elementQuerySelector).to.equal("");
+      expect(structure.attributeDefines).to.be.an("array");
+      expect(structure.elementDefines).to.be.an("array");
+      expect(structure.triggerDefines).to.be.an("array");
     });
 
   });
@@ -100,7 +100,7 @@
         const widget = tester.construct();
         assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-number-field'], "Class is not defined");
+        assert(widgetClass.defaultValues.classes["u-number-field"], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -120,12 +120,12 @@
     const element = tester.processLayout();
     const widget = tester.onConnect();
     widget.mapTrigger("onchange");
-    const event = new window.Event('onchange');
+    const event = new window.Event("onchange");
     element.dispatchEvent(event);
     assert(widget.elements.widget === element, "widget is not connected");
   });
 
-  describe('Number Field onchange event', function () {
+  describe("Number Field onchange event", function () {
     let numberElement, onChangeSpy;
 
     beforeEach(function () {
@@ -136,7 +136,7 @@
       onChangeSpy = sinon.spy();
 
       // Add the onchange event listener to the number field element
-      numberElement.addEventListener('onchange', onChangeSpy);
+      numberElement.addEventListener("onchange", onChangeSpy);
     });
 
     // Clean up after each test
@@ -146,9 +146,9 @@
     });
 
     // Test case for the on change event
-    it('should call the onchange event handler when the number field is changed', function () {
+    it("should call the onchange event handler when the number field is changed", function () {
       // Simulate a onchange event
-      const event = new window.Event('onchange');
+      const event = new window.Event("onchange");
       numberElement.dispatchEvent(event);
 
       // Assert that the onchange event handler was called once
@@ -179,10 +179,10 @@
     }
 
     it("check 'hidden' attributes", function () {
-      assert(element.querySelector('span.u-label-text').hasAttribute('hidden'), "Label Text span element should be hidden by default");
-      assert(element.querySelector('span.u-error-icon').hasAttribute('hidden'), "Icon span element should be hidden by default");
-      assert(element.querySelector('span.u-prefix').hasAttribute('hidden'), "Prefix Icon span element should be hidden by default");
-      assert(element.querySelector('span.u-suffix').hasAttribute('hidden'), "Suffix Icon span element should be hidden by default");
+      assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label Text span element should be hidden by default");
+      assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Icon span element should be hidden by default");
+      assert(element.querySelector("span.u-prefix").hasAttribute("hidden"), "Prefix Icon span element should be hidden by default");
+      assert(element.querySelector("span.u-suffix").hasAttribute("hidden"), "Suffix Icon span element should be hidden by default");
     });
 
     it("check widget id", function () {
@@ -191,15 +191,15 @@
 
     it("check prefix, suffix icon and text", function () {
       let unifaceProperties = tester.defaultValues.uniface;
-      assert.equal(unifaceProperties["prefix-icon"], '', "Default value of prefix icon should be ''");
-      assert.equal(unifaceProperties["suffix-icon"], '', "Default value of suffix icon should be ''");
-      assert.equal(unifaceProperties["prefix-text"], '', "Default value of prefix text should be ''");
-      assert.equal(unifaceProperties["suffix-text"], '', "Default value of suffix text should be ''");
-      assert.equal(unifaceProperties["label-position"], 'above', "Default value of label-position will be above");
+      assert.equal(unifaceProperties["prefix-icon"], "", "Default value of prefix icon should be ''");
+      assert.equal(unifaceProperties["suffix-icon"], "", "Default value of suffix icon should be ''");
+      assert.equal(unifaceProperties["prefix-text"], "", "Default value of prefix text should be ''");
+      assert.equal(unifaceProperties["suffix-text"], "", "Default value of suffix text should be ''");
+      assert.equal(unifaceProperties["label-position"], "above", "Default value of label-position will be above");
     });
 
     it("check value", function () {
-      assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
+      assert.equal(tester.defaultValues.value, "", "Default value of attribute value should be ''");
     });
 
   });
@@ -277,7 +277,7 @@
     });
 
     it("show label", function () {
-      let numberFieldLabel = 'Label';
+      let numberFieldLabel = "Label";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function() {
         tester.dataUpdate({
@@ -300,8 +300,8 @@
           }
         });
       }).then(function () {
-        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
-        assert.equal(labelPosition, 'before', "Label position before is not before");
+        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        assert.equal(labelPosition, "before", "Label position before is not before");
       });
     });
 
@@ -310,7 +310,7 @@
       let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
       let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
       assert.equal(displayPropertyValue, "inline-flex");
-      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
+      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector(".label"), null);
       let alignPropertyValue = labelStyle.getPropertyValue("align-content");
       assert.equal(alignPropertyValue, "center", "Label position below is not center");
     });
@@ -323,8 +323,8 @@
           }
         });
       }).then(function () {
-        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
-        assert.equal(labelPosition, 'below',"Label position below is not below");
+        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        assert.equal(labelPosition, "below","Label position below is not below");
       });
     });
 
@@ -333,7 +333,7 @@
       let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
       let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
       assert.equal(flexPropertyValue, "column");
-      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector('.label'), null);
+      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector(".label"), null);
       let orderPropertyValue = labelStyle.getPropertyValue("order");
       assert.equal(orderPropertyValue, 2, "Labelposition below is not in order");
     });
@@ -347,8 +347,8 @@
           }
         });
       }).then(function () {
-        let labelPosition = widget.elements.widget.getAttribute('u-label-position');
-        assert.equal(labelPosition, 'above');
+        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        assert.equal(labelPosition, "above");
         assert(widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text");
         assert.equal(widget.elements.widget.querySelector("span.u-label-text").innerText, "", "Text is not empty");
       });
@@ -371,7 +371,7 @@
           }
         });
       }).then(function () {
-        let placeHolderTextDOM = widget.elements.widget.getAttribute('placeholder');
+        let placeHolderTextDOM = widget.elements.widget.getAttribute("placeholder");
         assert.equal(placeHolderTextDOM, placeHolderText, "Failed to show placeholder text" + placeHolderText);
       });
     });
@@ -440,8 +440,8 @@
           }
         });
       }).then(function () {
-        assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance outfill attribute");
-        let appearanceStylePropertyText = widget.elements.widget.getAttribute('appearance');
+        assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance outfill attribute");
+        let appearanceStylePropertyText = widget.elements.widget.getAttribute("appearance");
         assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance outfill style" + appearanceStylePropertyText);
       });
     });
@@ -456,8 +456,8 @@
           }
         });
       }).then(function () {
-        assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance filled attribute");
-        let appearanceStylePropertyText = widget.elements.widget.getAttribute('appearance');
+        assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance filled attribute");
+        let appearanceStylePropertyText = widget.elements.widget.getAttribute("appearance");
         assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance filled style" + appearanceStylePropertyText);
       });
     });
@@ -472,7 +472,7 @@
           }
         });
       }).then(function () {
-        assert(widget.elements.widget.hasAttribute('hide-step'), "Failed to show the hide-step attribute");
+        assert(widget.elements.widget.hasAttribute("hide-step"), "Failed to show the hide-step attribute");
       });
     });
 
@@ -486,7 +486,7 @@
           }
         });
       }).then(function () {
-        assert(!widget.elements.widget.hasAttribute('hide-step'), "Failed to hide the hide-step attribute");
+        assert(!widget.elements.widget.hasAttribute("hide-step"), "Failed to hide the hide-step attribute");
       });
     });
 
@@ -500,7 +500,7 @@
           }
         });
       }).then(function () {
-        assert('start',widget.elements.widget.querySelector("span.u-prefix").getAttribute("slot"), "Slot is not at the start");
+        assert("start",widget.elements.widget.querySelector("span.u-prefix").getAttribute("slot"), "Slot is not at the start");
         assert(widget.elements.widget.querySelector("span.u-prefix").hasAttribute("slot"), "Failed to hide the slot attribute");
         assert.equal(widget.elements.widget.querySelector("span.u-prefix").innerText, prefixTextData, "Prefix Text does not match");
       });
@@ -516,7 +516,7 @@
           }
         });
       }).then(function () {
-        assert(widget.elements.widget.querySelector("span.u-suffix").getAttribute("slot"), 'end', "Slot is not at the end");
+        assert(widget.elements.widget.querySelector("span.u-suffix").getAttribute("slot"), "end", "Slot is not at the end");
         assert(widget.elements.widget.querySelector("span.u-suffix").hasAttribute("slot"), "Failed to show the slot attribute");
         assert.equal(widget.elements.widget.querySelector("span.u-suffix").innerText, suffixTextData, "Suffix Text does not match");
       });

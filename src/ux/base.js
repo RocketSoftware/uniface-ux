@@ -391,17 +391,17 @@ export class Base {
    * @returns {HTMLElement | DocumentFragment}
    */
   getFormattedValrepItemAsHTML(displayFormat, value, representation) {
-    const valrepRepElement = document.createElement('span');
-    valrepRepElement.className = 'u-valrep-representation';
+    const valrepRepElement = document.createElement("span");
+    valrepRepElement.className = "u-valrep-representation";
     valrepRepElement.innerHTML = representation;
-    const valrepValueElement = document.createElement('span');
-    valrepValueElement.className = 'u-valrep-value';
+    const valrepValueElement = document.createElement("span");
+    valrepValueElement.className = "u-valrep-value";
     valrepValueElement.textContent = value ? value : "null";
     switch (displayFormat) {
       case "valrep":
         const fragmentElement = document.createDocumentFragment();
         fragmentElement.appendChild(valrepRepElement);
-        valrepValueElement.classList.add('u-value');
+        valrepValueElement.classList.add("u-value");
         fragmentElement.appendChild(valrepValueElement);
         return fragmentElement;
       case "val":

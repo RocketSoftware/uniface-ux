@@ -96,7 +96,7 @@ export class Select extends Widget {
       this.log("createPlaceholderElement", null);
       const element = document.createElement("div");
       element.setAttribute("value", value);
-      const placeholderElement = document.createElement('span');
+      const placeholderElement = document.createElement("span");
       placeholderElement.className = "u-placeholder";
       placeholderElement.textContent = text;
       element.appendChild(placeholderElement);
@@ -447,12 +447,12 @@ export class Select extends Widget {
     // Apply popup position and size styles and unhide popup.
     this.stylingSetRule(1, popupElementSelector, "visibility", "unset");
     this.stylingSetRule(2, ".ignore", "display", "unset");
-    this.stylingSetRule(3, popupElementSelector, "top", popupElementRect.top ? `${popupElementRect.top}px` : `unset`);
-    this.stylingSetRule(4, popupElementSelector, "bottom", popupElementRect.bottom ? `${popupElementRect.bottom}px` : `unset`);
-    this.stylingSetRule(5, popupElementSelector, "height", popupElementRect.height ? `${popupElementRect.height}px` : `unset`);
-    this.stylingSetRule(6, popupElementSelector, "left", popupElementRect.left ? `${popupElementRect.left}px` : `unset`);
-    this.stylingSetRule(7, popupElementSelector, "right", popupElementRect.right ? `${popupElementRect.right}px` : `unset`);
-    this.stylingSetRule(8, popupElementSelector, "width", popupElementRect.width ? `${popupElementRect.width}px` : `unset`);
+    this.stylingSetRule(3, popupElementSelector, "top", popupElementRect.top ? `${popupElementRect.top}px` : "unset");
+    this.stylingSetRule(4, popupElementSelector, "bottom", popupElementRect.bottom ? `${popupElementRect.bottom}px` : "unset");
+    this.stylingSetRule(5, popupElementSelector, "height", popupElementRect.height ? `${popupElementRect.height}px` : "unset");
+    this.stylingSetRule(6, popupElementSelector, "left", popupElementRect.left ? `${popupElementRect.left}px` : "unset");
+    this.stylingSetRule(7, popupElementSelector, "right", popupElementRect.right ? `${popupElementRect.right}px` : "unset");
+    this.stylingSetRule(8, popupElementSelector, "width", popupElementRect.width ? `${popupElementRect.width}px` : "unset");
   }
 
   popupGetRect(anchorElement, popupElement, position) {

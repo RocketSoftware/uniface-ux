@@ -32,7 +32,7 @@ export class TestWidget extends Widget {
 }
 
 (function () {
-  'use strict';
+  "use strict";
 
   const expect = chai.expect;
   const sandbox = sinon.createSandbox();
@@ -41,7 +41,7 @@ export class TestWidget extends Widget {
 
     let widget, subWidgetId;
 
-    it('constructor with subWidgets', function () {
+    it("constructor with subWidgets", function () {
       subWidgetId = "change-button";
       widget = new TestWidget;
       expect(Object.keys(widget.subWidgetDefinitions)).to.eql([subWidgetId]);
@@ -95,7 +95,7 @@ export class TestWidget extends Widget {
 
     it("mapTrigger", function () {
       // Test with a wrong trigger, should return undefined and display a warning
-      consoleLogSpy = sandbox.spy(console, 'warn');
+      consoleLogSpy = sandbox.spy(console, "warn");
       let badTrigger = testwidget.mapTrigger("click");
       expect(badTrigger).to.be.undefined;
       expect(consoleLogSpy.called).to.equal(true);
@@ -156,7 +156,7 @@ export class TestWidget extends Widget {
     });
 
     it("showError", function () {
-      const errorString = '{ "change-button": "This is a testing error" }';
+      const errorString = "{ \"change-button\": \"This is a testing error\" }";
       const errorReturn = {
         "error": true,
         "error-message": errorString
