@@ -163,6 +163,7 @@
         });
       }).then(function () {
         expect(element.getAttribute("readonly"));
+        expect(window.getComputedStyle(element).cursor).equal("not-allowed");
       });
     });
 
@@ -173,6 +174,7 @@
         });
       }).then(function () {
         expect(!element.getAttribute("readonly"));
+        expect(window.getComputedStyle(element).cursor).equal("auto");
       });
     });
 
@@ -183,6 +185,7 @@
         });
       }).then(function () {
         expect(element.getAttribute("disabled"));
+        expect(window.getComputedStyle(element).cursor).equal("not-allowed");
       });
     });
 
@@ -193,6 +196,7 @@
         });
       }).then(function () {
         expect(!element.getAttribute("disabled"));
+        expect(window.getComputedStyle(element).cursor).equal("auto");
       });
     });
 
@@ -214,6 +218,7 @@
         });
       }).then(function () {
         expect(!element.getAttribute("hidden"));
+        expect(window.getComputedStyle(element).display).equal("inline-flex");
       });
     });
 
@@ -284,7 +289,6 @@
         let selectOptionArray = element.querySelectorAll("fluent-option");
         selectOptionArray.forEach(function (node, index) {
           expect(node.textContent).equal(valRepArray[index].value);
-          console.log(node.textContent);
         });
       });
     });
