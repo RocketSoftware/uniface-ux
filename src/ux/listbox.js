@@ -37,13 +37,13 @@ export class Listbox extends Widget {
   /**
    * Private Worker: Used to handle changes in value and valrep.
    * As part of basic implementation, will only update the previousSelectedIndex property in refresh method.
-   * @class ListboxValue
+   * @class ListboxSelectedValue
    * @extends {Worker}
    */
-  static ListboxValue = class extends Worker {
+  static ListboxSelectedValue = class extends Worker {
 
     /**
-     * Creates an instance of ListboxValue.
+     * Creates an instance of ListboxSelectedValue.
      * @param {typeof Widget} widgetClass
      * @param {String} propId
      * @param {String} defaultValue
@@ -82,18 +82,18 @@ export class Listbox extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readonly", false, true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new this.ListboxValue(this, "value", ""),
+    new this.ListboxSelectedValue(this, "value", ""),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
   ], [
-    new SlottedElementsByValRep(this, "fluent-option", "", "")
+    new SlottedElementsByValRep(this, "fluent-option", "u-option", "")
   ], [
     new Trigger(this, "onchange", "change", true)
   ]);
 
   /**
    * Private Uniface API method - onConnect.
-   * Used to add a change event for the listbox when user interaction occurs.
+   * Specialized onConnect method to add a change event for the listbox when user interaction occurs.
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
@@ -121,9 +121,9 @@ export class Listbox extends Widget {
   }
 
   /**
-   * Specialized blockUI method because:
-   * Listbox should be in readonly during block state.
-   * For this we explicitly need to add readonly as an attribute because it is not supported as a property.
+   * Private Uniface API method - blockUI.
+   * Specialized blockUI method to set the widget in readonly state during UI blocking.
+   * We explicitly need to add readonly as an attribute because it is not supported as a property.
    */
   blockUI() {
     this.log("blockUI");
@@ -145,7 +145,8 @@ export class Listbox extends Widget {
   }
 
   /**
-   * Specialized UnblockUI method to remove the readonly attribute.
+   * Private Uniface API method - unblockUI.
+   * Specialized unblockUI method to explicitly remove the readonly attribute.
    */
   unblockUI() {
     this.log("unblockUI");
