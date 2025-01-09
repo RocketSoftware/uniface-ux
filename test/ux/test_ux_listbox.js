@@ -271,8 +271,8 @@
           valrep: valRepArray
         });
       }).then(function () {
-        let selectOptionArray = element.querySelectorAll("fluent-option");
-        selectOptionArray.forEach(function (node, index) {
+        let listBoxArray = element.querySelectorAll("fluent-option");
+        listBoxArray.forEach(function (node, index) {
           expect(node.textContent).equal(valRepArray[index].representation);
         });
       });
@@ -285,8 +285,8 @@
           "display-format": "val"
         });
       }).then(function () {
-        let selectOptionArray = element.querySelectorAll("fluent-option");
-        selectOptionArray.forEach(function (node, index) {
+        let listBoxArray = element.querySelectorAll("fluent-option");
+        listBoxArray.forEach(function (node, index) {
           expect(node.textContent).equal(valRepArray[index].value);
         });
       });
@@ -299,8 +299,8 @@
           "display-format": "valrep"
         });
       }).then(function () {
-        let selectOptionArray = element.querySelectorAll("fluent-option");
-        selectOptionArray.forEach(function (node, index) {
+        let listBoxArray = element.querySelectorAll("fluent-option");
+        listBoxArray.forEach(function (node, index) {
           let formatValrepText = valRepArray[index].representation + valRepArray[index].value;
           expect(node.textContent).equal(formatValrepText);
         });
