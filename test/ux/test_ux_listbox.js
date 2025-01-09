@@ -12,16 +12,16 @@
   // Custom test variables
   const valRepArray = [
     {
-      value: "1",
-      representation: "option one"
+      "value": "1",
+      "representation": "option one"
     },
     {
-      value: "2",
-      representation: "option two"
+      "value": "2",
+      "representation": "option two"
     },
     {
-      value: "3",
-      representation: "option three"
+      "value": "3",
+      "representation": "option three"
     }
   ];
 
@@ -180,7 +180,7 @@
     it("Set HTML property disabled to true", function () {
       return asyncRun(function() {
         tester.dataUpdate({
-          "html:disabled" : true
+          "html:disabled": true
         });
       }).then(function () {
         expect(element.getAttribute("disabled"));
@@ -191,7 +191,7 @@
     it("Set HTML property disabled to false", function () {
       return asyncRun(function() {
         tester.dataUpdate({
-          "html:disabled" : false
+          "html:disabled": false
         });
       }).then(function () {
         expect(!element.getAttribute("disabled"));
@@ -202,7 +202,7 @@
     it("Set HTML property hidden to true", function () {
       return asyncRun(function() {
         tester.dataUpdate({
-          "html:hidden" : true
+          "html:hidden": true
         });
       }).then(function () {
         expect(element.getAttribute("hidden"));
@@ -213,7 +213,7 @@
     it("Set HTML property hidden to false", function () {
       return asyncRun(function() {
         tester.dataUpdate({
-          "html:hidden" : false
+          "html:hidden": false
         });
       }).then(function () {
         expect(!element.getAttribute("hidden"));
@@ -224,7 +224,7 @@
     it("Set HTML property title", function () {
       return asyncRun(function() {
         tester.dataUpdate({
-          "html:title" : "On"
+          "html:title": "On"
         });
       }).then(function () {
         expect(element.getAttribute("title"));
@@ -235,7 +235,7 @@
     it("Set HTML property tabindex to -1 ", function () {
       return asyncRun(function() {
         tester.dataUpdate({
-          "html:tabindex" : -1
+          "html:tabindex": -1
         });
       }).then(function () {
         expect(element.getAttribute("tabindex"));
@@ -246,7 +246,7 @@
     it("Set HTML property tabindex to 0", function () {
       return asyncRun(function() {
         tester.dataUpdate({
-          "html:tabindex" : 0
+          "html:tabindex": 0
         });
       }).then(function () {
         expect(element.getAttribute("tabindex"));
@@ -257,7 +257,7 @@
     it("Set HTML property tabindex to 1", function () {
       return asyncRun(function() {
         tester.dataUpdate({
-          "html:tabindex" : 1
+          "html:tabindex": 1
         });
       }).then(function () {
         expect(element.getAttribute("tabindex"));
@@ -268,7 +268,7 @@
     it("Set valrep property with default display-format as rep", function () {
       return asyncRun(function() {
         tester.dataUpdate({
-          valrep: valRepArray
+          "valrep": valRepArray
         });
       }).then(function () {
         let listBoxArray = element.querySelectorAll("fluent-option");
@@ -281,7 +281,7 @@
     it("Set valrep property with display-format as value", function () {
       return asyncRun(function() {
         tester.dataUpdate({
-          valrep: valRepArray,
+          "valrep": valRepArray,
           "display-format": "val"
         });
       }).then(function () {
@@ -295,7 +295,7 @@
     it("Set valrep property with display-format as valrep", function () {
       return asyncRun(function() {
         tester.dataUpdate({
-          valrep: valRepArray,
+          "valrep": valRepArray,
           "display-format": "valrep"
         });
       }).then(function () {
