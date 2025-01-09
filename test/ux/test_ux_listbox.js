@@ -110,7 +110,7 @@
     it("onConnect", function () {
       const element = tester.processLayout();
       const widget = tester.construct();
-      tester.onConnect(element);
+      tester.onConnect();
       assert(element, "Target element is not defined!");
       assert(widget.elements.widget === element, "widget is not connected");
     });
@@ -232,7 +232,7 @@
       });
     });
 
-    it("Set HTML  property tabindex to -1 ", function () {
+    it("Set HTML property tabindex to -1 ", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:tabindex" : -1
@@ -243,7 +243,7 @@
       });
     });
 
-    it("Set HTML  property tabindex to 0", function () {
+    it("Set HTML property tabindex to 0", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:tabindex" : 0
@@ -254,7 +254,7 @@
       });
     });
 
-    it("Set HTML  property tabindex to 1", function () {
+    it("Set HTML property tabindex to 1", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:tabindex" : 1
@@ -278,7 +278,7 @@
       });
     });
 
-    it("Set valrep property with  display-format as value", function () {
+    it("Set valrep property with display-format as value", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           valrep: valRepArray,
@@ -292,7 +292,7 @@
       });
     });
 
-    it("Set valrep property with  display-format as valrep", function () {
+    it("Set valrep property with display-format as valrep", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           valrep: valRepArray,
