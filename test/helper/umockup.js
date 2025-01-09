@@ -103,7 +103,7 @@
     },
 
     /**
-     * This is a mock function same as uniface to create the UX-definition object
+     * This is a mock function same as uniface to create the UX-definition object,
      * and define its getter functions and setter functions.
      * @param {Object} defs The properties defined for the widget.
      * @param {Boolean} isUpdatable Allowed only in process layout.
