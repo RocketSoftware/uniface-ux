@@ -15,6 +15,7 @@
 .u-listbox[readonly="true"] {
   cursor: not-allowed;
 }
+
 .u-listbox[readonly="true"] .u-option {
   pointer-events: none;
 }
