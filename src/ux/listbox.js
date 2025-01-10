@@ -92,38 +92,43 @@ export class Listbox extends Widget {
   ]);
 
   /**
+   * Method used to handle selection change and fire a change event.
+   */
+  handleSelectionChange(widgetElement) {
+    if (widgetElement.hasAttribute("readonly") || widgetElement.hasAttribute("disabled")) {
+      // If listbox is in readonly or disabled state, reset the selectedIndex and return, do not fire a change event.
+      widgetElement.selectedIndex = this.previousSelectedIndex;
+      return;
+    }
+    if (widgetElement.selectedIndex !== this.previousSelectedIndex) {
+      this.previousSelectedIndex = widgetElement.selectedIndex;
+      const event = new window.Event("change");
+      widgetElement.dispatchEvent(event);
+    }
+  }
+
+  /**
    * Private Uniface API method - onConnect.
    * Specialized onConnect method to add a change event for the listbox when user interaction occurs.
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
-    // Add event listeners for user interactions.
-    widgetElement.addEventListener("click", handleSelectionChange);
-    widgetElement.addEventListener("keydown", handleSelectionChange);
     let widgetInstance = this;
+    // Add event listeners for user interactions.
+    widgetElement.addEventListener("click", function () {
+      widgetInstance.handleSelectionChange(widgetElement);
+    });
+    widgetElement.addEventListener("keydown", function () {
+      widgetInstance.handleSelectionChange(widgetElement);
+    });
     // Store the original selectedIndex value.
     widgetInstance.previousSelectedIndex = widgetElement.selectedIndex;
-
-    // Function to handle selection change.
-    function handleSelectionChange() {
-      if (widgetElement.hasAttribute("readonly") || widgetElement.hasAttribute("disabled")) {
-        // If listbox is in readonly or disabled state, reset the selectedIndex and return, do not fire a change event.
-        widgetElement.selectedIndex = widgetInstance.previousSelectedIndex;
-        return;
-      }
-      if (widgetElement.selectedIndex !== widgetInstance.previousSelectedIndex) {
-        widgetInstance.previousSelectedIndex = widgetElement.selectedIndex;
-        const event = new window.Event("change");
-        widgetElement.dispatchEvent(event);
-      }
-    }
     return valueUpdaters;
   }
 
   /**
    * Private Uniface API method - blockUI.
-   * Specialized blockUI method to set the widget in readonly state during UI blocking.
-   * We explicitly need to add readonly as an attribute because it is not supported as a property.
+   * Specialized blockUI method to explicitly add readonly as an attribute because it is not supported as a property.
    */
   blockUI() {
     this.log("blockUI");
@@ -159,9 +164,11 @@ export class Listbox extends Widget {
       this.elements.widget.classList.remove("u-blocked");
       if (widgetClass.uiBlocking === "readonly") {
         if (!this.toBoolean(this.data["html:readonly"])) {
+          // Remove the readonly attribute from the widget element.
           this.elements.widget.removeAttribute("readonly");
         }
       } else {
+        // If uiBlocking has an invalid value, log an error.
         this.error("unblockUI()", "Static uiBlocking not defined or invalid value", "No UI blocking");
       }
     }
