@@ -60,7 +60,7 @@ export class Listbox extends Widget {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
 
       // Should be set to -1 only if newly selected value is not part of valrep.
-      // Now setting to -1 by default as value hook up is not yet implemented.
+      // Now setting previousSelectedIndex to -1 by default as value hook up is not yet implemented.
       widgetInstance.previousSelectedIndex = -1;
     }
   };
