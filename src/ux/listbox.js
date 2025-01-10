@@ -12,7 +12,7 @@ import {
   IgnoreProperty,
   Worker
 } from "./workers.js";
-// The import of Fluent UI web-components is done in loader.js
+// The import of Fluent UI web-components is done in loader.js.
 
 /**
  * Listbox Widget
