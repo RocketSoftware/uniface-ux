@@ -1,0 +1,37 @@
+.u-listbox {
+  vertical-align: bottom;
+}
+
+/* Styling for disabled and readonly states */
+.u-listbox[disabled] {
+  cursor: not-allowed;
+  opacity: var(--disabled-opacity);
+}
+
+.u-listbox[disabled] .u-option {
+  pointer-events: none;
+}
+
+.u-listbox[readonly="true"] {
+  cursor: not-allowed;
+}
+
+.u-listbox[readonly="true"] .u-option {
+  pointer-events: none;
+}
+
+/* Styling for when display-format is valrep */
+.u-listbox .u-value {
+  color: var(--neutral-base-color);
+  font-style: italic;
+  margin-inline-start: calc((var(--design-unit) * 3px) + 2px);
+}
+
+/* Styling the valrep value to enclose it within parentheses. */
+.u-listbox .u-value::before {
+  content: "(";
+}
+
+.u-listbox .u-value::after {
+  content: ")";
+}

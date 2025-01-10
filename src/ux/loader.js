@@ -17,6 +17,7 @@ import "../fluentui/js/web-components.min.js";
 // The UX field level widgets to include
 import "./button.js";
 import "./checkbox.js";
+import "./listbox.js";
 import "./number_field.js";
 import "./plain_text.js";
 import "./radio_group.js";
