@@ -94,7 +94,8 @@ export class Listbox extends Widget {
   /**
    * Method used to handle selection change and fire a change event.
    */
-  handleSelectionChange(widgetElement) {
+  handleSelectionChange() {
+    let widgetElement = this.elements.widget;
     if (widgetElement.hasAttribute("readonly") || widgetElement.hasAttribute("disabled")) {
       // If listbox is in readonly or disabled state, reset the selectedIndex and return, do not fire a change event.
       widgetElement.selectedIndex = this.previousSelectedIndex;
@@ -113,16 +114,15 @@ export class Listbox extends Widget {
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
-    let widgetInstance = this;
     // Add event listeners for user interactions.
-    widgetElement.addEventListener("click", function () {
-      widgetInstance.handleSelectionChange(widgetElement);
+    widgetElement.addEventListener("click", () => {
+      this.handleSelectionChange();
     });
-    widgetElement.addEventListener("keydown", function () {
-      widgetInstance.handleSelectionChange(widgetElement);
+    widgetElement.addEventListener("keydown", () => {
+      this.handleSelectionChange();
     });
     // Store the original selectedIndex value.
-    widgetInstance.previousSelectedIndex = widgetElement.selectedIndex;
+    this.previousSelectedIndex = widgetElement.selectedIndex;
     return valueUpdaters;
   }
 
