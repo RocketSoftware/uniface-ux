@@ -1,4 +1,5 @@
 // @ts-check
+/* global UNIFACE */
 
 /**
  * Load fluentUI web components centrally in this JS file.
@@ -15,15 +16,33 @@ import "../fluentui/js/web-components.min.js";
 // import "https://unpkg.com/@fluentui/web-components@2.6.1/dist/web-components.min.js";
 
 // The UX field level widgets to include
-import "./button.js";
-import "./checkbox.js";
-import "./number_field.js";
-import "./plain_text.js";
-import "./radio_group.js";
-import "./select.js";
-import "./switch.js";
-import "./text_area.js";
-import "./text_field.js";
+import {Button} from "./button.js";
+UNIFACE.ClassRegistry.add("UX.Button", Button);
+
+import {Checkbox} from "./checkbox.js";
+UNIFACE.ClassRegistry.add("UX.Checkbox", Checkbox);
+
+import {NumberField} from "./number_field.js";
+UNIFACE.ClassRegistry.add("UX.NumberField", NumberField);
+
+import {PlainText} from "./plain_text.js";
+UNIFACE.ClassRegistry.add("UX.PlainText", PlainText);
+
+import {RadioGroup} from "./radio_group.js";
+UNIFACE.ClassRegistry.add("UX.RadioGroup", RadioGroup);
+
+import {Select} from "./select.js";
+UNIFACE.ClassRegistry.add("UX.Select", Select);
+
+import {Switch} from "./switch.js";
+UNIFACE.ClassRegistry.add("UX.Switch", Switch);
+
+import {TextArea} from "./text_area.js";
+UNIFACE.ClassRegistry.add("UX.TextArea", TextArea);
+
+import {TextField} from "./text_field.js";
+UNIFACE.ClassRegistry.add("UX.TextField", TextField);
+
 
 // The UX entity level widgets to include
 import "./data_grid.js";

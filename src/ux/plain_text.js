@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   StyleClass,
@@ -390,5 +389,3 @@ export class PlainText extends Widget {
     return formattedValue;
   }
 }
-
-UNIFACE.ClassRegistry.add("UX.PlainText", PlainText);

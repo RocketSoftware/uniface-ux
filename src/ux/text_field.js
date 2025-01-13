@@ -193,4 +193,3 @@ export class TextField extends Widget {
   }
 }
 
-UNIFACE.ClassRegistry.add("UX.TextField", TextField);

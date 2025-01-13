@@ -145,5 +145,3 @@ export class NumberField extends Widget {
     return formattedValue;
   }
 }
-
-UNIFACE.ClassRegistry.add("UX.NumberField", NumberField);
