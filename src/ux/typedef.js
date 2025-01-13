@@ -10,7 +10,7 @@
  *
  * @typedef {"component"|"entity"|"collection"|"occurrence"|"field"} UObjectType
  * @typedef {String} UObjectName
- * @typedef {String} UPropName
+ * @typedef {String | undefined} UPropName
  * @typedef {String} UTriggerName
  * @typedef {any} UPropValue
  * @typedef {String} UWidgetClassName
@@ -40,13 +40,6 @@
  *  @property {Boolean} TriggerMapping.validate
  *
  * @typedef {Object} UData
- *  @property {any} [value]
- *  @property {Object} [valrep]
- *  @property {Object} [uniface]
- *  @property {Object} [html]
- *  @property {Object} [style]
- *  @property {Object} [class]
- *  @property {Object} [classes]
  *
  * @typedef {String} UDataError
  *

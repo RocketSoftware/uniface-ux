@@ -100,7 +100,7 @@
         const widget = tester.construct();
         assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-number-field'], "Class is not defined");
+        assert(widgetClass.defaultValues['class:u-number-field'], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -159,8 +159,8 @@
 
   // Data Init
   describe("Data Init", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+    const classes = tester.getDefaultClasses();
+
     let element;
 
     beforeEach(function () {
@@ -190,12 +190,11 @@
     });
 
     it("check prefix, suffix icon and text", function () {
-      let unifaceProperties = tester.defaultValues.uniface;
-      assert.equal(unifaceProperties["prefix-icon"], '', "Default value of prefix icon should be ''");
-      assert.equal(unifaceProperties["suffix-icon"], '', "Default value of suffix icon should be ''");
-      assert.equal(unifaceProperties["prefix-text"], '', "Default value of prefix text should be ''");
-      assert.equal(unifaceProperties["suffix-text"], '', "Default value of suffix text should be ''");
-      assert.equal(unifaceProperties["label-position"], 'above', "Default value of label-position will be above");
+      assert.equal(tester.defaultValues["prefix-icon"], '', "Default value of prefix icon should be ''");
+      assert.equal(tester.defaultValues["suffix-icon"], '', "Default value of suffix icon should be ''");
+      assert.equal(tester.defaultValues["prefix-text"], '', "Default value of prefix text should be ''");
+      assert.equal(tester.defaultValues["suffix-text"], '', "Default value of suffix text should be ''");
+      assert.equal(tester.defaultValues["label-position"], 'above', "Default value of label-position will be above");
     });
 
     it("check value", function () {
@@ -215,11 +214,9 @@
       let showApplyButton = true;
       let defaultClass = "u-sw-changebutton";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "changebutton": showApplyButton
-          }
+          "changebutton": showApplyButton
         });
       }).then(function () {
         let element = widget.elements.widget.querySelector("fluent-button.u-sw-changebutton");
@@ -235,11 +232,9 @@
       let showApplyButton = false;
       let defaultClass = "u-sw-changebutton";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "changebutton": showApplyButton
-          }
+          "changebutton": showApplyButton
         });
       }).then(function () {
         let element = widget.elements.widget.querySelector("fluent-button.u-sw-changebutton");
@@ -257,14 +252,12 @@
       let buttonIconName = "AddHome";
       let buttonText = "Click Me";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
           "icon": buttonIconName,
-          uniface: {
-            "changebutton": showApplyButton,
-            "changebutton:value": buttonText,
-            "changebutton:icon": buttonIconName
-          }
+          "changebutton": showApplyButton,
+          "changebutton:value": buttonText,
+          "changebutton:icon": buttonIconName
         });
       }).then(function () {
         if (showApplyButton) {
@@ -279,11 +272,9 @@
     it("show label", function () {
       let numberFieldLabel = 'Label';
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-text": numberFieldLabel
-          }
+          "label-text": numberFieldLabel
         });
       }).then(function () {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
@@ -293,11 +284,9 @@
     });
 
     it("Set label position before", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": "before"
-          }
+          "label-position": "before"
         });
       }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -316,15 +305,13 @@
     });
 
     it("Set label position below", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": "below"
-          }
+          "label-position": "below"
         });
       }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
-        assert.equal(labelPosition, 'below',"Label position below is not below");
+        assert.equal(labelPosition, 'below', "Label position below is not below");
       });
     });
 
@@ -339,12 +326,10 @@
     });
 
     it("reset label and its position", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": uniface.RESET,
-            "label-text": uniface.RESET
-          }
+          "label-position": uniface.RESET,
+          "label-text": uniface.RESET
         });
       }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -364,11 +349,9 @@
     // html:placeholder property
     it("Set html:placeholder property for numberField", function () {
       let placeHolderText = "Input the Number";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "placeholder": placeHolderText
-          }
+          "html:placeholder": placeHolderText
         });
       }).then(function () {
         let placeHolderTextDOM = widget.elements.widget.getAttribute('placeholder');
@@ -379,11 +362,9 @@
     // html:readonly property
     it("Set html:readonly property true for numberField", function () {
       let readOnly = "readOnly";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "readonly": true
-          }
+          "html:readonly": true
         });
       }).then(function () {
         assert(widget.elements.widget.hasAttribute(readOnly), "Failed to show the readonly attribute");
@@ -393,11 +374,9 @@
     // html:readonly property false
     it("Set html:readonly property false for numberField", function () {
       let readOnly = "readOnly";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "readonly": false
-          }
+          "html:readonly": false
         });
       }).then(function () {
         assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to hide the readonly attribute");
@@ -407,9 +386,9 @@
     // html:disabled property
     it("Set html:disabled property true for numberField", function () {
       let disabled = "disabled";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          "html":{"disabled": true}
+          "html:disabled": true
         });
       }).then(function () {
         assert(widget.elements.widget.hasAttribute(disabled), "Failed to show the disabled attribute");
@@ -419,11 +398,9 @@
     // html:disabled property false
     it("Set html:disabled property false for numberField", function () {
       let disabled = "disabled";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          html: {
-            "disabled": false
-          }
+          "html:disabled": false
         });
       }).then(function () {
         assert(!widget.elements.widget.hasAttribute(disabled), "Failed to hide the disabled attribute");
@@ -433,11 +410,9 @@
     // html:appearance outfill property
     it("Set html:appearance outline property true for numberField", function () {
       let appearanceStyle = "filled";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          html: {
-            "appearance": appearanceStyle
-          }
+          "html:appearance": appearanceStyle
         });
       }).then(function () {
         assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance outfill attribute");
@@ -449,11 +424,9 @@
     // html:appearance filled property
     it("Set html:appearance filled property true for numberField", function () {
       let appearanceStyle = "outline";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          html: {
-            "appearance": appearanceStyle
-          }
+          "html:appearance": appearanceStyle
         });
       }).then(function () {
         assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance filled attribute");
@@ -465,11 +438,9 @@
     // html:hide-step true property
     it("Set html:hide-step property true for numberField", function () {
       let hideStep = true;
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          html: {
-            "hide-step": hideStep
-          }
+          "html:hide-step": hideStep
         });
       }).then(function () {
         assert(widget.elements.widget.hasAttribute('hide-step'), "Failed to show the hide-step attribute");
@@ -479,11 +450,9 @@
     // html:hide-step false property
     it("Set html:hide-step property false for numberField", function () {
       let hideStep = false;
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          html: {
-            "hide-step": hideStep
-          }
+          "html:hide-step": hideStep
         });
       }).then(function () {
         assert(!widget.elements.widget.hasAttribute('hide-step'), "Failed to hide the hide-step attribute");
@@ -493,14 +462,12 @@
     // prefix-text property for number Field
     it("Prefix Text for numberField", function () {
       let prefixTextData = "PrefixMe";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "prefix-text": prefixTextData
-          }
+          "prefix-text": prefixTextData
         });
       }).then(function () {
-        assert('start',widget.elements.widget.querySelector("span.u-prefix").getAttribute("slot"), "Slot is not at the start");
+        assert('start', widget.elements.widget.querySelector("span.u-prefix").getAttribute("slot"), "Slot is not at the start");
         assert(widget.elements.widget.querySelector("span.u-prefix").hasAttribute("slot"), "Failed to hide the slot attribute");
         assert.equal(widget.elements.widget.querySelector("span.u-prefix").innerText, prefixTextData, "Prefix Text does not match");
       });
@@ -509,11 +476,9 @@
     // suffix-text property for number Field
     it("Suffix Text for numberField", function () {
       let suffixTextData = "Suffix Me";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "suffix-text": suffixTextData
-          }
+          "suffix-text": suffixTextData
         });
       }).then(function () {
         assert(widget.elements.widget.querySelector("span.u-suffix").getAttribute("slot"), 'end', "Slot is not at the end");
@@ -526,11 +491,9 @@
       let showApplyButton = true;
       let buttonIconName = "AddHome";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "prefix-icon": buttonIconName
-          }
+          "prefix-icon": buttonIconName
         });
       }).then(function () {
         if (showApplyButton) {
@@ -543,11 +506,9 @@
       let showApplyButton = true;
       let buttonIconName = "AddHome";
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "suffix-icon": buttonIconName
-          }
+          "suffix-icon": buttonIconName
         });
       }).then(function () {
         if (showApplyButton) {
@@ -567,30 +528,26 @@
       verifyWidgetClass(widgetClass);
     });
 
-    it("setting min and max", function(){
-      return asyncRun(function() {
+    it("setting min and max", function () {
+      return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "min": minlength,
-            "max": maxlength
-          }
+          "html:min": minlength,
+          "html:max": maxlength
         });
       }).then(function () {
         expect(widget.elements.widget.hasAttribute("max"), "Failed to show the max attribute");
         expect(widget.elements.widget.hasAttribute("min"), "Failed to show the min attribute");
-        assert.equal(widget.elements.widget.getAttribute("min"), minlength , "Min is not same " + minlength);
-        assert.equal(widget.elements.widget.getAttribute("max"), maxlength , "Max is not same " + maxlength);
+        assert.equal(widget.elements.widget.getAttribute("min"), minlength, "Min is not same " + minlength);
+        assert.equal(widget.elements.widget.getAttribute("max"), maxlength, "Max is not same " + maxlength);
       });
     });
 
     it("Set invalid value in number Field", function () {
       const appliedClassNames = "u-error-icon ms-Icon ms-Icon--AlertSolid";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            error: true,
-            "error-message": "Field Value length mismatch."
-          }
+          "error": true,
+          "error-message": "Field Value length mismatch."
         });
       }).then(function () {
         expect(widget.elements.widget).to.have.class("u-invalid");
@@ -612,19 +569,17 @@
 
     it("Hide Error Set invalid value in number Field", function () {
       const appliedClassNames = "u-error-icon ms-Icon ms-Icon--AlertSolid";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            error: false,
-            "error-message": "Field Value length mismatch."
-          }
+          "error": false,
+          "error-message": "Field Value length mismatch."
         });
         widget.hideError("Field Value length mismatch.");
       }).then(function () {
         expect(widget.elements.widget).to.not.have.class("u-invalid");
         assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
         assert(widget.elements.widget.childNodes[2].className, appliedClassNames, "widget element doesn't has correct class names");
-        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"),  "slot attribute is not present");
+        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"), "slot attribute is not present");
         assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("title"), "title attribute is not present");
       });
     });
