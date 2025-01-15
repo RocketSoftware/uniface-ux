@@ -184,7 +184,7 @@
   }
 
   /**
-   * Run asynchronous test actions using requestAnimationFrame.
+   * Run asynchronous test actions.
    *
    * @param {Function} testFunction a function including test actions;
    * @returns a promise.
