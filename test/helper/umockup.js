@@ -1,4 +1,4 @@
-/* global _uf MutationObserver UNIFACE URLSearchParams clearTimeout setTimeout  */
+/* global _uf UNIFACE URLSearchParams  */
 (function (global) {
   "use strict";
 
@@ -183,93 +183,15 @@
     });
   }
 
-  const defaultAsyncTimeout = 100; // ms
-  let defaultIdleTime = 25; // ms
-
-  /**
-   * Run asynchronous test actions via setTimeout.
-   *
-   * @param {Function} testFunction a function including test actions;
-   * @param {Number} timeout the milliseconds delay of setTimeout for resolve
-   *                   the returned promise;
-   * @returns a promise.
-   */
-  async function asyncRunST(testFunction, timeout) {
-    if (timeout === undefined) {
-      timeout = defaultAsyncTimeout;
-    }
-    return new Promise(function(resolve, _reject) {
-      testFunction();
-      setTimeout(function(){
-        resolve();
-      }, timeout);
-    });
-  }
-
-  /**
-   * Run asynchronous test actions via MutationObserver.
-   *
-   * @param {Function} testFunction a function including test actions;
-   * @param {Function} callbackFunction optional, a callback function;
-   * @param {Number} idleTime optional, the idle time to waiting next round of callback;
-   * @returns a promise.
-   */
-  async function asyncRunMO(testFunction, callbackFunction, idleTime) {
-    if (!idleTime || typeof idleTime !== "number") {
-      idleTime = defaultIdleTime;
-    }
-    const container = document.getElementById("widget-container");
-    let lastTimeoutId = 0;
-
-    let count = 0;
-
-    debugLog("asyncRunMO");
-
-    if (typeof callbackFunction !== "function") {
-      callbackFunction = function (_records, observer, resolve, _reject) {
-        const _count = ++count;
-        debugLog("Callback " + _count);
-        setTimeout(function () {
-          debugLog("Timeout Callback " + _count);
-
-          if (lastTimeoutId) {
-            clearTimeout(lastTimeoutId);
-          }
-          lastTimeoutId = setTimeout(function () {
-            debugLog("Timeout 2 callback " + _count);
-            resolve();
-            observer.disconnect();
-          }, idleTime);
-        });
-      };
-    }
-
-    return new Promise(function(resolve, reject){
-      const observer = new MutationObserver(function (records, observer) {
-        callbackFunction(records, observer, resolve, reject);
-      });
-
-      observer.observe(container, {
-        "attributes" : true,
-        "attributeOldValue" : true,
-        "characterData" : true,
-        "childList" : true,
-        "subtree" : true
-      });
-
-      testFunction();
-    });
-  }
-
   /**
    * Run asynchronous test actions using requestAnimationFrame.
    *
    * @param {Function} testFunction a function including test actions;
    * @returns a promise.
    */
-  async function asyncRunAF(testFunction) {
+  async function asyncRun(testFunction) {
 
-    debugLog("asyncRunAF");
+    debugLog("asyncRun");
 
     return new Promise(function(resolve, _reject) {
       function callback(_timestamp) {
@@ -284,27 +206,6 @@
       // Ask browser to callback before next repaint
       window.requestAnimationFrame(callback);
     });
-  }
-
-  /**
-   * The helper function for running asynchronous test actions.
-   *
-   * @param {Function} testFunction a function including test actions;
-   * @param {Function | Number} option optional,
-   *   no option (or zero):   asyncRunAF(testFunction),
-   *   for Number:            asyncRunST(testFunction, option),
-   *   else:                  asyncRunMO(testFunction, option, idleTime);
-   * @param {Number}   idleTime optional, the idle time to waiting next round of callback;
-   * @returns a promise.
-   */
-  async function asyncRun(testFunction, option, idleTime) {
-    if (!option) {
-      return asyncRunAF(testFunction);
-    } else if (typeof option === "number") {
-      return asyncRunST(testFunction, option);
-    } else {
-      return asyncRunMO(testFunction, option, idleTime);
-    }
   }
 
   /**
@@ -329,14 +230,6 @@
         }
       }
       return scriptName;
-    },
-
-    "getDefaultIdleTime" : function () {
-      return defaultIdleTime;
-    },
-
-    "setDefaultIdleTime" : function (idolTime) {
-      defaultIdleTime = idolTime;
     },
 
     "asyncRun" : asyncRun,
