@@ -233,8 +233,7 @@ export class Widget extends Base {
    * @return {UValueFormatting}
    */
   getMenuItem() {
-    const properties = this.data.properties;
-    const widgetClass = this.getNode(properties, "uniface:widget-class");
+    const widgetClass = this.getNode(this.data, "widget-class");
 
     /** @type {UValueFormatting} */
     const formattedValue = {

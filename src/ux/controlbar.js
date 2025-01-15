@@ -46,7 +46,7 @@ export class Controlbar extends Widget {
       const widget = widgetInstance.elements.widget;
       const overflowMenu = widgetInstance.elements.overflowMenu;
       const overflowButton = widgetInstance.elements.overflowButton;
-      const properties = widgetInstance.data.properties.uniface;
+      const properties = widgetInstance.data;
       const subWidgets = Object.values(widgetInstance?.subWidgets);
 
       // Create a map of subWidgets with their ids as key and the widgetInstance as value.
@@ -297,9 +297,9 @@ export class Controlbar extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "div", "", "", [
-    new HtmlAttributeChoice(this, "uniface:orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
+    new HtmlAttributeChoice(this, "orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
     new StyleClass(this, ["u-controlbar"]),
-    new this.HandleOverFlowPropertyWorker(this, "uniface:widget-resize", false)
+    new this.HandleOverFlowPropertyWorker(this, "widget-resize", false)
   ], [
     new Element(this, "div", "u-start-section", ".u-start-section", [], [
       new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "controls-start")
@@ -346,9 +346,7 @@ export class Controlbar extends Widget {
     // Create a ResizeObserver instance.
     const resizeObserver = new window.ResizeObserver(() => {
       this.setProperties({
-        "uniface": {
-          "widget-resize": true
-        }
+        "widget-resize": true
       });
     });
     // Observe the controlbar for changes in screen size.
@@ -462,24 +460,23 @@ export class Controlbar extends Widget {
   setProperties(data) {
     const subWidgetIds = this.getSubWidgetIds();
     const overflowProperties = subWidgetIds.flatMap((subWidget) => [`${subWidget}_${"overflow-behavior"}`, `${subWidget}_${"priority"}`]);
-    const unifaceProperties = data.uniface ?? {};
-    const setter = Controlbar.setters["uniface"]["widget-resize"][0];
+    const setter = Controlbar.setters["widget-resize"][0];
     let invokeRefresh = false;
-    for (const property in unifaceProperties) {
+    for (const property in data) {
       if (overflowProperties.includes(property)) {
-        const value = unifaceProperties[property];
+        const value = data[property];
         // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
         // eslint-disable-next-line eqeqeq, no-undef
         if (value == uniface.RESET) {
-          this.data.properties.uniface[property] = Controlbar.defaultValues.uniface[property] ?? null;
+          this.data[property] = Controlbar.defaultValues[property] ?? null;
           invokeRefresh = true;
         } else if (this.validateOverflowPropertyValue(property, value)) {
-          this.data.properties.uniface[property] = value;
+          this.data[property] = value;
           invokeRefresh = true;
         } else {
           this.warn("setProperties", `Property '${property}' is given invalid value '(${value})'`, "Ignored");
         }
-        delete data.uniface[property];
+        delete data[property];
       }
     }
     invokeRefresh && setter?.refresh(this);
