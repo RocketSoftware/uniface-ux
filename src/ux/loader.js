@@ -45,7 +45,11 @@ UNIFACE.ClassRegistry.add("UX.TextField", TextField);
 
 
 // The UX entity level widgets to include
-import "./data_grid.js";
+import {DataGridCollection, DataGridOccurrence} from "./data_grid.js";
+UNIFACE.ClassRegistry.add("UX.DataGridCollection", DataGridCollection);
+UNIFACE.ClassRegistry.add("UX.DataGridOccurrence", DataGridOccurrence);
+
+
 
 /**
  * Uncomment the following code and/or add your own variable to
