@@ -1,8 +1,9 @@
 import { Button } from "../../src/ux/button.js";
 import { Widget } from "../../src/ux/widget.js";
-import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget,
-  SubWidgetsByProperty , BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean ,
-  HtmlValueAttributeBoolean , HtmlAttributeMinMaxLength , StyleProperty , Worker, IgnoreProperty, SlottedElementsByValRep
+import {
+  StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget,
+  SubWidgetsByProperty, BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean,
+  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, StyleProperty, Worker, IgnoreProperty, SlottedElementsByValRep
 } from "../../src/ux/workers.js";
 
 
@@ -23,24 +24,24 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       worker = new Worker(widgetClass);
     });
 
-    it("should initialize with the correct properties" , function () {
+    it("should initialize with the correct properties", function () {
       expect(worker.widgetClass).to.equal(widgetClass);
       expect(worker.isSetter).to.equal(true);
     });
 
-    it("testing setElementQuerySelector" , function () {
+    it("testing setElementQuerySelector", function () {
       elementQuerySelector = "div";
       worker.setElementQuerySelector(elementQuerySelector);
       expect(worker.elementQuerySelector).to.equal(elementQuerySelector);
     });
 
-    it("testing getElement" , function () {
+    it("testing getElement", function () {
       const widgetInstance = {
-        elements : {
-          widget: document.createElement("div")
-        } ,
-        getTraceDescription: () => {
-          return "description" ;
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": () => {
+          return "description";
         }
       };
       element = worker.getElement(widgetInstance);
@@ -77,21 +78,17 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
     it('should register default class values', function () {
       defaultClassList.forEach((className) => {
-        expect(instance.widgetClass.defaultValues.classes[className]).to.be.true;
+        expect(instance.widgetClass.defaultValues[`class:${className}`]).to.be.true;
       });
     });
 
     it('should refresh correctly and modify the element classes', function () {
       const widgetInstance = {
-        data: {
-          properties: {
-            classes: {
-              class1: true,
-              class2: false
-            }
-          }
+        "data": {
+          "class1": true,
+          "class2": false
         },
-        getTraceDescription: sinon.stub().returns('description')
+        "getTraceDescription": sinon.stub().returns('description')
       };
       const element = document.createElement('div');
       sinon.stub(instance, 'getElement').returns(element);
@@ -132,9 +129,9 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       tagname = "DIV";
       elementQuerySelector = "div";
       styleclass = "styleClass";
-      attributeDefines = [new StyleClass(widgetClass, ["u-switch"]) , new HtmlAttribute(widgetClass, "html:role", "role", "switch")];
-      elementDefines = [new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
-        new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "uniface:checked-message")];
+      attributeDefines = [new StyleClass(widgetClass, ["u-switch"]), new HtmlAttribute(widgetClass, "html:role", "role", "switch")];
+      elementDefines = [new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "label-text"),
+        new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message")];
       triggerDefines = [new Trigger(widgetClass, "onchange", "change", true)];
       element = new Element(widgetClass, tagname, styleclass, elementQuerySelector, attributeDefines, elementDefines, triggerDefines);
     });
@@ -182,20 +179,16 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     let slottedElement;
 
     const widgetInstance = {
-      data: {
-        properties: {
-          uniface: {
-            "icon": "testicon.png",
-            "icon-position": "start",
-            "text" : "defaultText"
-          },
-          value: ""
-        }
+      "data": {
+        "icon": "testicon.png",
+        "icon-position": "start",
+        "text": "defaultText",
+        "value": ""
       },
-      elements : {
-        widget: document.createElement("div")
-      } ,
-      getTraceDescription: () => {
+      "elements": {
+        "widget": document.createElement("div")
+      },
+      "getTraceDescription": () => {
         return "description";
       }
     };
@@ -212,8 +205,8 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      propText = "uniface:text";
-      propIcon = "uniface:icon";
+      propText = "text";
+      propIcon = "icon";
       defaultText = "defaultText";
       defaultIcon = "default.png";
       slottedElement = new SlottedElement(widgetClass, "", "", "", "", propText, defaultText, propIcon, defaultIcon);
@@ -228,8 +221,8 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
     it("Check getters/setters changed for propIcon, propText", function () {
-      expect(slottedElement.widgetClass.defaultValues.uniface.icon).to.equal(defaultIcon);
-      expect(slottedElement.widgetClass.defaultValues.uniface.text).to.equal(defaultText);
+      expect(slottedElement.widgetClass.defaultValues.icon).to.equal(defaultIcon);
+      expect(slottedElement.widgetClass.defaultValues.text).to.equal(defaultText);
     });
 
     it('should refresh correctly', function () {
@@ -238,7 +231,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(widgetInstance.elements.widget.classList[0]).to.equal("ms-Icon");
       expect(widgetInstance.elements.widget.classList[1]).to.equal("ms-Icon--testicon.png");
 
-      widgetInstance.data.properties.uniface["icon"] = "";
+      widgetInstance.data["icon"] = "";
       slottedElement.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.innerText).to.equal("defaultText");
     });
@@ -271,7 +264,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
     it("Check setters were added", function () {
-      let setters = Object.keys(slottedError.widgetClass.setters.uniface);
+      let setters = Object.keys(slottedError.widgetClass.setters);
       let errorArray = [
         "error",
         "error-message",
@@ -287,20 +280,16 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
-          properties: {
-            uniface: {
-              "error": true,
-              "error-message": "1Bad error",
-              "format-error": true,
-              "format-error-message": "1Bad Formatting"
-            }
-          }
+        "data": {
+          "error": true,
+          "error-message": "1Bad error",
+          "format-error": true,
+          "format-error-message": "1Bad Formatting"
         },
-        elements : {
-          widget: document.createElement("div")
-        } ,
-        getTraceDescription: () => {
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -312,16 +301,17 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(widgetInstance.elements.widget.classList[2]).to.equal("ms-Icon--AlertSolid");
       expect(widgetInstance.elements.widget.title).to.equal("1Bad Formatting");
 
-      widgetInstance.data.properties.uniface["format-error"] = false;
+      widgetInstance.data["format-error"] = false;
       slottedError.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.title).to.equal("1Bad error");
       expect(widgetInstance.elements.widget.classList[3]).to.equal("u-invalid");
 
-      widgetInstance.data.properties.uniface["error"] = false;
+      widgetInstance.data["error"] = false;
       slottedError.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.hidden).to.equal(true);
       expect(widgetInstance.elements.widget.title).to.equal("");
       expect(widgetInstance.elements.widget.classList).to.have.lengthOf(0);
+
     });
   });
 
@@ -359,7 +349,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
     it("Check getters/setters changed and subWidget added", function () {
       expect(slottedWidget.subWidgetClass.name).to.equal("Button");
-      expect(slottedWidget.propId).to.equal("uniface:undefined");
+      expect(slottedWidget.propId).to.equal("undefined");
     });
 
     it("Check Generate Layout", function () {
@@ -372,17 +362,13 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
-          properties: {
-            uniface: {
-              "undefined" : true
-            }
-          }
+        "data": {
+          "undefined": true
         },
-        elements : {
-          widget: document.createElement("div")
-        } ,
-        getTraceDescription: () => {
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -393,7 +379,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(widgetInstance.elements.widget.hidden).to.equal(false);
       expect(widgetInstance.elements.widget.classList[0]).to.equal("u-sw-undefined-shown");
 
-      delete widgetInstance.data.properties.uniface["undefined"];
+      delete widgetInstance.data["undefined"];
       slottedWidget.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.hidden).to.equal(true);
       expect(widgetInstance.elements.widget.classList).to.have.lengthOf(0);
@@ -494,34 +480,34 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
     it("Check Getters/Setters", function () {
-      let length =  worker.widgetClass.setters.value.length;
+      let length = worker.widgetClass.setters.value.length;
 
       expect(worker.widgetClass.getters.value.propId).to.equal(propId);
-      expect(worker.widgetClass.setters.value[length- 1].propId).to.equal(propId);
+      expect(worker.widgetClass.setters.value[length - 1].propId).to.equal(propId);
     });
 
     it("Check setHtmlAttribute", function () {
       element = {
-        elements : {
-          widget: document.createElement("div")
+        "elements": {
+          "widget": document.createElement("div")
         }
       };
-      worker.setHtmlAttribute(element , "new Value");
+      worker.setHtmlAttribute(element, "new Value");
       expect(element[attrName]).to.equal("new Value");
     });
 
     // Refresh doesn't do anything
-    it("check refresh" , function () {
+    it("check refresh", function () {
       worker.refresh({});
     });
 
-    it("check getValue" , function () {
+    it("check getValue", function () {
       const widgetInstance = {
-        elements : {
-          widget: document.createElement("div")
-        } ,
-        getTraceDescription: () => {
-          return "description" ;
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": () => {
+          return "description";
         }
       };
       value = worker.getValue(widgetInstance);
@@ -529,12 +515,12 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
     // getValueUpdaters doesn't do anything
-    it("check getValueUpdaters" , function () {
+    it("check getValueUpdaters", function () {
       const widgetInstance = {
-        elements : {
-          widget: [document.createElement("div")  , document.createElement("span") ]
-        } ,
-        getTraceDescription: () => {
+        "elements": {
+          "widget": [document.createElement("div"), document.createElement("span")]
+        },
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -564,7 +550,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      propId = "uniface:icon-position";
+      propId = "icon-position";
       attrName = "button";
       defaultValue = "1";
       element = new HtmlAttribute(widgetClass, propId, attrName, defaultValue);
@@ -577,17 +563,13 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
-          properties: {
-            uniface: {
-              "icon-position" : "start-end"
-            }
-          }
+        "data": {
+          "icon-position": "start-end"
         },
-        elements : {
-          widget: document.createElement("div")
-        } ,
-        getTraceDescription: () => {
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -620,10 +602,10 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      propId = "uniface:icon-position";
+      propId = "icon-position";
       attrName = "button";
       defaultValue = "1";
-      choices = ["all" ,  "start-end" , "none"];
+      choices = ["all", "start-end", "none"];
       element = new HtmlAttributeChoice(widgetClass, propId, attrName, choices, defaultValue);
     });
 
@@ -635,17 +617,13 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
-          properties: {
-            uniface: {
-              "icon-position" : "start-end"
-            }
-          }
+        "data": {
+          "icon-position": "start-end"
         },
-        elements : {
-          widget: document.createElement("div")
-        } ,
-        getTraceDescription: () => {
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -679,7 +657,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      propId = "uniface:numberValue";
+      propId = "numberValue";
       attrName = "newReturnNumber";
       defaultValue = "1";
       min = 1;
@@ -696,17 +674,13 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
-          properties: {
-            uniface: {
-              "numberValue" : "126"
-            }
-          }
+        "data": {
+          "numberValue": "126"
         },
-        elements : {
-          widget: document.createElement("div")
-        } ,
-        getTraceDescription: () => {
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -738,7 +712,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      propId = "uniface:icon-position";
+      propId = "icon-position";
       attrName = "button";
       defaultValue = "1";
       element = new HtmlAttributeBoolean(widgetClass, propId, attrName, defaultValue);
@@ -751,17 +725,13 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
-          properties: {
-            uniface: {
-              "icon-position" : "1-start-end"
-            }
-          }
+        "data": {
+          "icon-position": "1-start-end"
         },
-        elements : {
-          widget: document.createElement("div")
-        } ,
-        getTraceDescription: () => {
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -799,7 +769,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      propId = "uniface:icon-position";
+      propId = "icon-position";
       attrName = "ariaValueMax";
       defaultValue = "1";
       element = new HtmlValueAttributeBoolean(widgetClass, propId, attrName, defaultValue);
@@ -813,28 +783,24 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
-          properties: {
-            uniface: {
-              "icon-position" : "1-start-end"
-            }
-          }
+        "data": {
+          "icon-position": "1-start-end"
         },
-        elements : {
-          widget: document.createElement("div")
-        } ,
-        getTraceDescription: () => {
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": () => {
           return "description";
         }
       };
       buttonWidget.onConnect(returnedProcess, "");
       buttonWidget.dataInit();
-      buttonWidget.dataUpdate(widgetInstance.data.properties);
+      buttonWidget.dataUpdate(widgetInstance.data);
 
       element.refresh(buttonWidget);
-      expect(buttonWidget.data.properties.uniface).to.have.any.keys("icon","icon-position","format-error","format-error-message");
-      expect(buttonWidget.data.properties.uniface["format-error"]).to.equal(true);
-      expect(buttonWidget.data.properties.uniface["format-error-message"]).to.equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+      expect(buttonWidget.data).to.have.any.keys("icon", "icon-position", "format-error", "format-error-message");
+      expect(buttonWidget.data["format-error"]).to.equal(true);
+      expect(buttonWidget.data["format-error-message"]).to.equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
     });
   });
 
@@ -862,8 +828,8 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      propMin = "uniface:min";
-      propMax = "uniface:max";
+      propMin = "min";
+      propMax = "max";
       defaultMin = 0;
       defaultMax = 10;
       element = new HtmlAttributeMinMaxLength(widgetClass, propMin, propMax, defaultMin, defaultMax);
@@ -878,10 +844,10 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
     it("Check Setters", function () {
-      let setterKeys = Object.keys(element.widgetClass.setters.uniface);
+      let setterKeys = Object.keys(element.widgetClass.setters);
 
-      expect(setterKeys[setterKeys.length-2]).to.equal("min");
-      expect(setterKeys[setterKeys.length-1]).to.equal("max");
+      expect(setterKeys[setterKeys.length - 2]).to.equal("min");
+      expect(setterKeys[setterKeys.length - 1]).to.equal("max");
     });
 
 
@@ -891,22 +857,18 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       divElement.value = "";
 
       const widgetInstance = {
-        data: {
-          properties: {
-            uniface: {
-              "min" : "12" ,
-              "max" : "100"
-            },
-            value: ""
-          }
+        "data": {
+          "min": "12",
+          "max": "100",
+          "value": ""
         },
-        elements : {
-          widget: divElement
-        } ,
-        widget : {
-          maxlengthHasBeenSet : ""
-        } ,
-        getTraceDescription: () => {
+        "elements": {
+          "widget": divElement
+        },
+        "widget": {
+          "maxlengthHasBeenSet": ""
+        },
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -941,10 +903,10 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
       widgetClass = Widget;
       property = {
-        id : "propertyClass" ,
-        value : 26
+        "id": "propertyClass",
+        "value": 26
       };
-      element = new StyleProperty(widgetClass ,property);
+      element = new StyleProperty(widgetClass, property);
     });
 
     it("should initialize with correct properties", function () {
@@ -957,8 +919,8 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       let lengthKeys = setterKeys.length;
       let lengthDefaultKeys = defaultKeys.length;
 
-      expect(setterKeys[lengthKeys-1]).to.equal("style");
-      expect(defaultKeys[lengthDefaultKeys-1]).to.equal("style");
+      expect(setterKeys[lengthKeys - 1]).to.equal("style");
+      expect(defaultKeys[lengthDefaultKeys - 1]).to.equal("style:id");
       expect(element.defaultStyleProperty.value).to.equal(property.value);
       expect(element.defaultStyleProperty.id).to.equal(property.id);
     });
@@ -966,17 +928,13 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
     it('should refresh correctly', function () {
       const widgetInstance = {
-        data: {
-          properties: {
-            style : {
-              color : "red"
-            }
-          }
+        "data": {
+          "style:color": "red"
         },
-        elements : {
-          widget: document.createElement("div")
-        } ,
-        getTraceDescription: () => {
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -1025,10 +983,10 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
     it("Check getTriggerMapping functionality", function () {
       const widgetInstance = {
-        elements : {
-          widget: document.createElement("div")
-        } ,
-        getTraceDescription: () => {
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -1059,7 +1017,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      propId = "uniface:tri-state";
+      propId = "tri-state";
       defaultValue = false;
       element = new IgnoreProperty(widgetClass, propId, defaultValue);
     });
@@ -1070,7 +1028,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
     it("Check Setters and Default values", function () {
-      let setterKeys = Object.keys(element.widgetClass.setters.uniface);
+      let setterKeys = Object.keys(element.widgetClass.setters);
       expect(setterKeys[setterKeys.length - 1]).to.equal("tri-state");
       expect(element.defaultValue).to.equal(defaultValue);
     });
@@ -1113,10 +1071,10 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     it("Check Setters and Default values", function () {
       let setterKeys = Object.keys(element.widgetClass.setters);
       let defaultValues = element.widgetClass.defaultValues;
-      let setterKeysForUniface = Object.keys(element.widgetClass.setters.uniface);
-      let defaultValuesForUniface =element.widgetClass.defaultValues.uniface;
+      let setterKeysForUniface = Object.keys(element.widgetClass.setters);
+      let defaultValuesForUniface = element.widgetClass.defaultValues;
 
-      expect(setterKeysForUniface[0]).to.equal("display-format");
+      expect(setterKeysForUniface[1]).to.equal("display-format");
       expect(defaultValuesForUniface["display-format"]).to.equal("rep");
       expect(setterKeys[0]).to.equal("valrep");
       expect(defaultValues["valrep"].length).to.equal(0);
@@ -1125,32 +1083,28 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     it('Should refresh correctly', function () {
       const valRepArray = [
         {
-          value: "1",
-          representation: "option one"
+          "value": "1",
+          "representation": "option one"
         },
         {
-          value: "2",
-          representation: "option two"
+          "value": "2",
+          "representation": "option two"
         },
         {
-          value: "3",
-          representation: "option three"
+          "value": "3",
+          "representation": "option three"
         }
       ];
 
       const widgetInstance = {
-        data: {
-          properties: {
-            valrep: valRepArray,
-            uniface: {
-              "display-format": "val"
-            }
-          }
+        "data": {
+          "valrep": valRepArray,
+          "display-format": "val"
         },
-        elements : {
-          widget: document.createElement("div")
-        } ,
-        getTraceDescription: () => {
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": () => {
           return "description";
         }
       };

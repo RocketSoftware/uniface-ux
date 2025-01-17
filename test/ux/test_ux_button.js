@@ -93,7 +93,7 @@
         const widget = tester.construct();
         assert(widget, "widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-button'], "Class is not defined");
+        assert(widgetClass.defaultValues['class:u-button'], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -117,8 +117,7 @@
   });
 
   describe("Data Init", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+    const classes = tester.getDefaultClasses();
     var element;
 
     beforeEach(function () {
@@ -147,9 +146,8 @@
     });
 
     it("check 'icon' and 'icon-position'", function () {
-      let unifaceProperties = tester.defaultValues.uniface;
-      assert.equal(unifaceProperties["icon"], '', "Default value of icon should be ''");
-      assert.equal(unifaceProperties["icon-position"], 'start', "Default value of icon-position will be start");
+      assert.equal(tester.defaultValues["icon"], '', "Default value of icon should be ''");
+      assert.equal(tester.defaultValues["icon-position"], 'start', "Default value of icon-position will be start");
     });
 
     it("check value", function () {
@@ -169,9 +167,9 @@
 
     it("update only button text", function () {
       let buttonText = 'Button';
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          value: buttonText
+          "value": buttonText
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -182,30 +180,26 @@
 
     it("update button text, icon and icon-position to default", function () {
       let buttonText = 'Button';
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          value: buttonText,
-          uniface: {
-            icon: "Home"
-          }
+          "value": buttonText,
+          "icon": "Home"
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
-        expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(tester.defaultValues.uniface["icon-position"]);
+        expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(tester.defaultValues["icon-position"]);
       });
     });
 
     it("update icon-position to end", function () {
       let buttonText = 'Button';
       let iconPosition = "end";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "icon-position": iconPosition
-          },
-          value: buttonText
+          "icon-position": iconPosition,
+          "value": buttonText
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -217,9 +211,9 @@
 
     it("update icon only button", function () {
       let buttonText = '';
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          value: buttonText
+          "value": buttonText
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
@@ -231,31 +225,29 @@
 
     it("update button text and icon will move to last selected slot", function () {
       let buttonText = 'Button';
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          value: buttonText
+          "value": buttonText
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
-        expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(tester.widget.data.properties.uniface["icon-position"]);
+        expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(tester.widget.data["icon-position"]);
       });
     });
 
     it("if icon-position is other than start and end then it should allot default slot to icon", function () {
       let buttonText = 'Button';
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "icon-position": "stat"
-          }
+          "icon-position": "stat"
         });
       }).then(function () {
         expect(element.querySelector('span.u-text').innerText).equal(buttonText);
         assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
         assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
-        expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(tester.defaultValues.uniface["icon-position"]);
+        expect(element.querySelector('span.u-icon').getAttribute("slot")).equal(tester.defaultValues["icon-position"]);
       });
     });
 
@@ -329,17 +321,13 @@
     it('should refresh correctly and modify the element text and may be icon if we add icon in button', function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
-          properties: {
-            uniface: {
-              "icon": "",
-              "icon-position": "start"
-            },
-            value: ""
-          }
+        "data": {
+          "icon": "",
+          "icon-position": "start",
+          "value": ""
         },
-        elements: tester.construct().elements,
-        getTraceDescription: () => {
+        "elements": tester.construct().elements,
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -366,8 +354,8 @@
     });
 
     it('should register default values for icon properties', function () {
-      expect(instance.widgetClass.defaultValues.uniface.icon).equal("");
-      expect(instance.widgetClass.defaultValues.uniface["icon-position"]).equal("start");
+      expect(instance.widgetClass.defaultValues.icon).equal("");
+      expect(instance.widgetClass.defaultValues["icon-position"]).equal("start");
     });
 
     it('should generate and return layout correctly', function () {
@@ -380,17 +368,13 @@
     it('should refresh correctly and modify the element text and may be icon if we add icon in button', function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
-          properties: {
-            uniface: {
-              "icon": "",
-              "icon-position": "start"
-            },
-            value: ""
-          }
+        "data": {
+          "icon": "",
+          "icon-position": "start",
+          "value": ""
         },
-        elements: tester.construct().elements,
-        getTraceDescription: () => {
+        "elements": tester.construct().elements,
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -404,16 +388,13 @@
     it("add icon to test classes are added in the icon slot or not", function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
-          properties: {
-            uniface: {
-              "icon": "Home"
-            },
-            value: ""
-          }
+        "data": {
+          "icon": "Home",
+          "value": ""
         },
-        elements: tester.construct().elements,
-        getTraceDescription: () => {
+
+        "elements": tester.construct().elements,
+        "getTraceDescription": () => {
           return "description";
         }
       };
@@ -428,16 +409,12 @@
     it("test delete icon class functionality in slotted icon element", function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
-          properties: {
-            uniface: {
-              "icon": ""
-            },
-            value: ""
-          }
+        "data": {
+          "icon": "",
+          "value": ""
         },
-        elements: tester.construct().elements,
-        getTraceDescription: () => {
+        "elements": tester.construct().elements,
+        "getTraceDescription": () => {
           return "description";
         }
       };

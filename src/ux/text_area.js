@@ -49,7 +49,7 @@ export class TextArea extends Widget {
     new HtmlAttribute(this, "html:placeholder", "placeholder", undefined),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
-    new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
+    new HtmlAttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new HtmlAttributeChoice(this, "html:resize", "resize", ["none", "both", "horizontal", "vertical"], "both"),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
@@ -58,7 +58,7 @@ export class TextArea extends Widget {
     new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
     new StyleClass(this, ["u-text-area", "outline"])
   ], [
-    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end")
   ], [
     new Trigger(this, "onchange", "change", true)

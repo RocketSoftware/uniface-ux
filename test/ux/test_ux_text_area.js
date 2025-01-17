@@ -90,7 +90,7 @@
         const widget = tester.construct();
         assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-text-area'], "Class is not defined");
+        assert(widgetClass.defaultValues['class:u-text-area'], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -149,8 +149,8 @@
 
   // Data Init
   describe("Data Init", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+    const classes = tester.getDefaultClasses();
+
     var element;
 
     beforeEach(function () {
@@ -194,9 +194,7 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-text": textAreaLabel
-          }
+          "label-text": textAreaLabel
         });
       }).then(function () {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
@@ -208,9 +206,7 @@
     it("Set label position before", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": "before"
-          }
+          "label-position": "before"
         });
       }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -231,9 +227,7 @@
     it("Set label position below", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": "below"
-          }
+          "label-position": "below"
         });
       }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -254,10 +248,8 @@
     it("reset label and its position", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": uniface.RESET,
-            "label-text": uniface.RESET
-          }
+          "label-position": uniface.RESET,
+          "label-text": uniface.RESET
         });
       }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute('u-label-position');
@@ -279,9 +271,7 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "resize": "none"
-          }
+          "html:resize": "none"
         });
       }).then(function () {
         let resizePropText = widget.elements.widget.getAttribute("resize");
@@ -294,9 +284,7 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "resize": resizeProp
-          }
+          "html:resize": resizeProp
         });
       }).then(function () {
         let resizePropText = widget.elements.widget.getAttribute("resize");
@@ -309,9 +297,7 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "resize": resizeProp
-          }
+          "html:resize": resizeProp
         });
       }).then(function () {
         let resizePropText = widget.elements.widget.getAttribute("resize");
@@ -324,9 +310,7 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "resize": resizeProp
-          }
+          "html:resize": resizeProp
         });
       }).then(function () {
         let resizePropText = widget.elements.widget.getAttribute("resize");
@@ -339,9 +323,7 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "hidden": hiddenProp
-          }
+          "html:hidden": hiddenProp
         });
       }).then(function () {
         let hiddenPropPresent = widget.elements.widget.hasAttribute("hidden");
@@ -354,9 +336,7 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "hidden": hiddenProp
-          }
+          "html:hidden": hiddenProp
         });
       }).then(function () {
         let hiddenPropPresent = widget.elements.widget.hasAttribute("hidden");
@@ -379,9 +359,7 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "cols": colsProp
-          }
+          "html:cols": colsProp
         });
       }, 100).then(function () {
         let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
@@ -396,9 +374,7 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "cols": colsProp
-          }
+          "html:cols": colsProp
         });
       }, 100).then(function () {
         let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
@@ -413,9 +389,7 @@
       let placeHolderText = "Input the Number";
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "placeholder": placeHolderText
-          }
+          "html:placeholder": placeHolderText
         });
       }).then(function () {
         let placeHolderTextDOM = widget.elements.widget.getAttribute('placeholder');
@@ -428,9 +402,7 @@
       let readOnly = "readOnly";
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "readonly": true
-          }
+          "html:readonly": true
         });
       }).then(function () {
         assert(widget.elements.widget.hasAttribute(readOnly), "Failed to show the readonly attribute");
@@ -442,9 +414,7 @@
       let readOnly = "readOnly";
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "readonly": false
-          }
+          "html:readonly": false
         });
       }).then(function () {
         assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to hide the readonly attribute");
@@ -456,7 +426,7 @@
       let disabled = "disabled";
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": { "disabled": true }
+          "html:disabled": true
         });
       }).then(function () {
         assert(widget.elements.widget.hasAttribute(disabled), "Failed to show the disabled attribute");
@@ -468,9 +438,7 @@
       let disabled = "disabled";
       return asyncRun(function () {
         tester.dataUpdate({
-          html: {
-            "disabled": false
-          }
+          "html:disabled": false
         });
       }).then(function () {
         assert(!widget.elements.widget.hasAttribute(disabled), "Failed to hide the disabled attribute");
@@ -482,9 +450,7 @@
       let appearanceStyle = "outline";
       return asyncRun(function () {
         tester.dataUpdate({
-          html: {
-            "appearance": appearanceStyle
-          }
+          "html:appearance": appearanceStyle
         });
       }, 100).then(function () {
         assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance outfill attribute");
@@ -498,9 +464,7 @@
       let appearanceStyle = "filled";
       return asyncRun(function () {
         tester.dataUpdate({
-          html: {
-            "appearance": appearanceStyle
-          }
+          "html:appearance": appearanceStyle
         });
       }).then(function () {
         assert(widget.elements.widget.hasAttribute('appearance'), "Failed to show the appearance filled attribute");
@@ -523,10 +487,8 @@
     it("setting minlength and maxlength", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "minlength": minlength,
-            "maxlength": maxlength
-          }
+          "html:minlength": minlength,
+          "html:maxlength": maxlength
         });
       }).then(function () {
         expect(widget.elements.widget.hasAttribute("maxlength"), "Failed to show the maxlength attribute");
@@ -539,10 +501,8 @@
     it("Set invalid value in text area", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            error: true,
-            "error-message": "Field Value length mismatch."
-          }
+          "error": true,
+          "error-message": "Field Value length mismatch."
         });
       }).then(function () {
         expect(widget.elements.widget).to.have.class("u-invalid");
@@ -558,9 +518,7 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "rows": rowsProp
-          }
+          "html:rows": rowsProp
         });
       }).then(function () {
         let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
@@ -575,9 +533,7 @@
       // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
-          "html": {
-            "rows": rowsProp
-          }
+          "html:rows": rowsProp
         });
       }).then(function () {
         let colsText = widget.elements.widget.shadowRoot.querySelector("textarea").getAttribute("cols");
@@ -598,10 +554,8 @@
     it("Hide Error Set invalid value in text Area", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            error: false,
-            "error-message": "Field Value length mismatch."
-          }
+          "error": false,
+          "error-message": "Field Value length mismatch."
         });
         widget.hideError("Field Value length mismatch.");
       }).then(function () {

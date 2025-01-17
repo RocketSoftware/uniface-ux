@@ -33,9 +33,8 @@ import { Widget } from "../../src/ux/widget.js";
 
       base.registerSetter(widgetClass, propId, worker);
 
-      expect(String(Object.keys(widgetClass.setters))).to.equal("html");
-      expect(String(Object.keys(widgetClass.setters.html))).to.equal("disabled");
-      expect(widgetClass.setters.html.disabled[0].constructor.name).to.equal("Worker");
+      expect(String(Object.keys(widgetClass.setters))).to.equal("html:disabled");
+      expect(widgetClass.setters["html:disabled"][0].constructor.name).to.equal("Worker");
 
     });
 
@@ -45,9 +44,8 @@ import { Widget } from "../../src/ux/widget.js";
 
       base.registerGetter(widgetClass, propId, worker);
 
-      expect(String(Object.keys(widgetClass.getters))).to.equal("html");
-      expect(String(Object.keys(widgetClass.getters.html))).to.equal("disabled");
-      expect(widgetClass.getters.html.disabled.constructor.name).to.equal("Worker");
+      expect(String(Object.keys(widgetClass.getters))).to.equal("html:disabled");
+      expect(widgetClass.getters["html:disabled"].constructor.name).to.equal("Worker");
     });
 
 
@@ -57,9 +55,8 @@ import { Widget } from "../../src/ux/widget.js";
 
       base.registerDefaultValue(widgetClass, propId, defaultValue);
 
-      expect(String(Object.keys(widgetClass.defaultValues))).to.equal("html");
-      expect(String(Object.keys(widgetClass.defaultValues.html))).to.equal("testDefault");
-      expect(widgetClass.defaultValues.html.testDefault).to.equal(defaultValue);
+      expect(String(Object.keys(widgetClass.defaultValues))).to.equal("html:testDefault");
+      expect(widgetClass.defaultValues["html:testDefault"]).to.equal(defaultValue);
 
     });
 
@@ -78,7 +75,7 @@ import { Widget } from "../../src/ux/widget.js";
       subWidgetId = "change-button";
       subWidgetStyleClass = "u-change-button";
       subWidgetClass = new Button();
-      subWidgetTriggers = ["trigger1" , "trigger2"];
+      subWidgetTriggers = ["trigger1", "trigger2"];
 
       base.registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers);
 
@@ -99,18 +96,14 @@ import { Widget } from "../../src/ux/widget.js";
     it("getNode", function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
-          properties: {
-            uniface: {
-              "uniface": "",
-              "icon-position": "start"
-            },
-            value: ""
-          }
+        "data": {
+          "uniface": "",
+          "icon-position": "start",
+          "value": ""
         }
       };
-      url = "uniface:icon-position";
-      let returnedNode = base.getNode(widgetInstance.data.properties, url);
+      url = "icon-position";
+      let returnedNode = base.getNode(widgetInstance.data, url);
       expect(String(returnedNode)).to.equal("start");
     });
 
@@ -131,52 +124,12 @@ import { Widget } from "../../src/ux/widget.js";
       expect(base.fieldValueToBoolean(0)).to.equal(false);
     });
 
-    it("fixData", function () {
-      let UData = {
-        value: 56,
-        uniface: {
-          "icon:this-is-bad-data:baddata": "bad",
-          "icon-position": "start"
-        }
-      };
-
-      let correctedData = {
-        value: 56,
-        uniface: {
-          "icon-position": "start"
-        },
-        "icon": {
-          "this-is-bad-data": {
-            uniface: {
-              "baddata": "bad"
-            }
-          }
-        }
-      };
-
-      expect(base.fixData("TESTBASIC")).to.eql({
-        0: 'T',
-        1: 'E',
-        2: 'S',
-        3: 'T',
-        4: 'B',
-        5: 'A',
-        6: 'S',
-        7: 'I',
-        8: 'C'
-      });
-
-      let returnData = base.fixData(UData);
-      expect(returnData).to.eql(correctedData);
-
-    });
-
     it("getFormattedValrep", function () {
       let valRepString = "valrep1=value1valrep2=value2";
       let formattedValReps = base.getFormattedValrep(valRepString);
 
       expect(formattedValReps).to.have.lengthOf(2);
-      expect(Object.keys(formattedValReps[0])).to.eql([ 'value', 'representation' ]);
+      expect(Object.keys(formattedValReps[0])).to.eql(['value', 'representation']);
 
       expect(formattedValReps[0].value).to.eql("valrep1");
       expect(formattedValReps[0].representation).to.eql("value1");
@@ -209,7 +162,7 @@ import { Widget } from "../../src/ux/widget.js";
       let displayFormat = "valrep";
       let valRepString = "<p>this is paragraph</p>";
       let representation = "<p>this is paragraph</p>";
-      let formattedValReps = base.getFormattedValrepItemAsHTML(displayFormat,valRepString,representation);
+      let formattedValReps = base.getFormattedValrepItemAsHTML(displayFormat, valRepString, representation);
       expect(formattedValReps.querySelector('.u-valrep-value').className).to.eql('u-valrep-value u-value');
       expect(formattedValReps.querySelector('.u-valrep-representation').textContent).to.eql('this is paragraph');
       expect(formattedValReps.querySelector('.u-valrep-representation').innerHTML).to.eql(representation);

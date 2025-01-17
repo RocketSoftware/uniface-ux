@@ -1,4 +1,4 @@
-(function() {
+(function () {
   'use strict';
 
   const assert = chai.assert;
@@ -17,7 +17,7 @@
               Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
   }
 
-  describe("Uniface Mockup tests", function() {
+  describe("Uniface Mockup tests", function () {
 
     it("Get class " + widgetName, function() {
       verifyWidgetClass(widgetClass);
@@ -25,9 +25,9 @@
 
   });
 
-  describe("Uniface static structure constructor definition", function() {
+  describe("Uniface static structure constructor definition", function () {
 
-    it('should have a static property structure of type Element', function() {
+    it('should have a static property structure of type Element', function () {
       verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
       expect(structure.constructor).to.be.an.instanceof(Element.constructor);
@@ -42,16 +42,16 @@
 
   });
 
-  describe(widgetName + ".processLayout", function() {
+  describe(widgetName + ".processLayout", function () {
     let element;
 
-    it("processLayout", function() {
+    it("processLayout", function () {
       verifyWidgetClass(widgetClass);
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
     });
 
-    describe("Checks", function() {
+    describe("Checks", function () {
 
       before(function() {
         verifyWidgetClass(widgetClass);
@@ -92,7 +92,7 @@
         const widget = tester.construct();
         assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-checkbox'], "Class is not defined");
+        assert(widgetClass.defaultValues['class:u-checkbox'], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -150,8 +150,7 @@
 
   // Data Init
   describe("Data Init", function() {
-    const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+    const classes = tester.getDefaultClasses();
     let element;
 
     beforeEach(function() {
@@ -180,14 +179,13 @@
     });
 
     it("check tri-state, tabindex, hidden , disabled, readonly and title", function() {
-      let htmlProperties = tester.defaultValues.html;
-      let unifaceProperties = tester.defaultValues.uniface;
-      assert.equal(htmlProperties["tabindex"], 0, "Default value of html:tabindex should be 0");
-      assert.equal(htmlProperties["title"], undefined, "Default value of html:title should be undefined");
-      assert.equal(htmlProperties["disabled"], false, "Default value of disabled  should be false");
-      assert.equal(htmlProperties["readonly"], false, "Default value of readonly  should be false");
-      assert.equal(htmlProperties["hidden"], false, "Default value of hidden  should be false");
-      assert.equal(unifaceProperties["tri-state"], false, "Default value of label-position will be above");
+
+      assert.equal(tester.defaultValues["html:tabindex"], 0, "Default value of html:tabindex should be 0");
+      assert.equal(tester.defaultValues["html:title"], undefined, "Default value of html:title should be undefined");
+      assert.equal(tester.defaultValues["html:disabled"], false, "Default value of disabled  should be false");
+      assert.equal(tester.defaultValues["html:readonly"], false, "Default value of readonly  should be false");
+      assert.equal(tester.defaultValues["html:hidden"], false, "Default value of hidden  should be false");
+      assert.equal(tester.defaultValues["tri-state"], false, "Default value of label-position will be above");
     });
 
     it("check value", function() {
@@ -207,7 +205,7 @@
     it("set value to 1 and make the checkbox toggle", function() {
       return asyncRun(function() {
         tester.dataUpdate({
-          value: 1
+          "value": 1
         });
       }).then(function() {
         expect(element).to.have.class("checked");
@@ -218,7 +216,7 @@
     it("set value to false and make the switch checkbox in unchecked state", function() {
       return asyncRun(function() {
         tester.dataUpdate({
-          value: false
+          "value": false
         });
       }).then(function() {
         expect(element).to.not.have.class("checked");
@@ -229,7 +227,7 @@
     it("set value to '' and make the checkbox in indeterminate state", function() {
       return asyncRun(function() {
         tester.dataUpdate({
-          value: ""
+          "value": ""
         });
       }).then(function() {
         expect(element).to.not.have.class("checked");
@@ -243,9 +241,7 @@
       let checkBoxLabelText = "Label";
       return asyncRun(function() {
         tester.dataUpdate({
-          uniface: {
-            "label-text": checkBoxLabelText
-          }
+          "label-text": checkBoxLabelText
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
@@ -258,10 +254,8 @@
       let checkBoxTitle = "On";
       return asyncRun(function() {
         tester.dataUpdate({
-          "html": {
-            "title": checkBoxTitle
-          },
-          value: 1
+          "html:title": checkBoxTitle,
+          "value": 1
         });
       }).then(function() {
         assert(widget.elements.widget.hasAttribute("title"), "Failed to show the title attribute");
@@ -273,10 +267,8 @@
       let checkBoxLabelText = "Label";
       return asyncRun(function() {
         tester.dataUpdate({
-          value: 1,
-          uniface: {
-            "label-text": checkBoxLabelText
-          }
+          "value": 1,
+          "label-text": checkBoxLabelText
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
@@ -289,10 +281,8 @@
       let checkBoxLabelText = "Label";
       return asyncRun(function() {
         tester.dataUpdate({
-          value: 0,
-          uniface: {
-            "label-text": checkBoxLabelText
-          }
+          "value": 0,
+          "label-text": checkBoxLabelText
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
@@ -305,17 +295,13 @@
       let checkBoxLabelText = "Label";
       return asyncRun(function() {
         tester.dataUpdate({
-          value: 1,
-          uniface: {
-            "label-text": checkBoxLabelText
-          }
+          "value": 1,
+          "label-text": checkBoxLabelText
         });
 
         tester.dataUpdate({
-          value: "",
-          uniface: {
-            "label-text": "Changed Label Text"
-          }
+          "value": "",
+          "label-text": "Changed Label Text"
         });
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
@@ -336,9 +322,10 @@
     it("set invalid value when checkbox checked state is false", function() {
       return asyncRun(function() {
         tester.dataUpdate({
-          value: 123
+          "value": 123
         });
       }).then(function() {
+
         expect(element).to.have.class("u-format-invalid");
         assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon");
         expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
@@ -359,10 +346,8 @@
     it("set error to false", function() {
       return asyncRun(function() {
         tester.dataUpdate({
-          uniface: {
-            error: false,
-            "error-message": ""
-          }
+          "error": false,
+          "error-message": ""
         });
       }).then(function() {
         expect(element).to.not.have.class("u-format-invalid");
@@ -373,14 +358,13 @@
     });
   });
 
-  describe("reset all properties", function() {
-
-    it("reset all property", function() {
+  describe("Reset all properties", function () {
+    it("reset all properties", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, "Failed to reset the properties, exception " + e);
       }
     });
   });
