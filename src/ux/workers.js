@@ -502,6 +502,8 @@ export class SubWidgetsByProperty extends Element {
       subWidgetIds.split("")?.forEach((subWidgetId) => {
         const classNamePropId = `${subWidgetId}:widget-class`;
         const triggersPropId = `${subWidgetId}:widget-triggers`;
+        const useValuePropId = `${subWidgetId}:usevalue`;
+        const usevalue = objectDefinition.getProperty(useValuePropId);
         const className = objectDefinition.getProperty(classNamePropId);
         const subWidgetClass = UNIFACE.ClassRegistry.get(className);
         const subWidgetTriggers = objectDefinition.getProperty(triggersPropId);
@@ -510,6 +512,7 @@ export class SubWidgetsByProperty extends Element {
         subWidgetDefinition.styleClass = `u-sw-${subWidgetId}`;
         subWidgetDefinition.triggers = subWidgetTriggers?.split("") || [];
         subWidgetDefinition.propPrefix = subWidgetId;
+        subWidgetDefinition.usevalue = usevalue;
         subWidgetDefinitions[subWidgetId] = subWidgetDefinition;
       });
     }
@@ -519,7 +522,9 @@ export class SubWidgetsByProperty extends Element {
   getValue(widgetInstance) {
     let value = {};
     Object.keys(widgetInstance.subWidgets).forEach((subWidgetId) => {
-      value[subWidgetId] = widgetInstance.subWidgets[subWidgetId].getValue();
+      if (widgetInstance.subWidgetDefinitions[subWidgetId] && widgetInstance.subWidgetDefinitions[subWidgetId].usevalue === "true") {
+        value[subWidgetId] = widgetInstance.subWidgets[subWidgetId].getValue();
+      }
     });
     return JSON.stringify(value);
   }
