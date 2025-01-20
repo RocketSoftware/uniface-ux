@@ -340,8 +340,9 @@ export class Base {
   /**
    * Extracts sub-widget data from the original data object and removes the corresponding
    * properties from original data object.
-   * @param {Object} data - The source object containing properties to extract.
-   * @returns {Object} An object containing the extracted sub-widget data.
+   * @param {UData} data - The source object containing properties to extract.
+   * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
+   * @returns {UData|undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
    */
   extractSubWidgetData(data, subWidgetPropPrefix) {
     let subWidgetData;
