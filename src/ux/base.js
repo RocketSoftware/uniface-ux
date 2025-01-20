@@ -14,7 +14,7 @@ export class Base {
   // Flag to enable or disable the usage of flat properties.
   static useFlatProperties = true;
 
-  constructor() {}
+  constructor() { }
 
   /**
    * This method registers the worker that Uniface calls to update the widget caused by a property change.
@@ -77,12 +77,14 @@ export class Base {
    * @param {typeof Widget} subWidgetClass
    * @param {String} subWidgetStyleClass
    * @param {Array} subWidgetTriggers
+   * @param {Array} delegatedProperties
    */
-  registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers) {
+  registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, delegatedProperties) {
     widgetClass.subWidgets[subWidgetId] = {
       "class": subWidgetClass,
       "styleClass": subWidgetStyleClass,
-      "triggers": subWidgetTriggers
+      "triggers": subWidgetTriggers,
+      "delegatedProperties": delegatedProperties
     };
   }
 

@@ -213,6 +213,11 @@ export class Widget extends Base {
       });
     });
 
+    // Iterate over all sub-widget IDs to update delegated properties from the widgetClass.
+    Object.keys(widgetClass.subWidgets).forEach((subWidgetId) => {
+      this.subWidgets[subWidgetId].delegatedProperties = widgetClass.subWidgets[subWidgetId].delegatedProperties;
+    });
+
     // Add the value-updater(s) of widget itself.
     let valueWorker = widgetClass.getters.value;
     let widgetUpdaters = valueWorker?.getValueUpdaters(this);
@@ -314,7 +319,8 @@ export class Widget extends Base {
       this.subWidgets[subWidgetId].dataInit();
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix);
+      let subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix);
+      subWidgetData = this.updateSubWidgetProperties(subWidgetId, data, subWidgetData);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
@@ -335,7 +341,8 @@ export class Widget extends Base {
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix);
+      let subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix);
+      subWidgetData = this.updateSubWidgetProperties(subWidgetId, data, subWidgetData);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
@@ -558,6 +565,28 @@ export class Widget extends Base {
         setter.refresh(this);
       });
     });
+  }
+
+  /**
+  * Updates data of subWidgets based on delegatedProperties.
+  * @param {Object} subWidgetId
+  * @param {Object} [data]
+  */
+  updateSubWidgetProperties(subWidgetId, data, subWidgetData) {
+    let delegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
+
+    if (!subWidgetData) {
+      subWidgetData = {};
+    }
+    // Iterate over each delegated property
+    delegatedProperties.forEach(property => {
+      // Check if the data object has the property
+      if (data.hasOwnProperty(property)) {
+        // Add the property to subWidgetData
+        subWidgetData[property] = data[property];
+      }
+    });
+    return subWidgetData;
   }
 
   /**

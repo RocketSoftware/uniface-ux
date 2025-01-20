@@ -359,7 +359,8 @@ export class SlottedSubWidget extends Element {
     subWidgetClassName,
     subWidgetDefaultValues,
     visible,
-    subWidgetTriggers
+    subWidgetTriggers,
+    delegatedProperties = []
   ) {
     // Redefine styleClass with hard-coded values based on sub-widget id
     styleClass = `u-sw-${subWidgetId}`;
@@ -367,6 +368,7 @@ export class SlottedSubWidget extends Element {
     super(widgetClass, tagName, styleClass, elementQuerySelector);
     this.subWidgetId = subWidgetId;
     this.subWidgetClass = UNIFACE.ClassRegistry.get(subWidgetClassName);
+    this.delegatedProperties = delegatedProperties;
     if (this.subWidgetClass) {
       if (subWidgetDefaultValues) {
         Object.keys(subWidgetDefaultValues).forEach((propId) => {
@@ -378,7 +380,7 @@ export class SlottedSubWidget extends Element {
       this.propId = subWidgetId;
       this.registerSetter(widgetClass, this.propId, this);
       this.registerDefaultValue(widgetClass, this.propId, visible);
-      this.registerSubWidget(widgetClass, subWidgetId, this.subWidgetClass, this.styleClass, subWidgetTriggers);
+      this.registerSubWidget(widgetClass, subWidgetId, this.subWidgetClass, this.styleClass, subWidgetTriggers, delegatedProperties);
     } else {
       this.error("constructor", `Widget class with name '${subWidgetClassName}' not found in UNIFACE.widgetRepository.`, "Not available");
     }
