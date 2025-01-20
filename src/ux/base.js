@@ -359,4 +359,28 @@ export class Base {
     }
     return subWidgetData;
   }
+
+  /**
+   * Extracts sub-widget property names from the original property names set and removes the corresponding
+   * property names from original property names set.
+   * @param {UPropertyNames} propertyNames - The source set containing property names to extract.
+   * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
+   * @returns {UPropertyNames|undefined} A set of extracted sub-widget property names, or `undefined` if no property names are found.
+   */
+  extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix) {
+    let subWidgetPropertyNames;
+    propertyNames.forEach((propertyName) => {
+      if (propertyName.startsWith(subWidgetPropPrefix)) {
+        let pos = propertyName.search(":");
+        if (pos > 0) {
+          subWidgetPropertyNames = subWidgetPropertyNames || new Set();
+          const key = propertyName.substring(pos + 1);
+          subWidgetPropertyNames.add(key);
+          // Remove the property names from the original set to avoid duplication.
+          propertyNames.delete(propertyName);
+        }
+      }
+    });
+    return subWidgetPropertyNames;
+  }
 }
