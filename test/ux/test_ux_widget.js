@@ -12,13 +12,13 @@ export class TestWidget extends Widget {
   static uiBlocking = "disabled";
 
   static structure = new Element(this, "fluent-text-field", "", "", [
-    new StyleClass(this, ["u-test-field"]),
+    new StyleClass(this, ["u-test-field", "u-test-field-2"]),
     new HtmlAttribute(this, "html:current-value", "current-value", ""),
     new HtmlValueAttributeBoolean(this, "value", "checked", false)
   ], [
     new SlottedSubWidget(this, "span", "u-change-button", ".u-change-button", "end", "change-button", "UX.Button", {
-      "uniface:icon": "",
-      "uniface:icon-position": "end",
+      "icon": "",
+      "icon-position": "end",
       "value": "Change",
       "classes:u-change-button": true,
       "html:title": "",
@@ -51,23 +51,21 @@ export class TestWidget extends Widget {
 
   describe("Widget Class methods", function () {
 
-    let definitions, returnedProcess , testwidget, consoleLogSpy;
+    let definitions, returnedProcess, testwidget, consoleLogSpy;
 
     definitions = {
       "widget_class": "Widget",
-      "properties": {
-        "controls-center": "four\u001bfive\u001bsix",
-        "controls-end": "seven",
-        "controls-start": "one\u001btwo\u001bthree",
-        "five:widget-class": "UX.Button",
-        "four:widget-class": "UX.Button",
-        "html:readonly": "true",
-        "one:widget-class": "UX.Button",
-        "seven:widget-class": "UX.Button",
-        "six:widget-class": "UX.Button",
-        "three:widget-class": "UX.Button",
-        "two:widget-class": "UX.Button"
-      }
+      "controls-center": "four\u001bfive\u001bsix",
+      "controls-end": "seven",
+      "controls-start": "one\u001btwo\u001bthree",
+      "five:widget-class": "UX.Button",
+      "four:widget-class": "UX.Button",
+      "html:readonly": "true",
+      "one:widget-class": "UX.Button",
+      "seven:widget-class": "UX.Button",
+      "six:widget-class": "UX.Button",
+      "three:widget-class": "UX.Button",
+      "two:widget-class": "UX.Button"
     };
 
     beforeEach(function () {
@@ -114,16 +112,22 @@ export class TestWidget extends Widget {
 
     it("dataInit", function () {
       expect(testwidget.element, "Widget top element is not defined!");
-      expect(TestWidget.defaultValues.classes).to.eql(testwidget.data.properties.classes);
+      const dataKeys = Object.keys(testwidget.data).filter(key => key.startsWith("class:"));
+      const defaultValueKeys = Object.keys(TestWidget.defaultValues).filter(key => key.startsWith("class:"));
+      expect(dataKeys).to.eql(defaultValueKeys);
+
+      expect(testwidget.data).to.have.deep.property("class:u-test-field", true);
+      expect(testwidget.data).to.have.deep.property("class:u-test-field-2", true);
+
+      expect(TestWidget.defaultValues).to.have.deep.property("class:u-test-field", true);
+      expect(TestWidget.defaultValues).to.have.deep.property("class:u-test-field-2", true);
     });
 
     it("dataUpdate", function () {
-      const data =  {
-        uniface: {
-          "icon": "",
-          "icon-position": "start"
-        },
-        value: true
+      const data = {
+        "icon": "",
+        "icon-position": "start",
+        "value": true
       };
 
       testwidget.dataUpdate(data);
@@ -133,10 +137,18 @@ export class TestWidget extends Widget {
       defaultTestWidget.dataInit();
 
       // Expect widget properties to differ from the initial Widget
-      expect(defaultTestWidget.data.properties).to.not.eql(testwidget.data.properties);
+      expect(defaultTestWidget.data).to.not.eql(testwidget.data);
 
-      expect(testwidget.data.properties.value).to.equal(true);
-      expect(testwidget.data.properties.uniface).to.have.any.keys(data.uniface);
+      // Exepct widget properties to be updated with the new data object
+      expect(testwidget.data.value).to.equal(true);
+      expect(testwidget.data.icon).to.equal("");
+      expect(testwidget.data["icon-position"]).to.equal("start");
+
+      // Expect the widget to still have the default values that were not updated by dataUpdate.
+      expect(testwidget.data["change-button"]).to.equal(false);
+      expect(testwidget.data["format-error"]).to.equal(false);
+      expect(testwidget.data["format-error-message"]).to.equal("");
+      expect(testwidget.data["html:current-value"]).to.equal("");
     });
 
     // button doesn't have a dateCleanup function
@@ -163,9 +175,10 @@ export class TestWidget extends Widget {
       };
 
       testwidget.showError(errorString);
-      expect(testwidget.data.properties.uniface).to.have.any.keys(errorReturn);
-      expect(testwidget.data.properties.uniface["error-message"]).equal(errorString);
-      expect(testwidget.data.properties.uniface["error"]).equal(true);
+      console.log(testwidget.data);
+      expect(testwidget.data).to.have.any.keys(errorReturn);
+      expect(testwidget.data["error-message"]).equal(errorString);
+      expect(testwidget.data["error"]).equal(true);
     });
 
     it("hideError", function () {
@@ -175,15 +188,15 @@ export class TestWidget extends Widget {
       };
 
       testwidget.hideError();
-      expect(testwidget.data.properties.uniface).to.have.any.keys(errorReturn);
-      expect(testwidget.data.properties.uniface["error-message"]).equal("");
-      expect(testwidget.data.properties.uniface["error"]).equal(false);
+      expect(testwidget.data).to.have.any.keys(errorReturn);
+      expect(testwidget.data["error-message"]).equal("");
+      expect(testwidget.data["error"]).equal(false);
     });
 
     it("blockUI", function () {
       expect(testwidget.elements.widget.disabled).to.equal(false);
 
-      testwidget.blockUI() ;
+      testwidget.blockUI();
       expect(testwidget.elements.widget.disabled).to.equal(true);
     });
 

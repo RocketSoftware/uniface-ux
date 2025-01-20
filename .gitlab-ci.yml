@@ -19,7 +19,7 @@ lint:
     - npm install --no-update --no-fund
     - echo "Lint repository"
     # do not allow warnings
-    - npx eslint . --max-warnings=0
+    - npm run lint
 
 build:
   stage: build

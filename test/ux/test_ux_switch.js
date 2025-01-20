@@ -92,7 +92,7 @@
         const widget = tester.construct();
         assert(widget, "widget is not defined!");
         const widgetClass = tester.getWidgetClass();
-        assert(widgetClass.defaultValues.classes['u-switch'], "Class is not defined");
+        assert(widgetClass.defaultValues['class:u-switch'], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -114,9 +114,9 @@
     widget.mapTrigger("onchange");
   });
 
-  describe("dataInit", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+  describe("Data Init", function () {
+    const classes = tester.getDefaultClasses();
+
     var element;
 
     beforeEach(function () {
@@ -145,9 +145,9 @@
     });
 
     it("set value to 1 and make the switch toggle", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          value: 1
+          "value": 1
         });
       }).then(function () {
         expect(element).to.have.class("checked");
@@ -156,9 +156,9 @@
     });
 
     it("set value to false and make the switch toggle in unchecked state", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          value: false
+          "value": false
         });
       }).then(function () {
         expect(element).to.not.have.class("checked");
@@ -168,11 +168,9 @@
 
     it("set label to switch", function () {
       let switchLabelText = "Label";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-text": switchLabelText
-          }
+          "label-text": switchLabelText
         });
       }).then(function () {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
@@ -183,12 +181,10 @@
 
     it("set checked message", function () {
       let switchCheckedText = "On";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "checked-message": switchCheckedText
-          },
-          value: 1
+          "checked-message": switchCheckedText,
+          "value": 1
         });
       }).then(function () {
         let checkedText = widget.elements.widget.querySelector("span.u-checked-message").innerText;
@@ -201,12 +197,10 @@
 
     it("set unchecked message", function () {
       let switchUnCheckedText = "Off";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "unchecked-message": switchUnCheckedText
-          },
-          value: 0
+          "unchecked-message": switchUnCheckedText,
+          "value": 0
         });
       }).then(function () {
         let uncheckedText = widget.elements.widget.querySelector("span.u-unchecked-message").innerText;
@@ -257,9 +251,9 @@
     });
 
     it("set invalid value when switch checked state is false", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          value: ""
+          "value": ""
         });
       }).then(function () {
         expect(element).to.have.class("u-format-invalid");
@@ -279,13 +273,11 @@
     });
 
     it("set error to false with checked and unchecked messages", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "checked-message": "On",
-            "unchecked-message": "Off"
-          },
-          value: 1
+          "checked-message": "On",
+          "unchecked-message": "Off",
+          "value": 1
         });
       }).then(function () {
         expect(element).to.not.have.class("u-format-invalid");
@@ -298,9 +290,9 @@
     });
 
     it("set error to false without checked and unchecked messages", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          value: 1
+          "value": 1
         });
       }).then(function () {
         expect(element).to.not.have.class("u-format-invalid");
@@ -313,18 +305,13 @@
     });
   });
 
-  describe("dataCleanup", function () {
-    let widget;
-    before(function () {
-      widget = tester.createWidget();
-    });
-
+  describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {
-        widget.dataCleanup(tester.widgetProperties);
+        tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, "Failed to reset the properties, exception " + e);
       }
     });
   });

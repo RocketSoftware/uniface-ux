@@ -111,8 +111,8 @@
   });
 
   describe("dataInit", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+    // Defines the classes from the widget's defaultValues.
+    const classes = tester.getDefaultClasses();
     var element;
 
     beforeEach(function () {
@@ -174,7 +174,7 @@
     it("Set HTML property", function (done) {
       // html: {appearance: "accent"}  // but: it stays as neutral not accent, but class accent is well set
       widget.dataUpdate({
-        html: { appearance: "accent" }
+        "html:appearance": "accent"
       });
 
       setTimeout(function () {
@@ -187,7 +187,7 @@
 
     it("Set STYLE property", function (done) {
       widget.dataUpdate({
-        style: { "background-color": "green" }
+        "style:background-color": "green"
       });
 
       setTimeout(function () {
@@ -201,7 +201,7 @@
 
     it("Set CLASS property", function (done) {
       widget.dataUpdate({
-        classes: { "ClassA": true }
+        "classes:ClassA": true
       });
 
       setTimeout(function () {
@@ -216,7 +216,8 @@
     it("Set icon and icon-position", function (done) {
       widget.dataUpdate({
         value: widgetName,  // not empty value, required by icon-position=start
-        uniface: { icon: "IncomingCall", 'icon-position': "start" }
+        icon: "IncomingCall",
+        'icon-position': "start"
       });
 
       setTimeout(function () {
@@ -231,10 +232,11 @@
     it("Change multiple properties", function (done) {
       widget.dataUpdate({
         value: "Button Text",
-        html: { appearance: "accent" },
-        style: { "background-color": "green" },
-        classes: { "ClassA": true },
-        uniface: { icon: "IncomingCall", 'icon-position': "start" }
+        "html:appearance": "accent",
+        "style:background-color": "green",
+        "classes:ClassA": true,
+        "icon": "IncomingCall",
+        'icon-position': "start"
       });
 
       setTimeout(function () {
@@ -272,7 +274,7 @@
 
     it("Set STYLE property 1 (setTimeout)", function (done) {
       widget.dataUpdate({
-        style: { "background-color": "green" }
+        "style:background-color": "green"
       });
 
       setTimeout(function () {
@@ -285,9 +287,9 @@
     });
 
     it("Set STYLE property 2 (promise 1)", function () {
-      const p = asyncRun(function() {
+      const p = asyncRun(function () {
         widget.dataUpdate({
-          style: { "background-color": "green" }
+          "style:background-color": "green"
         });
       });
       return p.then(function () { // check result
@@ -298,9 +300,9 @@
     });
 
     it("Set STYLE property 3 (promise 2)", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         widget.dataUpdate({
-          style: { "background-color": "green" }
+          "style:background-color": "green"
         });
       }).then(function () { // check result
         let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
@@ -322,49 +324,18 @@
     for (let i = 0; i < texts.length; i++) {
       it(texts[i]);
     }
-
   });
 
-  describe("dataCleanup", function () {
-    let widget;
 
-    beforeEach(function () {
-      widget = tester.createWidget();
-    });
-
-    it("value", function () {
+  describe("Reset all properties", function () {
+    it("reset all properties", function () {
       try {
-        widget.dataCleanup({ value: new Set(), html: new Set(), uniface: new Set() });
+        tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, "Failed to reset the properties, exception " + e);
       }
     });
-
-    it("style:color", function () {
-      try {
-        widget.dataCleanup({ html: new Set(), style: new Set(["color"]), uniface: new Set() });
-      } catch (e) {
-        console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
-      }
-    });
-
-  });
-
-  describe("End", function () {
-    let widget;
-
-    beforeEach(function () {
-      widget = tester.createWidget();
-    });
-
-    it("Set back to default", function () {
-      widget.dataUpdate({
-        value: widgetName
-      });
-    });
-
   });
 
 })();
