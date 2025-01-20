@@ -9,10 +9,10 @@
   const widgetClass = tester.getWidgetClass();
   const asyncRun = umockup.asyncRun;
 
-  const MOCK_EMPTY_DEFINITION = { properties: {} };
+  const MOCK_EMPTY_DEFINITION = { "properties": {} };
 
   const MOCK_EMPTY_START_CENTER_END_CONTROLS_DEFINITION = {
-    properties: {
+    "properties": {
       "subwidgets-start": "",
       "subwidgets-center": "",
       "subwidgets-end": "",
@@ -22,37 +22,37 @@
     }
   };
   const MOCK_START_CONTROLS_ONLY_DEFINITION = {
-    properties: {
+    "properties": {
       "subwidgets-start": "first",
       "first:widget-class": "UX.Button"
     }
   };
   const MOCK_CENTER_CONTROLS_ONLY_DEFINITION = {
-    properties: {
+    "properties": {
       "subwidgets-center": "second",
       "second:widget-class": "UX.Select"
     }
   };
   const MOCK_END_CONTROLS_ONLY_DEFINITION = {
-    properties: {
+    "properties": {
       "subwidgets-end": "first",
       "first:widget-class": "UX.TextField"
     }
   };
 
   const MOCK_CONTROLBAR_DEFAULT_PROPERTIES = {
-    classes: {
+    "classes": {
       "u-controlbar": true
     },
-    uniface: {
-      orientation: "horizontal",
+    "uniface": {
+      "orientation": "horizontal",
       "widget-resize": false
     },
-    value: null
+    "value": null
   };
 
   const MOCK_EMPTY_START_CONTROLS_DEFINITION = {
-    properties: {
+    "properties": {
       "subwidgets-start": "",
       "subwidgets-center": "size",
       "subwidgets-end": "goto",
@@ -62,7 +62,7 @@
     }
   };
   const MOCK_UNDEFINED_START_CONTROLS_DEFINITION = {
-    properties: {
+    "properties": {
       "subwidgets-center": "goto",
       "subwidgets-end": "size",
       "goto:widget-class": "UX.NumberField",
@@ -70,7 +70,7 @@
     }
   };
   const MOCK_EMPTY_CENTER_CONTROLS_DEFINITION = {
-    properties: {
+    "properties": {
       "subwidgets-start": "info",
       "subwidgets-center": "",
       "subwidgets-end": "size",
@@ -80,29 +80,29 @@
   };
   const valRepArray = [
     {
-      value: "1",
-      representation: "a"
+      "value": "1",
+      "representation": "a"
     },
     {
-      value: "10",
-      representation: "10"
+      "value": "10",
+      "representation": "10"
     },
     {
-      value: "25",
-      representation: "25"
+      "value": "25",
+      "representation": "25"
     },
     {
-      value: "50",
-      representation: "50"
+      "value": "50",
+      "representation": "50"
     },
     {
-      value: "100",
-      representation: "100"
+      "value": "100",
+      "representation": "100"
     }
   ];
 
   const MOCK_START_CENTER_END_CONTROLS_DEFINITION = {
-    properties: {
+    "properties": {
       "subwidgets-start": "info",
       "subwidgets-center": "goto",
       "subwidgets-end": "sizefirst",
@@ -115,7 +115,7 @@
 
 
   const MOCK_UNDEFINED_CENTER_CONTROLS_DEFINITION = {
-    properties: {
+    "properties": {
       "subwidgets-start": "info",
       "subwidgets-end": "size",
       "info:widget-class": "UX.PlainText",
@@ -124,7 +124,7 @@
   };
 
   const MOCK_EMPTY_END_CONTROLS_DEFINITION = {
-    properties: {
+    "properties": {
       "subwidgets-start": "info",
       "subwidgets-center": "goto",
       "subwidgets-end": "",
@@ -134,7 +134,7 @@
   };
 
   const MOCK_UNDEFINED_END_CONTROLS_DEFINITION = {
-    properties: {
+    "properties": {
       "subwidgets-start": "info",
       "subwidgets-center": "goto",
       "info:widget-class": "UX.PlainText",
@@ -142,26 +142,26 @@
     }
   };
   const MOCK_UNDEFINED_START_CENTER_END_CONTROLS_DEFINITION = {
-    properties: {
+    "properties": {
       "info:widget-class": "UX.PlainText",
       "goto:widget-class": "UX.NumberField",
       "size:widget-class": "UX.Select"
     }
   };
   const MOCK_CONTROLBAR_DATA = {
-    uniface: {
-      orientation: "vertical"
+    "uniface": {
+      "orientation": "vertical"
     },
-    style: {
-      padding: "10px"
+    "style": {
+      "padding": "10px"
     },
-    classes: {
-      classC: "true"
+    "classes": {
+      "classC": "true"
     }
   };
 
   const MOCK_CONTROLBAR_CONTROLS_DATA = {
-    uniface: {
+    "uniface": {
       "size:html:disabled": "true",
       "goto:html:hide-step": "true",
       "size:style:min-width": "100px",
