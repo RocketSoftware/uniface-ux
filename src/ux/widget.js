@@ -319,8 +319,8 @@ export class Widget extends Base {
       this.subWidgets[subWidgetId].dataInit();
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      let subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix);
-      subWidgetData = this.updateSubWidgetProperties(subWidgetId, data, subWidgetData);
+      let subWidgetData = this.extractSubWidgetData(data, subWidgetId, subWidgetPropPrefix);
+      // subWidgetData = this.updateSubWidgetProperties(subWidgetId, data, subWidgetData);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
@@ -341,8 +341,8 @@ export class Widget extends Base {
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      let subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix);
-      subWidgetData = this.updateSubWidgetProperties(subWidgetId, data, subWidgetData);
+      let subWidgetData = this.extractSubWidgetData(data, subWidgetId, subWidgetPropPrefix);
+      // subWidgetData = this.updateSubWidgetProperties(subWidgetId, data, subWidgetData);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
