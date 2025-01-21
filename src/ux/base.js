@@ -348,9 +348,9 @@ export class Base {
     let subWidgetData;
     for (let property in data) {
       if (property.startsWith(subWidgetPropPrefix)) {
-        subWidgetData = subWidgetData || {};
         const key = property.substring(subWidgetPropPrefix.length + 1);
         if (key) {
+          subWidgetData = subWidgetData || {};
           subWidgetData[key] = key === "valrep" ? this.getFormattedValrep(data[property]) : data[property];
           // Remove the property from the original data to avoid duplication.
           delete data[property];
@@ -371,9 +371,9 @@ export class Base {
     let subWidgetPropertyNames;
     propertyNames.forEach((propertyName) => {
       if (propertyName.startsWith(subWidgetPropPrefix)) {
-        subWidgetPropertyNames = subWidgetPropertyNames || new Set();
         const key = propertyName.substring(subWidgetPropPrefix.length + 1);
         if (key) {
+          subWidgetPropertyNames = subWidgetPropertyNames || new Set();
           subWidgetPropertyNames.add(key);
           // Remove the property names from the original set to avoid duplication.
           propertyNames.delete(propertyName);
