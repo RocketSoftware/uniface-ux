@@ -343,6 +343,7 @@ export class Base {
    * Extracts sub-widget data from the original data object and removes the corresponding
    * properties from original data object.
    * @param {Object} data - The source object containing properties to extract.
+   * @param {Object} delegatedProperties - The array containing list of delegated properties.
    * @returns {Object} An object containing the extracted sub-widget data.
    */
   extractSubWidgetData(data, subWidgetPropPrefix, delegatedProperties) {
@@ -359,16 +360,14 @@ export class Base {
         }
       }
     }
-    // Add delegated properties to subWidgetData.
-    // let delegatedProperties = this.subWidgets[subWidgetPropPrefix].delegatedProperties;
-    // Iterate over each delegated property.
+    // Iterate over each delegated property and add delegated property to subWidgetData.
     delegatedProperties.forEach(property => {
       // Check if the data object has the property.
       if (data.hasOwnProperty(property)) {
-        // Add the property to subWidgetData.
         if (!subWidgetData) {
           subWidgetData = {};
         }
+        // Add the property to subWidgetData.
         subWidgetData[property] = data[property];
       }
     });
