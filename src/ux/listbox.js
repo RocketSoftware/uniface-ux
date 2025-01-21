@@ -10,7 +10,6 @@ import {
   HtmlAttribute,
   HtmlAttributeNumber,
   HtmlAttributeBoolean,
-  HtmlAttributeChoice,
   IgnoreProperty,
   Worker
 } from "./workers.js";
