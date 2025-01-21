@@ -319,8 +319,8 @@ export class Widget extends Base {
       this.subWidgets[subWidgetId].dataInit();
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      let subWidgetData = this.extractSubWidgetData(data, subWidgetId, subWidgetPropPrefix);
-      // subWidgetData = this.updateSubWidgetProperties(subWidgetId, data, subWidgetData);
+      const delegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, delegatedProperties);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
@@ -341,8 +341,8 @@ export class Widget extends Base {
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      let subWidgetData = this.extractSubWidgetData(data, subWidgetId, subWidgetPropPrefix);
-      // subWidgetData = this.updateSubWidgetProperties(subWidgetId, data, subWidgetData);
+      const delegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, delegatedProperties);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
@@ -565,28 +565,6 @@ export class Widget extends Base {
         setter.refresh(this);
       });
     });
-  }
-
-  /**
-  * Updates data of subWidgets based on delegatedProperties.
-  * @param {Object} subWidgetId
-  * @param {Object} [data]
-  */
-  updateSubWidgetProperties(subWidgetId, data, subWidgetData) {
-    let delegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
-
-    if (!subWidgetData) {
-      subWidgetData = {};
-    }
-    // Iterate over each delegated property
-    delegatedProperties.forEach(property => {
-      // Check if the data object has the property
-      if (data.hasOwnProperty(property)) {
-        // Add the property to subWidgetData
-        subWidgetData[property] = data[property];
-      }
-    });
-    return subWidgetData;
   }
 
   /**

@@ -345,7 +345,7 @@ export class Base {
    * @param {Object} data - The source object containing properties to extract.
    * @returns {Object} An object containing the extracted sub-widget data.
    */
-  extractSubWidgetData(data, subWidgetId, subWidgetPropPrefix) {
+  extractSubWidgetData(data, subWidgetPropPrefix, delegatedProperties) {
     let subWidgetData;
     for (let property in data) {
       if (property.startsWith(subWidgetPropPrefix)) {
@@ -360,7 +360,7 @@ export class Base {
       }
     }
     // Add delegated properties to subWidgetData.
-    let delegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
+    // let delegatedProperties = this.subWidgets[subWidgetPropPrefix].delegatedProperties;
     // Iterate over each delegated property.
     delegatedProperties.forEach(property => {
       // Check if the data object has the property.
