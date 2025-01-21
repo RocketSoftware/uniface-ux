@@ -348,10 +348,9 @@ export class Base {
     let subWidgetData;
     for (let property in data) {
       if (property.startsWith(subWidgetPropPrefix)) {
-        let pos = property.search(":");
-        if (pos > 0) {
-          subWidgetData = subWidgetData || {};
-          let key = property.substring(pos + 1);
+        subWidgetData = subWidgetData || {};
+        const key = property.substring(subWidgetPropPrefix.length + 1);
+        if (key) {
           subWidgetData[key] = key === "valrep" ? this.getFormattedValrep(data[property]) : data[property];
           // Remove the property from the original data to avoid duplication.
           delete data[property];
@@ -372,10 +371,9 @@ export class Base {
     let subWidgetPropertyNames;
     propertyNames.forEach((propertyName) => {
       if (propertyName.startsWith(subWidgetPropPrefix)) {
-        let pos = propertyName.search(":");
-        if (pos > 0) {
-          subWidgetPropertyNames = subWidgetPropertyNames || new Set();
-          const key = propertyName.substring(pos + 1);
+        subWidgetPropertyNames = subWidgetPropertyNames || new Set();
+        const key = propertyName.substring(subWidgetPropPrefix.length + 1);
+        if (key) {
           subWidgetPropertyNames.add(key);
           // Remove the property names from the original set to avoid duplication.
           propertyNames.delete(propertyName);
