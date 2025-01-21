@@ -553,7 +553,7 @@ export class Widget extends Base {
         } else {
           this.data[property] = data[property];
         }
-        let setters = property.startsWith("class") ? widgetSetters["class"] : property.startsWith("style") ? widgetSetters["style"] : widgetSetters[property];
+        let setters = property.startsWith("class:") ? widgetSetters["class"] : property.startsWith("style:") ? widgetSetters["style"] : widgetSetters[property];
         if (setters) {
           setOfSetters.add(setters);
         } else if (reportUnsupportedPropertyWarnings) {
@@ -575,7 +575,7 @@ export class Widget extends Base {
    */
   cleanupClassProperties(propertyNames) {
     propertyNames.forEach((propertyName) => {
-      if (propertyName.startsWith("class")) {
+      if (propertyName.startsWith("class:")) {
         const className = propertyName.split(":")[1];
         this.elements.widget.classList.remove(className);
       }
