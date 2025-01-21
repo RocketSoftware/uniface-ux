@@ -112,16 +112,16 @@
     "createUxDefinitions" : function (defs, isUpdatable = false) {
       const definition = {
         "getProperty" : function (propertyName) {
-          return defs.properties[propertyName];
+          return defs[propertyName];
         },
         "getPropertyNames" : function () {
           // This  relies on the syntax and valrep-range having been translated into html properties.
           var propertyNames;
           var prop;
-          if (Object.keys(defs.properties).length > 0) {
+          if (Object.keys(defs).length > 0) {
             propertyNames = [];
-            for (prop in defs.properties) {
-              if (defs.properties.hasOwnProperty(prop)) {
+            for (prop in defs) {
+              if (defs.hasOwnProperty(prop)) {
                 propertyNames.push(externalizePropertyName(prop));
               }
             }
@@ -133,7 +133,7 @@
       };
       if (isUpdatable) {
         definition.setProperty = function (propertyName, propertyValue) {
-          defs.properties[propertyName] = propertyValue;
+          defs[propertyName] = propertyValue;
         };
       }
       return definition;

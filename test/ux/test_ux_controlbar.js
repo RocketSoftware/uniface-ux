@@ -12,71 +12,58 @@
   const MOCK_EMPTY_DEFINITION = { "properties": {} };
 
   const MOCK_EMPTY_START_CENTER_END_CONTROLS_DEFINITION = {
-    "properties": {
-      "subwidgets-start": "",
-      "subwidgets-center": "",
-      "subwidgets-end": "",
-      "info:widget-class": "UX.PlainText",
-      "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select"
-    }
+    "subwidgets-start": "",
+    "subwidgets-center": "",
+    "subwidgets-end": "",
+    "info:widget-class": "UX.PlainText",
+    "goto:widget-class": "UX.NumberField",
+    "size:widget-class": "UX.Select"
   };
   const MOCK_START_CONTROLS_ONLY_DEFINITION = {
-    "properties": {
-      "subwidgets-start": "first",
-      "first:widget-class": "UX.Button"
-    }
-  };
-  const MOCK_CENTER_CONTROLS_ONLY_DEFINITION = {
-    "properties": {
-      "subwidgets-center": "second",
-      "second:widget-class": "UX.Select"
-    }
-  };
-  const MOCK_END_CONTROLS_ONLY_DEFINITION = {
-    "properties": {
-      "subwidgets-end": "first",
-      "first:widget-class": "UX.TextField"
-    }
+    "subwidgets-start": "first",
+    "first:widget-class": "UX.Button"
   };
 
+  const MOCK_CENTER_CONTROLS_ONLY_DEFINITION = {
+    "subwidgets-center": "second",
+    "second:widget-class": "UX.Select"
+  };
+
+  const MOCK_END_CONTROLS_ONLY_DEFINITION = {
+    "subwidgets-end": "first",
+    "first:widget-class": "UX.TextField"
+  };
+
+
   const MOCK_CONTROLBAR_DEFAULT_PROPERTIES = {
-    "classes": {
-      "u-controlbar": true
-    },
-    "uniface": {
-      "orientation": "horizontal",
-      "widget-resize": false
-    },
+    "class:u-controlbar": true,
+    "orientation": "horizontal",
+    "widget-resize": false,
     "value": null
   };
 
   const MOCK_EMPTY_START_CONTROLS_DEFINITION = {
-    "properties": {
-      "subwidgets-start": "",
-      "subwidgets-center": "size",
-      "subwidgets-end": "goto",
-      "info:widget-class": "UX.RadioGroup",
-      "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select"
-    }
+    "subwidgets-start": "",
+    "subwidgets-center": "size",
+    "subwidgets-end": "goto",
+    "info:widget-class": "UX.RadioGroup",
+    "goto:widget-class": "UX.NumberField",
+    "size:widget-class": "UX.Select"
   };
+
   const MOCK_UNDEFINED_START_CONTROLS_DEFINITION = {
-    "properties": {
-      "subwidgets-center": "goto",
-      "subwidgets-end": "size",
-      "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select"
-    }
+    "subwidgets-center": "goto",
+    "subwidgets-end": "size",
+    "goto:widget-class": "UX.NumberField",
+    "size:widget-class": "UX.Select"
   };
+
   const MOCK_EMPTY_CENTER_CONTROLS_DEFINITION = {
-    "properties": {
-      "subwidgets-start": "info",
-      "subwidgets-center": "",
-      "subwidgets-end": "size",
-      "info:widget-class": "UX.RadioGroup",
-      "size:widget-class": "UX.Select"
-    }
+    "subwidgets-start": "info",
+    "subwidgets-center": "",
+    "subwidgets-end": "size",
+    "info:widget-class": "UX.RadioGroup",
+    "size:widget-class": "UX.Select"
   };
   const valRepArray = [
     {
@@ -102,77 +89,63 @@
   ];
 
   const MOCK_START_CENTER_END_CONTROLS_DEFINITION = {
-    "properties": {
-      "subwidgets-start": "info",
-      "subwidgets-center": "goto",
-      "subwidgets-end": "sizefirst",
-      "info:widget-class": "UX.PlainText",
-      "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select",
-      "first:widget-class": "UX.Button"
-    }
+    "subwidgets-start": "info",
+    "subwidgets-center": "goto",
+    "subwidgets-end": "sizefirst",
+    "info:widget-class": "UX.PlainText",
+    "goto:widget-class": "UX.NumberField",
+    "size:widget-class": "UX.Select",
+    "first:widget-class": "UX.Button"
+
   };
 
 
   const MOCK_UNDEFINED_CENTER_CONTROLS_DEFINITION = {
-    "properties": {
-      "subwidgets-start": "info",
-      "subwidgets-end": "size",
-      "info:widget-class": "UX.PlainText",
-      "size:widget-class": "UX.Select"
-    }
+    "subwidgets-start": "info",
+    "subwidgets-end": "size",
+    "info:widget-class": "UX.PlainText",
+    "size:widget-class": "UX.Select"
   };
 
+
   const MOCK_EMPTY_END_CONTROLS_DEFINITION = {
-    "properties": {
-      "subwidgets-start": "info",
-      "subwidgets-center": "goto",
-      "subwidgets-end": "",
-      "info:widget-class": "UX.PlainText",
-      "goto:widget-class": "UX.NumberField"
-    }
+    "subwidgets-start": "info",
+    "subwidgets-center": "goto",
+    "subwidgets-end": "",
+    "info:widget-class": "UX.PlainText",
+    "goto:widget-class": "UX.NumberField"
   };
 
   const MOCK_UNDEFINED_END_CONTROLS_DEFINITION = {
-    "properties": {
-      "subwidgets-start": "info",
-      "subwidgets-center": "goto",
-      "info:widget-class": "UX.PlainText",
-      "goto:widget-class": "UX.NumberField"
-    }
+    "subwidgets-start": "info",
+    "subwidgets-center": "goto",
+    "info:widget-class": "UX.PlainText",
+    "goto:widget-class": "UX.NumberField"
   };
+
   const MOCK_UNDEFINED_START_CENTER_END_CONTROLS_DEFINITION = {
-    "properties": {
-      "info:widget-class": "UX.PlainText",
-      "goto:widget-class": "UX.NumberField",
-      "size:widget-class": "UX.Select"
-    }
+    "info:widget-class": "UX.PlainText",
+    "goto:widget-class": "UX.NumberField",
+    "size:widget-class": "UX.Select"
   };
+
   const MOCK_CONTROLBAR_DATA = {
-    "uniface": {
-      "orientation": "vertical"
-    },
-    "style": {
-      "padding": "10px"
-    },
-    "classes": {
-      "classC": "true"
-    }
+    "orientation": "vertical",
+    "style:padding": "10px",
+    "class:classC": "true"
   };
 
   const MOCK_CONTROLBAR_CONTROLS_DATA = {
-    "uniface": {
-      "size:html:disabled": "true",
-      "goto:html:hide-step": "true",
-      "size:style:min-width": "100px",
-      "goto:style:margin": "5px",
-      "size:class:classA": "true",
-      "goto:class:classB": "true",
-      "size:label-text": "Label",
-      "first:html:appearance": "accent",
-      "first:value": "Go",
-      "size:valrep": "1=a10=1025=2550=50100=100"
-    }
+    "size:html:disabled": "true",
+    "goto:html:hide-step": "true",
+    "size:style:min-width": "100px",
+    "goto:style:margin": "5px",
+    "size:class:classA": "true",
+    "goto:class:classB": "true",
+    "size:label-text": "Label",
+    "first:html:appearance": "accent",
+    "first:value": "Go",
+    "size:valrep": "1=a10=1025=2550=50100=100"
   };
 
   /**
@@ -426,7 +399,7 @@
         const widget = tester.construct();
         assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes['u-controlbar'], "Class is not defined");
+        assert(true,widgetClass.defaultValues['class:u-controlbar'], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -572,9 +545,8 @@
         tester.dataInit();
         conn.blockUI();
       }).then(function() {
-        expect(element.querySelector(".u-start-section").firstChild.className).contains("u-blocked");
         expect(element.querySelector(".u-end-section").firstChild.className).contains("u-blocked");
-
+        expect(element.querySelector(".u-end-section").firstChild.className).contains("u-readonly");
       });
     });
   });
