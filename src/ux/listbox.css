@@ -1,5 +1,10 @@
+/* Styling unset and applied to slot for adding label */
 .u-listbox {
   vertical-align: bottom;
+  border: unset;
+  border-radius: unset;
+  box-sizing: unset;
+  padding: unset;
 }
 
 /* Styling for disabled and readonly states */
@@ -10,6 +15,11 @@
 
 .u-listbox[disabled] .u-option {
   pointer-events: none;
+}
+
+.u-select.u-readonly::part(label),
+.u-select.u-readonly::part(control) {
+  cursor: not-allowed;
 }
 
 .u-listbox[readonly="true"] {
