@@ -57,7 +57,7 @@
 
   });
 
-  describe(`${widgetNam}.processLayout()`, function () {
+  describe(`${widgetName}.processLayout()`, function () {
     let element;
 
     it("processLayout()", function () {

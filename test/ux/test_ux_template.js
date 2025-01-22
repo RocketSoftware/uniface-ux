@@ -25,7 +25,7 @@
   const widgetId = tester.widgetId;
   const widgetName = tester.widgetName;
 
-  describe("Uniface Mockup tests", function () {
+  describe("Uniface mockup tests", function () {
 
     /**
          * Only for template. Remove this test case from your widget test.
@@ -48,10 +48,10 @@
 
   });
 
-  describe(widgetName + ".processLayout", function () {
+  describe(widgetName + ".processLayout()", function () {
     let element;
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
     });
@@ -63,7 +63,7 @@
       });
 
       it("check instance of HTMLElement", function () {
-        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+        expect(element).instanceOf(HTMLElement, `Function processLayout of "${widgetName}" does not return an HTMLElement.`);
       });
 
       it("check tagName", function () {
@@ -75,11 +75,11 @@
       });
 
       it("check u-icon", function () {
-        assert(element.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
+        assert(element.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element.");
       });
 
       it("check u-text", function () {
-        assert(element.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
+        assert(element.querySelector("span.u-text"), "Widget misses or has incorrect u-text element.");
       });
 
     });
@@ -95,22 +95,22 @@
     it("constructor", function () {
       try {
         const widget = tester.construct();
-        assert(widget, "widget is not defined!");
+        assert(widget, "Widget is not defined!");
       } catch (e) {
-        assert(false, "Failed to construct new widget, exception " + e);
+        assert(false, `Failed to construct new widget, exception ${e}.`);
       }
     });
 
-    it("onConnect", function () {
+    it("onConnect()", function () {
       const element = tester.processLayout();
       const widget = tester.onConnect();
       assert(element, "Target element is not defined!");
-      assert(widget.elements.widget === element, "widget is not connected");
+      assert(widget.elements.widget === element, "Widget is not connected!");
     });
 
   });
 
-  describe("dataInit", function () {
+  describe("dataInit()", function () {
     const defaultValues = tester.getDefaultValues();
     const classes = defaultValues.classes;
     var element;
@@ -124,9 +124,9 @@
     for (const clazz in classes) {
       it("check class '" + clazz + "'", function () {
         if (classes[clazz]) {
-          expect(element).to.have.class(clazz, "widget element has class " + clazz);
+          expect(element).to.have.class(clazz, `Widget element has class ${clazz}.`);
         } else {
-          expect(element).not.to.have.class(clazz, "widget element has no class " + clazz);
+          expect(element).not.to.have.class(clazz, `Widget element has no class ${clazz}.`);
         }
       });
     }
@@ -140,7 +140,7 @@
       "etc ..."
     ];
 
-    it("mapTrigger");
+    it("mapTrigger()");
 
     for (let i = 0; i < texts.length; i++) {
       it(texts[i]);
@@ -148,7 +148,7 @@
 
   });
 
-  describe("dataUpdate", function () {
+  describe("dataUpdate()", function () {
     let widget;
 
     beforeEach(function () {
@@ -171,7 +171,7 @@
       });
     }
 
-    it("Set HTML property", function (done) {
+    it("set html property", function (done) {
       // html: {appearance: "accent"}  // but: it stays as neutral not accent, but class accent is well set
       widget.dataUpdate({
         html: { appearance: "accent" }
@@ -185,7 +185,7 @@
 
     });
 
-    it("Set STYLE property", function (done) {
+    it("set style property", function (done) {
       widget.dataUpdate({
         style: { "background-color": "green" }
       });
@@ -199,7 +199,7 @@
 
     });
 
-    it("Set CLASS property", function (done) {
+    it("set class property", function (done) {
       widget.dataUpdate({
         classes: { "ClassA": true }
       });
@@ -213,7 +213,7 @@
 
     });
 
-    it("Set icon and icon-position", function (done) {
+    it("set icon and icon-position", function (done) {
       widget.dataUpdate({
         value: widgetName,  // not empty value, required by icon-position=start
         uniface: { icon: "IncomingCall", 'icon-position': "start" }
@@ -228,7 +228,7 @@
     });
 
     // Multiple properties update
-    it("Change multiple properties", function (done) {
+    it("change multiple properties", function (done) {
       widget.dataUpdate({
         value: "Button Text",
         html: { appearance: "accent" },
@@ -270,7 +270,7 @@
       widget = tester.createWidget();
     });
 
-    it("Set STYLE property 1 (setTimeout)", function (done) {
+    it("set style property 1 (setTimeout)", function (done) {
       widget.dataUpdate({
         style: { "background-color": "green" }
       });
@@ -284,7 +284,7 @@
 
     });
 
-    it("Set STYLE property 2 (promise 1)", function () {
+    it("set style property 2 (promise 1)", function () {
       const p = asyncRun(function() {
         widget.dataUpdate({
           style: { "background-color": "green" }
@@ -297,7 +297,7 @@
       });
     });
 
-    it("Set STYLE property 3 (promise 2)", function () {
+    it("set style property 3 (promise 2)", function () {
       return asyncRun(function() {
         widget.dataUpdate({
           style: { "background-color": "green" }
@@ -325,7 +325,7 @@
 
   });
 
-  describe("dataCleanup", function () {
+  describe("dataCleanup()", function () {
     let widget;
 
     beforeEach(function () {
@@ -337,7 +337,7 @@
         widget.dataCleanup({ value: new Set(), html: new Set(), uniface: new Set() });
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, `Failed to call dataCleanup(), exception ${e}.`);
       }
     });
 
@@ -346,7 +346,7 @@
         widget.dataCleanup({ html: new Set(), style: new Set(["color"]), uniface: new Set() });
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, `Failed to call dataCleanup(), exception ${e}.`);
       }
     });
 
@@ -359,7 +359,7 @@
       widget = tester.createWidget();
     });
 
-    it("Set back to default", function () {
+    it("set back to default", function () {
       widget.dataUpdate({
         value: widgetName
       });
