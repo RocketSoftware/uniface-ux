@@ -51,7 +51,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing ClassStyle class =======================================================================================
   // ===================================================================================================================
-  describe("Test ClassStyle Class", function () {
+  describe("Test ClassStyle class", function () {
     let widgetClass;
     let defaultClassList;
     let instance;
@@ -106,7 +106,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing Elements class =========================================================================================
   // ===================================================================================================================
-  describe("Test Element Class", function () {
+  describe("Test Element class", function () {
 
     let widgetClass;
     let tagname;
@@ -149,7 +149,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(element.triggerDefines).to.equal(triggerDefines);
     });
 
-    it("Check elementQuerySelector changed for all elements", function () {
+    it("check elementQuerySelector changed for all elements", function () {
       attributeDefines.forEach((attributeDefine) => {
         expect(attributeDefine.elementQuerySelector).to.equal("div");
       });
@@ -159,7 +159,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
     // Definitions doesn't do anything
-    it("Check Generate layout", function () {
+    it("check generate layout", function () {
       let layoutElement = element.getLayout(definitions);
 
       expect(layoutElement).to.have.tagName("DIV");
@@ -170,9 +170,9 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   });
 
   // ===================================================================================================================
-  // == Testing Slotted Elements class =================================================================================
+  // == Testing SlottedElements class =================================================================================
   // ===================================================================================================================
-  describe("Test Slotted Elements Class", function () {
+  describe("Test SlottedElements class", function () {
 
     let widgetClass;
     let propText;
@@ -200,7 +200,6 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       }
     };
 
-
     beforeEach(function () {
       Widget.structure = {};
       Widget.subWidgets = {};
@@ -227,7 +226,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(slottedElement.iconDefaultValue).to.equal(defaultIcon);
     });
 
-    it("Check getters/setters changed for propIcon, propText", function () {
+    it("check getters/setters changed for propIcon, propText", function () {
       expect(slottedElement.widgetClass.defaultValues.uniface.icon).to.equal(defaultIcon);
       expect(slottedElement.widgetClass.defaultValues.uniface.text).to.equal(defaultText);
     });
@@ -247,7 +246,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing SlottedError class =====================================================================================
   // ===================================================================================================================
-  describe("Test SlottedError Class", function () {
+  describe("Test SlottedError class", function () {
 
     let widgetClass;
     let slottedError;
@@ -270,7 +269,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(slottedError.widgetClass).to.equal(widgetClass);
     });
 
-    it("Check setters were added", function () {
+    it("check setters were added", function () {
       let setters = Object.keys(slottedError.widgetClass.setters.uniface);
       let errorArray = [
         "error",
@@ -357,12 +356,12 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(slottedWidget.widgetClass).to.equal(widgetClass);
     });
 
-    it("Check getters/setters changed and subWidget added", function () {
+    it("check getters/setters changed and subWidget added", function () {
       expect(slottedWidget.subWidgetClass.name).to.equal("Button");
       expect(slottedWidget.propId).to.equal("uniface:undefined");
     });
 
-    it("Check Generate Layout", function () {
+    it("check generate layout", function () {
       let layoutElement = slottedWidget.getLayout();
 
       expect(layoutElement).to.have.class("u-sw-undefined");
@@ -403,7 +402,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing SubWidgetsByProperty class ================================================================================
   // ===================================================================================================================
-  describe("Test SubWidgetsByProperty Class", function () {
+  describe("Test SubWidgetsByProperty class", function () {
 
     let widgetClass;
     let tagName;
@@ -458,7 +457,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing BaseHtmlAttribute class ================================================================================
   // ===================================================================================================================
-  describe("Test BaseHtmlAttribute Class", function () {
+  describe("Test BaseHtmlAttribute class", function () {
 
     let widgetClass;
     let propId;
@@ -493,14 +492,14 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
 
     });
 
-    it("Check Getters/Setters", function () {
+    it("check getters/setters", function () {
       let length =  worker.widgetClass.setters.value.length;
 
       expect(worker.widgetClass.getters.value.propId).to.equal(propId);
       expect(worker.widgetClass.setters.value[length- 1].propId).to.equal(propId);
     });
 
-    it("Check setHtmlAttribute", function () {
+    it("check setHtmlAttribute", function () {
       element = {
         elements : {
           widget: document.createElement("div")
@@ -515,7 +514,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       worker.refresh({});
     });
 
-    it("check getValue" , function () {
+    it("check getValue()" , function () {
       const widgetInstance = {
         elements : {
           widget: document.createElement("div")
@@ -529,10 +528,10 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
     });
 
     // getValueUpdaters doesn't do anything
-    it("check getValueUpdaters" , function () {
+    it("check getValueUpdaters()" , function () {
       const widgetInstance = {
         elements : {
-          widget: [document.createElement("div")  , document.createElement("span") ]
+          widget: [document.createElement("div"), document.createElement("span") ]
         } ,
         getTraceDescription: () => {
           return "description";
@@ -545,7 +544,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing HtmlAttribute class ====================================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttribute Class", function () {
+  describe("Test HtmlAttribute class", function () {
 
     let widgetClass;
     let propId;
@@ -600,7 +599,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing HtmlAttributeChoice class ==============================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeChoice Class", function () {
+  describe("Test HtmlAttributeChoice class", function () {
 
     let widgetClass;
     let propId;
@@ -658,7 +657,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing HtmlAttributeNumber class ==============================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeNumber Class", function () {
+  describe("Test HtmlAttributeNumber class", function () {
 
     let widgetClass;
     let propId;
@@ -719,7 +718,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing HtmlAttributeBoolean class =============================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeBoolean Class", function () {
+  describe("Test HtmlAttributeBoolean class", function () {
 
     let widgetClass;
     let propId;
@@ -778,7 +777,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing HtmlValueAttributeBoolean class ========================================================================
   // ===================================================================================================================
-  describe("Test HtmlValueAttributeBoolean Class", function () {
+  describe("Test HtmlValueAttributeBoolean class", function () {
 
     let widgetClass;
     let propId;
@@ -841,7 +840,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing HtmlAttributeMinMaxLength class ========================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeMinMaxLength Class", function () {
+  describe("Test HtmlAttributeMinMaxLength class", function () {
 
     let widgetClass;
     let propMin;
@@ -877,7 +876,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(element.defaultMax).to.equal(defaultMax);
     });
 
-    it("Check Setters", function () {
+    it("check setters", function () {
       let setterKeys = Object.keys(element.widgetClass.setters.uniface);
 
       expect(setterKeys[setterKeys.length-2]).to.equal("min");
@@ -923,7 +922,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing StyleProperty class ====================================================================================
   // ===================================================================================================================
-  describe("Test StyleProperty Class", function () {
+  describe("Test StyleProperty class", function () {
 
     let widgetClass;
     let property;
@@ -951,7 +950,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(element.widgetClass).to.equal(widgetClass);
     });
 
-    it("Check Setters and Default values", function () {
+    it("check setters and default values", function () {
       let setterKeys = Object.keys(element.widgetClass.setters);
       let defaultKeys = Object.keys(element.widgetClass.defaultValues);
       let lengthKeys = setterKeys.length;
@@ -988,7 +987,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing Trigger class ==========================================================================================
   // ===================================================================================================================
-  describe("Test Trigger Class", function () {
+  describe("Test Trigger class", function () {
 
     let widgetClass;
     let triggerName;
@@ -1018,12 +1017,12 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(element.triggerName).to.equal(triggerName);
     });
 
-    it("Check registerTrigger functionality", function () {
+    it("check registerTrigger() functionality", function () {
       let registerTriggerKey = Object.keys(element.widgetClass.triggers);
       expect(registerTriggerKey).to.include(triggerName);
     });
 
-    it("Check getTriggerMapping functionality", function () {
+    it("check getTriggerMapping() functionality", function () {
       const widgetInstance = {
         elements : {
           widget: document.createElement("div")
@@ -1042,7 +1041,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing IgnoreProperty class ===================================================================================
   // ===================================================================================================================
-  describe("Test IgnoreProperty Class", function () {
+  describe("Test IgnoreProperty class", function () {
     let widgetClass;
     let propId;
     let defaultValue;
@@ -1064,12 +1063,12 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       element = new IgnoreProperty(widgetClass, propId, defaultValue);
     });
 
-    it("Should initialize with correct properties", function () {
+    it("should initialize with correct properties", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.propId).to.equal(propId);
     });
 
-    it("Check Setters and Default values", function () {
+    it("check setters and Default values", function () {
       let setterKeys = Object.keys(element.widgetClass.setters.uniface);
       expect(setterKeys[setterKeys.length - 1]).to.equal("tri-state");
       expect(element.defaultValue).to.equal(defaultValue);
@@ -1079,7 +1078,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing SlottedElementsByValRep class ==========================================================================
   // ===================================================================================================================
-  describe("Test SlottedElementsByValRep Class", function () {
+  describe("Test SlottedElementsByValRep class", function () {
     let widgetClass;
     let tagName;
     let styleClass;
@@ -1103,14 +1102,14 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       element = new SlottedElementsByValRep(widgetClass, tagName, styleClass, elementQuerySelector);
     });
 
-    it("Should initialize with correct properties", function () {
+    it("should initialize with correct properties", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.tagName).to.equal(tagName);
       expect(element.styleClass).to.equal(styleClass);
       expect(element.elementQuerySelector).to.equal(elementQuerySelector);
     });
 
-    it("Check Setters and Default values", function () {
+    it("check setters and default values", function () {
       let setterKeys = Object.keys(element.widgetClass.setters);
       let defaultValues = element.widgetClass.defaultValues;
       let setterKeysForUniface = Object.keys(element.widgetClass.setters.uniface);
@@ -1122,7 +1121,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
       expect(defaultValues["valrep"].length).to.equal(0);
     });
 
-    it("Should refresh correctly", function () {
+    it("should refresh correctly", function () {
       const valRepArray = [
         {
           value: "1",

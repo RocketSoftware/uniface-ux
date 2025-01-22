@@ -49,7 +49,7 @@ export class TestWidget extends Widget {
 
   });
 
-  describe("Widget Class methods", function () {
+  describe("Widget class methods", function () {
 
     let definitions, returnedProcess , testwidget, consoleLogSpy;
 
@@ -78,14 +78,14 @@ export class TestWidget extends Widget {
       testwidget.dataInit();
     });
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       expect(returnedProcess).to.have.tagName("FLUENT-TEXT-FIELD");
       expect(returnedProcess.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
-      expect(returnedProcess.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
+      expect(returnedProcess.querySelector("span.u-text"), "Widget misses or has incorrect u-text element.");
       expect(returnedProcess.querySelector("span.u-text").outerText).to.eql("Change");
     });
 
-    it("onConnect", function () {
+    it("onConnect()", function () {
       let connectedWidget = testwidget.onConnect(returnedProcess);
 
       expect(connectedWidget[0].element).instanceOf(HTMLElement);
@@ -93,7 +93,7 @@ export class TestWidget extends Widget {
       expect(connectedWidget[0].element).to.have.tagName("FLUENT-TEXT-FIELD");
     });
 
-    it("mapTrigger", function () {
+    it("mapTrigger()", function () {
       // Test with a wrong trigger, should return undefined and display a warning
       consoleLogSpy = sandbox.spy(console, "warn");
       let badTrigger = testwidget.mapTrigger("click");
@@ -112,12 +112,12 @@ export class TestWidget extends Widget {
       expect(onchangeTrigger.element).to.have.tagName("FLUENT-TEXT-FIELD");
     });
 
-    it("dataInit", function () {
+    it("dataInit()", function () {
       expect(testwidget.element, "Widget top element is not defined!");
       expect(TestWidget.defaultValues.classes).to.eql(testwidget.data.properties.classes);
     });
 
-    it("dataUpdate", function () {
+    it("dataUpdate()", function () {
       const data =  {
         uniface: {
           "icon": "",
@@ -140,11 +140,11 @@ export class TestWidget extends Widget {
     });
 
     // button doesn't have a dateCleanup function
-    it("dataCleanup", function () {
+    it("dataCleanup()", function () {
       testwidget.dataCleanup();
     });
 
-    it("getValue", function () {
+    it("getValue()", function () {
       const value = testwidget.getValue();
       expect(value).to.equal(false);
     });
@@ -155,7 +155,7 @@ export class TestWidget extends Widget {
       expect(returnNull).to.equal(null);
     });
 
-    it("showError", function () {
+    it("showError()", function () {
       const errorString = "{ \"change-button\": \"This is a testing error\" }";
       const errorReturn = {
         "error": true,
@@ -168,7 +168,7 @@ export class TestWidget extends Widget {
       expect(testwidget.data.properties.uniface["error"]).equal(true);
     });
 
-    it("hideError", function () {
+    it("hideError()", function () {
       const errorReturn = {
         "error": false,
         "error-message": ""
@@ -180,14 +180,14 @@ export class TestWidget extends Widget {
       expect(testwidget.data.properties.uniface["error"]).equal(false);
     });
 
-    it("blockUI", function () {
+    it("blockUI()", function () {
       expect(testwidget.elements.widget.disabled).to.equal(false);
 
       testwidget.blockUI() ;
       expect(testwidget.elements.widget.disabled).to.equal(true);
     });
 
-    it("unblockUI", function () {
+    it("unblockUI()", function () {
       expect(testwidget.elements.widget.disabled).to.equal(false);
 
       testwidget.blockUI();

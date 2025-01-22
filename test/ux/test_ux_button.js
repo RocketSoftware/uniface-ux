@@ -17,9 +17,9 @@
           Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
   }
 
-  describe("Uniface Mockup tests", function () {
+  describe("Uniface mockup tests", function () {
 
-    it("get class " + widgetName, function () {
+    it(`get class ${widgetName}`, function () {
       verifyWidgetClass(widgetClass);
     });
 
@@ -41,10 +41,10 @@
 
   });
 
-  describe(widgetName + ".processLayout", function () {
+  describe(`${widgetName}.processLayout()`, function () {
     let element;
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       verifyWidgetClass(widgetClass);
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
@@ -58,7 +58,7 @@
       });
 
       it("check instance of HTMLElement", function () {
-        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+        expect(element).instanceOf(HTMLElement, `Function processLayout() of ${widgetName} does not return an HTMLElement.`);
       });
 
       it("check tagName", function () {
@@ -70,11 +70,11 @@
       });
 
       it("check u-text", function () {
-        assert(element.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
+        assert(element.querySelector("span.u-text"), "Widget misses or has incorrect u-text element.");
       });
 
       it("check u-icon", function () {
-        assert(element.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
+        assert(element.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element.");
       });
 
     });
@@ -91,32 +91,32 @@
     it("constructor", function () {
       try {
         const widget = tester.construct();
-        assert(widget, "widget is not defined!");
+        assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes["u-button"], "Class is not defined");
+        assert(widgetClass.defaultValues.classes["u-button"], "Class is not defined!");
       } catch (e) {
-        assert(false, "Failed to construct new widget, exception " + e);
+        assert(false, `Failed to construct new widget, exception ${e}.`);
       }
     });
 
-    describe("On Connect", function () {
+    describe("onConnect()", function () {
       const element = tester.processLayout();
       const widget = tester.onConnect();
 
-      it("check element created and connected", function () {
+      it("check that the element is created and connected", function () {
         assert(element, "Target element is not defined!");
-        assert(widget.elements.widget === element, "widget is not connected");
+        assert(widget.elements.widget === element, "Widget is not connected!");
       });
     });
 
   });
 
-  describe("mapTrigger", function () {
+  describe("mapTrigger()", function () {
     const widget = tester.onConnect();
     widget.mapTrigger("click");
   });
 
-  describe("Data Init", function () {
+  describe("dataInit()", function () {
     const defaultValues = tester.getDefaultValues();
     const classes = defaultValues.classes;
     var element;
@@ -128,18 +128,18 @@
     });
 
     for (const defaultClass in classes) {
-      it("check class '" + defaultClass + "'", function () {
+      it(`check class ${defaultClass}`, function () {
         if (classes[defaultClass]) {
-          expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+          expect(element).to.have.class(defaultClass, `Widget element has class ${defaultClass}.`);
         } else {
-          expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
+          expect(element).not.to.have.class(defaultClass, `Widget element has no class ${defaultClass}.`);
         }
       });
     }
 
     it("check 'hidden' attributes", function () {
-      assert(element.querySelector("span.u-text").hasAttribute("hidden"), "Text span element should be hidden by default");
-      assert(element.querySelector("span.u-icon").hasAttribute("hidden"), "Icon span element should be hidden by default");
+      assert(element.querySelector("span.u-text").hasAttribute("hidden"), "Text span element should be hidden by default.");
+      assert(element.querySelector("span.u-icon").hasAttribute("hidden"), "Icon span element should be hidden by default.");
     });
 
     it("check widget id", function () {
@@ -148,17 +148,17 @@
 
     it("check 'icon' and 'icon-position'", function () {
       let unifaceProperties = tester.defaultValues.uniface;
-      assert.equal(unifaceProperties["icon"], "", "Default value of icon should be ''");
-      assert.equal(unifaceProperties["icon-position"], "start", "Default value of icon-position will be start");
+      assert.equal(unifaceProperties["icon"], "", "Default value of icon should be ''.");
+      assert.equal(unifaceProperties["icon-position"], "start", "Default value of icon-position will be start.");
     });
 
     it("check value", function () {
-      assert.equal(tester.defaultValues.value, "", "Default value of attribute value should be ''");
+      assert.equal(tester.defaultValues.value, "", "Default value of attribute value should be ''.");
     });
 
   });
 
-  describe("Data Update", function () {
+  describe("dataUpdate()", function () {
     let element;
 
     before(function () {
@@ -167,7 +167,7 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("update only button text", function () {
+    it("update button text", function () {
       let buttonText = "Button";
       return asyncRun(function() {
         tester.dataUpdate({
@@ -175,12 +175,12 @@
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
-        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
-        assert(element.querySelector("span.u-icon").hasAttribute("hidden"), "Icon Element should be hidden");
+        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text.");
+        assert(element.querySelector("span.u-icon").hasAttribute("hidden"), "Icon element should be hidden.");
       });
     });
 
-    it("update button text, icon and icon-position to default", function () {
+    it("update button text, icon, and icon-position to default", function () {
       let buttonText = "Button";
       return asyncRun(function() {
         tester.dataUpdate({
@@ -191,8 +191,8 @@
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
-        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
-        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
+        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text.");
+        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon.");
         expect(element.querySelector("span.u-icon").getAttribute("slot")).equal(tester.defaultValues.uniface["icon-position"]);
       });
     });
@@ -209,8 +209,8 @@
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
-        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
-        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
+        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text.");
+        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon.");
         expect(element.querySelector("span.u-icon").getAttribute("slot")).equal(iconPosition);
       });
     });
@@ -223,8 +223,8 @@
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
-        assert(element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text");
-        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
+        assert(element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text.");
+        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon.");
         expect(element.querySelector("span.u-icon").getAttribute("slot")).equal("");
       });
     });
@@ -237,8 +237,8 @@
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
-        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text");
-        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
+        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text.");
+        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon.");
         expect(element.querySelector("span.u-icon").getAttribute("slot")).equal(tester.widget.data.properties.uniface["icon-position"]);
       });
     });
@@ -253,8 +253,8 @@
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
-        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
-        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
+        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text.");
+        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon.");
         expect(element.querySelector("span.u-icon").getAttribute("slot")).equal(tester.defaultValues.uniface["icon-position"]);
       });
     });
@@ -293,11 +293,11 @@
 
   });
 
-  describe("Show Error", function () {
+  describe("showError()", function () {
     it("not required", function () { });
   });
 
-  describe("Hide Error", function () {
+  describe("hideError()", function () {
     it("not required", function () { });
   });
 
@@ -326,7 +326,7 @@
       expect(layout.classList.contains(styleClass)).to.be.true;
     });
 
-    it("should refresh correctly and modify the element text and may be icon if we add icon in button", function () {
+    it("should refresh correctly and modify the element text and the icon if an icon is added to the button", function () {
       const widgetInstance = {
         ...widgetClass,
         data: {
@@ -377,7 +377,7 @@
       expect(layout.classList.contains(styleClass)).to.be.true;
     });
 
-    it("should refresh correctly and modify the element text and may be icon if we add icon in button", function () {
+    it("should refresh correctly and modify the element text and the icon if an icon is added to the button", function () {
       const widgetInstance = {
         ...widgetClass,
         data: {
@@ -401,7 +401,7 @@
       expect(element.querySelector("span.u-icon").getAttribute("slot")).equal("");
     });
 
-    it("add icon to test classes are added in the icon slot or not", function () {
+    it("add icon and verify classes are added to the icon slot", function () {
       const widgetInstance = {
         ...widgetClass,
         data: {
@@ -456,7 +456,7 @@
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to reset the properties, exception " + e);
+        assert(false, `Failed to reset the properties, exception ${e}.`);
       }
     });
   });

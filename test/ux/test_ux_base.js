@@ -17,7 +17,7 @@ import { Widget } from "../../src/ux/widget.js";
     });
   });
 
-  describe("test Base Class methods", function () {
+  describe("Test Base class methods", function () {
 
     let base, widgetClass, propId, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, defaultValue, triggerName,
       url, functionName, message, consequence, consoleLogSpy, worker;
@@ -27,7 +27,7 @@ import { Widget } from "../../src/ux/widget.js";
       widgetClass = Widget;
     });
 
-    it("registerSetter", function () {
+    it("registerSetter()", function () {
       worker = new Worker(widgetClass);
       propId = "html:disabled";
 
@@ -39,7 +39,7 @@ import { Widget } from "../../src/ux/widget.js";
 
     });
 
-    it("registerGetter", function () {
+    it("registerGetter()", function () {
       propId = "html:disabled";
       worker = new Worker(widgetClass);
 
@@ -51,7 +51,7 @@ import { Widget } from "../../src/ux/widget.js";
     });
 
 
-    it("registerDefaultValue", function () {
+    it("registerDefaultValue()", function () {
       propId = "html:testDefault";
       defaultValue = "56";
 
@@ -63,7 +63,7 @@ import { Widget } from "../../src/ux/widget.js";
 
     });
 
-    it("registerTrigger", function () {
+    it("registerTrigger()", function () {
       triggerName = "newTrigger";
       worker = new Worker(widgetClass);
 
@@ -74,7 +74,7 @@ import { Widget } from "../../src/ux/widget.js";
 
     });
 
-    it("registerSubWidget", function () {
+    it("registerSubWidget()", function () {
       subWidgetId = "change-button";
       subWidgetStyleClass = "u-change-button";
       subWidgetClass = new Button();
@@ -88,7 +88,7 @@ import { Widget } from "../../src/ux/widget.js";
       expect(widgetClass.subWidgets[subWidgetId].triggers).to.equal(subWidgetTriggers);
     });
 
-    it("registerSubWidgetWorker", function () {
+    it("registerSubWidgetWorker()", function () {
       worker = new Worker(widgetClass);
 
       base.registerSubWidgetWorker(widgetClass, worker);
@@ -96,7 +96,7 @@ import { Widget } from "../../src/ux/widget.js";
       expect(widgetClass.subWidgetWorkers[0]).to.equal(worker);
     });
 
-    it("getNode", function () {
+    it("getNode()", function () {
       const widgetInstance = {
         ...widgetClass,
         data: {
@@ -114,7 +114,7 @@ import { Widget } from "../../src/ux/widget.js";
       expect(String(returnedNode)).to.equal("start");
     });
 
-    it("toBoolean", function () {
+    it("toBoolean()", function () {
       expect(base.toBoolean(true)).to.equal(true);
       expect(base.toBoolean(false)).to.equal(false);
       expect(base.toBoolean("1258395")).to.equal(true);
@@ -122,7 +122,7 @@ import { Widget } from "../../src/ux/widget.js";
       expect(base.toBoolean(56743)).to.equal(true);
     });
 
-    it("fieldValueToBoolean", function () {
+    it("fieldValueToBoolean()", function () {
       expect(base.fieldValueToBoolean(true)).to.equal(true);
       expect(base.fieldValueToBoolean(false)).to.equal(false);
       expect(base.fieldValueToBoolean("1")).to.equal(true);
@@ -131,7 +131,7 @@ import { Widget } from "../../src/ux/widget.js";
       expect(base.fieldValueToBoolean(0)).to.equal(false);
     });
 
-    it("fixData", function () {
+    it("fixData()", function () {
       let UData = {
         value: 56,
         uniface: {
@@ -171,7 +171,7 @@ import { Widget } from "../../src/ux/widget.js";
 
     });
 
-    it("getFormattedValrep", function () {
+    it("getFormattedValrep()", function () {
       let valRepString = "valrep1=value1valrep2=value2";
       let formattedValReps = base.getFormattedValrep(valRepString);
 
@@ -205,7 +205,7 @@ import { Widget } from "../../src/ux/widget.js";
       sandbox.restore();
     });
 
-    it("getFormattedValrepItemAsHTML", function () {
+    it("getFormattedValrepItemAsHTML()", function () {
       let displayFormat = "valrep";
       let valRepString = "<p>this is paragraph</p>";
       let representation = "<p>this is paragraph</p>";

@@ -17,9 +17,9 @@
               Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
   }
 
-  describe("Uniface Mockup tests", function () {
+  describe("Uniface mockup tests", function () {
 
-    it("Get class " + widgetName, function () {
+    it(`Get class ${widgetName}`, function () {
       verifyWidgetClass(widgetClass);
     });
   });
@@ -41,10 +41,10 @@
     });
   });
 
-  describe(widgetName + ".processLayout", function () {
+  describe(`${widgetName}.processLayout()`, function () {
     let element;
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       verifyWidgetClass(widgetClass);
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
@@ -58,7 +58,7 @@
       });
 
       it("check instance of HTMLElement", function () {
-        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+        expect(element).instanceOf(HTMLElement, `Function processLayout of ${widgetName} does not return an HTMLElement.`);
       });
 
       it("check tagName", function () {
@@ -70,11 +70,11 @@
       });
 
       it("check u-label-text", function () {
-        assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element");
+        assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element.");
       });
 
       it("check u-error-icon", function () {
-        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
+        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element.");
       });
     });
   });
@@ -91,32 +91,32 @@
         const widget = tester.construct();
         assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes["u-text-area"], "Class is not defined");
+        assert(widgetClass.defaultValues.classes["u-text-area"], "Class is not defined.");
       } catch (e) {
-        assert(false, "Failed to construct new widget, exception " + e);
+        assert(false, `Failed to construct new widget, exception ${e}.`);
       }
     });
 
-    describe("onConnect", function () {
+    describe("onConnect()", function () {
       const element = tester.processLayout();
       const widget = tester.onConnect();
-      it("check element created and connected", function () {
+      it("check that the element is created and connected", function () {
         assert(element, "Target element is not defined!");
-        assert(widget.elements.widget === element, "widget is not connected");
+        assert(widget.elements.widget === element, "Widget is not connected.");
       });
     });
   });
 
-  describe("mapTrigger", function () {
+  describe("mapTrigger()", function () {
     const element = tester.processLayout();
     const widget = tester.onConnect();
     widget.mapTrigger("onchange");
     const event = new window.Event("onchange");
     element.dispatchEvent(event);
-    assert(widget.elements.widget === element, "widget is not connected");
+    assert(widget.elements.widget === element, "Widget is not connected.");
   });
 
-  describe("Text Area onchange event", function () {
+  describe("Text area onchange event", function () {
     let textAreaElement, onChangeSpy;
 
     beforeEach(function () {
@@ -148,7 +148,7 @@
   });
 
   // Data Init
-  describe("Data Init", function () {
+  describe("dataInit()", function () {
     const defaultValues = tester.getDefaultValues();
     const classes = defaultValues.classes;
     var element;
@@ -159,18 +159,18 @@
     });
 
     for (const defaultClass in classes) {
-      it("check class '" + defaultClass + "'", function () {
+      it(`check class '${defaultClass}'`, function () {
         if (classes[defaultClass]) {
-          expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+          expect(element).to.have.class(defaultClass, `Widget element has class ${defaultClass}.`);
         } else {
-          expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
+          expect(element).not.to.have.class(defaultClass, `widget element has no class ${defaultClass}.`);
         }
       });
     }
 
     it("check 'hidden' attributes", function () {
-      assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label Text span element should be hidden by default");
-      assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Icon span element should be hidden by default");
+      assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label text span element should be hidden by default.");
+      assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Icon span element should be hidden by default.");
     });
 
     it("check widget id", function () {
@@ -178,11 +178,11 @@
     });
 
     it("check value", function () {
-      assert.equal(tester.defaultValues.value, "", "Default value of attribute value should be ''");
+      assert.equal(tester.defaultValues.value, "", "Default value of attribute value should be ''.");
     });
   });
 
-  describe("dataUpdate", function () {
+  describe("dataUpdate()", function () {
     let widget;
     before(function () {
       widget = tester.createWidget();
@@ -200,11 +200,11 @@
       }).then(function () {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, textAreaLabel);// Check for visibility
-        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
+        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
 
-    it("Set label position before", function () {
+    it("set label position before", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           uniface: {
@@ -227,7 +227,7 @@
       assert.equal(alignPropertyValue, "center", "Label position below is not center");
     });
 
-    it("Set label position below", function () {
+    it("set label position below", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           uniface: {
@@ -247,7 +247,7 @@
       assert.equal(flexPropertyValue, "column");
       let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector(".label"), null);
       let orderPropertyValue = labelStyle.getPropertyValue("order");
-      assert.equal(orderPropertyValue, 2, "Labelposition below is not in order");
+      assert.equal(orderPropertyValue, 2, "Label position below is not in order.");
     });
 
     it("reset label and its position", function () {
@@ -261,8 +261,8 @@
       }).then(function () {
         let labelPosition = widget.elements.widget.getAttribute("u-label-position");
         assert.equal(labelPosition, "above");
-        assert(widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text");
-        assert.equal(widget.elements.widget.querySelector("span.u-label-text").innerText, "", "Text is not empty");
+        assert(widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text.");
+        assert.equal(widget.elements.widget.querySelector("span.u-label-text").innerText, "", "Text is not empty.");
       });
     });
 
@@ -392,7 +392,7 @@
 
     it("html cols property positive integer", function () {
       let colsProp = 25;
-      // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+      // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
           "html": {
@@ -408,7 +408,7 @@
     });
 
     // html:placeholder property
-    it("Set html:placeholder property for textarea", function () {
+    it("set html:placeholder property for textarea", function () {
       let placeHolderText = "Input the Number";
       return asyncRun(function () {
         tester.dataUpdate({
@@ -418,12 +418,12 @@
         });
       }).then(function () {
         let placeHolderTextDOM = widget.elements.widget.getAttribute("placeholder");
-        assert.equal(placeHolderTextDOM, placeHolderText, "Failed to show placeholder text" + placeHolderText);
+        assert.equal(placeHolderTextDOM, placeHolderText, `Failed to show placeholder text, ${placeHolderText}`);
       });
     });
 
     // html:readonly property
-    it("Set html:readonly property true for textarea", function () {
+    it("set html:readonly property true for textarea", function () {
       let readOnly = "readOnly";
       return asyncRun(function () {
         tester.dataUpdate({
@@ -432,12 +432,12 @@
           }
         });
       }).then(function () {
-        assert(widget.elements.widget.hasAttribute(readOnly), "Failed to show the readonly attribute");
+        assert(widget.elements.widget.hasAttribute(readOnly), "Failed to show the readonly attribute.");
       });
     });
 
     // html:readonly property false
-    it("Set html:readonly property false for textarea", function () {
+    it("set html:readonly property false for textarea", function () {
       let readOnly = "readOnly";
       return asyncRun(function () {
         tester.dataUpdate({
@@ -446,24 +446,24 @@
           }
         });
       }).then(function () {
-        assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to hide the readonly attribute");
+        assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to hide the readonly attribute.");
       });
     });
 
     // html:disabled property
-    it("Set html:disabled property true for textarea", function () {
+    it("set html:disabled property true for textarea", function () {
       let disabled = "disabled";
       return asyncRun(function () {
         tester.dataUpdate({
           "html": { "disabled": true }
         });
       }).then(function () {
-        assert(widget.elements.widget.hasAttribute(disabled), "Failed to show the disabled attribute");
+        assert(widget.elements.widget.hasAttribute(disabled), "Failed to show the disabled attribute.");
       });
     });
 
     // html:disabled property false
-    it("Set html:disabled property false for textarea", function () {
+    it("set html:disabled property false for textarea", function () {
       let disabled = "disabled";
       return asyncRun(function () {
         tester.dataUpdate({
@@ -477,7 +477,7 @@
     });
 
     // html:appearance outfill property
-    it("Set html:appearance outline property true for textarea", function () {
+    it("set html:appearance outline property true for textarea", function () {
       let appearanceStyle = "outline";
       return asyncRun(function () {
         tester.dataUpdate({
@@ -486,14 +486,14 @@
           }
         });
       }).then(function () {
-        assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance outfill attribute");
+        assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance outline attribute.");
         let appearanceStylePropertyText = widget.elements.widget.getAttribute("appearance");
-        assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance outfill style" + appearanceStylePropertyText);
+        assert.equal(appearanceStyle, appearanceStylePropertyText, `Failed to show appearance outline style, ${appearanceStylePropertyText}`);
       });
     });
 
     // html:appearance filled property
-    it("Set html:appearance filled property true for textarea", function () {
+    it("set html:appearance filled property true for textarea", function () {
       let appearanceStyle = "filled";
       return asyncRun(function () {
         tester.dataUpdate({
@@ -502,14 +502,14 @@
           }
         });
       }).then(function () {
-        assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance filled attribute");
+        assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance filled attribute.");
         let appearanceStylePropertyText = widget.elements.widget.getAttribute("appearance");
-        assert.equal(appearanceStyle, appearanceStylePropertyText, "Failed to show appearance filled style" + appearanceStylePropertyText);
+        assert.equal(appearanceStyle, appearanceStylePropertyText, `Failed to show appearance filled style${appearanceStylePropertyText}.`);
       });
     });
   });
 
-  describe("showError", function () {
+  describe("showError()", function () {
     let widget;
     let minlength = 2;
     let maxlength = 5;
@@ -527,14 +527,14 @@
           }
         });
       }).then(function () {
-        expect(widget.elements.widget.hasAttribute("maxlength"), "Failed to show the maxlength attribute");
-        expect(widget.elements.widget.hasAttribute("minlength"), "Failed to show the minlength attribute");
-        assert.equal(widget.elements.widget.getAttribute("minlength"), minlength, "Min is not same" + minlength);
-        assert.equal(widget.elements.widget.getAttribute("maxlength"), maxlength, "Max is not same" + maxlength);
+        expect(widget.elements.widget.hasAttribute("maxlength"), "Failed to show the maxlength attribute.");
+        expect(widget.elements.widget.hasAttribute("minlength"), "Failed to show the minlength attribute.");
+        assert.equal(widget.elements.widget.getAttribute("minlength"), minlength, `Min is not same ${minlength}.`);
+        assert.equal(widget.elements.widget.getAttribute("maxlength"), maxlength, `Max is not same ${maxlength}.`);
       });
     });
 
-    it("Set invalid value in text area", function () {
+    it("set invalid value in text area", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           uniface: {
@@ -544,16 +544,16 @@
         });
       }).then(function () {
         expect(widget.elements.widget).to.have.class("u-invalid");
-        assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
-        assert.equal(widget.elements.widget.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
-        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot"), "end", "Slot end  does not match");
-        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Field Value length mismatch.", "Error title doesnot match");
+        assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute.");
+        assert.equal(widget.elements.widget.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid.");
+        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot"), "end", "Slot end does not match.");
+        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Field Value length mismatch.", "Error title does not match.");
       });
     });
 
     it("html rows property positive integer", function () {
       let rowsProp = 25;
-      // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+      // Calling mock dataUpdat()e to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
           "html": {
@@ -570,7 +570,7 @@
 
     it("html rows property negative integer", function () {
       let rowsProp = -1;
-      // Calling mock dataUpdate to have widgetProperties and then call widget dataUpdate()
+      // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate()
       return asyncRun(function () {
         tester.dataUpdate({
           "html": {
@@ -586,14 +586,14 @@
     });
   });
 
-  describe("hideError", function () {
+  describe("hideError()", function () {
     let widget;
     before(function () {
       widget = tester.createWidget();
       verifyWidgetClass(widgetClass);
     });
 
-    it("Hide Error Set invalid value in text Area", function () {
+    it("hide error: set invalid value in text area", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           uniface: {
@@ -604,10 +604,10 @@
         widget.hideError("Field Value length mismatch.");
       }).then(function () {
         expect(widget.elements.widget).to.not.have.class("u-invalid");
-        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute");
-        assert(widget.elements.widget.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
-        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"), "slot attribute is not present");
-        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("title"), "title attribute is not present");
+        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute.");
+        assert(widget.elements.widget.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid.");
+        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"), "Slot attribute is not present.");
+        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("title"), "Title attribute is not present.");
       });
     });
   });

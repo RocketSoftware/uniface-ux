@@ -33,9 +33,9 @@
             Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
   }
 
-  describe("Uniface Mockup tests", function () {
+  describe("Uniface mockup tests", function () {
 
-    it("get class " + widgetName, function () {
+    it(`get class ${widgetName}`, function () {
       verifyWidgetClass(widgetClass);
     });
 
@@ -57,10 +57,10 @@
 
   });
 
-  describe(widgetName + ".processLayout", function () {
+  describe(`${widgetNam}.processLayout()`, function () {
     let element;
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       verifyWidgetClass(widgetClass);
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
@@ -74,7 +74,7 @@
       });
 
       it("check instance of HTMLElement", function () {
-        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+        expect(element).instanceOf(HTMLElement, `Function processLayout of ${widgetName} does not return an HTMLElement.`);
       });
 
       it("check tagName", function () {
@@ -86,11 +86,11 @@
       });
 
       it("check u-label-text", function () {
-        assert(element.querySelector("label.u-label-text"), "Widget misses or has incorrect u-label-text element");
+        assert(element.querySelector("label.u-label-text"), "Widget misses or has incorrect u-label-text element.");
       });
 
       it("check u-error-icon", function () {
-        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
+        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element.");
       });
     });
 
@@ -106,24 +106,24 @@
     it("constructor", function () {
       try {
         const widget = tester.construct();
-        assert(widget, "widget is not defined!");
+        assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes["u-radio-group"], "Class is not defined");
+        assert(widgetClass.defaultValues.classes["u-radio-group"], "Class is not defined.");
       } catch (e) {
-        assert(false, "Failed to construct new widget, exception " + e);
+        assert(false, `Failed to construct new widget, exception ${e}.`);
       }
     });
 
-    it("On Connect", function () {
+    it("onConnect()", function () {
       const element = tester.processLayout();
       const widget = tester.onConnect();
       assert(element, "Target element is not defined!");
-      assert(widget.elements.widget === element, "widget is not connected");
+      assert(widget.elements.widget === element, "Widget is not connected!");
     });
 
   });
 
-  describe("mapTrigger", function () {
+  describe("mapTrigger()", function () {
     const widget = tester.onConnect();
     widget.mapTrigger("onchange");
   });
@@ -142,15 +142,15 @@
     for (const defaultClass in classes) {
       it("check class '" + defaultClass + "'", function () {
         if (classes[defaultClass]) {
-          expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+          expect(element).to.have.class(defaultClass, `Widget element has class ${defaultClass}.`);
         } else {
-          expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
+          expect(element).not.to.have.class(defaultClass, `Widget element has no class ${defaultClass}.`);
         }
       });
     }
 
     it("check 'hidden' attributes", function () {
-      assert(element.querySelector("label.u-label-text").hasAttribute("hidden"), "Label Text element should be hidden by default");
+      assert(element.querySelector("label.u-label-text").hasAttribute("hidden"), "Label text element should be hidden by default.");
     });
 
     it("check widget id", function () {
@@ -171,7 +171,7 @@
     });
   });
 
-  describe("Data Update", function () {
+  describe("dataUpdate()", function () {
     let element;
     before(function () {
       tester.createWidget();
@@ -179,7 +179,7 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("Set HTML property hidden to true", function () {
+    it("set html property hidden to true", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           html: { hidden: true }
@@ -190,7 +190,7 @@
       });
     });
 
-    it("Set Uniface label text", function () {
+    it("set Uniface label-text", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           uniface: {
@@ -202,7 +202,7 @@
       });
     });
 
-    it("Set HTML property readonly to true", function () {
+    it("set html property readonly to true", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           html: { readonly: true }
@@ -213,7 +213,7 @@
       });
     });
 
-    it("Set HTML property disabled to true", function () {
+    it("set html property disabled to true", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           html: { disabled: true }
@@ -224,7 +224,7 @@
       });
     });
 
-    it("Set valrep property with default display value as rep", function () {
+    it("set valrep property with default display value as rep", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray
@@ -238,7 +238,7 @@
       });
     });
 
-    it("Set valrep property with default display-format as value", function () {
+    it("set valrep property with default display-format as value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
@@ -255,7 +255,7 @@
       });
     });
 
-    it("Set valrep property with default display value as valrep", function () {
+    it("set valrep property with default display value as valrep", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
@@ -273,7 +273,7 @@
       });
     });
 
-    it("Set value to 2 and expect the radio button to be checked", function () {
+    it("set value to 2 and expect the radio button to be checked", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
@@ -291,7 +291,7 @@
       });
     });
 
-    it("Set value to empty string ('') and expect the radio button to be checked", function () {
+    it("set value to empty string ('') and expect the radio button to be checked", function () {
       let valRepArrayWithEmptyOption = [{
         value: "",
         representation: "Empty Option"
@@ -314,7 +314,7 @@
       });
     });
 
-    it("Set layout property to horizontal", function () {
+    it("set layout property to horizontal", function () {
       let valRepArrayLongText = [{
         value: "0",
         representation: "Option zero, test horizontal css specification changes when there is more than 25 characters."
@@ -342,7 +342,7 @@
       });
     });
 
-    it("Change multiple properties", function () {
+    it("change multiple properties", function () {
       let selectedValue = "2";
 
       return asyncRun(function () {
@@ -389,7 +389,7 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("Set a valid initial value and ensure the corresponding element is checked", function () {
+    it("set a valid initial value and ensure the corresponding element is checked", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
@@ -407,7 +407,7 @@
       });
     });
 
-    it("Set value to empty string ('') and ensure there is no checked element", function () {
+    it("set value to empty string ('') and ensure there is no checked element", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           value: ""
@@ -418,7 +418,7 @@
     });
   });
 
-  describe("Invalid state, user interaction and again set to invalid state", function () {
+  describe("Invalid state, user interaction, and set to invalid state", function () {
     let element;
     before(function () {
       tester.createWidget();
@@ -427,7 +427,7 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("Set invalid initial value", function () {
+    it("set invalid initial value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
@@ -440,7 +440,7 @@
     });
 
 
-    it("Simulate user interaction and select first option", function () {
+    it("simulate user interaction and select first option", function () {
       return asyncRun(function () {
         const firstRadioOption = document.querySelector("fluent-radio");
 
@@ -460,7 +460,7 @@
       });
     });
 
-    it("Now again set the same invalid value", function () {
+    it("now again set the same invalid value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
@@ -518,7 +518,7 @@
         });
       }).then(function () {
         // Assert that the change event handler was called not twice.
-        // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
+        // The change event will be invoked once in onConnect(), but it should not propagate further hence we check calledTwice.
         expect(onchangeSpy.calledTwice).to.be.false;
       });
     });
@@ -536,7 +536,7 @@
         // Change the display-format property.
         tester.element.setAttribute("display-format", "valrep");
         // Assert that the change event handler was not called twice.
-        // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
+        // The change event will be invoked once in onConnect(), but it should not propagate further hence we check calledTwice.
         expect(onchangeSpy.calledTwice).to.be.false;
       });
     });
@@ -554,7 +554,7 @@
         // Change the layout property.
         tester.element.setAttribute("layout", "horizontal");
         // Assert that the change event handler was not called twice.
-        // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
+        // The change event will be invoked once in onConnect(), but it should not propagate further hence we check calledTwice.
         expect(onchangeSpy.calledTwice).to.be.false;
       });
     });
@@ -592,20 +592,20 @@
         });
       }).then(function () {
         // Assert that the change event handler was not called thrice.
-        // The change event will be invoked twice in onConnect but it should not propogate further hence we check calledTwice.
+        // The change event will be invoked twice in onConnect(), but it should not propagate further hence we check calledTwice.
         expect(onchangeSpy.calledThrice).to.be.false;
       });
     });
   });
 
-  describe("showError", function () {
+  describe("showError()", function () {
     let radioElement;
     beforeEach(function () {
       tester.createWidget();
       radioElement = tester.element;
     });
 
-    it("When invalid value is set, should show error and none of the options should be selected", function () {
+    it("when invalid value is set, should show error and none of the options should be selected", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           valrep: valRepArray,
@@ -616,21 +616,21 @@
         const selectedOption = radioElement.querySelector("fluent-radio[current-checked=true]");
         expect(selectedOption).equal(null);
         expect(radioElement).to.have.class("u-format-invalid");
-        assert(!radioElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon");
-        assert.equal(radioElement.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'");
+        assert(!radioElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        assert.equal(radioElement.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class'u-error-icon ms-Icon ms-Icon--AlertSolid'.");
         assert.equal(radioElement.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
       });
     });
   });
 
-  describe("hideError", function () {
+  describe("hideError()", function () {
     let radioElement;
     beforeEach(function () {
       tester.createWidget();
       radioElement = tester.element;
     });
 
-    it("Set error to false", function () {
+    it("set error to false", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           uniface: {
@@ -640,20 +640,20 @@
         });
       }).then(function () {
         expect(radioElement).to.not.have.class("u-format-invalid");
-        assert(radioElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon");
+        assert(radioElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
         expect(radioElement.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
         expect(radioElement.querySelector("span.u-error-icon").getAttribute("title")).equal("");
       });
     });
   });
 
-  describe("reset all properties", function () {
+  describe("Reset all properties", function () {
     it("reset all property", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to reset all properties, exception " + e);
+        assert(false, `Failed to reset all properties, exception ${e}.`);
       }
     });
   });

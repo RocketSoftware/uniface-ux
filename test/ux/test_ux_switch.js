@@ -10,7 +10,7 @@
 
   describe("Uniface Mockup tests", function () {
 
-    it("Get class " + widgetName, function () {
+    it(`Get class ${widgetName}`, function () {
       const widgetClass = tester.getWidgetClass();
       assert(widgetClass, `Widget class '${widgetName}' is not defined!
             Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
@@ -33,10 +33,10 @@
 
   });
 
-  describe(widgetName + ".processLayout", function () {
+  describe(`${widgetName}.processLayout()`, function () {
     let element;
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
     });
@@ -48,7 +48,7 @@
       });
 
       it("check instance of HTMLElement", function () {
-        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+        expect(element).instanceOf(HTMLElement, `Function processLayout of ${widgetName} does not return an HTMLElement.`);
       });
 
       it("check tagName", function () {
@@ -60,22 +60,22 @@
       });
 
       it("check u-label-text", function () {
-        assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element");
+        assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element.");
       });
 
       it("check u-checked-message", function () {
-        assert(element.querySelector("span.u-checked-message"), "Widget misses or has incorrect u-checked-message element");
+        assert(element.querySelector("span.u-checked-message"), "Widget misses or has incorrect u-checked-message element.");
       });
 
       it("check u-unchecked-message", function () {
-        assert(element.querySelector("span.u-unchecked-message"), "Widget misses or has incorrect u-unchecked-message element");
+        assert(element.querySelector("span.u-unchecked-message"), "Widget misses or has incorrect u-unchecked-message element.");
       });
 
       it("check u-error-icon-unchecked", function () {
-        assert(element.querySelector("span.u-error-icon-unchecked"), "Widget misses or has incorrect u-error-icon-unchecked element");
+        assert(element.querySelector("span.u-error-icon-unchecked"), "Widget misses or has incorrect u-error-icon-unchecked element.");
       });
       it("check u-error-icon-checked", function () {
-        assert(element.querySelector("span.u-error-icon-checked"), "Widget misses or has incorrect u-error-icon-checked element");
+        assert(element.querySelector("span.u-error-icon-checked"), "Widget misses or has incorrect u-error-icon-checked element.");
       });
     });
 
@@ -90,31 +90,31 @@
     it("constructor", function () {
       try {
         const widget = tester.construct();
-        assert(widget, "widget is not defined!");
+        assert(widget, "Widget is not defined!");
         const widgetClass = tester.getWidgetClass();
-        assert(widgetClass.defaultValues.classes["u-switch"], "Class is not defined");
+        assert(widgetClass.defaultValues.classes["u-switch"], "Class is not defined!");
       } catch (e) {
-        assert(false, "Failed to construct new widget, exception " + e);
+        assert(false, `Failed to construct new widget, exception ${e}.`);
       }
     });
 
-    it("onConnect", function () {
+    it("onConnect()", function () {
       const element = tester.processLayout();
       const widget = tester.onConnect();
-      assert(widget.elements.widget.shadowRoot.querySelector("slot[name='switch']").hasAttribute("part"), "Attribute is added to defined slot element");
-      assert(widget.elements.widget.shadowRoot.querySelector("slot[name='switch']").getAttribute("part") === "switch-toggle", "Attribute value is not switch-toggle");
+      assert(widget.elements.widget.shadowRoot.querySelector("slot[name='switch']").hasAttribute("part"), "Attribute is added to defined slot element.");
+      assert(widget.elements.widget.shadowRoot.querySelector("slot[name='switch']").getAttribute("part") === "switch-toggle", "Attribute value is not switch-toggle.");
       assert(element, "Target element is not defined!");
-      assert(widget.elements.widget === element, "widget is not connected");
+      assert(widget.elements.widget === element, "Widget is not connected.");
     });
 
   });
 
-  describe("mapTrigger", function () {
+  describe("mapTrigger()", function () {
     const widget = tester.onConnect();
     widget.mapTrigger("onchange");
   });
 
-  describe("dataInit", function () {
+  describe("dataInit()", function () {
     const defaultValues = tester.getDefaultValues();
     const classes = defaultValues.classes;
     var element;
@@ -126,17 +126,17 @@
     });
 
     for (const defaultClass in classes) {
-      it("check class '" + defaultClass + "'", function () {
+      it(`check class '${defaultClass}'`, function () {
         if (classes[defaultClass]) {
-          expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+          expect(element).to.have.class(defaultClass, `Widget element has class ${defaultClass}.`);
         } else {
-          expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
+          expect(element).not.to.have.class(defaultClass, `Widget element has no class ${defaultClass}.`);
         }
       });
     }
   });
 
-  describe("dataUpdate", function () {
+  describe("dataUpdate()", function () {
     let widget, element;
     before(function () {
       widget = tester.createWidget();
@@ -177,7 +177,7 @@
       }).then(function () {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, switchLabelText);// Check for visibility
-        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
+        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
 
@@ -193,9 +193,9 @@
       }).then(function () {
         let checkedText = widget.elements.widget.querySelector("span.u-checked-message").innerText;
         assert.equal(checkedText, switchCheckedText);// Check for visibility
-        assert(!widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message text");
+        assert(!widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message text.");
         expect(widget.elements.widget.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
-        expect(widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
+        expect(widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide unchecked message.");
       });
     });
 
@@ -211,9 +211,9 @@
       }).then(function () {
         let uncheckedText = widget.elements.widget.querySelector("span.u-unchecked-message").innerText;
         assert.equal(uncheckedText, switchUnCheckedText);// Check for visibility
-        assert(!widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text");
+        assert(!widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text.");
         expect(widget.elements.widget.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
-        expect(widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
+        expect(widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message.");
       });
     });
   });
@@ -248,7 +248,7 @@
     });
   });
 
-  describe("showError", function () {
+  describe("showError()", function () {
     let widget, element;
     before(function () {
       widget = tester.createWidget();
@@ -305,15 +305,15 @@
       }).then(function () {
         expect(element).to.not.have.class("u-format-invalid");
         // If there are no messages to show in the slot, they should still be kept hidden even after the error has been removed
-        assert(widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to keep the unchecked message slot hidden");
+        assert(widget.elements.widget.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to keep the unchecked message slot hidden.");
         expect(widget.elements.widget.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("");
-        assert(widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to keep the checked message slot hidden");
+        assert(widget.elements.widget.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to keep the checked message slot hidden.");
         expect(widget.elements.widget.querySelector("span.u-checked-message").getAttribute("slot")).equal("");
       });
     });
   });
 
-  describe("dataCleanup", function () {
+  describe("dataCleanup()", function () {
     let widget;
     before(function () {
       widget = tester.createWidget();
@@ -324,7 +324,7 @@
         widget.dataCleanup(tester.widgetProperties);
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, `Failed to call dataCleanup(), exception ${e}.`);
       }
     });
   });

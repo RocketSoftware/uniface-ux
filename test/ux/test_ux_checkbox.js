@@ -17,9 +17,9 @@
               Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
   }
 
-  describe("Uniface Mockup tests", function() {
+  describe("Uniface mockup tests", function() {
 
-    it("Get class " + widgetName, function() {
+    it(`get class ${widgetName}`, function() {
       verifyWidgetClass(widgetClass);
     });
 
@@ -42,10 +42,10 @@
 
   });
 
-  describe(widgetName + ".processLayout", function() {
+  describe(`${widgetName}.processLayout()`, function() {
     let element;
 
-    it("processLayout", function() {
+    it("processLayout()", function() {
       verifyWidgetClass(widgetClass);
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
@@ -59,7 +59,7 @@
       });
 
       it("check instance of HTMLElement", function() {
-        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+        expect(element).instanceOf(HTMLElement, `Function processLayout() of ${widgetName} does not return an HTMLElement.`);
       });
 
       it("check tagName", function() {
@@ -71,11 +71,11 @@
       });
 
       it("check u-label-text", function() {
-        assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element");
+        assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element.");
       });
 
       it("check u-error-icon", function() {
-        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
+        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element.");
       });
     });
   });
@@ -92,32 +92,32 @@
         const widget = tester.construct();
         assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes["u-checkbox"], "Class is not defined");
+        assert(widgetClass.defaultValues.classes["u-checkbox"], "Class is not defined!");
       } catch (e) {
-        assert(false, "Failed to construct new widget, exception " + e);
+        assert(false, `Failed to construct new widget, exception ${e}.`);
       }
     });
 
-    describe("onConnect", function() {
+    describe("onConnect()", function() {
       const element = tester.processLayout();
       const widget = tester.onConnect();
-      it("check element created and connected", function() {
+      it("check that the element is created and connected", function() {
         assert(element, "Target element is not defined!");
-        assert(widget.elements.widget === element, "widget is not connected");
+        assert(widget.elements.widget === element, "Widget is not connected!");
       });
     });
   });
 
-  describe("mapTrigger", function() {
+  describe("mapTrigger()", function() {
     const element = tester.processLayout();
     const widget = tester.onConnect();
     widget.mapTrigger("onchange");
     const event = new window.Event("onchange");
     element.dispatchEvent(event);
-    assert(widget.elements.widget === element, "widget is not connected");
+    assert(widget.elements.widget === element, "Widget is not connected!");
   });
 
-  describe("CheckBox onchange event", function() {
+  describe("Checkbox onchange event", function() {
     let checkBoxElement, onchangeSpy;
     beforeEach(function() {
 
@@ -148,8 +148,8 @@
   });
 
 
-  // Data Init
-  describe("Data Init", function() {
+  // dataInit()
+  describe("dataInit()", function() {
     const defaultValues = tester.getDefaultValues();
     const classes = defaultValues.classes;
     let element;
@@ -161,41 +161,41 @@
 
 
     for (const defaultClass in classes) {
-      it("check class '" + defaultClass + "'", function() {
+      it(`check class ${defaultClass}`, function() {
         if (classes[defaultClass]) {
-          expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+          expect(element).to.have.class(defaultClass, `Widget element has class ${defaultClass}.`);
         } else {
-          expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
+          expect(element).not.to.have.class(defaultClass, `Widget element has no class ${defaultClass}.`);
         }
       });
     }
 
     it("check 'hidden' attributes", function() {
-      assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label Text span element should be hidden by default");
-      assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Icon span element should be hidden by default");
+      assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label text span element should be hidden by default.");
+      assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Icon span element should be hidden by default.");
     });
 
     it("check widget id", function() {
       assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
     });
 
-    it("check tri-state, tabindex, hidden , disabled, readonly and title", function() {
+    it("check tri-state, tabindex, hidden , disabled, readonly, and title", function() {
       let htmlProperties = tester.defaultValues.html;
       let unifaceProperties = tester.defaultValues.uniface;
-      assert.equal(htmlProperties["tabindex"], 0, "Default value of html:tabindex should be 0");
-      assert.equal(htmlProperties["title"], undefined, "Default value of html:title should be undefined");
-      assert.equal(htmlProperties["disabled"], false, "Default value of disabled  should be false");
-      assert.equal(htmlProperties["readonly"], false, "Default value of readonly  should be false");
-      assert.equal(htmlProperties["hidden"], false, "Default value of hidden  should be false");
-      assert.equal(unifaceProperties["tri-state"], false, "Default value of label-position will be above");
+      assert.equal(htmlProperties["tabindex"], 0, "Default value of html:tabindex should be 0.");
+      assert.equal(htmlProperties["title"], undefined, "Default value of html:title should be undefined.");
+      assert.equal(htmlProperties["disabled"], false, "Default value of disabled should be false.");
+      assert.equal(htmlProperties["readonly"], false, "Default value of readonly should be false.");
+      assert.equal(htmlProperties["hidden"], false, "Default value of hidden should be false.");
+      assert.equal(unifaceProperties["tri-state"], false, "Default value of label-position will be above.");
     });
 
     it("check value", function() {
-      assert.equal(tester.defaultValues.value, null, "Default value of attribute value should be null");
+      assert.equal(tester.defaultValues.value, null, "Default value of attribute value should be null.");
     });
   });
 
-  describe("dataUpdate", function() {
+  describe("dataUpdate()", function() {
     let widget, element;
 
     before(function() {
@@ -250,7 +250,7 @@
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, checkBoxLabelText); // Check for visibility
-        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
+        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
 
@@ -264,7 +264,7 @@
           value: 1
         });
       }).then(function() {
-        assert(widget.elements.widget.hasAttribute("title"), "Failed to show the title attribute");
+        assert(widget.elements.widget.hasAttribute("title"), "Failed to show the title attribute.");
         expect(widget.elements.widget.getAttribute("title")).equal(checkBoxTitle);
       });
     });
@@ -281,7 +281,7 @@
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, checkBoxLabelText); // Check for visibility
-        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
+        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
 
@@ -297,7 +297,7 @@
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, checkBoxLabelText); // Check for visibility
-        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
+        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
 
@@ -320,12 +320,12 @@
       }).then(function() {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, "Changed Label Text"); // Check for visibility
-        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text");
+        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label-text.");
       });
     });
   });
 
-  describe("showError", function() {
+  describe("showError()", function() {
     let widget, element;
     before(function() {
       widget = tester.createWidget();
@@ -340,15 +340,15 @@
         });
       }).then(function() {
         expect(element).to.have.class("u-format-invalid");
-        assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon");
+        assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
         expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
-        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid");
+        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid.");
         assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."); // Check for visibility
       });
     });
   });
 
-  describe("hideError", function() {
+  describe("hideError()", function() {
     let widget, element;
     before(function() {
       widget = tester.createWidget();
@@ -366,21 +366,21 @@
         });
       }).then(function() {
         expect(element).to.not.have.class("u-format-invalid");
-        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden error icon");
+        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden error icon.");
         expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
-        expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide hidden attribute");
+        expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide hidden attribute.");
       });
     });
   });
 
-  describe("reset all properties", function() {
+  describe("Reset all properties", function() {
 
     it("reset all property", function() {
       try {
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, `Failed to call dataCleanup(), exception ${e}`);
       }
     });
   });
