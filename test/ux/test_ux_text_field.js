@@ -241,6 +241,10 @@
       assert.equal(tester.defaultValues.value, '', "Default value of attribute value should be ''");
     });
 
+    it("check delegated property disabled", function () {
+      assert.equal(tester.widget.subWidgets["changebutton"].delegatedProperties, 'html:disabled', "Delegated property html:disabled is not present");
+    });
+
   });
 
   describe("dataUpdate", function () {
