@@ -131,7 +131,6 @@ export class Listbox extends Widget {
 
         :host([disabled]) .label {
           cursor: not-allowed;
-          opacity: var(--disabled-opacity);
         }
 
         :host([readonly]) .label {
@@ -162,16 +161,26 @@ export class Listbox extends Widget {
    */
   createElement() {
     let element = this.elements.widget;
+    const controlElement = element?.shadowRoot?.querySelector(".control");
 
     // Put label inside the shadow root since the fluent library doesn't provide it.
     let labelElement = document.createElement("label");
     labelElement.setAttribute("class", "label");
+    labelElement.setAttribute("for", "control");
     labelElement.setAttribute("part", "label");
+
+    // Adding id to control element to bind with the label element, hence clicking on the label gives focus to the control.
+    controlElement?.setAttribute("id", "control");
 
     // Creating slot element to hold label, since we can't use default slot.
     let slot = document.createElement("slot");
     slot.setAttribute("name", "label");
     labelElement.appendChild(slot);
+
+    // Stop the propagation of click event to prevent opening of select pop-up.
+    labelElement.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
 
     element?.shadowRoot?.prepend(labelElement);
   }
