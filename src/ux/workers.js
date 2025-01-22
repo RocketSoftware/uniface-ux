@@ -348,6 +348,7 @@ export class SlottedSubWidget extends Element {
    * @param {Object} subWidgetDefaultValues
    * @param {Boolean} visible
    * @param {Array} subWidgetTriggers
+   * @param {Array} delegatedProperties
    */
   constructor(
     widgetClass,
