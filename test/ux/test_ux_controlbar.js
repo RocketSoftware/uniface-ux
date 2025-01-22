@@ -9,7 +9,9 @@
   const widgetClass = tester.getWidgetClass();
   const asyncRun = umockup.asyncRun;
 
+  // const MOCK_EMPTY_DEFINITION = { "properties": {} };
   const MOCK_EMPTY_DEFINITION = {};
+
   const MOCK_EMPTY_START_CENTER_END_CONTROLS_DEFINITION = {
     "subwidgets-start": "",
     "subwidgets-center": "",
@@ -448,6 +450,7 @@
       });
 
       it("if there is any change in subwidgets properties and html properties, should be reflected on the subwidgets", function () {
+        // dataUpdate deletes theproperty of object hence creating deepcopy of object for checking
         let updatedData = Object.assign({}, MOCK_CONTROLBAR_CONTROLS_DATA);
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
         return asyncRun(function() {
