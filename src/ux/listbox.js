@@ -131,7 +131,6 @@ export class Listbox extends Widget {
 
         :host([disabled]) .label {
           cursor: not-allowed;
-          opacity: var(--disabled-opacity);
         }
 
         :host([readonly]) .label {
