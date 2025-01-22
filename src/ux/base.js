@@ -344,39 +344,27 @@ export class Base {
    * @returns {Object} An object containing the extracted sub-widget data.
    */
   extractSubWidgetData(data, subWidgetPropPrefix) {
-    const subWidgetData = {};
-    const shouldHandleUseValue = data[`${subWidgetPropPrefix}:usevalue`] === "true";
+    let subWidgetData;
 
-    Object.keys(data).forEach(property => {
-      if (!property.startsWith(subWidgetPropPrefix)) {
-        return;
-      }
-      const pos = property.indexOf(":");
-      if (pos <= 0) {
-        return;
-      }
-      const key = property.substring(pos + 1);
-
-      if (key === "value" && !shouldHandleUseValue) {
-        subWidgetData[key] = data[property];
-      } else if (key === "valrep") {
-        subWidgetData[key] = this.getFormattedValrep(data[property]);
-      } else {
-        subWidgetData[key] = data[property];
-      }
-      delete data[property];
-    });
-
-    if (shouldHandleUseValue) {
-      const valueObject = JSON.parse(data.value);
-      if (valueObject && subWidgetPropPrefix in valueObject) {
-        subWidgetData.value = valueObject[subWidgetPropPrefix] === "uniface.RESET"
-          ? uniface.RESET
-          : valueObject[subWidgetPropPrefix];
+    for (let property in data) {
+      if (property.startsWith(subWidgetPropPrefix)) {
+        let pos = property.search(":");
+        if (pos > 0) {
+          subWidgetData = subWidgetData || {};
+          let key = property.substring(pos + 1);
+          if (key === "valrep") {
+            subWidgetData[key] = this.getFormattedValrep(data[property]);
+          } else if (key === "value" && (this.toBoolean(subWidgetData["usefield"]) || this.toBoolean(data[`${subWidgetPropPrefix}:usefield`]))) {
+            const valueObject = JSON.parse(data.value);
+            subWidgetData[key] = valueObject[subWidgetPropPrefix];
+          } else {
+            subWidgetData[key] = data[property];
+          }
+          // Remove the property from the original data to avoid duplication.
+          delete data[property];
+        }
       }
     }
-
     return subWidgetData;
   }
-
 }

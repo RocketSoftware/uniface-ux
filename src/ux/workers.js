@@ -440,9 +440,6 @@ export class SubWidgetsByProperty extends Element {
     this.styleClass = styleClass;
     this.propId = propId;
     this.registerSubWidgetWorker(widgetClass, this);
-    this.registerSetter(widgetClass, "value", this);
-    this.registerDefaultValue(widgetClass, "value", null);
-    this.registerGetter(widgetClass, "value", this);
   }
 
   /**
@@ -502,8 +499,8 @@ export class SubWidgetsByProperty extends Element {
       subWidgetIds.split("")?.forEach((subWidgetId) => {
         const classNamePropId = `${subWidgetId}:widget-class`;
         const triggersPropId = `${subWidgetId}:widget-triggers`;
-        const useValuePropId = `${subWidgetId}:usevalue`;
-        const usevalue = objectDefinition.getProperty(useValuePropId);
+        const useFieldPropId = `${subWidgetId}:usefield`;
+        const usefield = objectDefinition.getProperty(useFieldPropId);
         const className = objectDefinition.getProperty(classNamePropId);
         const subWidgetClass = UNIFACE.ClassRegistry.get(className);
         const subWidgetTriggers = objectDefinition.getProperty(triggersPropId);
@@ -512,26 +509,11 @@ export class SubWidgetsByProperty extends Element {
         subWidgetDefinition.styleClass = `u-sw-${subWidgetId}`;
         subWidgetDefinition.triggers = subWidgetTriggers?.split("") || [];
         subWidgetDefinition.propPrefix = subWidgetId;
-        subWidgetDefinition.usevalue = usevalue;
+        subWidgetDefinition.usefield = usefield;
         subWidgetDefinitions[subWidgetId] = subWidgetDefinition;
       });
     }
     return subWidgetDefinitions;
-  }
-
-  getValue(widgetInstance) {
-    let value = {};
-    Object.keys(widgetInstance.subWidgets).forEach((subWidgetId) => {
-      if (widgetInstance.subWidgetDefinitions[subWidgetId] && widgetInstance.subWidgetDefinitions[subWidgetId].usevalue === "true") {
-        value[subWidgetId] = widgetInstance.subWidgets[subWidgetId].getValue();
-      }
-    });
-    return JSON.stringify(value);
-  }
-
-  getValueUpdaters(widgetInstance) {
-    this.log("getValueUpdaters", { "widgetInstance": widgetInstance.getTraceDescription() });
-    return;
   }
 }
 
@@ -1526,5 +1508,27 @@ export class SlottedElementsByValRep extends Element {
   refresh(widgetInstance) {
     this.removeValRepElements(widgetInstance);
     this.createValRepElements(widgetInstance);
+  }
+}
+
+/**
+ * A specialized value worker for subwidgets that identifies and returns values where the useField property is set to true.
+ * @export
+ * @class HtmlSubWidgetValueWorker
+ * @extends {HtmlAttribute}
+ */
+export class HtmlSubWidgetValueWorker extends HtmlAttribute {
+  getValue(widgetInstance) {
+    this.log("getValue", {
+      "widgetInstance": widgetInstance.getTraceDescription(),
+      "attrName": "value"
+    });
+    let value = {};
+    Object.keys(widgetInstance.subWidgets).forEach((subWidgetId) => {
+      if (widgetInstance.subWidgetDefinitions[subWidgetId] && widgetInstance.subWidgetDefinitions[subWidgetId].useField === "true") {
+        value[subWidgetId] = widgetInstance.subWidgets[subWidgetId].getValue();
+      }
+    });
+    return JSON.stringify(value);
   }
 }
