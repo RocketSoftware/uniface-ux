@@ -347,7 +347,7 @@ export class Base {
   extractSubWidgetData(data, subWidgetPropPrefix) {
     let subWidgetData;
     for (let property in data) {
-      if (property.startsWith(subWidgetPropPrefix)) {
+      if (property.startsWith(`${subWidgetPropPrefix}:`)) {
         const key = property.substring(subWidgetPropPrefix.length + 1);
         if (key) {
           subWidgetData = subWidgetData || {};
@@ -370,7 +370,7 @@ export class Base {
   extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix) {
     let subWidgetPropertyNames;
     propertyNames.forEach((propertyName) => {
-      if (propertyName.startsWith(subWidgetPropPrefix)) {
+      if (propertyName.startsWith(`${subWidgetPropPrefix}:`)) {
         const key = propertyName.substring(subWidgetPropPrefix.length + 1);
         if (key) {
           subWidgetPropertyNames = subWidgetPropertyNames || new Set();
