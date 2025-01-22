@@ -570,8 +570,8 @@ export class Widget extends Base {
 
   /**
    * Removes the CSS class names from the widget element based on the provided property names.
-   * @param {UPropertyNames} propertyNames - A set of property names, where some may start with "class".
-   * If a property name starts with "class", the corresponding class is removed from the widget element.
+   * @param {UPropertyNames} propertyNames - A set of property names, where some may start with "class:".
+   * If a property name starts with "class:", the corresponding class is removed from the widget element.
    */
   cleanupClassProperties(propertyNames) {
     propertyNames.forEach((propertyName) => {
