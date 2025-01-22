@@ -7,6 +7,15 @@
   padding: unset;
 }
 
+.u-listbox:focus-within:not([disabled]) {
+  outline: unset;
+  outline-offset: unset;
+}
+
+.u-listbox:focus-visible {
+  outline: unset;
+}
+
 /* Styling for disabled and readonly states */
 .u-listbox[disabled] {
   cursor: not-allowed;
