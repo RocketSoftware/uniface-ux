@@ -9,15 +9,11 @@
   const widgetClass = tester.getWidgetClass();
   const asyncRun = umockup.asyncRun;
 
-  const MOCK_EMPTY_DEFINITION = { "properties": {} };
-
+  const MOCK_EMPTY_DEFINITION = {};
   const MOCK_EMPTY_START_CENTER_END_CONTROLS_DEFINITION = {
     "subwidgets-start": "",
     "subwidgets-center": "",
-    "subwidgets-end": "",
-    "info:widget-class": "UX.PlainText",
-    "goto:widget-class": "UX.NumberField",
-    "size:widget-class": "UX.Select"
+    "subwidgets-end": ""
   };
   const MOCK_START_CONTROLS_ONLY_DEFINITION = {
     "subwidgets-start": "first",
@@ -45,10 +41,7 @@
   const MOCK_EMPTY_START_CONTROLS_DEFINITION = {
     "subwidgets-start": "",
     "subwidgets-center": "size",
-    "subwidgets-end": "goto",
-    "info:widget-class": "UX.RadioGroup",
-    "goto:widget-class": "UX.NumberField",
-    "size:widget-class": "UX.Select"
+    "subwidgets-end": "goto"
   };
 
   const MOCK_UNDEFINED_START_CONTROLS_DEFINITION = {
@@ -89,14 +82,14 @@
   ];
 
   const MOCK_START_CENTER_END_CONTROLS_DEFINITION = {
-    "subwidgets-start": "info",
+    "subwidgets-start": "checkbox1info",
     "subwidgets-center": "goto",
     "subwidgets-end": "sizefirst",
     "info:widget-class": "UX.PlainText",
     "goto:widget-class": "UX.NumberField",
     "size:widget-class": "UX.Select",
-    "first:widget-class": "UX.Button"
-
+    "first:widget-class": "UX.Button",
+    "checkbox1:widget-class": "UX.Checkbox"
   };
 
 
@@ -189,7 +182,7 @@
       expect(element).to.have.tagName(tester.uxTagName);
     });
 
-    it("processLayout with just start controls", function () {
+    it("processLayout with just start subwidgets", function () {
       verifyWidgetClass(widgetClass);
       const tester = new umockup.WidgetTester();
       element = tester.processLayout(MOCK_START_CONTROLS_ONLY_DEFINITION);
@@ -197,29 +190,37 @@
       tester.dataInit();
       expect(element);
       expect(element.querySelector(".u-start-section").children.length).not.to.equal(0);
+      expect(element.querySelector(".u-center-section").children.length).to.equal(0);
+      expect(element.querySelector(".u-end-section").children.length).to.equal(0);
+
     });
 
-    it("processLayout with just center controls", function () {
+    it("processLayout with just center subwidgets", function () {
       verifyWidgetClass(widgetClass);
       const tester = new umockup.WidgetTester();
       element = tester.processLayout(MOCK_CENTER_CONTROLS_ONLY_DEFINITION);
       tester.onConnect();
       tester.dataInit();
       expect(element.querySelector(".u-center-section").children.length).not.to.equal(0);
+      expect(element.querySelector(".u-start-section").children.length).to.equal(0);
+      expect(element.querySelector(".u-end-section").children.length).to.equal(0);
+
     });
 
-    it("processLayout with just end controls", function () {
+    it("processLayout with just end subwidgets", function () {
       verifyWidgetClass(widgetClass);
       const tester = new umockup.WidgetTester();
       element = tester.processLayout(MOCK_END_CONTROLS_ONLY_DEFINITION);
       tester.onConnect();
       tester.dataInit();
       expect(element);
+      expect(element.querySelector(".u-start-section").children.length).to.equal(0);
+      expect(element.querySelector(".u-center-section").children.length).to.equal(0);
       expect(element.querySelector(".u-end-section").children.length).not.to.equal(0);
     });
 
     describe("if subwidgets-start is undefined or empty", function () {
-      it("should not contain start controls if subwidgets-start is empty", function () {
+      it("should not contain start subwidgets if subwidgets-start is empty", function () {
         verifyWidgetClass(widgetClass);
         const tester = new umockup.WidgetTester();
         element = tester.processLayout(MOCK_EMPTY_START_CONTROLS_DEFINITION);
@@ -228,7 +229,7 @@
         expect(element.querySelector(".u-start-section").children.length).to.equal(0);
       });
 
-      it("should not contain start controls if subwidgets-start is undefined", function () {
+      it("should not contain start subwidgets if subwidgets-start is undefined", function () {
         verifyWidgetClass(widgetClass);
         const tester = new umockup.WidgetTester();
         element = tester.processLayout(MOCK_UNDEFINED_START_CONTROLS_DEFINITION);
@@ -240,7 +241,7 @@
     });
 
     describe("if subwidgets-center is undefined or empty", function () {
-      it("should not contain center controls if subwidgets-center is empty", function () {
+      it("should not contain center subwidgets if subwidgets-center is empty", function () {
         verifyWidgetClass(widgetClass);
         element = tester.processLayout(MOCK_EMPTY_CENTER_CONTROLS_DEFINITION);
         tester.onConnect();
@@ -248,7 +249,7 @@
         expect(element.querySelector(".u-center-section").children.length).to.equal(0);
       });
 
-      it("should not contain center controls if subwidgets-center is undefined", function () {
+      it("should not contain center subwidgets if subwidgets-center is undefined", function () {
         verifyWidgetClass(widgetClass);
         element = tester.processLayout(MOCK_UNDEFINED_CENTER_CONTROLS_DEFINITION);
         tester.onConnect();
@@ -258,7 +259,7 @@
     });
 
     describe("if subwidgets-end is undefined or empty", function () {
-      it("should not contain end controls if subwidgets-end is empty", function () {
+      it("should not contain end subwidgets if subwidgets-end is empty", function () {
         verifyWidgetClass(widgetClass);
         const tester = new umockup.WidgetTester();
         element = tester.processLayout(MOCK_EMPTY_END_CONTROLS_DEFINITION);
@@ -267,7 +268,7 @@
         expect(element.querySelector(".u-end-section").children.length).to.equal(0);
       });
 
-      it("should not contain end controls if subwidgets-end is undefined", function () {
+      it("should not contain end subwidgets if subwidgets-end is undefined", function () {
         verifyWidgetClass(widgetClass);
         const tester = new umockup.WidgetTester();
         element = tester.processLayout(MOCK_UNDEFINED_END_CONTROLS_DEFINITION);
@@ -277,8 +278,8 @@
       });
     });
 
-    describe("when the definition.properties does not contain control id's defined", function () {
-      it("should not contain start, center and end controls", function () {
+    describe("when the definition.properties does not contain subwidgets id's defined", function () {
+      it("should not contain start, center and end subwidgets", function () {
         const tester = new umockup.WidgetTester();
         element = tester.processLayout(MOCK_EMPTY_START_CENTER_END_CONTROLS_DEFINITION);
         tester.onConnect();
@@ -290,6 +291,7 @@
     });
 
     describe("if subwidgets-start, subwidgets-center and subwidgets-end are defined", function () {
+      let element;
       beforeEach(function () {
         const tester = new umockup.WidgetTester();
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
@@ -297,16 +299,19 @@
         tester.dataInit();
       });
 
-      it("should contain start, center and end controls", function () {
+      it("should contain start, center and end subwidgets", function () {
         verifyWidgetClass(widgetClass);
+        expect(element.querySelector(".u-start-section").children.length).to.equal(2);
+        expect(element.querySelector(".u-center-section").children.length).to.equal(1);
+        expect(element.querySelector(".u-end-section").children.length).to.equal(2);
         expect(element.querySelector(".u-start-section").children.length).not.to.equal(0);
         expect(element.querySelector(".u-center-section").children.length).not.to.equal(0);
         expect(element.querySelector(".u-end-section").children.length).not.to.equal(0);
       });
     });
 
-    describe("when the definition.properties does not contain control id's defined", function () {
-      it("should not contain start, center and end controls", function () {
+    describe("when the definition.properties does not contain subwidgets id's defined", function () {
+      it("should not contain start, center and end subwidgets", function () {
         const tester = new umockup.WidgetTester();
         element = tester.processLayout(MOCK_EMPTY_START_CENTER_END_CONTROLS_DEFINITION);
         tester.onConnect();
@@ -317,8 +322,8 @@
       });
     });
 
-    describe("when the definition.properties does not contain control-start, control-center and control-end defined", function () {
-      it("should not contain start, center and end controls", function () {
+    describe("when the definition.properties does not contain subwidgets-start, subwidgets-center and subwidgets-end defined", function () {
+      it("should not contain start, center and end subwidgets", function () {
         const tester = new umockup.WidgetTester();
         element = tester.processLayout(MOCK_UNDEFINED_START_CENTER_END_CONTROLS_DEFINITION);
         tester.onConnect();
@@ -382,12 +387,12 @@
       expect(tester.element).to.deep.equal(element);
     });
 
-    it("refernces to control elements should be added", function () {
-      let mockControlIds = new Set(["info", "goto", "size"]);
+    it("refernces to subwidget elements should be added", function () {
+      let mockSubWidgetIds = new Set(["info", "goto", "size"]);
       tester.onConnect(element);
 
-      mockControlIds.forEach((controlId) => {
-        expect(tester[controlId]).not.to.be.null;
+      mockSubWidgetIds.forEach((subWidgetId) => {
+        expect(tester.widget.subWidgets[subWidgetId]).not.to.be.null;
       });
     });
   });
@@ -428,123 +433,68 @@
       const tester = new umockup.WidgetTester();
 
       it("if there is change in any class properties, should be reflected on the widgetElement", function () {
+        const tester = new umockup.WidgetTester();
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
         return asyncRun(function() {
           tester.onConnect(element);
           tester.dataInit();
           tester.dataUpdate(MOCK_CONTROLBAR_DATA);
         }).then(function() {
-          for (let key in MOCK_CONTROLBAR_DATA.classes) {
-            expect(element.classList.contains(key)).to.be.true;
-          }
+          expect(element.classList.contains("classC")).to.be.true;
+          expect(element.getAttribute("u-orientation")).to.equal("vertical");
+          expect(window.getComputedStyle(element)['flex-direction']).to.equal("column");
+          expect(element.querySelector("fluent-number-field .u-label-text").hasAttribute('hidden')).to.be.true;
         });
       });
 
-      it("if there is any change in control's uniface properties, should be reflected on the control", function () {
-        element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
-        return asyncRun(function() {
-          tester.onConnect(element);
-          tester.dataInit();
-          tester.dataUpdate(MOCK_CONTROLBAR_DATA);
-        }).then(function() {
-          for (let key in MOCK_CONTROLBAR_DATA.uniface) {
-            let [...subKeys] = key.split(":");
-            if (subKeys[0] === "label-text") {
-              expect(element.querySelector(".u-label-text").textContent).to.equal(MOCK_CONTROLBAR_CONTROLS_DATA.uniface[key]);
-            }
-          }
-        });
-      });
-
-      it("if there is any change in control's html properties, should be reflected on the control", function () {
+      it("if there is any change in subwidgets properties and html properties, should be reflected on the subwidgets", function () {
+        let updatedData = Object.assign({}, MOCK_CONTROLBAR_CONTROLS_DATA);
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
         return asyncRun(function() {
           tester.onConnect(element);
           tester.dataInit();
           tester.dataUpdate(MOCK_CONTROLBAR_CONTROLS_DATA);
         }).then(function() {
-          for (let key in MOCK_CONTROLBAR_CONTROLS_DATA.uniface) {
-            let [ ...subKeys] = key.split(":");
-            if (subKeys[0] === "html") {
-              let selectArray = element.querySelectorAll("fluent-select");
-              expect(selectArray[0].hasAttribute("disabled")).to.be.true;
-            }
-          }
+          // check if there is any change in subwidgets properties
+          expect(element.querySelector("fluent-select .u-label-text").textContent).to.equal(updatedData["size:label-text"]);
+          expect(element.querySelector("fluent-number-field .u-label-text").hasAttribute('hidden')).to.be.true;
+          expect(element.querySelector("fluent-checkbox .u-label-text").hasAttribute('hidden')).to.be.true;
+
+          // check if any change in subwidget's html properties
+          expect(element.querySelector("fluent-select").hasAttribute("disabled")).to.be.true;
+          expect(String(element.querySelector("fluent-select").hasAttribute('disabled')).toLowerCase()).to.equal(updatedData["size:html:disabled"]);
+          expect(String(element.querySelector("fluent-number-field").hasAttribute('hide-step')).toLowerCase()).to.equal(updatedData["goto:html:hide-step"]);
         });
       });
 
-      it("if there is any change in control's val properties, should be reflected on the control", function () {
+      it("if there is any change in subwidget's valrep properties, should be reflected on the subwidgets", function () {
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
         return asyncRun(function() {
           tester.onConnect(element);
           tester.dataInit();
-          tester.dataUpdate({"uniface":{"size:valrep": "1=a10=1025=2550=50100=100"}});
+          tester.dataUpdate({"size:valrep": "1=a10=1025=2550=50100=100"});
         }).then(function() {
-          for (let key in MOCK_CONTROLBAR_CONTROLS_DATA.uniface) {
-            let [...subKeys] = key.split(":");
-            if (subKeys[0] === "class") {
-              let selectOptionArray = element.querySelectorAll("fluent-option");
-              selectOptionArray.forEach(function (node, index) {
-                expect(node.textContent).equal(valRepArray[index].representation);
-              });
-            }
-          }
+          let selectOptionArray = element.querySelectorAll("fluent-option");
+          selectOptionArray.forEach(function (node, index) {
+            expect(node.textContent).equal(valRepArray[index].representation);
+          });
         });
-      });
-
-      it("if there is any change in control's valrep property, should be reflected on the control", function () {
-        tester.onConnect(element);
-        tester.dataInit();
-        tester.dataUpdate(MOCK_CONTROLBAR_CONTROLS_DATA);
-
-        for (let key in MOCK_CONTROLBAR_CONTROLS_DATA.uniface) {
-          let [mainKey, subKeys] = key.split(":");
-          if (subKeys[0] === "valrep") {
-            let formattedValrep = umockup.getFormattedValrep(MOCK_CONTROLBAR_CONTROLS_DATA.uniface[key]);
-            let listboxOptions = umockup[mainKey].element.querySelectorAll("fluent-option");
-            Array.from(listboxOptions).forEach((option, i) => {
-              expect(option.value).to.equal(formattedValrep[i].value);
-              expect(option.querySelector(".u-valrep-representation").textContent).to.equal(formattedValrep[i].representation);
-            });
-          }
-        }
-      });
-    });
-  });
-  describe("dataCleanup()", function () {
-    describe("reset all properties to default", function() {
-      let widget;
-      before(function () {
-        widget = tester.createWidget();
-      });
-
-      it("reset all property", function() {
-        try {
-          tester.dataUpdate(tester.getDefaultValues());
-        } catch (e) {
-          console.error(e);
-          assert(false, "Failed to call dataCleanup(), exception " + e);
-        }
-      });
-
-      it("dataCleanUp reset all properties", function () {
-        try {
-          widget.dataCleanup(tester.widgetProperties);
-        } catch (e) {
-          console.error(e);
-          assert(false, "Failed to call dataCleanup(), exception " + e);
-        }
       });
     });
   });
   describe("blockUI()", function () {
-    it("should make the controls readonly/disabled (whatever that is applicable)", function () {
+    it("should make the subwidgets readonly/disabled (whatever that is applicable)", function () {
+      const tester = new umockup.WidgetTester();
       let element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
       return asyncRun(function() {
         let conn = tester.onConnect(element);
         tester.dataInit();
         conn.blockUI();
       }).then(function() {
+        expect(element.querySelector(".u-start-section").firstChild.className).contains("u-blocked");
+        expect(element.querySelector(".u-start-section").firstChild.className).contains("readonly");
+        expect(element.querySelector(".u-center-section").firstChild.className).contains("u-blocked");
+        expect(element.querySelector(".u-center-section").firstChild.className).contains("readonly");
         expect(element.querySelector(".u-end-section").firstChild.className).contains("u-blocked");
         expect(element.querySelector(".u-end-section").firstChild.className).contains("u-readonly");
       });
@@ -552,16 +502,33 @@
   });
 
   describe("unblockUI()", function () {
-    it("should remove readonly/disabled (whatever that is applicable) from the controls", function () {
+    it("should remove readonly/disabled (whatever that is applicable) from the subwidgets", function () {
+      const tester = new umockup.WidgetTester();
       let element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
       return asyncRun(function() {
         let conn = tester.onConnect(element);
         tester.dataInit();
         conn.blockUI();
+        expect(element.querySelector(".u-start-section").firstChild.className).contains("u-blocked");
+        expect(element.querySelector(".u-center-section").firstChild.className).contains("u-blocked");
+        expect(element.querySelector(".u-end-section").firstChild.className).contains("u-blocked");
         conn.unblockUI();
       }).then(function() {
         expect(element.querySelector(".u-start-section").firstChild.className).not.contains("u-blocked");
+        expect(element.querySelector(".u-center-section").firstChild.className).not.contains("u-blocked");
         expect(element.querySelector(".u-end-section").firstChild.className).not.contains("u-blocked");
+      });
+    });
+  });
+  describe("dataCleanup()", function () {
+    describe("reset all properties to default", function() {
+      it("reset all property", function() {
+        try {
+          tester.dataUpdate(tester.getDefaultValues());
+        } catch (e) {
+          console.error(e);
+          assert(false, "Failed to call dataCleanup(), exception " + e);
+        }
       });
     });
   });
