@@ -392,11 +392,10 @@ export class PlainText extends Widget {
    * @return {UValueFormatting}
    */
   getMenuItem() {
-    const properties = this.data.properties;
 
     /** @type {UValueFormatting} */
     let formattedValue = {
-      ...PlainText.getValueFormatted(properties),
+      ...PlainText.getValueFormatted(this.data),
       "isNotSupported": false
     };
     this.log("getMenuItem", formattedValue);

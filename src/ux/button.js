@@ -235,11 +235,10 @@ export class Button extends Widget {
    * @return {UValueFormatting}
    */
   getMenuItem() {
-    const properties = this.data.properties;
 
     /** @type {UValueFormatting} */
     let formattedValue = {
-      ...Button.getValueFormatted(properties),
+      ...Button.getValueFormatted(this.data),
       "isNotSupported": false
     };
     this.log("getMenuItem", formattedValue);
