@@ -19,7 +19,7 @@ import { Widget } from "../../src/ux/widget.js";
 
   describe("test Base Class methods", function () {
 
-    let base, widgetClass, propId, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, defaultValue, triggerName,
+    let base, widgetClass, propId, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, delegatedProperties, defaultValue, triggerName,
       url, functionName, message, consequence, consoleLogSpy, worker;
 
     beforeEach(function () {
@@ -76,13 +76,15 @@ import { Widget } from "../../src/ux/widget.js";
       subWidgetStyleClass = "u-change-button";
       subWidgetClass = new Button();
       subWidgetTriggers = ["trigger1", "trigger2"];
+      delegatedProperties = ["html:disabled"];
 
-      base.registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers);
+      base.registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, delegatedProperties);
 
       expect(String(Object.keys(widgetClass.subWidgets))).to.equal(subWidgetId);
-      expect((Object.keys(widgetClass.subWidgets[subWidgetId]))).to.have.lengthOf(3);
+      expect((Object.keys(widgetClass.subWidgets[subWidgetId]))).to.have.lengthOf(4);
       expect(widgetClass.subWidgets[subWidgetId].styleClass).to.equal(subWidgetStyleClass);
       expect(widgetClass.subWidgets[subWidgetId].triggers).to.equal(subWidgetTriggers);
+      expect(widgetClass.subWidgets[subWidgetId].delegatedProperties).to.equal(delegatedProperties);
     });
 
     it("registerSubWidgetWorker", function () {
