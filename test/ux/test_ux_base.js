@@ -174,16 +174,16 @@ import { Widget } from "../../src/ux/widget.js";
     describe("extractSubWidgetData", function () {
       it("return the sub-widget data correctly and delete corresponding sub-widget properties from data source", function () {
         let data = {
-          "subWidgetId1:widget-class": "Some class",
-          "subWidgetId1:value": "Some value 1",
-          "subWidgetId1:html:readonly": "Something",
+          "subWidgetId:widget-class": "Some class",
+          "subWidgetId:value": "Some value 1",
+          "subWidgetId:html:readonly": "Something",
           "subWidgetId2:widget-class": "Something",
           "subWidgetId2:value": "Some value 2",
           "subWidgetId2:html:disabled": "Something",
-          "subWidgetId1:class:class-test": "Something",
-          "subWidgetId1:label-text": "Some Label"
+          "subWidgetId:class:class-test": "Something",
+          "subWidgetId:label-text": "Some Label"
         };
-        let subWidgetPropPrefix = "subWidgetId1";
+        let subWidgetPropPrefix = "subWidgetId";
         let mockSubWidgetData = {
           "widget-class": "Some class",
           "value": "Some value 1",
@@ -194,18 +194,18 @@ import { Widget } from "../../src/ux/widget.js";
         let subWidgetData = base.extractSubWidgetData(data, subWidgetPropPrefix);
         expect(subWidgetData).to.deep.equal(mockSubWidgetData);
         for (let prop in data) {
-          expect(prop.startsWith(`${subWidgetPropPrefix}`)).to.equal(false);
+          expect(prop.startsWith(`${subWidgetPropPrefix}:`)).to.equal(false);
         }
 
         data = {
-          "subWidgetId1:widget-class": "Some class",
-          "subWidgetId1:value": "Some value 1",
-          "subWidgetId1:html:readonly": "Something",
+          "subWidgetId:widget-class": "Some class",
+          "subWidgetId:value": "Some value 1",
+          "subWidgetId:html:readonly": "Something",
           "subWidgetId2:widget-class": "Something",
           "subWidgetId2:value": "Some value 2",
           "subWidgetId2:html:disabled": "Something",
-          "subWidgetId1:class:class-test": "Something",
-          "subWidgetId1:label-text": "Some Label"
+          "subWidgetId:class:class-test": "Something",
+          "subWidgetId:label-text": "Some Label"
         };
         subWidgetPropPrefix = "subWidgetId2";
         mockSubWidgetData = {
@@ -216,7 +216,7 @@ import { Widget } from "../../src/ux/widget.js";
         subWidgetData = base.extractSubWidgetData(data, subWidgetPropPrefix);
         expect(subWidgetData).to.deep.equal(mockSubWidgetData);
         for (let prop in data) {
-          expect(prop.startsWith(`${subWidgetPropPrefix}`)).to.equal(false);
+          expect(prop.startsWith(`${subWidgetPropPrefix}:`)).to.equal(false);
         }
       });
     });
@@ -224,41 +224,41 @@ import { Widget } from "../../src/ux/widget.js";
     describe("extractSubWidgetPropertyNames", function () {
       it("return the sub-widget property names correctly and delete corresponding sub-widget property names from property names source", function () {
         let propertyNames = new Set([
-          "subWidgetId1:widget-class",
-          "subWidgetId1:value",
-          "subWidgetId1:html:readonly",
+          "subWidgetId:widget-class",
+          "subWidgetId:value",
+          "subWidgetId:html:readonly",
           "subWidgetId2:widget-class",
           "subWidgetId2:value",
           "subWidgetId2:html:disabled",
           "subWidgetId2:class:abcd",
-          "subWidgetId1:class:class-test",
-          "subWidgetId1:label-text"
+          "subWidgetId:class:class-test",
+          "subWidgetId:label-text"
         ]);
-        let subWidgetPropPrefix = "subWidgetId1";
+        let subWidgetPropPrefix = "subWidgetId";
         let mockSubWidgetPropertyNames = new Set(["widget-class", "value", "html:readonly", "class:class-test", "label-text"]);
         let subWidgetPropertyNames = base.extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix);
         expect(subWidgetPropertyNames).to.deep.equal(mockSubWidgetPropertyNames);
         propertyNames.forEach((propertyName) => {
-          expect(propertyName.startsWith(`${subWidgetPropPrefix}`)).to.equal(false);
+          expect(propertyName.startsWith(`${subWidgetPropPrefix}:`)).to.equal(false);
         });
 
         propertyNames = new Set([
-          "subWidgetId1:widget-class",
-          "subWidgetId1:value",
-          "subWidgetId1:html:readonly",
+          "subWidgetId:widget-class",
+          "subWidgetId:value",
+          "subWidgetId:html:readonly",
           "subWidgetId2:widget-class",
           "subWidgetId2:value",
           "subWidgetId2:html:disabled",
           "subWidgetId2:class:abcd",
-          "subWidgetId1:class:class-test",
-          "subWidgetId1:label-text"
+          "subWidgetId:class:class-test",
+          "subWidgetId:label-text"
         ]);
         subWidgetPropPrefix = "subWidgetId2";
         mockSubWidgetPropertyNames = new Set(["widget-class", "value", "html:disabled", "class:abcd"]);
         subWidgetPropertyNames = base.extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix);
         expect(subWidgetPropertyNames).to.deep.equal(mockSubWidgetPropertyNames);
         propertyNames.forEach((propertyName) => {
-          expect(propertyName.startsWith(`${subWidgetPropPrefix}`)).to.equal(false);
+          expect(propertyName.startsWith(`${subWidgetPropPrefix}:`)).to.equal(false);
         });
       });
     });
