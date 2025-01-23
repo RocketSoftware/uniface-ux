@@ -1,6 +1,16 @@
 # UX widget sources & tests
 
-## Configuration with Tomcat
+## How to start a HTTP server and open the test page
+
+### Use npm HTTP servers
+- Open a command prompt in top folder ux-widgets;
+- Run command: ```npm run serve```,
+  This will start http-server;
+- Or Run command: ```npm run serve:dev```,
+  This will start webpack-dev-server;
+- Open a browser with URL: http://localhost:9000/test/index.html
+
+### Configuration with Tomcat
 
 - Clone this repository to your web server as a WebApp named ux-widgets
 - Goto inside the WebApp ux-widgets
