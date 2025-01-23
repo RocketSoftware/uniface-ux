@@ -169,10 +169,10 @@
 
   });
 
-  describe(widgetName + ".processLayout", function () {
+  describe(`${widgetName}.processLayout()`, function () {
     let element;
 
-    it("processLayout with empty mock properties", function () {
+    it(`${widgetName}.processLayout() with empty mock properties`, function () {
       verifyWidgetClass(widgetClass);
       const tester = new umockup.WidgetTester();
       return asyncRun(function() {
@@ -182,7 +182,7 @@
       });
     });
 
-    it("processLayout with just start subwidgets", function () {
+    it(`${widgetName}.processLayout() with just start subwidgets` , function () {
       verifyWidgetClass(widgetClass);
       const tester = new umockup.WidgetTester();
       return asyncRun(function() {
@@ -197,7 +197,7 @@
       });
     });
 
-    it("processLayout with just center subwidgets", function () {
+    it(`${widgetName}.processLayout() with just center subwidgets`, function () {
       verifyWidgetClass(widgetClass);
       const tester = new umockup.WidgetTester();
       return asyncRun(function() {
@@ -211,7 +211,7 @@
       });
     });
 
-    it("processLayout with just end subwidgets", function () {
+    it(`${widgetName}.processLayout() with just end subwidgets`, function () {
       verifyWidgetClass(widgetClass);
       const tester = new umockup.WidgetTester();
       return asyncRun(function() {
@@ -353,7 +353,7 @@
       });
     });
 
-    describe("Checks", function () {
+    describe(`${widgetName} Checks`, function () {
 
       before(function () {
         verifyWidgetClass(widgetClass);
@@ -361,7 +361,7 @@
       });
 
       it("check instance of HTMLElement", function () {
-        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+        expect(element).instanceOf(HTMLElement, "Function processLayout of " + `${widgetName}` + " does not return an HTMLElement.");
       });
 
       it("check tagName", function () {
@@ -390,7 +390,7 @@
     });
   });
 
-  describe("onConnect", function () {
+  describe(`${widgetName}.onConnect()`, function () {
     const tester = new umockup.WidgetTester();
     const element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
     const widget = tester.onConnect();
@@ -398,7 +398,7 @@
 
     it("check element created and connected", function () {
       assert(element, "Target element is not defined!");
-      assert(widget.elements.widget === element, "widget is not connected");
+      assert(widget.elements.widget === element, "Widget is not connected");
     });
 
     it("should add widgetElement(which is passed as parameter) to widget property of elements object", function () {
@@ -406,7 +406,7 @@
       expect(tester.element).to.deep.equal(element);
     });
 
-    it("references to subwidget elements should be added", function () {
+    it("should add references to subwidget elements", function () {
       let mockSubWidgetIds = new Set(["info", "goto", "size"]);
       tester.onConnect(element);
 
@@ -416,9 +416,9 @@
     });
   });
 
-  describe("createWidget", function () {
+  describe(`${widgetName}.createWidget`, function () {
 
-    it("constructor", function () {
+    it(`${widgetName}.constructor()`, function () {
       try {
         const widget = tester.construct();
         assert(widget, "Widget is not defined!");
@@ -435,7 +435,7 @@
 
   });
 
-  describe("dataInit()", function () {
+  describe(`${widgetName}.dataInit()`, function () {
     it("should put widget in defined initial state", function () {
       const tester = new umockup.WidgetTester();
       return asyncRun(function() {
@@ -449,7 +449,7 @@
       });
     });
   });
-  describe("dataUpdate()", function () {
+  describe(`${widgetName}.dataUpdate()`, function () {
     describe("when there is change in the controlbar properties", function () {
       let element;
       const tester = new umockup.WidgetTester();
@@ -504,7 +504,7 @@
       });
     });
   });
-  describe("blockUI()", function () {
+  describe(`${widgetName}.blockUI()`, function () {
     it("should make the subwidgets readonly/disabled (whatever that is applicable)", function () {
       const tester = new umockup.WidgetTester();
       let element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
@@ -523,7 +523,7 @@
     });
   });
 
-  describe("unblockUI()", function () {
+  describe(`${widgetName}.unblockUI()`, function () {
     it("should remove readonly/disabled (whatever that is applicable) from the subwidgets", function () {
       const tester = new umockup.WidgetTester();
       let element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
@@ -542,8 +542,8 @@
       });
     });
   });
-  describe("dataCleanup()", function () {
-    describe("reset all properties to default", function() {
+  describe(`${widgetName}.dataCleanup()`, function () {
+    describe("Reset all properties to default", function() {
       it("reset all property", function() {
         try {
           tester.dataUpdate(tester.getDefaultValues());
