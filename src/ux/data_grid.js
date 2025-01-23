@@ -60,7 +60,6 @@ export class DataGridCollection extends Widget {
     new Worker.Trigger(this, "detail", "click", true)
   ]);
 }
-UNIFACE.ClassRegistry.add("UX.DataGridCollection", DataGridCollection);
 
 /**
  * DataGrid Column Header widget.
@@ -134,7 +133,6 @@ export class DataGridOccurrence extends Widget {
     new Worker.WidgetsByFields(this, "span","uniface:exclude", "ufld:{{getName()}}")
   ]);
 }
-UNIFACE.ClassRegistry.add("UX.DataGridOccurrence", DataGridOccurrence);
 
 /**
  * DataGrid Field/Cell class

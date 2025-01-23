@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   Element,
@@ -281,5 +280,3 @@ export class RadioGroup extends Widget {
     return valueUpdaters;
   }
 }
-
-UNIFACE.ClassRegistry.add("UX.RadioGroup", RadioGroup);

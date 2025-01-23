@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   Element,
@@ -651,4 +650,3 @@ export class Select extends Widget {
     return formattedValue;
   }
 }
-UNIFACE.ClassRegistry.add("UX.Select", Select);
