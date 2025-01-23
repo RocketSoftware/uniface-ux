@@ -26,11 +26,6 @@
   pointer-events: none;
 }
 
-.u-select.u-readonly::part(label),
-.u-select.u-readonly::part(control) {
-  cursor: not-allowed;
-}
-
 .u-listbox[readonly="true"] {
   cursor: not-allowed;
 }
