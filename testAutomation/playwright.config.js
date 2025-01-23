@@ -1,6 +1,23 @@
 // playwright.config.ts or playwright.config.js
 import { defineConfig } from '@playwright/test';
-const CustomReporter = require('./custom-reporter');
+
+/**
+ * System environment variable: UX_WIDGETS_BASE_URL
+ * Configure the base URL of the index.html file.
+ * Default value: specified by constant defaultBaseURL;
+ */
+const defaultBaseURL = 'http://localhost:9000/test/';
+let baseURL;
+function getBaseURL() {
+  if (!baseURL) {
+    baseURL = process.env.UX_WIDGETS_BASE_URL;
+
+    if (!baseURL) {
+      baseURL = defaultBaseURL;
+    }
+  }
+  return baseURL;
+}
 
 export default defineConfig({
   workers: 2, // Set the number of workers
@@ -13,8 +30,15 @@ export default defineConfig({
     ['html'], // HTML reporter
     ['allure-playwright'] // Allure reporter
   ],
+  webServer: {
+    command: 'cd .. && npm run serve',
+    url: getBaseURL(),
+    reuseExistingServer: !process.env.CI,
+    stdout: 'ignore',
+    stderr: 'pipe'
+  },
   use: {
-    baseURL: process.env.UX_WIDGETS_BASE_URL || 'http://localhost:8080/ux-widgets/test/',
+    baseURL: getBaseURL(),
     headless: true, // Run tests in headless mode
     viewport: { width: 1280, height: 720 }, // Set viewport size
     ignoreHTTPSErrors: true, // Ignore HTTPS errors

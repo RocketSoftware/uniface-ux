@@ -51,7 +51,16 @@ To set up the project locally, follow these steps:
 
     npx playwright install
     
-5. Start your Tomcat server with ux-widgets webapp deployed. By default, the base URL of index.page is configured as
+5. Start a HTTP server
+
+5.1. Use the default configured http-server
+
+You need do nothing, and later in step 6, the default server will be started automatically before test.
+This default server use the baseURL http://localhost:9000/test/ .
+
+5.2. Optionally, you also can use your Tomcat server
+
+Start your Tomcat server with ux-widgets webapp deployed. By default, the base URL of index.page is configured as
       
      http://localhost:8080/ux-widgets/test/
      
