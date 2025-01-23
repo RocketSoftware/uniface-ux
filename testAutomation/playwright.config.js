@@ -27,8 +27,7 @@ export default defineConfig({
   reporter: [
     ['./custom-reporter.js'], // Custom reporter
     ['list'], // Default list reporter
-    ['html'], // HTML reporter
-    ['allure-playwright'] // Allure reporter
+    ['html'] // HTML reporter
   ],
   webServer: {
     command: 'cd .. && npm run serve',
