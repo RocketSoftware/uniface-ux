@@ -41,6 +41,8 @@
  *
  * @typedef {Object} UData
  *
+ * @typedef {Set<string>} UPropertyNames
+ *
  * @typedef {String} UDataError
  *
  * @typedef {Object} UValueFormatting - Object describing the formatting of a widget value.

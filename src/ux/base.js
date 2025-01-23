@@ -340,17 +340,17 @@ export class Base {
   /**
    * Extracts sub-widget data from the original data object and removes the corresponding
    * properties from original data object.
-   * @param {Object} data - The source object containing properties to extract.
-   * @returns {Object} An object containing the extracted sub-widget data.
+   * @param {UData} data - The source object containing properties to extract.
+   * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
+   * @returns {UData|undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
    */
   extractSubWidgetData(data, subWidgetPropPrefix) {
     let subWidgetData;
     for (let property in data) {
-      if (property.startsWith(subWidgetPropPrefix)) {
-        let pos = property.search(":");
-        if (pos > 0) {
+      if (property.startsWith(`${subWidgetPropPrefix}:`)) {
+        const key = property.substring(subWidgetPropPrefix.length + 1);
+        if (key) {
           subWidgetData = subWidgetData || {};
-          let key = property.substring(pos + 1);
           subWidgetData[key] = key === "valrep" ? this.getFormattedValrep(data[property]) : data[property];
           // Remove the property from the original data to avoid duplication.
           delete data[property];
@@ -358,5 +358,28 @@ export class Base {
       }
     }
     return subWidgetData;
+  }
+
+  /**
+   * Extracts sub-widget property names from the original property names set and removes the corresponding
+   * property names from original property names set.
+   * @param {UPropertyNames} propertyNames - The source set containing property names to extract.
+   * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
+   * @returns {UPropertyNames|undefined} A set of extracted sub-widget property names, or `undefined` if no property names are found.
+   */
+  extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix) {
+    let subWidgetPropertyNames;
+    propertyNames.forEach((propertyName) => {
+      if (propertyName.startsWith(`${subWidgetPropPrefix}:`)) {
+        const key = propertyName.substring(subWidgetPropPrefix.length + 1);
+        if (key) {
+          subWidgetPropertyNames = subWidgetPropertyNames || new Set();
+          subWidgetPropertyNames.add(key);
+          // Remove the property names from the original set to avoid duplication.
+          propertyNames.delete(propertyName);
+        }
+      }
+    });
+    return subWidgetPropertyNames;
   }
 }

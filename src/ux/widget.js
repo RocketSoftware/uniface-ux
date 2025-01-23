@@ -347,14 +347,22 @@ export class Widget extends Base {
 
   /**
    * Cleans up the widget.
+   * @param {UPropertyNames} propertyNames
    */
-  dataCleanup() {
-    this.log("dataCleanup");
+  dataCleanup(propertyNames) {
+    this.log("dataCleanup", propertyNames);
 
     // Call dataCleanup() of sub-widgets (if any).
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
-      this.subWidgets[subWidgetId].dataCleanup();
+      const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
+      const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
+      const subWidgetPropertyNames = this.extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix);
+      if (subWidgetPropertyNames) {
+        this.subWidgets[subWidgetId].dataCleanup(subWidgetPropertyNames);
+      }
     });
+    // Clean up class properties.
+    this.cleanupClassProperties(propertyNames);
   }
 
   /**
@@ -545,7 +553,7 @@ export class Widget extends Base {
         } else {
           this.data[property] = data[property];
         }
-        let setters = property.startsWith("class") ? widgetSetters["class"] : property.startsWith("style") ? widgetSetters["style"] : widgetSetters[property];
+        let setters = property.startsWith("class:") ? widgetSetters["class"] : property.startsWith("style:") ? widgetSetters["style"] : widgetSetters[property];
         if (setters) {
           setOfSetters.add(setters);
         } else if (reportUnsupportedPropertyWarnings) {
@@ -557,6 +565,20 @@ export class Widget extends Base {
       setterList.forEach((setter) => {
         setter.refresh(this);
       });
+    });
+  }
+
+  /**
+   * Removes the CSS class names from the widget element based on the provided property names.
+   * @param {UPropertyNames} propertyNames - A set of property names, where some may start with "class:".
+   * If a property name starts with "class:", the corresponding class is removed from the widget element.
+   */
+  cleanupClassProperties(propertyNames) {
+    propertyNames.forEach((propertyName) => {
+      if (propertyName.startsWith("class:")) {
+        const className = propertyName.split(":")[1];
+        this.elements.widget.classList.remove(className);
+      }
     });
   }
 
