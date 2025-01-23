@@ -221,7 +221,7 @@
     // The property name has no known prefix.
     // It's external name will have "uniface:" as prefix.
     // Later will remove the uniface prefix as well as a part of flattend data structure.
-    return "uniface:" + propertyName.toLowerCase();
+    return propertyName.toLowerCase();
   }
 
   function getWidgetName() {
