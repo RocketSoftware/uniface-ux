@@ -77,14 +77,14 @@ export class Base {
    * @param {typeof Widget} subWidgetClass
    * @param {String} subWidgetStyleClass
    * @param {Array} subWidgetTriggers
-   * @param {Array} delegatedProperties
+   * @param {Array} subWidgetDelegatedProperties
    */
-  registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, delegatedProperties) {
+  registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, subWidgetDelegatedProperties) {
     widgetClass.subWidgets[subWidgetId] = {
       "class": subWidgetClass,
       "styleClass": subWidgetStyleClass,
       "triggers": subWidgetTriggers,
-      "delegatedProperties": delegatedProperties
+      "delegatedProperties": subWidgetDelegatedProperties
     };
   }
 
@@ -344,10 +344,10 @@ export class Base {
    * properties from original data object.
    * @param {UData} data - The source object containing properties to extract.
    * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
-   * @param {Array} delegatedProperties - An array containing list of delegated properties.
+   * @param {Array} subWidgetDelegatedProperties - An array containing list of delegated properties.
    * @returns {UData|undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
    */
-  extractSubWidgetData(data, subWidgetPropPrefix, delegatedProperties) {
+  extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties) {
     let subWidgetData;
     for (let property in data) {
       if (property.startsWith(`${subWidgetPropPrefix}:`)) {
@@ -361,7 +361,7 @@ export class Base {
       }
     }
     // Iterate over each delegated property and add matching delegated property to subWidgetData.
-    delegatedProperties?.forEach(property => {
+    subWidgetDelegatedProperties?.forEach(property => {
       // Check if the data object has the property.
       if (data.hasOwnProperty(property)) {
         subWidgetData = subWidgetData || {};
