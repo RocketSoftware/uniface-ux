@@ -227,15 +227,18 @@
     });
 
     describe("If subwidgets-start is undefined or empty", function () {
-      it("should not contain start subwidgets if subwidgets-start is empty", function () {
-        verifyWidgetClass(widgetClass);
-        const tester = new umockup.WidgetTester();
+      it("should not contain start subwidgets if subwidgets-start is empty and widget-class not defined for other subwidget section", function () {
         return asyncRun(function() {
+          const tester = new umockup.WidgetTester();
+          verifyWidgetClass(widgetClass);
           element = tester.processLayout(MOCK_EMPTY_START_CONTROLS_DEFINITION);
           tester.onConnect();
           tester.dataInit();
         }).then(function() {
           expect(element.querySelector(".u-start-section").children.length).to.equal(0);
+          expect(element.querySelector(".u-center-section").children.length).to.equal(0);
+          expect(element.querySelector(".u-end-section").children.length).to.equal(0);
+
         });
       });
 
@@ -249,6 +252,9 @@
         }).then(function() {
           expect(element);
           expect(element.querySelector(".u-start-section").children.length).to.equal(0);
+          expect(element.querySelector(".u-center-section").children.length).to.equal(1);
+          expect(element.querySelector(".u-end-section").children.length).to.equal(1);
+
         });
       });
     });
@@ -261,6 +267,8 @@
           tester.onConnect();
           tester.dataInit();
         }).then(function() {
+          expect(element.querySelector(".u-start-section").children.length).to.equal(1);
+          expect(element.querySelector(".u-end-section").children.length).to.equal(1);
           expect(element.querySelector(".u-center-section").children.length).to.equal(0);
         });
       });
@@ -272,6 +280,8 @@
           tester.onConnect();
           tester.dataInit();
         }).then(function() {
+          expect(element.querySelector(".u-start-section").children.length).to.equal(1);
+          expect(element.querySelector(".u-end-section").children.length).to.equal(1);
           expect(element.querySelector(".u-center-section").children.length).to.equal(0);
         });
       });
@@ -286,6 +296,8 @@
           tester.onConnect();
           tester.dataInit();
         }).then(function() {
+          expect(element.querySelector(".u-center-section").children.length).to.equal(1);
+          expect(element.querySelector(".u-start-section").children.length).to.equal(1);
           expect(element.querySelector(".u-end-section").children.length).to.equal(0);
         });
       });
@@ -298,6 +310,8 @@
           tester.onConnect();
           tester.dataInit();
         }).then(function() {
+          expect(element.querySelector(".u-center-section").children.length).to.equal(1);
+          expect(element.querySelector(".u-start-section").children.length).to.equal(1);
           expect(element.querySelector(".u-end-section").children.length).to.equal(0);
         });
       });
@@ -546,17 +560,14 @@
     });
   });
 
-  describe(`${widgetName}.dataCleanup()`, function () {
-
-    describe("Reset all properties to default", function() {
-      it("reset all property", function() {
-        try {
-          tester.dataUpdate(tester.getDefaultValues());
-        } catch (e) {
-          console.error(e);
-          assert(false, "Failed to call dataCleanup(), exception " + e);
-        }
-      });
+  describe("Reset all properties to default", function() {
+    it("reset all property", function() {
+      try {
+        tester.dataUpdate(tester.getDefaultValues());
+      } catch (e) {
+        console.error(e);
+        assert(false, "Failed to call dataCleanup(), exception " + e);
+      }
     });
   });
 })();
