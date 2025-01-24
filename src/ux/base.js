@@ -361,12 +361,10 @@ export class Base {
       }
     }
     // Iterate over each delegated property and add matching delegated property to subWidgetData.
-    delegatedProperties.forEach(property => {
+    delegatedProperties?.forEach(property => {
       // Check if the data object has the property.
       if (data.hasOwnProperty(property)) {
-        if (!subWidgetData) {
-          subWidgetData = {};
-        }
+        subWidgetData = subWidgetData || {};
         // Add the property to subWidgetData.
         subWidgetData[property] = data[property];
       }
