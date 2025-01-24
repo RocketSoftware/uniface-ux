@@ -533,10 +533,10 @@
       }).then(function () {
         const event = new window.Event('hover');
         widget.elements.widget.dispatchEvent(event);
-        assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth", "Subwidget Class name doesnot match");
+        assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth", "Subwidget Class name does not match");
         assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute('slot'), "start", "Failed to show the slot  attribute and value does not match");
-        assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"), "Failed to show the placeHolderText attribute and value doesnot match");
-        assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("class"), "u-icon ms-Icon ms-Icon--PublicEmail", "Subwidget icon Class name doesnot match");
+        assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"), "Failed to show the placeHolderText attribute and value does not match");
+        assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("class"), "u-icon ms-Icon ms-Icon--PublicEmail", "Subwidget icon Class name does not match");
       });
     });
 
