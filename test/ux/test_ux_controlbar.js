@@ -226,7 +226,7 @@
       });
     });
 
-    describe("if subwidgets-start is undefined or empty", function () {
+    describe("If subwidgets-start is undefined or empty", function () {
       it("should not contain start subwidgets if subwidgets-start is empty", function () {
         verifyWidgetClass(widgetClass);
         const tester = new umockup.WidgetTester();
@@ -253,7 +253,7 @@
       });
     });
 
-    describe("if subwidgets-center is undefined or empty", function () {
+    describe("If subwidgets-center is undefined or empty", function () {
       it("should not contain center subwidgets if subwidgets-center is empty", function () {
         verifyWidgetClass(widgetClass);
         return asyncRun(function() {
@@ -277,7 +277,7 @@
       });
     });
 
-    describe("if subwidgets-end is undefined or empty", function () {
+    describe("If subwidgets-end is undefined or empty", function () {
       it("should not contain end subwidgets if subwidgets-end is empty", function () {
         return asyncRun(function() {
           verifyWidgetClass(widgetClass);
@@ -303,7 +303,7 @@
       });
     });
 
-    describe("when the definition.properties does not contain subwidgets id's defined", function () {
+    describe("When the definition.properties does not contain subwidgets id's defined", function () {
       it("should not contain start, center and end subwidgets", function () {
         const tester = new umockup.WidgetTester();
         return asyncRun(function() {
@@ -318,7 +318,7 @@
       });
     });
 
-    describe("if subwidgets-start, subwidgets-center and subwidgets-end are defined", function () {
+    describe("If subwidgets-start, subwidgets-center and subwidgets-end are defined", function () {
       let element;
       beforeEach(function () {
         const tester = new umockup.WidgetTester();
@@ -338,7 +338,7 @@
       });
     });
 
-    describe("when the definition.properties does not contain subwidgets-start, subwidgets-center and subwidgets-end defined", function () {
+    describe("When the definition.properties does not contain subwidgets-start, subwidgets-center and subwidgets-end defined", function () {
       it("should not contain start, center and end subwidgets", function () {
         const tester = new umockup.WidgetTester();
         return asyncRun(function() {
@@ -449,7 +449,9 @@
       });
     });
   });
+
   describe(`${widgetName}.dataUpdate()`, function () {
+
     describe("when there is change in the controlbar properties", function () {
       let element;
       const tester = new umockup.WidgetTester();
@@ -469,7 +471,7 @@
       });
 
       it("if there is any change in subwidgets properties and html properties, should be reflected on the subwidgets", function () {
-        // dataUpdate deletes theproperty of object hence creating deepcopy of object for checking
+        // dataUpdate deletes the property of object hence creating deepcopy of object for checking
         let updatedData = Object.assign({}, MOCK_CONTROLBAR_CONTROLS_DATA);
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
         return asyncRun(function() {
@@ -504,6 +506,7 @@
       });
     });
   });
+
   describe(`${widgetName}.blockUI()`, function () {
     it("should make the subwidgets readonly/disabled (whatever that is applicable)", function () {
       const tester = new umockup.WidgetTester();
@@ -542,7 +545,9 @@
       });
     });
   });
+
   describe(`${widgetName}.dataCleanup()`, function () {
+
     describe("Reset all properties to default", function() {
       it("reset all property", function() {
         try {
