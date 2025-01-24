@@ -466,7 +466,7 @@
 
   describe(`${widgetName}.dataUpdate()`, function () {
 
-    describe("when there is change in the controlbar properties", function () {
+    describe("When there is change in the controlbar properties", function () {
       let element;
       const tester = new umockup.WidgetTester();
 
@@ -566,7 +566,7 @@
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, "Failed to reset properties to default with, exception " + e);
       }
     });
   });
