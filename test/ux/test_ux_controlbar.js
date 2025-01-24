@@ -333,22 +333,22 @@
     });
 
     describe("If subwidgets-start, subwidgets-center and subwidgets-end are defined", function () {
-      let element;
-      beforeEach(function () {
-        const tester = new umockup.WidgetTester();
-        element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
-        tester.onConnect();
-        tester.dataInit();
-      });
 
       it("should contain start, center and end subwidgets", function () {
-        verifyWidgetClass(widgetClass);
-        expect(element.querySelector(".u-start-section").children.length).to.equal(2);
-        expect(element.querySelector(".u-center-section").children.length).to.equal(1);
-        expect(element.querySelector(".u-end-section").children.length).to.equal(2);
-        expect(element.querySelector(".u-start-section").children.length).not.to.equal(0);
-        expect(element.querySelector(".u-center-section").children.length).not.to.equal(0);
-        expect(element.querySelector(".u-end-section").children.length).not.to.equal(0);
+        return asyncRun(function() {
+          const tester = new umockup.WidgetTester();
+          element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+          tester.onConnect();
+          tester.dataInit();
+        }).then(function() {
+          verifyWidgetClass(widgetClass);
+          expect(element.querySelector(".u-start-section").children.length).to.equal(2);
+          expect(element.querySelector(".u-center-section").children.length).to.equal(1);
+          expect(element.querySelector(".u-end-section").children.length).to.equal(2);
+          expect(element.querySelector(".u-start-section").children.length).not.to.equal(0);
+          expect(element.querySelector(".u-center-section").children.length).not.to.equal(0);
+          expect(element.querySelector(".u-end-section").children.length).not.to.equal(0);
+        });
       });
     });
 
