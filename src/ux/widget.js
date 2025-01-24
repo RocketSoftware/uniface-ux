@@ -341,7 +341,7 @@ export class Widget extends Base {
       this.subWidgets[subWidgetId].dataInit();
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix);
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDefinition);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
@@ -362,7 +362,7 @@ export class Widget extends Base {
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix);
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDefinition);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
