@@ -111,7 +111,7 @@ export class Listbox extends Widget {
   }
 
   /**
-   * Creates a custom adoptedStyleSheet rules for the label element.
+   * Creates a custom adoptedStyleSheet rules for the ListBox element.
    */
   styleListBox() {
     let element = this.elements.widget;
@@ -127,10 +127,17 @@ export class Listbox extends Widget {
           font-weight: initial;
           font-variation-settings: var(--type-ramp-base-font-variations);
           margin-bottom: 4px;
+          word-break: break-all;
         }
 
         :host([disabled]) .label {
           cursor: not-allowed;
+          user-select: none;
+          -webkit-user-select: none;
+          -khtml-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          -o-user-select: none;
         }
 
         :host([readonly]) .label {
