@@ -8,7 +8,7 @@
   const widgetId = tester.widgetId;
   const widgetName = tester.widgetName;
 
-  describe("Uniface Mockup tests", function () {
+  describe("Uniface mockup tests", function () {
 
     it(`Get class ${widgetName}`, function () {
       const widgetClass = tester.getWidgetClass();

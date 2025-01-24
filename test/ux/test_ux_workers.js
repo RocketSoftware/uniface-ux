@@ -327,7 +327,7 @@ import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubW
   // ===================================================================================================================
   // == Testing SlottedSubWidget class =====================================================================================
   // ====================================================================================================================
-  describe("Test SlottedSubWidget Class", function () {
+  describe("Test SlottedSubWidget class", function () {
     let widgetClass;
     let subWidgetId;
     let subWidgetName;
