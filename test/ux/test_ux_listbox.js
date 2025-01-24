@@ -85,6 +85,10 @@
         expect(element).to.have.id(widgetId);
       });
 
+      it("check u-label-text", function () {
+        assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element");
+      });
+
     });
 
   });
@@ -141,6 +145,10 @@
         }
       });
     }
+
+    it("check 'hidden' attributes", function () {
+      assert.notEqual(element.querySelector('span.u-label-text').getAttribute('hidden'), null);
+    });
     it("check widget id", function () {
       assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
     });
@@ -153,6 +161,34 @@
       tester.createWidget();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
+    });
+
+    it("show label", function () {
+      let listboxLabel = 'Label';
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": listboxLabel
+        });
+      }).then(function () {
+        let labelElement = element.querySelector("span.u-label-text");
+        let labelText = labelElement.innerText;
+        expect(listboxLabel).equal(labelText);
+        assert(!labelElement.hasAttribute("hidden"), "Failed to show the label text");
+      });
+    });
+
+    it("reset label", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": uniface.RESET
+        });
+      }).then(function () {
+        const widget = tester.construct();
+        let labelElement = widget.elements.widget.querySelector("span.u-label-text");
+        assert(labelElement.hasAttribute("hidden"), "Failed to hide the label text");
+        assert.equal(labelElement.innerText, "");
+        assert.equal(labelElement.getAttribute("slot"), "");
+      });
     });
 
     it("Set HTML property readonly to true", function () {

@@ -5,6 +5,7 @@ import {
   Element,
   StyleClass,
   Trigger,
+  SlottedElement,
   SlottedElementsByValRep,
   HtmlAttribute,
   HtmlAttributeNumber,
@@ -86,6 +87,7 @@ export class Listbox extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
   ], [
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
     new SlottedElementsByValRep(this, "fluent-option", "u-option", "")
   ], [
     new Trigger(this, "onchange", "change", true)
@@ -109,11 +111,90 @@ export class Listbox extends Widget {
   }
 
   /**
+   * Creates a custom adoptedStyleSheet rules for the ListBox element.
+   */
+  styleListBox() {
+    let element = this.elements.widget;
+    this.CSSStyleSheet = new window.CSSStyleSheet();
+    this.CSSStyleSheet.replaceSync(`
+        .label {
+          display: block;
+          color: var(--neutral-foreground-rest);
+          cursor: pointer;
+          font-family: var(--body-font);
+          font-size: var(--type-ramp-base-font-size);
+          line-height: var(--type-ramp-base-line-height);
+          font-weight: initial;
+          font-variation-settings: var(--type-ramp-base-font-variations);
+          margin-bottom: 4px;
+          word-break: break-all;
+        }
+
+        :host([disabled]) .label {
+          cursor: not-allowed;
+          user-select: none;
+          -webkit-user-select: none;
+          -khtml-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          -o-user-select: none;
+        }
+
+        :host([readonly]) .label {
+          cursor: not-allowed;
+        }
+
+        :host(:focus-within:not([disabled])) slot:not([name]) {
+          outline: calc(var(--focus-stroke-width) * 1px) solid var(--focus-stroke-outer);
+          outline-offset: calc(var(--focus-stroke-width) * -1px);
+        }
+
+        slot:not([name]) {
+          box-sizing: border-box;
+          display: inline-flex;
+          flex-direction: column;
+          border: calc(var(--stroke-width)* 1px) solid var(--neutral-stroke-rest);
+          border-radius: calc(var(--control-corner-radius)* 1px);
+          padding: calc(var(--design-unit)* 1px) 0;
+        }
+      `);
+    if (element.shadowRoot) {
+      element.shadowRoot.adoptedStyleSheets = [...element.shadowRoot.adoptedStyleSheets, this.CSSStyleSheet];
+    }
+  }
+
+  /**
+   * Creates a new label element with a slot to place the label.
+   */
+  createElement() {
+    let element = this.elements.widget;
+
+    // Put label inside the shadow root since the fluent library doesn't provide it.
+    let labelElement = document.createElement("label");
+    labelElement.setAttribute("class", "label");
+    labelElement.setAttribute("part", "label");
+
+    // Creating slot element to hold label, since we can't use default slot.
+    let slot = document.createElement("slot");
+    slot.setAttribute("name", "label");
+    labelElement.appendChild(slot);
+
+    element?.shadowRoot?.prepend(labelElement);
+  }
+
+  /**
    * Private Uniface API method - onConnect.
    * Specialized onConnect method to add a change event for the listbox when user interaction occurs.
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
+
+    const labelElement = widgetElement?.shadowRoot?.querySelector(".label");
+    if (!labelElement) {
+      this.createElement();
+      this.styleListBox();
+    }
+
     // Add event listeners for user interactions.
     widgetElement.addEventListener("click", () => {
       this.handleSelectionChange();

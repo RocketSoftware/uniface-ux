@@ -1,5 +1,19 @@
+/* Styling unset and applied to slot for adding label */
 .u-listbox {
   vertical-align: bottom;
+  border: unset;
+  border-radius: unset;
+  box-sizing: unset;
+  padding: unset;
+}
+
+.u-listbox:focus-within:not([disabled]) {
+  outline: unset;
+  outline-offset: unset;
+}
+
+.u-listbox:focus-visible {
+  outline: unset;
 }
 
 /* Styling for disabled and readonly states */
