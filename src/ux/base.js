@@ -14,7 +14,7 @@ export class Base {
   // Flag to enable or disable the usage of flat properties.
   static useFlatProperties = true;
 
-  constructor() {}
+  constructor() { }
 
   /**
    * This method registers the worker that Uniface calls to update the widget caused by a property change.
@@ -77,12 +77,14 @@ export class Base {
    * @param {typeof Widget} subWidgetClass
    * @param {String} subWidgetStyleClass
    * @param {Array} subWidgetTriggers
+   * @param {Array} subWidgetDelegatedProperties
    */
-  registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers) {
+  registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, subWidgetDelegatedProperties) {
     widgetClass.subWidgets[subWidgetId] = {
       "class": subWidgetClass,
       "styleClass": subWidgetStyleClass,
-      "triggers": subWidgetTriggers
+      "triggers": subWidgetTriggers,
+      "delegatedProperties": subWidgetDelegatedProperties
     };
   }
 
@@ -342,9 +344,10 @@ export class Base {
    * properties from original data object.
    * @param {UData} data - The source object containing properties to extract.
    * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
+   * @param {Array} subWidgetDelegatedProperties - An array containing list of delegated properties.
    * @returns {UData|undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
    */
-  extractSubWidgetData(data, subWidgetPropPrefix) {
+  extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties) {
     let subWidgetData;
     for (let property in data) {
       if (property.startsWith(`${subWidgetPropPrefix}:`)) {
@@ -357,6 +360,15 @@ export class Base {
         }
       }
     }
+    // Iterate over each delegated property and add matching delegated property to subWidgetData.
+    subWidgetDelegatedProperties?.forEach(property => {
+      // Check if the data object has the property.
+      if (data.hasOwnProperty(property)) {
+        subWidgetData = subWidgetData || {};
+        // Add the property to subWidgetData.
+        subWidgetData[property] = data[property];
+      }
+    });
     return subWidgetData;
   }
 

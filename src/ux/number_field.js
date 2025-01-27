@@ -70,6 +70,8 @@ export class NumberField extends Widget {
       "html:appearance": "stealth"
     }, false, [
       "detail"
+    ], [
+      "html:disabled"
     ])
   ], [
     new Trigger(this, "onchange", "change", true)
