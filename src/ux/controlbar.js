@@ -1,7 +1,7 @@
 // @ts-check
 /* global UNIFACE */
 import { Widget } from "./widget.js";
-import { Element, Worker, StyleClass, SubWidgetsByProperty, HtmlAttributeChoice, HtmlAttribute, HtmlSubWidgetValueWorker } from "./workers.js";
+import { Element, Worker, StyleClass, SubWidgetsByProperty, HtmlAttributeChoice, HtmlSubWidgetValueWorker } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
 /**
