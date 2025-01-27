@@ -224,6 +224,25 @@
     return propertyName.toLowerCase();
   }
 
+  /**
+   * Converts a string format valrep into [{"value": "representation"},....] format.
+   * @param {string} valrep - The valrep string to be formatted.
+   * @returns {Array} An array of objects with "value" and "representation" properties.
+   */
+  function getFormattedValrep(valrep) {
+    let formattedValrep = [];
+    valrep.split("").forEach((keyVal) => {
+      // Split each key-value pair by "="
+      let [key, val] = keyVal.split("=");
+      // Push an object with "value" and "representation" properties to the formattedValrep array.
+      formattedValrep.push({
+        "value": key,
+        "representation": val
+      });
+    });
+    return formattedValrep;
+  }
+
   function getWidgetName() {
     if (!widgetName) {
       const value = getUrlParam("widget_name");
@@ -368,6 +387,8 @@
     },
 
     "asyncRun" : asyncRun,
+
+    "getFormattedValrep":getFormattedValrep,
 
     /**
      * Helper class for testing widget.

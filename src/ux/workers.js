@@ -415,7 +415,7 @@ export class SlottedSubWidget extends Element {
  * The property, of which the name is specified by propId, holds a Uniface list of subWidgetIds which are be added as sub-widgets:
  *   "sub-widget1;sub-widget2;sub-widget3;sub-widget4"
  * For each sub-widget, additional properties need to be available:
- *   - "<subWidgetId>_widget-class" - defines the sub-widget's widget-class as registered with UNIFACE.classRegistry
+ *   - "<subWidgetId>:widget-class" - defines the sub-widget's widget-class as registered with UNIFACE.classRegistry
  *   - "<subWidgetId>:properties" - defines a list of property ids that need to be passed on to the sub-widget;
  *     if not defined, all properties are passed on to the sub-widget.
  *   - "<subWidgetId>:triggers" - defines a list of trigger names that need to be mapped on to the wub-widget;
@@ -453,7 +453,7 @@ export class SubWidgetsByProperty extends Element {
     let subWidgetIds = objectDefinition.getProperty(this.propId);
     if (subWidgetIds) {
       subWidgetIds.split("")?.forEach((subWidgetId) => {
-        let propName = `${subWidgetId}_widget-class`;
+        let propName = `${subWidgetId}:widget-class`;
         let subWidgetClassName = objectDefinition.getProperty(propName);
         if (subWidgetClassName) {
           let subWidgetClass = UNIFACE.ClassRegistry.get(subWidgetClassName);
@@ -497,7 +497,7 @@ export class SubWidgetsByProperty extends Element {
     let subWidgetIds = objectDefinition.getProperty(this.propId);
     if (subWidgetIds) {
       subWidgetIds.split("")?.forEach((subWidgetId) => {
-        const classNamePropId = `${subWidgetId}_widget-class`;
+        const classNamePropId = `${subWidgetId}:widget-class`;
         const triggersPropId = `${subWidgetId}:widget-triggers`;
         const useFieldPropId = `${subWidgetId}_usefield`;
         const usefield = objectDefinition.getProperty(useFieldPropId);
@@ -1525,7 +1525,7 @@ export class HtmlSubWidgetValueWorker extends HtmlAttribute {
     });
     let value = {};
     Object.keys(widgetInstance.subWidgets).forEach((subWidgetId) => {
-      if (widgetInstance.subWidgetDefinitions[subWidgetId] && widgetInstance.subWidgetDefinitions[subWidgetId].useField === "true") {
+      if (widgetInstance.subWidgetDefinitions[subWidgetId] && widgetInstance.subWidgetDefinitions[subWidgetId].usefield) {
         value[subWidgetId] = widgetInstance.subWidgets[subWidgetId].getValue();
       }
     });
