@@ -233,7 +233,7 @@
         expect(window.getComputedStyle(element).cursor).equal("not-allowed");
         let labelElement = element.querySelector("span.u-label-text");
         let labelDisplay = window.getComputedStyle(labelElement).display;
-        expect(labelDisplay).not.equal("hidden");;
+        expect(labelDisplay).not.equal("hidden");
       });
     });
 
