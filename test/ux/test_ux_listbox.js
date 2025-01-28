@@ -192,12 +192,20 @@
     });
 
     it("Set HTML property readonly to true", function () {
+      // Adding Label element
+      let listboxLabel = 'Label';
       return asyncRun(function() {
         tester.dataUpdate({
-          "html:readonly": true
+          "html:readonly": true,
+          "label-text": listboxLabel
         });
       }).then(function () {
-        expect(element.getAttribute("readonly"));
+        let labelElement = element.querySelector("span.u-label-text");
+        expect(labelElement.hasAttribute("readonly"));
+        let labelText = labelElement.innerText;
+        expect(labelText).equal(listboxLabel);
+        expect(window.getComputedStyle(labelElement).cursor).equal("not-allowed");
+        expect(Boolean(element.getAttribute("readonly"))).to.be.true;
         expect(window.getComputedStyle(element).cursor).equal("not-allowed");
       });
     });
@@ -214,13 +222,18 @@
     });
 
     it("Set HTML property disabled to true", function () {
+      let listboxLabel = 'Label';
       return asyncRun(function() {
         tester.dataUpdate({
-          "html:disabled": true
+          "html:disabled": true,
+          "label-text": listboxLabel
         });
       }).then(function () {
         expect(element.getAttribute("disabled"));
         expect(window.getComputedStyle(element).cursor).equal("not-allowed");
+        let labelElement = element.querySelector("span.u-label-text");
+        let labelDisplay = window.getComputedStyle(labelElement).display;
+        expect(labelDisplay).not.equal("hidden");;
       });
     });
 
