@@ -213,6 +213,11 @@ export class Widget extends Base {
       });
     });
 
+    // Iterate over all sub-widget ids to update delegated properties from the widgetClass.
+    Object.keys(widgetClass.subWidgets).forEach((subWidgetId) => {
+      this.subWidgets[subWidgetId].delegatedProperties = widgetClass.subWidgets[subWidgetId].delegatedProperties;
+    });
+
     // Add the value-updater(s) of widget itself.
     let valueWorker = widgetClass.getters.value;
     let widgetUpdaters = valueWorker?.getValueUpdaters(this);
@@ -314,7 +319,8 @@ export class Widget extends Base {
       this.subWidgets[subWidgetId].dataInit();
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix);
+      const subWidgetDelegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
@@ -335,7 +341,8 @@ export class Widget extends Base {
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix);
+      const subWidgetDelegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
@@ -347,14 +354,22 @@ export class Widget extends Base {
 
   /**
    * Cleans up the widget.
+   * @param {UPropertyNames} propertyNames
    */
-  dataCleanup() {
-    this.log("dataCleanup");
+  dataCleanup(propertyNames) {
+    this.log("dataCleanup", propertyNames);
 
     // Call dataCleanup() of sub-widgets (if any).
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
-      this.subWidgets[subWidgetId].dataCleanup();
+      const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
+      const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
+      const subWidgetPropertyNames = this.extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix);
+      if (subWidgetPropertyNames) {
+        this.subWidgets[subWidgetId].dataCleanup(subWidgetPropertyNames);
+      }
     });
+    // Clean up class properties.
+    this.cleanupClassProperties(propertyNames);
   }
 
   /**
@@ -545,7 +560,7 @@ export class Widget extends Base {
         } else {
           this.data[property] = data[property];
         }
-        let setters = property.startsWith("class") ? widgetSetters["class"] : property.startsWith("style") ? widgetSetters["style"] : widgetSetters[property];
+        let setters = property.startsWith("class:") ? widgetSetters["class"] : property.startsWith("style:") ? widgetSetters["style"] : widgetSetters[property];
         if (setters) {
           setOfSetters.add(setters);
         } else if (reportUnsupportedPropertyWarnings) {
@@ -557,6 +572,20 @@ export class Widget extends Base {
       setterList.forEach((setter) => {
         setter.refresh(this);
       });
+    });
+  }
+
+  /**
+   * Removes the CSS class names from the widget element based on the provided property names.
+   * @param {UPropertyNames} propertyNames - A set of property names, where some may start with "class:".
+   * If a property name starts with "class:", the corresponding class is removed from the widget element.
+   */
+  cleanupClassProperties(propertyNames) {
+    propertyNames.forEach((propertyName) => {
+      if (propertyName.startsWith("class:")) {
+        const className = propertyName.split(":")[1];
+        this.elements.widget.classList.remove(className);
+      }
     });
   }
 
