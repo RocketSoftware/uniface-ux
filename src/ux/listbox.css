@@ -49,3 +49,18 @@
 .u-listbox .u-value::after {
   content: ")";
 }
+
+/* Styling for the label and error icon */
+.u-listbox::part(label) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.u-listbox .u-error-icon::before {
+  color: #d13438;
+}
+
+.u-listbox .u-label-text:not([hidden]) + .u-error-icon::before {
+  padding-inline-start: calc(var(--design-unit) * 2px + 2px);
+}

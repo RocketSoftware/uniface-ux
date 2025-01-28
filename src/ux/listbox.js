@@ -11,6 +11,7 @@ import {
   HtmlAttributeNumber,
   HtmlAttributeBoolean,
   IgnoreProperty,
+  SlottedError,
   Worker
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js.
@@ -88,6 +89,7 @@ export class Listbox extends Widget {
     new IgnoreProperty(this, "html:maxlength")
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label"),
     new SlottedElementsByValRep(this, "fluent-option", "u-option", "")
   ], [
     new Trigger(this, "onchange", "change", true)
