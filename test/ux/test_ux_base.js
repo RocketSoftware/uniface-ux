@@ -19,7 +19,7 @@ import { Widget } from "../../src/ux/widget.js";
 
   describe("test Base Class methods", function () {
 
-    let base, widgetClass, propId, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, defaultValue, triggerName,
+    let base, widgetClass, propId, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, subWidgetDelegatedProperties, defaultValue, triggerName,
       url, functionName, message, consequence, consoleLogSpy, worker;
 
     beforeEach(function () {
@@ -76,13 +76,15 @@ import { Widget } from "../../src/ux/widget.js";
       subWidgetStyleClass = "u-change-button";
       subWidgetClass = new Button();
       subWidgetTriggers = ["trigger1", "trigger2"];
+      subWidgetDelegatedProperties = ["html:disabled"];
 
-      base.registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers);
+      base.registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, subWidgetDelegatedProperties);
 
       expect(String(Object.keys(widgetClass.subWidgets))).to.equal(subWidgetId);
-      expect((Object.keys(widgetClass.subWidgets[subWidgetId]))).to.have.lengthOf(3);
+      expect((Object.keys(widgetClass.subWidgets[subWidgetId]))).to.have.lengthOf(4);
       expect(widgetClass.subWidgets[subWidgetId].styleClass).to.equal(subWidgetStyleClass);
       expect(widgetClass.subWidgets[subWidgetId].triggers).to.equal(subWidgetTriggers);
+      expect(widgetClass.subWidgets[subWidgetId].delegatedProperties).to.equal(subWidgetDelegatedProperties);
     });
 
     it("registerSubWidgetWorker", function () {
@@ -169,6 +171,98 @@ import { Widget } from "../../src/ux/widget.js";
       expect(formattedValReps.querySelector('.u-valrep-value').textContent).to.eql(valRepString);
       expect(formattedValReps.querySelector('.u-valrep-value').innerHTML).to.eql('&lt;p&gt;this is paragraph&lt;/p&gt;');
       expect(formattedValReps.querySelector('.u-valrep-representation').className).to.eql('u-valrep-representation');
+    });
+
+    describe("extractSubWidgetData", function () {
+      it("return the sub-widget data correctly and delete corresponding sub-widget properties from data source", function () {
+        let data = {
+          "subWidgetId:widget-class": "Some class",
+          "subWidgetId:value": "Some value 1",
+          "subWidgetId:html:readonly": "Something",
+          "subWidgetId2:widget-class": "Something",
+          "subWidgetId2:value": "Some value 2",
+          "subWidgetId2:html:disabled": "Something",
+          "subWidgetId:class:class-test": "Something",
+          "subWidgetId:label-text": "Some Label"
+        };
+        let subWidgetPropPrefix = "subWidgetId";
+        let mockSubWidgetData = {
+          "widget-class": "Some class",
+          "value": "Some value 1",
+          "html:readonly": "Something",
+          "class:class-test": "Something",
+          "label-text": "Some Label"
+        };
+        let subWidgetData = base.extractSubWidgetData(data, subWidgetPropPrefix);
+        expect(subWidgetData).to.deep.equal(mockSubWidgetData);
+        for (let prop in data) {
+          expect(prop.startsWith(`${subWidgetPropPrefix}:`)).to.equal(false);
+        }
+
+        data = {
+          "subWidgetId:widget-class": "Some class",
+          "subWidgetId:value": "Some value 1",
+          "subWidgetId:html:readonly": "Something",
+          "subWidgetId2:widget-class": "Something",
+          "subWidgetId2:value": "Some value 2",
+          "subWidgetId2:html:disabled": "Something",
+          "subWidgetId:class:class-test": "Something",
+          "subWidgetId:label-text": "Some Label"
+        };
+        subWidgetPropPrefix = "subWidgetId2";
+        mockSubWidgetData = {
+          "widget-class": "Something",
+          "value": "Some value 2",
+          "html:disabled": "Something"
+        };
+        subWidgetData = base.extractSubWidgetData(data, subWidgetPropPrefix);
+        expect(subWidgetData).to.deep.equal(mockSubWidgetData);
+        for (let prop in data) {
+          expect(prop.startsWith(`${subWidgetPropPrefix}:`)).to.equal(false);
+        }
+      });
+    });
+
+    describe("extractSubWidgetPropertyNames", function () {
+      it("return the sub-widget property names correctly and delete corresponding sub-widget property names from property names source", function () {
+        let propertyNames = new Set([
+          "subWidgetId:widget-class",
+          "subWidgetId:value",
+          "subWidgetId:html:readonly",
+          "subWidgetId2:widget-class",
+          "subWidgetId2:value",
+          "subWidgetId2:html:disabled",
+          "subWidgetId2:class:abcd",
+          "subWidgetId:class:class-test",
+          "subWidgetId:label-text"
+        ]);
+        let subWidgetPropPrefix = "subWidgetId";
+        let mockSubWidgetPropertyNames = new Set(["widget-class", "value", "html:readonly", "class:class-test", "label-text"]);
+        let subWidgetPropertyNames = base.extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix);
+        expect(subWidgetPropertyNames).to.deep.equal(mockSubWidgetPropertyNames);
+        propertyNames.forEach((propertyName) => {
+          expect(propertyName.startsWith(`${subWidgetPropPrefix}:`)).to.equal(false);
+        });
+
+        propertyNames = new Set([
+          "subWidgetId:widget-class",
+          "subWidgetId:value",
+          "subWidgetId:html:readonly",
+          "subWidgetId2:widget-class",
+          "subWidgetId2:value",
+          "subWidgetId2:html:disabled",
+          "subWidgetId2:class:abcd",
+          "subWidgetId:class:class-test",
+          "subWidgetId:label-text"
+        ]);
+        subWidgetPropPrefix = "subWidgetId2";
+        mockSubWidgetPropertyNames = new Set(["widget-class", "value", "html:disabled", "class:abcd"]);
+        subWidgetPropertyNames = base.extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix);
+        expect(subWidgetPropertyNames).to.deep.equal(mockSubWidgetPropertyNames);
+        propertyNames.forEach((propertyName) => {
+          expect(propertyName.startsWith(`${subWidgetPropPrefix}:`)).to.equal(false);
+        });
+      });
     });
   });
 })();
