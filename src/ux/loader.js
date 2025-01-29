@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 
 /**
  * Load fluentUI web components centrally in this JS file.
@@ -15,39 +14,42 @@ import "../fluentui/js/web-components.min.js";
 // next line when using CDN location (fixed to version 2.6.1)
 // import "https://unpkg.com/@fluentui/web-components@2.6.1/dist/web-components.min.js";
 
+import { registerWidgetClass } from "./dsp_connector.js";
+
+
 // The UX field level widgets to include
 import {Button} from "./button.js";
-UNIFACE.ClassRegistry.add("UX.Button", Button);
+registerWidgetClass("UX.Button", Button);
 
 import {Checkbox} from "./checkbox.js";
-UNIFACE.ClassRegistry.add("UX.Checkbox", Checkbox);
+registerWidgetClass("UX.Checkbox", Checkbox);
 
 import {NumberField} from "./number_field.js";
-UNIFACE.ClassRegistry.add("UX.NumberField", NumberField);
+registerWidgetClass("UX.NumberField", NumberField);
 
 import {PlainText} from "./plain_text.js";
-UNIFACE.ClassRegistry.add("UX.PlainText", PlainText);
+registerWidgetClass("UX.PlainText", PlainText);
 
 import {RadioGroup} from "./radio_group.js";
-UNIFACE.ClassRegistry.add("UX.RadioGroup", RadioGroup);
+registerWidgetClass("UX.RadioGroup", RadioGroup);
 
 import {Select} from "./select.js";
-UNIFACE.ClassRegistry.add("UX.Select", Select);
+registerWidgetClass("UX.Select", Select);
 
 import {Switch} from "./switch.js";
-UNIFACE.ClassRegistry.add("UX.Switch", Switch);
+registerWidgetClass("UX.Switch", Switch);
 
 import {TextArea} from "./text_area.js";
-UNIFACE.ClassRegistry.add("UX.TextArea", TextArea);
+registerWidgetClass("UX.TextArea", TextArea);
 
 import {TextField} from "./text_field.js";
-UNIFACE.ClassRegistry.add("UX.TextField", TextField);
+registerWidgetClass("UX.TextField", TextField);
 
 
 // The UX entity level widgets to include
 import {DataGridCollection, DataGridOccurrence} from "./data_grid.js";
-UNIFACE.ClassRegistry.add("UX.DataGridCollection", DataGridCollection);
-UNIFACE.ClassRegistry.add("UX.DataGridOccurrence", DataGridOccurrence);
+registerWidgetClass("UX.DataGridCollection", DataGridCollection);
+registerWidgetClass("UX.DataGridOccurrence", DataGridOccurrence);
 
 
 
@@ -62,5 +64,5 @@ UNIFACE.ClassRegistry.add("UX.DataGridOccurrence", DataGridOccurrence);
  * - the registered sub-widgets
  * - the registered sub-widget-workers
  */
-// UX.MyDataGrid = UNIFACE.ClassRegistry.get("UX.DataGridCollection");
-// UX.MyButton = UNIFACE.ClassRegistry.get("UX.Button");
+// UX.MyDataGrid = getClassRegistry().get("UX.DataGridCollection");
+// UX.MyButton = getClassRegistry().get("UX.Button");

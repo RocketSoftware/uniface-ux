@@ -1,5 +1,4 @@
 // @ts-check
-
 import "./typedef.js";
 import "./workers.js";
 import { Base } from "./base.js";

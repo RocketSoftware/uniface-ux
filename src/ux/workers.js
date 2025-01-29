@@ -1,6 +1,5 @@
 // @ts-check
-/* global UNIFACE */
-
+import { getWidgetClass } from "./dsp_connector.js";
 import { Widget } from "./widget.js"; // eslint-disable-line no-unused-vars
 import { Base } from "./base.js";
 
@@ -366,7 +365,7 @@ export class SlottedSubWidget extends Element {
     elementQuerySelector = `.${styleClass}`;
     super(widgetClass, tagName, styleClass, elementQuerySelector);
     this.subWidgetId = subWidgetId;
-    this.subWidgetClass = UNIFACE.ClassRegistry.get(subWidgetClassName);
+    this.subWidgetClass = getWidgetClass(subWidgetClassName);
     if (this.subWidgetClass) {
       if (subWidgetDefaultValues) {
         Object.keys(subWidgetDefaultValues).forEach((propId) => {
@@ -459,7 +458,7 @@ export class SubWidgetsByProperty extends Element {
         let propName = `${subWidgetId}:widget-class`;
         let subWidgetClassName = objectDefinition.getProperty(propName);
         if (subWidgetClassName) {
-          let subWidgetClass = UNIFACE.ClassRegistry.get(subWidgetClassName);
+          let subWidgetClass = getWidgetClass(subWidgetClassName);
           if (subWidgetClass) {
             validSubWidgetIds.push(subWidgetId);
             let element = document.createElement(this.tagName);
@@ -499,7 +498,7 @@ export class SubWidgetsByProperty extends Element {
         const classNamePropId = `${subWidgetId}:widget-class`;
         const triggersPropId = `${subWidgetId}:widget-triggers`;
         const className = objectDefinition.getProperty(classNamePropId);
-        const subWidgetClass = UNIFACE.ClassRegistry.get(className);
+        const subWidgetClass = getWidgetClass(className);
         const subWidgetTriggers = objectDefinition.getProperty(triggersPropId);
         let subWidgetDefinition = {};
         subWidgetDefinition.class = subWidgetClass;
@@ -563,7 +562,7 @@ export class SubWidgetsByFields extends Worker {
     let elements = [];
     let childObjectDefinitions = objectDefinition.getChildDefinitions();
     if (childObjectDefinitions) {
-      let subWidgetClass = UNIFACE.ClassRegistry.get(this.subWidgetClassName);
+      let subWidgetClass = getWidgetClass(this.subWidgetClassName);
       if (subWidgetClass) {
         childObjectDefinitions.forEach((childObjectDefinition) => {
           const childType = childObjectDefinition.getType();
@@ -618,7 +617,7 @@ export class SubWidgetsByFields extends Worker {
     let subWidgetDefinitions = {};
     let childObjectDefinitions = objectDefinition.getChildDefinitions();
     if (childObjectDefinitions) {
-      let subWidgetClass = UNIFACE.ClassRegistry.get(this.subWidgetClassName);
+      let subWidgetClass = getWidgetClass(this.subWidgetClassName);
       if (subWidgetClass) {
         childObjectDefinitions.forEach((childObjectDefinition) => {
           const childType = childObjectDefinition.getType();
@@ -1309,7 +1308,7 @@ export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
   refresh(widgetInstance) {
     this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
     const orgWidgetClassName = this.getNode(widgetInstance.data.properties, this.propId);
-    const orgWidgetClass = UNIFACE.ClassRegistry.get(orgWidgetClassName);
+    const orgWidgetClass = getWidgetClass(orgWidgetClassName);
     const element = this.getElement(widgetInstance);
     element.innerHTML = "";
     element.classList.remove("u-invalid");
