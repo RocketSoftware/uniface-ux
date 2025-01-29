@@ -12,6 +12,10 @@
   width: 100%;
 }
 
+.u-controlbar[hidden] {
+  display:none;
+}
+
 .u-controlbar .u-start-section,
 .u-controlbar .u-center-section,
 .u-controlbar .u-end-section {
