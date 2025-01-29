@@ -340,7 +340,7 @@ export class SlottedSubWidget extends Element {
    * Creates an instance of SlottedWidget.
    * @param {typeof Widget} widgetClass
    * @param {String} tagName
-   * @param {String} styleClass
+   * @param {String} subWidgetStyleClass
    * @param {String} elementQuerySelector
    * @param {String} slot
    * @param {String} subWidgetId
@@ -348,25 +348,28 @@ export class SlottedSubWidget extends Element {
    * @param {Object} subWidgetDefaultValues
    * @param {Boolean} visible
    * @param {Array} subWidgetTriggers
+   * @param {Array} subWidgetDelegatedProperties
    */
   constructor(
     widgetClass,
     tagName,
-    styleClass,
+    subWidgetStyleClass,
     elementQuerySelector,
     slot,
     subWidgetId,
     subWidgetClassName,
     subWidgetDefaultValues,
     visible,
-    subWidgetTriggers
+    subWidgetTriggers,
+    subWidgetDelegatedProperties = []
   ) {
-    // Redefine styleClass with hard-coded values based on sub-widget id
-    styleClass = `u-sw-${subWidgetId}`;
-    elementQuerySelector = `.${styleClass}`;
-    super(widgetClass, tagName, styleClass, elementQuerySelector);
+    // Redefine subWidgetStyleClass with hard-coded values based on sub-widget id
+    subWidgetStyleClass = `u-sw-${subWidgetId}`;
+    elementQuerySelector = `.${subWidgetStyleClass}`;
+    super(widgetClass, tagName, subWidgetStyleClass, elementQuerySelector);
     this.subWidgetId = subWidgetId;
     this.subWidgetClass = UNIFACE.ClassRegistry.get(subWidgetClassName);
+    this.subWidgetDelegatedProperties = subWidgetDelegatedProperties;
     if (this.subWidgetClass) {
       if (subWidgetDefaultValues) {
         Object.keys(subWidgetDefaultValues).forEach((propId) => {
@@ -378,7 +381,7 @@ export class SlottedSubWidget extends Element {
       this.propId = subWidgetId;
       this.registerSetter(widgetClass, this.propId, this);
       this.registerDefaultValue(widgetClass, this.propId, visible);
-      this.registerSubWidget(widgetClass, subWidgetId, this.subWidgetClass, this.styleClass, subWidgetTriggers);
+      this.registerSubWidget(widgetClass, subWidgetId, this.subWidgetClass, this.styleClass, subWidgetTriggers, subWidgetDelegatedProperties);
     } else {
       this.error("constructor", `Widget class with name '${subWidgetClassName}' not found in UNIFACE.widgetRepository.`, "Not available");
     }

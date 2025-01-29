@@ -151,9 +151,24 @@ export class TestWidget extends Widget {
       expect(testwidget.data["html:current-value"]).to.equal("");
     });
 
-    // button doesn't have a dateCleanup function
-    it("dataCleanup", function () {
-      testwidget.dataCleanup();
+
+    describe("dataCleanup", function () {
+      const mockData = {
+        "class:class-test-1": "true",
+        "class:class-test-2": "true"
+      };
+      const mockPropertNames = new Set(["class:class-test-1", "class:class-test-2"]);
+
+      it("clean all class properties of the widget that are received as parameters in the dataCleanup() function", function () {
+        testwidget.dataUpdate(mockData);
+        expect(testwidget.elements.widget, "Widget top element is not defined!");
+
+        testwidget.dataCleanup(mockPropertNames);
+        mockPropertNames.forEach((propertyName) => {
+          const className = propertyName.split(":")[1];
+          expect(testwidget.elements.widget.classList.contains(className)).to.equal(false);
+        });
+      });
     });
 
     it("getValue", function () {
