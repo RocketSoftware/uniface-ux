@@ -120,12 +120,12 @@
     });
   });
 
-  describe("mapTrigger", function () {
+  describe("mapTrigger()", function () {
     const widget = tester.onConnect();
     widget.mapTrigger("onchange");
   });
 
-  describe("Data Init", function () {
+  describe("dataInit()", function () {
     const defaultValues = tester.getDefaultValues();
     const classes = defaultValues.classes;
     let element;
@@ -155,7 +155,7 @@
 
   });
 
-  describe("dataUpdate", function () {
+  describe("dataUpdate()", function () {
     let element;
     before(function () {
       tester.createWidget();
@@ -191,7 +191,7 @@
       });
     });
 
-    it("Set HTML property readonly to true", function () {
+    it("set HTML property readonly to true", function () {
       // Adding Label element
       let listboxLabel = 'Label';
       return asyncRun(function() {
@@ -201,16 +201,15 @@
         });
       }).then(function () {
         let labelElement = element.querySelector("span.u-label-text");
-        expect(labelElement.hasAttribute("readonly"));
         let labelText = labelElement.innerText;
         expect(labelText).equal(listboxLabel);
-        expect(window.getComputedStyle(labelElement).cursor).equal("not-allowed");
         expect(Boolean(element.getAttribute("readonly"))).to.be.true;
         expect(window.getComputedStyle(element).cursor).equal("not-allowed");
+        expect(window.getComputedStyle(labelElement).cursor).equal("not-allowed");
       });
     });
 
-    it("Set HTML property readonly to false", function () {
+    it("set HTML property readonly to false", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:readonly": false
@@ -221,7 +220,7 @@
       });
     });
 
-    it("Set HTML property disabled to true", function () {
+    it("set HTML property disabled to true", function () {
       let listboxLabel = 'Label';
       return asyncRun(function() {
         tester.dataUpdate({
@@ -232,12 +231,11 @@
         expect(element.getAttribute("disabled"));
         expect(window.getComputedStyle(element).cursor).equal("not-allowed");
         let labelElement = element.querySelector("span.u-label-text");
-        let labelDisplay = window.getComputedStyle(labelElement).display;
-        expect(labelDisplay).not.equal("hidden");
+        expect(window.getComputedStyle(labelElement).cursor).equal("not-allowed");
       });
     });
 
-    it("Set HTML property disabled to false", function () {
+    it("set HTML property disabled to false", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:disabled": false
@@ -248,7 +246,7 @@
       });
     });
 
-    it("Set HTML property hidden to true", function () {
+    it("set HTML property hidden to true", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:hidden": true
@@ -259,7 +257,7 @@
       });
     });
 
-    it("Set HTML property hidden to false", function () {
+    it("set HTML property hidden to false", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:hidden": false
@@ -270,7 +268,7 @@
       });
     });
 
-    it("Set HTML property title", function () {
+    it("set HTML property title", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:title": "On"
@@ -281,7 +279,7 @@
       });
     });
 
-    it("Set HTML property tabindex to -1 ", function () {
+    it("set HTML property tabindex to -1 ", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:tabindex": -1
@@ -292,7 +290,7 @@
       });
     });
 
-    it("Set HTML property tabindex to 0", function () {
+    it("set HTML property tabindex to 0", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:tabindex": 0
@@ -303,7 +301,7 @@
       });
     });
 
-    it("Set HTML property tabindex to 1", function () {
+    it("set HTML property tabindex to 1", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "html:tabindex": 1
@@ -314,7 +312,7 @@
       });
     });
 
-    it("Set valrep property with default display-format as rep", function () {
+    it("set valrep property with default display-format as rep", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "valrep": valRepArray
@@ -327,7 +325,7 @@
       });
     });
 
-    it("Set valrep property with display-format as value", function () {
+    it("set valrep property with display-format as value", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "valrep": valRepArray,
@@ -341,7 +339,7 @@
       });
     });
 
-    it("Set valrep property with display-format as valrep", function () {
+    it("set valrep property with display-format as valrep", function () {
       return asyncRun(function() {
         tester.dataUpdate({
           "valrep": valRepArray,
@@ -357,7 +355,7 @@
     });
   });
 
-  describe("dataCleanup", function () {
+  describe("dataCleanup()", function () {
     it("reset all properties", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());
