@@ -246,14 +246,6 @@ export class SlottedElement extends Element {
       element.innerText = "";
     }
   }
-
-  deleteIconClasses(element) {
-    Array.from(element.classList).forEach((className) => {
-      if (className.startsWith("ms-")) {
-        element.classList.remove(className);
-      }
-    });
-  }
 }
 
 /**
@@ -1392,7 +1384,7 @@ export class StyleClass extends Worker {
     this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
     let element = this.getElement(widgetInstance);
     for (let property in widgetInstance.data) {
-      if (property.startsWith("class")) {
+      if (property.startsWith("class:")) {
         let value = this.toBoolean(widgetInstance.data[property]);
         let pos = property.search(":");
         property = property.substring(pos + 1);
@@ -1423,7 +1415,7 @@ export class StyleProperty extends Worker {
     let element = this.getElement(widgetInstance);
 
     for (let property in widgetInstance.data) {
-      if (property.startsWith("style")) {
+      if (property.startsWith("style:")) {
         let value = widgetInstance.data[property];
         let pos = property.search(":");
         property = property.substring(pos + 1);
