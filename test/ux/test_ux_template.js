@@ -5,7 +5,7 @@
   'use strict';
 
   /**
-     * Default timeout for waiting for DOM rendering (in milliseconds)
+     * Default timeout for waiting for DOM rendering (in milliseconds).
      */
   const defaultAsyncTimeout = 100; // ms
 
@@ -13,19 +13,19 @@
   const expect = chai.expect;
 
   /* TODO: Not necessary for test, maybe for demo?
-    // Set wait time between each test case
+    // Set wait time between each test case.
     beforeEach(function (done) {
-        this.timeout(3000); // environment setup time 3 seconds
+        this.timeout(3000); // Environment setup time 3 seconds.
         setTimeout(done, 500);  // 500 ms
     });
     */
 
-  // for widget test
+  // For widget test.
   const tester = new umockup.WidgetTester();
   const widgetId = tester.widgetId;
   const widgetName = tester.widgetName;
 
-  describe("Uniface Mockup tests", function () {
+  describe("Uniface mockup tests", function () {
 
     /**
          * Only for template. Remove this test case from your widget test.
@@ -48,10 +48,10 @@
 
   });
 
-  describe(widgetName + ".processLayout", function () {
+  describe(widgetName + ".processLayout()", function () {
     let element;
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
     });
@@ -63,7 +63,7 @@
       });
 
       it("check instance of HTMLElement", function () {
-        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+        expect(element).instanceOf(HTMLElement, `Function processLayout of "${widgetName}" does not return an HTMLElement.`);
       });
 
       it("check tagName", function () {
@@ -75,11 +75,11 @@
       });
 
       it("check u-icon", function () {
-        assert(element.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
+        assert(element.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element.");
       });
 
       it("check u-text", function () {
-        assert(element.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
+        assert(element.querySelector("span.u-text"), "Widget misses or has incorrect u-text element.");
       });
 
     });
@@ -92,25 +92,25 @@
       tester.construct();
     });
 
-    it("constructor", function () {
+    it("constructor()", function () {
       try {
         const widget = tester.construct();
-        assert(widget, "widget is not defined!");
+        assert(widget, "Widget is not defined!");
       } catch (e) {
-        assert(false, "Failed to construct new widget, exception " + e);
+        assert(false, `Failed to construct new widget, exception ${e}.`);
       }
     });
 
-    it("onConnect", function () {
+    it("onConnect()", function () {
       const element = tester.processLayout();
       const widget = tester.onConnect();
       assert(element, "Target element is not defined!");
-      assert(widget.elements.widget === element, "widget is not connected");
+      assert(widget.elements.widget === element, "Widget is not connected!");
     });
 
   });
 
-  describe("dataInit", function () {
+  describe("dataInit()", function () {
     // Defines the classes from the widget's defaultValues.
     const classes = tester.getDefaultClasses();
     var element;
@@ -124,9 +124,9 @@
     for (const clazz in classes) {
       it("check class '" + clazz + "'", function () {
         if (classes[clazz]) {
-          expect(element).to.have.class(clazz, "widget element has class " + clazz);
+          expect(element).to.have.class(clazz, `Widget element has class ${clazz}.`);
         } else {
-          expect(element).not.to.have.class(clazz, "widget element has no class " + clazz);
+          expect(element).not.to.have.class(clazz, `Widget element has no class ${clazz}.`);
         }
       });
     }
@@ -140,7 +140,7 @@
       "etc ..."
     ];
 
-    it("mapTrigger");
+    it("mapTrigger()");
 
     for (let i = 0; i < texts.length; i++) {
       it(texts[i]);
@@ -148,7 +148,7 @@
 
   });
 
-  describe("dataUpdate", function () {
+  describe("dataUpdate()", function () {
     let widget;
 
     beforeEach(function () {
@@ -166,13 +166,13 @@
           let buttonText = widget.elements.widget.querySelector("span.u-text").innerText;
           assert.equal(buttonText, texts[i]);
           done();
-        }, defaultAsyncTimeout); // Wait for DOM rendering
+        }, defaultAsyncTimeout); // Wait for DOM rendering.
 
       });
     }
 
-    it("Set HTML property", function (done) {
-      // html: {appearance: "accent"}  // but: it stays as neutral not accent, but class accent is well set
+    it("set html property", function (done) {
+      // html: {appearance: "accent"}  // but: it stays as neutral not accent, but class accent is well set.
       widget.dataUpdate({
         "html:appearance": "accent"
       });
@@ -181,11 +181,11 @@
         let appearanceValue = widget.elements.widget.getAttribute('appearance');
         assert.equal(appearanceValue, 'accent');
         done();
-      }, defaultAsyncTimeout); // Wait for DOM rendering
+      }, defaultAsyncTimeout); // Wait for DOM rendering.
 
     });
 
-    it("Set STYLE property", function (done) {
+    it("set style property", function (done) {
       widget.dataUpdate({
         "style:background-color": "green"
       });
@@ -195,11 +195,11 @@
         let bgColor = buttonStyle.getPropertyValue("background-color");
         assert.equal(bgColor, 'rgb(0, 128, 0)');
         done();
-      }, defaultAsyncTimeout); // Wait for DOM rendering
+      }, defaultAsyncTimeout); // Wait for DOM rendering.
 
     });
 
-    it("Set CLASS property", function (done) {
+    it("set class property", function (done) {
       widget.dataUpdate({
         "classes:ClassA": true
       });
@@ -209,13 +209,13 @@
         let classExist = classAttributeValue.includes('ClassA');
         expect(classExist).to.be.true;
         done();
-      }, defaultAsyncTimeout); // Wait for DOM rendering
+      }, defaultAsyncTimeout); // Wait for DOM rendering.
 
     });
 
-    it("Set icon and icon-position", function (done) {
+    it("set icon and icon-position", function (done) {
       widget.dataUpdate({
-        value: widgetName,  // not empty value, required by icon-position=start
+        value: widgetName,  // Not empty value, required by icon-position=start.
         icon: "IncomingCall",
         'icon-position': "start"
       });
@@ -224,12 +224,12 @@
         let buttonIcon = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--IncomingCall[slot='start'");
         assert.notEqual(buttonIcon, null);
         done();
-      }, defaultAsyncTimeout); // Wait for DOM rendering
+      }, defaultAsyncTimeout); // Wait for DOM rendering.
 
     });
 
-    // Multiple properties update
-    it("Change multiple properties", function (done) {
+    // Multiple properties update.
+    it("change multiple properties", function (done) {
       widget.dataUpdate({
         value: "Button Text",
         "html:appearance": "accent",
@@ -258,7 +258,7 @@
         assert.notEqual(buttonIcon, null);
 
         done();
-      }, defaultAsyncTimeout); // Wait for DOM rendering
+      }, defaultAsyncTimeout); // Wait for DOM rendering.
 
     });
 
@@ -272,7 +272,7 @@
       widget = tester.createWidget();
     });
 
-    it("Set STYLE property 1 (setTimeout)", function (done) {
+    it("set style property 1 (setTimeout)", function (done) {
       widget.dataUpdate({
         "style:background-color": "green"
       });
@@ -282,29 +282,29 @@
         let bgColor = buttonStyle.getPropertyValue("background-color");
         assert.equal(bgColor, 'rgb(0, 128, 0)');
         done();
-      }, defaultAsyncTimeout); // Wait for DOM rendering
+      }, defaultAsyncTimeout); // Wait for DOM rendering.
 
     });
 
-    it("Set STYLE property 2 (promise 1)", function () {
+    it("set style property 2 (promise 1)", function () {
       const p = asyncRun(function () {
         widget.dataUpdate({
           "style:background-color": "green"
         });
       });
-      return p.then(function () { // check result
+      return p.then(function () { // Check result.
         let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
         let bgColor = buttonStyle.getPropertyValue("background-color");
         assert.equal(bgColor, 'rgb(0, 128, 0)');
       });
     });
 
-    it("Set STYLE property 3 (promise 2)", function () {
+    it("set style property 3 (promise 2)", function () {
       return asyncRun(function () {
         widget.dataUpdate({
           "style:background-color": "green"
         });
-      }).then(function () { // check result
+      }).then(function () { // Check result.
         let buttonStyle = window.getComputedStyle(widget.elements.widget, null);
         let bgColor = buttonStyle.getPropertyValue("background-color");
         assert.equal(bgColor, 'rgb(0, 128, 0)');
@@ -333,7 +333,7 @@
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to reset the properties, exception " + e);
+        assert(false, `Failed to reset all properties, exception ${e}.`);
       }
     });
   });

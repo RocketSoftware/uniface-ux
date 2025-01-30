@@ -1,7 +1,7 @@
 import { Widget } from "../../src/ux/widget.js";
 import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedSubWidget, Element } from "../../src/ux/workers.js";
 
-// Simple widget that has both subwidget and triggers for easier testing and doens't mess with other widgets
+// Simple widget that has both subwidget and triggers for easier testing and doens't mess with other widgets.
 export class TestWidget extends Widget {
 
   static subWidgets = {};
@@ -32,16 +32,16 @@ export class TestWidget extends Widget {
 }
 
 (function () {
-  'use strict';
+  "use strict";
 
   const expect = chai.expect;
   const sandbox = sinon.createSandbox();
 
-  describe("Widget constructor properly defined with subwidgets", function () {
+  describe("Widget constructor() properly defined with subwidgets", function () {
 
     let widget, subWidgetId;
 
-    it('constructor with subWidgets', function () {
+    it("constructor() with subWidgets", function () {
       subWidgetId = "change-button";
       widget = new TestWidget;
       expect(Object.keys(widget.subWidgetDefinitions)).to.eql([subWidgetId]);
@@ -49,7 +49,7 @@ export class TestWidget extends Widget {
 
   });
 
-  describe("Widget Class methods", function () {
+  describe("Widget class methods", function () {
 
     let definitions, returnedProcess, testwidget, consoleLogSpy;
 
@@ -76,14 +76,14 @@ export class TestWidget extends Widget {
       testwidget.dataInit();
     });
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       expect(returnedProcess).to.have.tagName("FLUENT-TEXT-FIELD");
       expect(returnedProcess.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
-      expect(returnedProcess.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
+      expect(returnedProcess.querySelector("span.u-text"), "Widget misses or has incorrect u-text element.");
       expect(returnedProcess.querySelector("span.u-text").outerText).to.eql("Change");
     });
 
-    it("onConnect", function () {
+    it("onConnect()", function () {
       let connectedWidget = testwidget.onConnect(returnedProcess);
 
       expect(connectedWidget[0].element).instanceOf(HTMLElement);
@@ -91,9 +91,9 @@ export class TestWidget extends Widget {
       expect(connectedWidget[0].element).to.have.tagName("FLUENT-TEXT-FIELD");
     });
 
-    it("mapTrigger", function () {
-      // Test with a wrong trigger, should return undefined and display a warning
-      consoleLogSpy = sandbox.spy(console, 'warn');
+    it("mapTrigger()", function () {
+      // Test with a wrong trigger, should return undefined and display a warning.
+      consoleLogSpy = sandbox.spy(console, "warn");
       let badTrigger = testwidget.mapTrigger("click");
       expect(badTrigger).to.be.undefined;
       expect(consoleLogSpy.called).to.equal(true);
@@ -110,7 +110,7 @@ export class TestWidget extends Widget {
       expect(onchangeTrigger.element).to.have.tagName("FLUENT-TEXT-FIELD");
     });
 
-    it("dataInit", function () {
+    it("dataInit()", function () {
       expect(testwidget.element, "Widget top element is not defined!");
       const dataKeys = Object.keys(testwidget.data).filter(key => key.startsWith("class:"));
       const defaultValueKeys = Object.keys(TestWidget.defaultValues).filter(key => key.startsWith("class:"));
@@ -123,7 +123,7 @@ export class TestWidget extends Widget {
       expect(TestWidget.defaultValues).to.have.deep.property("class:u-test-field-2", true);
     });
 
-    it("dataUpdate", function () {
+    it("dataUpdate()", function () {
       const data = {
         "icon": "",
         "icon-position": "start",
@@ -136,39 +136,39 @@ export class TestWidget extends Widget {
       defaultTestWidget.onConnect(returnedProcess);
       defaultTestWidget.dataInit();
 
-      // Expect widget properties to differ from the initial Widget
+      // Expect widget properties to differ from the initial Widget.
       expect(defaultTestWidget.data).to.not.eql(testwidget.data);
 
-      // Exepct widget properties to be updated with the new data object
+      // Exepct widget properties to be updated with the new data object.
       expect(testwidget.data.value).to.equal(true);
       expect(testwidget.data.icon).to.equal("");
       expect(testwidget.data["icon-position"]).to.equal("start");
 
-      // Expect the widget to still have the default values that were not updated by dataUpdate.
+      // Expect the widget to still have the default values that were not updated by dataUpdate().
       expect(testwidget.data["change-button"]).to.equal(false);
       expect(testwidget.data["format-error"]).to.equal(false);
       expect(testwidget.data["format-error-message"]).to.equal("");
       expect(testwidget.data["html:current-value"]).to.equal("");
     });
 
-    // button doesn't have a dateCleanup function
-    it("dataCleanup", function () {
+    // Button doesn't have a dataCleanup() function.
+    it("dataCleanup()", function () {
       testwidget.dataCleanup();
     });
 
-    it("getValue", function () {
+    it("getValue()", function () {
       const value = testwidget.getValue();
       expect(value).to.equal(false);
     });
 
-    // Validate only returns null for the time being
+    // Validate only returns null for the time being.
     it("validate", function () {
       const returnNull = testwidget.validate();
       expect(returnNull).to.equal(null);
     });
 
-    it("showError", function () {
-      const errorString = '{ "change-button": "This is a testing error" }';
+    it("showError()", function () {
+      const errorString = "{ \"change-button\": \"This is a testing error\" }";
       const errorReturn = {
         "error": true,
         "error-message": errorString
@@ -181,7 +181,7 @@ export class TestWidget extends Widget {
       expect(testwidget.data["error"]).equal(true);
     });
 
-    it("hideError", function () {
+    it("hideError()", function () {
       const errorReturn = {
         "error": false,
         "error-message": ""
@@ -193,14 +193,14 @@ export class TestWidget extends Widget {
       expect(testwidget.data["error"]).equal(false);
     });
 
-    it("blockUI", function () {
+    it("blockUI()", function () {
       expect(testwidget.elements.widget.disabled).to.equal(false);
 
       testwidget.blockUI();
       expect(testwidget.elements.widget.disabled).to.equal(true);
     });
 
-    it("unblockUI", function () {
+    it("unblockUI()", function () {
       expect(testwidget.elements.widget.disabled).to.equal(false);
 
       testwidget.blockUI();
