@@ -938,7 +938,7 @@ import {
         }
       };
       element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget.outerHTML).to.equal('<div style="color: red;"></div>');
+      expect(widgetInstance.elements.widget.outerHTML).to.equal("<div style=\"color: red;\"></div>");
     });
   });
 

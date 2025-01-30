@@ -1,4 +1,4 @@
-/* global _uf UNIFACE URLSearchParams  */
+/* global _uf MutationObserver UNIFACE URLSearchParams clearTimeout setTimeout*/
 (function (global) {
   "use strict";
 
@@ -183,29 +183,100 @@
     });
   }
 
+  const defaultAsyncTimeout = 100; // ms
+  let defaultIdleTime = 25; // ms
+
   /**
-   * Run asynchronous test actions.
+   * Run asynchronous test actions via setTimeout.
    *
    * @param {Function} testFunction a function including test actions;
+   * @param {Number} timeout the milliseconds delay of setTimeout for resolve
+   *                   the returned promise;
    * @returns a promise.
    */
-  async function asyncRun(testFunction) {
-
-    debugLog("asyncRun");
-
+  async function asyncRunST(testFunction, timeout) {
+    if (timeout === undefined) {
+      timeout = defaultAsyncTimeout;
+    }
     return new Promise(function(resolve, _reject) {
-      function callback(_timestamp) {
-        debugLog("Callback done");
-
-        resolve();  // resolve immediately
-      }
-
-      // Call the function that updates the DOM
       testFunction();
-
-      // Ask browser to callback before next repaint
-      window.requestAnimationFrame(callback);
+      setTimeout(function(){
+        resolve();
+      }, timeout);
     });
+  }
+
+  /**
+   * Run asynchronous test actions via MutationObserver.
+   *
+   * @param {Function} testFunction a function including test actions;
+   * @param {Function} callbackFunction a callback function;
+   * @param {Number} idleTime the idle time to waiting next round of callback;
+   * @returns a promise.
+   */
+  async function asyncRunMO(testFunction, callbackFunction, idleTime) {
+    if (!idleTime || typeof idleTime !== "number") {
+      idleTime = defaultIdleTime;
+    }
+    const container = document.getElementById("widget-container");
+    let lastTimeoutId = 0;
+
+    let count = 0;
+
+    debugLog("asyncRunMO");
+
+    if (typeof callbackFunction !== "function") {
+      callbackFunction = function (records, observer, resolve, _reject) {
+        const _count = ++count;
+        debugLog("Callback " + _count);
+        setTimeout(function () {
+          debugLog("Timeout Callback " + _count);
+
+          if (lastTimeoutId) {
+            clearTimeout(lastTimeoutId);
+          }
+          lastTimeoutId = setTimeout(function () {
+            debugLog("Timeout 2 callback " + _count);
+            resolve();
+            observer.disconnect();
+          }, idleTime);
+        });
+      };
+    }
+
+    return new Promise(function(resolve, reject){
+      const observer = new MutationObserver(function (records, observer) {
+        callbackFunction(records, observer, resolve, reject);
+      });
+
+      observer.observe(container, {
+        "attributes" : true,
+        "attributeOldValue" : true,
+        "characterData" : true,
+        "childList" : true,
+        "subtree" : true
+      });
+
+      testFunction();
+    });
+  }
+
+  /**
+   * The helper function for running asynchronous test actions.
+   *
+   * @param {Function} testFunction a function including test actions;
+   * @param {Function} option optional, if option is a number, it calls
+   *                   asyncRunST(testFunction, option); otherwise, it calls
+   *                   asyncRunMO(testFunction, option).
+   * @param {Number}   idleTime the idle time to waiting next round of callback;
+   * @returns a promise.
+   */
+  async function asyncRun(testFunction, option, idleTime) {
+    if (typeof option === "number") {
+      return asyncRunST(testFunction, option);
+    } else {
+      return asyncRunMO(testFunction, option, idleTime);
+    }
   }
 
   /**
@@ -230,6 +301,14 @@
         }
       }
       return scriptName;
+    },
+
+    "getDefaultIdleTime" : function () {
+      return defaultIdleTime;
+    },
+
+    "setDefaultIdleTime" : function (idolTime) {
+      defaultIdleTime = idolTime;
     },
 
     "asyncRun" : asyncRun,
