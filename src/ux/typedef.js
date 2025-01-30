@@ -1,13 +1,6 @@
 // @ts-check
 
 /**
- * @typedef {Object} UClassRegistry
- *  @property {function(UWidgetClassName): *} get - Return class definition of widget.
- *  @property {function(UWidgetClassName, *): void} add - Add class definition of widget to registry.
- *
- * @typedef {Object} UTYPE_UNIFACE
- *  @property {UClassRegistry} ClassRegistry
- *
  * @typedef {"component"|"entity"|"collection"|"occurrence"|"field"} UObjectType
  * @typedef {String} UObjectName
  * @typedef {String} UPropName
@@ -62,7 +55,3 @@
  *  @property {String} [errorMessage] - (Format) Error message.
  *  @property {String} [labelText] - Unformatted label-text.
  */
-
-/** @type {UTYPE_UNIFACE} */
-let UNIFACE;  // eslint-disable-line no-unused-vars
-let uniface;  // eslint-disable-line no-unused-vars
