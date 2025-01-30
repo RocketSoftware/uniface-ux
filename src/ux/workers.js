@@ -1,7 +1,7 @@
 // @ts-check
-import { getWidgetClass } from "./dsp_connector.js";
 import { Widget } from "./widget.js"; // eslint-disable-line no-unused-vars
 import { Base } from "./base.js";
+import { getWidgetClass } from "./dsp_connector.js";
 
 /**
  * Worker base class.
@@ -379,7 +379,7 @@ export class SlottedSubWidget extends Element {
       this.registerDefaultValue(widgetClass, this.propId, visible);
       this.registerSubWidget(widgetClass, subWidgetId, this.subWidgetClass, this.styleClass, subWidgetTriggers);
     } else {
-      this.error("constructor", `Widget class with name '${subWidgetClassName}' not found in UNIFACE.widgetRepository.`, "Not available");
+      this.error("constructor", `Widget class with name '${subWidgetClassName}' is not registered.`, "Not available");
     }
   }
 
@@ -414,7 +414,7 @@ export class SlottedSubWidget extends Element {
  * The property, of which the name is specified by propId, holds a Uniface list of subWidgetIds which are be added as sub-widgets:
  *   "sub-widget1;sub-widget2;sub-widget3;sub-widget4"
  * For each sub-widget, additional properties need to be available:
- *   - "<subWidgetId>:widget-class" - defines the sub-widget's widget-class as registered with UNIFACE.classRegistry
+ *   - "<subWidgetId>:widget-class" - defines the sub-widget's widget-class as registered with function registerWidgetClass
  *   - "<subWidgetId>:properties" - defines a list of property ids that need to be passed on to the sub-widget;
  *     if not defined, all properties are passed on to the sub-widget.
  *   - "<subWidgetId>:triggers" - defines a list of trigger names that need to be mapped on to the wub-widget;
@@ -469,7 +469,7 @@ export class SubWidgetsByProperty extends Element {
           } else {
             this.warn(
               "getLayout",
-              `Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry.`,
+              `Widget definition with name '${subWidgetClassName}' is not registered.`,
               `Creation of sub-widget '${subWidgetId}'skipped`
             );
           }
@@ -599,7 +599,7 @@ export class SubWidgetsByFields extends Worker {
       } else {
         this.warn(
           "getLayout",
-          `Widget definition with name '${this.subWidgetClassName}' not found in UNIFACE.classRegistry.`,
+          `Widget definition with name '${this.subWidgetClassName}' is not registered.`,
           "Creation of sub-widget(s) skipped"
         );
       }
