@@ -14,6 +14,9 @@ import "../fluentui/js/web-components.min.js";
 // next line when using CDN location (fixed to version 2.6.1)
 // import "https://unpkg.com/@fluentui/web-components@2.6.1/dist/web-components.min.js";
 
+
+// registerWidgetClass is used to register UX Widgets to Uniface.
+// The same name needs to be used in the web.ini configuration.
 import { registerWidgetClass } from "./dsp_connector.js";
 
 
@@ -50,19 +53,3 @@ registerWidgetClass("UX.TextField", TextField);
 import {DataGridCollection, DataGridOccurrence} from "./data_grid.js";
 registerWidgetClass("UX.DataGridCollection", DataGridCollection);
 registerWidgetClass("UX.DataGridOccurrence", DataGridOccurrence);
-
-
-
-/**
- * Uncomment the following code and/or add your own variable to
- * a specific widget-class definition.
- * This allows you to check:
- * - the registered default values
- * - the registered setters
- * - the registered getters
- * - the registered trigger mappings
- * - the registered sub-widgets
- * - the registered sub-widget-workers
- */
-// UX.MyDataGrid = getClassRegistry().get("UX.DataGridCollection");
-// UX.MyButton = getClassRegistry().get("UX.Button");
