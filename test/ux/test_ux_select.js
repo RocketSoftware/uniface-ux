@@ -625,14 +625,9 @@
   });
 
   describe("Reset all properties", function () {
-    let widget;
-    before(function () {
-      widget = tester.createWidget();
-    });
-
     it("reset all properties", function () {
       try {
-        widget.dataCleanup(tester.widgetProperties);
+        tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
         assert(false, `Failed to reset the properties, exception ${e}`);

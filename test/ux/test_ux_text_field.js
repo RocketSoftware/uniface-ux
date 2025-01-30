@@ -241,6 +241,10 @@
       assert.equal(tester.defaultValues.value, "", "Default value of attribute value should be ''.");
     });
 
+    it("check delegated property disabled", function () {
+      assert.equal(tester.widget.subWidgets["changebutton"].delegatedProperties, "html:disabled", "Delegated property html:disabled is not present.");
+    });
+
   });
 
   describe("dataUpdate()", function () {
@@ -626,6 +630,40 @@
       }).then(function () {
         assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth", "Subwidget class name does not match.");
         assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"), "Failed to show the placeHolderText attribute and value does not match.");
+      });
+    });
+
+    it("set button as subwidget in textField with textfield disabled as true", function () {
+      let disabled = true;
+      // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:disabled": disabled,
+          "changebutton": true,
+          "changebutton:value": "Click Me"
+        });
+      }).then(function () {
+        assert(widget.elements.widget.className, "outline u-text-field disabled", "Disabled class is not applied.");
+        assert(widget.elements.widget.hasAttribute("disabled"), "Failed to show the disabled attribute.");
+        assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth disabled", "Subwidget class name does not match.");
+        assert(widget.elements.widget.childNodes[4].hasAttribute("disabled"), "Failed to show the disabled attribute.");
+      });
+    });
+
+    it("set button as subwidget in textField with textfield disabled as false", function () {
+      let disabled = false;
+      // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:disabled": disabled,
+          "changebutton": true,
+          "changebutton:value": "Click Me"
+        });
+      }).then(function () {
+        assert(widget.elements.widget.className, "outline u-text-field", "Disabled class is applied.");
+        assert(!widget.elements.widget.hasAttribute("disabled"), "Failed to hide the disabled attribute.");
+        assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth", "Subwidget class name does not match.");
+        assert(!widget.elements.widget.childNodes[4].hasAttribute("disabled"), "Failed to hide the disabled attribute.");
       });
     });
 
