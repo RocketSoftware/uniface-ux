@@ -168,7 +168,7 @@ export class TestWidget extends Widget {
     });
 
     it("showError()", function () {
-      const errorString = '{ "change-button": "This is a testing error" }';
+      const errorString = "{ \"change-button\": \"This is a testing error\" }";
       const errorReturn = {
         "error": true,
         "error-message": errorString
