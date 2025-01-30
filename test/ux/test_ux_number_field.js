@@ -483,7 +483,7 @@
       }).then(function () {
         assert(widget.elements.widget.querySelector("span.u-suffix").getAttribute("slot"), "end", "Slot is not at the end.");
         assert(widget.elements.widget.querySelector("span.u-suffix").hasAttribute("slot"), "Failed to show the slot attribute.");
-        assert.equal(widget.elements.widget.querySelector("span.u-suffix").innerText, suffixTextData, "suffix-text does not match.");
+        assert.equal(widget.elements.widget.querySelector("span.u-suffix").innerText, suffixTextData, "The suffix-text does not match.");
       });
     });
 

@@ -103,7 +103,7 @@
       const element = tester.processLayout();
       const widget = tester.onConnect();
 
-      it("check that the element is created and connected", function () {
+      it("check element is created and connected", function () {
         assert(element, "Target element is not defined!");
         assert(widget.elements.widget === element, "Widget is not connected!");
       });

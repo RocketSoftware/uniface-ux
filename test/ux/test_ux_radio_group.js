@@ -604,7 +604,7 @@
         expect(selectedOption).equal(null);
         expect(radioElement).to.have.class("u-format-invalid");
         assert(!radioElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
-        assert.equal(radioElement.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class'u-error-icon ms-Icon ms-Icon--AlertSolid'.");
+        assert.equal(radioElement.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'.");
         assert.equal(radioElement.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
       });
     });

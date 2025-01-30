@@ -163,7 +163,7 @@
         if (classes[defaultClass]) {
           expect(element).to.have.class(defaultClass, `Widget element has class ${defaultClass}.`);
         } else {
-          expect(element).not.to.have.class(defaultClass, `widget element has no class ${defaultClass}.`);
+          expect(element).not.to.have.class(defaultClass, `Widget element has no class ${defaultClass}.`);
         }
       });
     }
