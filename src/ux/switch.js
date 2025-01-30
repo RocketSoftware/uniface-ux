@@ -34,6 +34,7 @@ export class Switch extends Widget {
   static getters = {};
   static triggers = {};
   static uiBlocking = "disabled";
+  static useSubWidgetValueAsField = true;
 
   /**
    * Private worker: SwitchSlottedError.

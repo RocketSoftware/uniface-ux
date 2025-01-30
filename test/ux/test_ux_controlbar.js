@@ -138,7 +138,7 @@
     "size:valrep": "1=a10=1025=2550=50100=100"
   };
 
-  const MOCK_DATA_WITH_USEFIELD_VALUE = {
+  const MOCK_DATA_TO_VERIFY_USESUBWIDGETFIELDVALUE_AS_VALUE = {
     "subwidgets-start": "select",
     "subwidgets-center": "btn",
     "subwidgets-end": "numberfield",
@@ -156,23 +156,6 @@
     "numberfield:changebutton:value": "Apply",
     "numberfield:html:placeholder": "Enter number to jump",
     "value": '{"select":"10", "numberfield":"2"}'
-  };
-  const MOCK_DATA_WITHOUT_USEFIELD_VALUE = {
-    "subwidgets-start": "select",
-    "subwidgets-center": "btn",
-    "subwidgets-end": "numberfield",
-    "select:widget-class": "UX.Select",
-    "select:valrep": "1=a10=1025=2550=50100=100",
-    "select:value": "1",
-    "btn:widget-class": "UX.Button",
-    "btn:value": "Button",
-    "numberfield:widget-class": "UX.NumberField",
-    "numberfield:value": "",
-    "numberfield:changebutton": "true",
-    "numberfield:changebutton:icon": "Home",
-    "numberfield:changebutton:value": "Apply",
-    "numberfield:html:placeholder": "Enter number to jump",
-    "value": '{"select":"10","btn":"Hello", "numberfield":"2"}'
   };
 
   /**
@@ -219,7 +202,7 @@
       });
     });
 
-    it(`${widgetName}.processLayout() with just start subwidgets` , function () {
+    it(`${widgetName}.processLayout() with just start subwidgets`, function () {
       verifyWidgetClass(widgetClass);
       const tester = new umockup.WidgetTester();
       return asyncRun(function() {
@@ -547,7 +530,7 @@
         return asyncRun(function() {
           tester.onConnect(element);
           tester.dataInit();
-          tester.dataUpdate({"size:valrep": "1=a10=1025=2550=50100=100"});
+          tester.dataUpdate({ "size:valrep": "1=a10=1025=2550=50100=100" });
         }).then(function() {
           let selectOptionArray = element.querySelectorAll("fluent-option");
           selectOptionArray.forEach(function (node, index) {
@@ -597,51 +580,18 @@
     });
   });
 
-  describe("Mock usefield value to use either field value or property value", function () {
-    it("no usefield is defined for any of the subwidget then it should update with property value", function () {
-      let element, widget;
-      const tester = new umockup.WidgetTester();
-
-      element = tester.processLayout(MOCK_DATA_WITHOUT_USEFIELD_VALUE);
-      let data = Object.assign({}, MOCK_DATA_WITHOUT_USEFIELD_VALUE);
-      return asyncRun(function() {
-        widget = tester.onConnect(element);
-        tester.dataInit();
-        tester.dataUpdate(MOCK_DATA_WITHOUT_USEFIELD_VALUE);
-      }).then(function() {
-        expect(element.querySelector('.u-start-section').children.length).equal(1);
-        expect(element.querySelector('.u-center-section').children.length).equal(1);
-        expect(element.querySelector('.u-end-section').children.length).equal(1);
-        // Verify select value.
-        let selectElementValue = element.querySelector("fluent-select").value;
-        let valrep = umockup.getFormattedValrep(data["select:valrep"]);
-        let selectValue = valrep[selectElementValue].value;
-        expect(selectValue).equal(data["select:value"]);
-
-        // Verify button.
-        let buttonValue = document.querySelector("fluent-button .u-text").innerText;
-        expect(buttonValue).equal(data["btn:value"]);
-
-        // Verify numberfield.
-        let numberfieldValue = document.querySelector("fluent-number-field").value;
-        expect(numberfieldValue).equal(data["numberfield:value"]);
-
-        // Verify getValue
-        expect(widget.getValue()).equal('{}');
-      });
-
-    });
-    it("useField is defined for few of the subwidgets and for others it will be false", function () {
+  describe("Verify useSubWidgetValueAsField to determine either field value or property value", function () {
+    it("verify button value is updated through property value and others as field value", function () {
       let element;
       const tester = new umockup.WidgetTester();
       let widget;
-      element = tester.processLayout(MOCK_DATA_WITH_USEFIELD_VALUE);
-      let data = Object.assign({}, MOCK_DATA_WITH_USEFIELD_VALUE);
+      element = tester.processLayout(MOCK_DATA_TO_VERIFY_USESUBWIDGETFIELDVALUE_AS_VALUE);
+      let data = Object.assign({}, MOCK_DATA_TO_VERIFY_USESUBWIDGETFIELDVALUE_AS_VALUE);
       const fieldValue = JSON.parse(data.value);
       return asyncRun(function() {
         widget = tester.onConnect(element);
         tester.dataInit();
-        tester.dataUpdate(MOCK_DATA_WITH_USEFIELD_VALUE);
+        tester.dataUpdate(MOCK_DATA_TO_VERIFY_USESUBWIDGETFIELDVALUE_AS_VALUE);
       }).then(function() {
         expect(element.querySelector('.u-start-section').children.length).equal(1);
         expect(element.querySelector('.u-center-section').children.length).equal(1);

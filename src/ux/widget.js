@@ -65,6 +65,7 @@ export class Widget extends Base {
   static getters = {};
   static triggers = {};
   static uiBlocking = ""; // "disabled" | "readonly"
+  static useSubWidgetValueAsField = false;
 
   /**
    * These static properties define the default on whether to report unsupported properties or triggers.
@@ -152,6 +153,7 @@ export class Widget extends Base {
     this.widget.id = Math.random();
     this.subWidgetDefinitions = {}; // As registered by the widget class.
     this.subWidgets = {}; // Instantiated subWidget objects.
+    this.useSubWidgetValueAsField = false;
     this.log("constructor");
 
     /**
@@ -160,6 +162,7 @@ export class Widget extends Base {
      * @type {Object}
      */
     let widgetClass = this.constructor;
+    this.useSubWidgetValueAsField = widgetClass.useSubWidgetValueAsField;
     Object.keys(widgetClass.subWidgets).forEach((subWidgetId) => {
       this.subWidgetDefinitions[subWidgetId] = {};
       // Copy reference of sub-widget class.
@@ -169,6 +172,7 @@ export class Widget extends Base {
       // Copy array of triggers.
       this.subWidgetDefinitions[subWidgetId].triggers = JSON.parse(JSON.stringify(widgetClass.subWidgets[subWidgetId].triggers));
       // propPrefix for static widgets is always the subWidgetId
+
       this.subWidgetDefinitions[subWidgetId].propPrefix = subWidgetId;
     });
   }
@@ -347,7 +351,8 @@ export class Widget extends Base {
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
       const subWidgetDelegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
-      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties, subWidgetDefinition);
+      const useSubWidgetValueAsField = this.subWidgets[subWidgetId].useSubWidgetValueAsField;
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties, useSubWidgetValueAsField);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
@@ -369,7 +374,8 @@ export class Widget extends Base {
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
       const subWidgetDelegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
-      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties, subWidgetDefinition);
+      const useSubWidgetValueAsField = this.subWidgets[subWidgetId].useSubWidgetValueAsField;
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties, useSubWidgetValueAsField);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }

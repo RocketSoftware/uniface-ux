@@ -34,6 +34,7 @@ export class Checkbox extends Widget {
   static getters = {};
   static triggers = {};
   static uiBlocking = "readonly";
+  static useSubWidgetValueAsField = true;
 
   /**
    * Extends HtmlValueAttributeBoolean worker and adds tri-state functionality to it.

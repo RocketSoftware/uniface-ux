@@ -34,7 +34,7 @@ export class Button extends Widget {
   static getters = {};
   static triggers = {};
   static uiBlocking = "disabled";
-  static useFeildValue = false;
+  static useSubWidgetValueAsField = false;
 
   /**
    * Private Worker: Slotted Button Text
