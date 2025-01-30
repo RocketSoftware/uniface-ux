@@ -14,6 +14,7 @@ export class Base {
   // Flag to enable or disable the usage of flat properties.
   static useFlatProperties = true;
 
+  constructor() { }
 
   /**
    * This method registers the worker that Uniface calls to update the widget caused by a property change.
