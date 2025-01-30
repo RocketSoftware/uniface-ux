@@ -385,7 +385,6 @@
     });
   });
 
-
   describe("dataCleanup", function () {
     it("reset all properties", function () {
       try {
