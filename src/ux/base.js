@@ -14,7 +14,7 @@ export class Base {
   // Flag to enable or disable the usage of flat properties.
   static useFlatProperties = true;
 
-  constructor() { }
+  constructor() {}
 
   /**
    * This method registers the worker that Uniface calls to update the widget caused by a property change.
@@ -361,7 +361,7 @@ export class Base {
       }
     }
     // Iterate over each delegated property and add matching delegated property to subWidgetData.
-    subWidgetDelegatedProperties?.forEach(property => {
+    subWidgetDelegatedProperties?.forEach((property) => {
       // Check if the data object has the property.
       if (data.hasOwnProperty(property)) {
         subWidgetData = subWidgetData || {};
@@ -393,5 +393,17 @@ export class Base {
       }
     });
     return subWidgetPropertyNames;
+  }
+
+  /**
+   * Removes all classes from the given element that start with "ms-Icon".
+   * @param {HTMLElement} element - The DOM element from which the classes that start with "ms-Icon" will be removed.
+   */
+  deleteIconClasses(element) {
+    Array.from(element.classList).forEach((key) => {
+      if (key.startsWith("ms-Icon")) {
+        element.classList.remove(key);
+      }
+    });
   }
 }
