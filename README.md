@@ -6,7 +6,7 @@
 - Open a command prompt in top folder ux-widgets;
 - Run command: ```npm run serve```,
   This will start http-server;
-- Or Run command: ```npm run serve:dev```,
+- Or run command: ```npm run serve:dev```,
   This will start webpack-dev-server;
 - Open a browser with URL: http://localhost:9000/test/index.html
 
@@ -25,7 +25,7 @@ ux-widgets/
   (node_modules/)           // working folder for npm packages, ignored
   src/                      // source folder
     fluentui/
-    ux/
+    ux/                     // UX widget sources
   test/                     // test folder
     helper/
       umockup.js            // test mockup and helper module
@@ -42,6 +42,7 @@ ux-widgets/
     pageobjects/
     tests/
   README.md                 // this file
+  eslint.config.js          // ESLint configuration
   package-lock.json         // npm lock file
   package.json              // npm configuration
   webpack.common.js         // webpack common configuration
@@ -54,15 +55,13 @@ ux-widgets/
 - Open a command prompt in top folder ux-widgets;
 - Run command: ```npm install```,
   This will install all nessesary npm packages;
+- Run command: ```npm run lint```,
+  This will run JavaScript lint for several sources;
 - Run command: ```npm run build```,
   This will build the bundles for production mode in dist folder;
 - Run command: ```npm run build:dev```,
   This will build the bundles for development mode, so with source map;
+- Run command: ```npm run serve:dev```,
+  This will build the bundles for development mode, start a web server and watch for source changes;
 - Run command: ```npm run watch```,
-  This will build the bundles for development and watch for source changes.
-  
-## Template and Guideline
-
-See wiki page:
-- UX Widget Test Templates/Guidelines - Uniface UX-Integration - Rocket Software Wiki
-  https://wiki.rocketsoftware.com/pages/viewpage.action?pageId=458704944
+  This will build the bundles for development mode and watch for source changes.
