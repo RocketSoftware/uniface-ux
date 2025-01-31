@@ -138,6 +138,10 @@
     "size:valrep": "1=a10=1025=2550=50100=100"
   };
 
+  const MOCK_HIDDEN_POPERRTY = {
+    "size:html:hidden": "true"
+  };
+
   /**
    * Function to determine whether the widget class has been loaded.
    */
@@ -515,6 +519,21 @@
           let selectOptionArray = element.querySelectorAll("fluent-option");
           selectOptionArray.forEach(function (node, index) {
             expect(node.textContent).equal(valRepArray[index].representation);
+          });
+        });
+      });
+
+      it("if hidden property is set to be true, it should be reflected", function () {
+        element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        return asyncRun(function() {
+          tester.onConnect(element);
+          tester.dataInit();
+          tester.dataUpdate({MOCK_HIDDEN_POPERRTY});
+        }).then(function() {
+          let subwidgetArray = element.querySelectorAll(".u-controlbar");
+          subwidgetArray.forEach(function (node) {
+            let isHidden = (node.getAttribute("hidden") !== null);
+            expect(isHidden).to.equal(true);
           });
         });
       });
