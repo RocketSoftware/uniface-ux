@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 (function () {
-  'use strict';
+  "use strict";
 
   /**
      * Default timeout for waiting for DOM rendering (in milliseconds).
@@ -48,7 +48,7 @@
 
   });
 
-  describe(widgetName + ".processLayout()", function () {
+  describe(`${widgetName}.processLayout()`, function () {
     let element;
 
     it("processLayout()", function () {

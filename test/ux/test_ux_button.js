@@ -88,7 +88,7 @@
       tester.construct();
     });
 
-    it("(constructor())", function () {
+    it("constructor()", function () {
       try {
         const widget = tester.construct();
         assert(widget, "Widget is not defined!");

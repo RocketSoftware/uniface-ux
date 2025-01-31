@@ -139,7 +139,7 @@
     });
 
     for (const defaultClass in classes) {
-      it("check class '" + defaultClass + "'", function () {
+      it(`check class '${defaultClass}'`, function () {
         if (classes[defaultClass]) {
           expect(element).to.have.class(defaultClass, `Widget element has class ${defaultClass}.`);
         } else {

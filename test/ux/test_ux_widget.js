@@ -1,7 +1,7 @@
 import { Widget } from "../../src/ux/widget.js";
 import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedSubWidget, Element } from "../../src/ux/workers.js";
 
-// Simple widget that has both subwidget and triggers for easier testing and doens't mess with other widgets.
+// Simple widget that has both subwidgets and triggers for easier testing and doens't mess with other widgets.
 export class TestWidget extends Widget {
 
   static subWidgets = {};
@@ -159,7 +159,7 @@ export class TestWidget extends Widget {
       };
       const mockPropertNames = new Set(["class:class-test-1", "class:class-test-2"]);
 
-      it("clean all class properties of the widget that are received as parameters in the dataCleanup() function.", function () {
+      it("clean all class properties of the widget that are received as parameters in the dataCleanup() function", function () {
         testwidget.dataUpdate(mockData);
         expect(testwidget.elements.widget, "Widget top element is not defined!");
 

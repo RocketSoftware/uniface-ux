@@ -4,7 +4,7 @@
 // !!! This test currently does not use the test framework !!!
 
 (function () {
-  'use strict';
+  "use strict";
 
   /**
    * Default timeout for waiting for DOM rendering (in milliseconds).
