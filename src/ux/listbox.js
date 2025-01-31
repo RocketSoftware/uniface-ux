@@ -89,7 +89,7 @@ export class Listbox extends Widget {
     new IgnoreProperty(this, "html:maxlength")
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label"),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error"),
     new SlottedElementsByValRep(this, "fluent-option", "u-option", "")
   ], [
     new Trigger(this, "onchange", "change", true)
@@ -159,6 +159,10 @@ export class Listbox extends Widget {
           border-radius: calc(var(--control-corner-radius)* 1px);
           padding: calc(var(--design-unit)* 1px) 0;
         }
+
+        slot[name="error"]{
+          cursor: default;
+        }
       `);
     if (element.shadowRoot) {
       element.shadowRoot.adoptedStyleSheets = [...element.shadowRoot.adoptedStyleSheets, this.CSSStyleSheet];
@@ -177,9 +181,14 @@ export class Listbox extends Widget {
     labelElement.setAttribute("part", "label");
 
     // Creating slot element to hold label, since we can't use default slot.
-    let slot = document.createElement("slot");
-    slot.setAttribute("name", "label");
-    labelElement.appendChild(slot);
+    let labelSlot = document.createElement("slot");
+    labelSlot.setAttribute("name", "label");
+    labelElement.appendChild(labelSlot);
+
+    // Creating slot element to hold error-icon.
+    let errorSlot = document.createElement("slot");
+    errorSlot.setAttribute("name", "error");
+    labelElement.appendChild(errorSlot);
 
     element?.shadowRoot?.prepend(labelElement);
   }
@@ -196,6 +205,13 @@ export class Listbox extends Widget {
       this.createElement();
       this.styleListBox();
     }
+
+    // Add event listener to prevent the widget from getting focus when clicking on error-icon.
+    const errorIcon = widgetElement.querySelector('.u-error-icon');
+    errorIcon.addEventListener('mousedown', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    });
 
     // Add event listeners for user interactions.
     widgetElement.addEventListener("click", () => {
