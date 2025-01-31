@@ -264,5 +264,20 @@ import { Widget } from "../../src/ux/widget.js";
         });
       });
     });
+
+    describe("deleteIconClasses", function () {
+      it("delete the classes starting with 'ms-Icon' from the element", function () {
+        let element = document.createElement("div");
+        let mockClassList = ["ms-Icon", "Ms-icon", "Ms-icon--Home", "class-1", "ms-Icon--Home", "ms-icon", "ms-icon--Home"];
+        let mockIconClasses = ["ms-Icon", "ms-Icon--Home"];
+        let mockNonIconClasses = mockClassList.filter(className => !mockIconClasses.includes(className));
+        element.classList.add(...mockClassList);
+        expect([...element.classList].includes(...mockIconClasses)).to.equal(true);
+
+        base.deleteIconClasses(element);
+        expect([...element.classList].includes(...mockIconClasses)).to.equal(false);
+        expect([...element.classList].includes(...mockNonIconClasses)).to.equal(true);
+      });
+    });
   });
 })();

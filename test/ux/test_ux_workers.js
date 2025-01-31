@@ -85,8 +85,10 @@ import {
     it("should refresh correctly and modify the element classes", function () {
       const widgetInstance = {
         "data": {
-          "class1": true,
-          "class2": false
+          "class:class1": true,
+          "class:class2": false,
+          "class1:class3": true,
+          "class2:class4":true
         },
         "getTraceDescription": sinon.stub().returns("description")
       };
@@ -96,7 +98,7 @@ import {
       instance.refresh(widgetInstance);
 
       expect(element.classList.contains("class1")).to.be.true;
-      expect(element.classList.contains("class2")).to.be.false;
+      expect([...element.classList].includes(...["class2, class3", "class4"])).to.be.false;
     });
   });
 
@@ -226,13 +228,14 @@ import {
 
     it("should refresh correctly", function () {
       slottedElement.refresh(widgetInstance);
+      let mockIconClasses = ["ms-Icon", "ms-Icon--testicon.png"];
       expect(widgetInstance.elements.widget.hidden).to.equal(false);
-      expect(widgetInstance.elements.widget.classList[0]).to.equal("ms-Icon");
-      expect(widgetInstance.elements.widget.classList[1]).to.equal("ms-Icon--testicon.png");
+      expect([...widgetInstance.elements.widget.classList].includes(...mockIconClasses)).to.equal(true);
 
       widgetInstance.data["icon"] = "";
       slottedElement.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.innerText).to.equal("defaultText");
+      expect([...widgetInstance.elements.widget.classList].includes(...mockIconClasses)).to.equal(false);
     });
   });
 
@@ -928,7 +931,9 @@ import {
     it("should refresh correctly", function () {
       const widgetInstance = {
         "data": {
-          "style:color": "red"
+          "style:color": "red",
+          "style1:border": "1px solid black",
+          "style2:outline": "1px solid black"
         },
         "elements": {
           "widget": document.createElement("div")
@@ -938,7 +943,11 @@ import {
         }
       };
       element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget.outerHTML).to.equal("<div style=\"color: red;\"></div>");
+      let inlineStyles = widgetInstance.elements.widget.style;
+
+      expect(inlineStyles["color"]).to.equal("red");
+      expect(inlineStyles["border"]).to.equal("");
+      expect(inlineStyles["outline"]).to.equal("");
     });
   });
 

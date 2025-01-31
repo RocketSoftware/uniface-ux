@@ -385,7 +385,7 @@
       expect(element.querySelector("span.u-icon").getAttribute("slot")).equal("");
     });
 
-    it("add icon and verify classes are added to the icon slot", function () {
+    it("test add icon class functionality in slotted icon element", function () {
       const widgetInstance = {
         ...widgetClass,
         "data": {
@@ -401,9 +401,10 @@
 
       instance.refresh(widgetInstance);
       const element = widgetInstance.elements.widget;
+      const mockIconClasses = ["ms-Icon", "ms-Icon--Home"];
       expect(element.querySelector("span.u-icon").hasAttribute("hidden")).to.be.false;
       expect(element.querySelector("span.u-icon").getAttribute("slot")).equal("");
-      expect(element.querySelector("span.u-icon").classList.contains("ms-Icon")).to.be.true;
+      expect([...element.querySelector("span.u-icon").classList].includes(...mockIconClasses)).to.equal(true);
     });
 
     it("test delete icon class functionality in slotted icon element", function () {
