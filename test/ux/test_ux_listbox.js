@@ -358,7 +358,7 @@
         expect(widget.elements.widget).to.have.class("u-invalid");
         assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
         expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")).equal("Validation Error");
-        expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot")).equal("label");
+        expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
         expect(widget.elements.widget.childNodes[1].className).equal("u-error-icon ms-Icon ms-Icon--AlertSolid");
       });
     });
