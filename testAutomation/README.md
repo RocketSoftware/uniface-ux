@@ -10,8 +10,8 @@ This repository contains a suite of automated tests for automation of uniface ux
 
 - [Features](##Features)
 - [Prerequisites](##Prerequisites)
-- [Installation] (##Installation)
-- [Running Tests](##Running Tests)
+- [Installation](##Installation)
+- [Running Tests](##Running-Tests)
 - [Reporting](##Reporting)
 
 ## Features
@@ -27,112 +27,108 @@ This repository contains a suite of automated tests for automation of uniface ux
 
 Before you begin, ensure you have met the following requirements:
 
-- Node.js (version 12 or later) : If you don't have Node.js installed, download and install it from [Node.js official website](https://nodejs.org/)
-- npm (version 6 or later) or yarn : Node.js installation includes npm, the Node package manager.
+- Node.js (version 18 or later): If you don't have Node.js installed, download and install it from [Node.js official website](https://nodejs.org/)
 - Playwright: Install Playwright using npm.
 
 ## Installation
 
 To set up the project locally, follow these steps:
 
-1. Clone the repository:
-   
-    git clone git@gitlab.com:Uniface/sources/ux-widgets.git
-   
-2. Navigate to the project directory:
-    
-    cd testAutomation
-    
-3. Install the dependencies:
-    
-    npm install
-    
-4. Install Playwright browsers:
+1. Navigate to this directory:
 
-    npx playwright install
-    
-5. Start a HTTP server
+    ```cd testAutomation```
 
-5.1. Use the default configured http-server
+1. Install the dependencies:
 
-You need do nothing, and later in step 6, the default server will be started automatically before test.
-This default server use the baseURL http://localhost:9000/test/ .
+    ```npm install```
 
-5.2. Optionally, you also can use your Tomcat server
+1. Install Playwright browsers:
 
-Start your Tomcat server with ux-widgets webapp deployed. By default, the base URL of index.page is configured as
-      
-     http://localhost:8080/ux-widgets/test/
-     
-  This will open test index page http://localhost:8080/ux-widgets/test/index.html
-  
-  This can be customized locally by environment variable:
-  
-    set UX_WIDGETS_BASE_URL=the_baseURL_of_index.html
-  
-  For example,
-  
-    set UX_WIDGETS_BASE_URL=http://localhost:8080/my_local_path/
-  
-  This will open test index page http://localhost:8080/my_local_path/index.html
+    ```npx playwright install```
 
-6. Running Tests
+1. Start a HTTP server
 
-	To run the Playwright tests, use the following command:
+    1. Use the default configured http-server
 
-	npx playwright test
+        You need do nothing, and later in step 5, the default server will be started automatically before test.
+
+        This default server use the baseURL http://localhost:9000/test/ .
+
+    1. Optionally, you also can use your Tomcat server
+
+        This can be customized locally by environment variable:
+ 
+        ```set UX_WIDGETS_BASE_URL=<the_baseURL_of_index.html>```
+
+        For example: ```set UX_WIDGETS_BASE_URL=http://localhost:8080/ux-widgets/test/```
+
+        This will open test index page http://localhost:8080/ux-widgets/test/index.html
+
+1. Running Tests
+
+    To run the Playwright tests, use the following command:
+
+    ```npx playwright test```
 
 
-## Running Tests
+## Running-Tests
 
 * Running All Tests
+
   To run all tests, execute:
-	npx playwright test
+  ```npx playwright test```
 
 * Running a Specific Test
+
   To run a specific test file, execute:
-    npx playwright test path/to/UXWidgetUnitTest.spec.js
+  ```npx playwright test path/to/UXWidgetUnitTest.spec.js```
 
 * Running Tests in Headless Mode
+
   By default, Playwright runs tests in headless mode. To run tests in headed mode, use the --headed option:
-	npx playwright test --headed
+  ```npx playwright test --headed```
 
 * Run tests with a specific tag (assuming you use test annotations):
-	npx playwright test --grep @tagname
+  ```npx playwright test --grep @tagname```
 
 
 ## Reporting
 
-* Generate a HTML report:
-	
-   1. Run the tests normally using
-		npx playwright test
-   2. View report using:
-		npx playwright show-report
+### Generate a HTML report:
 
-* Generate a Allure report:
-  
-  To generate an Allure report in Playwright, you'll need to integrate Allure with your Playwright tests. Here are the steps to do this:
+1. Run the tests normally using ```npx playwright test```
+1. View report using ```npx playwright show-report```
 
-   1. Install Allure and related packages:
-		You'll need to install allure-playwright, allure-commandline, and @playwright/test if you haven't already.
-		
-		npm install @playwright/test allure-playwright allure-commandline --save-dev
-	
-   2. Configure Playwright to use Allure:
-		Add Allure as a reporter in your Playwright configuration file (playwright.config.js)
-	
-   3. Run your tests:
-	    Run your tests as usual. Allure results will be generated in the allure-results folder.
-		
-		npx playwright test
-		
-   4. Generate the Allure report:
-		Use the Allure command line tool to generate the report.
-		
-		npx allure generate allure-results --clean -o allure-report
-   
-   5. Open the Allure report:
-		Open the generated report in your browser.
+### Generate a Allure report:
 
-		npx allure open allure-report
+To generate an Allure report in Playwright, you'll need to integrate Allure with your Playwright tests.
+
+Here are the steps to do this:
+
+1. Install Allure and related packages:
+
+    You'll need to install allure-playwright, allure-commandline, and @playwright/test if you haven't already.
+
+    ```npm install @playwright/test allure-playwright allure-commandline --save-dev```
+
+1. Configure Playwright to use Allure:
+
+    Add Allure as a reporter in your Playwright configuration file (playwright.config.js)
+
+1. Run your tests:
+
+    Run your tests as usual. Allure results will be generated in the allure-results folder.
+
+    ```npx playwright test```
+
+1. Generate the Allure report:
+
+    Use the Allure command line tool to generate the report.
+
+    ```npx allure generate allure-results --clean -o allure-report```
+
+1. Open the Allure report:
+
+    Open the generated report in your browser.
+
+    ```npx allure open allure-report```
