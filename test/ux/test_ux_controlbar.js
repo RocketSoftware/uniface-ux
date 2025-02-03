@@ -32,6 +32,7 @@
 
 
   const MOCK_CONTROLBAR_DEFAULT_PROPERTIES = {
+    "html:hidden":false,
     "class:u-controlbar": true,
     "orientation": "horizontal",
     "widget-resize": false,
@@ -139,7 +140,7 @@
   };
 
   const MOCK_HIDDEN_POPERRTY = {
-    "size:html:hidden": "true"
+    "html:hidden": "true"
   };
 
   /**
@@ -524,17 +525,10 @@
       });
 
       it("if hidden property is set to be true, it should be reflected", function () {
-        element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
         return asyncRun(function() {
-          tester.onConnect(element);
-          tester.dataInit();
-          tester.dataUpdate({MOCK_HIDDEN_POPERRTY});
+          tester.dataUpdate(MOCK_HIDDEN_POPERRTY);
         }).then(function() {
-          let subwidgetArray = element.querySelectorAll(".u-controlbar");
-          subwidgetArray.forEach(function (node) {
-            let isHidden = (node.getAttribute("hidden") !== null);
-            expect(isHidden).to.equal(true);
-          });
+          expect(element.hasAttribute("hidden")).to.equal(true);
         });
       });
     });
