@@ -1,7 +1,7 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import * as Worker from "./workers.js";
+import { getWidgetClass, registerWidgetClass } from "./dsp_connector.js";
 // The import of Fluent UI web-components is done in loader.js
 
 /**
@@ -97,7 +97,6 @@ export class DataGridColumnHeader extends Widget {
     new Worker.SlottedElement(this, "span", "control-bar", ".control-bar", "", "uniface:label-text", "")
   ]);
 }
-UNIFACE.ClassRegistry.add("UX.DataGridColumnHeader", DataGridColumnHeader);
 
 /**
  * DataGrid Occurrence class
@@ -196,7 +195,7 @@ export class DataGridField extends Widget {
     const objectClassNamePropId = "uniface:org-widget-class";
     const objectWidgetName = this.getNode(this.data.properties, objectClassNamePropId);
     if (objectWidgetName) {
-      const objectWidgetClass = UNIFACE.ClassRegistry.get(objectWidgetName);
+      const objectWidgetClass = getWidgetClass(objectWidgetName);
       let formattedValueChange = false;
       setterPropIds = [...setterPropIds, ...objectWidgetClass.getValueFormattedSetters()];
       setterPropIds?.forEach((propId) => {
@@ -214,4 +213,7 @@ export class DataGridField extends Widget {
     }
   }
 }
-UNIFACE.ClassRegistry.add("UX.DataGridField", DataGridField);
+
+// Although used internal, this registration is still needed
+registerWidgetClass("UX.DataGridColumnHeader", DataGridColumnHeader);
+registerWidgetClass("UX.DataGridField", DataGridField);

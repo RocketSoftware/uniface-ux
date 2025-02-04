@@ -1,5 +1,5 @@
 // @ts-check
-/* global UNIFACE */
+import { registerWidgetClass } from "./dsp_connector.js";
 import { Widget } from "./widget.js";
 import {
   Trigger,
@@ -19,7 +19,7 @@ import {
 
 // This widget also depends on Button, still registration is needed
 import { Button } from "./button.js";
-UNIFACE.ClassRegistry.add("UX.Button", Button);
+registerWidgetClass("UX.Button", Button);
 
 /**
  * NumberField Widget.

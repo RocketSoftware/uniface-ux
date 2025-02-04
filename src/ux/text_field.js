@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   Element,
@@ -19,7 +18,8 @@ import {
 
 // This widget also depends on Button, still registration is needed
 import { Button } from "./button.js";
-UNIFACE.ClassRegistry.add("UX.Button", Button);
+import { registerWidgetClass } from "./dsp_connector.js";
+registerWidgetClass("UX.Button", Button);
 
 /**
  * TextField Widget.

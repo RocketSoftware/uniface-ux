@@ -1,17 +1,16 @@
-/* global UNIFACE */
 import { Button } from "../../src/ux/button.js";
 import { Widget } from "../../src/ux/widget.js";
 import { StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget,
   SubWidgetsByProperty , BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean ,
   HtmlValueAttributeBoolean , HtmlAttributeMinMaxLength , StyleProperty , Worker, IgnoreProperty, SlottedElementsByValRep
 } from "../../src/ux/workers.js";
-
+import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
 
 (function () {
   "use strict";
 
   // This test also depends on Button, still registration is needed
-  UNIFACE.ClassRegistry.add("UX.Button", Button);
+  registerWidgetClass("UX.Button", Button);
 
   const expect = chai.expect;
 
