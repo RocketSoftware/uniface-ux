@@ -31,7 +31,6 @@ export class PlainText extends Widget {
   static getters = {};
   static triggers = {};
   static uiBlocking = "";
-  static useSubWidgetValueAsField = false;
 
   /**
    * Private Worker: SlottedPlainTextFormat

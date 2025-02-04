@@ -345,10 +345,10 @@ export class Base {
    * @param {UData} data - The source object containing properties to extract.
    * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
    * @param {Array} subWidgetDelegatedProperties - An array containing list of delegated properties.
-   * @param {Boolean} useSubWidgetValueAsField - sub-widget property to be used as field value or property value.
+   * @param {Object} subWidgetDefinition - subWidget definitions registered by the widget class.
    * @returns {UData|undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
    */
-  extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties, useSubWidgetValueAsField) {
+  extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties, subWidgetDefinition) {
     let subWidgetData;
 
     for (let property in data) {
@@ -358,7 +358,7 @@ export class Base {
           subWidgetData = subWidgetData || {};
           if (key === "valrep") {
             subWidgetData[key] = this.getFormattedValrep(data[property]);
-          } else if (key === "value" && useSubWidgetValueAsField) {
+          } else if (key === "value" && subWidgetDefinition["usefield"]) {
             try {
               const valueObject = JSON.parse(data.value) ?? {};
               subWidgetData[key] = valueObject[subWidgetPropPrefix] ?? '';
@@ -370,9 +370,9 @@ export class Base {
           }
           // Remove the property from the original data to avoid duplication.
           delete data[property];
-          // If useSubWidgetValueAsField value is true and there is update in field widget then subwidget value should be updated with field value.
+          // If usefield value is true and there is update in field widget then subwidget value should be updated with field value.
         }
-      } else if (property === "value" && useSubWidgetValueAsField && data.value && data.value !== "") {
+      } else if (property === "value" && subWidgetDefinition["usefield"] && data.value && data.value !== "") {
         subWidgetData = subWidgetData || {};
         try {
           const valueObject = JSON.parse(data.value);

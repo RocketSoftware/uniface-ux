@@ -36,7 +36,6 @@ export class Select extends Widget {
   static getters = {};
   static triggers = {};
   static uiBlocking = "readonly";
-  static useSubWidgetValueAsField = true;
 
   /**
    * Private Worker: HtmlAttributeBoolean ReadOnly Attribute.

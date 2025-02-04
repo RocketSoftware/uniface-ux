@@ -36,7 +36,6 @@ export class RadioGroup extends Widget {
   static getters = {};
   static triggers = {};
   static uiBlocking = "readonly";
-  static useSubWidgetValueAsField = true;
 
   /**
    * Private Worker: RadioGroupSelectedValue

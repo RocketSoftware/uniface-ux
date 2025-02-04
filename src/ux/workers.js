@@ -502,6 +502,8 @@ export class SubWidgetsByProperty extends Element {
       subWidgetIds.split("")?.forEach((subWidgetId) => {
         const classNamePropId = `${subWidgetId}:widget-class`;
         const triggersPropId = `${subWidgetId}:widget-triggers`;
+        const useFieldPropId = `${subWidgetId}_usefield`;
+        const usefield = objectDefinition.getProperty(useFieldPropId);
         const className = objectDefinition.getProperty(classNamePropId);
         const subWidgetClass = UNIFACE.ClassRegistry.get(className);
         const subWidgetTriggers = objectDefinition.getProperty(triggersPropId);
@@ -510,6 +512,7 @@ export class SubWidgetsByProperty extends Element {
         subWidgetDefinition.styleClass = `u-sw-${subWidgetId}`;
         subWidgetDefinition.triggers = subWidgetTriggers?.split("") || [];
         subWidgetDefinition.propPrefix = subWidgetId;
+        subWidgetDefinition.usefield = this.toBoolean(usefield);
         subWidgetDefinitions[subWidgetId] = subWidgetDefinition;
       });
     }
@@ -1512,7 +1515,7 @@ export class SlottedElementsByValRep extends Element {
 }
 
 /**
- * A specialized value worker for subwidgets that identifies and returns values where the useSubWidgetValueAsField property is set to true.
+ * A specialized value worker for subwidgets that identifies and returns values where the useField property is set to true.
  * @export
  * @class HtmlSubWidgetValueWorker
  * @extends {HtmlAttribute}
@@ -1525,7 +1528,7 @@ export class HtmlSubWidgetValueWorker extends HtmlAttribute {
     });
     let value = {};
     Object.keys(widgetInstance.subWidgets).forEach((subWidgetId) => {
-      if (widgetInstance.subWidgetDefinitions[subWidgetId] && widgetInstance.subWidgets[subWidgetId].useSubWidgetValueAsField) {
+      if (widgetInstance.subWidgetDefinitions[subWidgetId] && widgetInstance.subWidgetDefinitions[subWidgetId].usefield) {
         value[subWidgetId] = widgetInstance.subWidgets[subWidgetId].getValue();
       }
     });
