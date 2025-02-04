@@ -47,7 +47,7 @@
   describe(`${widgetName}.processLayout()`, function () {
     let element;
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
     });

@@ -26,8 +26,8 @@
   ];
 
   /**
-     * Function to determine whether the widget class has been loaded.
-     */
+    * Function to determine whether the widget class has been loaded.
+    */
   function verifyWidgetClass(widgetClass) {
     assert(widgetClass, `Widget class '${widgetName}' is not defined!
               Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
@@ -132,7 +132,6 @@
     });
   });
 
-  // dataInit()
   describe("dataInit()", function () {
     const classes = tester.getDefaultClasses();
     var element;
@@ -396,21 +395,6 @@
 
     });
 
-    // html:title property
-    it("set html:title property true for plaintext", function () {
-      let title = "titleText";
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "html:title": title
-        });
-      }).then(function () {
-        let titleProperty = window.getComputedStyle(widget.elements.widget, null);
-        assert(widget.elements.widget.hasAttribute("title"), titleProperty, "Failed to show the title attribute.");
-        assert.equal(widget.elements.widget.getAttribute("title"), title); // Check for visibility.
-      });
-    });
-
-    // html:title property
     it("set html:title property for changed title for plaintext", function () {
       let title = "changedTitleText";
       return asyncRun(function () {

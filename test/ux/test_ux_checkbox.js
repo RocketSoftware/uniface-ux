@@ -10,8 +10,8 @@
   const asyncRun = umockup.asyncRun;
 
   /**
-     * Function to determine whether the widget class has been loaded.
-     */
+   * Function to determine whether the widget class has been loaded.
+   */
   function verifyWidgetClass(widgetClass) {
     assert(widgetClass, `Widget class '${widgetName}' is not defined!
               Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
@@ -132,7 +132,7 @@
 
     // Clean up after each test.
     afterEach(function() {
-      // Restore the spy to its original state
+      // Restore the spy to its original state.
       sinon.restore();
     });
 
@@ -148,7 +148,6 @@
   });
 
 
-  // dataInit()
   describe("dataInit()", function() {
     const classes = tester.getDefaultClasses();
     let element;
