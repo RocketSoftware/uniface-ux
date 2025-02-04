@@ -216,9 +216,7 @@ export class Widget extends Base {
 
     // Iterate over all sub-widget ids to update delegated properties from the widgetClass.
     Object.keys(widgetClass.subWidgets).forEach((subWidgetId) => {
-      if (!this.subWidgets[subWidgetId].delegatedProperties) {
-        this.subWidgets[subWidgetId].delegatedProperties = widgetClass.subWidgets[subWidgetId].delegatedProperties;
-      }
+      this.subWidgets[subWidgetId].delegatedProperties = widgetClass.subWidgets[subWidgetId].delegatedProperties;
     });
 
     // Add the value-updater(s) of widget itself.
