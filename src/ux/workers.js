@@ -505,7 +505,7 @@ export class SubWidgetsByProperty extends Element {
       subWidgetIds.split("")?.forEach((subWidgetId) => {
         const classNamePropId = `${subWidgetId}:widget-class`;
         const triggersPropId = `${subWidgetId}:widget-triggers`;
-        const delegatedPropertiesPropId = `${subWidgetId}_delegated_properties`;
+        const delegatedPropertiesPropId = `${subWidgetId}_delegated-properties`;
         const className = objectDefinition.getProperty(classNamePropId);
         const subWidgetClass = UNIFACE.ClassRegistry.get(className);
         const subWidgetTriggers = objectDefinition.getProperty(triggersPropId);
