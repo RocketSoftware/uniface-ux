@@ -17,17 +17,17 @@
   };
   const MOCK_START_CONTROLS_ONLY_DEFINITION = {
     "subwidgets-start": "first",
-    "first:widget-class": "UX.Button"
+    "first_widget-class": "UX.Button"
   };
 
   const MOCK_CENTER_CONTROLS_ONLY_DEFINITION = {
     "subwidgets-center": "second",
-    "second:widget-class": "UX.Select"
+    "second_widget-class": "UX.Select"
   };
 
   const MOCK_END_CONTROLS_ONLY_DEFINITION = {
     "subwidgets-end": "first",
-    "first:widget-class": "UX.TextField"
+    "first_widget-class": "UX.TextField"
   };
 
 
@@ -47,16 +47,16 @@
   const MOCK_UNDEFINED_START_CONTROLS_DEFINITION = {
     "subwidgets-center": "goto",
     "subwidgets-end": "size",
-    "goto:widget-class": "UX.NumberField",
-    "size:widget-class": "UX.Select"
+    "goto_widget-class": "UX.NumberField",
+    "size_widget-class": "UX.Select"
   };
 
   const MOCK_EMPTY_CENTER_CONTROLS_DEFINITION = {
     "subwidgets-start": "info",
     "subwidgets-center": "",
     "subwidgets-end": "size",
-    "info:widget-class": "UX.RadioGroup",
-    "size:widget-class": "UX.Select"
+    "info_widget-class": "UX.RadioGroup",
+    "size_widget-class": "UX.Select"
   };
   const valRepArray = [
     {
@@ -85,19 +85,19 @@
     "subwidgets-start": "checkbox1info",
     "subwidgets-center": "goto",
     "subwidgets-end": "sizefirst",
-    "info:widget-class": "UX.PlainText",
-    "goto:widget-class": "UX.NumberField",
-    "size:widget-class": "UX.Select",
-    "first:widget-class": "UX.Button",
-    "checkbox1:widget-class": "UX.Checkbox"
+    "info_widget-class": "UX.PlainText",
+    "goto_widget-class": "UX.NumberField",
+    "size_widget-class": "UX.Select",
+    "first_widget-class": "UX.Button",
+    "checkbox1_widget-class": "UX.Checkbox"
   };
 
 
   const MOCK_UNDEFINED_CENTER_CONTROLS_DEFINITION = {
     "subwidgets-start": "info",
     "subwidgets-end": "size",
-    "info:widget-class": "UX.PlainText",
-    "size:widget-class": "UX.Select"
+    "info_widget-class": "UX.PlainText",
+    "size_widget-class": "UX.Select"
   };
 
 
@@ -105,21 +105,21 @@
     "subwidgets-start": "info",
     "subwidgets-center": "goto",
     "subwidgets-end": "",
-    "info:widget-class": "UX.PlainText",
-    "goto:widget-class": "UX.NumberField"
+    "info_widget-class": "UX.PlainText",
+    "goto_widget-class": "UX.NumberField"
   };
 
   const MOCK_UNDEFINED_END_CONTROLS_DEFINITION = {
     "subwidgets-start": "info",
     "subwidgets-center": "goto",
-    "info:widget-class": "UX.PlainText",
-    "goto:widget-class": "UX.NumberField"
+    "info_widget-class": "UX.PlainText",
+    "goto_widget-class": "UX.NumberField"
   };
 
   const MOCK_UNDEFINED_START_CENTER_END_CONTROLS_DEFINITION = {
-    "info:widget-class": "UX.PlainText",
-    "goto:widget-class": "UX.NumberField",
-    "size:widget-class": "UX.Select"
+    "info_widget-class": "UX.PlainText",
+    "goto_widget-class": "UX.NumberField",
+    "size_widget-class": "UX.Select"
   };
 
   const MOCK_CONTROLBAR_DATA = {
@@ -142,13 +142,13 @@
     "subwidgets-start": "select",
     "subwidgets-center": "btn",
     "subwidgets-end": "numberfield",
-    "select:widget-class": "UX.Select",
+    "select_widget-class": "UX.Select",
     "select:valrep": "1=a10=1025=2550=50100=100",
     "select:value": "1",
     "select_usefield": "true",
-    "btn:widget-class": "UX.Button",
+    "btn_widget-class": "UX.Button",
     "btn:value": "Button",
-    "numberfield:widget-class": "UX.NumberField",
+    "numberfield_widget-class": "UX.NumberField",
     "numberfield:value": "",
     "numberfield_usefield": "true",
     "numberfield:changebutton": "true",
@@ -161,12 +161,12 @@
     "subwidgets-start": "select",
     "subwidgets-center": "btn",
     "subwidgets-end": "numberfield",
-    "select:widget-class": "UX.Select",
+    "select_widget-class": "UX.Select",
     "select:valrep": "1=a10=1025=2550=50100=100",
     "select:value": "1",
-    "btn:widget-class": "UX.Button",
+    "btn_widget-class": "UX.Button",
     "btn:value": "Button",
-    "numberfield:widget-class": "UX.NumberField",
+    "numberfield_widget-class": "UX.NumberField",
     "numberfield:value": "",
     "numberfield:changebutton": "true",
     "numberfield:changebutton:icon": "Home",
