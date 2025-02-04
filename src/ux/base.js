@@ -358,7 +358,7 @@ export class Base {
           subWidgetData = subWidgetData || {};
           if (key === "valrep") {
             subWidgetData[key] = this.getFormattedValrep(data[property]);
-          } else if (key === "value" && subWidgetDefinition["usefield"]) {
+          } else if (key === "value" && subWidgetDefinition && subWidgetDefinition["usefield"]) {
             try {
               const valueObject = JSON.parse(data.value) ?? {};
               subWidgetData[key] = valueObject[subWidgetPropPrefix] ?? '';
