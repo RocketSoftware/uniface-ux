@@ -505,14 +505,17 @@ export class SubWidgetsByProperty extends Element {
       subWidgetIds.split("")?.forEach((subWidgetId) => {
         const classNamePropId = `${subWidgetId}:widget-class`;
         const triggersPropId = `${subWidgetId}:widget-triggers`;
+        const delegatedPropertiesPropId = `${subWidgetId}_delegated_properties`;
         const className = objectDefinition.getProperty(classNamePropId);
         const subWidgetClass = UNIFACE.ClassRegistry.get(className);
         const subWidgetTriggers = objectDefinition.getProperty(triggersPropId);
+        const delegatedProperties = objectDefinition.getProperty(delegatedPropertiesPropId);
         let subWidgetDefinition = {};
         subWidgetDefinition.class = subWidgetClass;
         subWidgetDefinition.styleClass = `u-sw-${subWidgetId}`;
         subWidgetDefinition.triggers = subWidgetTriggers?.split("") || [];
         subWidgetDefinition.propPrefix = subWidgetId;
+        subWidgetDefinition.delegatedProperties = delegatedProperties ? delegatedProperties.split("") :[];
         subWidgetDefinitions[subWidgetId] = subWidgetDefinition;
       });
     }
