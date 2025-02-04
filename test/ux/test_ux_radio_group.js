@@ -637,7 +637,6 @@
       try {
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
-        console.error(e);
         assert(false, `Failed to reset all properties, exception ${e}.`);
       }
     });
