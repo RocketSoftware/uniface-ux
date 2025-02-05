@@ -14,12 +14,6 @@ test.describe('Widget Tests', () => {
         await basePage.open();
     });
 
-    // test('ControlBar Widget Tests', async ({ page }) => {
-    //     const newPage = await indexPage.openNewPage(indexPage.controlBarWidgetLink);
-    //     const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
-    //     await homePage.checkFailuresEncountered(newPage, test);
-    // });
-
     test('Button Widget Tests', async ({ page }) => {
         const newPage = await indexPage.openNewPage(indexPage.buttonWidgetLink);
         const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
