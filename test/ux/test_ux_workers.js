@@ -421,26 +421,6 @@ import {
       expect(element.elementQuerySelector).to.equal(elementQuerySelector);
       expect(element.propId).to.equal(propId);
     });
-
-    // it("Check Generate Layout", function () {
-    //     definitions = {
-    //         "widget_class": "Button",
-    //         "properties": {
-    //             "controls-center": "four\u001bfive\u001bsix",
-    //             "controls-end": "seven",
-    //             "controls-start": "one\u001btwo\u001bthree",
-    //             "five:widget-class": "UX.Button",
-    //             "four:widget-class": "UX.Button",
-    //             "html:readonly": "true",
-    //             "one:widget-class": "UX.Button",
-    //             "seven:widget-class": "UX.Button",
-    //             "six:widget-class": "UX.Button",
-    //             "three:widget-class": "UX.Button",
-    //             "two:widget-class": "UX.Button"
-    //         } ,
-    //     }
-    //     let layoutElement = element.getLayout(definitions)
-    //  });
   });
 
   // ===================================================================================================================
@@ -498,7 +478,7 @@ import {
       expect(element[attrName]).to.equal("new Value");
     });
 
-    // Refresh doesn't do anything.
+    // refresh() doesn't do anything.
     it("check refresh()", function () {
       worker.refresh({});
     });
