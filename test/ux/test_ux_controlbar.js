@@ -861,7 +861,6 @@
         expect(element.querySelector("fluent-select.u-sw-select").classList.contains("u-overflown-item"));
         expect(element.querySelector("fluent-text-field.u-sw-textfld1").classList.contains("u-overflown-item"));
 
-
         expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.false;
         expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute("hidden")).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
