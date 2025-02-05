@@ -4,10 +4,10 @@
 // !!! This test currently does not use the test framework !!!
 
 (function () {
-  'use strict';
+  "use strict";
 
   /**
-   * Default timeout for waiting for DOM rendering (in milliseconds)
+   * Default timeout for waiting for DOM rendering (in milliseconds).
    */
   const defaultAsyncTimeout = 100; // ms
 
@@ -253,7 +253,7 @@
       expect(widgetElement).not.equal(placeholderEl);
     });
 
-    describe("when the definition.properties is {}", function () {
+    describe("When the definition.properties is {}", function () {
       it("should not contain start, center and end controls", function () {
         widgetElement = controlbar.processLayout(placeholderEl, MOCK_EMPTY_DEFINITION);
 
@@ -263,8 +263,8 @@
       });
     });
 
-    describe("when the definition.properties is not {}", function () {
-      describe("if controls-start is undefined or empty", function () {
+    describe("When the definition.properties is not {}", function () {
+      describe("If controls-start is undefined or empty", function () {
         it("should not contain start controls if controls-start is empty", function () {
           widgetElement = controlbar.processLayout(placeholderEl, MOCK_EMPTY_START_CONTROLS_DEFINITION);
 
@@ -278,7 +278,7 @@
         });
       });
 
-      describe("if controls-center is undefined or empty", function () {
+      describe("If controls-center is undefined or empty", function () {
         it("should not contain center controls if controls-center is empty", function () {
           widgetElement = controlbar.processLayout(placeholderEl, MOCK_EMPTY_CENTER_CONTROLS_DEFINITION);
 
@@ -292,7 +292,7 @@
         });
       });
 
-      describe("if controls-end is undefined or empty", function () {
+      describe("If controls-end is undefined or empty", function () {
         it("should not contain end controls if controls-end is empty", function () {
           widgetElement = controlbar.processLayout(placeholderEl, MOCK_EMPTY_END_CONTROLS_DEFINITION);
 
@@ -306,7 +306,7 @@
         });
       });
 
-      describe("if controls-start, controls-center and controls-end are defined", function () {
+      describe("If controls-start, controls-center and controls-end are defined", function () {
         it("should contain start, center and end controls", function () {
           widgetElement = controlbar.processLayout(placeholderEl, MOCK_START_CENTER_END_CONTROLS_DEFINITION);
 
@@ -317,7 +317,7 @@
       });
     });
 
-    describe("when the definition.properties does not contain control id's defined", function () {
+    describe("When the definition.properties does not contain control id's defined", function () {
       it("should not contain start, center and end controls", function () {
         widgetElement = controlbar.processLayout(placeholderEl, MOCK_EMPTY_START_CENTER_END_CONTROLS_DEFINITION);
 
@@ -327,7 +327,7 @@
       });
     });
 
-    describe("when the definition.properties does not contain control-start, control-center and control-end defined", function () {
+    describe("When the definition.properties does not contain control-start, control-center and control-end defined", function () {
       it("should not contain start, center and end controls", function () {
         widgetElement = controlbar.processLayout(placeholderEl, MOCK_UNDEFINED_START_CENTER_END_CONTROLS_DEFINITION);
 

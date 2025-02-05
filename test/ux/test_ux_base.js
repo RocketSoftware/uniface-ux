@@ -4,20 +4,20 @@ import { Worker } from "../../src/ux/workers.js";
 import { Widget } from "../../src/ux/widget.js";
 
 (function () {
-  'use strict';
+  "use strict";
 
   const expect = chai.expect;
   const sandbox = sinon.createSandbox();
 
-  describe("Base constructor properly defined", function () {
+  describe("Base constructor() properly defined", function () {
 
-    it('constructor', function () {
+    it("constructor()", function () {
       let base = new Base();
       expect(base.constructor.name).to.equal("Base");
     });
   });
 
-  describe("test Base Class methods", function () {
+  describe("Test Base class methods", function () {
 
     let base, widgetClass, propId, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, subWidgetDelegatedProperties, defaultValue, triggerName,
       url, functionName, message, consequence, consoleLogSpy, worker;
@@ -27,7 +27,7 @@ import { Widget } from "../../src/ux/widget.js";
       widgetClass = Widget;
     });
 
-    it("registerSetter", function () {
+    it("registerSetter()", function () {
       worker = new Worker(widgetClass);
       propId = "html:disabled";
 
@@ -38,7 +38,7 @@ import { Widget } from "../../src/ux/widget.js";
 
     });
 
-    it("registerGetter", function () {
+    it("registerGetter()", function () {
       propId = "html:disabled";
       worker = new Worker(widgetClass);
 
@@ -49,7 +49,7 @@ import { Widget } from "../../src/ux/widget.js";
     });
 
 
-    it("registerDefaultValue", function () {
+    it("registerDefaultValue()", function () {
       propId = "html:testDefault";
       defaultValue = "56";
 
@@ -60,7 +60,7 @@ import { Widget } from "../../src/ux/widget.js";
 
     });
 
-    it("registerTrigger", function () {
+    it("registerTrigger()", function () {
       triggerName = "newTrigger";
       worker = new Worker(widgetClass);
 
@@ -71,7 +71,7 @@ import { Widget } from "../../src/ux/widget.js";
 
     });
 
-    it("registerSubWidget", function () {
+    it("registerSubWidget()", function () {
       subWidgetId = "change-button";
       subWidgetStyleClass = "u-change-button";
       subWidgetClass = new Button();
@@ -87,7 +87,7 @@ import { Widget } from "../../src/ux/widget.js";
       expect(widgetClass.subWidgets[subWidgetId].delegatedProperties).to.equal(subWidgetDelegatedProperties);
     });
 
-    it("registerSubWidgetWorker", function () {
+    it("registerSubWidgetWorker()", function () {
       worker = new Worker(widgetClass);
 
       base.registerSubWidgetWorker(widgetClass, worker);
@@ -95,7 +95,7 @@ import { Widget } from "../../src/ux/widget.js";
       expect(widgetClass.subWidgetWorkers[0]).to.equal(worker);
     });
 
-    it("getNode", function () {
+    it("getNode()", function () {
       const widgetInstance = {
         ...widgetClass,
         "data": {
@@ -109,7 +109,7 @@ import { Widget } from "../../src/ux/widget.js";
       expect(String(returnedNode)).to.equal("start");
     });
 
-    it("toBoolean", function () {
+    it("toBoolean()", function () {
       expect(base.toBoolean(true)).to.equal(true);
       expect(base.toBoolean(false)).to.equal(false);
       expect(base.toBoolean("1258395")).to.equal(true);
@@ -117,7 +117,7 @@ import { Widget } from "../../src/ux/widget.js";
       expect(base.toBoolean(56743)).to.equal(true);
     });
 
-    it("fieldValueToBoolean", function () {
+    it("fieldValueToBoolean()", function () {
       expect(base.fieldValueToBoolean(true)).to.equal(true);
       expect(base.fieldValueToBoolean(false)).to.equal(false);
       expect(base.fieldValueToBoolean("1")).to.equal(true);
@@ -126,12 +126,12 @@ import { Widget } from "../../src/ux/widget.js";
       expect(base.fieldValueToBoolean(0)).to.equal(false);
     });
 
-    it("getFormattedValrep", function () {
+    it("getFormattedValrep()", function () {
       let valRepString = "valrep1=value1valrep2=value2";
       let formattedValReps = base.getFormattedValrep(valRepString);
 
       expect(formattedValReps).to.have.lengthOf(2);
-      expect(Object.keys(formattedValReps[0])).to.eql(['value', 'representation']);
+      expect(Object.keys(formattedValReps[0])).to.eql(["value", "representation"]);
 
       expect(formattedValReps[0].value).to.eql("valrep1");
       expect(formattedValReps[0].representation).to.eql("value1");
@@ -144,7 +144,7 @@ import { Widget } from "../../src/ux/widget.js";
       functionName = "tooBoolean";
       message = "Function does not return that value";
       consequence = "Aborting";
-      consoleLogSpy = sandbox.spy(console, 'warn');
+      consoleLogSpy = sandbox.spy(console, "warn");
       base.warn(functionName, message, consequence);
       expect(consoleLogSpy.called).to.equal(true);
       sandbox.restore();
@@ -154,23 +154,23 @@ import { Widget } from "../../src/ux/widget.js";
       functionName = "tooBoolean";
       message = "Function does not return that value";
       consequence = "Aborting";
-      consoleLogSpy = sandbox.spy(console, 'error');
+      consoleLogSpy = sandbox.spy(console, "error");
       base.error(functionName, message, consequence);
       expect(consoleLogSpy.called).to.equal(true);
       sandbox.restore();
     });
 
-    it("getFormattedValrepItemAsHTML", function () {
+    it("getFormattedValrepItemAsHTML()", function () {
       let displayFormat = "valrep";
       let valRepString = "<p>this is paragraph</p>";
       let representation = "<p>this is paragraph</p>";
       let formattedValReps = base.getFormattedValrepItemAsHTML(displayFormat, valRepString, representation);
-      expect(formattedValReps.querySelector('.u-valrep-value').className).to.eql('u-valrep-value u-value');
-      expect(formattedValReps.querySelector('.u-valrep-representation').textContent).to.eql('this is paragraph');
-      expect(formattedValReps.querySelector('.u-valrep-representation').innerHTML).to.eql(representation);
-      expect(formattedValReps.querySelector('.u-valrep-value').textContent).to.eql(valRepString);
-      expect(formattedValReps.querySelector('.u-valrep-value').innerHTML).to.eql('&lt;p&gt;this is paragraph&lt;/p&gt;');
-      expect(formattedValReps.querySelector('.u-valrep-representation').className).to.eql('u-valrep-representation');
+      expect(formattedValReps.querySelector(".u-valrep-value").className).to.eql("u-valrep-value u-value");
+      expect(formattedValReps.querySelector(".u-valrep-representation").textContent).to.eql("this is paragraph");
+      expect(formattedValReps.querySelector(".u-valrep-representation").innerHTML).to.eql(representation);
+      expect(formattedValReps.querySelector(".u-valrep-value").textContent).to.eql(valRepString);
+      expect(formattedValReps.querySelector(".u-valrep-value").innerHTML).to.eql("&lt;p&gt;this is paragraph&lt;/p&gt;");
+      expect(formattedValReps.querySelector(".u-valrep-representation").className).to.eql("u-valrep-representation");
     });
 
     describe("extractSubWidgetData", function () {

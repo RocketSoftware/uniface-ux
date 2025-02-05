@@ -264,7 +264,7 @@ export class RadioGroup extends Widget {
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
     let shadowRoot = this.elements.widget.shadowRoot;
-    let labelSlot = shadowRoot.querySelector('slot[name="label"]');
+    let labelSlot = shadowRoot.querySelector("slot[name=\"label\"]");
     labelSlot.setAttribute("part", "label");
     // Stop propagating further change events when valrep has been updated.
     // This is to prevent fluent-radio-group from firing unwanted change events.
