@@ -138,42 +138,6 @@
     "size:valrep": "1=a10=1025=2550=50100=100"
   };
 
-  const MOCK_DATA_WITH_USEFIELD_VALUE = {
-    "subwidgets-start": "select",
-    "subwidgets-center": "btn",
-    "subwidgets-end": "numberfield",
-    "select:widget-class": "UX.Select",
-    "select:valrep": "1=a10=1025=2550=50100=100",
-    "select:value": "1",
-    "select_usefield": "true",
-    "btn:widget-class": "UX.Button",
-    "btn:value": "Button",
-    "numberfield:widget-class": "UX.NumberField",
-    "numberfield:value": "",
-    "numberfield_usefield": "true",
-    "numberfield:changebutton": "true",
-    "numberfield:changebutton:icon": "Home",
-    "numberfield:changebutton:value": "Apply",
-    "numberfield:html:placeholder": "Enter number to jump",
-    "value": '{"select":"10", "numberfield":"2"}'
-  };
-  const MOCK_DATA_WITHOUT_USEFIELD_VALUE = {
-    "subwidgets-start": "select",
-    "subwidgets-center": "btn",
-    "subwidgets-end": "numberfield",
-    "select:widget-class": "UX.Select",
-    "select:valrep": "1=a10=1025=2550=50100=100",
-    "select:value": "1",
-    "btn:widget-class": "UX.Button",
-    "btn:value": "Button",
-    "numberfield:widget-class": "UX.NumberField",
-    "numberfield:value": "",
-    "numberfield:changebutton": "true",
-    "numberfield:changebutton:icon": "Home",
-    "numberfield:changebutton:value": "Apply",
-    "numberfield:html:placeholder": "Enter number to jump",
-    "value": '{"select":"10","btn":"Hello", "numberfield":"2"}'
-  };
   const MOCK_DATA_WITHOUT_OVERFLOW = {
     "subwidgets-start": "selecttextfld1",
     "subwidgets-center": "btnchkbox1",
