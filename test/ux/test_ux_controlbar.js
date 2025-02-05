@@ -160,6 +160,7 @@
     "switch1:widget-class": "UX.Switch",
     "switch1:value": "true"
   };
+
   const MOCK_DATA_WITH_OVERFLOW_NONE = {
     "subwidgets-start": "selecttextfld1",
     "subwidgets-center": "btnchkbox1",
@@ -188,7 +189,8 @@
     "switch1:value": "true",
     "switch1_overflow-behavior": "none"
   };
-  const MOCK_DATA_WITH_OVERFLOW_and_PRIORITY = {
+
+  const MOCK_DATA_WITH_OVERFLOW_MOVE_and_PRIORITY = {
     "subwidgets-start": "selecttextfld1",
     "subwidgets-center": "btnchkbox1",
     "subwidgets-end": "numberfieldswitch1",
@@ -255,6 +257,41 @@
     "switch1:widget-class": "UX.Switch",
     "switch1:value": "true",
     "switch1_overflow-behavior": "hide",
+    "switch1_priority": 6
+  };
+
+  const MOCK_DATA_WITH_OVERFLOW_and_PRIORITY_MENU = {
+    "subwidgets-start": "selecttextfld1",
+    "subwidgets-center": "btnchkbox1",
+    "subwidgets-end": "numberfieldswitch1",
+    "select:widget-class": "UX.Select",
+    "select:valrep": "1=a10=1025=2550=50100=100",
+    "select_overflow-behavior": "menu",
+    "select_priority": 1,
+    "select:value": "1",
+    "textfld1:widget-class": "UX.TextField",
+    "textfld1:value": "text Value",
+    "textfld1_overflow-behavior": "menu",
+    "textfld1_priority": 2,
+    "btn:widget-class": "UX.Button",
+    "btn:value": "Button",
+    "btn_overflow-behavior": "menu",
+    "btn_priority": 3,
+    "chkbox1:widget-class": "UX.CheckBox",
+    "chkbox1:value": "true",
+    "chkbox1_overflow-behavior": "menu",
+    "chkbox1_priority": 4,
+    "numberfield:widget-class": "UX.NumberField",
+    "numberfield:value": "",
+    "numberfield_overflow-behavior": "menu",
+    "numberfield_priority": 5,
+    "numberfield:changebutton": "true",
+    "numberfield:changebutton:icon": "Home",
+    "numberfield:changebutton:value": "Apply",
+    "numberfield:html:placeholder": "Enter number to jump",
+    "switch1:widget-class": "UX.Switch",
+    "switch1:value": "true",
+    "switch1_overflow-behavior": "menu",
     "switch1_priority": 6
   };
 
@@ -686,11 +723,9 @@
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
       element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
-      // let data = Object.assign({}, MOCK_CONTROLBAR_CONTROLS_DATA); MOCK_DATA_WITHOUT_OVERFLOW
       return asyncRun(function() {
         widget = tester.onConnect(element);
         tester.dataInit();
-        // tester.dataUpdate(MOCK_CONTROLBAR_CONTROLS_DATA);
         node = document.querySelector('#widget-container');
         node.style.width = '300px';
 
@@ -756,7 +791,7 @@
       });
     });
 
-    it("different combinations of widgets with respect to overflow-behavior set to none and no priority defined", function () {
+    it("specifies nothing happens, the sub-widget does not overflow at all when different combinations of widgets with respect to overflow-behavior set to none and no priority defined", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
@@ -787,16 +822,15 @@
       });
     });
 
-    it("different combinations of widgets with respect to overflow-behavior set to move  and priority is defined with subwidget visible", function () {
+    it("sub-widget moves to the overflow menu when different combinations of widgets with respect to overflow-behavior set to move  and priority is defined with subwidget visible", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
 
-      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_and_PRIORITY);
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MOVE_and_PRIORITY);
       return asyncRun(function() {
         widget = tester.onConnect(element);
         tester.dataInit();
-        // tester.dataUpdate(MOCK_DATA_WITH_OVERFLOW_and_PRIORITY);
         node = document.querySelector('#widget-container');
         node.style.width = '500px';
       }).then(function() {
@@ -823,30 +857,7 @@
         node.style.width = '200px';
       });
     });
-    it("different combinations of widgets with respect to overflow-behavior set to move  and priority is defined when no subwidget is visible", function () {
-      let element, widget;
-      const tester = new umockup.WidgetTester();
-      let node = document.querySelector('#widget-container');
-      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_and_PRIORITY);
-      return asyncRun(function() {
-        widget = tester.onConnect(element);
-        tester.dataInit();
-        // tester.dataUpdate(MOCK_DATA_WITH_OVERFLOW_and_PRIORITY);
-        node = document.querySelector('#widget-container');
-        node.style.width = '100px';
-      }).then(function() {
-        expect(widget.elements.widget.classList.contains("u-overflowed"));
-        expect(element.querySelector("fluent-select.u-sw-select").classList.contains("u-overflown-item"));
-        expect(element.querySelector("fluent-text-field.u-sw-textfld1").classList.contains("u-overflown-item"));
-
-
-        expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.false;
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute("hidden")).to.be.true;
-        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
-      });
-    });
-    it("different combinations of widgets with respect to overflow-behavior set to hide  and priority is defined when no subwidget is visible", function () {
+    it("sub-widgets hides when it gets 'overflowed' when different combinations of widgets with respect to overflow-behavior set to hide  and priority is defined when no subwidget is visible", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
@@ -856,6 +867,7 @@
         tester.dataInit();
         node = document.querySelector('#widget-container');
         node.style.width = '100px';
+        debugger;
       }).then(function() {
         expect(widget.elements.widget.classList.contains("u-overflowed"));
         expect(element.querySelector("fluent-select.u-sw-select").classList.contains("u-overflown-item"));
@@ -865,6 +877,36 @@
         expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute("hidden")).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+      });
+    });
+    it("sub-widget always sits in the overflow-menu when different combinations of widgets with respect to overflow-behavior set to menu and priority is defined", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_and_PRIORITY_MENU);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        node = document.querySelector('#widget-container');
+        node.style.width = '100px';
+      }).then(function() {
+        expect(widget.elements.widget.classList.contains("u-overflowed"));
+        expect(element.querySelector("fluent-select.u-sw-select").classList.contains("u-overflown-item"));
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").classList.contains("u-overflown-item"));
+        expect(element.querySelector("fluent-button.u-sw-btn").classList.contains("u-overflown-item"));
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").classList.contains("u-overflown-item"));
+        expect(element.querySelector("fluent-switch.u-sw-switch1").classList.contains("u-overflown-item"));
+
+        expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.false;
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute("hidden")).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").classList.contains("u-not-supported"));
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").classList.contains("u-not-supported"));
+        expect(!element.querySelector(".u-overflow-menu [item-id=btn]").classList.contains("u-not-supported"));
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").classList.contains("u-not-supported"));
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").classList.contains("u-not-supported"));
       });
     });
   });
