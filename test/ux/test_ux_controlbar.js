@@ -867,7 +867,6 @@
         tester.dataInit();
         node = document.querySelector('#widget-container');
         node.style.width = '100px';
-        debugger;
       }).then(function() {
         expect(widget.elements.widget.classList.contains("u-overflowed"));
         expect(element.querySelector("fluent-select.u-sw-select").classList.contains("u-overflown-item"));
