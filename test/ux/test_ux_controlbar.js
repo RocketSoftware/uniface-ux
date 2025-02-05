@@ -529,6 +529,7 @@
           tester.dataUpdate(MOCK_HIDDEN_POPERRTY);
         }).then(function() {
           expect(element.hasAttribute("hidden")).to.equal(true);
+          expect(window.getComputedStyle(element).display).equal("none");
         });
       });
     });
