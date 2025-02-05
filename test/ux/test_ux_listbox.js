@@ -355,6 +355,47 @@
     });
   });
 
+  describe("showError()", function () {
+    let widget;
+    before(function () {
+      widget = tester.createWidget();
+      verifyWidgetClass(widgetClass);
+    });
+
+    it("call the showError() method and check if error is properly visualized", function () {
+      return asyncRun(function () {
+        widget.showError("Validation Error");
+      }).then(function () {
+        expect(widget.elements.widget).to.have.class("u-invalid");
+        assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")).equal("Validation Error");
+        expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
+        expect(widget.elements.widget.childNodes[1].className).equal("u-error-icon ms-Icon ms-Icon--AlertSolid");
+      });
+    });
+  });
+
+  describe("hideError()", function () {
+    let widget;
+    before(function () {
+      widget = tester.createWidget();
+      verifyWidgetClass(widgetClass);
+    });
+
+    it("call the hideError() method and check if error is removed", function () {
+      return asyncRun(function () {
+        widget.hideError();
+      }).then(function () {
+        expect(widget.elements.widget).to.not.have.class("u-invalid");
+        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+        expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+        expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(widget.elements.widget.childNodes[1].classList.contains("ms-Icon")).to.be.false;
+        expect(widget.elements.widget.childNodes[1].classList.contains("ms-Icon--AlertSolid")).to.be.false;
+      });
+    });
+  });
+
   describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {
