@@ -622,24 +622,24 @@
       return asyncRun(function() {
         widget = tester.onConnect(element);
         tester.dataInit();
-        tester.dataUpdate(MOCK_DATA_WITHOUT_USEFIELD_VALUE);
+        tester.dataUpdate(data);
       }).then(function() {
         expect(element.querySelector('.u-start-section').children.length).equal(1);
         expect(element.querySelector('.u-center-section').children.length).equal(1);
         expect(element.querySelector('.u-end-section').children.length).equal(1);
         // Verify select value.
         let selectElementValue = element.querySelector("fluent-select").value;
-        let valrep = umockup.getFormattedValrep(data["select:valrep"]);
+        let valrep = umockup.getFormattedValrep(MOCK_DATA_WITHOUT_USEFIELD_VALUE["select:valrep"]);
         let selectValue = valrep[selectElementValue].value;
-        expect(selectValue).equal(data["select:value"]);
+        expect(selectValue).equal(MOCK_DATA_WITHOUT_USEFIELD_VALUE["select:value"]);
 
         // Verify button.
         let buttonValue = document.querySelector("fluent-button .u-text").innerText;
-        expect(buttonValue).equal(data["btn:value"]);
+        expect(buttonValue).equal(MOCK_DATA_WITHOUT_USEFIELD_VALUE["btn:value"]);
 
         // Verify numberfield.
         let numberfieldValue = document.querySelector("fluent-number-field").value;
-        expect(numberfieldValue).equal(data["numberfield:value"]);
+        expect(numberfieldValue).equal(MOCK_DATA_WITHOUT_USEFIELD_VALUE["numberfield:value"]);
 
         // Verify getValue
         expect(widget.getValue()).equal('{}');
@@ -656,20 +656,20 @@
       return asyncRun(function() {
         widget = tester.onConnect(element);
         tester.dataInit();
-        tester.dataUpdate(MOCK_DATA_WITH_USEFIELD_VALUE);
+        tester.dataUpdate(data);
       }).then(function() {
         expect(element.querySelector('.u-start-section').children.length).equal(1);
         expect(element.querySelector('.u-center-section').children.length).equal(1);
         expect(element.querySelector('.u-end-section').children.length).equal(1);
         // Verify select value.
         let selectElementValue = element.querySelector("fluent-select").value;
-        let valrep = umockup.getFormattedValrep(data["select:valrep"]);
+        let valrep = umockup.getFormattedValrep(MOCK_DATA_WITH_USEFIELD_VALUE["select:valrep"]);
         let selectValue = valrep[selectElementValue].value;
         expect(selectValue).equal(fieldValue["select"]);
 
         // Verify button.
         let buttonValue = document.querySelector("fluent-button .u-text").innerText;
-        expect(buttonValue).equal(data["btn:value"]);
+        expect(buttonValue).equal(MOCK_DATA_WITH_USEFIELD_VALUE["btn:value"]);
         expect(buttonValue).not.equal(fieldValue["btn"]);
 
         // Verify numberfield.

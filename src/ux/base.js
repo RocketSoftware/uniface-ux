@@ -370,8 +370,8 @@ export class Base {
           }
           // Remove the property from the original data to avoid duplication.
           delete data[property];
-          // If usefield value is true and there is update in field widget then subwidget value should be updated with field value.
         }
+        // If usefield value is true and there is update in field widget then subwidget value should be updated with field value.
       } else if (property === "value" && subWidgetDefinition && subWidgetDefinition["usefield"] && data.value && data.value !== "") {
         subWidgetData = subWidgetData || {};
         try {
