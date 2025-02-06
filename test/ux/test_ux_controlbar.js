@@ -177,7 +177,7 @@
     "value": '{"select":"10","btn":"Hello", "numberfield":"2"}'
   };
 
-  const MOCK_HIDDEN_POPERRTY = {
+  const MOCK_HIDDEN_PROPERTY = {
     "html:hidden": "true"
   };
 
@@ -564,7 +564,7 @@
 
       it("if hidden property is set to be true, it should be reflected", function () {
         return asyncRun(function() {
-          tester.dataUpdate(MOCK_HIDDEN_POPERRTY);
+          tester.dataUpdate(MOCK_HIDDEN_PROPERTY);
         }).then(function() {
           expect(element.hasAttribute("hidden")).to.equal(true);
           expect(window.getComputedStyle(element).display).equal("none");
