@@ -10,7 +10,7 @@
   const asyncRun = umockup.asyncRun;
 
   /**
-     * Function to determine whether the widget class has been loaded.
+    * Function to determine whether the widget class has been loaded.
     */
   function verifyWidgetClass(widgetClass) {
     assert(widgetClass, `Widget class '${widgetName}' is not defined!
@@ -147,7 +147,6 @@
     });
   });
 
-  // dataInit()
   describe("dataInit()", function () {
     const classes = tester.getDefaultClasses();
 
@@ -383,7 +382,6 @@
       });
     });
 
-    // html:placeholder property.
     it("set html:placeholder property for textarea", function () {
       let placeHolderText = "Input the Number";
       return asyncRun(function () {
@@ -396,7 +394,6 @@
       });
     });
 
-    // html:readonly property.
     it("set html:readonly property true for textarea", function () {
       let readOnly = "readOnly";
       return asyncRun(function () {
@@ -408,7 +405,6 @@
       });
     });
 
-    // html:readonly property false.
     it("set html:readonly property false for textarea", function () {
       let readOnly = "readOnly";
       return asyncRun(function () {
@@ -420,7 +416,6 @@
       });
     });
 
-    // html:disabled property.
     it("set html:disabled property true for textarea", function () {
       let disabled = "disabled";
       return asyncRun(function () {
@@ -432,7 +427,6 @@
       });
     });
 
-    // html:disabled property false.
     it("set html:disabled property false for textarea", function () {
       let disabled = "disabled";
       return asyncRun(function () {
@@ -444,7 +438,6 @@
       });
     });
 
-    // html:appearance outfill property.
     it("set html:appearance outline property true for textarea", function () {
       let appearanceStyle = "outline";
       return asyncRun(function () {
@@ -458,7 +451,6 @@
       });
     });
 
-    // html:appearance filled property.
     it("set html:appearance filled property true for textarea", function () {
       let appearanceStyle = "filled";
       return asyncRun(function () {

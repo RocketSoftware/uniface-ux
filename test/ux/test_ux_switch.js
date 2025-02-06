@@ -264,7 +264,7 @@
     });
   });
 
-  describe("hideError", function () {
+  describe("hideError()", function () {
     let widget, element;
     beforeEach(function () {
       widget = tester.createWidget();

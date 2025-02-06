@@ -10,7 +10,7 @@
   const asyncRun = umockup.asyncRun;
 
   /**
-     * Function to determine whether the widget class has been loaded.
+    * Function to determine whether the widget class has been loaded.
     */
   function verifyWidgetClass(widgetClass) {
     assert(widgetClass, `Widget class '${widgetName}' is not defined!
@@ -157,7 +157,6 @@
 
   });
 
-  // dataInit()
   describe("dataInit()", function () {
     const classes = tester.getDefaultClasses();
 
@@ -350,7 +349,6 @@
       assert.equal(flexPropertyValue, "column");
     });
 
-    // html:placeholder property.
     it("set html:placeholder property for number field", function () {
       let placeHolderText = "Input the Number";
       return asyncRun(function () {
@@ -363,7 +361,6 @@
       });
     });
 
-    // html:readonly property.
     it("set html:readonly property true for number field", function () {
       let readOnly = "readOnly";
       return asyncRun(function () {
@@ -375,7 +372,6 @@
       });
     });
 
-    // html:readonly property false.
     it("set html:readonly property false for number field", function () {
       let readOnly = "readOnly";
       return asyncRun(function () {
@@ -387,7 +383,6 @@
       });
     });
 
-    // html:disabled property.
     it("set html:disabled property true for number field", function () {
       let disabled = "disabled";
       return asyncRun(function () {
@@ -399,7 +394,6 @@
       });
     });
 
-    // html:disabled property false.
     it("set html:disabled property false for number field", function () {
       let disabled = "disabled";
       return asyncRun(function () {
@@ -411,23 +405,8 @@
       });
     });
 
-    // html:appearance outfill property.
-    it("set html:appearance outline property true for number field", function () {
-      let appearanceStyle = "filled";
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "html:appearance": appearanceStyle
-        });
-      }).then(function () {
-        assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance outfill attribute.");
-        let appearanceStylePropertyText = widget.elements.widget.getAttribute("appearance");
-        assert.equal(appearanceStyle, appearanceStylePropertyText, `Failed to show appearance outfill style ${appearanceStylePropertyText}.`);
-      });
-    });
-
-    // html:appearance filled property.
     it("set html:appearance filled property true for number field", function () {
-      let appearanceStyle = "outline";
+      let appearanceStyle = "filled";
       return asyncRun(function () {
         tester.dataUpdate({
           "html:appearance": appearanceStyle
@@ -435,11 +414,23 @@
       }).then(function () {
         assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance filled attribute.");
         let appearanceStylePropertyText = widget.elements.widget.getAttribute("appearance");
-        assert.equal(appearanceStyle, appearanceStylePropertyText, `Failed to show appearance filled style${appearanceStylePropertyText}.`);
+        assert.equal(appearanceStyle, appearanceStylePropertyText, `Failed to show appearance filled style ${appearanceStylePropertyText}.`);
       });
     });
 
-    // html:hide-step true property.
+    it("set html:appearance outline property true for number field", function () {
+      let appearanceStyle = "outline";
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:appearance": appearanceStyle
+        });
+      }).then(function () {
+        assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance outline attribute.");
+        let appearanceStylePropertyText = widget.elements.widget.getAttribute("appearance");
+        assert.equal(appearanceStyle, appearanceStylePropertyText, `Failed to show appearance outline style${appearanceStylePropertyText}.`);
+      });
+    });
+
     it("set html:hide-step property true for number field", function () {
       let hideStep = true;
       return asyncRun(function () {
@@ -451,7 +442,6 @@
       });
     });
 
-    // html:hide-step false property.
     it("set html:hide-step property false for number field", function () {
       let hideStep = false;
       return asyncRun(function () {
@@ -463,7 +453,6 @@
       });
     });
 
-    // prefix-text property for number field.
     it("prefix-text for number field", function () {
       let prefixTextData = "PrefixMe";
       return asyncRun(function () {
@@ -477,7 +466,6 @@
       });
     });
 
-    // suffix-text property for number field.
     it("suffix-text for number field", function () {
       let suffixTextData = "Suffix Me";
       return asyncRun(function () {

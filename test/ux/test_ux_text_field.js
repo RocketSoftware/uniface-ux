@@ -11,8 +11,8 @@
   const asyncRun = umockup.asyncRun;
 
   /**
-     * Function to determine whether the widget class has been loaded.
-     */
+    * Function to determine whether the widget class has been loaded.
+    */
   function verifyWidgetClass(widgetClass) {
     assert(widgetClass, `Widget class '${widgetName}' is not defined!
               Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
@@ -47,7 +47,7 @@
   describe(`${widgetName}.processLayout()`, function () {
     let element;
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
     });
@@ -422,8 +422,6 @@
           "value": 1234
         });
       }).then(function () {
-        // const event = new window.Event('hover');
-        // widget.elements.widget.dispatchEvent(event);
         assert.equal(widget.elements.widget.getAttribute("pattern"),patternText, "Failed to show the pattern attribute and value does not match.");
         assert.equal(widget.elements.widget.getAttribute("placeholder"),placeHolderText, "Failed to show the placeHolderText attribute and value does not match.");
         assert.equal(widget.elements.widget.getAttribute("title"),title, "Failed to show the title attribute and value does not match.");
@@ -466,14 +464,11 @@
         tester.dataUpdate({
           "html:placeholder": placeHolderText,
           "html:type": "text"
-          // value: "Value input"
         });
       }).then(function () {
         const event = new window.Event("hover");
         widget.elements.widget.dispatchEvent(event);
-        // assert.equal(widget.elements.widget.getAttribute("pattern"), pattern ,"Failed to show the pattern attribute and value does not match.");
         assert.equal(widget.elements.widget.getAttribute("placeholder"), placeHolderText, "Failed to show the placeHolderText attribute and value does not match.");
-        // assert(widget.elements.widget.hasAttribute("pattern"), "Failed to show the pattern attribute.");
         assert(widget.elements.widget.hasAttribute("placeholder"), "Failed to show the placeHolderText attribute and value does not match.");
       });
     });
@@ -507,7 +502,6 @@
           "suffix-text": "Customer Email Address",
           "html:placeholder": placeHolderText,
           "html:type": "email"
-          // value: "test@test.com"
         });
       }).then(function () {
         const event = new window.Event("hover");
@@ -525,10 +519,8 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "prefix-icon": "PasswordField",
-          // "suffix-text": "Customer Email Address",
           "html:placeholder": placeHolderText,
           "html:type": "password"
-          // value: "test@test.com"
         });
       }).then(function () {
         const event = new window.Event("hover");
@@ -546,10 +538,8 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "prefix-icon": "URLBlock",
-          // "suffix-text": "Customer Email Address",
           "html:placeholder": placeHolderText,
           "html:type": "url"
-          // value: "test@test.com"
         });
       }).then(function () {
         const event = new window.Event("hover");
