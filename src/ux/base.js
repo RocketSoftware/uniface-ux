@@ -349,7 +349,6 @@ export class Base {
    */
   extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties) {
     let subWidgetData;
-
     for (let property in data) {
       if (property.startsWith(`${subWidgetPropPrefix}:`)) {
         const key = property.substring(subWidgetPropPrefix.length + 1);
