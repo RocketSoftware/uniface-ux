@@ -629,7 +629,7 @@
         expect(element.querySelector('.u-end-section').children.length).equal(1);
         // Verify select value.
         let selectElementValue = element.querySelector("fluent-select").value;
-        let valrep = umockup.getFormattedValrep(MOCK_DATA_WITHOUT_USEFIELD_VALUE["select:valrep"]);
+        let valrep = widget.getFormattedValrep(MOCK_DATA_WITHOUT_USEFIELD_VALUE["select:valrep"]);
         let selectValue = valrep[selectElementValue].value;
         expect(selectValue).equal(MOCK_DATA_WITHOUT_USEFIELD_VALUE["select:value"]);
 
@@ -663,7 +663,7 @@
         expect(element.querySelector('.u-end-section').children.length).equal(1);
         // Verify select value.
         let selectElementValue = element.querySelector("fluent-select").value;
-        let valrep = umockup.getFormattedValrep(MOCK_DATA_WITH_USEFIELD_VALUE["select:valrep"]);
+        let valrep = widget.getFormattedValrep(MOCK_DATA_WITH_USEFIELD_VALUE["select:valrep"]);
         let selectValue = valrep[selectElementValue].value;
         expect(selectValue).equal(fieldValue["select"]);
 
