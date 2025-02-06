@@ -1,7 +1,7 @@
 // @ts-check
 /* global UNIFACE */
 import { Widget } from "./widget.js";
-import { Element, Worker, StyleClass, SubWidgetsByProperty, HtmlAttributeChoice, HtmlSubWidgetValueWorker } from "./workers.js";
+import { Element, Worker, StyleClass, SubWidgetsByProperty, HtmlAttributeChoice, HtmlAttributeBoolean } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
 /**
@@ -298,9 +298,9 @@ export class Controlbar extends Widget {
   // prettier-ignore
   static structure = new Element(this, "div", "", "", [
     new HtmlAttributeChoice(this, "orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
+    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new StyleClass(this, ["u-controlbar"]),
-    new this.HandleOverFlowPropertyWorker(this, "widget-resize", false),
-    new HtmlSubWidgetValueWorker(this, "value", "value", null)
+    new this.HandleOverFlowPropertyWorker(this, "widget-resize", false)
   ], [
     new Element(this, "div", "u-start-section", ".u-start-section", [], [
       new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-start")

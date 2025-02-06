@@ -77,12 +77,14 @@ export class Base {
    * @param {typeof Widget} subWidgetClass
    * @param {String} subWidgetStyleClass
    * @param {Array} subWidgetTriggers
+   * @param {Array} subWidgetDelegatedProperties
    */
-  registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers) {
+  registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, subWidgetDelegatedProperties) {
     widgetClass.subWidgets[subWidgetId] = {
       "class": subWidgetClass,
       "styleClass": subWidgetStyleClass,
-      "triggers": subWidgetTriggers
+      "triggers": subWidgetTriggers,
+      "delegatedProperties": subWidgetDelegatedProperties
     };
   }
 
@@ -340,44 +342,57 @@ export class Base {
   /**
    * Extracts sub-widget data from the original data object and removes the corresponding
    * properties from original data object.
-   * @param {Object} data - The source object containing properties to extract.
-   * @returns {Object} An object containing the extracted sub-widget data.
+   * @param {UData} data - The source object containing properties to extract.
+   * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
+   * @param {Array} subWidgetDelegatedProperties - An array containing list of delegated properties.
+   * @returns {UData|undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
    */
-  extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDefinition) {
+  extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties) {
     let subWidgetData;
 
     for (let property in data) {
-      if (property.startsWith(subWidgetPropPrefix)) {
-        let pos = property.search(":");
-        if (pos > 0) {
+      if (property.startsWith(`${subWidgetPropPrefix}:`)) {
+        const key = property.substring(subWidgetPropPrefix.length + 1);
+        if (key) {
           subWidgetData = subWidgetData || {};
-          let key = property.substring(pos + 1);
-          if (key === "valrep") {
-            subWidgetData[key] = this.getFormattedValrep(data[property]);
-          } else if (key === "value" && subWidgetDefinition["usefield"]) {
-            try {
-              const valueObject = JSON.parse(data.value) ?? {};
-              subWidgetData[key] = valueObject[subWidgetPropPrefix] ?? '';
-            } catch (error) {
-              console.log("Invalid JSON value", data.value, error);
-            }
-          } else {
-            subWidgetData[key] = data[property];
-          }
+          subWidgetData[key] = key === "valrep" ? this.getFormattedValrep(data[property]) : data[property];
           // Remove the property from the original data to avoid duplication.
           delete data[property];
-          // If usefield value is true and there is update in field widget then subwidget value should be updated with field value.
-        }
-      } else if (property === "value" && subWidgetDefinition["usefield"] && data.value && data.value !== "") {
-        subWidgetData = subWidgetData || {};
-        try {
-          const valueObject = JSON.parse(data.value);
-          subWidgetData[property] = String(valueObject[subWidgetPropPrefix]) ?? '';
-        } catch (error) {
-          console.log("Invalid JSON value", data.value, error);
         }
       }
     }
+    // Iterate over each delegated property and add matching delegated property to subWidgetData.
+    subWidgetDelegatedProperties?.forEach(property => {
+      // Check if the data object has the property.
+      if (data.hasOwnProperty(property)) {
+        subWidgetData = subWidgetData || {};
+        // Add the property to subWidgetData.
+        subWidgetData[property] = data[property];
+      }
+    });
     return subWidgetData;
+  }
+
+  /**
+   * Extracts sub-widget property names from the original property names set and removes the corresponding
+   * property names from original property names set.
+   * @param {UPropertyNames} propertyNames - The source set containing property names to extract.
+   * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
+   * @returns {UPropertyNames|undefined} A set of extracted sub-widget property names, or `undefined` if no property names are found.
+   */
+  extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix) {
+    let subWidgetPropertyNames;
+    propertyNames.forEach((propertyName) => {
+      if (propertyName.startsWith(`${subWidgetPropPrefix}:`)) {
+        const key = propertyName.substring(subWidgetPropPrefix.length + 1);
+        if (key) {
+          subWidgetPropertyNames = subWidgetPropertyNames || new Set();
+          subWidgetPropertyNames.add(key);
+          // Remove the property names from the original set to avoid duplication.
+          propertyNames.delete(propertyName);
+        }
+      }
+    });
+    return subWidgetPropertyNames;
   }
 }
