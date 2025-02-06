@@ -190,7 +190,6 @@ export class TestWidget extends Widget {
       };
 
       testwidget.showError(errorString);
-      console.log(testwidget.data);
       expect(testwidget.data).to.have.any.keys(errorReturn);
       expect(testwidget.data["error-message"]).equal(errorString);
       expect(testwidget.data["error"]).equal(true);
