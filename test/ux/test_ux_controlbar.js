@@ -176,7 +176,7 @@
     "numberfield:html:placeholder": "Enter number to jump",
     "value": '{"select":"10","btn":"Hello", "numberfield":"2"}'
   };
-  
+
   const MOCK_HIDDEN_POPERRTY = {
     "html:hidden": "true"
   };
