@@ -208,7 +208,6 @@ export class Widget extends Base {
       const subWidgetElement = widgetElement.querySelector(`.${subWidgetStyleClass}`);
       this.subWidgets[subWidgetId] = new subWidgetClass();
       let subWidgetUpdaters = this.subWidgets[subWidgetId].onConnect(subWidgetElement) || [];
-      this.subWidgets[subWidgetId].delegatedProperties = subWidgetDefinition.delegatedProperties;
       subWidgetUpdaters.forEach((subWidgetUpdater) => {
         if (subWidgetUpdater !== undefined) {
           valueUpdaters.push(subWidgetUpdater);
@@ -344,8 +343,7 @@ export class Widget extends Base {
       this.subWidgets[subWidgetId].dataInit();
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      const subWidgetDelegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
-      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties, subWidgetDefinition);
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDefinition);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
@@ -366,8 +364,7 @@ export class Widget extends Base {
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      const subWidgetDelegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
-      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties, subWidgetDefinition);
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDefinition);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }

@@ -344,13 +344,12 @@ export class Base {
    * properties from original data object.
    * @param {UData} data - The source object containing properties to extract.
    * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
-   * @param {Array} subWidgetDelegatedProperties - An array containing list of delegated properties.
    * @param {Object} subWidgetDefinition - subWidget definitions registered by the widget class.
    * @returns {UData|undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
    */
-  extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties, subWidgetDefinition) {
+  extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDefinition) {
     let subWidgetData;
-
+    let subWidgetDelegatedProperties = subWidgetDefinition?.delegatedProperties;
     for (let property in data) {
       if (property.startsWith(`${subWidgetPropPrefix}:`)) {
         const key = property.substring(subWidgetPropPrefix.length + 1);
