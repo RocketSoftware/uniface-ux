@@ -515,7 +515,7 @@ export class SubWidgetsByProperty extends Element {
         subWidgetDefinition.styleClass = `u-sw-${subWidgetId}`;
         subWidgetDefinition.triggers = subWidgetTriggers?.split("") || [];
         subWidgetDefinition.propPrefix = subWidgetId;
-        subWidgetDefinition.delegatedProperties = delegatedProperties ? delegatedProperties.split("") :[];
+        subWidgetDefinition.delegatedProperties = delegatedProperties ? delegatedProperties.split("") : [];
         subWidgetDefinitions[subWidgetId] = subWidgetDefinition;
       });
     }
