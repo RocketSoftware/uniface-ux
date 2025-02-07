@@ -419,7 +419,7 @@ export class Controlbar extends Widget {
     }
   }
 
-  validatePropertyValue(property, value) {
+  validateOverflowPropertyValue(property, value) {
     const validOverFlowBehavior = ["move", "hide", "menu", "none"];
     const propertyType = this.checkSuffix(property);
     switch (propertyType) {
@@ -434,7 +434,7 @@ export class Controlbar extends Widget {
         }
         break;
       default:
-        return true;
+        break;
     }
     return false;
   }
@@ -459,18 +459,18 @@ export class Controlbar extends Widget {
    */
   setProperties(data) {
     const subWidgetIds = this.getSubWidgetIds();
-    const subWidgetProperties = subWidgetIds.flatMap((subWidget) => [`${subWidget}_${"overflow-behavior"}`, `${subWidget}_${"priority"}`, `${subWidget}_delegated-properties`]);
+    const overflowProperties = subWidgetIds.flatMap((subWidget) => [`${subWidget}_${"overflow-behavior"}`, `${subWidget}_${"priority"}`]);
     const setter = Controlbar.setters["widget-resize"][0];
     let invokeRefresh = false;
     for (const property in data) {
-      if (subWidgetProperties.includes(property)) {
+      if (overflowProperties.includes(property)) {
         const value = data[property];
         // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
         // eslint-disable-next-line eqeqeq, no-undef
         if (value == uniface.RESET) {
           this.data[property] = Controlbar.defaultValues[property] ?? null;
           invokeRefresh = true;
-        } else if (this.validatePropertyValue(property, value)) {
+        } else if (this.validateOverflowPropertyValue(property, value)) {
           this.data[property] = value;
           invokeRefresh = true;
         } else {
