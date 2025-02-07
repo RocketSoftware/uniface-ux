@@ -17,21 +17,22 @@
   };
   const MOCK_START_CONTROLS_ONLY_DEFINITION = {
     "subwidgets-start": "first",
-    "first:widget-class": "UX.Button"
+    "first_widget-class": "UX.Button"
   };
 
   const MOCK_CENTER_CONTROLS_ONLY_DEFINITION = {
     "subwidgets-center": "second",
-    "second:widget-class": "UX.Select"
+    "second_widget-class": "UX.Select"
   };
 
   const MOCK_END_CONTROLS_ONLY_DEFINITION = {
     "subwidgets-end": "first",
-    "first:widget-class": "UX.TextField"
+    "first_widget-class": "UX.TextField"
   };
 
 
   const MOCK_CONTROLBAR_DEFAULT_PROPERTIES = {
+    "html:hidden":false,
     "class:u-controlbar": true,
     "orientation": "horizontal",
     "widget-resize": false,
@@ -47,16 +48,16 @@
   const MOCK_UNDEFINED_START_CONTROLS_DEFINITION = {
     "subwidgets-center": "goto",
     "subwidgets-end": "size",
-    "goto:widget-class": "UX.NumberField",
-    "size:widget-class": "UX.Select"
+    "goto_widget-class": "UX.NumberField",
+    "size_widget-class": "UX.Select"
   };
 
   const MOCK_EMPTY_CENTER_CONTROLS_DEFINITION = {
     "subwidgets-start": "info",
     "subwidgets-center": "",
     "subwidgets-end": "size",
-    "info:widget-class": "UX.RadioGroup",
-    "size:widget-class": "UX.Select"
+    "info_widget-class": "UX.RadioGroup",
+    "size_widget-class": "UX.Select"
   };
   const valRepArray = [
     {
@@ -85,11 +86,11 @@
     "subwidgets-start": "checkbox1info",
     "subwidgets-center": "goto",
     "subwidgets-end": "sizefirst",
-    "info:widget-class": "UX.PlainText",
-    "goto:widget-class": "UX.NumberField",
-    "size:widget-class": "UX.Select",
-    "first:widget-class": "UX.Button",
-    "checkbox1:widget-class": "UX.Checkbox",
+    "info_widget-class": "UX.PlainText",
+    "goto_widget-class": "UX.NumberField",
+    "size_widget-class": "UX.Select",
+    "first_widget-class": "UX.Button",
+    "checkbox1_widget-class": "UX.Checkbox",
     "goto_delegated-properties": "html:disabledhtml:readonlyclass:classTest"
   };
 
@@ -97,8 +98,8 @@
   const MOCK_UNDEFINED_CENTER_CONTROLS_DEFINITION = {
     "subwidgets-start": "info",
     "subwidgets-end": "size",
-    "info:widget-class": "UX.PlainText",
-    "size:widget-class": "UX.Select"
+    "info_widget-class": "UX.PlainText",
+    "size_widget-class": "UX.Select"
   };
 
 
@@ -106,21 +107,21 @@
     "subwidgets-start": "info",
     "subwidgets-center": "goto",
     "subwidgets-end": "",
-    "info:widget-class": "UX.PlainText",
-    "goto:widget-class": "UX.NumberField"
+    "info_widget-class": "UX.PlainText",
+    "goto_widget-class": "UX.NumberField"
   };
 
   const MOCK_UNDEFINED_END_CONTROLS_DEFINITION = {
     "subwidgets-start": "info",
     "subwidgets-center": "goto",
-    "info:widget-class": "UX.PlainText",
-    "goto:widget-class": "UX.NumberField"
+    "info_widget-class": "UX.PlainText",
+    "goto_widget-class": "UX.NumberField"
   };
 
   const MOCK_UNDEFINED_START_CENTER_END_CONTROLS_DEFINITION = {
-    "info:widget-class": "UX.PlainText",
-    "goto:widget-class": "UX.NumberField",
-    "size:widget-class": "UX.Select"
+    "info_widget-class": "UX.PlainText",
+    "goto_widget-class": "UX.NumberField",
+    "size_widget-class": "UX.Select"
   };
 
   const MOCK_CONTROLBAR_DATA = {
@@ -137,6 +138,48 @@
     "first:html:appearance": "accent",
     "first:value": "Go",
     "size:valrep": "1=a10=1025=2550=50100=100"
+  };
+
+  const MOCK_DATA_WITH_USEFIELD_VALUE = {
+    "subwidgets-start": "select",
+    "subwidgets-center": "btn",
+    "subwidgets-end": "numberfield",
+    "select_widget-class": "UX.Select",
+    "select:valrep": "1=a10=1025=2550=50100=100",
+    "select:value": "1",
+    "select_usefield": "true",
+    "btn_widget-class": "UX.Button",
+    "btn:value": "Button",
+    "numberfield_widget-class": "UX.NumberField",
+    "numberfield:value": "",
+    "numberfield_usefield": "true",
+    "numberfield:changebutton": "true",
+    "numberfield:changebutton:icon": "Home",
+    "numberfield:changebutton:value": "Apply",
+    "numberfield:html:placeholder": "Enter number to jump",
+    "value": '{"select":"10", "numberfield":"2"}'
+  };
+
+  const MOCK_DATA_WITHOUT_USEFIELD_VALUE = {
+    "subwidgets-start": "select",
+    "subwidgets-center": "btn",
+    "subwidgets-end": "numberfield",
+    "select_widget-class": "UX.Select",
+    "select:valrep": "1=a10=1025=2550=50100=100",
+    "select:value": "1",
+    "btn_widget-class": "UX.Button",
+    "btn:value": "Button",
+    "numberfield_widget-class": "UX.NumberField",
+    "numberfield:value": "",
+    "numberfield:changebutton": "true",
+    "numberfield:changebutton:icon": "Home",
+    "numberfield:changebutton:value": "Apply",
+    "numberfield:html:placeholder": "Enter number to jump",
+    "value": '{"select":"10","btn":"Hello", "numberfield":"2"}'
+  };
+
+  const MOCK_HIDDEN_PROPERTY = {
+    "html:hidden": "true"
   };
 
   /**
@@ -438,7 +481,7 @@
         const widget = tester.construct();
         assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(true,widgetClass.defaultValues['class:u-controlbar'], "Class is not defined");
+        assert(true, widgetClass.defaultValues['class:u-controlbar'], "Class is not defined");
       } catch (e) {
         assert(false, "Failed to construct new widget, exception " + e);
       }
@@ -568,6 +611,15 @@
           });
         });
       });
+
+      it("if hidden property is set to be true, it should be reflected", function () {
+        return asyncRun(function() {
+          tester.dataUpdate(MOCK_HIDDEN_PROPERTY);
+        }).then(function() {
+          expect(element.hasAttribute("hidden")).to.equal(true);
+          expect(window.getComputedStyle(element).display).equal("none");
+        });
+      });
     });
   });
 
@@ -610,8 +662,78 @@
     });
   });
 
-  describe("Reset all properties to default", function() {
-    it("reset all property", function() {
+  describe("Mock usefield value to use either field value or property value", function () {
+    it("no usefield is defined for any of the subwidget then it should update with property value", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+
+      element = tester.processLayout(MOCK_DATA_WITHOUT_USEFIELD_VALUE);
+      let data = Object.assign({}, MOCK_DATA_WITHOUT_USEFIELD_VALUE);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+      }).then(function() {
+        expect(element.querySelector('.u-start-section').children.length).equal(1);
+        expect(element.querySelector('.u-center-section').children.length).equal(1);
+        expect(element.querySelector('.u-end-section').children.length).equal(1);
+        // Verify select value.
+        let selectElementValue = element.querySelector("fluent-select").value;
+        let valrep = widget.getFormattedValrep(MOCK_DATA_WITHOUT_USEFIELD_VALUE["select:valrep"]);
+        let selectValue = valrep[selectElementValue].value;
+        expect(selectValue).equal(MOCK_DATA_WITHOUT_USEFIELD_VALUE["select:value"]);
+
+        // Verify button.
+        let buttonValue = document.querySelector("fluent-button .u-text").innerText;
+        expect(buttonValue).equal(MOCK_DATA_WITHOUT_USEFIELD_VALUE["btn:value"]);
+
+        // Verify numberfield.
+        let numberfieldValue = document.querySelector("fluent-number-field").value;
+        expect(numberfieldValue).equal(MOCK_DATA_WITHOUT_USEFIELD_VALUE["numberfield:value"]);
+
+        // Verify getValue
+        expect(widget.getValue()).equal('{}');
+      });
+
+    });
+    it("useField is defined for few of the subwidgets and for others it will be false", function () {
+      let element;
+      const tester = new umockup.WidgetTester();
+      let widget;
+      element = tester.processLayout(MOCK_DATA_WITH_USEFIELD_VALUE);
+      let data = Object.assign({}, MOCK_DATA_WITH_USEFIELD_VALUE);
+      const fieldValue = JSON.parse(data.value);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+      }).then(function() {
+        expect(element.querySelector('.u-start-section').children.length).equal(1);
+        expect(element.querySelector('.u-center-section').children.length).equal(1);
+        expect(element.querySelector('.u-end-section').children.length).equal(1);
+        // Verify select value.
+        let selectElementValue = element.querySelector("fluent-select").value;
+        let valrep = widget.getFormattedValrep(MOCK_DATA_WITH_USEFIELD_VALUE["select:valrep"]);
+        let selectValue = valrep[selectElementValue].value;
+        expect(selectValue).equal(fieldValue["select"]);
+
+        // Verify button.
+        let buttonValue = document.querySelector("fluent-button .u-text").innerText;
+        expect(buttonValue).equal(MOCK_DATA_WITH_USEFIELD_VALUE["btn:value"]);
+        expect(buttonValue).not.equal(fieldValue["btn"]);
+
+        // Verify numberfield.
+        let numberfieldValue = document.querySelector("fluent-number-field").value;
+        expect(numberfieldValue).equal(fieldValue["numberfield"]);
+
+        // Verify getValue
+        expect(widget.getValue()).equal(JSON.stringify(fieldValue));
+      });
+    });
+  });
+
+  describe("Reset all properties to default", function () {
+    it("reset all property", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
