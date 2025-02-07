@@ -3,7 +3,7 @@ import { Widget } from "../../src/ux/widget.js";
 import {
   StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget,
   SubWidgetsByProperty, BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean,
-  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, StyleProperty, Worker, IgnoreProperty, SlottedElementsByValRep
+  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep
 } from "../../src/ux/workers.js";
 
 
@@ -861,73 +861,6 @@ import {
       expect(widgetInstance.elements.widget.minlength).to.equal(12);
       expect(widgetInstance.widget.maxlengthHasBeenSet).to.equal(true);
 
-    });
-  });
-
-  // ===================================================================================================================
-  // == Testing StyleProperty class ====================================================================================
-  // ===================================================================================================================
-  describe("Test StyleProperty class", function () {
-
-    let widgetClass;
-    let property;
-    let element;
-
-    beforeEach(function () {
-      Widget.structure = {};
-      Widget.subWidgets = {};
-      Widget.subWidgetWorkers = [];
-      Widget.defaultValues = {};
-      Widget.setters = {};
-      Widget.getters = {};
-      Widget.triggers = {};
-      Widget.uiBlocking = "";
-
-      widgetClass = Widget;
-      property = {
-        "id": "propertyClass",
-        "value": 26
-      };
-      element = new StyleProperty(widgetClass, property);
-    });
-
-    it("should initialize with correct properties", function () {
-      expect(element.widgetClass).to.equal(widgetClass);
-    });
-
-    it("check setters and default values", function () {
-      let setterKeys = Object.keys(element.widgetClass.setters);
-      let defaultKeys = Object.keys(element.widgetClass.defaultValues);
-      let lengthKeys = setterKeys.length;
-      let lengthDefaultKeys = defaultKeys.length;
-
-      expect(setterKeys[lengthKeys - 1]).to.equal("style");
-      expect(defaultKeys[lengthDefaultKeys - 1]).to.equal("style:id");
-      expect(element.defaultStyleProperty.value).to.equal(property.value);
-      expect(element.defaultStyleProperty.id).to.equal(property.id);
-    });
-
-
-    it("should refresh correctly", function () {
-      const widgetInstance = {
-        "data": {
-          "style:color": "red",
-          "style1:border": "1px solid black",
-          "style2:outline": "1px solid black"
-        },
-        "elements": {
-          "widget": document.createElement("div")
-        },
-        "getTraceDescription": () => {
-          return "description";
-        }
-      };
-      element.refresh(widgetInstance);
-      let inlineStyles = widgetInstance.elements.widget.style;
-
-      expect(inlineStyles["color"]).to.equal("red");
-      expect(inlineStyles["border"]).to.equal("");
-      expect(inlineStyles["outline"]).to.equal("");
     });
   });
 
