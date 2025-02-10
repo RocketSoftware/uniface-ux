@@ -17,17 +17,17 @@
   };
   const MOCK_START_CONTROLS_ONLY_DEFINITION = {
     "subwidgets-start": "first",
-    "first:widget-class": "UX.Button"
+    "first_widget-class": "UX.Button"
   };
 
   const MOCK_CENTER_CONTROLS_ONLY_DEFINITION = {
     "subwidgets-center": "second",
-    "second:widget-class": "UX.Select"
+    "second_widget-class": "UX.Select"
   };
 
   const MOCK_END_CONTROLS_ONLY_DEFINITION = {
     "subwidgets-end": "first",
-    "first:widget-class": "UX.TextField"
+    "first_widget-class": "UX.TextField"
   };
 
 
@@ -48,16 +48,16 @@
   const MOCK_UNDEFINED_START_CONTROLS_DEFINITION = {
     "subwidgets-center": "goto",
     "subwidgets-end": "size",
-    "goto:widget-class": "UX.NumberField",
-    "size:widget-class": "UX.Select"
+    "goto_widget-class": "UX.NumberField",
+    "size_widget-class": "UX.Select"
   };
 
   const MOCK_EMPTY_CENTER_CONTROLS_DEFINITION = {
     "subwidgets-start": "info",
     "subwidgets-center": "",
     "subwidgets-end": "size",
-    "info:widget-class": "UX.RadioGroup",
-    "size:widget-class": "UX.Select"
+    "info_widget-class": "UX.RadioGroup",
+    "size_widget-class": "UX.Select"
   };
   const valRepArray = [
     {
@@ -86,19 +86,19 @@
     "subwidgets-start": "checkbox1info",
     "subwidgets-center": "goto",
     "subwidgets-end": "sizefirst",
-    "info:widget-class": "UX.PlainText",
-    "goto:widget-class": "UX.NumberField",
-    "size:widget-class": "UX.Select",
-    "first:widget-class": "UX.Button",
-    "checkbox1:widget-class": "UX.Checkbox"
+    "info_widget-class": "UX.PlainText",
+    "goto_widget-class": "UX.NumberField",
+    "size_widget-class": "UX.Select",
+    "first_widget-class": "UX.Button",
+    "checkbox1_widget-class": "UX.Checkbox"
   };
 
 
   const MOCK_UNDEFINED_CENTER_CONTROLS_DEFINITION = {
     "subwidgets-start": "info",
     "subwidgets-end": "size",
-    "info:widget-class": "UX.PlainText",
-    "size:widget-class": "UX.Select"
+    "info_widget-class": "UX.PlainText",
+    "size_widget-class": "UX.Select"
   };
 
 
@@ -106,21 +106,21 @@
     "subwidgets-start": "info",
     "subwidgets-center": "goto",
     "subwidgets-end": "",
-    "info:widget-class": "UX.PlainText",
-    "goto:widget-class": "UX.NumberField"
+    "info_widget-class": "UX.PlainText",
+    "goto_widget-class": "UX.NumberField"
   };
 
   const MOCK_UNDEFINED_END_CONTROLS_DEFINITION = {
     "subwidgets-start": "info",
     "subwidgets-center": "goto",
-    "info:widget-class": "UX.PlainText",
-    "goto:widget-class": "UX.NumberField"
+    "info_widget-class": "UX.PlainText",
+    "goto_widget-class": "UX.NumberField"
   };
 
   const MOCK_UNDEFINED_START_CENTER_END_CONTROLS_DEFINITION = {
-    "info:widget-class": "UX.PlainText",
-    "goto:widget-class": "UX.NumberField",
-    "size:widget-class": "UX.Select"
+    "info_widget-class": "UX.PlainText",
+    "goto_widget-class": "UX.NumberField",
+    "size_widget-class": "UX.Select"
   };
 
   const MOCK_CONTROLBAR_DATA = {
@@ -153,6 +153,26 @@
     "chkbox1:widget-class": "UX.CheckBox",
     "chkbox1:value": "true",
     "numberfield:widget-class": "UX.NumberField",
+    "numberfield:value": "",
+    "numberfield:changebutton": "true",
+    "numberfield:changebutton:icon": "Home",
+    "numberfield:changebutton:value": "Apply",
+    "numberfield:html:placeholder": "Enter number to jump",
+    "switch1:widget-class": "UX.Switch",
+    "switch1:value": "true"
+  };
+
+  const MOCK_DATA_WITH_USEFIELD_VALUE = {
+    "subwidgets-start": "select",
+    "subwidgets-center": "btn",
+    "subwidgets-end": "numberfield",
+    "select_widget-class": "UX.Select",
+    "select:valrep": "1=a10=1025=2550=50100=100",
+    "select:value": "1",
+    "select_usefield": "true",
+    "btn_widget-class": "UX.Button",
+    "btn:value": "Button",
+    "numberfield_widget-class": "UX.NumberField",
     "numberfield:value": "",
     "numberfield:changebutton": "true",
     "numberfield:changebutton:icon": "Home",
@@ -296,7 +316,27 @@
     "switch1_priority": 6
   };
 
-  const MOCK_HIDDEN_POPERRTY = {
+  const MOCK_DATA_WITHOUT_USEFIELD_VALUE = {
+    "subwidgets-start": "select",
+    "subwidgets-center": "btn",
+    "subwidgets-end": "numberfield",
+    "select_widget-class": "UX.Select",
+    "select:valrep": "1=a10=1025=2550=50100=100",
+    "select_overflow-behavior": "none",
+    "select:value": "1",
+    "btn_widget-class": "UX.Button",
+    "btn:value": "Button",
+    "numberfield_widget-class": "UX.NumberField",
+    "numberfield:value": "",
+    "numberfield_overflow-behavior": "none",
+    "numberfield:changebutton": "true",
+    "numberfield:changebutton:icon": "Home",
+    "numberfield:changebutton:value": "Apply",
+    "numberfield:html:placeholder": "Enter number to jump",
+    "value": '{"select":"10","btn":"Hello", "numberfield":"2"}'
+  };
+
+  const MOCK_HIDDEN_PROPERTY = {
     "html:hidden": "true"
   };
 
@@ -683,7 +723,7 @@
 
       it("if hidden property is set to be true, it should be reflected", function () {
         return asyncRun(function() {
-          tester.dataUpdate(MOCK_HIDDEN_POPERRTY);
+          tester.dataUpdate(MOCK_HIDDEN_PROPERTY);
         }).then(function() {
           expect(element.hasAttribute("hidden")).to.equal(true);
           expect(window.getComputedStyle(element).display).equal("none");
@@ -740,21 +780,30 @@
       return asyncRun(function() {
         widget = tester.onConnect(element);
         tester.dataInit();
-        node = document.querySelector('#widget-container');
-        node.style.width = '300px';
-
+        tester.dataUpdate(data);
       }).then(function() {
         expect(widget.data['widget-resize']).to.be.true;
         node.style.width = '200px';
         expect(widget.data['widget-resize']).to.be.true;
         expect(element.querySelector('.u-start-section').children.length).equal(2);
         expect(element.querySelector('.u-center-section').children.length).equal(1);
-        expect(element.querySelector('.u-end-section').children.length).equal(2);
-        node.style.width = '500px';
-        expect(widget.data['widget-resize']).to.be.true;
-        expect(element.querySelector('.u-start-section').children.length).equal(2);
-        expect(element.querySelector('.u-center-section').children.length).equal(1);
-        expect(element.querySelector('.u-end-section').children.length).equal(2);
+        expect(element.querySelector('.u-end-section').children.length).equal(1);
+        // Verify select value.
+        let selectElementValue = element.querySelector("fluent-select").value;
+        let valrep = widget.getFormattedValrep(MOCK_DATA_WITHOUT_USEFIELD_VALUE["select:valrep"]);
+        let selectValue = valrep[selectElementValue].value;
+        expect(selectValue).equal(MOCK_DATA_WITHOUT_USEFIELD_VALUE["select:value"]);
+
+        // Verify button.
+        let buttonValue = document.querySelector("fluent-button .u-text").innerText;
+        expect(buttonValue).equal(MOCK_DATA_WITHOUT_USEFIELD_VALUE["btn:value"]);
+
+        // Verify numberfield.
+        let numberfieldValue = document.querySelector("fluent-number-field").value;
+        expect(numberfieldValue).equal(MOCK_DATA_WITHOUT_USEFIELD_VALUE["numberfield:value"]);
+
+        // Verify getValue
+        expect(widget.getValue()).equal('{}');
       });
     });
 
@@ -766,21 +815,21 @@
       return asyncRun(function() {
         widget = tester.onConnect(element);
         tester.dataInit();
-        node = document.querySelector('#widget-container');
-        node.style.width = '300px';
+        tester.dataUpdate(data);
       }).then(function() {
-        expect(widget.data['widget-resize']).to.be.true;
-        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector('.u-start-section').children.length).equal(1);
+        expect(element.querySelector('.u-center-section').children.length).equal(1);
+        expect(element.querySelector('.u-end-section').children.length).equal(1);
+        // Verify select value.
+        let selectElementValue = element.querySelector("fluent-select").value;
+        let valrep = widget.getFormattedValrep(MOCK_DATA_WITH_USEFIELD_VALUE["select:valrep"]);
+        let selectValue = valrep[selectElementValue].value;
+        expect(selectValue).equal(fieldValue["select"]);
 
-        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        // Verify button.
+        let buttonValue = document.querySelector("fluent-button .u-text").innerText;
+        expect(buttonValue).equal(MOCK_DATA_WITH_USEFIELD_VALUE["btn:value"]);
+        expect(buttonValue).not.equal(fieldValue["btn"]);
       });
     });
 
