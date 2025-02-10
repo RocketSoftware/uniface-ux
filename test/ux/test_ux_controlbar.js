@@ -90,7 +90,8 @@
     "goto:widget-class": "UX.NumberField",
     "size:widget-class": "UX.Select",
     "first:widget-class": "UX.Button",
-    "checkbox1:widget-class": "UX.Checkbox"
+    "checkbox1:widget-class": "UX.Checkbox",
+    "goto_delegated-properties": "html:disabledhtml:readonlyclass:classTest"
   };
 
 
@@ -643,6 +644,55 @@
           expect(element.classList.contains("classC")).to.be.true;
           expect(element.getAttribute("u-orientation")).to.equal("vertical");
           expect(window.getComputedStyle(element)['flex-direction']).to.equal("column");
+        });
+      });
+
+      it("if disabled is set to true, it should be reflected on the subwidgets with disabled as delegated property", function () {
+        element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        return asyncRun(function() {
+          tester.onConnect(element);
+          tester.dataUpdate({
+            "html:disabled": "true"
+          });
+        }).then(function() {
+          // check if property delegation is working
+          expect(element.querySelector("fluent-number-field").hasAttribute("disabled")).to.be.true;
+          expect(element.querySelector(".u-sw-changebutton.neutral").hasAttribute("disabled")).to.be.true;
+          expect(element.querySelector("fluent-select").hasAttribute("disabled")).to.be.false;
+          expect(element.querySelector(".u-sw-first.u-controlbar-item.neutral").hasAttribute("disabled")).to.be.false;
+          expect(element.querySelector("fluent-checkbox").hasAttribute("disabled")).to.be.false;
+        });
+      });
+
+      it("if readonly is set to true, it should be reflected on the subwidgets with readonly as delegated property", function () {
+        element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        return asyncRun(function() {
+          tester.onConnect(element);
+          tester.dataUpdate({
+            "html:readonly": "true"
+          });
+        }).then(function() {
+          // check if property delegation is working
+          expect(element.querySelector("fluent-number-field").hasAttribute("readonly")).to.be.true;
+          expect(element.querySelector("fluent-select").hasAttribute("readonly")).to.be.false;
+          expect(element.querySelector(".u-sw-first.u-controlbar-item.neutral").hasAttribute("readonly")).to.be.false;
+          expect(element.querySelector("fluent-checkbox").hasAttribute("readonly")).to.be.false;
+        });
+      });
+
+      it("if class is set to widget, it should be reflected on the subwidgets with same class as delegated property", function () {
+        element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        return asyncRun(function() {
+          tester.onConnect(element);
+          tester.dataUpdate({
+            "class:classTest": "true"
+          });
+        }).then(function() {
+          // check if property delegation is working
+          expect(element.querySelector("fluent-number-field").classList.contains('classTest')).to.be.true;
+          expect(element.querySelector("fluent-select").classList.contains('classTest')).to.be.false;
+          expect(element.querySelector(".u-sw-first.u-controlbar-item.neutral").classList.contains('classTest')).to.be.false;
+          expect(element.querySelector("fluent-checkbox").classList.contains('classTest')).to.be.false;
         });
       });
 
