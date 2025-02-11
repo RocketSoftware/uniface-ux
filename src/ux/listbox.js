@@ -56,14 +56,39 @@ export class Listbox extends Widget {
       this.registerDefaultValue(widgetClass, propId, defaultValue);
       // Register a setter for valrep, ensuring it also updates the worker's refresh function.
       this.registerSetter(widgetClass, "valrep", this);
+      this.registerGetter(widgetClass, "value", this);
+    }
+
+    getValue(widgetInstance) {
+      const element = this.getElement(widgetInstance);
+      const valrep = this.getNode(widgetInstance.data, "valrep");
+      console.log(element);
+      console.log(valrep);
+      // console.log(element.selectedIndex);
+
+      const value = valrep[element["value"]]?.value;
+      return value;
+
+    }
+
+    getValueUpdaters(widgetInstance) {
+      this.log("getValueUpdaters", { "widgetInstance": widgetInstance.getTraceDescription() });
+      return;
     }
 
     refresh(widgetInstance) {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
 
+      const element = this.getElement(widgetInstance);
+      const value = this.getNode(widgetInstance.data, "value");
+      const valrep = this.getNode(widgetInstance.data, "valrep");
+      const valueToSet = valrep.findIndex((item) => item.value === value);
+
       // Should be set to -1 only if newly selected value is not part of valrep.
       // Now setting previousSelectedIndex to -1 by default as value hook up is not yet implemented.
-      widgetInstance.previousSelectedIndex = -1;
+      // widgetInstance.previousSelectedIndex = valueToSet;
+      element["selectedIndex"] = valueToSet;
+      // element.setAttribute("selectedIndex", valueToSet);
     }
   };
 
