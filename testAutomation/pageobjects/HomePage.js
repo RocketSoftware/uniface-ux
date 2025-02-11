@@ -13,11 +13,15 @@ class HomePage extends BasePage
 }
 
 async checkElementVisibilityAndExtractText(newPage, selector) {
-    await newPage.waitForLoadState();
-    await expect(newPage.locator(selector)).toBeVisible();
-    const elementText = await newPage.locator(selector).textContent();
-    //console.log('Extracted Text:', elementText);
-    return elementText;
+
+  // Ensure the element exists in the DOM before checking visibility
+  await newPage.waitForSelector(selector, { state: 'attached', timeout: 30000 });
+
+  //Element is present in the DOM, now checking if it's visible
+  await expect(newPage.locator(selector)).toBeVisible({ timeout: 30000 });
+
+  const elementText = await newPage.locator(selector).textContent();
+  return elementText;
   }
 
 async getFailureCount(newPage) {   
