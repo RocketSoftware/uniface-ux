@@ -308,7 +308,8 @@ export class Controlbar extends Widget {
     new HtmlAttributeChoice(this, "orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new StyleClass(this, ["u-controlbar"]),
-    new this.HandleOverFlowPropertyWorker(this, "widget-resize", false)
+    new this.HandleOverFlowPropertyWorker(this, "widget-resize", false),
+    new HtmlSubWidgetValueWorker(this, "value", "value", null)
   ], [
     new Element(this, "div", "u-start-section", ".u-start-section", [], [
       new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-start")
