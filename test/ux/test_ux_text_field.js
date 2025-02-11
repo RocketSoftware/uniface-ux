@@ -132,13 +132,12 @@
     const element = tester.processLayout();
     const widget = tester.onConnect();
 
-    it("mapTrigger()", function () {
+    it("defined mapTrigger() and onchange event", function () {
       widget.mapTrigger("onchange");
       const event = new window.Event("onchange");
       element.dispatchEvent(event);
       assert(widget.elements.widget === element, "Widget is not connected.");
     });
-
   });
 
   describe("Text field onchange event", function () {

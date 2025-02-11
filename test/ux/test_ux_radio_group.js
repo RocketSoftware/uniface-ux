@@ -124,8 +124,15 @@
   });
 
   describe("mapTrigger()", function () {
+    const element = tester.processLayout();
     const widget = tester.onConnect();
-    widget.mapTrigger("onchange");
+
+    it("defined mapTrigger() and onchange event", function () {
+      widget.mapTrigger("onchange");
+      const event = new window.Event("onchange");
+      element.dispatchEvent(event);
+      assert(widget.elements.widget === element, "Widget is not connected.");
+    });
   });
 
   describe("dataInit()", function () {

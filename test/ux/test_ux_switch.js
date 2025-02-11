@@ -110,9 +110,17 @@
   });
 
   describe("mapTrigger()", function () {
+    const element = tester.processLayout();
     const widget = tester.onConnect();
-    widget.mapTrigger("onchange");
+
+    it("defined mapTrigger() and onchange event", function () {
+      widget.mapTrigger("onchange");
+      const event = new window.Event("onchange");
+      element.dispatchEvent(event);
+      assert(widget.elements.widget === element, "Widget is not connected.");
+    });
   });
+
 
   describe("dataInit()", function () {
     const classes = tester.getDefaultClasses();
@@ -174,6 +182,7 @@
         });
       }).then(function () {
         let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
+        let labelText2 = element.querySelector("span.u-label-text").innerText; // does the same things
         assert.equal(labelText, switchLabelText); // Check for visibility.
         assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });

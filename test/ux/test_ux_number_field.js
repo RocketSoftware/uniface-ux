@@ -119,10 +119,13 @@
   describe("mapTrigger()", function () {
     const element = tester.processLayout();
     const widget = tester.onConnect();
-    widget.mapTrigger("onchange");
-    const event = new window.Event("onchange");
-    element.dispatchEvent(event);
-    assert(widget.elements.widget === element, "Widget is not connected!");
+
+    it("define mapTrigger() and onchange event", function () {
+      widget.mapTrigger("onchange");
+      const event = new window.Event("onchange");
+      element.dispatchEvent(event);
+      assert(widget.elements.widget === element, "Widget is not connected.");
+    });
   });
 
   describe("Number field onchange event", function () {
@@ -629,6 +632,17 @@
       });
     });
 
+  });
+
+  describe("Reset all properties", function () {
+
+    it("reset all properties", function () {
+      try {
+        tester.dataUpdate(tester.getDefaultValues());
+      } catch (e) {
+        assert(false, `Failed to reset the properties, exception ${e}`);
+      }
+    });
   });
 
 })();

@@ -108,13 +108,17 @@
     });
   });
 
-  describe("mapTrigger()", function() {
+  describe("mapTrigger()", function () {
     const element = tester.processLayout();
     const widget = tester.onConnect();
-    widget.mapTrigger("onchange");
-    const event = new window.Event("onchange");
-    element.dispatchEvent(event);
-    assert(widget.elements.widget === element, "Widget is not connected!");
+
+    it("verify mapTrigger() and onchange event", function () {
+      widget.mapTrigger("click");
+      const event = new window.Event("click");
+      element.dispatchEvent(event);
+      assert(widget.elements.widget === element, "Widget is not connected.");
+    });
+
   });
 
   describe("Checkbox onchange event", function() {
@@ -193,10 +197,10 @@
   });
 
   describe("dataUpdate()", function() {
-    let widget, element;
+    let element;
 
     before(function() {
-      widget = tester.createWidget();
+      tester.createWidget();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
@@ -243,9 +247,9 @@
           "label-text": checkBoxLabelText
         });
       }).then(function() {
-        let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
+        let labelText = element.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, checkBoxLabelText); // Check for visibility.
-        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
+        assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
 
@@ -257,8 +261,8 @@
           "value": 1
         });
       }).then(function() {
-        assert(widget.elements.widget.hasAttribute("title"), "Failed to show the title attribute.");
-        expect(widget.elements.widget.getAttribute("title")).equal(checkBoxTitle);
+        assert(element.hasAttribute("title"), "Failed to show the title attribute.");
+        expect(element.getAttribute("title")).equal(checkBoxTitle);
       });
     });
 
@@ -270,9 +274,9 @@
           "label-text": checkBoxLabelText
         });
       }).then(function() {
-        let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
+        let labelText = element.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, checkBoxLabelText); // Check for visibility.
-        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
+        assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
 
@@ -284,9 +288,9 @@
           "label-text": checkBoxLabelText
         });
       }).then(function() {
-        let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
+        let labelText = element.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, checkBoxLabelText); // Check for visibility.
-        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
+        assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
 
@@ -303,17 +307,17 @@
           "label-text": "Changed Label Text"
         });
       }).then(function() {
-        let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
+        let labelText = element.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, "Changed Label Text"); // Check for visibility.
-        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label-text.");
+        assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label-text.");
       });
     });
   });
 
   describe("showError()", function() {
-    let widget, element;
+    let element;
     before(function() {
-      widget = tester.createWidget();
+      tester.createWidget();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
@@ -326,18 +330,18 @@
       }).then(function() {
 
         expect(element).to.have.class("u-format-invalid");
-        assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
-        expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
-        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid.");
-        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."); // Check for visibility.
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid.");
+        assert.equal(element.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."); // Check for visibility.
       });
     });
   });
 
   describe("hideError()", function() {
-    let widget, element;
+    let element;
     before(function() {
-      widget = tester.createWidget();
+      tester.createWidget();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
@@ -350,9 +354,9 @@
         });
       }).then(function() {
         expect(element).to.not.have.class("u-format-invalid");
-        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden error icon.");
-        expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
-        expect(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide hidden attribute.");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide hidden attribute.");
       });
     });
   });
