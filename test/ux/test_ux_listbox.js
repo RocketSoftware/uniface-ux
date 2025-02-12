@@ -422,9 +422,9 @@
         });
       }).then(function () {
         const selectedOption = element.querySelector(".u-option.selected");
-        const selectedIndex = valRepArray.findIndex((item) => item.value === "2");
+        const selectedIndex = valRepArrayWithEmpty.findIndex((item) => item.value === "");
         expect(selectedOption?.value).equal(selectedIndex?.toString());
-        expect(selectedOption?.textContent).equal(valRepArray[selectedIndex]?.representation);
+        expect(selectedOption?.textContent).equal(valRepArrayWithEmpty[selectedIndex]?.representation);
 
         assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("");
