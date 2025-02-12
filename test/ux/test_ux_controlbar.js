@@ -269,7 +269,7 @@
     "switch1_priority": 1
   };
 
-  const MOCK_DATA_WITH_OVERFLOW_and_PRIORITY_HIDE = {
+  const MOCK_DATA_WITH_OVERFLOW_HIDE_AND_PRIORITY = {
     "subwidgets-start": "selecttextfld1",
     "subwidgets-center": "btnchkbox1",
     "subwidgets-end": "numberfieldswitch1",
@@ -304,7 +304,7 @@
     "switch1_priority": 6
   };
 
-  const MOCK_DATA_WITH_OVERFLOW_AND_PRIORITY_MENU = {
+  const MOCK_DATA_WITH_OVERFLOW_MENU_AND_PRIORITY = {
     "subwidgets-start": "selecttextfld1",
     "subwidgets-center": "btnchkbox1",
     "subwidgets-end": "numberfieldswitch1",
@@ -337,6 +337,40 @@
     "switch1:value": "true",
     "switch1_overflow-behavior": "menu",
     "switch1_priority": 6
+  };
+
+  const MOCK_DATA_WITH_DIFFERENT_OVERFLOW_AND_PRIORITY = {
+    "subwidgets-start": "selecttextfld1",
+    "subwidgets-center": "btnchkbox1",
+    "subwidgets-end": "numberfieldswitch1",
+    "select_widget-class": "UX.Select",
+    "select:valrep": "1=a10=1025=2550=50100=100",
+    "select_overflow-behavior": "none",
+    "select_priority": 2,
+    "select:value": "1",
+    "textfld1_widget-class": "UX.TextField",
+    "textfld1:value": "text Value",
+    "textfld1_overflow-behavior": "move",
+    "btn_widget-class": "UX.Button",
+    "btn:value": "Button",
+    "btn_overflow-behavior": "menu",
+    "btn_priority": 3,
+    "chkbox1_widget-class": "UX.CheckBox",
+    "chkbox1:value": "true",
+    "chkbox1_overflow-behavior": "move",
+    "chkbox1_priority": 4,
+    "numberfield_widget-class": "UX.NumberField",
+    "numberfield:value": "",
+    "numberfield_overflow-behavior": "hide",
+    "numberfield_priority": 5,
+    "numberfield:changebutton": "true",
+    "numberfield:changebutton:icon": "Home",
+    "numberfield:changebutton:value": "Apply",
+    "numberfield:html:placeholder": "Enter number to jump",
+    "switch1_widget-class": "UX.Switch",
+    "switch1:value": "true",
+    "switch1_overflow-behavior": "move",
+    "switch1_priority": 1
   };
 
   /**
@@ -820,7 +854,7 @@
   });
 
   describe(`${widgetName} OverFlow tests`, function () {
-    it("resize the widget container and expect the widget-resize property to be true", function () {
+    it("resize the widget container and expect the widget-resize property to be true and expect widgets to not be removed", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
@@ -846,7 +880,7 @@
       });
     });
 
-    it("default behavior of subwidgets if no overflow is set", function () {
+    it("overflow button should be hidden with larger widget resize property", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
@@ -855,20 +889,13 @@
         widget = tester.onConnect(element);
         tester.dataInit();
         node = document.querySelector('#widget-container');
-        node.style.width = '300px';
+        node.style.width = '900px';
       }).then(function() {
-        expect(widget.data['widget-resize']).to.be.true;
-        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
-
-        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.true;
+        expect(widget.elements.widget.classList.contains("u-overflowed"));
+        expect(element.querySelector("fluent-button.u-overflow-button").isConnected).to.be.true;
+        expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.true;
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute("hidden")).to.be.true;
       });
     });
 
@@ -880,10 +907,10 @@
       return asyncRun(function() {
         widget = tester.onConnect(element);
         tester.dataInit();
+        node = document.querySelector('#widget-container');
+        node.style.width = '300px';
       }).then(function() {
         expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.false;
-        node.style.width = '300px';
-        node = document.querySelector('#widget-container');
         expect(widget.data['widget-resize']).to.be.true;
         expect(element.querySelector("fluent-button.u-overflow-button").getAttribute("class")).to.includes("u-overflow-button");
         expect(element.querySelector("fluent-menu.u-overflow-menu").getAttribute("class")).to.includes("u-overflow-menu");
@@ -925,47 +952,11 @@
       });
     });
 
-    it("sub-widget moves to the overflow menu when different combinations of widgets with respect to overflow-behavior set to move and priority is defined with subwidget visible", function () {
-      let element, widget;
-      const tester = new umockup.WidgetTester();
-      let node = document.querySelector('#widget-container');
-
-      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
-      return asyncRun(function() {
-        widget = tester.onConnect(element);
-        tester.dataInit();
-        node = document.querySelector('#widget-container');
-        node.style.width = '500px';
-      }).then(function() {
-        expect(widget.data['widget-resize']).to.be.true;
-        expect(widget.elements.widget.classList.contains("u-overflowed"));
-
-        expect(element.querySelector("fluent-select.u-sw-select").classList.contains("u-overflown-item")).to.be.false;
-
-        expect(!element.querySelector("fluent-select.u-sw-select").classList.contains("u-overflown-item"));
-        expect(!element.querySelector("fluent-text-field.u-sw-textfld1").classList.contains("u-overflown-item"));
-
-        expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.false;
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute("hidden")).to.be.true;
-
-        expect(element.querySelector("fluent-number-field.u-sw-numberfield").classList.contains("u-overflown-item"));
-        expect(element.querySelector("fluent-button.u-sw-btn").classList.contains("u-overflown-item"));
-        expect(element.querySelector("fluent-switch.u-sw-switch1").classList.contains("u-overflown-item"));
-
-        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
-        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.true;
-        node.style.width = '200px';
-      });
-    });
-
     it("sub-widgets hides when it gets 'overflowed' when different combinations of widgets with respect to overflow-behavior set to hide and priority is defined when no subwidget is visible", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
-      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_and_PRIORITY_HIDE);
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_HIDE_AND_PRIORITY);
       return asyncRun(function() {
         widget = tester.onConnect(element);
         tester.dataInit();
@@ -987,7 +978,7 @@
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
-      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_AND_PRIORITY_MENU);
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_AND_PRIORITY);
       return asyncRun(function() {
         widget = tester.onConnect(element);
         tester.dataInit();
@@ -1017,7 +1008,7 @@
     it("sub-widget always sits in the overflow-menu when different combinations of widgets with respect to overflow-behavior set to menu and priority is defined with same width", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
-      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_AND_PRIORITY_MENU);
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_AND_PRIORITY);
       return asyncRun(function() {
         widget = tester.onConnect(element);
         tester.dataInit();
@@ -1039,6 +1030,508 @@
         expect(!element.querySelector(".u-overflow-menu [item-id=btn]").classList.contains("u-not-supported"));
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").classList.contains("u-not-supported"));
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").classList.contains("u-not-supported"));
+      });
+    });
+  });
+
+  describe("OverFlow tests with priority and overflow not defined", function () {
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to  900px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITHOUT_OVERFLOW);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        node = document.querySelector('#widget-container');
+        node.style.width = '900px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).not.to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 750px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITHOUT_OVERFLOW);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        node = document.querySelector('#widget-container');
+        node.style.width = '750px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 600px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITHOUT_OVERFLOW);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        node = document.querySelector('#widget-container');
+        node.style.width = '600px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 500px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITHOUT_OVERFLOW);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        node = document.querySelector('#widget-container');
+        node.style.width = '500px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 400px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITHOUT_OVERFLOW);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        node = document.querySelector('#widget-container');
+        node.style.width = '400px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 50px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITHOUT_OVERFLOW);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        node = document.querySelector('#widget-container');
+        node.style.width = '50px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+      });
+    });
+  });
+
+  describe("OverFlow tests with priority defined and overflow is set to move", function () {
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 1000px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '1000px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).not.to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 750px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '750px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).not.to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 600px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '600px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).not.to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 400px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '400px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).not.to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 300px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '300px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).not.to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 50px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '50px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 50px and widget overflow behavior is updated manually to none", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate({"numberfield_overflow-behavior": "none"});
+        node = document.querySelector('#widget-container');
+        node.style.width = '50px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+      });
+    });
+  });
+
+  describe("OverFlow tests with different priority and combination of overflow behavior", function () {
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 1000px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_DIFFERENT_OVERFLOW_AND_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_DIFFERENT_OVERFLOW_AND_PRIORITY);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '1000px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).not.to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 750px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_DIFFERENT_OVERFLOW_AND_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_DIFFERENT_OVERFLOW_AND_PRIORITY);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '750px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).not.to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 600px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_DIFFERENT_OVERFLOW_AND_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_DIFFERENT_OVERFLOW_AND_PRIORITY);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '600px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).not.to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 300px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_DIFFERENT_OVERFLOW_AND_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_DIFFERENT_OVERFLOW_AND_PRIORITY);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '300px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+      });
+    });
+
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 50px", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_DIFFERENT_OVERFLOW_AND_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_DIFFERENT_OVERFLOW_AND_PRIORITY);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '50px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
       });
     });
   });
