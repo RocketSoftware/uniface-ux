@@ -62,18 +62,29 @@ export class Listbox extends Widget {
     getValue(widgetInstance) {
       const element = this.getElement(widgetInstance);
       const valrep = this.getNode(widgetInstance.data, "valrep");
-      console.log(element);
-      console.log(valrep);
-      // console.log(element.selectedIndex);
 
-      const value = valrep[element["value"]]?.value;
+      const value = valrep[element["selectedIndex"]]?.value;
       return value;
 
     }
 
     getValueUpdaters(widgetInstance) {
       this.log("getValueUpdaters", { "widgetInstance": widgetInstance.getTraceDescription() });
-      return;
+      const element = this.getElement(widgetInstance);
+      let updaters = [];
+      updaters.push({
+        "element": element,
+        "event_name": "change",
+        "handler": () => {
+          const valrep = this.getNode(widgetInstance.data, "valrep");
+          if (valrep && valrep.length > 0) {
+            // Since the value received will be the corresponding index, find the actual value from valrep.
+            const value = valrep[element["selectedIndex"]]?.value;
+            widgetInstance.setProperties({ "value": value });
+          }
+        }
+      });
+      return updaters;
     }
 
     refresh(widgetInstance) {
@@ -82,13 +93,28 @@ export class Listbox extends Widget {
       const element = this.getElement(widgetInstance);
       const value = this.getNode(widgetInstance.data, "value");
       const valrep = this.getNode(widgetInstance.data, "valrep");
-      const valueToSet = valrep.findIndex((item) => item.value === value);
 
+      // Since the index is passed to fluent instead of the actual value, find the index corresponding to the value received.
+      const valueToSet = valrep.findIndex((item) => item.value === value);
+      const isValueEmpty = (value === null || value === "");
+      if (valrep.length > 0 && (valueToSet !== -1 || isValueEmpty)) {
+        // Manually clear the checked state when value is empty and empty value not present in valrep.
+        widgetInstance.setProperties({
+          "format-error": false,
+          "format-error-message": ""
+        });
+      } else {
+        widgetInstance.setProperties({
+          "format-error": true,
+          "format-error-message": Listbox.formatErrorMessage
+        });
+      }
       // Should be set to -1 only if newly selected value is not part of valrep.
       // Now setting previousSelectedIndex to -1 by default as value hook up is not yet implemented.
-      // widgetInstance.previousSelectedIndex = valueToSet;
-      element["selectedIndex"] = valueToSet;
-      // element.setAttribute("selectedIndex", valueToSet);
+      widgetInstance.previousSelectedIndex = valueToSet;
+      window.queueMicrotask(() => {
+        element["selectedIndex"] = valueToSet;
+      });
     }
   };
 
