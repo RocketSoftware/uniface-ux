@@ -13,7 +13,7 @@ class HomePage extends BasePage {
   async checkElementVisibilityAndExtractText(newPage, selector) {
     await newPage.waitForLoadState();
     // Ensure the element exists in the DOM before checking visibility
-    //
+    
     await newPage.waitForSelector(selector, { state: 'attached' });
 
     //Element is present in the DOM, now checking if it's visible
