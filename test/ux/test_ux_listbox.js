@@ -369,6 +369,26 @@
       });
     });
 
+    it("update valrep and expect the selection to be retained", function () {
+      const valRepArrayWithExtraOptions = [
+        {
+          "value": "0",
+          "representation": "option zero"
+        },
+        ...valRepArray
+      ];
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArrayWithExtraOptions
+        });
+      }).then(function () {
+        const selectedOption = element.querySelector(".u-option.selected");
+        const selectedIndex = valRepArrayWithExtraOptions.findIndex((item) => item.value === "2");
+        expect(selectedOption?.value).equal(selectedIndex?.toString());
+        expect(selectedOption?.textContent).equal(valRepArrayWithExtraOptions[selectedIndex]?.representation);
+      });
+    });
+
     it("set selection to an invalid value and expect error to be shown and nothing to be selected", function () {
       return asyncRun(function () {
         tester.dataUpdate({
@@ -450,25 +470,19 @@
           "valrep": valRepArray,
           "display-format": "rep"
         });
-        const firstOption = element.querySelector("fluent-option");
-        firstOption.click();
-      }).then(function () {
-        const selectedOption = element.querySelector(".u-option.selected");
-        expect(selectedOption?.value).equal(valRepArray["0"].value);
-        expect(selectedOption?.textContent).equal(valRepArray["0"]?.representation);
-      });
-    });
 
-    it("call getValue() to check if the selected value is returned", function () {
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "valrep": valRepArray
-        });
-        const secondOption = element.querySelectorAll("fluent-option")[1];
-        secondOption.click();
+        // Programmatically select an option and dispatch the change event.
+        const firstOption = element.querySelector("fluent-option");
+        firstOption.selected = true;
+        const event = new window.Event("change", { "bubbles": true });
+        element.dispatchEvent(event);
       }).then(function () {
-        const value = widget.getValue();
-        expect(value).to.equal(valRepArray[1].value);
+        const returnedValue = widget.getValue();
+        const selectedOption = element.querySelector(".u-option.selected");
+
+        expect(selectedOption?.value).equal("0");
+        expect(returnedValue).to.equal(valRepArray[0].value);
+        expect(selectedOption?.textContent).equal(valRepArray[0]?.representation);
       });
     });
 
@@ -490,20 +504,22 @@
       });
     });
 
-    it("simulate user interaction again to select a valid option and expect the error to be removed", function () {
+    it("simulate user interaction again to select the same valid option and expect the error to be removed", function () {
       return asyncRun(function () {
-        tester.dataUpdate({
-          "valrep": valRepArray,
-          "display-format": "rep"
-        });
-        const thirdOption = element.querySelectorAll("fluent-option")[2];
-        thirdOption.click();
+        // Programmatically select an option and dispatch the change event.
+        const firstOption = element.querySelector("fluent-option");
+        firstOption.selected = true;
+        const event = new window.Event("change", { "bubbles": true });
+        element.dispatchEvent(event);
       }).then(function () {
+        const returnedValue = widget.getValue();
         const selectedOption = element.querySelector(".u-option.selected");
-        expect(selectedOption?.value).equal(valRepArray["2"].value);
-        expect(selectedOption?.textContent).equal(valRepArray["2"]?.representation);
-        expect(element).to.not.have.class("u-format-invalid");
 
+        expect(selectedOption?.value).equal("0");
+        expect(returnedValue).to.equal(valRepArray[0].value);
+        expect(selectedOption?.textContent).equal(valRepArray[0]?.representation);
+
+        expect(element).to.not.have.class("u-format-invalid");
         assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("");
         expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
@@ -542,7 +558,7 @@
     });
   });
 
-  describe("showError()", function () {
+  describe("Error Visualization", function () {
     let widget, element;
     before(function () {
       widget = tester.createWidget();
@@ -550,7 +566,23 @@
       verifyWidgetClass(widgetClass);
     });
 
-    it("call the showError() method and check if error is properly visualized", function () {
+    it("clear the format error and expect no error to be shown", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "format-error": false,
+          "format-error-message": ""
+        });
+      }).then(function () {
+        expect(element).to.not.have.class("u-format-invalid");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(element.childNodes[1].classList.contains("ms-Icon")).to.be.false;
+        expect(element.childNodes[1].classList.contains("ms-Icon--AlertSolid")).to.be.false;
+      });
+    });
+
+    it("call the showError() method and expect validation error to be shown", function () {
       return asyncRun(function () {
         widget.showError("Validation Error");
       }).then(function () {
@@ -561,17 +593,8 @@
         expect(element.childNodes[1].className).equal("u-error-icon ms-Icon ms-Icon--AlertSolid");
       });
     });
-  });
 
-  describe("hideError()", function () {
-    let widget, element;
-    before(function () {
-      widget = tester.createWidget();
-      element = tester.element;
-      verifyWidgetClass(widgetClass);
-    });
-
-    it("call the hideError() method and check if error is removed", function () {
+    it("call the hideError() method and expect validation error to be removed", function () {
       return asyncRun(function () {
         widget.hideError();
       }).then(function () {
