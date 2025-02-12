@@ -912,9 +912,6 @@
       }).then(function() {
         expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.false;
         expect(widget.data['widget-resize']).to.be.true;
-        expect(element.querySelector("fluent-button.u-overflow-button").getAttribute("class")).to.includes("u-overflow-button");
-        expect(element.querySelector("fluent-menu.u-overflow-menu").getAttribute("class")).to.includes("u-overflow-menu");
-
         expect(element.querySelector("fluent-button.u-overflow-button").isConnected).to.be.true;
         expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.false;
         expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute("hidden")).to.be.true;
