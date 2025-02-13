@@ -880,7 +880,7 @@
       });
     });
 
-    it("overflow button should be hidden with larger widget resize property", function () {
+    it("overflow button should be hidden when there is no overflow of subwidgets", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
@@ -891,7 +891,6 @@
         node = document.querySelector('#widget-container');
         node.style.width = '900px';
       }).then(function() {
-        expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.true;
         expect(widget.elements.widget.classList.contains("u-overflowed"));
         expect(element.querySelector("fluent-button.u-overflow-button").isConnected).to.be.true;
         expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.true;
@@ -899,7 +898,7 @@
       });
     });
 
-    it("should check the visibility of the overflow button", function () {
+    it("overflow button should be visible when there is an overflow of subwidgets", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
@@ -910,7 +909,6 @@
         node = document.querySelector('#widget-container');
         node.style.width = '300px';
       }).then(function() {
-        expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.false;
         expect(widget.data['widget-resize']).to.be.true;
         expect(element.querySelector("fluent-button.u-overflow-button").isConnected).to.be.true;
         expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.false;
@@ -918,7 +916,7 @@
       });
     });
 
-    it("specifies nothing happens, the sub-widget does not overflow at all when different combinations of widgets with respect to overflow-behavior set to none and no priority defined", function () {
+    it("when the overflow behavior is set to none and a priority is defined, the subwidgets maintain their positions", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
@@ -941,15 +939,15 @@
         expect(!element.querySelector("fluent-switch.u-sw-switch1").classList.contains("u-overflown-item"));
         expect(!element.querySelector("fluent-text-field.u-sw-textfld1").classList.contains("u-overflown-item"));
 
-        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.true;
       });
     });
 
-    it("sub-widgets hides when it gets 'overflowed' when different combinations of widgets with respect to overflow-behavior set to hide and priority is defined when no subwidget is visible", function () {
+    it("when the overflow behavior is set to hide and priority defined, sub-widgets are hidden when they overflow.", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
@@ -962,6 +960,9 @@
       }).then(function() {
         expect(widget.elements.widget.classList.contains("u-overflowed"));
         expect(element.querySelector("fluent-select.u-sw-select").classList.contains("u-overflown-item"));
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").classList.contains("u-overflown-item"));
+        expect(element.querySelector("fluent-button.u-sw-btn").classList.contains("u-overflown-item"));
+        expect(element.querySelector("fluent-switch.u-sw-switch1").classList.contains("u-overflown-item"));
         expect(element.querySelector("fluent-text-field.u-sw-textfld1").classList.contains("u-overflown-item"));
 
         expect(element.querySelector("fluent-button.u-overflow-button").hasAttribute("hidden")).to.be.false;
@@ -971,7 +972,7 @@
       });
     });
 
-    it("sub-widget always sits in the overflow-menu when different combinations of widgets with respect to overflow-behavior set to menu and priority is defined and width is reduced", function () {
+    it("when the overflow behavior is set to menu and priority is defined, sub-widgets always sit in the overflow menu as the width is reduced", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
@@ -1002,7 +1003,7 @@
       });
     });
 
-    it("sub-widget always sits in the overflow-menu when different combinations of widgets with respect to overflow-behavior set to menu and priority is defined with same width", function () {
+    it("when the overflow behavior is set to menu and priority is defined, sub-widgets always sit in the overflow menu under various combinations of widgets with the same width.", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_AND_PRIORITY);
@@ -1366,7 +1367,9 @@
       return asyncRun(function() {
         widget = tester.onConnect(element);
         tester.dataInit();
-        tester.dataUpdate({"numberfield_overflow-behavior": "none"});
+        tester.dataUpdate({
+          "numberfield_overflow-behavior": "none"
+        });
         node = document.querySelector('#widget-container');
         node.style.width = '50px';
       }).then(function() {
