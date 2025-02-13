@@ -250,7 +250,7 @@
     let element;
     before(function () {
       tester.createWidget();
-      element = tester.element
+      element = tester.element;
     });
 
     it("set appearance set to filled", function () {

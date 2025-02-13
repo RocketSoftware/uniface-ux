@@ -225,7 +225,6 @@
           "label-position": "below"
         });
       }).then(function () {
-        const widget = tester.construct();
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "below");
       });

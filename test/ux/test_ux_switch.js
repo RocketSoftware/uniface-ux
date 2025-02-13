@@ -182,7 +182,6 @@
         });
       }).then(function () {
         let labelText = element.querySelector("span.u-label-text").innerText;
-        let labelText2 = element.querySelector("span.u-label-text").innerText; // does the same things
         assert.equal(labelText, switchLabelText); // Check for visibility.
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
@@ -252,7 +251,7 @@
   });
 
   describe("showError()", function () {
-    let widget, element;
+    let element;
     before(function () {
       tester.createWidget();
       element = tester.element;
