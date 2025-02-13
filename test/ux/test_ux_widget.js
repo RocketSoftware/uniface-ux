@@ -51,7 +51,7 @@ export class TestWidget extends Widget {
 
   describe("Widget class methods", function () {
 
-    let definitions, returnedProcess, testwidget, consoleLogSpy;
+    let definitions, returnedProcess, testWidget, consoleLogSpy;
 
     definitions = {
       "widget_class": "Widget",
@@ -69,11 +69,11 @@ export class TestWidget extends Widget {
     };
 
     beforeEach(function () {
-      testwidget = new TestWidget;
+      testWidget = new TestWidget;
       TestWidget.reportUnsupportedTriggerWarnings = true;
-      returnedProcess = TestWidget.processLayout(testwidget, definitions);
-      testwidget.onConnect(returnedProcess);
-      testwidget.dataInit();
+      returnedProcess = TestWidget.processLayout(testWidget, definitions);
+      testWidget.onConnect(returnedProcess);
+      testWidget.dataInit();
     });
 
     it("processLayout()", function () {
@@ -84,7 +84,7 @@ export class TestWidget extends Widget {
     });
 
     it("onConnect()", function () {
-      let connectedWidget = testwidget.onConnect(returnedProcess);
+      let connectedWidget = testWidget.onConnect(returnedProcess);
 
       expect(connectedWidget[0].element).instanceOf(HTMLElement);
       expect(connectedWidget[0].event_name).to.eql("");
@@ -94,30 +94,30 @@ export class TestWidget extends Widget {
     it("mapTrigger()", function () {
       // Test with a wrong trigger, should return undefined and display a warning.
       consoleLogSpy = sandbox.spy(console, "warn");
-      let badTrigger = testwidget.mapTrigger("click");
+      let badTrigger = testWidget.mapTrigger("click");
       expect(badTrigger).to.be.undefined;
       expect(consoleLogSpy.called).to.equal(true);
       sandbox.restore();
 
-      let onchangeTrigger = testwidget.mapTrigger("onchange");
+      let onchangeTrigger = testWidget.mapTrigger("onchange");
       expect(onchangeTrigger.element).instanceOf(HTMLElement);
       expect(onchangeTrigger.event_name).to.eql("change");
       expect(onchangeTrigger.element).to.have.tagName("FLUENT-TEXT-FIELD");
 
-      let detailTrigger = testwidget.mapTrigger("detail");
+      let detailTrigger = testWidget.mapTrigger("detail");
       expect(detailTrigger.element).instanceOf(HTMLElement);
       expect(detailTrigger.event_name).to.eql("click");
       expect(onchangeTrigger.element).to.have.tagName("FLUENT-TEXT-FIELD");
     });
 
     it("dataInit()", function () {
-      expect(testwidget.element, "Widget top element is not defined!");
-      const dataKeys = Object.keys(testwidget.data).filter(key => key.startsWith("class:"));
+      expect(testWidget.element, "Widget top element is not defined!");
+      const dataKeys = Object.keys(testWidget.data).filter(key => key.startsWith("class:"));
       const defaultValueKeys = Object.keys(TestWidget.defaultValues).filter(key => key.startsWith("class:"));
       expect(dataKeys).to.eql(defaultValueKeys);
 
-      expect(testwidget.data).to.have.deep.property("class:u-test-field", true);
-      expect(testwidget.data).to.have.deep.property("class:u-test-field-2", true);
+      expect(testWidget.data).to.have.deep.property("class:u-test-field", true);
+      expect(testWidget.data).to.have.deep.property("class:u-test-field-2", true);
 
       expect(TestWidget.defaultValues).to.have.deep.property("class:u-test-field", true);
       expect(TestWidget.defaultValues).to.have.deep.property("class:u-test-field-2", true);
@@ -130,25 +130,25 @@ export class TestWidget extends Widget {
         "value": true
       };
 
-      testwidget.dataUpdate(data);
+      testWidget.dataUpdate(data);
 
       const defaultTestWidget = new TestWidget;
       defaultTestWidget.onConnect(returnedProcess);
       defaultTestWidget.dataInit();
 
       // Expect widget properties to differ from the initial Widget.
-      expect(defaultTestWidget.data).to.not.eql(testwidget.data);
+      expect(defaultTestWidget.data).to.not.eql(testWidget.data);
 
       // Exepct widget properties to be updated with the new data object.
-      expect(testwidget.data.value).to.equal(true);
-      expect(testwidget.data.icon).to.equal("");
-      expect(testwidget.data["icon-position"]).to.equal("start");
+      expect(testWidget.data.value).to.equal(true);
+      expect(testWidget.data.icon).to.equal("");
+      expect(testWidget.data["icon-position"]).to.equal("start");
 
       // Expect the widget to still have the default values that were not updated by dataUpdate().
-      expect(testwidget.data["change-button"]).to.equal(false);
-      expect(testwidget.data["format-error"]).to.equal(false);
-      expect(testwidget.data["format-error-message"]).to.equal("");
-      expect(testwidget.data["html:current-value"]).to.equal("");
+      expect(testWidget.data["change-button"]).to.equal(false);
+      expect(testWidget.data["format-error"]).to.equal(false);
+      expect(testWidget.data["format-error-message"]).to.equal("");
+      expect(testWidget.data["html:current-value"]).to.equal("");
     });
 
 
@@ -160,25 +160,25 @@ export class TestWidget extends Widget {
       const mockPropertNames = new Set(["class:class-test-1", "class:class-test-2"]);
 
       it("clean all class properties of the widget that are received as parameters in the dataCleanup() function", function () {
-        testwidget.dataUpdate(mockData);
-        expect(testwidget.elements.widget, "Widget top element is not defined!");
+        testWidget.dataUpdate(mockData);
+        expect(testWidget.elements.widget, "Widget top element is not defined!");
 
-        testwidget.dataCleanup(mockPropertNames);
+        testWidget.dataCleanup(mockPropertNames);
         mockPropertNames.forEach((propertyName) => {
           const className = propertyName.split(":")[1];
-          expect(testwidget.elements.widget.classList.contains(className)).to.equal(false);
+          expect(testWidget.elements.widget.classList.contains(className)).to.equal(false);
         });
       });
     });
 
     it("getValue()", function () {
-      const value = testwidget.getValue();
+      const value = testWidget.getValue();
       expect(value).to.equal(false);
     });
 
     // Validate only returns null for the time being.
     it("validate", function () {
-      const returnNull = testwidget.validate();
+      const returnNull = testWidget.validate();
       expect(returnNull).to.equal(null);
     });
 
@@ -189,11 +189,10 @@ export class TestWidget extends Widget {
         "error-message": errorString
       };
 
-      testwidget.showError(errorString);
-      console.log(testwidget.data);
-      expect(testwidget.data).to.have.any.keys(errorReturn);
-      expect(testwidget.data["error-message"]).equal(errorString);
-      expect(testwidget.data["error"]).equal(true);
+      testWidget.showError(errorString);
+      expect(testWidget.data).to.have.any.keys(errorReturn);
+      expect(testWidget.data["error-message"]).equal(errorString);
+      expect(testWidget.data["error"]).equal(true);
     });
 
     it("hideError()", function () {
@@ -202,27 +201,27 @@ export class TestWidget extends Widget {
         "error-message": ""
       };
 
-      testwidget.hideError();
-      expect(testwidget.data).to.have.any.keys(errorReturn);
-      expect(testwidget.data["error-message"]).equal("");
-      expect(testwidget.data["error"]).equal(false);
+      testWidget.hideError();
+      expect(testWidget.data).to.have.any.keys(errorReturn);
+      expect(testWidget.data["error-message"]).equal("");
+      expect(testWidget.data["error"]).equal(false);
     });
 
     it("blockUI()", function () {
-      expect(testwidget.elements.widget.disabled).to.equal(false);
+      expect(testWidget.elements.widget.disabled).to.equal(false);
 
-      testwidget.blockUI();
-      expect(testwidget.elements.widget.disabled).to.equal(true);
+      testWidget.blockUI();
+      expect(testWidget.elements.widget.disabled).to.equal(true);
     });
 
     it("unblockUI()", function () {
-      expect(testwidget.elements.widget.disabled).to.equal(false);
+      expect(testWidget.elements.widget.disabled).to.equal(false);
 
-      testwidget.blockUI();
-      expect(testwidget.elements.widget.disabled).to.equal(true);
+      testWidget.blockUI();
+      expect(testWidget.elements.widget.disabled).to.equal(true);
 
-      testwidget.unblockUI();
-      expect(testwidget.elements.widget.disabled).to.equal(false);
+      testWidget.unblockUI();
+      expect(testWidget.elements.widget.disabled).to.equal(false);
     });
   });
 })();

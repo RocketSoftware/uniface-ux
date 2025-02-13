@@ -109,6 +109,7 @@
     describe("onConnect()", function () {
       const element = tester.processLayout();
       const widget = tester.onConnect();
+
       it("check that the element is created and connected", function () {
         assert(element, "Target element is not defined!");
         assert(widget.elements.widget === element, "Widget is not connected!");
@@ -162,10 +163,10 @@
 
   describe("dataInit()", function () {
     const classes = tester.getDefaultClasses();
-
     let element;
 
     beforeEach(function () {
+      tester.dataInit();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
@@ -210,10 +211,12 @@
   });
 
   describe("dataUpdate()", function () {
-    let widget;
+    let element;
 
     before(function () {
-      widget = tester.createWidget();
+      tester.createWidget();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
     });
 
     it("show apply button", function () {
@@ -225,9 +228,9 @@
           "changebutton": showApplyButton
         });
       }).then(function () {
-        let element = widget.elements.widget.querySelector("fluent-button.u-sw-changebutton");
+        let buttonElement = element.querySelector("fluent-button.u-sw-changebutton");
         if (showApplyButton) {
-          expect(element).to.have.class(defaultClass, `Widget element has class ${defaultClass}.`);
+          expect(buttonElement).to.have.class(defaultClass, `Widget element has class ${defaultClass}.`);
         } else {
           assert(element.hasAttribute("hidden"), "Failed to show the hidden attribute for button.");
         }
@@ -243,11 +246,11 @@
           "changebutton": showApplyButton
         });
       }).then(function () {
-        let element = widget.elements.widget.querySelector("fluent-button.u-sw-changebutton");
+        let buttonElement = element.querySelector("fluent-button.u-sw-changebutton");
         if (showApplyButton) {
-          expect(element).to.have.class(defaultClass, `Widget element has class ${defaultClass}.`);
+          expect(buttonElement).to.have.class(defaultClass, `Widget buttonElement has class ${defaultClass}.`);
         } else {
-          assert(element.hasAttribute("hidden"), "Failed to show the label text.");
+          assert(buttonElement.hasAttribute("hidden"), "Failed to show the label text.");
         }
       });
     });
@@ -267,9 +270,9 @@
         });
       }).then(function () {
         if (showApplyButton) {
-          let element = widget.elements.widget.querySelector("span.u-icon.ms-Icon.ms-Icon--AddHome[slot='end']");
-          assert.equal(element.className, appliedButtonClass, `Widget element doesn't has class ${appliedButtonClass}.`);
-          let labelText = widget.elements.widget.querySelector("span.u-text").innerText;
+          let buttonElement = element.querySelector("span.u-icon.ms-Icon.ms-Icon--AddHome[slot='end']");
+          assert.equal(buttonElement.className, appliedButtonClass, `Widget element doesn't has class ${appliedButtonClass}.`);
+          let labelText = element.querySelector("span.u-text").innerText;
           assert.equal(labelText, buttonText, "Button text does not match."); // Check for visibility.
         }
       });
@@ -283,9 +286,9 @@
           "label-text": numberFieldLabel
         });
       }).then(function () {
-        let labelText = widget.elements.widget.querySelector("span.u-label-text").innerText;
+        let labelText = element.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, numberFieldLabel);  // Check for visibility.
-        assert(!widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
+        assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
 
@@ -295,17 +298,17 @@
           "label-position": "before"
         });
       }).then(function () {
-        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "before", "Label position is not set to before.");
       });
     });
 
     it("check label position before styles", function () {
       // If u-label-position attribute is added element display is changed.
-      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      let numberFieldStyle = window.getComputedStyle(element, null);
       let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
       assert.equal(displayPropertyValue, "inline-flex");
-      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector(".label"), null);
+      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
       let alignPropertyValue = labelStyle.getPropertyValue("align-content");
       assert.equal(alignPropertyValue, "center", "Label position below is not center.");
     });
@@ -316,17 +319,17 @@
           "label-position": "below"
         });
       }).then(function () {
-        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "below", "Label position below is not below.");
       });
     });
 
     it("check label position below styles", function () {
       // If u-label-position attribute is added element display is changed.
-      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      let numberFieldStyle = window.getComputedStyle(element, null);
       let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
       assert.equal(flexPropertyValue, "column");
-      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector(".label"), null);
+      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
       let orderPropertyValue = labelStyle.getPropertyValue("order");
       assert.equal(orderPropertyValue, 2, "Label position below is not in order.");
     });
@@ -338,16 +341,16 @@
           "label-text": uniface.RESET
         });
       }).then(function () {
-        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "above");
-        assert(widget.elements.widget.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text.");
-        assert.equal(widget.elements.widget.querySelector("span.u-label-text").innerText, "", "Text is not empty.");
+        assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text.");
+        assert.equal(element.querySelector("span.u-label-text").innerText, "", "Text is not empty.");
       });
     });
 
     it("check reset label position styles", function () {
       // If u-label-position attribute is added element display is changed.
-      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      let numberFieldStyle = window.getComputedStyle(element, null);
       let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
       assert.equal(flexPropertyValue, "column");
     });
@@ -359,7 +362,7 @@
           "html:placeholder": placeHolderText
         });
       }).then(function () {
-        let placeHolderTextDOM = widget.elements.widget.getAttribute("placeholder");
+        let placeHolderTextDOM = element.getAttribute("placeholder");
         assert.equal(placeHolderTextDOM, placeHolderText, `Failed to show placeholder text, ${placeHolderText}.`);
       });
     });
@@ -371,7 +374,7 @@
           "html:readonly": true
         });
       }).then(function () {
-        assert(widget.elements.widget.hasAttribute(readOnly), "Failed to show the readonly attribute.");
+        assert(element.hasAttribute(readOnly), "Failed to show the readonly attribute.");
       });
     });
 
@@ -382,7 +385,7 @@
           "html:readonly": false
         });
       }).then(function () {
-        assert(!widget.elements.widget.hasAttribute(readOnly), "Failed to hide the readonly attribute.");
+        assert(!element.hasAttribute(readOnly), "Failed to hide the readonly attribute.");
       });
     });
 
@@ -393,7 +396,7 @@
           "html:disabled": true
         });
       }).then(function () {
-        assert(widget.elements.widget.hasAttribute(disabled), "Failed to show the disabled attribute.");
+        assert(element.hasAttribute(disabled), "Failed to show the disabled attribute.");
       });
     });
 
@@ -404,7 +407,7 @@
           "html:disabled": false
         });
       }).then(function () {
-        assert(!widget.elements.widget.hasAttribute(disabled), "Failed to hide the disabled attribute.");
+        assert(!element.hasAttribute(disabled), "Failed to hide the disabled attribute.");
       });
     });
 
@@ -415,8 +418,8 @@
           "html:appearance": appearanceStyle
         });
       }).then(function () {
-        assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance filled attribute.");
-        let appearanceStylePropertyText = widget.elements.widget.getAttribute("appearance");
+        assert(element.hasAttribute("appearance"), "Failed to show the appearance filled attribute.");
+        let appearanceStylePropertyText = element.getAttribute("appearance");
         assert.equal(appearanceStyle, appearanceStylePropertyText, `Failed to show appearance filled style ${appearanceStylePropertyText}.`);
       });
     });
@@ -428,8 +431,8 @@
           "html:appearance": appearanceStyle
         });
       }).then(function () {
-        assert(widget.elements.widget.hasAttribute("appearance"), "Failed to show the appearance outline attribute.");
-        let appearanceStylePropertyText = widget.elements.widget.getAttribute("appearance");
+        assert(element.hasAttribute("appearance"), "Failed to show the appearance outline attribute.");
+        let appearanceStylePropertyText = element.getAttribute("appearance");
         assert.equal(appearanceStyle, appearanceStylePropertyText, `Failed to show appearance outline style${appearanceStylePropertyText}.`);
       });
     });
@@ -441,7 +444,7 @@
           "html:hide-step": hideStep
         });
       }).then(function () {
-        assert(widget.elements.widget.hasAttribute("hide-step"), "Failed to show the hide-step attribute.");
+        assert(element.hasAttribute("hide-step"), "Failed to show the hide-step attribute.");
       });
     });
 
@@ -452,7 +455,7 @@
           "html:hide-step": hideStep
         });
       }).then(function () {
-        assert(!widget.elements.widget.hasAttribute("hide-step"), "Failed to hide the hide-step attribute.");
+        assert(!element.hasAttribute("hide-step"), "Failed to hide the hide-step attribute.");
       });
     });
 
@@ -463,9 +466,9 @@
           "prefix-text": prefixTextData
         });
       }).then(function () {
-        assert("start", widget.elements.widget.querySelector("span.u-prefix").getAttribute("slot"), "Slot is not at the start.");
-        assert(widget.elements.widget.querySelector("span.u-prefix").hasAttribute("slot"), "Failed to hide the slot attribute.");
-        assert.equal(widget.elements.widget.querySelector("span.u-prefix").innerText, prefixTextData, "Prefix text does not match.");
+        assert("start", element.querySelector("span.u-prefix").getAttribute("slot"), "Slot is not at the start.");
+        assert(element.querySelector("span.u-prefix").hasAttribute("slot"), "Failed to hide the slot attribute.");
+        assert.equal(element.querySelector("span.u-prefix").innerText, prefixTextData, "Prefix text does not match.");
       });
     });
 
@@ -476,9 +479,9 @@
           "suffix-text": suffixTextData
         });
       }).then(function () {
-        assert(widget.elements.widget.querySelector("span.u-suffix").getAttribute("slot"), "end", "Slot is not at the end.");
-        assert(widget.elements.widget.querySelector("span.u-suffix").hasAttribute("slot"), "Failed to show the slot attribute.");
-        assert.equal(widget.elements.widget.querySelector("span.u-suffix").innerText, suffixTextData, "The suffix-text does not match.");
+        assert(element.querySelector("span.u-suffix").getAttribute("slot"), "end", "Slot is not at the end.");
+        assert(element.querySelector("span.u-suffix").hasAttribute("slot"), "Failed to show the slot attribute.");
+        assert.equal(element.querySelector("span.u-suffix").innerText, suffixTextData, "The suffix-text does not match.");
       });
     });
 
@@ -492,7 +495,7 @@
         });
       }).then(function () {
         if (showApplyButton) {
-          assert(widget.elements.widget.querySelector("span.u-prefix").hasAttribute("slot"), "Failed to show the slot attribute.");
+          assert(element.querySelector("span.u-prefix").hasAttribute("slot"), "Failed to show the slot attribute.");
         }
       });
     });
@@ -507,7 +510,7 @@
         });
       }).then(function () {
         if (showApplyButton) {
-          assert(widget.elements.widget.querySelector("span.u-suffix").hasAttribute("slot"), "Failed to show the slot attribute.");
+          assert(element.querySelector("span.u-suffix").hasAttribute("slot"), "Failed to show the slot attribute.");
         }
       });
     });
@@ -523,11 +526,11 @@
         });
       }).then(function () {
         const event = new window.Event("hover");
-        widget.elements.widget.dispatchEvent(event);
-        assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth", "Subwidget class name does not match.");
-        assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("slot"), "start", "Failed to show the slot attribute and value does not match.");
-        assert(widget.elements.widget.childNodes[4].childNodes[0].hasAttribute("slot"), "Failed to show the placeHolderText attribute and value does not match.");
-        assert.equal(widget.elements.widget.childNodes[4].childNodes[0].getAttribute("class"), "u-icon ms-Icon ms-Icon--PublicEmail", "Subwidget icon class name does not match.");
+        element.dispatchEvent(event);
+        assert.equal(element.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth", "Subwidget class name does not match.");
+        assert.equal(element.childNodes[4].childNodes[0].getAttribute("slot"), "start", "Failed to show the slot attribute and value does not match.");
+        assert(element.childNodes[4].childNodes[0].hasAttribute("slot"), "Failed to show the placeHolderText attribute and value does not match.");
+        assert.equal(element.childNodes[4].childNodes[0].getAttribute("class"), "u-icon ms-Icon ms-Icon--PublicEmail", "Subwidget icon class name does not match.");
       });
     });
 
@@ -541,10 +544,10 @@
           "changebutton:value": "Click Me"
         });
       }).then(function () {
-        assert(widget.elements.widget.className, "outline u-number-field disabled", "Disabled class is not applied.");
-        assert(widget.elements.widget.hasAttribute("disabled"), "Failed to show the disabled attribute.");
-        assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth disabled", "Subwidget class name does not match.");
-        assert(widget.elements.widget.childNodes[4].hasAttribute("disabled"), "Failed to show the disabled attribute.");
+        assert(element.className, "outline u-number-field disabled", "Disabled class is not applied.");
+        assert(element.hasAttribute("disabled"), "Failed to show the disabled attribute.");
+        assert.equal(element.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth disabled", "Subwidget class name does not match.");
+        assert(element.childNodes[4].hasAttribute("disabled"), "Failed to show the disabled attribute.");
       });
     });
 
@@ -558,21 +561,22 @@
           "changebutton:value": "Click Me"
         });
       }).then(function () {
-        assert(widget.elements.widget.className, "outline u-number-field", "Disabled class is applied.");
-        assert(!widget.elements.widget.hasAttribute("disabled"), "Failed to hide the disabled attribute.");
-        assert.equal(widget.elements.widget.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth", "Subwidget class name does not match.");
-        assert(!widget.elements.widget.childNodes[4].hasAttribute("disabled"), "Failed to hide the disabled attribute.");
+        assert(element.className, "outline u-number-field", "Disabled class is applied.");
+        assert(!element.hasAttribute("disabled"), "Failed to hide the disabled attribute.");
+        assert.equal(element.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth", "Subwidget class name does not match.");
+        assert(!element.childNodes[4].hasAttribute("disabled"), "Failed to hide the disabled attribute.");
       });
     });
   });
 
   describe("showError()", function () {
-    let widget;
+    let element;
     let minlength = 2;
     let maxlength = 5;
 
     before(function () {
-      widget = tester.createWidget();
+      tester.createWidget();
+      element = tester.element;
       verifyWidgetClass(widgetClass);
     });
 
@@ -583,10 +587,10 @@
           "html:max": maxlength
         });
       }).then(function () {
-        expect(widget.elements.widget.hasAttribute("max"), "Failed to show the max attribute.");
-        expect(widget.elements.widget.hasAttribute("min"), "Failed to show the min attribute.");
-        assert.equal(widget.elements.widget.getAttribute("min"), minlength, `Min is not same ${minlength}.`);
-        assert.equal(widget.elements.widget.getAttribute("max"), maxlength, `Max is not same ${maxlength}.`);
+        expect(element.hasAttribute("max"), "Failed to show the max attribute.");
+        expect(element.hasAttribute("min"), "Failed to show the min attribute.");
+        assert.equal(element.getAttribute("min"), minlength, `Min is not same ${minlength}.`);
+        assert.equal(element.getAttribute("max"), maxlength, `Max is not same ${maxlength}.`);
       });
     });
 
@@ -598,20 +602,21 @@
           "error-message": "Field Value length mismatch."
         });
       }).then(function () {
-        expect(widget.elements.widget).to.have.class("u-invalid");
-        assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute.");
-        assert(widget.elements.widget.childNodes[2].className, appliedClassNames, "Widget element doesn't has correct class names.");
-        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot"), "end", "Slot end does not match.");
-        assert.equal(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title"), "Field Value length mismatch.", "Error title does not match.");
+        expect(element).to.have.class("u-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute.");
+        assert(element.childNodes[2].className, appliedClassNames, "Widget element doesn't has correct class names.");
+        assert.equal(element.querySelector("span.u-error-icon").getAttribute("slot"), "end", "Slot end does not match.");
+        assert.equal(element.querySelector("span.u-error-icon").getAttribute("title"), "Field Value length mismatch.", "Error title does not match.");
       });
     });
   });
 
   describe("hideError()", function () {
-    let widget;
+    let widget, element;
 
     before(function () {
       widget = tester.createWidget();
+      element = tester.element;
       verifyWidgetClass(widgetClass);
     });
 
@@ -624,18 +629,17 @@
         });
         widget.hideError("Field Value length mismatch.");
       }).then(function () {
-        expect(widget.elements.widget).to.not.have.class("u-invalid");
-        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute.");
-        assert(widget.elements.widget.childNodes[2].className, appliedClassNames, "Widget element doesn't has correct class names.");
-        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("slot"),  "Slot attribute is not present.");
-        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("title"), "Title attribute is not present.");
+        expect(element).to.not.have.class("u-invalid");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute.");
+        assert(element.childNodes[2].className, appliedClassNames, "Widget element doesn't has correct class names.");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("slot"),  "Slot attribute is not present.");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("title"), "Title attribute is not present.");
       });
     });
 
   });
 
   describe("Reset all properties", function () {
-
     it("reset all properties", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());

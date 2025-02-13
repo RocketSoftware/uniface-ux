@@ -199,24 +199,22 @@
     });
 
     it("set label position before", function () {
-      const widget = tester.construct();
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": "before"
         });
       }).then(function () {
-        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "before");
       });
     });
 
     it("check label position before styles", function () {
       // If u-label-position attribute is added element display is changed.
-      const widget = tester.construct();
-      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      let numberFieldStyle = window.getComputedStyle(element, null);
       let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
       assert.equal(displayPropertyValue, "inline-flex");
-      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector(".label"), null);
+      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
       let alignPropertyValue = labelStyle.getPropertyValue("align-content");
       assert.equal(alignPropertyValue, "center");
     });
@@ -228,18 +226,17 @@
         });
       }).then(function () {
         const widget = tester.construct();
-        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "below");
       });
     });
 
     it("check label position below styles", function () {
       // If u-label-position attribute is added element display is changed.
-      const widget = tester.construct();
-      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      let numberFieldStyle = window.getComputedStyle(element, null);
       let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
       assert.equal(flexPropertyValue, "column");
-      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector(".label"), null);
+      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
       let orderPropertyValue = labelStyle.getPropertyValue("order");
       assert.equal(orderPropertyValue, 2);
     });
@@ -251,9 +248,8 @@
           "label-text": uniface.RESET
         });
       }).then(function () {
-        const widget = tester.construct();
-        let labelElement = widget.elements.widget.querySelector("span.u-label-text");
-        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        let labelElement = element.querySelector("span.u-label-text");
+        let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "above");
         assert(labelElement.hasAttribute("hidden"), "Failed to hide the label text.");
         assert.equal(labelElement.innerText, "");
@@ -263,8 +259,7 @@
 
     it("check reset label position styles", function () {
       // If u-label-position attribute is added element display is changed.
-      const widget = tester.construct();
-      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      let numberFieldStyle = window.getComputedStyle(element, null);
       let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
       assert.equal(flexPropertyValue, "column");
     });
@@ -397,10 +392,10 @@
   });
 
   describe("showError()", function () {
-    let selectElement;
+    let element;
     beforeEach(function () {
       tester.createWidget();
-      selectElement = tester.element;
+      element = tester.element;
     });
 
     it("when invalid value is set, should show error and none of the options should be selected", function () {
@@ -411,21 +406,21 @@
           "display-format": "valrep"
         });
       }).then(function () {
-        const selectedValue = selectElement.querySelector("fluent-option.selected");
+        const selectedValue = element.querySelector("fluent-option.selected");
         expect(selectedValue).equal(null);
-        expect(selectElement).to.have.class("u-format-invalid");
-        assert(!selectElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
-        assert.equal(selectElement.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'.");
-        assert.equal(selectElement.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(element).to.have.class("u-format-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'.");
+        assert.equal(element.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
       });
     });
   });
 
   describe("hideError()", function () {
-    let selectElement;
+    let element;
     beforeEach(function () {
       tester.createWidget();
-      selectElement = tester.element;
+      element = tester.element;
     });
 
     it("set error to false", function () {
@@ -435,10 +430,10 @@
           "format-error-message": ""
         });
       }).then(function () {
-        expect(selectElement).to.not.have.class("u-format-invalid");
-        assert(selectElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
-        expect(selectElement.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
-        expect(selectElement.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+        expect(element).to.not.have.class("u-format-invalid");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("");
       });
     });
   });

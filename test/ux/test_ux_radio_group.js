@@ -593,10 +593,10 @@
   });
 
   describe("showError()", function () {
-    let radioElement;
+    let element;
     beforeEach(function () {
       tester.createWidget();
-      radioElement = tester.element;
+      element = tester.element;
     });
 
     it("when invalid value is set, should show error and none of the options should be selected", function () {
@@ -607,21 +607,21 @@
           "display-format": "valrep"
         });
       }).then(function () {
-        const selectedOption = radioElement.querySelector("fluent-radio[current-checked=true]");
+        const selectedOption = element.querySelector("fluent-radio[current-checked=true]");
         expect(selectedOption).equal(null);
-        expect(radioElement).to.have.class("u-format-invalid");
-        assert(!radioElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
-        assert.equal(radioElement.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'.");
-        assert.equal(radioElement.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(element).to.have.class("u-format-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'.");
+        assert.equal(element.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
       });
     });
   });
 
   describe("hideError()", function () {
-    let radioElement;
+    let element;
     beforeEach(function () {
       tester.createWidget();
-      radioElement = tester.element;
+      element = tester.element;
     });
 
     it("set error to false", function () {
@@ -631,10 +631,10 @@
           "format-error-message": ""
         });
       }).then(function () {
-        expect(radioElement).to.not.have.class("u-format-invalid");
-        assert(radioElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
-        expect(radioElement.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
-        expect(radioElement.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+        expect(element).to.not.have.class("u-format-invalid");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("");
       });
     });
   });
