@@ -65,7 +65,6 @@ export class Listbox extends Widget {
 
       const value = valrep[element["selectedIndex"]]?.value;
       return value;
-
     }
 
     getValueUpdaters(widgetInstance) {
@@ -89,7 +88,6 @@ export class Listbox extends Widget {
 
     refresh(widgetInstance) {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
-
       const element = this.getElement(widgetInstance);
       const value = this.getNode(widgetInstance.data, "value");
       const valrep = this.getNode(widgetInstance.data, "valrep");
@@ -112,7 +110,7 @@ export class Listbox extends Widget {
       // Should be set to -1 only if newly selected value is not part of valrep.
       // Now setting previousSelectedIndex to -1 by default as value hook up is not yet implemented.
       widgetInstance.previousSelectedIndex = valueToSet;
-      window.queueMicrotask(() => {
+      window.setTimeout(() => {
         element["selectedIndex"] = valueToSet;
       });
     }
