@@ -1582,7 +1582,7 @@
       try {
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
-        assert(false, "Failed to reset properties to default with, exception " + e);
+        assert(false, `Failed to reset the properties, exception ${e}.`);
       }
     });
   });
