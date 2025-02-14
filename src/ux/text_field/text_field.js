@@ -14,7 +14,10 @@ import {
   HtmlAttributeReadonlyDisabled,
   HtmlAttributeMinMaxLength
 } from "../framework/workers.js";
-// The import of Fluent UI web-components is done in loader.js
+
+// Optimized way to reduce the size of bundle, only import necessary fluent-ui components
+import { fluentTextField,  provideFluentDesignSystem } from "@fluentui/web-components";
+provideFluentDesignSystem().register(fluentTextField());
 
 // This widget also depends on Button, still registration is needed
 import { Button } from "../button/button.js";

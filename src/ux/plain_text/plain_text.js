@@ -9,7 +9,6 @@ import {
   HtmlAttribute,
   IgnoreProperty
 } from "../framework/workers.js";
-// The import of Fluent UI web-components is done in loader.js
 
 /**
  * PlaintText Widget
