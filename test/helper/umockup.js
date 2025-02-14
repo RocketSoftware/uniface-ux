@@ -200,7 +200,7 @@
     }
     return new Promise(function(resolve, _reject) {
       testFunction();
-      setTimeout(function(){
+      setTimeout(function() {
         resolve();
       }, timeout);
     });
@@ -244,7 +244,7 @@
       };
     }
 
-    return new Promise(function(resolve, reject){
+    return new Promise(function(resolve, reject) {
       const observer = new MutationObserver(function (records, observer) {
         callbackFunction(records, observer, resolve, reject);
       });

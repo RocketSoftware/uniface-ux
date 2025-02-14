@@ -40,7 +40,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -190,7 +190,7 @@ import {
       "elements": {
         "widget": document.createElement("div")
       },
-      "getTraceDescription": function() {
+      "getTraceDescription": function () {
         return "description";
       }
     };
@@ -291,7 +291,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -370,7 +370,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -488,7 +488,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -502,7 +502,7 @@ import {
         "elements": {
           "widget": [document.createElement("div"), document.createElement("span")]
         },
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -551,7 +551,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -605,7 +605,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -662,7 +662,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -713,7 +713,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -771,7 +771,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -850,7 +850,7 @@ import {
         "widget": {
           "maxlengthHasBeenSet": ""
         },
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -907,7 +907,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -1025,7 +1025,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };

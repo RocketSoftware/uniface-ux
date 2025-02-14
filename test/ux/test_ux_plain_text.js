@@ -226,7 +226,7 @@
     it("suffix-text property", function () {
       let suffixTextData = "suffixTextData";
       // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
           "suffix-text": suffixTextData
         });
@@ -305,7 +305,7 @@
                         Multi paragraphs Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles Single Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
       let p1Text = "Multi paragraphs Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles Single Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css stylesSingle Line Once you have all the widgets ready, the rest was mostly about setting the css styles";
       // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
           "value": val,
           "plaintext-format": plainTextFormat
@@ -501,7 +501,7 @@
       verifyWidgetClass(widgetClass);
     });
     it("hide error, set invalid value in plain text", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
           "error": false,
           "error-message": "Field Value length mismatch."

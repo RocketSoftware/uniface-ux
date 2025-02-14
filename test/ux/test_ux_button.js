@@ -335,7 +335,7 @@
           "value": ""
         },
         "elements": tester.construct().elements,
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -382,7 +382,7 @@
           "value": ""
         },
         "elements": tester.construct().elements,
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -402,7 +402,7 @@
         },
 
         "elements": tester.construct().elements,
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -423,7 +423,7 @@
           "value": ""
         },
         "elements": tester.construct().elements,
-        "getTraceDescription": function() {
+        "getTraceDescription": function () {
           return "description";
         }
       };
