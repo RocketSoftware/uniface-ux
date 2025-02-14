@@ -1399,33 +1399,6 @@ export class StyleClass extends Worker {
 }
 
 /**
- * Worker: All style property.
- */
-export class StyleProperty extends Worker {
-  constructor(widgetClass, property) {
-    super(widgetClass);
-    this.defaultStyleProperty = property;
-    this.registerSetter(widgetClass, "style", this);
-    let key = Object.keys(property)[0];
-    this.registerDefaultValue(widgetClass, `style:${key}`, property[key]);
-  }
-
-  refresh(widgetInstance) {
-    this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
-    let element = this.getElement(widgetInstance);
-
-    for (let property in widgetInstance.data) {
-      if (property.startsWith("style:")) {
-        let value = widgetInstance.data[property];
-        let pos = property.search(":");
-        property = property.substring(pos + 1);
-        element.style[property] = value || "unset";
-      }
-    }
-  }
-}
-
-/**
  * Worker: Trigger mapping.
  */
 export class Trigger extends Worker {
