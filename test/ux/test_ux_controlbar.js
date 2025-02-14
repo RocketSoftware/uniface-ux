@@ -193,7 +193,7 @@
     "textfld1:value": "text Value",
     "btn_widget-class": "UX.Button",
     "btn:value": "Button",
-    "chkbox1_widget-class": "UX.CheckBox",
+    "chkbox1_widget-class": "UX.Checkbox",
     "chkbox1:value": "true",
     "numberfield_widget-class": "UX.NumberField",
     "numberfield:value": "",
@@ -219,7 +219,7 @@
     "btn_widget-class": "UX.Button",
     "btn:value": "Button",
     "btn_overflow-behavior": "none",
-    "chkbox1_widget-class": "UX.CheckBox",
+    "chkbox1_widget-class": "UX.Checkbox",
     "chkbox1:value": "true",
     "chkbox1_overflow-behavior": "none",
     "numberfield_widget-class": "UX.NumberField",
@@ -251,7 +251,7 @@
     "btn:value": "Button",
     "btn_overflow-behavior": "move",
     "btn_priority": 3,
-    "chkbox1_widget-class": "UX.CheckBox",
+    "chkbox1_widget-class": "UX.Checkbox",
     "chkbox1:value": "true",
     "chkbox1_overflow-behavior": "move",
     "chkbox1_priority": 4,
@@ -286,7 +286,7 @@
     "btn:value": "Button",
     "btn_overflow-behavior": "hide",
     "btn_priority": 3,
-    "chkbox1_widget-class": "UX.CheckBox",
+    "chkbox1_widget-class": "UX.Checkbox",
     "chkbox1:value": "true",
     "chkbox1_overflow-behavior": "hide",
     "chkbox1_priority": 4,
@@ -321,7 +321,7 @@
     "btn:value": "Button",
     "btn_overflow-behavior": "menu",
     "btn_priority": 3,
-    "chkbox1_widget-class": "UX.CheckBox",
+    "chkbox1_widget-class": "UX.Checkbox",
     "chkbox1:value": "true",
     "chkbox1_overflow-behavior": "menu",
     "chkbox1_priority": 4,
@@ -355,7 +355,7 @@
     "btn:value": "Button",
     "btn_overflow-behavior": "menu",
     "btn_priority": 3,
-    "chkbox1_widget-class": "UX.CheckBox",
+    "chkbox1_widget-class": "UX.Checkbox",
     "chkbox1:value": "true",
     "chkbox1_overflow-behavior": "move",
     "chkbox1_priority": 4,
@@ -976,9 +976,11 @@
       let element, widget;
       const tester = new umockup.WidgetTester();
       element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_AND_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MENU_AND_PRIORITY);
       return asyncRun(function() {
         widget = tester.onConnect(element);
         tester.dataInit();
+        tester.dataUpdate(data);
       }).then(function() {
         expect(widget.elements.widget.classList.contains("u-overflowed"));
         expect(element.querySelector("fluent-select.u-sw-select").classList.contains("u-overflown-item"));
@@ -1028,7 +1030,7 @@
       });
     });
 
-    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 750px", function () {
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 800px", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
@@ -1037,7 +1039,7 @@
         widget = tester.onConnect(element);
         tester.dataInit();
         node = document.querySelector('#widget-container');
-        node.style.width = '750px';
+        node.style.width = '800px';
       }).then(function() {
         expect(widget.data['widget-resize']).to.be.true;
         expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
@@ -1188,7 +1190,7 @@
       });
     });
 
-    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 750px", function () {
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 800px", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
@@ -1199,7 +1201,7 @@
         tester.dataInit();
         tester.dataUpdate(data);
         node = document.querySelector('#widget-container');
-        node.style.width = '750px';
+        node.style.width = '800px';
       }).then(function() {
         expect(widget.data['widget-resize']).to.be.true;
         expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
@@ -1388,7 +1390,7 @@
       });
     });
 
-    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 750px", function () {
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 800px", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
@@ -1399,7 +1401,7 @@
         tester.dataInit();
         tester.dataUpdate(data);
         node = document.querySelector('#widget-container');
-        node.style.width = '750px';
+        node.style.width = '800px';
       }).then(function() {
         expect(widget.data['widget-resize']).to.be.true;
         expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
