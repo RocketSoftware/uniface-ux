@@ -1,6 +1,7 @@
 class CustomReporter {
   constructor() {
-    this.uniqueTests = new Set(); // Track unique tests
+    this.totalTests = 0; // Track total test executions
+    this.uniqueTests = new Set(); // Track unique test titles
     this.failedTestNames = new Set(); // Track unique failed tests
     this.passedTests = 0;
     this.failedTests = 0;
@@ -9,22 +10,23 @@ class CustomReporter {
 
   onTestEnd(test, result) {
     console.log(`Test: ${test.title}, Status: ${result.status}, Retry: ${result.retry}`);
-    this.uniqueTests.add(test.title); // Add each test to the set of unique tests
+
+    this.uniqueTests.add(test.title); // Track unique test titles only
+    this.totalTests++; // Count every test execution (across all browsers)
 
     if (result.status === 'passed') {
       this.passedTests++;
-      // If the test passes after a retry, ensure it's not counted as a failure
+      // Remove from failed if it later passes
       if (this.failedTestNames.has(test.title)) {
         this.failedTestNames.delete(test.title);
-        this.failedTests--; // Adjust failure count
+        this.failedTests--;
       }
     } else if (result.status === 'failed' || result.status === 'timedOut') {
-      // Only count failures for the first retry
-      if (result.retry === 0 && !this.failedTestNames.has(test.title)) {
+      if (result.retry === test.retries) {
         this.failedTests++;
-        this.failedTestNames.add(test.title); // Track unique failures
+        this.failedTestNames.add(test.title);
       }
-    } else if (result.status === 'skipped') { // Check for skipped tests
+    } else if (result.status === 'skipped') {
       this.skippedTests++;
     }
   }
@@ -38,12 +40,11 @@ class CustomReporter {
     const blue = '\x1b[94m';
 
     console.log(`\n${cyan}--- Summary Report ---${reset}`);
-
-    console.log(`\n${blue}📊 Total Tests: ${this.uniqueTests.size}${reset}`); // Count unique tests
+    console.log(`\n${blue}📊 Unique Tests: ${this.uniqueTests.size}${reset}`); // Count unique test titles only
+    console.log(`${blue}📊 Total Test Executions: ${this.totalTests}${reset}`); // Total test executions across browsers
     console.log(`${green}✅ Test Passed: ${this.passedTests}${reset}`);
-    console.log(`${red}❌ Test Failed: ${this.failedTests}${reset}`); // Count unique failed tests
-    console.log(`${yellow}⚠️ Test Skipped: ${this.skippedTests}${reset}`); // Count skipped tests
+    console.log(`${red}❌ Test Failed: ${this.failedTests}${reset}`);
+    console.log(`${yellow}⚠️ Test Skipped: ${this.skippedTests}${reset}`);
+    }
   }
-}
-
 module.exports = CustomReporter;

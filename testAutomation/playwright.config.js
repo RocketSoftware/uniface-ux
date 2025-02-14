@@ -20,14 +20,16 @@ function getBaseURL() {
 }
 
 export default defineConfig({
+  outputDir: './test-results/testArtifacts',
   workers: 2, // Set the number of workers
   timeout: 30000, // Set timeout for each test
   retries: 1, // Number of retries for failed tests
+  reportSlowTests: null,
   globalSetup: './global-setup.js', // Reference to the global setup file
   reporter: [
     ['./custom-reporter.js'], // Custom reporter
     ['list'], // Default list reporter
-    ['html', { outputFolder: 'test-results/html-report', open: 'never' }] // HTML reporter
+    ['html', { outputFolder: './test-results/html-report', open: 'never' }]
   ],
   webServer: {
     command: 'cd .. && npm run serve',
@@ -40,9 +42,23 @@ export default defineConfig({
     baseURL: getBaseURL(),
     headless: true, // Run tests in headless mode
     viewport: { width: 1280, height: 720 }, // Set viewport size
+    timeout: 30000, // Global timeout for all operations like actions, navigation, assertions, etc.
     ignoreHTTPSErrors: true, // Ignore HTTPS errors
+    expect: {
+      timeout: 30000 // Timeout for assertions
+    },
     screenshot: 'on', // Take screenshots[on, off, only-on-failure are few options]
     video: 'on', // Record video of tests ['on', 'off' or 'retain-on-failure']
     trace: 'off' // Disable tracing
   },
+  projects: [
+    {
+      name: 'chromium',
+      use: { browserName: 'chromium' }
+    },
+    {
+      name: 'firefox',
+      use: { browserName: 'firefox' }
+    }
+  ]
 });
