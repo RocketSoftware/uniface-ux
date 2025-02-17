@@ -38,7 +38,6 @@ export class Listbox extends Widget {
 
   /**
    * Private Worker: Used to handle changes in value and valrep.
-   * As part of basic implementation, will only update the previousSelectedIndex property in refresh method.
    * @class ListboxSelectedValue
    * @extends {Worker}
    */
@@ -62,7 +61,6 @@ export class Listbox extends Widget {
     getValue(widgetInstance) {
       const element = this.getElement(widgetInstance);
       const valrep = this.getNode(widgetInstance.data, "valrep");
-
       const value = valrep[element["selectedIndex"]]?.value;
       return value;
     }
@@ -95,8 +93,8 @@ export class Listbox extends Widget {
       // Since the index is passed to fluent instead of the actual value, find the index corresponding to the value received.
       const valueToSet = valrep.findIndex((item) => item.value === value);
       const isValueEmpty = (value === null || value === "");
+
       if (valrep.length > 0 && (valueToSet !== -1 || isValueEmpty)) {
-        // Manually clear the checked state when value is empty and empty value not present in valrep.
         widgetInstance.setProperties({
           "format-error": false,
           "format-error-message": ""
@@ -107,9 +105,7 @@ export class Listbox extends Widget {
           "format-error-message": Listbox.formatErrorMessage
         });
       }
-      // Should be set to -1 only if newly selected value is not part of valrep.
-      // Now setting previousSelectedIndex to -1 by default as value hook up is not yet implemented.
-      widgetInstance.previousSelectedIndex = valueToSet;
+
       window.setTimeout(() => {
         element["selectedIndex"] = valueToSet;
       });
@@ -149,13 +145,15 @@ export class Listbox extends Widget {
    */
   handleSelectionChange() {
     let widgetElement = this.elements.widget;
+    const value = this.getNode(this.data, "value");
+    const valrep = this.getNode(this.data, "valrep");
+    const previousSelectedIndex = valrep.findIndex((item) => item.value === value);
     if (widgetElement.hasAttribute("readonly") || widgetElement.hasAttribute("disabled")) {
       // If listbox is in readonly or disabled state, reset the selectedIndex and return, do not fire a change event.
-      widgetElement.selectedIndex = this.previousSelectedIndex;
+      widgetElement.selectedIndex = previousSelectedIndex;
       return;
     }
-    if (widgetElement.selectedIndex !== this.previousSelectedIndex) {
-      this.previousSelectedIndex = widgetElement.selectedIndex;
+    if (widgetElement.selectedIndex !== previousSelectedIndex) {
       const event = new window.Event("change");
       widgetElement.dispatchEvent(event);
     }
@@ -269,8 +267,6 @@ export class Listbox extends Widget {
     widgetElement.addEventListener("keydown", () => {
       this.handleSelectionChange();
     });
-    // Store the original selectedIndex value.
-    this.previousSelectedIndex = widgetElement.selectedIndex;
     return valueUpdaters;
   }
 
