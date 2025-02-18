@@ -1581,7 +1581,6 @@
         expect(element.querySelectorAll("fluent-menu-item")[3].getAttribute('item-id')).to.be.equal("chkbox1");
         expect(element.querySelectorAll("fluent-menu-item")[4].getAttribute('item-id')).to.be.equal("numberfield");
         expect(element.querySelectorAll("fluent-menu-item")[5].getAttribute('item-id')).to.be.equal("switch1");
-
       });
     });
 
