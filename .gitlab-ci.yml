@@ -2,6 +2,7 @@ stages:
   - lint
   - build
   - test
+  - publish
 
 include:
   - project: Uniface/tools/defaults
@@ -41,7 +42,7 @@ test:
     paths:
       - testAutomation/test-results/
     when: always
-    
+
 publish:
   stage: publish
   extends: .cloudprovisioning
