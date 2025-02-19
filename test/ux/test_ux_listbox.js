@@ -462,15 +462,14 @@
       tester.bindUpdatorsEventToElement();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
+      tester.dataUpdate({
+        "valrep": valRepArray,
+        "display-format": "rep"
+      });
     });
 
     it("simulate user interaction and select first option", function () {
       return asyncRun(function () {
-        tester.dataUpdate({
-          "valrep": valRepArray,
-          "display-format": "rep"
-        });
-
         // Programmatically select an option and dispatch the change event.
         const firstOption = element.querySelector("fluent-option");
         firstOption.selected = true;
