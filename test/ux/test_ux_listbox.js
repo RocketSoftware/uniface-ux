@@ -472,9 +472,11 @@
       return asyncRun(function () {
         // Programmatically select an option and dispatch the change event.
         const firstOption = element.querySelector("fluent-option");
-        firstOption.selected = true;
-        const event = new window.Event("change", { "bubbles": true });
-        element.dispatchEvent(event);
+        window.requestAnimationFrame(() => {
+          firstOption.selected = true;
+          const event = new window.Event("change");
+          element.dispatchEvent(event);
+        });
       }).then(function () {
         const returnedValue = widget.getValue();
         const selectedOption = element.querySelector(".u-option.selected");
@@ -507,9 +509,11 @@
       return asyncRun(function () {
         // Programmatically select an option and dispatch the change event.
         const firstOption = element.querySelector("fluent-option");
-        firstOption.selected = true;
-        const event = new window.Event("change", { "bubbles": true });
-        element.dispatchEvent(event);
+        window.requestAnimationFrame(() => {
+          firstOption.selected = true;
+          const event = new window.Event("change");
+          element.dispatchEvent(event);
+        });
       }).then(function () {
         const returnedValue = widget.getValue();
         const selectedOption = element.querySelector(".u-option.selected");
