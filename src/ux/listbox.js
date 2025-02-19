@@ -128,7 +128,7 @@ export class Listbox extends Widget {
   ], [
     new this.ListBoxValRep(this, "fluent-option", "u-option", ""),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error"),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error")
   ], [
     new Trigger(this, "onchange", "change", true)
   ]);
