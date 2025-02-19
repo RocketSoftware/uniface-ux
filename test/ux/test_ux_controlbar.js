@@ -373,6 +373,41 @@
     "switch1_priority": 1
   };
 
+  const MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY = {
+    "subwidgets-start": "selecttextfld1",
+    "subwidgets-center": "btnchkbox1plaintext1",
+    "subwidgets-end": "numberfieldswitch1",
+    "select_widget-class": "UX.Select",
+    "select:valrep": "1=a10=1025=2550=50100=100",
+    "select_overflow-behavior": "menu",
+    "select:value": "1",
+    "textfld1_widget-class": "UX.TextField",
+    "textfld1:value": "text Value",
+    "textfld1_overflow-behavior": "menu",
+    "btn_widget-class": "UX.Button",
+    "btn:value": "Button",
+    "btn:icon": "Home",
+    "btn_overflow-behavior": "menu",
+    "chkbox1_widget-class": "UX.Checkbox",
+    "chkbox1:value": "true",
+    "chkbox1_overflow-behavior": "menu",
+    "numberfield_widget-class": "UX.NumberField",
+    "numberfield:value": "",
+    "numberfield_overflow-behavior": "menu",
+    "numberfield:changebutton": "true",
+    "numberfield:changebutton:icon": "Home",
+    "numberfield:changebutton:value": "Apply",
+    "numberfield:html:placeholder": "Enter number to jump",
+    "switch1_widget-class": "UX.Switch",
+    "switch1:value": "true",
+    "switch1_overflow-behavior": "menu",
+    "plaintext1_widget-class": "UX.PlainText",
+    "plaintext1:value": "Plain text",
+    "plaintext1:suffix-text": "Suffix text",
+    "plaintext1_overflow-behavior": "menu",
+    "plaintext1:prefix-icon": "Home"
+  };
+
   /**
    * Function to determine whether the widget class has been loaded.
    */
@@ -1501,6 +1536,239 @@
         expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+      });
+    });
+  });
+
+  describe("OverFlow Menu tests", function () {
+    it("check subwidgets order in overflow menu when overflow-behavior is set to menu", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_AND_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MENU_AND_PRIORITY);
+      return asyncRun(function() {
+        widget = tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '1200px';
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-checkbox.u-sw-chkbox1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-container").hasAttribute('slot')).to.be.true;
+        expect(element.querySelector(".u-overflow-container").getAttribute('slot')).to.be.equal("end");
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+
+        expect(element.querySelectorAll("fluent-menu-item")[0].getAttribute('item-id')).to.be.equal("select");
+        expect(element.querySelectorAll("fluent-menu-item")[1].getAttribute('item-id')).to.be.equal("textfld1");
+        expect(element.querySelectorAll("fluent-menu-item")[2].getAttribute('item-id')).to.be.equal("btn");
+        expect(element.querySelectorAll("fluent-menu-item")[3].getAttribute('item-id')).to.be.equal("chkbox1");
+        expect(element.querySelectorAll("fluent-menu-item")[4].getAttribute('item-id')).to.be.equal("numberfield");
+        expect(element.querySelectorAll("fluent-menu-item")[5].getAttribute('item-id')).to.be.equal("switch1");
+      });
+    });
+
+    it("overflow menu behavior when overflow button is clicked", function () {
+      let element;
+      const tester = new umockup.WidgetTester();
+      let event, overFlowBtnElement;
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
+      return asyncRun(function() {
+        tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        // Overflow menu should be hidden initially.
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+        node = document.querySelector('#widget-container');
+        node.style.width = '800px';
+
+        // After resize overflow menu should be hidden.
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+        overFlowBtnElement = document.querySelector("fluent-button.u-overflow-button");
+
+        // Simulate click event on overflow button.
+        overFlowBtnElement.click();
+        // Dispatch the click event.
+        event = new window.Event("click", { "bubbles": true});
+      }).then(function() {
+        // Overflow button is clicked and menu is open.
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+
+        // Click again on overflow button the menu should be closed now.
+        overFlowBtnElement.click();
+        event = new window.Event("click", { "bubbles": true});
+
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+
+        // Click outside of overflow button i.e start section.
+        let startSecElement = document.querySelector("div.u-start-section");
+        startSecElement.click();
+        event = new window.Event("click", { "bubbles": true});
+        startSecElement.dispatchEvent(event);
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+      });
+    });
+
+    it("should check overflow menu contents, item text and its different states (supported and un-supported widgets) when opened", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let event;
+      let overFlowBtnElement;
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
+      return asyncRun(function() {
+        widget= tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '800px';
+
+        overFlowBtnElement = document.querySelector("fluent-button.u-overflow-button");
+        // Simulate click event on overflow button.
+        overFlowBtnElement.click();
+        // Dispatch the click event.
+        event = new window.Event("click", { "bubbles": true});
+        overFlowBtnElement.dispatchEvent(event);
+      }).then(function() {
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        // Check menu items contents, if the supported subwidget has prefix-icon and suffix text then it should be visible in menu.
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Blocked");
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").childNodes[1].textContent).to.equal("ERROR:  not supported as menu-item!");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Blocked");
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").childNodes[1].textContent).to.equal("ERROR:  not supported as menu-item!");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").childNodes[1].textContent).to.equal(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY["btn:value"]);
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Home");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=chkbox1]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Blocked");
+        expect(element.querySelector(".u-overflow-menu [item-id=chkbox1]").childNodes[1].textContent).to.equal("ERROR:  not supported as menu-item!");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=plaintext1]").childNodes[1].textContent).to.equal(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY["plaintext1:value"]);
+        expect(element.querySelector(".u-overflow-menu [item-id=plaintext1]").childNodes[2].textContent).to.equal(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY["plaintext1:suffix-text"]);
+        expect(element.querySelector(".u-overflow-menu [item-id=plaintext1]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Home");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Blocked");
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").childNodes[1].textContent).to.equal("ERROR:  not supported as menu-item!");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Blocked");
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").childNodes[1].textContent).to.equal("ERROR:  not supported as menu-item!");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+      });
+    });
+
+    it("should check overflow menu contents, item text and its different states (supported and un-supported widgets) when closed", function () {
+      let element, widget;
+      const tester = new umockup.WidgetTester();
+      let event;
+      let overFlowBtnElement;
+      let node = document.querySelector('#widget-container');
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
+      let data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
+      return asyncRun(function() {
+        widget= tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '800px';
+
+        overFlowBtnElement = document.querySelector("fluent-button.u-overflow-button");
+        // Simulate click event on overflow button.
+        overFlowBtnElement.click();
+        // Dispatch the click event.
+        event = new window.Event("click", { "bubbles": true});
+        overFlowBtnElement.dispatchEvent(event);
+      }).then(function() {
+        // Click outside menu and menu should close.
+        let startSecElement = document.querySelector("div.u-center-section");
+        startSecElement.click();
+        event = new window.Event("click", { "bubbles": true});
+        startSecElement.dispatchEvent(event);
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+
+        expect(widget.data['widget-resize']).to.be.true;
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        // Check menu items contents, if the supported subwidget has prefix-icon and suffix text then it should be visible in menu.
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Blocked");
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").childNodes[1].textContent).to.equal("ERROR:  not supported as menu-item!");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Blocked");
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").childNodes[1].textContent).to.equal("ERROR:  not supported as menu-item!");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").childNodes[1].textContent).to.equal(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY["btn:value"]);
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Home");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=chkbox1]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Blocked");
+        expect(element.querySelector(".u-overflow-menu [item-id=chkbox1]").childNodes[1].textContent).to.equal("ERROR:  not supported as menu-item!");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=plaintext1]").childNodes[1].textContent).to.equal(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY["plaintext1:value"]);
+        expect(element.querySelector(".u-overflow-menu [item-id=plaintext1]").childNodes[2].textContent).to.equal(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY["plaintext1:suffix-text"]);
+        expect(element.querySelector(".u-overflow-menu [item-id=plaintext1]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Home");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Blocked");
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").childNodes[1].textContent).to.equal("ERROR:  not supported as menu-item!");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").childNodes[0].getAttribute("class")).to.equal("u-prefix ms-Icon ms-Icon--Blocked");
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").childNodes[1].textContent).to.equal("ERROR:  not supported as menu-item!");
+
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
       });
