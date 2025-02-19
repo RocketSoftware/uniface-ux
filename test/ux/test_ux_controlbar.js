@@ -1666,7 +1666,6 @@
         // Dispatch the click event.
         event = new window.Event("click", { "bubbles": true});
         overFlowBtnElement.dispatchEvent(event);
-
       }).then(function() {
         expect(widget.data['widget-resize']).to.be.true;
         expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
@@ -1728,9 +1727,7 @@
         // Dispatch the click event.
         event = new window.Event("click", { "bubbles": true});
         overFlowBtnElement.dispatchEvent(event);
-
       }).then(function() {
-
         // Click outside menu and menu should close.
         let startSecElement = document.querySelector("div.u-center-section");
         startSecElement.click();
