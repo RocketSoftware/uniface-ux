@@ -108,7 +108,7 @@ export class Listbox extends Widget {
         });
       }
 
-      window.setTimeout(() => {
+      window.queueMicrotask(() => {
         element["selectedIndex"] = valueToSet;
       });
     }
@@ -131,13 +131,13 @@ export class Listbox extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readonly", false, true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new SlottedElementsByValRep(this, "fluent-option", "u-option", ""),
     new this.ListboxSelectedValue(this, "value", ""),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error"),
-    new SlottedElementsByValRep(this, "fluent-option", "u-option", "")
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error")
   ], [
     new Trigger(this, "onchange", "change", true)
   ]);
