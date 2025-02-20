@@ -112,8 +112,16 @@
   });
 
   describe("mapTrigger()", function () {
+    const element = tester.processLayout();
     const widget = tester.onConnect();
-    widget.mapTrigger("click");
+
+    it("define mapTrigger() and click event", function () {
+      widget.mapTrigger("click");
+      const event = new window.Event("click");
+      element.dispatchEvent(event);
+      assert(widget.elements.widget === element, "Widget is not connected.");
+    });
+
   });
 
   describe("dataInit()", function () {
@@ -327,7 +335,7 @@
           "value": ""
         },
         "elements": tester.construct().elements,
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -374,7 +382,7 @@
           "value": ""
         },
         "elements": tester.construct().elements,
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -394,7 +402,7 @@
         },
 
         "elements": tester.construct().elements,
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -415,7 +423,7 @@
           "value": ""
         },
         "elements": tester.construct().elements,
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -433,7 +441,6 @@
       try {
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
-        console.error(e);
         assert(false, `Failed to reset the properties, exception ${e}.`);
       }
     });

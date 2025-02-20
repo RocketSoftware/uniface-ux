@@ -40,7 +40,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -108,8 +108,8 @@ import {
   describe("Test Element class", function () {
 
     let widgetClass;
-    let tagname;
-    let styleclass;
+    let tagName;
+    let styleClass;
     let elementQuerySelector;
     let attributeDefines;
     let elementDefines;
@@ -128,20 +128,20 @@ import {
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      tagname = "DIV";
+      tagName = "DIV";
       elementQuerySelector = "div";
-      styleclass = "styleClass";
+      styleClass = "styleClass";
       attributeDefines = [new StyleClass(widgetClass, ["u-switch"]), new HtmlAttribute(widgetClass, "html:role", "role", "switch")];
       elementDefines = [new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "label-text"),
         new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message")];
       triggerDefines = [new Trigger(widgetClass, "onchange", "change", true)];
-      element = new Element(widgetClass, tagname, styleclass, elementQuerySelector, attributeDefines, elementDefines, triggerDefines);
+      element = new Element(widgetClass, tagName, styleClass, elementQuerySelector, attributeDefines, elementDefines, triggerDefines);
     });
 
     it("should initialize with correct properties", function () {
       expect(element.widgetClass).to.equal(widgetClass);
-      expect(element.tagName).to.equal(tagname);
-      expect(element.styleClass).to.equal(styleclass);
+      expect(element.tagName).to.equal(tagName);
+      expect(element.styleClass).to.equal(styleClass);
       expect(element.elementQuerySelector).to.equal(elementQuerySelector);
       expect(element.attributeDefines).to.equal(attributeDefines);
       expect(element.elementDefines).to.equal(elementDefines);
@@ -190,7 +190,7 @@ import {
       "elements": {
         "widget": document.createElement("div")
       },
-      "getTraceDescription": () => {
+      "getTraceDescription": function () {
         return "description";
       }
     };
@@ -291,7 +291,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -370,7 +370,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -488,7 +488,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -502,7 +502,7 @@ import {
         "elements": {
           "widget": [document.createElement("div"), document.createElement("span")]
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -551,7 +551,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -605,7 +605,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -662,7 +662,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -713,7 +713,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -771,7 +771,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -850,7 +850,7 @@ import {
         "widget": {
           "maxlengthHasBeenSet": ""
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -907,7 +907,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -1025,7 +1025,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
