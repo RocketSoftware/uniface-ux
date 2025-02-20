@@ -468,15 +468,14 @@
       });
     });
 
+    // This test case will fail when run individually, fix for that yet to be done.
     it("simulate user interaction and select first option", function () {
       return asyncRun(function () {
         // Programmatically select an option and dispatch the change event.
         const firstOption = element.querySelector("fluent-option");
-        window.requestAnimationFrame(function () {
-          firstOption.selected = true;
-          const event = new window.Event("change");
-          element.dispatchEvent(event);
-        });
+        firstOption.selected = true;
+        const event = new window.Event("change");
+        element.dispatchEvent(event);
       }).then(function () {
         const returnedValue = widget.getValue();
         const selectedOption = element.querySelector(".u-option.selected");
@@ -505,15 +504,14 @@
       });
     });
 
+    // This test case will fail when run individually, fix for that yet to be done.
     it("simulate user interaction again to select the same valid option and expect the error to be removed", function () {
       return asyncRun(function () {
         // Programmatically select an option and dispatch the change event.
         const firstOption = element.querySelector("fluent-option");
-        window.requestAnimationFrame(function () {
-          firstOption.selected = true;
-          const event = new window.Event("change");
-          element.dispatchEvent(event);
-        });
+        firstOption.selected = true;
+        const event = new window.Event("change");
+        element.dispatchEvent(event);
       }).then(function () {
         const returnedValue = widget.getValue();
         const selectedOption = element.querySelector(".u-option.selected");
