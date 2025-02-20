@@ -5,10 +5,13 @@ import {
   SubWidgetsByProperty, BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean,
   HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep
 } from "../../src/ux/workers.js";
-
+import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
 
 (function () {
   "use strict";
+
+  // This test also depends on Button, still registration is needed
+  registerWidgetClass("UX.Button", Button);
 
   const expect = chai.expect;
 

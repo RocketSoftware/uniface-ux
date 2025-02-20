@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   Worker,
@@ -235,4 +234,3 @@ export class Button extends Widget {
     this.log("hideError");
   }
 }
-UNIFACE.ClassRegistry.add("UX.Button", Button);
