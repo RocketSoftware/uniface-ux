@@ -57,6 +57,7 @@ export class Listbox extends Widget {
       this.registerSetter(widgetClass, "display-format", this);
       // Register a setter for valrep, ensuring it also updates the worker's refresh function.
       this.registerSetter(widgetClass, "valrep", this);
+      this.registerGetter(widgetClass, "value", this);
     }
 
     getValue(widgetInstance) {
