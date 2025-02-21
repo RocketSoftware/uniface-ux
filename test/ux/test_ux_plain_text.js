@@ -474,6 +474,46 @@
     });
   });
 
+  describe(`${widgetName} getValueFormatted() function test`, function () {
+    it("getValueFormatted() should return correct formatted values", function () {
+      let formattedData;
+      let returnedFormattedVal = {
+        "primaryHtmlText": "<b>This is test valrep html</b>",
+        "secondaryPlainText": "One",
+        "prefixIcon": "",
+        "prefixText": "Prefix-Text",
+        "suffixIcon": "Home"
+      };
+      let props = {
+        "id": 0.191159463627403,
+        "class:u-plain-text": true,
+        "html:hidden": false,
+        "html:slot": "",
+        "html:maxlength": null,
+        "html:minlength": null,
+        "html:readonly": null,
+        "prefix-icon": "",
+        "prefix-text": "Prefix-Text",
+        "valrep": [
+          {
+            "value": "One",
+            "representation": "<b>This is test valrep html</b>"
+          }
+        ],
+        "plaintext-format": "valrep-html",
+        "value": "One",
+        "suffix-icon": "Home",
+        "suffix-text": "",
+        "format-error": false,
+        "format-error-message": "",
+        "error": false,
+        "error-message": ""
+      };
+      formattedData = widgetClass.getValueFormatted(props);
+      assert.equal(JSON.stringify(formattedData), JSON.stringify(returnedFormattedVal));
+    });
+  });
+
   describe("showError", function () {
     let widget;
     before(function () {
