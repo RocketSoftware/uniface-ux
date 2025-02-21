@@ -38,7 +38,6 @@ export class Listbox extends Widget {
 
   /**
    * Private Worker: Used to handle changes in value and valrep.
-   * As part of basic implementation, will only update the previousSelectedIndex property in refresh method.
    * @class ListboxSelectedValue
    * @extends {Worker}
    */
@@ -54,16 +53,64 @@ export class Listbox extends Widget {
       super(widgetClass);
       this.registerSetter(widgetClass, propId, this);
       this.registerDefaultValue(widgetClass, propId, defaultValue);
+      // Register a setter for display format, ensuring it also updates the worker's refresh function.
+      this.registerSetter(widgetClass, "display-format", this);
       // Register a setter for valrep, ensuring it also updates the worker's refresh function.
       this.registerSetter(widgetClass, "valrep", this);
+      this.registerGetter(widgetClass, "value", this);
+    }
+
+    getValue(widgetInstance) {
+      const element = this.getElement(widgetInstance);
+      const valrep = this.getNode(widgetInstance.data, "valrep");
+      const value = valrep[element["selectedIndex"]]?.value ?? widgetInstance?.data?.value;
+      return value;
+    }
+
+    getValueUpdaters(widgetInstance) {
+      this.log("getValueUpdaters", { "widgetInstance": widgetInstance.getTraceDescription() });
+      const element = this.getElement(widgetInstance);
+      let updaters = [];
+      updaters.push({
+        "element": element,
+        "event_name": "change",
+        "handler": () => {
+          const valrep = this.getNode(widgetInstance.data, "valrep");
+          if (valrep && valrep.length > 0) {
+            // Since the value received will be the corresponding index, find the actual value from valrep.
+            const value = valrep[element["selectedIndex"]]?.value;
+            widgetInstance.setProperties({ "value": value });
+          }
+        }
+      });
+      return updaters;
     }
 
     refresh(widgetInstance) {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
+      const element = this.getElement(widgetInstance);
+      const value = this.getNode(widgetInstance.data, "value");
+      const valrep = this.getNode(widgetInstance.data, "valrep");
 
-      // Should be set to -1 only if newly selected value is not part of valrep.
-      // Now setting previousSelectedIndex to -1 by default as value hook up is not yet implemented.
-      widgetInstance.previousSelectedIndex = -1;
+      // Since the index is passed to fluent instead of the actual value, find the index corresponding to the value received.
+      const valueToSet = valrep.findIndex((item) => item.value === value);
+      const isValueEmpty = (value === null || value === "");
+
+      if (valrep.length > 0 && (valueToSet !== -1 || isValueEmpty)) {
+        widgetInstance.setProperties({
+          "format-error": false,
+          "format-error-message": ""
+        });
+      } else {
+        widgetInstance.setProperties({
+          "format-error": true,
+          "format-error-message": Listbox.formatErrorMessage
+        });
+      }
+
+      window.queueMicrotask(() => {
+        element["selectedIndex"] = valueToSet;
+      });
     }
   };
 
@@ -84,13 +131,13 @@ export class Listbox extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readonly", false, true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new SlottedElementsByValRep(this, "fluent-option", "u-option", ""),
     new this.ListboxSelectedValue(this, "value", ""),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
   ], [
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error"),
-    new SlottedElementsByValRep(this, "fluent-option", "u-option", "")
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error")
   ], [
     new Trigger(this, "onchange", "change", true)
   ]);
@@ -100,13 +147,15 @@ export class Listbox extends Widget {
    */
   handleSelectionChange() {
     let widgetElement = this.elements.widget;
+    const value = this.getNode(this.data, "value");
+    const valrep = this.getNode(this.data, "valrep");
+    const previousSelectedIndex = valrep.findIndex((item) => item.value === value);
     if (widgetElement.hasAttribute("readonly") || widgetElement.hasAttribute("disabled")) {
       // If listbox is in readonly or disabled state, reset the selectedIndex and return, do not fire a change event.
-      widgetElement.selectedIndex = this.previousSelectedIndex;
+      widgetElement.selectedIndex = previousSelectedIndex;
       return;
     }
-    if (widgetElement.selectedIndex !== this.previousSelectedIndex) {
-      this.previousSelectedIndex = widgetElement.selectedIndex;
+    if (widgetElement.selectedIndex !== previousSelectedIndex) {
       const event = new window.Event("change");
       widgetElement.dispatchEvent(event);
     }
@@ -220,8 +269,6 @@ export class Listbox extends Widget {
     widgetElement.addEventListener("keydown", () => {
       this.handleSelectionChange();
     });
-    // Store the original selectedIndex value.
-    this.previousSelectedIndex = widgetElement.selectedIndex;
     return valueUpdaters;
   }
 

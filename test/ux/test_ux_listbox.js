@@ -353,45 +353,258 @@
         });
       });
     });
-  });
 
-  describe("showError()", function () {
-    let widget;
-    before(function () {
-      widget = tester.createWidget();
-      verifyWidgetClass(widgetClass);
+    it("set selection to 2 and expect the second option to be selected", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "rep"
+        });
+      }).then(function () {
+        const selectedOption = element.querySelector(".u-option.selected");
+        const selectedIndex = valRepArray.findIndex((item) => item.value === "2");
+        expect(selectedOption?.value).equal(selectedIndex?.toString());
+        expect(selectedOption?.textContent).equal(valRepArray[selectedIndex]?.representation);
+      });
     });
 
-    it("call the showError() method and check if error is properly visualized", function () {
+    it("update valrep and expect the selection to be retained", function () {
+      const valRepArrayWithExtraOptions = [
+        {
+          "value": "0",
+          "representation": "option zero"
+        },
+        ...valRepArray
+      ];
       return asyncRun(function () {
-        widget.showError("Validation Error");
+        tester.dataUpdate({
+          "valrep": valRepArrayWithExtraOptions
+        });
       }).then(function () {
-        expect(widget.elements.widget).to.have.class("u-invalid");
-        assert(!widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
-        expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")).equal("Validation Error");
-        expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
-        expect(widget.elements.widget.childNodes[1].className).equal("u-error-icon ms-Icon ms-Icon--AlertSolid");
+        const selectedOption = element.querySelector(".u-option.selected");
+        const selectedIndex = valRepArrayWithExtraOptions.findIndex((item) => item.value === "2");
+        expect(selectedOption?.value).equal(selectedIndex?.toString());
+        expect(selectedOption?.textContent).equal(valRepArrayWithExtraOptions[selectedIndex]?.representation);
+      });
+    });
+
+    it("set selection to an invalid value and expect error to be shown and nothing to be selected", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "value": "random"
+        });
+      }).then(function () {
+        const selectedOption = element.querySelector(".u-option.selected");
+        expect(selectedOption).equal(null);
+
+        expect(element).to.have.class("u-format-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
+        expect(element.childNodes[1].className).equal("u-error-icon ms-Icon ms-Icon--AlertSolid");
+      });
+    });
+
+    it("set value to empty string ('') when there is no empty option and expect the selection to be cleared with no error", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "value": "",
+          "display-format": "rep"
+        });
+      }).then(function () {
+        const selectedOption = element.querySelector(".u-option.selected");
+        expect(selectedOption).equal(null);
+
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(element.childNodes[1].classList.contains("ms-Icon")).to.be.false;
+        expect(element.childNodes[1].classList.contains("ms-Icon--AlertSolid")).to.be.false;
+      });
+    });
+
+    it("set value to empty string ('') when there is an empty option and expect the empty option to be selected with no error", function () {
+      const valRepArrayWithEmpty = [
+        {
+          "value": "",
+          "representation": ""
+        },
+        ...valRepArray
+      ];
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArrayWithEmpty,
+          "value": "",
+          "display-format": "rep"
+        });
+      }).then(function () {
+        const selectedOption = element.querySelector(".u-option.selected");
+        const selectedIndex = valRepArrayWithEmpty.findIndex((item) => item.value === "");
+        expect(selectedOption?.value).equal(selectedIndex?.toString());
+        expect(selectedOption?.textContent).equal(valRepArrayWithEmpty[selectedIndex]?.representation);
+
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(element.childNodes[1].classList.contains("ms-Icon")).to.be.false;
+        expect(element.childNodes[1].classList.contains("ms-Icon--AlertSolid")).to.be.false;
       });
     });
   });
 
-  describe("hideError()", function () {
-    let widget;
+  describe("Update selection through user interaction", function () {
+    let widget, element;
     before(function () {
       widget = tester.createWidget();
+      tester.bindUpdatorsEventToElement();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+      tester.dataUpdate({
+        "valrep": valRepArray,
+        "display-format": "rep"
+      });
+    });
+
+    // This test case will fail when run individually, fix for that yet to be done.
+    it("simulate user interaction and select first option", function () {
+      return asyncRun(function () {
+        // Programmatically select an option and dispatch the change event.
+        const firstOption = element.querySelector("fluent-option");
+        firstOption.selected = true;
+        const event = new window.Event("change");
+        element.dispatchEvent(event);
+      }).then(function () {
+        const returnedValue = widget.getValue();
+        const selectedOption = element.querySelector(".u-option.selected");
+
+        expect(selectedOption?.value).equal("0");
+        expect(returnedValue).to.equal(valRepArray[0].value);
+        expect(selectedOption?.textContent).equal(valRepArray[0]?.representation);
+      });
+    });
+
+    it("set an invalid option and expect error to be shown", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "value": "0"
+        });
+      }).then(function () {
+        const selectedOption = element.querySelector(".u-option.selected");
+        expect(selectedOption).equal(null);
+
+        expect(element).to.have.class("u-format-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
+        expect(element.childNodes[1].className).equal("u-error-icon ms-Icon ms-Icon--AlertSolid");
+      });
+    });
+
+    // This test case will fail when run individually, fix for that yet to be done.
+    it("simulate user interaction again to select the same valid option and expect the error to be removed", function () {
+      return asyncRun(function () {
+        // Programmatically select an option and dispatch the change event.
+        const firstOption = element.querySelector("fluent-option");
+        firstOption.selected = true;
+        const event = new window.Event("change");
+        element.dispatchEvent(event);
+      }).then(function () {
+        const returnedValue = widget.getValue();
+        const selectedOption = element.querySelector(".u-option.selected");
+
+        expect(selectedOption?.value).equal("0");
+        expect(returnedValue).to.equal(valRepArray[0].value);
+        expect(selectedOption?.textContent).equal(valRepArray[0]?.representation);
+
+        expect(element).to.not.have.class("u-format-invalid");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(element.childNodes[1].classList.contains("ms-Icon")).to.be.false;
+        expect(element.childNodes[1].classList.contains("ms-Icon--AlertSolid")).to.be.false;
+      });
+    });
+  });
+
+  describe("Listbox onchange event", function () {
+    let element, onchangeSpy;
+    beforeEach(function () {
+      tester.createWidget();
+      element = tester.element;
+
+      // Create a spy for the onchange event.
+      onchangeSpy = sinon.spy();
+
+      // Add the onchange event listener to the select element.
+      element.addEventListener("onchange", onchangeSpy);
+    });
+
+    // Clean up after each test.
+    afterEach(function () {
+      // Restore the spy to its original state.
+      sinon.restore();
+    });
+
+    it("should call the onchange event handler when an onchange event is fired", function () {
+      // Simulate a change event.
+      const event = new window.Event("onchange");
+      element.dispatchEvent(event);
+
+      // Assert that the onchange event handler was called once.
+      sinon.assert.calledOnce(onchangeSpy);
+    });
+  });
+
+  describe("Error Visualization", function () {
+    let widget, element;
+    before(function () {
+      widget = tester.createWidget();
+      element = tester.element;
       verifyWidgetClass(widgetClass);
     });
 
-    it("call the hideError() method and check if error is removed", function () {
+    it("clear the format error and expect no error to be shown", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "format-error": false,
+          "format-error-message": ""
+        });
+      }).then(function () {
+        expect(element).to.not.have.class("u-format-invalid");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(element.childNodes[1].classList.contains("ms-Icon")).to.be.false;
+        expect(element.childNodes[1].classList.contains("ms-Icon--AlertSolid")).to.be.false;
+      });
+    });
+
+    it("call the showError() method and expect validation error to be shown", function () {
+      return asyncRun(function () {
+        widget.showError("Validation Error");
+      }).then(function () {
+        expect(element).to.have.class("u-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("Validation Error");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
+        expect(element.childNodes[1].className).equal("u-error-icon ms-Icon ms-Icon--AlertSolid");
+      });
+    });
+
+    it("call the hideError() method and expect validation error to be removed", function () {
       return asyncRun(function () {
         widget.hideError();
       }).then(function () {
-        expect(widget.elements.widget).to.not.have.class("u-invalid");
-        assert(widget.elements.widget.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
-        expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("title")).equal("");
-        expect(widget.elements.widget.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
-        expect(widget.elements.widget.childNodes[1].classList.contains("ms-Icon")).to.be.false;
-        expect(widget.elements.widget.childNodes[1].classList.contains("ms-Icon--AlertSolid")).to.be.false;
+        expect(element).to.not.have.class("u-invalid");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(element.childNodes[1].classList.contains("ms-Icon")).to.be.false;
+        expect(element.childNodes[1].classList.contains("ms-Icon--AlertSolid")).to.be.false;
       });
     });
   });
