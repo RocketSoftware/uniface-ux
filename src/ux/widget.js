@@ -232,10 +232,10 @@ export class Widget extends Base {
    * will appear as a label or show an error message indicating they are not supported in a menu.
    * Returns an object that contains the text, icon and css classnames of individual menu items.
    * Can be specialized in individual widget classes.
+   * @param {String} widgetClass
    * @return {UValueFormatting}
    */
-  getMenuItem() {
-    const widgetClass = this.getNode(this.data, "widget-class");
+  getMenuItem(widgetClass) {
 
     /** @type {UValueFormatting} */
     const formattedValue = {

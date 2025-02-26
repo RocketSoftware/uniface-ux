@@ -71,7 +71,8 @@ export class Controlbar extends Widget {
             this.overflowPropertiesMap[subWidgetId] = {
               "overflow-behavior": properties[`${subWidgetId}_overflow-behavior`] ?? null,
               "priority": properties[`${subWidgetId}_priority`] ?? null,
-              "widget-instance": subWidget
+              "widget-instance": subWidget,
+              "widget-class": properties[`${subWidgetId}_widget-class`] ?? ""
             };
           }
           return subWidgetElement;
@@ -175,7 +176,8 @@ export class Controlbar extends Widget {
         const subWidgetId = subWidget.getAttribute("sub-widget-id");
         const menuItem = overflowMenu.querySelector(`[item-id="${subWidgetId}"]`);
         menuItem.removeAttribute("hidden");
-        const value = this.overflowPropertiesMap[subWidgetId]["widget-instance"].getMenuItem();
+        const widgetClass = this.overflowPropertiesMap[subWidgetId]["widget-class"];
+        const value = this.overflowPropertiesMap[subWidgetId]["widget-instance"].getMenuItem(widgetClass);
         this.appendIconAndTextInMenuItem(menuItem, value);
       }
     }
