@@ -92,7 +92,7 @@ class HomePage extends BasePage {
 
       // Check if both actualFailureCount and actualPassCount are 0
       if (parseInt(actualFailureCount) === 0 && parseInt(actualPassCount) === 0) {
-        console.log('Widget Not Loading. Please Check !!');
+        throw new Error('Widget Not Loading. Please Check !!');
       }
       else if (parseInt(actualFailureCount) > 0) {
         await this.navigateToFailurePage(newPage);
@@ -101,9 +101,6 @@ class HomePage extends BasePage {
         await this.scrollToBottom(newPage, test);
         await expect(parseInt(actualFailureCount)).toBe(0, `Test failed with ${actualFailureCount} failure(s).`);
       }
-      //   else {
-      //     console.log('No Failures');
-      // }
     } catch (e) {
       console.error("Error encountered in FailuresEncountered:", e.message || e);
       throw e;
