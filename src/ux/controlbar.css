@@ -10,10 +10,15 @@
   justify-content: space-between;
   padding: 10px;
   width: 100%;
+  overflow-x: auto;
+}
+
+div:has(> .u-controlbar) {
+  position: relative;
 }
 
 .u-controlbar[hidden] {
-  display:none;
+  display: none;
 }
 
 .u-controlbar .u-start-section,
@@ -42,16 +47,16 @@
   white-space: nowrap;
 }
 
-.u-controlbar .u-overflow-container {
-  position: relative;
-}
-
 .u-controlbar .u-overflow-menu {
   position: absolute;
   width: max-content;
-  top: 100%;
-  inset-inline-end: 0;
+  inset-inline-end: 10px;
   z-index: 100;
+}
+
+.u-controlbar[u-orientation="vertical"] .u-overflow-menu {
+  inset-inline-start: calc(50% - ((var(--base-height-multiplier) + var(--density)) * var(--design-unit) * 1px) / 2);
+  inset-inline-end: 0;
 }
 
 .u-controlbar .u-controlbar-item.u-overflown-item {

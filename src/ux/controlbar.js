@@ -345,6 +345,10 @@ export class Controlbar extends Widget {
     return widgetElement;
   }
 
+  hideMenu(){
+    this.elements.overflowMenu.setAttribute("hidden", true);
+  }
+
   /**
    * Specialized onConnect to specifically manage the control bar's resize behavior,
    * and incorporated event listeners for opening and closing the overflow menu.
@@ -355,6 +359,7 @@ export class Controlbar extends Widget {
     // Handle horizontal responsive behavior of controlbar based on screen size.
     // Create a ResizeObserver instance.
     const resizeObserver = new window.ResizeObserver(() => {
+      this.hideMenu();
       this.setProperties({
         "widget-resize": true
       });
@@ -373,8 +378,12 @@ export class Controlbar extends Widget {
     // Hide the menu on clicking outside.
     document.addEventListener("click", (event) => {
       if (!this.elements.overflowMenu.contains(event.target) && !this.elements.overflowButton.contains(event.target)) {
-        this.elements.overflowMenu.setAttribute("hidden", true);
+        this.hideMenu();
       }
+    });
+
+    widgetElement.addEventListener("scroll", () => {
+      this.hideMenu();
     });
 
     this.elements.overflowContainer = this.elements.widget.querySelector(".u-overflow-container");
