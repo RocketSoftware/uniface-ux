@@ -92,7 +92,7 @@ class HomePage extends BasePage {
 
       // Check if both actualFailureCount and actualPassCount are 0
       if (parseInt(actualFailureCount) === 0 && parseInt(actualPassCount) === 0) {
-        throw new Error('Widget Not Loading. Please Check !!');
+        throw new Error('No test results detected (Passes = 0, Failures = 0). This could be due to the widget failing to load, test execution not starting, or a configuration issue. Please investigate the cause.');
       }
       else if (parseInt(actualFailureCount) > 0) {
         await this.navigateToFailurePage(newPage);
