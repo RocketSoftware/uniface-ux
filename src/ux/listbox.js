@@ -132,27 +132,30 @@ export class Listbox extends Widget {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
 
       const size = this.getNode(widgetInstance.data, this.propId);
-      if (!size) {
-        this.warn("refresh()", `Property '${size}' cannot be set to ""`, "Ignored");
+      if (!size || size < 0) {
+        this.warn("refresh()", `Property '${size}' cannot be set to an invalid value`, "Ignored");
         return;
       }
 
       const element = this.getElement(widgetInstance);
+      // Set the u-size attribute to the element
       element.setAttribute("u-size", size);
 
-      const optionElement = element.querySelector('fluent-option');
-      const listboxElement = document.querySelector('fluent-listbox');
-      const slotElement = listboxElement?.shadowRoot?.querySelector('slot:not([name])');
+      const fluentOptionElement = element.querySelector('fluent-option');
+      const fluentListboxElement = document.querySelector('fluent-listbox');
+      const slotElement = fluentListboxElement?.shadowRoot?.querySelector('slot:not([name])');
 
-      if (optionElement) {
-        const computedStyleOption = window.getComputedStyle(optionElement);
+      if (fluentOptionElement) {
+        // Get computed styles for option and slot elements
+        const computedStyleOption = window.getComputedStyle(fluentOptionElement);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
 
+        // Calculate total height based on option height, border height, and slotPadding
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
-        const padding = computedStyleSlot ? (parseFloat(computedStyleSlot.paddingTop) + parseFloat(computedStyleSlot.paddingBottom)): 0;
+        const slotPadding = computedStyleSlot ? (parseFloat(computedStyleSlot.paddingTop) + parseFloat(computedStyleSlot.paddingBottom)): 0;
 
-        const totalHeight = optionHeight * size + borderHeight + padding;
+        const totalHeight = optionHeight * size + borderHeight + slotPadding;
 
         this.CSSStyleSheet = new window.CSSStyleSheet();
         this.CSSStyleSheet.replaceSync(`
