@@ -99,7 +99,7 @@ class HomePage extends BasePage {
         const currentUrl = newPage.url();
         console.log('Failure URL:', currentUrl);
         await this.scrollToBottom(newPage, test);
-        await expect(parseInt(actualFailureCount)).toBe(0, `Test failed with ${actualFailureCount} failure(s).`);
+        expect(parseInt(actualFailureCount)).toBe(0, `Test failed with ${actualFailureCount} failure(s).`);
       }
     } catch (e) {
       console.error("Error encountered in FailuresEncountered:", e.message || e);
