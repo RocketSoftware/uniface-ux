@@ -115,6 +115,65 @@ export class Listbox extends Widget {
   };
 
   /**
+   * Private Worker: Used to handle size and overflow.
+   * @class SizeAttribute
+   * @extends {Worker}
+   */
+  static SizeAttribute = class extends Worker {
+    constructor(widgetClass, propId, defaultValue) {
+      super(widgetClass);
+      this.propId = propId;
+      this.registerSetter(widgetClass, propId, this);
+      this.registerDefaultValue(widgetClass, propId, defaultValue);
+      this.registerSetter(widgetClass, "valrep", this);
+    }
+
+    refresh(widgetInstance) {
+      this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
+
+      const size = this.getNode(widgetInstance.data, this.propId);
+      if (!size) {
+        this.warn("refresh()", `Property '${size}' cannot be set to ""`, "Ignored");
+        return;
+      }
+
+      const element = this.getElement(widgetInstance);
+      element.setAttribute("u-size", size);
+
+      const optionElement = element.querySelector('fluent-option');
+      const listboxElement = document.querySelector('fluent-listbox');
+      const slotElement = listboxElement?.shadowRoot?.querySelector('slot:not([name])');
+
+      if (optionElement) {
+        const computedStyleOption = window.getComputedStyle(optionElement);
+        const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
+
+        const optionHeight = parseFloat(computedStyleOption.height);
+        const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
+        const padding = computedStyleSlot ? (parseFloat(computedStyleSlot.paddingTop) + parseFloat(computedStyleSlot.paddingBottom)): 0;
+
+        const totalHeight = optionHeight * size + borderHeight + padding;
+
+        this.CSSStyleSheet = new window.CSSStyleSheet();
+        this.CSSStyleSheet.replaceSync(`
+          slot {
+            max-height: ${totalHeight}px;
+            overflow-y: auto;
+          }
+          ::slotted(fluent-option) {
+            overflow: unset;
+            flex-shrink: 0;
+          }
+        `);
+
+        if (element.shadowRoot) {
+          element.shadowRoot.adoptedStyleSheets = [...element.shadowRoot.adoptedStyleSheets, this.CSSStyleSheet];
+        }
+      }
+    }
+  };
+
+  /**
    * Widget definition.
    */
   // prettier-ignore
@@ -133,6 +192,7 @@ export class Listbox extends Widget {
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new SlottedElementsByValRep(this, "fluent-option", "u-option", ""),
     new this.ListboxSelectedValue(this, "value", ""),
+    new this.SizeAttribute(this, "size", undefined),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
   ], [
