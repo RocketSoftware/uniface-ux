@@ -133,7 +133,7 @@ export class Listbox extends Widget {
 
       const size = this.getNode(widgetInstance.data, this.propId);
       if (!size || size < 0) {
-        this.warn("refresh()", `Property '${size}' cannot be set to an invalid value`, "Ignored");
+        this.warn("refresh()", `Size property cannot be set to '${size}'`, "Ignored");
         return;
       }
 
