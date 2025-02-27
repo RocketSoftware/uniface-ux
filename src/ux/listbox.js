@@ -131,9 +131,15 @@ export class Listbox extends Widget {
     refresh(widgetInstance) {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
 
-      const size = this.getNode(widgetInstance.data, this.propId);
-      if (!size || size < 0) {
-        this.warn("refresh()", `Size property cannot be set to '${size}'`, "Ignored");
+      let size = this.getNode(widgetInstance.data, this.propId);
+      let isSizeUndefined = size === undefined;
+      size = parseInt(size);
+      if (Number.isNaN(size)) {
+        size = null;
+      }
+
+      if ((!isSizeUndefined && size === null) || size < 0) {
+        this.warn("refresh()", "Size property cannot be set", "Ignored");
         return;
       }
 
