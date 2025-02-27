@@ -426,6 +426,40 @@
       });
     });
 
+    it("Set no valrep and show empty fluent option with format error", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": [],
+          "display-format": "valrep"
+        });
+      }).then(function () {
+        const listBoxArray = element.querySelectorAll("fluent-option");
+        expect(listBoxArray.length).to.equal(1);
+        expect(listBoxArray[0].value).to.equal("");
+        expect(listBoxArray[0].textContent).to.equal("");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
+      });
+    });
+
+    it("Set no valrep with initial value and show empty fluent option with format error", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": [],
+          "value":1,
+          "display-format": "val"
+        });
+      }).then(function () {
+        const listBoxArray = element.querySelectorAll("fluent-option");
+        expect(listBoxArray[0].value).to.equal("");
+        expect(listBoxArray[0].textContent).to.equal("");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
+      });
+    });
+
     it("set value to empty string ('') when there is an empty option and expect the empty option to be selected with no error", function () {
       const valRepArrayWithEmpty = [
         {
