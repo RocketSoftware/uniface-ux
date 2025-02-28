@@ -124,9 +124,9 @@ export class Listbox extends Widget {
     new HtmlAttribute(this, undefined, "role", "listbox"),
     new HtmlAttribute(this, undefined, "ariaActiveDescendant", ""),
     new HtmlAttribute(this, undefined, "ariaControls", ""),
-    new HtmlAttributeBoolean(this, undefined, "ariaDisabled", false),
-    new HtmlAttributeBoolean(this, undefined, "ariaReadOnly", false),
     new HtmlAttributeBoolean(this, undefined, "ariaExpanded", false),
+    new HtmlAttributeBoolean(this, "html:disabled", "ariaDisabled", false),
+    new HtmlAttributeBoolean(this, "html:readonly", "ariaReadOnly", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
     new HtmlAttributeBoolean(this, "html:readonly", "readonly", false, true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
@@ -288,6 +288,7 @@ export class Listbox extends Widget {
       if (widgetClass.uiBlocking === "readonly") {
         // Add the readonly attribute to the widget element.
         this.elements.widget.setAttribute("readonly", "true");
+        this.elements.widget.setAttribute("aria-readonly", "true");
       } else {
         // If uiBlocking has an invalid value, log an error.
         this.error("blockUI()", "Static uiBlocking not defined or invalid value", "No UI blocking");
@@ -312,6 +313,7 @@ export class Listbox extends Widget {
         if (!this.toBoolean(this.data["html:readonly"])) {
           // Remove the readonly attribute from the widget element.
           this.elements.widget.removeAttribute("readonly");
+          this.elements.widget.setAttribute("aria-readonly", "false");
         }
       } else {
         // If uiBlocking has an invalid value, log an error.
