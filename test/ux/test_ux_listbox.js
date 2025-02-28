@@ -149,10 +149,14 @@
     it("check 'hidden' attributes", function () {
       assert.notEqual(element.querySelector('span.u-label-text').getAttribute('hidden'), null);
     });
+
     it("check widget id", function () {
       assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
     });
 
+    it("check size attribute", function () {
+      assert.equal(tester.defaultValues.size, undefined ,"Widget misses or has incorrect u-size element");
+    });
   });
 
   describe("dataUpdate()", function () {
