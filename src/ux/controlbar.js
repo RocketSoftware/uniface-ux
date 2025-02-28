@@ -348,7 +348,7 @@ export class Controlbar extends Widget {
   }
 
   hideMenu(){
-    this.elements.overflowMenu.setAttribute("hidden", true);
+    this.elements.overflowMenu.hidden = true;
   }
 
   /**
@@ -384,6 +384,7 @@ export class Controlbar extends Widget {
       }
     });
 
+    // Hide the menu on scroll.
     widgetElement.addEventListener("scroll", () => {
       this.hideMenu();
     });
