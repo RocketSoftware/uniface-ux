@@ -121,33 +121,17 @@ export class Listbox extends Widget {
    * @extends {SlottedElementsByValRep}
    */
   static ListBoxValRep = class extends SlottedElementsByValRep {
-
-    /**
-     * Creates an instance of ListBoxValRep.
-     * @param {typeof Widget} widgetClass
-     * @param {String} tagName
-     * @param {String} styleClass
-     * @param {String} elementQuerySelector
-     */
-    constructor(widgetClass, tagName, styleClass, elementQuerySelector) {
-      super(widgetClass, tagName, styleClass, elementQuerySelector);
-      this.registerSetter(widgetClass, "layout", this);
-      this.registerSetter(widgetClass, "valrep", this);
-    }
-
     refresh(widgetInstance) {
       const valrep = this.getNode(widgetInstance.data, "valrep");
-      const value = this.getNode(widgetInstance.data, "value");
-      let matchedValrepObj = valrep ? valrep.find((valrepObj) => valrepObj.value === value) : undefined;
       if (valrep.length > 0) {
-        if (matchedValrepObj) {
-          widgetInstance.elements.widget.valrepUpdated = true;
-        }
         super.refresh(widgetInstance);
       } else {
         const ListBoxElement = this.getElement(widgetInstance);
         this.removeValRepElements(widgetInstance);
-        ListBoxElement.appendChild(document.createElement(this.tagName));
+        const option = document.createElement(this.tagName);
+        option.classList.add("u-option");
+        ListBoxElement.appendChild(option);
+        widgetInstance.setProperties({"html:readonly":true});
       }
     }
   };
