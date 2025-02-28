@@ -138,8 +138,10 @@ export class Listbox extends Widget {
         size = null;
       }
 
-      if ((!isSizeUndefined && size === null) || size < 0) {
-        this.warn("refresh()", "Size property cannot be set", "Ignored");
+      if (size === null || size <= 0) {
+        if (!isSizeUndefined) {
+          this.warn("refresh()", "Size property cannot be set", "Ignored");
+        }
         return;
       }
 
