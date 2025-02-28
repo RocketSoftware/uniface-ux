@@ -1592,7 +1592,7 @@
     });
   });
 
-  describe("Opening and closing behavior of overflow menu", function () {
+  describe("Check the opening and closing behavior of overflow menu", function () {
     let element, overFlowBtnElement, node, data;
 
     it("check overflow menu behavior when overflow button is clicked", function () {
@@ -1717,7 +1717,7 @@
     });
   });
 
-  describe("Contents of the overflow menu", function () {
+  describe("Check the contents of the overflow menu", function () {
     it("check subwidgets order in overflow menu when overflow-behavior is set to menu", function () {
       let element, widget;
       const tester = new umockup.WidgetTester();
@@ -1872,7 +1872,7 @@
     });
   });
 
-  describe("Scroll behavior on overflow of subwidgets", function () {
+  describe("Check the scroll behavior of controlbar on overflow of subwidgets", function () {
     let element, node, data, isHorizontalScrollPresent;
     it("check if horizontal scrollbar appears when there is an overflow when all subwidgets have overflow behavior set as 'none'", function () {
       const tester = new umockup.WidgetTester();
