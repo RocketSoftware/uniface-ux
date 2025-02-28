@@ -126,11 +126,11 @@ export class Listbox extends Widget {
       if (valrep.length > 0) {
         super.refresh(widgetInstance);
       } else {
-        const ListBoxElement = this.getElement(widgetInstance);
+        const listBoxElement = this.getElement(widgetInstance);
         this.removeValRepElements(widgetInstance);
         const option = document.createElement(this.tagName);
         option.classList.add("u-option");
-        ListBoxElement.appendChild(option);
+        listBoxElement.appendChild(option);
         widgetInstance.setProperties({"html:readonly":true});
       }
     }
