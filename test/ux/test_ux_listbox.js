@@ -437,6 +437,7 @@
         expect(listBoxArray.length).to.equal(1);
         expect(listBoxArray[0].value).to.equal("");
         expect(listBoxArray[0].textContent).to.equal("");
+        expect(listBoxArray[0].hasAttribute('readonly')).to.be.true;
         assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
         expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
@@ -454,6 +455,7 @@
         const listBoxArray = element.querySelectorAll("fluent-option");
         expect(listBoxArray[0].value).to.equal("");
         expect(listBoxArray[0].textContent).to.equal("");
+        expect(listBoxArray[0].hasAttribute('readonly')).to.be.true;
         assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
         expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
