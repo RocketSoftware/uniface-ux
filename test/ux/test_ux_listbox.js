@@ -530,6 +530,159 @@
     });
   });
 
+  describe("Check listbox scroll based on size", function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    it("set the size = no of valrep element then scroll bar should not be visible with display-format as valrep", function () {
+      let size = 3;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "valrep"
+        });
+      }).then(function () {
+        const listboxElement = document.querySelector('fluent-listbox');
+        const slotElement = listboxElement?.shadowRoot?.querySelector('slot:not([name])');
+        const optionElement = element.querySelector('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElement);
+        const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
+        const optionHeight = parseFloat(computedStyleOption.height);
+        const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
+        const padding = computedStyleSlot ? (parseFloat(computedStyleSlot.paddingTop) + parseFloat(computedStyleSlot.paddingBottom)): 0;
+        const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
+        expect(parseFloat(listboxElement.getAttribute('u-size'))).equal(size);
+        let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
+        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('overflow-y');
+        expect(parseFloat(maxHeightSlotinpx)).equal(totalHeight);
+        expect(overflowBehavior).equal("auto");
+      });
+    });
+
+    it("set the size < no of valrep element then scroll bar should be visible with display-format as rep", function () {
+      let size = 1;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "rep"
+        });
+      }).then(function () {
+        const listboxElement = document.querySelector('fluent-listbox');
+        const slotElement = listboxElement?.shadowRoot?.querySelector('slot:not([name])');
+        const optionElement = element.querySelector('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElement);
+        const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
+        const optionHeight = parseFloat(computedStyleOption.height);
+        const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
+        const padding = computedStyleSlot ? (parseFloat(computedStyleSlot.paddingTop) + parseFloat(computedStyleSlot.paddingBottom)): 0;
+        const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
+        expect(parseFloat(listboxElement.getAttribute('u-size'))).equal(size);
+        let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
+        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('overflow-y');
+        expect(totalHeight).to.be.greaterThan(parseFloat(maxHeightSlotinpx));
+        expect(overflowBehavior).equal("auto");
+      });
+    });
+
+    it("set the size > no of valrep element then scroll bar should not be visible with display-format as rep", function () {
+      let size = 4;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "rep"
+        });
+      }).then(function () {
+        const listboxElement = document.querySelector('fluent-listbox');
+        const slotElement = listboxElement?.shadowRoot?.querySelector('slot:not([name])');
+        const optionElement = element.querySelector('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElement);
+        const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
+        const optionHeight = parseFloat(computedStyleOption.height);
+        const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
+        const padding = computedStyleSlot ? (parseFloat(computedStyleSlot.paddingTop) + parseFloat(computedStyleSlot.paddingBottom)): 0;
+        const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
+        expect(parseFloat(listboxElement.getAttribute('u-size'))).equal(size);
+        let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
+        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('overflow-y');
+        expect(parseFloat(maxHeightSlotinpx)).to.be.greaterThan(totalHeight);
+        expect(overflowBehavior).equal("auto");
+      });
+    });
+
+    it("set the size as negative then scroll bar should not be visible and size should be ignored with display-format as valrep", function () {
+      let size = -2;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "valrep"
+        });
+      }).then(function () {
+        const listboxElement = document.querySelector('fluent-listbox');
+        // We can not check max-height and overflow-y here since the code exits in case of  negative size value.
+        expect(!listboxElement.hasAttribute('u-size'));
+      });
+    });
+
+    it("set the size as 0 then scroll bar should not be visible and size should be ignored with display-format as val", function () {
+      let size = 0;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "val"
+        });
+      }).then(function () {
+        const listboxElement = document.querySelector('fluent-listbox');
+        // We can not check max-height and overflow-y here since the code exits in case of negative/zero size value.
+        expect(!listboxElement.hasAttribute('u-size'));
+      });
+    });
+
+    it("set size as 2 and increase the font size then scroll bar should be visible with display-format as valrep", function () {
+      let size = 2;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "valrep"
+        });
+      }).then(function () {
+        const listboxElement = document.querySelector('fluent-listbox');
+        const slotElement = listboxElement?.shadowRoot?.querySelector('slot:not([name])');
+        const optionElement = element.querySelectorAll('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElement[0]);
+        const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
+        const optionHeight = parseFloat(computedStyleOption.height);
+        const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
+        const padding = computedStyleSlot ? (parseFloat(computedStyleSlot.paddingTop) + parseFloat(computedStyleSlot.paddingBottom)): 0;
+        const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
+        optionElement.forEach(setCustomFontSize);
+        function setCustomFontSize(optionElement){
+          optionElement.style.fontSize = "35px";
+        }
+        expect(parseFloat(listboxElement.getAttribute('u-size'))).equal(size);
+        let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
+        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('overflow-y');
+        expect(totalHeight).to.be.greaterThan(parseFloat(maxHeightSlotinpx));
+        expect(overflowBehavior).equal("auto");
+      });
+    });
+  });
+
   describe("Listbox onchange event", function () {
     let element, onchangeSpy;
     beforeEach(function () {
