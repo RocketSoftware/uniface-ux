@@ -554,12 +554,15 @@
       }).then(function () {
         const listboxElement = document.querySelector('fluent-listbox');
         const slotElement = listboxElement?.shadowRoot?.querySelector('slot:not([name])');
-        const optionElement = element.querySelector('fluent-option');
-        const computedStyleOption = window.getComputedStyle(optionElement);
+        const optionElement = element.querySelectorAll('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElement[0]);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
-        const padding = computedStyleSlot ? (parseFloat(computedStyleSlot.paddingTop) + parseFloat(computedStyleSlot.paddingBottom)): 0;
+        const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
+
+        const slotPaddingBottom = (size === optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
         expect(parseFloat(listboxElement.getAttribute('u-size'))).equal(size);
         let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
@@ -581,12 +584,15 @@
       }).then(function () {
         const listboxElement = document.querySelector('fluent-listbox');
         const slotElement = listboxElement?.shadowRoot?.querySelector('slot:not([name])');
-        const optionElement = element.querySelector('fluent-option');
-        const computedStyleOption = window.getComputedStyle(optionElement);
+        const optionElement = element.querySelectorAll('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElement[0]);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
-        const padding = computedStyleSlot ? (parseFloat(computedStyleSlot.paddingTop) + parseFloat(computedStyleSlot.paddingBottom)): 0;
+        const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
+
+        const slotPaddingBottom = (size === optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
         expect(parseFloat(listboxElement.getAttribute('u-size'))).equal(size);
         let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
@@ -608,12 +614,15 @@
       }).then(function () {
         const listboxElement = document.querySelector('fluent-listbox');
         const slotElement = listboxElement?.shadowRoot?.querySelector('slot:not([name])');
-        const optionElement = element.querySelector('fluent-option');
-        const computedStyleOption = window.getComputedStyle(optionElement);
+        const optionElement = element.querySelectorAll('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElement[0]);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
-        const padding = computedStyleSlot ? (parseFloat(computedStyleSlot.paddingTop) + parseFloat(computedStyleSlot.paddingBottom)): 0;
+        const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
+
+        const slotPaddingBottom = (size === optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
         expect(parseFloat(listboxElement.getAttribute('u-size'))).equal(size);
         let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
@@ -672,7 +681,10 @@
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
-        const padding = computedStyleSlot ? (parseFloat(computedStyleSlot.paddingTop) + parseFloat(computedStyleSlot.paddingBottom)): 0;
+        const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
+
+        const slotPaddingBottom = (size === optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
         optionElement.forEach(setCustomFontSize);
         function setCustomFontSize(optionElement){

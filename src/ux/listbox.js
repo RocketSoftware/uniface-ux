@@ -134,34 +134,27 @@ export class Listbox extends Widget {
       let size = this.getNode(widgetInstance.data, this.propId);
       let isSizeUndefined = size === undefined;
       size = parseInt(size);
-      if (Number.isNaN(size)) {
-        size = null;
-      }
-
-      if (size === null || size <= 0) {
-        if (!isSizeUndefined) {
-          this.warn("refresh()", "Size property cannot be set", "Ignored");
-        }
-        return;
-      }
 
       const element = this.getElement(widgetInstance);
-      // Set the u-size attribute to the element
-      element.setAttribute("u-size", size);
-
-      const fluentOptionElement = element.querySelector('fluent-option');
+      const fluentOptionElement = element.querySelectorAll('fluent-option');
       const fluentListboxElement = document.querySelector('fluent-listbox');
       const slotElement = fluentListboxElement?.shadowRoot?.querySelector('slot:not([name])');
 
-      if (fluentOptionElement) {
+      if (size > 0 && size <= fluentOptionElement.length) {
+        // Set the u-size attribute to the element
+        element.setAttribute("u-size", size);
+
         // Get computed styles for option and slot elements
-        const computedStyleOption = window.getComputedStyle(fluentOptionElement);
+        const computedStyleOption = window.getComputedStyle(fluentOptionElement[0]);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
 
         // Calculate total height based on option height, border height, and slotPadding
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
-        const slotPadding = computedStyleSlot ? (parseFloat(computedStyleSlot.paddingTop) + parseFloat(computedStyleSlot.paddingBottom)): 0;
+        const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
+        // Apply bottom padding only if size equals the number of options, otherwise set it to 0
+        const slotPaddingBottom = (size === fluentOptionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const slotPadding = slotPaddingTop + slotPaddingBottom;
 
         const totalHeight = optionHeight * size + borderHeight + slotPadding;
 
@@ -180,7 +173,10 @@ export class Listbox extends Widget {
         if (element.shadowRoot) {
           element.shadowRoot.adoptedStyleSheets = [...element.shadowRoot.adoptedStyleSheets, this.CSSStyleSheet];
         }
+      } else if(!isSizeUndefined) {
+        this.warn("refresh()", "Size property cannot be set", "Ignored");
       }
+      return;
     }
   };
 
@@ -268,7 +264,6 @@ export class Listbox extends Widget {
 
         :host(:focus-within:not([disabled])) slot:not([name]) {
           outline: calc(var(--focus-stroke-width) * 1px) solid var(--focus-stroke-outer);
-          outline-offset: calc(var(--focus-stroke-width) * -1px);
         }
 
         slot:not([name]) {
