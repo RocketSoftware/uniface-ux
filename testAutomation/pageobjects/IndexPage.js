@@ -16,7 +16,6 @@ class IndexPage extends BasePage {
     this.baseWidgetLink = '#base';
     this.widgetClassWidgetLink = '#widget';
     this.workersClassWidgetLink = '#workers';
-    this.controlBarWidgetLink = '#controlbar'
 }
 
 async openNewPage(selector) {

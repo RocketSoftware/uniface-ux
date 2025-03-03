@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   Element,
@@ -95,5 +94,3 @@ export class TextArea extends Widget {
     return updaters;
   }
 }
-
-UNIFACE.ClassRegistry.add("UX.TextArea", TextArea);
