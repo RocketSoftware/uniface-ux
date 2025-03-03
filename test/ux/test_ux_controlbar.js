@@ -1617,6 +1617,290 @@
     });
   });
 
+  describe("Check the scroll behavior of controlbar on overflow of subwidgets", function () {
+    let element, node, data, isHorizontalScrollPresent;
+
+    it("check if horizontal scrollbar appears when there is an overflow when all subwidgets have overflow behavior set as 'none'", function () {
+      const tester = new umockup.WidgetTester();
+      element = tester.processLayout(MOCK_DATA_FOR_SCROLL);
+      data = Object.assign({}, MOCK_DATA_FOR_SCROLL);
+      return asyncRun(function () {
+        tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+      }).then(function () {
+        node = document.querySelector('#widget-container');
+        node.style.width = '1500px';
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === false, "Horizontal scrollbar is shown when there is no overflow.");
+        node.style.width = '500px';
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
+
+        // Change the direction to 'rtl', scrollbar should still be present.
+        const bodyDiv = document.querySelector("body");
+        bodyDiv?.setAttribute("dir","rtl");
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow in 'rtl' direction.");
+
+        // Change the direction to 'ltr', scrollbar should still be present.
+        bodyDiv?.setAttribute("dir","ltr");
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow in 'ltr' direction.");
+
+        // Remove the attribute so that the test page goes back to normal.
+        bodyDiv?.removeAttribute("dir");
+      });
+    });
+
+    it("check if horizontal scrollbar appears when there is an overflow when one subwidget has overflow behavior set as 'menu' and the rest have 'none'", function () {
+      const tester = new umockup.WidgetTester();
+      element = tester.processLayout(MOCK_DATA_FOR_SCROLL_WITH_MENU);
+      data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU);
+      return asyncRun(function () {
+        tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+      }).then(function () {
+        node = document.querySelector('#widget-container');
+        node.style.width = '500px';
+
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
+
+        // Simulate click event on overflow button to open the overflow menu.
+        const overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
+        overFlowBtnElement.click();
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
+
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown after opening the menu.");
+
+        // Verify opening the menu does not cause a vertical overflow.
+        const isVerticalScrollPresent = element.scrollHeight > element.clientHeight;
+        assert(isVerticalScrollPresent === false, "Vertical scrollbar is shown after opening the menu.");
+      });
+    });
+
+    it("check scrollbar behavior when one subwidget has overflow behavior set as 'menu' and the rest have 'none' with orientation set as 'vertical' with enough space", function () {
+      const tester = new umockup.WidgetTester();
+      element = tester.processLayout(MOCK_DATA_FOR_SCROLL_WITH_MENU);
+      data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU);
+      return asyncRun(function () {
+        tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate({
+          ...data,
+          "orientation": "vertical"
+        });
+      }).then(function () {
+        node = document.querySelector('#widget-container');
+        node.style.width = '500px';
+
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === false, "Horizontal scrollbar is shown when there is no overflow.");
+
+        // Simulate click event on overflow button to open the overflow menu.
+        const overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
+        overFlowBtnElement.click();
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
+
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === false, "Horizontal scrollbar is shown after opening the menu.");
+
+        // Verify opening the menu does not cause a vertical overflow.
+        const isVerticalScrollPresent = element.scrollHeight > element.clientHeight;
+        assert(isVerticalScrollPresent === false, "Vertical scrollbar is shown after opening the menu.");
+      });
+    });
+
+    it("check scrollbar behavior when one subwidget has overflow behavior set as 'menu' and the rest have 'none' with orientation set as 'vertical' with not enough space", function () {
+      const tester = new umockup.WidgetTester();
+      element = tester.processLayout(MOCK_DATA_FOR_SCROLL_WITH_MENU_FOR_VERTICAL_ORIENTATION);
+      data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU_FOR_VERTICAL_ORIENTATION);
+      return asyncRun(function () {
+        tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate({
+          ...data,
+          "orientation": "vertical"
+        });
+      }).then(function () {
+        node = document.querySelector('#widget-container');
+        node.style.width = '200px';
+
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
+
+        // Simulate click event on overflow button to open the overflow menu.
+        const overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
+        overFlowBtnElement.click();
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
+
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown after opening the menu.");
+
+        // Verify opening the menu does not cause a vertical overflow.
+        const isVerticalScrollPresent = element.scrollHeight > element.clientHeight;
+        assert(isVerticalScrollPresent === false, "Vertical scrollbar is shown after opening the menu.");
+      });
+    });
+  });
+
+  describe("Check the opening and closing behavior of overflow menu", function () {
+    let element, overFlowBtnElement, node, data;
+
+    it("check overflow menu behavior when overflow button is clicked", function () {
+      const tester = new umockup.WidgetTester();
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
+      data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
+      return asyncRun(function () {
+        tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+      }).then(function () {
+        // Overflow menu should be hidden initially.
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+
+        // Simulate click event on overflow button to open the overflow menu.
+        overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
+        overFlowBtnElement.click();
+
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+        // Simulate another click event on overflow button to close the overflow menu.
+        overFlowBtnElement.click();
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+
+      });
+    });
+
+    it("check if the overflow menu closes after resize", function () {
+      const tester = new umockup.WidgetTester();
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
+      data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
+      return asyncRun(function() {
+        tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+
+        // Overflow menu should be hidden initially.
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+
+        // Simulate click event on overflow button to open the overflow menu.
+        overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
+        overFlowBtnElement.click();
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
+
+        // Now resize the controlbar.
+        node = document.querySelector('#widget-container');
+        node.style.width = '800px';
+      }).then(function() {
+        // After resize overflow menu should be hidden.
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+      });
+    });
+
+    it("check if the overflow menu closes on outside click", function () {
+      const tester = new umockup.WidgetTester();
+      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
+      data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
+      return asyncRun(function() {
+        tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+      }).then(function() {
+        // Overflow menu should be hidden initially.
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+
+        // Simulate click event on overflow button to open the overflow menu.
+        overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
+        overFlowBtnElement.click();
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
+
+        // Simulate a click somewhere outside the overflow menu.
+        let startSecElement = element.querySelector("div.u-center-section");
+        startSecElement.click();
+
+        // After outside click overflow menu should be hidden.
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
+
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
+        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
+      });
+    });
+
+    it("check if the overflow menu closes on scrolling", function () {
+      const tester = new umockup.WidgetTester();
+      element = tester.processLayout(MOCK_DATA_FOR_SCROLL_WITH_MENU);
+      data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU);
+      return asyncRun(function () {
+        tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate(data);
+        node = document.querySelector('#widget-container');
+        node.style.width = '500px';
+        const isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
+
+        // Simulate click event on overflow button to open the overflow menu.
+        const overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
+        overFlowBtnElement.click();
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
+
+        // Scroll to the opposite end and check if menu got closed.
+        element.scrollTo({
+          "left": element.scrollWidth
+        });
+      }).then(function () {
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+      });
+    });
+  });
+
   describe("Check the contents of the overflow menu", function () {
     it("check subwidgets order in overflow menu when overflow-behavior is set to menu", function () {
       let element, widget;
@@ -1768,290 +2052,6 @@
         expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
-      });
-    });
-  });
-
-  describe("Check the scroll behavior of controlbar on overflow of subwidgets", function () {
-    let element, node, data, isHorizontalScrollPresent;
-
-    it("check if horizontal scrollbar appears when there is an overflow when all subwidgets have overflow behavior set as 'none'", function () {
-      const tester = new umockup.WidgetTester();
-      element = tester.processLayout(MOCK_DATA_FOR_SCROLL);
-      data = Object.assign({}, MOCK_DATA_FOR_SCROLL);
-      return asyncRun(function () {
-        tester.onConnect(element);
-        tester.dataInit();
-        tester.dataUpdate(data);
-      }).then(function () {
-        node = document.querySelector('#widget-container');
-        node.style.width = '1500px';
-        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
-        assert(isHorizontalScrollPresent === false, "Horizontal scrollbar is shown when there is no overflow.");
-        node.style.width = '500px';
-        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
-        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
-
-        // Change the direction to 'rtl', scrollbar should still be present.
-        const bodyDiv = document.querySelector("body");
-        bodyDiv?.setAttribute("dir","rtl");
-        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
-        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow in 'rtl' direction.");
-
-        // Change the direction to 'ltr', scrollbar should still be present.
-        bodyDiv?.setAttribute("dir","ltr");
-        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
-        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow in 'ltr' direction.");
-
-        // Remove the attribute so that the test page goes back to normal.
-        bodyDiv?.removeAttribute("dir");
-      });
-    });
-
-    it("check if horizontal scrollbar appears when there is an overflow when one subwidget has overflow behavior set as 'menu' and the rest have 'none'", function () {
-      const tester = new umockup.WidgetTester();
-      element = tester.processLayout(MOCK_DATA_FOR_SCROLL_WITH_MENU);
-      data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU);
-      return asyncRun(function () {
-        tester.onConnect(element);
-        tester.dataInit();
-        tester.dataUpdate(data);
-      }).then(function () {
-        node = document.querySelector('#widget-container');
-        node.style.width = '500px';
-
-        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
-        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
-
-        // Simulate click event on overflow button to open the overflow menu.
-        const overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
-        overFlowBtnElement.click();
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
-
-        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
-        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown after opening the menu.");
-
-        // Verify opening the menu does not cause a vertical overflow.
-        const isVerticalScrollPresent = element.scrollHeight > element.clientHeight;
-        assert(isVerticalScrollPresent === false, "Vertical scrollbar is shown after opening the menu.");
-      });
-    });
-
-    it("check scrollbar behavior when one subwidget has overflow behavior set as 'menu' and the rest have 'none' with orientation set as 'vertical' with enough space", function () {
-      const tester = new umockup.WidgetTester();
-      element = tester.processLayout(MOCK_DATA_FOR_SCROLL_WITH_MENU);
-      data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU);
-      return asyncRun(function () {
-        tester.onConnect(element);
-        tester.dataInit();
-        tester.dataUpdate({
-          ...data,
-          "orientation": "vertical"
-        });
-      }).then(function () {
-        node = document.querySelector('#widget-container');
-        node.style.width = '500px';
-
-        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
-        assert(isHorizontalScrollPresent === false, "Horizontal scrollbar is shown when there is no overflow.");
-
-        // Simulate click event on overflow button to open the overflow menu.
-        const overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
-        overFlowBtnElement.click();
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
-
-        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
-        assert(isHorizontalScrollPresent === false, "Horizontal scrollbar is shown after opening the menu.");
-
-        // Verify opening the menu does not cause a vertical overflow.
-        const isVerticalScrollPresent = element.scrollHeight > element.clientHeight;
-        assert(isVerticalScrollPresent === false, "Vertical scrollbar is shown after opening the menu.");
-      });
-    });
-
-    it("check scrollbar behavior when one subwidget has overflow behavior set as 'menu' and the rest have 'none' with orientation set as 'vertical' with not enough space", function () {
-      const tester = new umockup.WidgetTester();
-      element = tester.processLayout(MOCK_DATA_FOR_SCROLL_WITH_MENU_FOR_VERTICAL_ORIENTATION);
-      data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU_FOR_VERTICAL_ORIENTATION);
-      return asyncRun(function () {
-        tester.onConnect(element);
-        tester.dataInit();
-        tester.dataUpdate({
-          ...data,
-          "orientation": "vertical"
-        });
-      }).then(function () {
-        node = document.querySelector('#widget-container');
-        node.style.width = '200px';
-
-        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
-        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
-
-        // Simulate click event on overflow button to open the overflow menu.
-        const overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
-        overFlowBtnElement.click();
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
-
-        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
-        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown after opening the menu.");
-
-        // Verify opening the menu does not cause a vertical overflow.
-        const isVerticalScrollPresent = element.scrollHeight > element.clientHeight;
-        assert(isVerticalScrollPresent === false, "Vertical scrollbar is shown after opening the menu.");
-      });
-    });
-  });
-
-  describe("Check the opening and closing behavior of overflow menu", function () {
-    let element, overFlowBtnElement, node, data;
-
-    it("check overflow menu behavior when overflow button is clicked", function () {
-      const tester = new umockup.WidgetTester();
-      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
-      data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
-
-      return asyncRun(function () {
-        tester.onConnect(element);
-        tester.dataInit();
-        tester.dataUpdate(data);
-      }).then(function () {
-        // Overflow menu should be hidden initially.
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
-
-        // Simulate click event on overflow button to open the overflow menu.
-        overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
-        overFlowBtnElement.click();
-
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
-
-        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
-
-        // Simulate another click event on overflow button to close the overflow menu.
-        overFlowBtnElement.click();
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
-        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
-
-        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
-      });
-    });
-
-    it("check if the overflow menu closes after resize", function () {
-      const tester = new umockup.WidgetTester();
-      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
-      data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
-
-      return asyncRun(function() {
-        tester.onConnect(element);
-        tester.dataInit();
-        tester.dataUpdate(data);
-
-        // Overflow menu should be hidden initially.
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
-
-        // Simulate click event on overflow button to open the overflow menu.
-        overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
-        overFlowBtnElement.click();
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
-
-        // Now resize the controlbar.
-        node = document.querySelector('#widget-container');
-        node.style.width = '800px';
-      }).then(function() {
-        // After resize overflow menu should be hidden.
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
-        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
-      });
-    });
-
-    it("check if the overflow menu closes on outside click", function () {
-      const tester = new umockup.WidgetTester();
-      element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
-      data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MENU_NO_PRIORITY);
-
-      return asyncRun(function() {
-        tester.onConnect(element);
-        tester.dataInit();
-        tester.dataUpdate(data);
-      }).then(function() {
-        // Overflow menu should be hidden initially.
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
-
-        // Simulate click event on overflow button to open the overflow menu.
-        overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
-        overFlowBtnElement.click();
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
-
-        // Simulate a click somewhere outside the overflow menu.
-        let startSecElement = element.querySelector("div.u-center-section");
-        startSecElement.click();
-
-        // After outside click overflow menu should be hidden.
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
-        expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
-      });
-    });
-
-    it("check if the overflow menu closes on scrolling", function () {
-      const tester = new umockup.WidgetTester();
-      element = tester.processLayout(MOCK_DATA_FOR_SCROLL_WITH_MENU);
-      data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU);
-      return asyncRun(function () {
-        tester.onConnect(element);
-        tester.dataInit();
-        tester.dataUpdate(data);
-        node = document.querySelector('#widget-container');
-        node.style.width = '500px';
-        const isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
-        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
-
-        // Simulate click event on overflow button to open the overflow menu.
-        const overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
-        overFlowBtnElement.click();
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
-
-        // Scroll to the opposite end and check if menu got closed.
-        element.scrollTo({
-          "left": element.scrollWidth
-        });
-      }).then(function () {
-        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
       });
     });
   });
