@@ -204,6 +204,7 @@
         let labelText = labelElement.innerText;
         expect(labelText).equal(listboxLabel);
         expect(Boolean(element.getAttribute("readonly"))).to.be.true;
+        expect(element.getAttribute("aria-readonly")).equal("true");
         expect(window.getComputedStyle(element).cursor).equal("not-allowed");
         expect(window.getComputedStyle(labelElement).cursor).equal("not-allowed");
       });
@@ -216,6 +217,7 @@
         });
       }).then(function () {
         expect(!element.getAttribute("readonly"));
+        expect(element.getAttribute("aria-readonly")).equal("false");
         expect(window.getComputedStyle(element).cursor).equal("auto");
       });
     });
@@ -229,6 +231,7 @@
         });
       }).then(function () {
         expect(element.getAttribute("disabled"));
+        expect(element.getAttribute("aria-disabled")).equal("true");
         expect(window.getComputedStyle(element).cursor).equal("not-allowed");
         let labelElement = element.querySelector("span.u-label-text");
         expect(window.getComputedStyle(labelElement).cursor).equal("not-allowed");
@@ -242,6 +245,7 @@
         });
       }).then(function () {
         expect(!element.getAttribute("disabled"));
+        expect(element.getAttribute("aria-disabled")).equal("false");
         expect(window.getComputedStyle(element).cursor).equal("auto");
       });
     });
