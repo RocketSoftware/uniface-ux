@@ -141,18 +141,18 @@ export class Listbox extends Widget {
       const slotElement = fluentListboxElement?.shadowRoot?.querySelector('slot:not([name])');
 
       if (size > 0 && size <= fluentOptionElement.length) {
-        // Set the u-size attribute to the element
+        // Set the u-size attribute to the element.
         element.setAttribute("u-size", size);
 
-        // Get computed styles for option and slot elements
+        // Get computed styles for option and slot elements.
         const computedStyleOption = window.getComputedStyle(fluentOptionElement[0]);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
 
-        // Calculate total height based on option height, border height, and slotPadding
+        // Calculate total height based on option height, border height, and slotPadding.
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
         const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
-        // Apply bottom padding only if size equals the number of options, otherwise set it to 0
+        // Apply bottom padding only if size equals the number of options, otherwise set it to 0.
         const slotPaddingBottom = (size === fluentOptionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
         const slotPadding = slotPaddingTop + slotPaddingBottom;
 
@@ -174,7 +174,7 @@ export class Listbox extends Widget {
           element.shadowRoot.adoptedStyleSheets = [...element.shadowRoot.adoptedStyleSheets, this.CSSStyleSheet];
         }
       } else if(!isSizeUndefined) {
-        this.warn("refresh()", "Size property cannot be set", "Ignored");
+        this.warn("refresh()", `Size property cannot be set to '${size}'`, "Ignored");
       }
       return;
     }
