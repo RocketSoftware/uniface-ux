@@ -185,8 +185,7 @@
       let listboxLabel = 'Label';
       return asyncRun(function () {
         tester.dataUpdate({
-          "label-text": listboxLabel,
-          "value": ""
+          "label-text": listboxLabel
         });
       }).then(function () {
         const listBoxArray = element.querySelectorAll("fluent-option");
