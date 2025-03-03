@@ -1494,7 +1494,6 @@
         expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
-        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
       });
@@ -1523,7 +1522,6 @@
         expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
-        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
       });
@@ -1552,7 +1550,6 @@
         expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
-        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
       });
@@ -1581,7 +1578,6 @@
         expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
-        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
       });
@@ -1610,7 +1606,6 @@
         expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
-        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
       });
@@ -1770,13 +1765,12 @@
         expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
 
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
         expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
         expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
         expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
         expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
 
@@ -1786,13 +1780,12 @@
         expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
 
+        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
         expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
         expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
         expect(element.querySelector("fluent-text-field.u-sw-textfld1").getAttribute("class")).to.includes("u-overflown-item");
         expect(element.querySelector("fluent-switch.u-sw-switch1").getAttribute("class")).to.includes("u-overflown-item");
 
@@ -1930,7 +1923,7 @@
         expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=chkbox1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
 
@@ -1996,7 +1989,7 @@
         expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=chkbox1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
       });
@@ -2049,7 +2042,7 @@
         expect(element.querySelector(".u-overflow-menu [item-id=btn]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=select]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.false;
-        expect(element.querySelector(".u-menu-item[item-id=numberfield]").hasAttribute('hidden')).to.be.false;
+        expect(element.querySelector(".u-overflow-menu [item-id=chkbox1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.false;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.false;
       });
