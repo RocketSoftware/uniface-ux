@@ -458,6 +458,31 @@
     "switch_overflow-behavior": "none"
   };
 
+  const MOCK_DATA_FOR_SCROLL_WITH_MENU_FOR_VERTICAL_ORIENTATION = {
+    "subwidgets-start": "selecttextfieldbtncheckboxnumberfieldswitch",
+    "subwidgets-center": "",
+    "subwidgets-end": "",
+    "select_widget-class": "UX.Select",
+    "select:valrep": "1=a10=1025=2550=50100=100",
+    "select_overflow-behavior": "none",
+    "select:value": "1",
+    "textfield_widget-class": "UX.TextField",
+    "textfield:value": "Value",
+    "textfield_overflow-behavior": "menu",
+    "btn_widget-class": "UX.Button",
+    "btn:value": "Button",
+    "btn_overflow-behavior": "none",
+    "checkbox_widget-class": "UX.Checkbox",
+    "checkbox:value": "true",
+    "checkbox_overflow-behavior": "none",
+    "numberfield_widget-class": "UX.NumberField",
+    "numberfield:value": "",
+    "numberfield_overflow-behavior": "none",
+    "switch_widget-class": "UX.Switch",
+    "switch:value": "true",
+    "switch_overflow-behavior": "none"
+  };
+
   /**
    * Function to determine whether the widget class has been loaded.
    */
@@ -1874,6 +1899,7 @@
 
   describe("Check the scroll behavior of controlbar on overflow of subwidgets", function () {
     let element, node, data, isHorizontalScrollPresent;
+
     it("check if horizontal scrollbar appears when there is an overflow when all subwidgets have overflow behavior set as 'none'", function () {
       const tester = new umockup.WidgetTester();
       element = tester.processLayout(MOCK_DATA_FOR_SCROLL);
@@ -1886,17 +1912,31 @@
         node = document.querySelector('#widget-container');
         node.style.width = '1500px';
         isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
-        assert(isHorizontalScrollPresent === false, "Horizontal scrollbar is shown when space is available.");
+        assert(isHorizontalScrollPresent === false, "Horizontal scrollbar is shown when there is no overflow.");
         node.style.width = '500px';
         isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
         assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
+
+        // Change the direction to 'rtl', scrollbar should still be present.
+        const bodyDiv = document.querySelector("body");
+        bodyDiv?.setAttribute("dir","rtl");
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow in 'rtl' direction.");
+
+        // Change the direction to 'ltr', scrollbar should still be present.
+        bodyDiv?.setAttribute("dir","ltr");
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow in 'ltr' direction.");
+
+        // Remove the attribute so that the test page goes back to normal.
+        bodyDiv?.removeAttribute("dir");
       });
     });
 
-    it("check scrollbar behavior when one subwidget has overflow behavior set as 'menu' and the rest have 'none'", function () {
+    it("check if horizontal scrollbar appears when there is an overflow when one subwidget has overflow behavior set as 'menu' and the rest have 'none'", function () {
       const tester = new umockup.WidgetTester();
       element = tester.processLayout(MOCK_DATA_FOR_SCROLL_WITH_MENU);
-      let data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU);
+      data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU);
       return asyncRun(function () {
         tester.onConnect(element);
         tester.dataInit();
@@ -1922,10 +1962,74 @@
       });
     });
 
+    it("check scrollbar behavior when one subwidget has overflow behavior set as 'menu' and the rest have 'none' with orientation set as 'vertical' with enough space", function () {
+      const tester = new umockup.WidgetTester();
+      element = tester.processLayout(MOCK_DATA_FOR_SCROLL_WITH_MENU);
+      data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU);
+      return asyncRun(function () {
+        tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate({
+          ...data,
+          "orientation": "vertical"
+        });
+      }).then(function () {
+        node = document.querySelector('#widget-container');
+        node.style.width = '500px';
+
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === false, "Horizontal scrollbar is shown when there is no overflow.");
+
+        // Simulate click event on overflow button to open the overflow menu.
+        const overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
+        overFlowBtnElement.click();
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
+
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === false, "Horizontal scrollbar is shown after opening the menu.");
+
+        // Verify opening the menu does not cause a vertical overflow.
+        const isVerticalScrollPresent = element.scrollHeight > element.clientHeight;
+        assert(isVerticalScrollPresent === false, "Vertical scrollbar is shown after opening the menu.");
+      });
+    });
+
+    it("check scrollbar behavior when one subwidget has overflow behavior set as 'menu' and the rest have 'none' with orientation set as 'vertical' with not enough space", function () {
+      const tester = new umockup.WidgetTester();
+      element = tester.processLayout(MOCK_DATA_FOR_SCROLL_WITH_MENU_FOR_VERTICAL_ORIENTATION);
+      data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU_FOR_VERTICAL_ORIENTATION);
+      return asyncRun(function () {
+        tester.onConnect(element);
+        tester.dataInit();
+        tester.dataUpdate({
+          ...data,
+          "orientation": "vertical"
+        });
+      }).then(function () {
+        node = document.querySelector('#widget-container');
+        node.style.width = '200px';
+
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
+
+        // Simulate click event on overflow button to open the overflow menu.
+        const overFlowBtnElement = element.querySelector("fluent-button.u-overflow-button");
+        overFlowBtnElement.click();
+        expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.false;
+
+        isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown after opening the menu.");
+
+        // Verify opening the menu does not cause a vertical overflow.
+        const isVerticalScrollPresent = element.scrollHeight > element.clientHeight;
+        assert(isVerticalScrollPresent === false, "Vertical scrollbar is shown after opening the menu.");
+      });
+    });
+
     it("check if the overflow menu closes on scrolling", function () {
       const tester = new umockup.WidgetTester();
       element = tester.processLayout(MOCK_DATA_FOR_SCROLL_WITH_MENU);
-      let data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU);
+      data = Object.assign({}, MOCK_DATA_FOR_SCROLL_WITH_MENU);
       return asyncRun(function () {
         tester.onConnect(element);
         tester.dataInit();
