@@ -137,8 +137,7 @@ export class Listbox extends Widget {
 
       const element = this.getElement(widgetInstance);
       const fluentOptionElement = element.querySelectorAll('fluent-option');
-      const fluentListboxElement = document.querySelector('fluent-listbox');
-      const slotElement = fluentListboxElement?.shadowRoot?.querySelector('slot:not([name])');
+      const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
 
       if (size > 0 && size <= fluentOptionElement.length) {
         // Set the u-size attribute to the element.
@@ -173,7 +172,12 @@ export class Listbox extends Widget {
         if (element.shadowRoot) {
           element.shadowRoot.adoptedStyleSheets = [...element.shadowRoot.adoptedStyleSheets, this.CSSStyleSheet];
         }
-      } else if(!isSizeUndefined) {
+      } else if (
+        !isSizeUndefined &&
+        fluentOptionElement.length > 0 &&
+        (isNaN(size) || size <= 0 || size > fluentOptionElement.length)
+      ) {
+        // Show warning if size is NaN, less than or equal to 0, or greater than the number of options.
         this.warn("refresh()", `Size property cannot be set to '${size}'`, "Ignored");
       }
       return;

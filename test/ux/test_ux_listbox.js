@@ -552,8 +552,7 @@
           "display-format": "valrep"
         });
       }).then(function () {
-        const listboxElement = document.querySelector('fluent-listbox');
-        const slotElement = listboxElement?.shadowRoot?.querySelector('slot:not([name])');
+        const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
         const optionElement = element.querySelectorAll('fluent-option');
         const computedStyleOption = window.getComputedStyle(optionElement[0]);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
@@ -564,7 +563,7 @@
         const slotPaddingBottom = (size === optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
         const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
-        expect(parseFloat(listboxElement.getAttribute('u-size'))).equal(size);
+        expect(parseFloat(element.getAttribute('u-size'))).equal(size);
         let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
         let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('overflow-y');
         expect(parseFloat(maxHeightSlotinpx)).equal(totalHeight);
@@ -582,8 +581,7 @@
           "display-format": "rep"
         });
       }).then(function () {
-        const listboxElement = document.querySelector('fluent-listbox');
-        const slotElement = listboxElement?.shadowRoot?.querySelector('slot:not([name])');
+        const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
         const optionElement = element.querySelectorAll('fluent-option');
         const computedStyleOption = window.getComputedStyle(optionElement[0]);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
@@ -594,7 +592,7 @@
         const slotPaddingBottom = (size === optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
         const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
-        expect(parseFloat(listboxElement.getAttribute('u-size'))).equal(size);
+        expect(parseFloat(element.getAttribute('u-size'))).equal(size);
         let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
         let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('overflow-y');
         expect(totalHeight).to.be.greaterThan(parseFloat(maxHeightSlotinpx));
@@ -612,23 +610,8 @@
           "display-format": "rep"
         });
       }).then(function () {
-        const listboxElement = document.querySelector('fluent-listbox');
-        const slotElement = listboxElement?.shadowRoot?.querySelector('slot:not([name])');
-        const optionElement = element.querySelectorAll('fluent-option');
-        const computedStyleOption = window.getComputedStyle(optionElement[0]);
-        const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
-        const optionHeight = parseFloat(computedStyleOption.height);
-        const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
-        const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
-
-        const slotPaddingBottom = (size === optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
-        const padding = slotPaddingTop + slotPaddingBottom;
-        const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
-        expect(parseFloat(listboxElement.getAttribute('u-size'))).equal(size);
-        let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
-        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('overflow-y');
-        expect(parseFloat(maxHeightSlotinpx)).to.be.greaterThan(totalHeight);
-        expect(overflowBehavior).equal("auto");
+        // We can not check max-height and overflow-y here since the code exits in case of negative/zero size value.
+        expect(!element.hasAttribute('u-size'));
       });
     });
 
@@ -642,9 +625,8 @@
           "display-format": "valrep"
         });
       }).then(function () {
-        const listboxElement = document.querySelector('fluent-listbox');
         // We can not check max-height and overflow-y here since the code exits in case of  negative size value.
-        expect(!listboxElement.hasAttribute('u-size'));
+        expect(!element.hasAttribute('u-size'));
       });
     });
 
@@ -658,9 +640,8 @@
           "display-format": "val"
         });
       }).then(function () {
-        const listboxElement = document.querySelector('fluent-listbox');
         // We can not check max-height and overflow-y here since the code exits in case of negative/zero size value.
-        expect(!listboxElement.hasAttribute('u-size'));
+        expect(!element.hasAttribute('u-size'));
       });
     });
 
@@ -674,8 +655,7 @@
           "display-format": "valrep"
         });
       }).then(function () {
-        const listboxElement = document.querySelector('fluent-listbox');
-        const slotElement = listboxElement?.shadowRoot?.querySelector('slot:not([name])');
+        const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
         const optionElement = element.querySelectorAll('fluent-option');
         const computedStyleOption = window.getComputedStyle(optionElement[0]);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
@@ -690,7 +670,7 @@
         function setCustomFontSize(optionElement){
           optionElement.style.fontSize = "35px";
         }
-        expect(parseFloat(listboxElement.getAttribute('u-size'))).equal(size);
+        expect(parseFloat(element.getAttribute('u-size'))).equal(size);
         let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
         let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('overflow-y');
         expect(totalHeight).to.be.greaterThan(parseFloat(maxHeightSlotinpx));
