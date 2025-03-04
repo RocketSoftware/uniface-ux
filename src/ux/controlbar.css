@@ -40,6 +40,12 @@ div:has(> .u-controlbar) {
   flex-direction: column;
 }
 
+.u-controlbar[u-orientation="vertical"] .u-start-section,
+.u-controlbar[u-orientation="vertical"] .u-center-section,
+.u-controlbar[u-orientation="vertical"] .u-end-section {
+  max-width: 100%;
+}
+
 .u-controlbar .u-select::part(label),
 .u-controlbar .u-text-field::part(label),
 .u-controlbar .u-number-field::part(label),
@@ -54,9 +60,12 @@ div:has(> .u-controlbar) {
   z-index: 100;
 }
 
+.u-controlbar .u-controlbar-item {
+  flex-shrink: 0;
+}
+
 .u-controlbar[u-orientation="vertical"] .u-overflow-menu {
-  inset-inline-start: calc(50% - ((var(--base-height-multiplier) + var(--density)) * var(--design-unit) * 1px) / 2);
-  inset-inline-end: 0;
+  inset-inline-end: calc(50% - ((var(--base-height-multiplier) + var(--density)) * var(--design-unit) * 1px) / 2);
 }
 
 .u-controlbar .u-controlbar-item.u-overflown-item {
