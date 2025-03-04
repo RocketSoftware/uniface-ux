@@ -623,7 +623,7 @@
       assert.equal(JSON.stringify(formattedData), JSON.stringify(returnedFormattedVal));
     });
 
-    it("getValueFormatted() should return correct formatted values with plaintext-format as valrep-html and format-error as true ", function () {
+    it("getValueFormatted() should return correct formatted values with plaintext-format as valrep-html and format-error as true", function () {
       let formattedData;
       let returnedFormattedVal = {
         "primaryPlainText": "ERROR",
