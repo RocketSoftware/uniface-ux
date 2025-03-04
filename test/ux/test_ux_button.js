@@ -427,6 +427,60 @@
     });
   });
 
+  describe(`${widgetName} getValueFormatted() function test`, function () {
+    it("getValueFormatted() should return correct formatted values with icon-position start", function () {
+      let formattedData;
+      let returnedFormattedVal = {
+        "primaryPlainText": "Prev",
+        "prefixIcon": "AddHome"
+      };
+      let props = {
+        "id": 0.2961020761829054,
+        "0.8038989244265": "",
+        "html:tabindex": 0,
+        "html:appearance": "neutral",
+        "html:hidden": false,
+        "html:disabled": false,
+        "html:minlength": null,
+        "html:maxlength": null,
+        "html:readonly": null,
+        "class:u-button": true,
+        "class:neutral": true,
+        "icon": "AddHome",
+        "icon-position": "start",
+        "value": "Prev"
+      };
+      formattedData = widgetClass.getValueFormatted(props);
+      assert.equal(JSON.stringify(formattedData), JSON.stringify(returnedFormattedVal));
+    });
+
+    it("getValueFormatted() should return correct formatted values with icon-position end", function () {
+      let formattedData;
+      let returnedFormattedVal = {
+        "primaryPlainText": "Prev",
+        "prefixIcon": "AddHome"
+      };
+      let props = {
+        "id": 0.2961020761829054,
+        "0.8038989244265": "",
+        "html:tabindex": 0,
+        "html:appearance": "neutral",
+        "html:hidden": false,
+        "html:disabled": false,
+        "html:minlength": null,
+        "html:maxlength": null,
+        "html:readonly": null,
+        "class:u-button": true,
+        "class:neutral": true,
+        "icon": "AddHome",
+        "icon-position": "end",
+        "value": "Prev"
+      };
+      formattedData = widgetClass.getValueFormatted(props);
+      assert.equal(JSON.stringify(formattedData), JSON.stringify(returnedFormattedVal));
+    });
+  });
+
   describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {
