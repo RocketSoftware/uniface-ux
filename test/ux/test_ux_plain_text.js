@@ -475,7 +475,7 @@
   });
 
   describe(`${widgetName} getValueFormatted() function test`, function () {
-    it("getValueFormatted() should return correct formatted values with plain-text format as valrep-html", function () {
+    it("getValueFormatted() should return correct formatted values with plaintext-format as valrep-html", function () {
       let formattedData;
       let returnedFormattedVal = {
         "primaryHtmlText": "<b>This is test valrep html</b>",
@@ -513,7 +513,7 @@
       assert.equal(JSON.stringify(formattedData), JSON.stringify(returnedFormattedVal));
     });
 
-    it("getValueFormatted() should return correct formatted values with plain-text format as valrep-text", function () {
+    it("getValueFormatted() should return correct formatted values with plaintext-format as valrep-text", function () {
       let formattedData;
       let returnedFormattedVal = {
         "primaryPlainText": "This is test valrep html",
@@ -551,7 +551,7 @@
       assert.equal(JSON.stringify(formattedData), JSON.stringify(returnedFormattedVal));
     });
 
-    it("getValueFormatted() should return correct formatted values with plain-text format as representation-only", function () {
+    it("getValueFormatted() should return correct formatted values with plaintext-format as representation-only", function () {
       let formattedData;
       let returnedFormattedVal = {
         "primaryHtmlText": "This is test valrep html",
@@ -587,7 +587,7 @@
       assert.equal(JSON.stringify(formattedData), JSON.stringify(returnedFormattedVal));
     });
 
-    it("getValueFormatted() should return correct formatted values with plain-text format as value-only", function () {
+    it("getValueFormatted() should return correct formatted values with plaintext-format as value-only", function () {
       let formattedData;
       let returnedFormattedVal = {
         "primaryPlainText": "One",
@@ -623,7 +623,7 @@
       assert.equal(JSON.stringify(formattedData), JSON.stringify(returnedFormattedVal));
     });
 
-    it("getValueFormatted() should return correct formatted values with plain-text format as valrep-html and format-error as true ", function () {
+    it("getValueFormatted() should return correct formatted values with plaintext-format as valrep-html and format-error as true ", function () {
       let formattedData;
       let returnedFormattedVal = {
         "primaryPlainText": "ERROR",
