@@ -40,6 +40,7 @@ div:has(> .u-controlbar) {
   flex-direction: column;
 }
 
+/* Max-width is required in vertical orientation to prevent widgets from being cut off when horizontal scrollbar is applied. */
 .u-controlbar[u-orientation="vertical"] .u-start-section,
 .u-controlbar[u-orientation="vertical"] .u-center-section,
 .u-controlbar[u-orientation="vertical"] .u-end-section {
