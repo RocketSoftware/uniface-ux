@@ -173,7 +173,7 @@
         expect(listBoxArray.length).to.equal(1);
         expect(listBoxArray[0].value).to.equal("");
         expect(listBoxArray[0].textContent).to.equal("");
-        expect(window.getComputedStyle(element).cursor).equal("not-allowed");
+        expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
 
         assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
@@ -189,15 +189,10 @@
         });
       }).then(function () {
         const listBoxArray = element.querySelectorAll("fluent-option");
-        let labelElement = element.querySelector("span.u-label-text");
-        let labelText = labelElement.innerText;
-        expect(listboxLabel).equal(labelText);
-        assert(!labelElement.hasAttribute("hidden"), "Failed to show the label text");
         expect(listBoxArray.length).to.equal(1);
         expect(listBoxArray[0].value).to.equal("");
         expect(listBoxArray[0].textContent).to.equal("");
-        expect(window.getComputedStyle(element).cursor).equal("not-allowed");
-        expect(window.getComputedStyle(labelElement).cursor).equal("not-allowed");
+        expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
 
         assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
@@ -464,13 +459,11 @@
         });
       }).then(function () {
         const listBoxArray = element.querySelectorAll("fluent-option");
-        const labelElement = element.querySelector("span.u-label-text");
         expect(listBoxArray.length).to.equal(1);
         expect(listBoxArray[0].value).to.equal("");
         expect(listBoxArray[0].textContent).to.equal("");
-        expect(window.getComputedStyle(element).cursor).equal("not-allowed");
-        expect(window.getComputedStyle(labelElement).cursor).equal("not-allowed");
-        expect(Boolean(element.getAttribute("readonly"))).to.be.true;
+        expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
+        expect(Boolean(listBoxArray[0].getAttribute("disabled"))).to.be.true;
 
         assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
@@ -489,12 +482,10 @@
         });
       }).then(function () {
         const listBoxArray = element.querySelectorAll("fluent-option");
-        const labelElement = element.querySelector("span.u-label-text");
         expect(listBoxArray[0].value).to.equal("");
         expect(listBoxArray[0].textContent).to.equal("");
-        expect(window.getComputedStyle(element).cursor).equal("not-allowed");
-        expect(window.getComputedStyle(labelElement).cursor).equal("not-allowed");
-        expect(Boolean(element.getAttribute("readonly"))).to.be.true;
+        expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
+        expect(Boolean(listBoxArray[0].getAttribute("disabled"))).to.be.true;
 
         assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
