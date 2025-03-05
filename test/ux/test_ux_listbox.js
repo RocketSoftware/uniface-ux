@@ -597,6 +597,8 @@
         let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('overflow-y');
         expect(totalHeight).to.be.greaterThan(parseFloat(maxHeightSlotInPixel));
         expect(overflowBehavior).equal("auto");
+        const expectedHeight = optionHeight * size + borderHeight + padding;
+        assert(expectedHeight, maxHeightSlotInPixel);
       });
     });
 
@@ -675,6 +677,22 @@
         let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('overflow-y');
         expect(totalHeight).to.be.greaterThan(parseFloat(maxHeightSlotInPixel));
         expect(overflowBehavior).equal("auto");
+      });
+    });
+
+    it("set the size as undefined then scroll bar should not be visible with display-format as rep", function () {
+      let size = undefined;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "rep"
+        });
+      }).then(function () {
+        expect(!element.hasAttribute('u-size'));
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        expect(maxHeightSlotInPixel).equal("none");
       });
     });
   });
