@@ -132,10 +132,13 @@ export class Listbox extends Widget {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
 
       let size = this.getNode(widgetInstance.data, this.propId);
-
       const element = this.getElement(widgetInstance);
       const fluentOptionElement = element.querySelectorAll('fluent-option');
       const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
+
+      if (!fluentOptionElement.length) {
+        return;
+      }
 
       if (size === undefined) {
         element.removeAttribute("u-size");
@@ -153,7 +156,7 @@ export class Listbox extends Widget {
       }
       size = parseInt(size);
 
-      if (size > 0 && size <= fluentOptionElement.length) {
+      if(size > 0) {
         // Set the u-size attribute to the element.
         element.setAttribute("u-size", size);
 
@@ -165,8 +168,8 @@ export class Listbox extends Widget {
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
         const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
-        // Apply bottom padding only if size equals the number of options, otherwise set it to 0.
-        const slotPaddingBottom = (size === fluentOptionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        // Apply bottom padding only if size equals to or greater than number of options, otherwise set it to 0.
+        const slotPaddingBottom = (size >= fluentOptionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
         const slotPadding = slotPaddingTop + slotPaddingBottom;
 
         const totalHeight = optionHeight * size + borderHeight + slotPadding;
@@ -186,11 +189,8 @@ export class Listbox extends Widget {
         if (element.shadowRoot) {
           element.shadowRoot.adoptedStyleSheets = [...element.shadowRoot.adoptedStyleSheets, this.CSSStyleSheet];
         }
-      } else if (
-        fluentOptionElement.length > 0 &&
-        (isNaN(size) || size <= 0 || size > fluentOptionElement.length)
-      ) {
-        // Show warning if size is NaN, less than or equal to 0, or greater than the number of options.
+      } else {
+        // Show warning if size is NaN or less than or equal to 0.
         this.warn("refresh()", `Size property cannot be set to '${size}'`, "Ignored");
       }
       return;

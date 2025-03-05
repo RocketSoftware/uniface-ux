@@ -559,8 +559,7 @@
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
         const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
-
-        const slotPaddingBottom = (size === optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const slotPaddingBottom = (size >= optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
         const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
         expect(parseFloat(element.getAttribute('u-size'))).equal(size);
@@ -588,8 +587,7 @@
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
         const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
-
-        const slotPaddingBottom = (size === optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const slotPaddingBottom = (size >= optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
         const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
         expect(parseFloat(element.getAttribute('u-size'))).equal(size);
@@ -612,8 +610,21 @@
           "display-format": "rep"
         });
       }).then(function () {
-        // We can not check max-height and overflow-y here since the code exits in case of negative/zero size value.
-        expect(!element.hasAttribute('u-size'));
+        const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
+        const optionElement = element.querySelectorAll('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElement[0]);
+        const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
+        const optionHeight = parseFloat(computedStyleOption.height);
+        const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
+        const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
+        const slotPaddingBottom = (size >= optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const padding = slotPaddingTop + slotPaddingBottom;
+        const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
+        expect(parseFloat(element.getAttribute('u-size'))).equal(size);
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('overflow-y');
+        expect(parseFloat(maxHeightSlotInPixel)).greaterThan(totalHeight);
+        expect(overflowBehavior).equal("auto");
       });
     });
 
@@ -664,8 +675,7 @@
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
         const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
-
-        const slotPaddingBottom = (size === optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const slotPaddingBottom = (size >= optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
         const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
         optionElement.forEach(setCustomFontSize);
