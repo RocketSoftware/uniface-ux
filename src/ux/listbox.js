@@ -261,7 +261,6 @@ export class Listbox extends Widget {
           line-height: var(--type-ramp-base-line-height);
           font-weight: initial;
           font-variation-settings: var(--type-ramp-base-font-variations);
-          margin-bottom: 4px;
           word-break: break-all;
         }
 

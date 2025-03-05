@@ -64,3 +64,8 @@
 .u-listbox .u-label-text:not([hidden]) + .u-error-icon::before {
   padding-inline-start: calc(var(--design-unit) * 2px + 2px);
 }
+
+.u-listbox .u-label-text:not([hidden]),
+.u-listbox .u-error-icon:not([hidden]) {
+  margin-bottom: 4px;
+} 

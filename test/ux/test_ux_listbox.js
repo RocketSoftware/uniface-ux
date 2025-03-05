@@ -687,6 +687,8 @@
         let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('overflow-y');
         expect(totalHeight).to.be.greaterThan(parseFloat(maxHeightSlotInPixel));
         expect(overflowBehavior).equal("auto");
+        const expectedHeight = optionHeight * size + borderHeight + padding;
+        assert(expectedHeight, maxHeightSlotInPixel);
       });
     });
 
