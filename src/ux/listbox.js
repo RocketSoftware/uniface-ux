@@ -123,11 +123,11 @@ export class Listbox extends Widget {
   static ListBoxValRep = class extends SlottedElementsByValRep {
     refresh(widgetInstance) {
       const valrep = this.getNode(widgetInstance.data, "valrep");
-      const option = document.createElement(this.tagName);
       if (valrep.length > 0) {
         super.refresh(widgetInstance);
       } else {
         const listBoxElement = this.getElement(widgetInstance);
+        const option = document.createElement(this.tagName);
         this.removeValRepElements(widgetInstance);
         option.setAttribute("disabled","true");
         listBoxElement.appendChild(option);
