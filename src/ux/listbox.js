@@ -115,8 +115,7 @@ export class Listbox extends Widget {
   };
 
   /**
-   * Private Worker: ListBoxValRep
-   * This is specialized worker to accommodate Listbox with no valrep defined.
+   * Private Worker: This is specialized worker to accommodate Listbox with no valrep defined.
    * @class ListBoxValRep
    * @extends {SlottedElementsByValRep}
    */
