@@ -132,12 +132,26 @@ export class Listbox extends Widget {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
 
       let size = this.getNode(widgetInstance.data, this.propId);
-      let isSizeUndefined = size === undefined;
-      size = parseInt(size);
 
       const element = this.getElement(widgetInstance);
       const fluentOptionElement = element.querySelectorAll('fluent-option');
       const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
+
+      if (size === undefined) {
+        element.removeAttribute("u-size");
+        this.CSSStyleSheet = new window.CSSStyleSheet();
+        this.CSSStyleSheet.replaceSync(`
+          slot:not([name]) {
+            max-height: unset;
+          }
+        `);
+
+        if (element.shadowRoot) {
+          element.shadowRoot.adoptedStyleSheets = [...element.shadowRoot.adoptedStyleSheets, this.CSSStyleSheet];
+        }
+        return;
+      }
+      size = parseInt(size);
 
       if (size > 0 && size <= fluentOptionElement.length) {
         // Set the u-size attribute to the element.
@@ -159,7 +173,7 @@ export class Listbox extends Widget {
 
         this.CSSStyleSheet = new window.CSSStyleSheet();
         this.CSSStyleSheet.replaceSync(`
-          slot {
+          slot:not([name]) {
             max-height: ${totalHeight}px;
             overflow-y: auto;
           }
@@ -173,7 +187,6 @@ export class Listbox extends Widget {
           element.shadowRoot.adoptedStyleSheets = [...element.shadowRoot.adoptedStyleSheets, this.CSSStyleSheet];
         }
       } else if (
-        !isSizeUndefined &&
         fluentOptionElement.length > 0 &&
         (isNaN(size) || size <= 0 || size > fluentOptionElement.length)
       ) {

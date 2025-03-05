@@ -564,9 +564,9 @@
         const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
         expect(parseFloat(element.getAttribute('u-size'))).equal(size);
-        let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
-        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('overflow-y');
-        expect(parseFloat(maxHeightSlotinpx)).equal(totalHeight);
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('overflow-y');
+        expect(parseFloat(maxHeightSlotInPixel)).equal(totalHeight);
         expect(overflowBehavior).equal("auto");
       });
     });
@@ -593,9 +593,9 @@
         const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
         expect(parseFloat(element.getAttribute('u-size'))).equal(size);
-        let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
-        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('overflow-y');
-        expect(totalHeight).to.be.greaterThan(parseFloat(maxHeightSlotinpx));
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('overflow-y');
+        expect(totalHeight).to.be.greaterThan(parseFloat(maxHeightSlotInPixel));
         expect(overflowBehavior).equal("auto");
       });
     });
@@ -671,9 +671,9 @@
           optionElement.style.fontSize = "35px";
         }
         expect(parseFloat(element.getAttribute('u-size'))).equal(size);
-        let maxHeightSlotinpx = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('max-height');
-        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot'),null).getPropertyValue('overflow-y');
-        expect(totalHeight).to.be.greaterThan(parseFloat(maxHeightSlotinpx));
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('overflow-y');
+        expect(totalHeight).to.be.greaterThan(parseFloat(maxHeightSlotInPixel));
         expect(overflowBehavior).equal("auto");
       });
     });
