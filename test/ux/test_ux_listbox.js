@@ -173,6 +173,7 @@
         expect(listBoxArray.length).to.equal(1);
         expect(listBoxArray[0].value).to.equal("");
         expect(listBoxArray[0].textContent).to.equal("");
+        expect(Boolean(listBoxArray[0].getAttribute("disabled"))).to.be.true;
         expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
 
         assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
@@ -192,6 +193,7 @@
         expect(listBoxArray.length).to.equal(1);
         expect(listBoxArray[0].value).to.equal("");
         expect(listBoxArray[0].textContent).to.equal("");
+        expect(Boolean(listBoxArray[0].getAttribute("disabled"))).to.be.true;
         expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
 
         assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
