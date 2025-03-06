@@ -128,32 +128,37 @@ export class Listbox extends Widget {
       this.registerSetter(widgetClass, "valrep", this);
     }
 
+    // Helper function to add the CSSStyleSheet to the shadowRoot.
+    applyStyleSheet(element, cssString) {
+      if (element.shadowRoot) {
+        const CSSStyleSheet = new window.CSSStyleSheet();
+        CSSStyleSheet.replaceSync(cssString);
+        element.shadowRoot.adoptedStyleSheets = [
+          ...element.shadowRoot.adoptedStyleSheets,
+          CSSStyleSheet
+        ];
+      }
+    }
+
     refresh(widgetInstance) {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
 
       let size = this.getNode(widgetInstance.data, this.propId);
       const element = this.getElement(widgetInstance);
-      const fluentOptionElement = element.querySelectorAll('fluent-option');
-      const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
-
-      if (!fluentOptionElement.length) {
-        return;
-      }
 
       if (size === undefined) {
         element.removeAttribute("u-size");
-        this.CSSStyleSheet = new window.CSSStyleSheet();
-        this.CSSStyleSheet.replaceSync(`
+        const resetCSS = `
           slot:not([name]) {
             max-height: unset;
           }
-        `);
-
-        if (element.shadowRoot) {
-          element.shadowRoot.adoptedStyleSheets = [...element.shadowRoot.adoptedStyleSheets, this.CSSStyleSheet];
-        }
+        `;
+        this.applyStyleSheet(element, resetCSS);
         return;
       }
+
+      const fluentOptionElement = element.querySelectorAll('fluent-option');
+      const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
       size = parseInt(size);
 
       if(size > 0) {
@@ -174,21 +179,17 @@ export class Listbox extends Widget {
 
         const totalHeight = optionHeight * size + borderHeight + slotPadding;
 
-        this.CSSStyleSheet = new window.CSSStyleSheet();
-        this.CSSStyleSheet.replaceSync(`
-          slot:not([name]) {
-            max-height: ${totalHeight}px;
-            overflow-y: auto;
-          }
-          ::slotted(fluent-option) {
-            overflow: unset;
-            flex-shrink: 0;
-          }
-        `);
-
-        if (element.shadowRoot) {
-          element.shadowRoot.adoptedStyleSheets = [...element.shadowRoot.adoptedStyleSheets, this.CSSStyleSheet];
+        const updatedCSS = `
+        slot:not([name]) {
+          max-height: ${totalHeight}px;
+          overflow-y: auto;
         }
+        ::slotted(fluent-option) {
+          overflow: unset;
+          flex-shrink: 0;
+        }
+      `;
+        this.applyStyleSheet(element, updatedCSS);
       } else {
         // Show warning if size is NaN or less than or equal to 0.
         this.warn("refresh()", `Size property cannot be set to '${size}'`, "Ignored");
