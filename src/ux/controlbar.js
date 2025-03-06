@@ -347,7 +347,7 @@ export class Controlbar extends Widget {
     return widgetElement;
   }
 
-  hideMenu(){
+  hideMenu() {
     this.elements.overflowMenu.hidden = true;
   }
 
@@ -387,6 +387,12 @@ export class Controlbar extends Widget {
     // Hide the menu on scroll.
     widgetElement.addEventListener("scroll", () => {
       this.hideMenu();
+      // Close any open select widget.
+      // Only one can be kept opened at a time, since opening one will close the others.
+      const selectWidgetWithOpenDropDown = widgetElement.querySelector(".u-select.open");
+      if (selectWidgetWithOpenDropDown) {
+        selectWidgetWithOpenDropDown.open = false;
+      }
     });
 
     this.elements.overflowContainer = this.elements.widget.querySelector(".u-overflow-container");
