@@ -38,6 +38,9 @@
 .u-listbox .u-value {
   color: var(--neutral-base-color);
   font-style: italic;
+}
+
+.u-listbox .u-valrep-representation:not(:empty) + .u-value {
   margin-inline-start: calc((var(--design-unit) * 3px) + 2px);
 }
 
