@@ -38,6 +38,7 @@ div:has(> .u-controlbar) {
 
 .u-controlbar[u-orientation="vertical"] {
   flex-direction: column;
+  gap: 8px;
 }
 
 /* Max-width is required in vertical orientation to prevent widgets from being cut off when horizontal scrollbar is applied. */
