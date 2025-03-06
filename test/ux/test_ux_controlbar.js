@@ -1709,7 +1709,7 @@
     });
   });
 
-  describe("Check the opening and closing behavior of overflow menu", function () {
+  describe("Check the opening and closing behavior of overflow menu and it's subwidgets", function () {
     let element, overFlowBtnElement, node, data, tester;
 
     before(function () {
@@ -1844,6 +1844,40 @@
         });
       }).then(function () {
         expect(element.querySelector("fluent-menu.u-overflow-menu").hasAttribute('hidden')).to.be.true;
+      });
+    });
+
+    it("check if opened select dropdown closes on scrolling", function () {
+      let selectElement;
+      return asyncRun(function () {
+        // Update the overflow-behavior of most of the widgets to 'none' to ensure that scrollbar will appear on reducing the size.
+        tester.dataUpdate({
+          "select_overflow-behavior": "none",
+          "textfld1_overflow-behavior": "menu",
+          "btn_overflow-behavior": "none",
+          "chkbox1_overflow-behavior": "none",
+          "numberfield_overflow-behavior": "none",
+          "switch1_overflow-behavior": "none",
+          "plaintext1_overflow-behavior": "none"
+        });
+
+        node = document.querySelector('#widget-container');
+        node.style.width = '500px';
+
+        const isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
+
+        // Open the select dropdown.
+        selectElement = element.querySelector(".u-select");
+        selectElement.click();
+        expect(selectElement.open).to.be.true;
+
+        // Scroll to the opposite end and check if the dropdown got closed.
+        element.scrollTo({
+          "left": element.scrollWidth
+        });
+      }).then(function () {
+        expect(selectElement.open).to.be.false;
       });
     });
   });
