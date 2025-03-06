@@ -128,7 +128,7 @@ export class Listbox extends Widget {
         const listBoxElement = this.getElement(widgetInstance);
         const option = document.createElement(this.tagName);
         this.removeValRepElements(widgetInstance);
-        option.setAttribute("disabled","true");
+        option["disabled"] = true;
         listBoxElement.appendChild(option);
       }
     }
