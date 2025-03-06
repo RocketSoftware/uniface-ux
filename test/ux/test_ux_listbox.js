@@ -173,7 +173,7 @@
         expect(listBoxArray.length).to.equal(1);
         expect(listBoxArray[0].value).to.equal("");
         expect(listBoxArray[0].textContent).to.equal("");
-        expect(Boolean(listBoxArray[0].getAttribute("disabled"))).to.be.true;
+        expect(listBoxArray[0].className).to.include("disabled");
         expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
 
         assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
@@ -193,7 +193,7 @@
         expect(listBoxArray.length).to.equal(1);
         expect(listBoxArray[0].value).to.equal("");
         expect(listBoxArray[0].textContent).to.equal("");
-        expect(Boolean(listBoxArray[0].getAttribute("disabled"))).to.be.true;
+        expect(listBoxArray[0].className).to.include("disabled");
         expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
 
         assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
@@ -465,7 +465,7 @@
         expect(listBoxArray[0].value).to.equal("");
         expect(listBoxArray[0].textContent).to.equal("");
         expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
-        expect(Boolean(listBoxArray[0].getAttribute("disabled"))).to.be.true;
+        expect(listBoxArray[0].className).to.include("disabled");
 
         assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
@@ -487,7 +487,7 @@
         expect(listBoxArray[0].value).to.equal("");
         expect(listBoxArray[0].textContent).to.equal("");
         expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
-        expect(Boolean(listBoxArray[0].getAttribute("disabled"))).to.be.true;
+        expect(listBoxArray[0].className).to.include("disabled");
 
         assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
