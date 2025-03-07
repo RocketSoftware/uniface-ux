@@ -199,6 +199,26 @@ export class Listbox extends Widget {
   };
 
   /**
+  * Private Worker: This is specialized worker to accommodate Listbox with no valrep defined.
+  * @class ListBoxValRep
+  * @extends {SlottedElementsByValRep}
+  */
+  static ListBoxValRep = class extends SlottedElementsByValRep {
+    refresh(widgetInstance) {
+      const valrep = this.getNode(widgetInstance.data, "valrep");
+      if (valrep.length > 0) {
+        super.refresh(widgetInstance);
+      } else {
+        const listBoxElement = this.getElement(widgetInstance);
+        const option = document.createElement(this.tagName);
+        this.removeValRepElements(widgetInstance);
+        option["disabled"] = true;
+        listBoxElement.appendChild(option);
+      }
+    }
+  };
+
+  /**
    * Widget definition.
    */
   // prettier-ignore
@@ -208,14 +228,14 @@ export class Listbox extends Widget {
     new HtmlAttribute(this, undefined, "role", "listbox"),
     new HtmlAttribute(this, undefined, "ariaActiveDescendant", ""),
     new HtmlAttribute(this, undefined, "ariaControls", ""),
-    new HtmlAttributeBoolean(this, undefined, "ariaDisabled", false),
-    new HtmlAttributeBoolean(this, undefined, "ariaReadOnly", false),
     new HtmlAttributeBoolean(this, undefined, "ariaExpanded", false),
+    new HtmlAttributeBoolean(this, "html:disabled", "ariaDisabled", false),
+    new HtmlAttributeBoolean(this, "html:readonly", "ariaReadOnly", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
     new HtmlAttributeBoolean(this, "html:readonly", "readonly", false, true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new SlottedElementsByValRep(this, "fluent-option", "u-option", ""),
+    new this.ListBoxValRep(this, "fluent-option", "u-option", ""),
     new this.ListboxSelectedValue(this, "value", ""),
     new this.SizeAttribute(this, "size", undefined),
     new IgnoreProperty(this, "html:minlength"),
@@ -371,6 +391,7 @@ export class Listbox extends Widget {
       if (widgetClass.uiBlocking === "readonly") {
         // Add the readonly attribute to the widget element.
         this.elements.widget.setAttribute("readonly", "true");
+        this.elements.widget.setAttribute("aria-readonly", "true");
       } else {
         // If uiBlocking has an invalid value, log an error.
         this.error("blockUI()", "Static uiBlocking not defined or invalid value", "No UI blocking");
@@ -395,6 +416,7 @@ export class Listbox extends Widget {
         if (!this.toBoolean(this.data["html:readonly"])) {
           // Remove the readonly attribute from the widget element.
           this.elements.widget.removeAttribute("readonly");
+          this.elements.widget.setAttribute("aria-readonly", "false");
         }
       } else {
         // If uiBlocking has an invalid value, log an error.
