@@ -163,17 +163,42 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("show label", function () {
+    it("no valrep and show empty fluent option with format error", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "value": ""
+        });
+      }).then(function () {
+        const listBoxArray = element.querySelectorAll("fluent-option");
+        expect(listBoxArray.length).to.equal(1);
+        expect(listBoxArray[0].value).to.equal("");
+        expect(listBoxArray[0].textContent).to.equal("");
+        expect(listBoxArray[0].className).to.include("disabled");
+        expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
+
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
+      });
+    });
+
+    it("no valrep with label and show empty fluent option with format error", function () {
       let listboxLabel = 'Label';
       return asyncRun(function () {
         tester.dataUpdate({
           "label-text": listboxLabel
         });
       }).then(function () {
-        let labelElement = element.querySelector("span.u-label-text");
-        let labelText = labelElement.innerText;
-        expect(listboxLabel).equal(labelText);
-        assert(!labelElement.hasAttribute("hidden"), "Failed to show the label text");
+        const listBoxArray = element.querySelectorAll("fluent-option");
+        expect(listBoxArray.length).to.equal(1);
+        expect(listBoxArray[0].value).to.equal("");
+        expect(listBoxArray[0].textContent).to.equal("");
+        expect(listBoxArray[0].className).to.include("disabled");
+        expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
+
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
       });
     });
 
@@ -427,6 +452,50 @@
         expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
         expect(element.childNodes[1].classList.contains("ms-Icon")).to.be.false;
         expect(element.childNodes[1].classList.contains("ms-Icon--AlertSolid")).to.be.false;
+      });
+    });
+
+    it("set no valrep and show empty fluent option with format error", function () {
+      let listboxLabel = 'Label';
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": [],
+          "display-format": "valrep",
+          "label-text": listboxLabel
+        });
+      }).then(function () {
+        const listBoxArray = element.querySelectorAll("fluent-option");
+        expect(listBoxArray.length).to.equal(1);
+        expect(listBoxArray[0].value).to.equal("");
+        expect(listBoxArray[0].textContent).to.equal("");
+        expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
+        expect(listBoxArray[0].className).to.include("disabled");
+
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
+      });
+    });
+
+    it("set no valrep with initial value and show empty fluent option with format error", function () {
+      let listboxLabel = 'Label';
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": [],
+          "value":1,
+          "display-format": "val",
+          "label-text": listboxLabel
+        });
+      }).then(function () {
+        const listBoxArray = element.querySelectorAll("fluent-option");
+        expect(listBoxArray[0].value).to.equal("");
+        expect(listBoxArray[0].textContent).to.equal("");
+        expect(window.getComputedStyle(listBoxArray[0]).cursor).equal("not-allowed");
+        expect(listBoxArray[0].className).to.include("disabled");
+
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("error");
       });
     });
 

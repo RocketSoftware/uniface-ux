@@ -115,6 +115,26 @@ export class Listbox extends Widget {
   };
 
   /**
+   * Private Worker: This is specialized worker to accommodate Listbox with no valrep defined.
+   * @class ListBoxValRep
+   * @extends {SlottedElementsByValRep}
+   */
+  static ListBoxValRep = class extends SlottedElementsByValRep {
+    refresh(widgetInstance) {
+      const valrep = this.getNode(widgetInstance.data, "valrep");
+      if (valrep.length > 0) {
+        super.refresh(widgetInstance);
+      } else {
+        const listBoxElement = this.getElement(widgetInstance);
+        const option = document.createElement(this.tagName);
+        this.removeValRepElements(widgetInstance);
+        option["disabled"] = true;
+        listBoxElement.appendChild(option);
+      }
+    }
+  };
+
+  /**
    * Widget definition.
    */
   // prettier-ignore
@@ -131,7 +151,7 @@ export class Listbox extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readonly", false, true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new SlottedElementsByValRep(this, "fluent-option", "u-option", ""),
+    new this.ListBoxValRep(this, "fluent-option", "u-option", ""),
     new this.ListboxSelectedValue(this, "value", ""),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
