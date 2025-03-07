@@ -157,7 +157,7 @@ export class Listbox extends Widget {
         return;
       }
 
-      const fluentOptionElementAll = element.querySelectorAll('fluent-option');
+      const fluentOptionElements = element.querySelectorAll('fluent-option');
       const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
       size = parseInt(size);
 
@@ -166,7 +166,7 @@ export class Listbox extends Widget {
         element.setAttribute("u-size", size);
 
         // Get computed styles for option and slot elements.
-        const computedStyleOption = window.getComputedStyle(fluentOptionElementAll[0]);
+        const computedStyleOption = window.getComputedStyle(fluentOptionElements[0]);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
 
         // Calculate total height based on option height, border height, and slotPadding.
@@ -174,7 +174,7 @@ export class Listbox extends Widget {
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
         const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
         // Apply bottom padding only if size equals to or greater than number of options, otherwise set it to 0.
-        const slotPaddingBottom = (size >= fluentOptionElementAll.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const slotPaddingBottom = (size >= fluentOptionElements.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
         const slotPadding = slotPaddingTop + slotPaddingBottom;
 
         const totalHeight = optionHeight * size + borderHeight + slotPadding;
