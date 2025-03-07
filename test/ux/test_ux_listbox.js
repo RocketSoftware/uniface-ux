@@ -753,6 +753,7 @@
 
     it("set the size as negative then scroll bar should not be visible and size should be ignored with display-format as valrep", function () {
       let size = -2;
+      const warnSpy = sinon.spy(console, 'warn');
       return asyncRun(function () {
         tester.dataUpdate({
           "size": size,
@@ -764,11 +765,14 @@
         expect(!element.hasAttribute('u-size'));
         let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
         expect(maxHeightSlotInPixel).equal("none");
+        expect(warnSpy.calledWith(`SizeAttribute.refresh(): Size property cannot be set to '${size}' - Ignored.`)).to.be.true;
+        warnSpy.restore(); // Restore the original console.warn
       });
     });
 
     it("set the size as 0 then scroll bar should not be visible and size should be ignored with display-format as val", function () {
       let size = 0;
+      const warnSpy = sinon.spy(console, 'warn');
       return asyncRun(function () {
         tester.dataUpdate({
           "size": size,
@@ -780,6 +784,8 @@
         expect(!element.hasAttribute('u-size'));
         let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
         expect(maxHeightSlotInPixel).equal("none");
+        expect(warnSpy.calledWith(`SizeAttribute.refresh(): Size property cannot be set to '${size}' - Ignored.`)).to.be.true;
+        warnSpy.restore(); // Restore the original console.warn
       });
     });
   });
