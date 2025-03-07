@@ -615,7 +615,7 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("set the size = no of valrep element then scroll bar should not be visible with display-format as valrep", function () {
+    it("set the size = number of valrep element then scroll bar should not be visible with display-format as valrep", function () {
       let size = 3;
       return asyncRun(function () {
         tester.dataUpdate({
@@ -626,13 +626,13 @@
         });
       }).then(function () {
         const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
-        const optionElement = element.querySelectorAll('fluent-option');
-        const computedStyleOption = window.getComputedStyle(optionElement[0]);
+        const optionElements = element.querySelectorAll('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElements[0]);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
         const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
-        const slotPaddingBottom = (size >= optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const slotPaddingBottom = (size >= optionElements.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
         const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
         expect(parseFloat(element.getAttribute('u-size'))).equal(size);
@@ -654,13 +654,13 @@
         });
       }).then(function () {
         const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
-        const optionElement = element.querySelectorAll('fluent-option');
-        const computedStyleOption = window.getComputedStyle(optionElement[0]);
+        const optionElements = element.querySelectorAll('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElements[0]);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
         const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
-        const slotPaddingBottom = (size >= optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const slotPaddingBottom = (size >= optionElements.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
         const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
         expect(parseFloat(element.getAttribute('u-size'))).equal(size);
@@ -684,13 +684,13 @@
         });
       }).then(function () {
         const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
-        const optionElement = element.querySelectorAll('fluent-option');
-        const computedStyleOption = window.getComputedStyle(optionElement[0]);
+        const optionElements = element.querySelectorAll('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElements[0]);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
         const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
-        const slotPaddingBottom = (size >= optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const slotPaddingBottom = (size >= optionElements.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
         const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
         expect(parseFloat(element.getAttribute('u-size'))).equal(size);
@@ -698,36 +698,6 @@
         let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('overflow-y');
         expect(parseFloat(maxHeightSlotInPixel)).greaterThan(totalHeight);
         expect(overflowBehavior).equal("auto");
-      });
-    });
-
-    it("set the size as negative then scroll bar should not be visible and size should be ignored with display-format as valrep", function () {
-      let size = -2;
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "size": size,
-          "valrep": valRepArray,
-          "value": "2",
-          "display-format": "valrep"
-        });
-      }).then(function () {
-        // We can not check max-height and overflow-y here since the code exits in case of  negative size value.
-        expect(!element.hasAttribute('u-size'));
-      });
-    });
-
-    it("set the size as 0 then scroll bar should not be visible and size should be ignored with display-format as val", function () {
-      let size = 0;
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "size": size,
-          "valrep": valRepArray,
-          "value": "2",
-          "display-format": "val"
-        });
-      }).then(function () {
-        // We can not check max-height and overflow-y here since the code exits in case of negative/zero size value.
-        expect(!element.hasAttribute('u-size'));
       });
     });
 
@@ -742,18 +712,18 @@
         });
       }).then(function () {
         const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
-        const optionElement = element.querySelectorAll('fluent-option');
-        const computedStyleOption = window.getComputedStyle(optionElement[0]);
+        const optionElements = element.querySelectorAll('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElements[0]);
         const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
         const optionHeight = parseFloat(computedStyleOption.height);
         const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
         const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
-        const slotPaddingBottom = (size >= optionElement.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const slotPaddingBottom = (size >= optionElements.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
         const padding = slotPaddingTop + slotPaddingBottom;
         const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
-        optionElement.forEach(setCustomFontSize);
-        function setCustomFontSize(optionElement){
-          optionElement.style.fontSize = "35px";
+        optionElements.forEach(setCustomFontSize);
+        function setCustomFontSize(optionElements){
+          optionElements.style.fontSize = "35px";
         }
         expect(parseFloat(element.getAttribute('u-size'))).equal(size);
         let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
@@ -773,6 +743,38 @@
           "valrep": valRepArray,
           "value": "2",
           "display-format": "rep"
+        });
+      }).then(function () {
+        expect(!element.hasAttribute('u-size'));
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        expect(maxHeightSlotInPixel).equal("none");
+      });
+    });
+
+    it("set the size as negative then scroll bar should not be visible and size should be ignored with display-format as valrep", function () {
+      let size = -2;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "valrep"
+        });
+      }).then(function () {
+        expect(!element.hasAttribute('u-size'));
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        expect(maxHeightSlotInPixel).equal("none");
+      });
+    });
+
+    it("set the size as 0 then scroll bar should not be visible and size should be ignored with display-format as val", function () {
+      let size = 0;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "val"
         });
       }).then(function () {
         expect(!element.hasAttribute('u-size'));
