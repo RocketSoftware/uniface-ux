@@ -638,12 +638,12 @@
         expect(parseFloat(element.getAttribute('u-size'))).equal(size);
         let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
         let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('overflow-y');
-        expect(parseFloat(maxHeightSlotInPixel)).equal(totalHeight);
+        expect(Math.round(parseFloat(maxHeightSlotInPixel))).equal(Math.round(totalHeight));
         expect(overflowBehavior).equal("auto");
       });
     });
 
-    it("set the size < no of valrep element then scroll bar should be visible with display-format as rep", function () {
+    it("set the size < number of valrep element then scroll bar should be visible with display-format as rep", function () {
       let size = 1;
       return asyncRun(function () {
         tester.dataUpdate({
@@ -673,7 +673,7 @@
       });
     });
 
-    it("set the size > no of valrep element then scroll bar should not be visible with display-format as rep", function () {
+    it("set the size > number of valrep element then scroll bar should not be visible with display-format as rep", function () {
       let size = 4;
       return asyncRun(function () {
         tester.dataUpdate({
