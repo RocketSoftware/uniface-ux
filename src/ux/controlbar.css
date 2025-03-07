@@ -66,6 +66,10 @@ div:has(> .u-controlbar) {
   flex-shrink: 0;
 }
 
+/* 
+  To display the overflow menu properly in vertical orientation, it should be positioned half the width of the overflow button towards the end (right in ltr direction) from the actual center of the controlbar.
+  To get the width of the button for this, we use the formula used by Fluent for setting the min-width.
+ */
 .u-controlbar[u-orientation="vertical"] .u-overflow-menu {
   inset-inline-end: calc(50% - ((var(--base-height-multiplier) + var(--density)) * var(--design-unit) * 1px) / 2);
 }
