@@ -38,6 +38,9 @@
 .u-listbox .u-value {
   color: var(--neutral-base-color);
   font-style: italic;
+}
+
+.u-listbox .u-valrep-representation:not(:empty) + .u-value {
   margin-inline-start: calc((var(--design-unit) * 3px) + 2px);
 }
 
@@ -64,3 +67,8 @@
 .u-listbox .u-label-text:not([hidden]) + .u-error-icon::before {
   padding-inline-start: calc(var(--design-unit) * 2px + 2px);
 }
+
+.u-listbox .u-label-text:not([hidden]),
+.u-listbox .u-error-icon:not([hidden]) {
+  margin-bottom: 4px;
+} 

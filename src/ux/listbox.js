@@ -115,10 +115,94 @@ export class Listbox extends Widget {
   };
 
   /**
-   * Private Worker: This is specialized worker to accommodate Listbox with no valrep defined.
-   * @class ListBoxValRep
-   * @extends {SlottedElementsByValRep}
+   * Private Worker: Used to handle size and overflow.
+   * @class SizeAttribute
+   * @extends {Worker}
    */
+  static SizeAttribute = class extends Worker {
+    constructor(widgetClass, propId, defaultValue) {
+      super(widgetClass);
+      this.propId = propId;
+      this.registerSetter(widgetClass, propId, this);
+      this.registerDefaultValue(widgetClass, propId, defaultValue);
+      this.registerSetter(widgetClass, "valrep", this);
+    }
+
+    // Helper function to add the CSSStyleSheet to the shadowRoot.
+    applyStyleSheet(element, cssString) {
+      if (element.shadowRoot) {
+        const CSSStyleSheet = new window.CSSStyleSheet();
+        CSSStyleSheet.replaceSync(cssString);
+        element.shadowRoot.adoptedStyleSheets = [
+          ...element.shadowRoot.adoptedStyleSheets,
+          CSSStyleSheet
+        ];
+      }
+    }
+
+    refresh(widgetInstance) {
+      this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
+
+      let size = this.getNode(widgetInstance.data, this.propId);
+      const element = this.getElement(widgetInstance);
+
+      if (size === undefined) {
+        element.removeAttribute("u-size");
+        const resetCSS = `
+          slot:not([name]) {
+            max-height: unset;
+          }
+        `;
+        this.applyStyleSheet(element, resetCSS);
+        return;
+      }
+
+      const fluentOptionElements = element.querySelectorAll('fluent-option');
+      const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
+      size = parseInt(size);
+
+      if(size > 0) {
+        // Set the u-size attribute to the element.
+        element.setAttribute("u-size", size);
+
+        // Get computed styles for option and slot elements.
+        const computedStyleOption = window.getComputedStyle(fluentOptionElements[0]);
+        const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
+
+        // Calculate total height based on option height, border height, and slotPadding.
+        const optionHeight = parseFloat(computedStyleOption.height);
+        const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
+        const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
+        // Apply bottom padding only if size equals to or greater than number of options, otherwise set it to 0.
+        const slotPaddingBottom = (size >= fluentOptionElements.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const slotPadding = slotPaddingTop + slotPaddingBottom;
+
+        const totalHeight = optionHeight * size + borderHeight + slotPadding;
+
+        const updatedCSS = `
+        slot:not([name]) {
+          max-height: ${totalHeight}px;
+          overflow-y: auto;
+        }
+        ::slotted(fluent-option) {
+          overflow: unset;
+          flex-shrink: 0;
+        }
+      `;
+        this.applyStyleSheet(element, updatedCSS);
+      } else {
+        // Show warning if size is NaN or less than or equal to 0.
+        this.warn("refresh()", `Size property cannot be set to '${size}'`, "Ignored");
+      }
+      return;
+    }
+  };
+
+  /**
+  * Private Worker: This is specialized worker to accommodate Listbox with no valrep defined.
+  * @class ListBoxValRep
+  * @extends {SlottedElementsByValRep}
+  */
   static ListBoxValRep = class extends SlottedElementsByValRep {
     refresh(widgetInstance) {
       const valrep = this.getNode(widgetInstance.data, "valrep");
@@ -153,6 +237,7 @@ export class Listbox extends Widget {
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new this.ListBoxValRep(this, "fluent-option", "u-option", ""),
     new this.ListboxSelectedValue(this, "value", ""),
+    new this.SizeAttribute(this, "size", undefined),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength")
   ], [
@@ -197,7 +282,6 @@ export class Listbox extends Widget {
           line-height: var(--type-ramp-base-line-height);
           font-weight: initial;
           font-variation-settings: var(--type-ramp-base-font-variations);
-          margin-bottom: 4px;
           word-break: break-all;
         }
 
@@ -217,7 +301,6 @@ export class Listbox extends Widget {
 
         :host(:focus-within:not([disabled])) slot:not([name]) {
           outline: calc(var(--focus-stroke-width) * 1px) solid var(--focus-stroke-outer);
-          outline-offset: calc(var(--focus-stroke-width) * -1px);
         }
 
         slot:not([name]) {

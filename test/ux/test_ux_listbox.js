@@ -149,10 +149,14 @@
     it("check 'hidden' attributes", function () {
       assert.notEqual(element.querySelector('span.u-label-text').getAttribute('hidden'), null);
     });
+
     it("check widget id", function () {
       assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
     });
 
+    it("check size attribute", function () {
+      assert.equal(tester.defaultValues.size, undefined ,"Widget misses or has incorrect u-size element");
+    });
   });
 
   describe("dataUpdate()", function () {
@@ -599,6 +603,189 @@
         expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
         expect(element.childNodes[1].classList.contains("ms-Icon")).to.be.false;
         expect(element.childNodes[1].classList.contains("ms-Icon--AlertSolid")).to.be.false;
+      });
+    });
+  });
+
+  describe("Check listbox scroll based on size", function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    it("set the size = number of valrep element then scroll bar should not be visible with display-format as valrep", function () {
+      let size = 3;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "valrep"
+        });
+      }).then(function () {
+        const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
+        const optionElements = element.querySelectorAll('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElements[0]);
+        const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
+        const optionHeight = parseFloat(computedStyleOption.height);
+        const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
+        const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
+        const slotPaddingBottom = (size >= optionElements.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const padding = slotPaddingTop + slotPaddingBottom;
+        const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
+        expect(parseFloat(element.getAttribute('u-size'))).equal(size);
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('overflow-y');
+        expect(Math.round(parseFloat(maxHeightSlotInPixel))).equal(Math.round(totalHeight));
+        expect(overflowBehavior).equal("auto");
+      });
+    });
+
+    it("set the size < number of valrep element then scroll bar should be visible with display-format as rep", function () {
+      let size = 1;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "rep"
+        });
+      }).then(function () {
+        const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
+        const optionElements = element.querySelectorAll('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElements[0]);
+        const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
+        const optionHeight = parseFloat(computedStyleOption.height);
+        const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
+        const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
+        const slotPaddingBottom = (size >= optionElements.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const padding = slotPaddingTop + slotPaddingBottom;
+        const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
+        expect(parseFloat(element.getAttribute('u-size'))).equal(size);
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('overflow-y');
+        expect(totalHeight).to.be.greaterThan(parseFloat(maxHeightSlotInPixel));
+        expect(overflowBehavior).equal("auto");
+        const expectedHeight = optionHeight * size + borderHeight + padding;
+        assert(expectedHeight, maxHeightSlotInPixel);
+      });
+    });
+
+    it("set the size > number of valrep element then scroll bar should not be visible with display-format as rep", function () {
+      let size = 4;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "rep"
+        });
+      }).then(function () {
+        const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
+        const optionElements = element.querySelectorAll('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElements[0]);
+        const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
+        const optionHeight = parseFloat(computedStyleOption.height);
+        const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
+        const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
+        const slotPaddingBottom = (size >= optionElements.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const padding = slotPaddingTop + slotPaddingBottom;
+        const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
+        expect(parseFloat(element.getAttribute('u-size'))).equal(size);
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('overflow-y');
+        expect(parseFloat(maxHeightSlotInPixel)).greaterThan(totalHeight);
+        expect(overflowBehavior).equal("auto");
+      });
+    });
+
+    it("set size as 2 and increase the font size then scroll bar should be visible with display-format as valrep", function () {
+      let size = 2;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "valrep"
+        });
+      }).then(function () {
+        const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
+        const optionElements = element.querySelectorAll('fluent-option');
+        const computedStyleOption = window.getComputedStyle(optionElements[0]);
+        const computedStyleSlot = slotElement ? window.getComputedStyle(slotElement) : null;
+        const optionHeight = parseFloat(computedStyleOption.height);
+        const borderHeight = parseFloat(computedStyleOption.borderTopWidth) + parseFloat(computedStyleOption.borderBottomWidth);
+        const slotPaddingTop = computedStyleSlot ? parseFloat(computedStyleSlot.paddingTop) : 0;
+        const slotPaddingBottom = (size >= optionElements.length) ? (computedStyleSlot ? parseFloat(computedStyleSlot.paddingBottom) : 0) : 0;
+        const padding = slotPaddingTop + slotPaddingBottom;
+        const totalHeight = optionHeight * valRepArray.length + borderHeight + padding;
+        optionElements.forEach(setCustomFontSize);
+        function setCustomFontSize(optionElements){
+          optionElements.style.fontSize = "35px";
+        }
+        expect(parseFloat(element.getAttribute('u-size'))).equal(size);
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        let overflowBehavior = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('overflow-y');
+        expect(totalHeight).to.be.greaterThan(parseFloat(maxHeightSlotInPixel));
+        expect(overflowBehavior).equal("auto");
+        const expectedHeight = optionHeight * size + borderHeight + padding;
+        assert(expectedHeight, maxHeightSlotInPixel);
+      });
+    });
+
+    it("set the size as undefined then scroll bar should not be visible with display-format as rep", function () {
+      let size = undefined;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "rep"
+        });
+      }).then(function () {
+        expect(!element.hasAttribute('u-size'));
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        expect(maxHeightSlotInPixel).equal("none");
+      });
+    });
+
+    it("set the size as negative then scroll bar should not be visible and size should be ignored with display-format as valrep", function () {
+      let size = -2;
+      const warnSpy = sinon.spy(console, 'warn');
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "valrep"
+        });
+      }).then(function () {
+        expect(!element.hasAttribute('u-size'));
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        expect(maxHeightSlotInPixel).equal("none");
+        expect(warnSpy.calledWith(`SizeAttribute.refresh(): Size property cannot be set to '${size}' - Ignored.`)).to.be.true;
+        warnSpy.restore(); // Restore the original console.warn
+      });
+    });
+
+    it("set the size as 0 then scroll bar should not be visible and size should be ignored with display-format as val", function () {
+      let size = 0;
+      const warnSpy = sinon.spy(console, 'warn');
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "size": size,
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "val"
+        });
+      }).then(function () {
+        expect(!element.hasAttribute('u-size'));
+        let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector('slot:not([name])'),null).getPropertyValue('max-height');
+        expect(maxHeightSlotInPixel).equal("none");
+        expect(warnSpy.calledWith(`SizeAttribute.refresh(): Size property cannot be set to '${size}' - Ignored.`)).to.be.true;
+        warnSpy.restore(); // Restore the original console.warn
       });
     });
   });
