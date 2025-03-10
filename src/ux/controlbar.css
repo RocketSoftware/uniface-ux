@@ -10,10 +10,15 @@
   justify-content: space-between;
   padding: 10px;
   width: 100%;
+  overflow-x: auto;
+}
+
+div:has(> .u-controlbar) {
+  position: relative;
 }
 
 .u-controlbar[hidden] {
-  display:none;
+  display: none;
 }
 
 .u-controlbar .u-start-section,
@@ -33,6 +38,14 @@
 
 .u-controlbar[u-orientation="vertical"] {
   flex-direction: column;
+  gap: 8px;
+}
+
+/* Max-width is required in vertical orientation to prevent widgets from being cut off when horizontal scrollbar is applied. */
+.u-controlbar[u-orientation="vertical"] .u-start-section,
+.u-controlbar[u-orientation="vertical"] .u-center-section,
+.u-controlbar[u-orientation="vertical"] .u-end-section {
+  max-width: 100%;
 }
 
 .u-controlbar .u-select::part(label),
@@ -42,16 +55,23 @@
   white-space: nowrap;
 }
 
-.u-controlbar .u-overflow-container {
-  position: relative;
-}
-
 .u-controlbar .u-overflow-menu {
   position: absolute;
   width: max-content;
-  top: 100%;
-  inset-inline-end: 0;
+  inset-inline-end: 10px;
   z-index: 100;
+}
+
+.u-controlbar .u-controlbar-item {
+  flex-shrink: 0;
+}
+
+/* 
+  To display the overflow menu properly in vertical orientation, it should be positioned half the width of the overflow button towards the end (right in ltr direction) from the actual center of the controlbar.
+  To get the width of the button for this, we use the formula used by Fluent for setting the min-width.
+ */
+.u-controlbar[u-orientation="vertical"] .u-overflow-menu {
+  inset-inline-end: calc(50% - ((var(--base-height-multiplier) + var(--density)) * var(--design-unit) * 1px) / 2);
 }
 
 .u-controlbar .u-controlbar-item.u-overflown-item {
