@@ -1,0 +1,89 @@
+.u-checkbox {
+  align-items: flex-start;
+}
+
+.u-checkbox::part(control) {
+  flex-shrink: 0;
+}
+
+.u-checkbox::part(label) {
+  display: inline-flex;
+}
+
+/* Styling Indeterminate state as per fluent design system */
+.u-checkbox.indeterminate::part(control) {
+  --neutral-stroke-strong-rest: var(--accent-fill-rest);
+  --neutral-foreground-rest: var(--accent-fill-rest);
+}
+
+.u-checkbox.indeterminate:hover::part(control) {
+  --neutral-stroke-strong-hover: var(--accent-fill-hover);
+  --neutral-foreground-rest: var(--accent-fill-hover);
+}
+
+.u-checkbox.indeterminate:active::part(control) {
+  --neutral-stroke-strong-active: var(--accent-fill-active);
+  --neutral-foreground-rest: var(--accent-fill-active);
+}
+
+/* Styling error icons as per fluent design system  */
+.u-checkbox.u-invalid .u-error-icon,
+.u-checkbox.u-format-invalid .u-error-icon {
+  color: #d13438;
+  padding-inline-start: calc(var(--design-unit) * 2px + 2px);
+}
+
+.u-checkbox .u-error-icon[hidden]::before {
+  display: none;
+}
+
+/* Styling Checked Checkbox in error or invalid state */
+.u-checkbox.u-invalid.checked::part(control),
+.u-checkbox.u-format-invalid.checked::part(control) {
+  --accent-fill-rest: #d13438;
+}
+
+.u-checkbox.u-invalid.checked:hover::part(control),
+.u-checkbox.u-format-invalid.checked:hover::part(control) {
+  --accent-fill-hover: #bb2e32;
+}
+
+.u-checkbox.u-invalid.checked:active::part(control),
+.u-checkbox.u-format-invalid.checked:active::part(control) {
+  --accent-fill-active: #d54649;
+}
+
+/* Styling Unchecked Checkbox in error or invalid state */
+.u-checkbox.u-invalid::part(control),
+.u-checkbox.u-format-invalid::part(control) {
+  --neutral-stroke-strong-rest: #d13438;
+}
+
+.u-checkbox.u-invalid:hover::part(control),
+.u-checkbox.u-format-invalid:hover::part(control) {
+  --neutral-stroke-strong-hover: #bb2e32;
+}
+
+.u-checkbox.u-invalid:active::part(control),
+.u-checkbox.u-format-invalid:active::part(control) {
+  --neutral-stroke-strong-active: #d54649;
+}
+
+/* Styling Indeterminate Checkbox in error or invalid state */
+.u-checkbox.u-invalid.indeterminate::part(control),
+.u-checkbox.u-format-invalid.indeterminate::part(control) {
+  --neutral-stroke-strong-rest: #d13438;
+  --neutral-foreground-rest: #d13438;
+}
+
+.u-checkbox.u-invalid.indeterminate:hover::part(control),
+.u-checkbox.u-format-invalid.indeterminate:hover::part(control) {
+  --neutral-stroke-strong-hover: #bb2e32;
+  --neutral-foreground-rest: #bb2e32;
+}
+
+.u-checkbox.u-invalid.indeterminate:active::part(control),
+.u-checkbox.u-format-invalid.indeterminate:active::part(control) {
+  --neutral-stroke-strong-active: #d54649;
+  --neutral-foreground-rest: #d54649;
+}

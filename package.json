@@ -1,0 +1,33 @@
+{
+  "name": "ux-widgets",
+  "version": "1.0.0",
+  "description": "Uniface UX widgets",
+  "main": "webpack.prod.js",
+  "scripts": {
+    "test": "cd testAutomation && npx playwright test",
+    "build": "npm run build:prod",
+    "build:dev": "webpack --config webpack.dev.js",
+    "build:prod": "webpack --config webpack.prod.js",
+    "lint": "eslint . --max-warnings=0",
+    "watch": "webpack -- watch --progress --config webpack.dev.js",
+    "serve": "http-server -p 9000",
+    "serve:dev": "webpack -- serve --progress --config webpack.dev.js"
+  },
+  "author": "Rocket Software B.V.",
+  "license": "",
+  "dependencies": {
+    "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.0",
+    "mini-css-extract-plugin": "^2.9.2",
+    "terser-webpack-plugin": "^5.3.11",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-middleware": "^7.4.2",
+    "webpack-dev-server": "^5.2.0",
+    "webpack-merge": "^6.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.18.0",
+    "http-server": "^14.1.1",
+    "@playwright/test": "^1.50.0"
+  }
+}

@@ -1,0 +1,33 @@
+/**
+ * Load all the CSS file related to the Uniface UX widgets.
+ * The UX widgets only use the ms-Icon subset.
+ * 
+ * The Office UI Fabric core CSS is used by FluentUI.
+ */
+
+/**
+ * Load Fabric CSS related to FluentUI.
+ * 
+ * Uncomment one of the following locations where to import the CSS from.
+ * During the bundling process a local CSS file with local icons needs to be used.
+ */
+/* uncomment next line for offline usage of ms-icon related subset */
+@import "../fluentui/css/fabric-ms-icon.css";
+/* uncomment next line to load version 11.0.0 from CDN location */
+/* @import "https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css"; */
+/* uncomment next line to load version 11.1.0 from CDN location */
+/* @import "https://res-1.cdn.office.net/files/fabric-cdn-prod_20230815.002/office-ui-fabric-core/11.1.0/css/fabric.min.css"; */
+
+/* The CSS files related to the UX widgets */
+@import "./base.css";
+@import "./button.css";
+@import "./checkbox.css";
+@import "./number_field.css";
+@import "./plain_text.css";
+@import "./radio_group.css";
+@import "./select.css";
+@import "./switch.css";
+@import "./text_area.css";
+@import "./text_field.css";
+
+@import "./data_grid.css";

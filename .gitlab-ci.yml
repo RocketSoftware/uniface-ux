@@ -1,0 +1,64 @@
+stages:
+  - lint
+  - build
+  - test
+  - publish
+
+variables:
+  TARGET_VERSION: "10403"
+
+include:
+  - project: Uniface/tools/defaults
+    ref: master
+    file: .gitlab-ci-defaults.yml
+
+lint:
+  stage: lint
+  extends: .uxwidgets
+  tags:
+    - docker-uniface-local
+  script:
+    - echo "Linting repository"
+    - npm run lint
+
+build:
+  stage: build
+  extends: .uxwidgets
+  tags:
+    - docker-uniface-local
+  script:
+    - echo "Building CSS/JS bundles"
+    - npm run build:prod
+  artifacts:
+    paths:
+      - dist/
+
+test:
+  stage: test
+  extends: .uxwidgets
+  tags:
+    - docker-uniface-local
+  script:
+    - echo "Running tests"
+    - npm run test
+  artifacts:
+    paths:
+      - testAutomation/test-results/
+    when: always
+
+publish:
+  stage: publish
+  extends: .cloudprovisioning
+  tags:
+    - docker-uniface-local
+  dependencies:
+    - build
+  before_script:
+    - sudo mkdir -p /cwnl/files/dib_cc
+    - sudo mount -v -o nfsvers=3 -o nolock cwnl-uxshares.unifaceforest.local:/export/common/dib/cc/cc /cwnl/files/dib_cc
+  script:
+    - echo "Publishing artifacts to shared location"
+    - TARGET_DIR="/cwnl/files/dib_cc/uxwidgets/${TARGET_VERSION}/testing/$(date +%Y%m%d)_${CI_COMMIT_SHORT_SHA}" && mkdir -p "$TARGET_DIR"
+    - test -d dist || { echo "Error :dist/ not found!"; exit 1; }
+    - cp -a dist "$TARGET_DIR/"
+    - echo "Artifacts copied to $TARGET_DIR"
