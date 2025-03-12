@@ -189,12 +189,10 @@ export class RadioGroup extends Widget {
     new HtmlAttributeChoice(this, "layout", "orientation", ["vertical", "horizontal"], "vertical", true),
     new this.RadioGroupSelectedValue(this, "value", "value", ""),
     new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength")
-  ], [
+    new IgnoreProperty(this, "html:maxlength"),
     new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
     new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label")
-  ], [
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label"),
     new Trigger(this, "onchange", "change", true)
   ]);
 

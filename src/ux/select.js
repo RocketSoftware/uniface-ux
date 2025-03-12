@@ -291,12 +291,10 @@ export class Select extends Widget {
     new HtmlAttributeChoice(this, "popup-position", "u-position", ["above", "below"], "below", true),
     new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ".u-placeholder"),
     new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength")
-  ], [
+    new IgnoreProperty(this, "html:maxlength"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
-    new SlottedElementsByValRep(this, "fluent-option", "", "")
-  ], [
+    new SlottedElementsByValRep(this, "fluent-option", "", ""),
     new Trigger(this, "onchange", "change", true)
   ]);
 

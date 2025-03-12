@@ -95,29 +95,21 @@ export class Element extends Worker {
    * @param {String} tagName
    * @param {String} styleClass
    * @param {String} elementQuerySelector
-   * @param {Array} [attributeDefines]
-   * @param {Array} [elementDefines]
-   * @param {Array} [triggerDefines]
+   * @param {Array} [childWorkers]
    */
-  constructor(widgetClass, tagName, styleClass, elementQuerySelector, attributeDefines, elementDefines, triggerDefines) {
+  constructor(widgetClass, tagName, styleClass, elementQuerySelector, childWorkers) {
     super(widgetClass);
     this.tagName = tagName;
     this.styleClass = styleClass;
     this.elementQuerySelector = elementQuerySelector;
     this.hidden = false;
-    this.attributeDefines = attributeDefines;
-    this.elementDefines = elementDefines;
-    this.triggerDefines = triggerDefines;
-    // Attributes and triggers work on an element.
+    this.childWorkers = childWorkers;
     // Make sure the setters can find the element by providing the element query selector.
-    if (this.attributeDefines) {
-      this.attributeDefines.forEach((attributeDefine) => {
-        attributeDefine.setElementQuerySelector(this.elementQuerySelector);
-      });
-    }
-    if (this.triggerDefines) {
-      this.triggerDefines.forEach((triggerDefine) => {
-        triggerDefine.setElementQuerySelector(this.elementQuerySelector);
+    if (this.childWorkers) {
+      this.childWorkers.forEach((childWorker) => {
+        if(!childWorker.elementQuerySelector){
+          childWorker.setElementQuerySelector(this.elementQuerySelector);
+        }
       });
     }
   }
@@ -130,12 +122,6 @@ export class Element extends Worker {
   getLayout(objectDefinition) {
     this.log("getLayout", null);
 
-    // Allow any child attribute-worker to process the objectDefinition.
-    this.attributeDefines?.forEach((define) => {
-      // eslint-disable-next-line no-unused-vars
-      const ignore = define.getLayout(objectDefinition);
-    });
-
     // Create element
     let element = document.createElement(this.tagName);
     element.hidden = this.hidden;
@@ -144,7 +130,8 @@ export class Element extends Worker {
     }
 
     // Allow any child element-workers to add child elements.
-    this.elementDefines?.forEach((define) => {
+    this.childWorkers?.forEach((define) => {
+      // If the workers are attribute or trigger related, they will return an empty array.
       let childLayout = define.getLayout(objectDefinition);
       if (childLayout instanceof Array) {
         childLayout.forEach((childElement) => {

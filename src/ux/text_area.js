@@ -55,11 +55,9 @@ export class TextArea extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
     new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
-    new StyleClass(this, ["u-text-area", "outline"])
-  ], [
+    new StyleClass(this, ["u-text-area", "outline"]),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end")
-  ], [
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
     new Trigger(this, "onchange", "change", true)
   ]);
 

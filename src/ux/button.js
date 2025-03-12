@@ -182,11 +182,9 @@ export class Button extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new IgnoreProperty(this, "html:readonly"),
-    new StyleClass(this, ["u-button", "neutral"])
-  ], [
+    new StyleClass(this, ["u-button", "neutral"]),
     new this.SlottedButtonIcon(this, "u-icon", ".u-icon"),
-    new this.SlottedButtonText(this, "u-text", ".u-text")
-  ], [
+    new this.SlottedButtonText(this, "u-text", ".u-text"),
     new Trigger(this, "detail", "click", true)
   ]);
 
