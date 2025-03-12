@@ -1,8 +1,7 @@
 // @ts-check
-/* global UNIFACE */
-
 import { Widget } from "./widget.js"; // eslint-disable-line no-unused-vars
 import { Base } from "./base.js";
+import { getWidgetClass } from "./dsp_connector.js";
 
 /**
  * Worker base class.
@@ -246,14 +245,6 @@ export class SlottedElement extends Element {
       element.innerText = "";
     }
   }
-
-  deleteIconClasses(element) {
-    Array.from(element.classList).forEach((className) => {
-      if (className.startsWith("ms-")) {
-        element.classList.remove(className);
-      }
-    });
-  }
 }
 
 /**
@@ -368,7 +359,7 @@ export class SlottedSubWidget extends Element {
     elementQuerySelector = `.${subWidgetStyleClass}`;
     super(widgetClass, tagName, subWidgetStyleClass, elementQuerySelector);
     this.subWidgetId = subWidgetId;
-    this.subWidgetClass = UNIFACE.ClassRegistry.get(subWidgetClassName);
+    this.subWidgetClass = getWidgetClass(subWidgetClassName);
     this.subWidgetDelegatedProperties = subWidgetDelegatedProperties;
     if (this.subWidgetClass) {
       if (subWidgetDefaultValues) {
@@ -383,7 +374,7 @@ export class SlottedSubWidget extends Element {
       this.registerDefaultValue(widgetClass, this.propId, visible);
       this.registerSubWidget(widgetClass, subWidgetId, this.subWidgetClass, this.styleClass, subWidgetTriggers, subWidgetDelegatedProperties);
     } else {
-      this.error("constructor", `Widget class with name '${subWidgetClassName}' not found in UNIFACE.widgetRepository.`, "Not available");
+      this.error("constructor", `Widget class with name '${subWidgetClassName}' is not registered.`, "Not available");
     }
   }
 
@@ -418,7 +409,7 @@ export class SlottedSubWidget extends Element {
  * The property, of which the name is specified by propId, holds a Uniface list of subWidgetIds which are be added as sub-widgets:
  *   "sub-widget1;sub-widget2;sub-widget3;sub-widget4"
  * For each sub-widget, additional properties need to be available:
- *   - "<subWidgetId>:widget-class" - defines the sub-widget's widget-class as registered with UNIFACE.classRegistry
+ *   - "<subWidgetId>:widget-class" - defines the sub-widget's widget-class as registered with function registerWidgetClass
  *   - "<subWidgetId>:properties" - defines a list of property ids that need to be passed on to the sub-widget;
  *     if not defined, all properties are passed on to the sub-widget.
  *   - "<subWidgetId>:triggers" - defines a list of trigger names that need to be mapped on to the wub-widget;
@@ -462,7 +453,7 @@ export class SubWidgetsByProperty extends Element {
         let propName = `${subWidgetId}:widget-class`;
         let subWidgetClassName = objectDefinition.getProperty(propName);
         if (subWidgetClassName) {
-          let subWidgetClass = UNIFACE.ClassRegistry.get(subWidgetClassName);
+          let subWidgetClass = getWidgetClass(subWidgetClassName);
           if (subWidgetClass) {
             validSubWidgetIds.push(subWidgetId);
             let element = document.createElement(this.tagName);
@@ -473,7 +464,7 @@ export class SubWidgetsByProperty extends Element {
           } else {
             this.warn(
               "getLayout",
-              `Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry.`,
+              `Widget definition with name '${subWidgetClassName}' is not registered.`,
               `Creation of sub-widget '${subWidgetId}'skipped`
             );
           }
@@ -502,7 +493,7 @@ export class SubWidgetsByProperty extends Element {
         const classNamePropId = `${subWidgetId}:widget-class`;
         const triggersPropId = `${subWidgetId}:widget-triggers`;
         const className = objectDefinition.getProperty(classNamePropId);
-        const subWidgetClass = UNIFACE.ClassRegistry.get(className);
+        const subWidgetClass = getWidgetClass(className);
         const subWidgetTriggers = objectDefinition.getProperty(triggersPropId);
         let subWidgetDefinition = {};
         subWidgetDefinition.class = subWidgetClass;
@@ -566,7 +557,7 @@ export class SubWidgetsByFields extends Worker {
     let elements = [];
     let childObjectDefinitions = objectDefinition.getChildDefinitions();
     if (childObjectDefinitions) {
-      let subWidgetClass = UNIFACE.ClassRegistry.get(this.subWidgetClassName);
+      let subWidgetClass = getWidgetClass(this.subWidgetClassName);
       if (subWidgetClass) {
         childObjectDefinitions.forEach((childObjectDefinition) => {
           const childType = childObjectDefinition.getType();
@@ -600,7 +591,7 @@ export class SubWidgetsByFields extends Worker {
       } else {
         this.warn(
           "getLayout",
-          `Widget definition with name '${this.subWidgetClassName}' not found in UNIFACE.classRegistry.`,
+          `Widget definition with name '${this.subWidgetClassName}' is not registered.`,
           "Creation of sub-widget(s) skipped"
         );
       }
@@ -618,7 +609,7 @@ export class SubWidgetsByFields extends Worker {
     let subWidgetDefinitions = {};
     let childObjectDefinitions = objectDefinition.getChildDefinitions();
     if (childObjectDefinitions) {
-      let subWidgetClass = UNIFACE.ClassRegistry.get(this.subWidgetClassName);
+      let subWidgetClass = getWidgetClass(this.subWidgetClassName);
       if (subWidgetClass) {
         childObjectDefinitions.forEach((childObjectDefinition) => {
           const childType = childObjectDefinition.getType();
@@ -1309,7 +1300,7 @@ export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
   refresh(widgetInstance) {
     this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
     const orgWidgetClassName = this.getNode(widgetInstance.data, this.propId);
-    const orgWidgetClass = UNIFACE.ClassRegistry.get(orgWidgetClassName);
+    const orgWidgetClass = getWidgetClass(orgWidgetClassName);
     const element = this.getElement(widgetInstance);
     element.innerHTML = "";
     element.classList.remove("u-invalid");
@@ -1400,7 +1391,7 @@ export class StyleClass extends Worker {
     this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
     let element = this.getElement(widgetInstance);
     for (let property in widgetInstance.data) {
-      if (property.startsWith("class")) {
+      if (property.startsWith("class:")) {
         let value = this.toBoolean(widgetInstance.data[property]);
         let pos = property.search(":");
         property = property.substring(pos + 1);
@@ -1409,33 +1400,6 @@ export class StyleClass extends Worker {
         } else {
           element.classList.remove(property);
         }
-      }
-    }
-  }
-}
-
-/**
- * Worker: All style property.
- */
-export class StyleProperty extends Worker {
-  constructor(widgetClass, property) {
-    super(widgetClass);
-    this.defaultStyleProperty = property;
-    this.registerSetter(widgetClass, "style", this);
-    let key = Object.keys(property)[0];
-    this.registerDefaultValue(widgetClass, `style:${key}`, property[key]);
-  }
-
-  refresh(widgetInstance) {
-    this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
-    let element = this.getElement(widgetInstance);
-
-    for (let property in widgetInstance.data) {
-      if (property.startsWith("style")) {
-        let value = widgetInstance.data[property];
-        let pos = property.search(":");
-        property = property.substring(pos + 1);
-        element.style[property] = value || "unset";
       }
     }
   }

@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   StyleClass,
@@ -290,4 +289,3 @@ export class Checkbox extends Widget {
     return formattedValue;
   }
 }
-UNIFACE.ClassRegistry.add("UX.Checkbox", Checkbox);

@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   Worker,
@@ -150,10 +149,10 @@ export class Button extends Widget {
         iconPosition = defaultIconPosition;
       }
 
-      deleteIconClasses();
+      this.deleteIconClasses(element);
       if (icon) {
         element.hidden = false;
-        element.classList.add(`ms-Icon`, `ms-Icon--${icon}`);
+        element.classList.add("ms-Icon", `ms-Icon--${icon}`);
         // Set the iconPosition if there is buttonText.
         if (text) {
           element.setAttribute("slot", iconPosition);
@@ -165,14 +164,6 @@ export class Button extends Widget {
       } else {
         element.hidden = true;
         element.setAttribute("slot", "");
-      }
-
-      function deleteIconClasses() {
-        Array.from(element.classList).forEach((key) => {
-          if (key.startsWith("ms-Icon")) {
-            element.classList.remove(key);
-          }
-        });
       }
     }
   };
@@ -243,4 +234,3 @@ export class Button extends Widget {
     this.log("hideError");
   }
 }
-UNIFACE.ClassRegistry.add("UX.Button", Button);

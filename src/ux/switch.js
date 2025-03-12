@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   Element,
@@ -62,7 +61,7 @@ export class Switch extends Widget {
       let errorElement = this.getElement(widgetInstance);
       if (errorElement && this.selectorUsingSameErrorSlot) {
         let slotElement = element.querySelector(this.selectorUsingSameErrorSlot);
-        if (formatError || error || slotElement.textContent.trim() === '') {
+        if (formatError || error || slotElement.textContent.trim() === "") {
           slotElement.slot = "";
           slotElement.hidden = true;
         } else {
@@ -154,5 +153,3 @@ export class Switch extends Widget {
     return formattedValue;
   }
 }
-
-UNIFACE.ClassRegistry.add("UX.Switch", Switch);

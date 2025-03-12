@@ -78,6 +78,7 @@ module.exports = [
       "no-trailing-spaces": "warn",
       "one-var-declaration-per-line": "warn",
       "quote-props": ["error", "always"], // Forces quotes around all object keys
+      "quotes": ["error", "double"],
       "lines-around-comment": [
         "warn",
         {

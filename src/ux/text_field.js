@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   Element,
@@ -16,6 +15,11 @@ import {
   HtmlAttributeMinMaxLength
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
+
+// This widget also depends on Button, still registration is needed
+import { Button } from "./button.js";
+import { registerWidgetClass } from "./dsp_connector.js";
+registerWidgetClass("UX.Button", Button);
 
 /**
  * TextField Widget.
@@ -195,4 +199,3 @@ export class TextField extends Widget {
   }
 }
 
-UNIFACE.ClassRegistry.add("UX.TextField", TextField);
