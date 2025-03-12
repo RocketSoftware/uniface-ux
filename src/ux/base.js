@@ -11,8 +11,6 @@ import { Worker } from "./workers.js"; // eslint-disable-line no-unused-vars
 export class Base {
 
   static formatErrorMessage = "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.";
-  // Flag to enable or disable the usage of flat properties.
-  static useFlatProperties = true;
 
   constructor() {}
 
