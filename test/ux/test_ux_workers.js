@@ -133,8 +133,7 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
       tagName = "DIV";
       elementQuerySelector = "div";
       styleClass = "styleClass";
-      childWorkers = [new StyleClass(widgetClass, ["u-switch"]), new HtmlAttribute(widgetClass, "html:role", "role", "switch"), new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "label-text"),
-        new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"), new Trigger(widgetClass, "onchange", "change", true)];
+      childWorkers = [new StyleClass(widgetClass, ["u-switch"]), new HtmlAttribute(widgetClass, "html:role", "role", "switch"), new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "label-text"), new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"), new Trigger(widgetClass, "onchange", "change", true)];
       expectedQuerySelectors = ["div", "div", ".u-label-text", ".u-checked-message", "div"];
       element = new Element(widgetClass, tagName, styleClass, elementQuerySelector, childWorkers);
     });

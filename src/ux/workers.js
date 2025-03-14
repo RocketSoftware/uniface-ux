@@ -104,7 +104,7 @@ export class Element extends Worker {
     this.elementQuerySelector = elementQuerySelector;
     this.hidden = false;
     this.childWorkers = childWorkers;
-    // Make sure the setters can find the element by providing the element query selector.
+    // Make sure the setters can find the element by providing the element query selector if one is not already present.
     if (this.childWorkers) {
       this.childWorkers.forEach((childWorker) => {
         if(!childWorker.elementQuerySelector){
