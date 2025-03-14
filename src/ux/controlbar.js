@@ -1,5 +1,4 @@
 // @ts-nocheck
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import { Element, StyleClass, SubWidgetsByProperty, HtmlAttributeChoice } from "./workers.js";
 
