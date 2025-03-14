@@ -157,8 +157,8 @@ export class Listbox extends Widget {
         return;
       }
 
-      const fluentOptionElements = element.querySelectorAll('fluent-option');
-      const slotElement = element?.shadowRoot?.querySelector('slot:not([name])');
+      const fluentOptionElements = element.querySelectorAll("fluent-option");
+      const slotElement = element?.shadowRoot?.querySelector("slot:not([name])");
       size = parseInt(size);
 
       if(size > 0) {
@@ -359,8 +359,8 @@ export class Listbox extends Widget {
     }
 
     // Add event listener to prevent the widget from getting focus when clicking on error-icon.
-    const errorIcon = widgetElement.querySelector('.u-error-icon');
-    errorIcon.addEventListener('mousedown', (event) => {
+    const errorIcon = widgetElement.querySelector(".u-error-icon");
+    errorIcon.addEventListener("mousedown", (event) => {
       event.preventDefault();
       event.stopPropagation();
     });
