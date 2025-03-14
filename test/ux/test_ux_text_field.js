@@ -35,9 +35,7 @@
       expect(structure.tagName).to.equal("fluent-text-field");
       expect(structure.styleClass).to.equal("");
       expect(structure.elementQuerySelector).to.equal("");
-      expect(structure.attributeDefines).to.be.an("array");
-      expect(structure.elementDefines).to.be.an("array");
-      expect(structure.triggerDefines).to.be.an("array");
+      expect(structure.childWorkers).to.be.an("array");
       expect(structure.isSetter).to.equal(true);
       expect(structure.hidden).to.equal(false);
     });
