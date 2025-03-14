@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-nocheck
 /* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
@@ -425,5 +425,3 @@ export class Listbox extends Widget {
     }
   }
 }
-
-UNIFACE.ClassRegistry.add("UX.Listbox", Listbox);

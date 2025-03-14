@@ -29,10 +29,10 @@ import {Checkbox} from "./checkbox.js";
 registerWidgetClass("UX.Checkbox", Checkbox);
 
 import {Controlbar} from "./controlbar.js";
-registerWidgetClass("UX.ListBox", Controlbar);
+registerWidgetClass("UX.Controlbar", Controlbar);
 
 import {Listbox} from "./listbox.js";
-registerWidgetClass("UX.ListBox", Listbox);
+registerWidgetClass("UX.Listbox", Listbox);
 
 import {NumberField} from "./number_field.js";
 registerWidgetClass("UX.NumberField", NumberField);
