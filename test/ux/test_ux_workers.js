@@ -1127,7 +1127,7 @@ import {
     let elementQuerySelector;
     let propId;
     let element;
-    const dataObj = {
+    const dataObjReturnLayout = {
       "subwidgets-start": "select",
       "subwidgets-center": "",
       "subwidgets-end": "",
@@ -1138,7 +1138,7 @@ import {
       "select_usefield": true,
       "select_delegated-properties":"html:disabled"
     };
-    const dataObj1 = {
+    const dataObjIncorrectProperty = {
       "subwidgets-starts": "select",
       "subwidgets-center": "",
       "subwidgets-end": "",
@@ -1149,7 +1149,7 @@ import {
       "select_usefield": true,
       "select_delegated-properties":"html:disabled"
     };
-    const dataObj2 = {
+    const dataObjSubwidgetNotFoundInClassRegistry = {
       "subwidgets-start": "select",
       "subwidgets-center": "",
       "subwidgets-end": "",
@@ -1160,7 +1160,7 @@ import {
       "select_usefield": true,
       "select_delegated-properties":"html:disabled"
     };
-    const dataObj3 = {
+    const dataObjPropertyNameNotDefined = {
       "subwidgets-start": "select1",
       "subwidgets-center": "",
       "subwidgets-end": "",
@@ -1188,41 +1188,38 @@ import {
       expect(element.propId).to.equal(propId);
     });
 
-    it("getLayout should generate and return layout for this setter", function () {
+    it("getLayout method should generate and return layout for this setter", function () {
       // eslint-disable-next-line no-undef
-      let returnedElement  = element.getLayout(_uf.createUxDefinitions(dataObj, true));
-      console.log("abc", returnedElement);
-      console.log("abaaac", Object(returnedElement));
-
-      expect(returnedElement[0].getAttribute('class')).to.equal("u-sw-select u-controlbar-item");
-      expect(returnedElement[0].getAttribute('sub-widget-id')).to.equal("select");
+      let returnedLayoutElement  = element.getLayout(_uf.createUxDefinitions(dataObjReturnLayout, true));
+      expect(returnedLayoutElement[0].getAttribute('class')).to.equal("u-sw-select u-controlbar-item");
+      expect(returnedLayoutElement[0].getAttribute('sub-widget-id')).to.equal("select");
     });
 
-    it("getLayout should generate correct warning for incorrect property", function () {
+    it("getLayout method should generate correct warning for incorrect property/not defined for object in the browser's console", function () {
       const warnSpy = sinon.spy(console, 'warn');
       // eslint-disable-next-line no-undef
-      element.getLayout(_uf.createUxDefinitions(dataObj1, true));
+      element.getLayout(_uf.createUxDefinitions(dataObjIncorrectProperty, true));
       expect(warnSpy.calledWith(`SubWidgetsByProperty.getLayout: Property 'subwidgets-start' not defined for object. - Creation of sub-widgets skipped.`)).to.be.true;
       warnSpy.restore(); // Restore the original console.warn
     });
 
-    it("getLayout should generate correct warning for Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry", function () {
+    it("getLayout method should generate correct warning for Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry with incorrect widget definition in the browser's console", function () {
       const warnSpy = sinon.spy(console, 'warn');
       // eslint-disable-next-line no-undef
-      element.getLayout(_uf.createUxDefinitions(dataObj2, true));
+      element.getLayout(_uf.createUxDefinitions(dataObjSubwidgetNotFoundInClassRegistry, true));
       expect(warnSpy.calledWith(`SubWidgetsByProperty.getLayout: Widget definition with name 'UX.Select123' not found in UNIFACE.classRegistry. - Creation of sub-widget 'select'skipped.`)).to.be.true;
       warnSpy.restore(); // Restore the original console.warn
     });
 
-    it("getLayout should generate correct warning for property name not defined for object.`, `Creation of sub-widget '${subWidgetId}' skipped", function () {
+    it("getLayout method should generate correct warning for property name not defined for object.`, `Creation of sub-widget '${subWidgetId}' skipped", function () {
       const warnSpy = sinon.spy(console, 'warn');
       // eslint-disable-next-line no-undef
-      element.getLayout(_uf.createUxDefinitions(dataObj3, true));
+      element.getLayout(_uf.createUxDefinitions(dataObjPropertyNameNotDefined, true));
       expect(warnSpy.calledWith(`SubWidgetsByProperty.getLayout: Property 'select1_widget-class' not defined for object. - Creation of sub-widget 'select1' skipped.`)).to.be.true;
       warnSpy.restore(); // Restore the original console.warn
     });
 
-    it("getSubWidgetDefinitions should collects the subWidget definitions based on the properties and returns them", function () {
+    it("getSubWidgetDefinitions method should collects the subWidget definitions based on the properties and returns them", function () {
       let subWidgetDefinitionToCompare = {
         "select": {
           "styleClass": "u-sw-select",
@@ -1233,10 +1230,8 @@ import {
         }
       };
       // eslint-disable-next-line no-undef
-      let returnedElement  = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObj, true));
-      console.log("getSubWidgetDefinitions", returnedElement);
-      console.log("getSubWidgetDefinitions", Object(returnedElement));
-      expect(JSON.stringify(returnedElement)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
+      let returnedElementSubWidgetDefinition  = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjReturnLayout, true));
+      expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
     });
   });
 })();
