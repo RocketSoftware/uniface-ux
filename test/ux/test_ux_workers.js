@@ -1200,7 +1200,7 @@ import {
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjIncorrectProperty, true));
       expect(warnSpy.calledWith(`SubWidgetsByProperty.getLayout: Property 'subwidgets-start' not defined for object. - Creation of sub-widgets skipped.`)).to.be.true;
-      warnSpy.restore(); // Restore the original console.warn
+      warnSpy.restore(); // Restore the original console.warn.
     });
 
     it("getLayout() method should generate correct warning for Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry with incorrect widget definition in the browser's console", function () {
@@ -1208,7 +1208,7 @@ import {
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjSubwidgetNotFoundInClassRegistry, true));
       expect(warnSpy.calledWith(`SubWidgetsByProperty.getLayout: Widget definition with name 'UX.Select123' not found in UNIFACE.classRegistry. - Creation of sub-widget 'select'skipped.`)).to.be.true;
-      warnSpy.restore(); // Restore the original console.warn
+      warnSpy.restore(); // Restore the original console.warn.
     });
 
     it("getLayout() method should generate correct warning for property name not defined for object creation of sub-widget '${subWidgetId}' skipped in the browser console", function () {
@@ -1216,7 +1216,7 @@ import {
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjPropertyNameNotDefined, true));
       expect(warnSpy.calledWith(`SubWidgetsByProperty.getLayout: Property 'select1_widget-class' not defined for object. - Creation of sub-widget 'select1' skipped.`)).to.be.true;
-      warnSpy.restore(); // Restore the original console.warn
+      warnSpy.restore(); // Restore the original console.warn.
     });
 
     it("getSubWidgetDefinitions() method should collects the subWidget definitions based on the properties and returns them correctly", function () {
