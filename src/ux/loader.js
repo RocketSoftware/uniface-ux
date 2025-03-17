@@ -21,7 +21,6 @@ import { registerWidgetClass } from "./dsp_connector.js";
 
 
 // The UX field level widgets to include
-
 import {Button} from "./button.js";
 registerWidgetClass("UX.Button", Button);
 

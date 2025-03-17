@@ -34,7 +34,7 @@
   pointer-events: none;
 }
 
-/* Styling for when display-format is valrep. */
+/* Styling for value when display-format is valrep. */
 .u-listbox .u-value {
   color: var(--neutral-base-color);
   font-style: italic;
