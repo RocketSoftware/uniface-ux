@@ -1188,14 +1188,14 @@ import {
       expect(element.propId).to.equal(propId);
     });
 
-    it("getLayout method should generate and return layout for this setter", function () {
+    it("getLayout() method should generate and return layout for this setter", function () {
       // eslint-disable-next-line no-undef
       let returnedLayoutElement  = element.getLayout(_uf.createUxDefinitions(dataObjReturnLayout, true));
       expect(returnedLayoutElement[0].getAttribute('class')).to.equal("u-sw-select u-controlbar-item");
       expect(returnedLayoutElement[0].getAttribute('sub-widget-id')).to.equal("select");
     });
 
-    it("getLayout method should generate correct warning for incorrect property/not defined for object in the browser's console", function () {
+    it("getLayout() method should generate correct warning for incorrect property/not defined for object in the browser's console", function () {
       const warnSpy = sinon.spy(console, 'warn');
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjIncorrectProperty, true));
@@ -1203,7 +1203,7 @@ import {
       warnSpy.restore(); // Restore the original console.warn
     });
 
-    it("getLayout method should generate correct warning for Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry with incorrect widget definition in the browser's console", function () {
+    it("getLayout() method should generate correct warning for Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry with incorrect widget definition in the browser's console", function () {
       const warnSpy = sinon.spy(console, 'warn');
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjSubwidgetNotFoundInClassRegistry, true));
@@ -1211,7 +1211,7 @@ import {
       warnSpy.restore(); // Restore the original console.warn
     });
 
-    it("getLayout method should generate correct warning for property name not defined for object.`, `Creation of sub-widget '${subWidgetId}' skipped", function () {
+    it("getLayout() method should generate correct warning for property name not defined for object creation of sub-widget '${subWidgetId}' skipped in the browser console", function () {
       const warnSpy = sinon.spy(console, 'warn');
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjPropertyNameNotDefined, true));
@@ -1219,11 +1219,10 @@ import {
       warnSpy.restore(); // Restore the original console.warn
     });
 
-    it("getSubWidgetDefinitions method should collects the subWidget definitions based on the properties and returns them", function () {
+    it("getSubWidgetDefinitions() method should collects the subWidget definitions based on the properties and returns them correctly", function () {
       let subWidgetDefinitionToCompare = {
         "select": {
           "styleClass": "u-sw-select",
-          "triggers": [],
           "propPrefix": "select",
           "usefield": true,
           "delegatedProperties": ["html:disabled"]
