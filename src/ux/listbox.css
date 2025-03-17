@@ -1,4 +1,4 @@
-/* Styling unset and applied to slot for adding label */
+/* Styling unset and applied to slot for adding label. */
 .u-listbox {
   vertical-align: bottom;
   border: unset;
@@ -16,7 +16,7 @@
   outline: unset;
 }
 
-/* Styling for disabled and readonly states */
+/* Styling for disabled and readonly states. */
 .u-listbox[disabled] {
   cursor: not-allowed;
   opacity: var(--disabled-opacity);
@@ -34,7 +34,7 @@
   pointer-events: none;
 }
 
-/* Styling for when display-format is valrep */
+/* Styling for when display-format is valrep. */
 .u-listbox .u-value {
   color: var(--neutral-base-color);
   font-style: italic;
@@ -53,7 +53,7 @@
   content: ")";
 }
 
-/* Styling for the label and error icon */
+/* Styling for the label and error icon. */
 .u-listbox::part(label) {
   display: flex;
   justify-content: space-between;

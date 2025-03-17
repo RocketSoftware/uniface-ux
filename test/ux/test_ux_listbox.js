@@ -9,7 +9,7 @@
   const widgetClass = tester.getWidgetClass();
   const asyncRun = umockup.asyncRun;
 
-  // Custom test variables
+  // Custom test variables.
   const valRepArray = [
     {
       "value": "1",
@@ -35,7 +35,7 @@
 
   describe("Uniface Mockup tests", function () {
 
-    it("get class " + widgetName, function () {
+    it(`get class ${widgetName}`, function () {
       verifyWidgetClass(widgetClass);
     });
 
@@ -58,10 +58,10 @@
   });
 
 
-  describe(widgetName + ".processLayout", function () {
+  describe(`${widgetName}.processLayout()`, function () {
     let element;
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       verifyWidgetClass(widgetClass);
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
@@ -74,7 +74,7 @@
       });
 
       it("check instance of HTMLElement", function () {
-        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+        expect(element).instanceOf(HTMLElement, `Function processLayout() of ${widgetName} does not return an HTMLElement.`);
       });
 
       it("check tagName", function () {
@@ -86,7 +86,7 @@
       });
 
       it("check u-label-text", function () {
-        assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element");
+        assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element.");
       });
 
     });
@@ -100,23 +100,23 @@
       tester.construct();
     });
 
-    it("constructor", function () {
+    it("constructor()", function () {
       try {
         const widget = tester.construct();
-        assert(widget, "widget is not defined!");
+        assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues["class:u-listbox"], "Class is not defined");
+        assert(widgetClass.defaultValues["class:u-listbox"], "Class is not defined!");
       } catch (e) {
-        assert(false, "Failed to construct new widget, exception " + e);
+        assert(false, `Failed to construct new widget, exception ${e}`);
       }
     });
 
-    it("onConnect", function () {
+    it("onConnect()", function () {
       const element = tester.processLayout();
       const widget = tester.construct();
       tester.onConnect();
       assert(element, "Target element is not defined!");
-      assert(widget.elements.widget === element, "widget is not connected");
+      assert(widget.elements.widget === element, "Widget is not connected!");
     });
   });
 
@@ -137,11 +137,11 @@
     });
 
     for (const defaultClass in classes) {
-      it("check class '" + defaultClass + "'", function () {
+      it(`check class ' ${defaultClass} '`, function () {
         if (classes[defaultClass]) {
-          expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+          expect(element).to.have.class(defaultClass, `widget element has class  ${defaultClass}`);
         } else {
-          expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
+          expect(element).not.to.have.class(defaultClass, `widget element has no class  ${defaultClass}`);
         }
       });
     }
@@ -155,7 +155,7 @@
     });
 
     it("check size attribute", function () {
-      assert.equal(tester.defaultValues.size, undefined ,"Widget misses or has incorrect u-size element");
+      assert.equal(tester.defaultValues.size, undefined ,"Widget misses or has incorrect u-size element.");
     });
   });
 
@@ -214,7 +214,7 @@
       }).then(function () {
         const widget = tester.construct();
         let labelElement = widget.elements.widget.querySelector("span.u-label-text");
-        assert(labelElement.hasAttribute("hidden"), "Failed to hide the label text");
+        assert(labelElement.hasAttribute("hidden"), "Failed to hide the label text.");
         assert.equal(labelElement.innerText, "");
         assert.equal(labelElement.getAttribute("slot"), "");
       });
@@ -875,7 +875,7 @@
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to reset all properties, exception " + e);
+        assert(false, `Failed to reset all properties, exception ${e}`);
       }
     });
   });

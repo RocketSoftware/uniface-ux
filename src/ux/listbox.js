@@ -179,15 +179,15 @@ export class Listbox extends Widget {
         const totalHeight = optionHeight * size + borderHeight + slotPadding;
 
         const updatedCSS = `
-        slot:not([name]) {
-          max-height: ${totalHeight}px;
-          overflow-y: auto;
-        }
-        ::slotted(fluent-option) {
-          overflow: unset;
-          flex-shrink: 0;
-        }
-      `;
+          slot:not([name]) {
+            max-height: ${totalHeight}px;
+            overflow-y: auto;
+          }
+          ::slotted(fluent-option) {
+            overflow: unset;
+            flex-shrink: 0;
+          }
+        `;
         this.applyStyleSheet(element, updatedCSS);
       } else {
         // Show warning if size is NaN or less than or equal to 0.
