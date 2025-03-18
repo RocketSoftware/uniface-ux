@@ -1171,6 +1171,22 @@ import {
       "select_usefield": true,
       "select_delegated-properties":"html:disabled"
     };
+    const dataObjWithTwoSubWidgets = {
+      "subwidgets-start": "selectbutton",
+      "subwidgets-center": "",
+      "subwidgets-end": "",
+      "select_widget-class": "UX.Select",
+      "select:valrep": "1=a10=1025=2550=50100=100",
+      "select_overflow-behavior": "none",
+      "select:value": "1",
+      "select_usefield": true,
+      "select_delegated-properties":"html:disabled",
+      "button_widget-class": "UX.Button",
+      "button:value": "Me Button",
+      "button_usefield": true,
+      "button_overflow-behavior": "move",
+      "button_delegated-properties":"html:readonly"
+    };
     beforeEach(function () {
       widgetClass = Widget;
       tagName = "span";
@@ -1230,6 +1246,33 @@ import {
       };
       // eslint-disable-next-line no-undef
       let returnedElementSubWidgetDefinition  = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjReturnLayout, true));
+      expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
+    });
+
+    it("getSubWidgetDefinitions() method should return empty subWidgetDefinitions {}, if objectDefinition do not have correct propid", function () {
+      let subWidgetDefinitionToCompare = {};
+      // eslint-disable-next-line no-undef
+      let returnedElementSubWidgetDefinition  = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjPropertyNameNotDefined, true));
+      expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
+    });
+
+    it("getSubWidgetDefinitions() method should return should return array of object with all subWidget definition,if it have more than 1 subwidgets", function () {
+      let subWidgetDefinitionToCompare = {
+        "select": {
+          "styleClass": "u-sw-select",
+          "propPrefix": "select",
+          "usefield": true,
+          "delegatedProperties": ["html:disabled"]
+        },
+        "button": {
+          "styleClass": "u-sw-button",
+          "propPrefix": "button",
+          "usefield": true,
+          "delegatedProperties": ["html:readonly"]
+        }
+      };
+      // eslint-disable-next-line no-undef
+      let returnedElementSubWidgetDefinition  = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjWithTwoSubWidgets, true));
       expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
     });
   });
