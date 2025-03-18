@@ -1256,7 +1256,7 @@ import {
       expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
     });
 
-    it("getSubWidgetDefinitions() method should return should return array of object with all subWidget definition,if it have more than 1 subwidgets", function () {
+    it("getSubWidgetDefinitions() method should return array of object with all subWidget definition,if it have more than 1 subwidgets", function () {
       let subWidgetDefinitionToCompare = {
         "select": {
           "styleClass": "u-sw-select",
