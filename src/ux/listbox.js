@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-check
 import { Widget } from "./widget.js";
 import {
   Element,
@@ -52,7 +52,7 @@ export class Listbox extends Widget {
       super(widgetClass);
       this.registerSetter(widgetClass, propId, this);
       this.registerDefaultValue(widgetClass, propId, defaultValue);
-      // Register a setter for display format, ensuring it also updates the worker's refresh function.
+      // Register a setter for display-format, ensuring it also updates the worker's refresh function.
       this.registerSetter(widgetClass, "display-format", this);
       // Register a setter for valrep, ensuring it also updates the worker's refresh function.
       this.registerSetter(widgetClass, "valrep", this);
@@ -119,6 +119,13 @@ export class Listbox extends Widget {
    * @extends {Worker}
    */
   static SizeAttribute = class extends Worker {
+
+    /**
+     * Creates an instance of SizeAttribute.
+     * @param {typeof Widget} widgetClass
+     * @param {String} propId
+     * @param {String} defaultValue
+     */
     constructor(widgetClass, propId, defaultValue) {
       super(widgetClass);
       this.propId = propId;
