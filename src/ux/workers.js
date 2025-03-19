@@ -419,7 +419,6 @@ export class SlottedSubWidget extends Element {
  *   "sub-widget1;sub-widget2;sub-widget3;sub-widget4"
  * For each sub-widget, additional properties need to be available:
  *   - "<subWidgetId>_widget-class" - defines the sub-widget's widget-class as registered with UNIFACE.classRegistry
- *   - "<subWidgetId>:properties" - defines a list of property ids that need to be passed on to the sub-widget;
  *   - "<subWidgetId>_delegated-properties" - defines a list of properties that need to be delegated to the sub-widget;
  *      if not defined nothing will be delegated to the sub-widget.
  * The sub-widgets receive a style-class, of syntax "u-sw-<subWidgetId>", to allow custom styling of the sub-widgets.
