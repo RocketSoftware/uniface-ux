@@ -130,9 +130,6 @@ module.exports = [
         // for umockup
         "umockup": "readonly"
       }
-    },
-    "rules": {
-      "quote-props": "off"
     }
   }
 ];
