@@ -14,8 +14,7 @@ export class TestWidget extends Widget {
   static structure = new Element(this, "fluent-text-field", "", "", [
     new StyleClass(this, ["u-test-field", "u-test-field-2"]),
     new HtmlAttribute(this, "html:current-value", "current-value", ""),
-    new HtmlValueAttributeBoolean(this, "value", "checked", false)
-  ], [
+    new HtmlValueAttributeBoolean(this, "value", "checked", false),
     new SlottedSubWidget(this, "span", "u-change-button", ".u-change-button", "end", "change-button", "UX.Button", {
       "icon": "",
       "icon-position": "end",
@@ -23,8 +22,7 @@ export class TestWidget extends Widget {
       "classes:u-change-button": true,
       "html:title": "",
       "html:appearance": ""
-    }, false, ["detail"])
-  ], [
+    }, false, ["detail"]),
     new Trigger(this, "onchange", "change", true),
     new Trigger(this, "detail", "click", true)
   ]);
