@@ -62,8 +62,7 @@ export class NumberField extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new HtmlAttributeMinMax(this, "html:min", "html:max", undefined, undefined),
-    new StyleClass(this, ["u-number-field", "outline"])
-  ], [
+    new StyleClass(this, ["u-number-field", "outline"]),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
@@ -76,8 +75,7 @@ export class NumberField extends Widget {
       "detail"
     ], [
       "html:disabled"
-    ])
-  ], [
+    ]),
     new Trigger(this, "onchange", "change", true)
   ]);
 

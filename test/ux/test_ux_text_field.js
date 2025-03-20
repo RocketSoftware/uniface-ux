@@ -35,9 +35,7 @@
       expect(structure.tagName).to.equal("fluent-text-field");
       expect(structure.styleClass).to.equal("");
       expect(structure.elementQuerySelector).to.equal("");
-      expect(structure.attributeDefines).to.be.an("array");
-      expect(structure.elementDefines).to.be.an("array");
-      expect(structure.triggerDefines).to.be.an("array");
+      expect(structure.childWorkers).to.be.an("array");
       expect(structure.isSetter).to.equal(true);
       expect(structure.hidden).to.equal(false);
     });
@@ -178,9 +176,12 @@
     let element;
 
     beforeEach(function () {
-      tester.dataInit();
-      element = tester.element;
-      assert(element, "Widget top element is not defined!");
+      return asyncRun(function () {
+        tester.dataInit();
+      }).then(function () {
+        element = tester.element;
+        assert(element, "Widget top element is not defined!");
+      });
     });
 
     for (const defaultClass in classes) {
@@ -203,8 +204,8 @@
     });
 
     it("check 'tabindex' attributes", function () {
-      assert(element.hasAttribute("tabindex"), "Tabindex element should be present by default.");
-      assert.equal(element.getAttribute("tabindex"), "0", "Tabindex element should be outline by default.");
+      assert(element.hasAttribute("tabindex"), "Tabindex attribute should be present by default.");
+      assert.equal(element.getAttribute("tabindex"), "0", "Default value of tabindex attribute should be 'outline'.");
     });
 
     it("check 'size'", function () {
@@ -213,27 +214,27 @@
 
     it("check label-text, label-position, changebutton", function () {
       assert.equal(defaultValues["changebutton"], false, "Default value of change button should be false.");
-      assert.equal(defaultValues["label-position"], "above", "Default value of label-position will be above.");
-      assert.equal(defaultValues["label-text"], undefined, "Default value of label-text will be undefined.");
+      assert.equal(defaultValues["label-position"], "above", "Default value of label-position should be above.");
+      assert.equal(defaultValues["label-text"], undefined, "Default value of label-text should be undefined.");
     });
 
     it("check type attributes", function () {
-      assert(element.hasAttribute("type"), "Text span element should be hidden by default.");
-      assert.equal(element.getAttribute("type"), "text", "Type element should be text by default.");
+      assert(element.hasAttribute("type"), "Type attribute should be present by default.");
+      assert.equal(element.getAttribute("type"), "text", "Default value of type attribute should be 'text'.");
     });
 
     it("check appearance attributes", function () {
-      assert(element.hasAttribute("appearance"), "Appearance of the element should be present by default.");
-      assert.equal(element.getAttribute("appearance"), "outline", "Appearance of the element should be outline by default.");
+      assert(element.hasAttribute("appearance"), "Appearance attribute should be present by default.");
+      assert.equal(element.getAttribute("appearance"), "outline", "Default value of appearance attribute should be 'outline'.");
     });
 
     it("check changebutton icon-position", function () {
-      assert.equal(defaultValues["changebutton:icon-position"], "end", "Default value of change button icon-position should be end.");
+      assert.equal(defaultValues["changebutton:icon-position"], "end", "Default value of change button icon-position should be 'end'.");
     });
 
     it("check changebutton tab-index, appearance", function () {
-      assert.equal(defaultValues["changebutton:html:tabindex"], "-1", "Default value of change button tab-index should be -1.");
-      assert.equal(defaultValues["changebutton:html:appearance"], "stealth", "Default value of change button appearance should be stealth.");
+      assert.equal(defaultValues["changebutton:html:tabindex"], "-1", "Default value of change button tab-index should be '-1'.");
+      assert.equal(defaultValues["changebutton:html:appearance"], "stealth", "Default value of change button appearance should be 'stealth'.");
     });
 
     it("check value", function () {

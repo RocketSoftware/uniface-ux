@@ -38,25 +38,21 @@ export class DataGridCollection extends Widget {
     new Worker.HtmlAttribute(this, "html:title", "title", undefined),
     new Worker.HtmlAttribute(this, "html:base-layer-luminance", "baseLayerLuminance", undefined, false),
     new Worker.HtmlAttributeChoice(this, "responsive-type", "u-responsive-type", ["horizontal-scroll", "wrap"], "horizontal-scroll", true),
-    new Worker.HtmlAttributeClass(this, "html:hidden", "u-hidden", false)
-  ], [
+    new Worker.HtmlAttributeClass(this, "html:hidden", "u-hidden", false),
     new Worker.SlottedElement(this, "span", "u-datagrid-labeltext", ".u-datagrid-labeltext", "", "label-text", ""),
     new Worker.Element(this, "fluent-data-grid", "u-datagrid", ".u-datagrid", [
       new Worker.HtmlAttribute(this, undefined, "role", "grid", false),
       new Worker.HtmlAttribute(this, undefined, "tabIndex", "0", false),
       new Worker.HtmlAttribute(this, undefined, "generate-header", "default", false),
-      new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", true)
-    ], [
+      new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", true),
       new Worker.Element(this, "fluent-data-grid-row", "u-datagrid-header-row", ".u-datagrid-header-row", [
         new Worker.HtmlAttribute(this, undefined, "row-type", "header", false),
         new Worker.HtmlAttribute(this, undefined, "role", "row", false),
-        new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", false)
-      ], [
+        new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", false),
         new Worker.SubWidgetsByFields(this, "exclude", "UX.DataGridColumnHeader")
       ]),
       new Worker.WidgetForOccurrence(this, "span", "uocc:{{getName()}}")
-    ])
-  ], [
+    ]),
     new Worker.Trigger(this, "detail", "click", true)
   ]);
 }
@@ -92,8 +88,7 @@ export class DataGridColumnHeader extends Widget {
     new Worker.HtmlAttribute(this, undefined, "grid-column", "auto", true),
     new Worker.HtmlAttribute(this, undefined, "cell-type", "columnheader", true),
     new Worker.HtmlAttribute(this, "column-title", "title", undefined, true),
-    new Worker.HtmlAttributeNumber(this, undefined, "tabIndex", -1, undefined, -1, true)
-  ], [
+    new Worker.HtmlAttributeNumber(this, undefined, "tabIndex", -1, undefined, -1, true),
     new Worker.SlottedElement(this, "span", "control-bar", ".control-bar", "", "label-text", "")
   ]);
 }
@@ -127,8 +122,7 @@ export class DataGridOccurrence extends Widget {
     new Worker.StyleClass(this, ["u-datagrid-content-row"]),
     new Worker.HtmlAttribute(this, undefined, "row-type", "default", true),
     new Worker.HtmlAttribute(this, undefined, "role", "row", false),
-    new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", false)
-  ], [
+    new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", false),
     new Worker.WidgetsByFields(this, "span","exclude", "ufld:{{getName()}}")
   ]);
 }

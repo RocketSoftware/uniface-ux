@@ -114,11 +114,10 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
     let tagName;
     let styleClass;
     let elementQuerySelector;
-    let attributeDefines;
-    let elementDefines;
-    let triggerDefines;
+    let childWorkers;
     let element;
     let definitions;
+    let expectedQuerySelectors;
 
     beforeEach(function () {
       Widget.structure = {};
@@ -134,11 +133,9 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
       tagName = "DIV";
       elementQuerySelector = "div";
       styleClass = "styleClass";
-      attributeDefines = [new StyleClass(widgetClass, ["u-switch"]), new HtmlAttribute(widgetClass, "html:role", "role", "switch")];
-      elementDefines = [new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "label-text"),
-        new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message")];
-      triggerDefines = [new Trigger(widgetClass, "onchange", "change", true)];
-      element = new Element(widgetClass, tagName, styleClass, elementQuerySelector, attributeDefines, elementDefines, triggerDefines);
+      childWorkers = [new StyleClass(widgetClass, ["u-switch"]), new HtmlAttribute(widgetClass, "html:role", "role", "switch"), new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "label-text"), new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"), new Trigger(widgetClass, "onchange", "change", true)];
+      expectedQuerySelectors = ["div", "div", ".u-label-text", ".u-checked-message", "div"];
+      element = new Element(widgetClass, tagName, styleClass, elementQuerySelector, childWorkers);
     });
 
     it("should initialize with correct properties", function () {
@@ -146,17 +143,12 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
       expect(element.tagName).to.equal(tagName);
       expect(element.styleClass).to.equal(styleClass);
       expect(element.elementQuerySelector).to.equal(elementQuerySelector);
-      expect(element.attributeDefines).to.equal(attributeDefines);
-      expect(element.elementDefines).to.equal(elementDefines);
-      expect(element.triggerDefines).to.equal(triggerDefines);
+      expect(element.childWorkers).to.equal(childWorkers);
     });
 
-    it("check elementQuerySelector changed for all elements", function () {
-      attributeDefines.forEach((attributeDefine) => {
-        expect(attributeDefine.elementQuerySelector).to.equal("div");
-      });
-      triggerDefines.forEach((triggerDefine) => {
-        expect(triggerDefine.elementQuerySelector).to.equal("div");
+    it("check elementQuerySelector has been inherited from Element if not already present", function () {
+      childWorkers.forEach((childWorker, index) => {
+        expect(childWorker.elementQuerySelector).to.equal(expectedQuerySelectors[index]);
       });
     });
 

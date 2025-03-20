@@ -92,14 +92,12 @@ export class Switch extends Widget {
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength")
-  ], [
+    new IgnoreProperty(this, "html:maxlength"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text", ""),
     new SlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"),
     new SlottedElement(this, "span", "u-unchecked-message", ".u-unchecked-message", "unchecked-message", "unchecked-message"),
     new this.SwitchSlottedError(this, "span", "u-error-icon-unchecked", ".u-error-icon-unchecked", "unchecked-message", ".u-unchecked-message"),
-    new this.SwitchSlottedError(this, "span", "u-error-icon-checked", ".u-error-icon-checked", "checked-message", ".u-checked-message")
-  ], [
+    new this.SwitchSlottedError(this, "span", "u-error-icon-checked", ".u-error-icon-checked", "checked-message", ".u-checked-message"),
     new Trigger(this, "onchange", "change", true)
   ]);
 
