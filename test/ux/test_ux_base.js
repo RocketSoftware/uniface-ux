@@ -1,10 +1,13 @@
-import { Button } from "../../src/ux/button/button.js";
 import { Base } from "../../src/ux/framework/base.js";
 import { Worker } from "../../src/ux/framework/workers.js";
 import { Widget } from "../../src/ux/framework/widget.js";
+import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
 
 (function () {
   "use strict";
+
+  // This test depends on Button, so get it from registry
+  const Button = getWidgetClass("UX.Button");
 
   const expect = chai.expect;
   const sandbox = sinon.createSandbox();

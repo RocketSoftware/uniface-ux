@@ -1,17 +1,16 @@
-import { Button } from "../../src/ux/button/button.js";
 import { Widget } from "../../src/ux/framework/widget.js";
 import {
   StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget,
   SubWidgetsByProperty, BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean,
   HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep
 } from "../../src/ux/framework/workers.js";
-import { registerWidgetClass } from "../../src/ux/framework/dsp_connector.js";
+import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
 
 (function () {
   "use strict";
 
-  // This test also depends on Button, still registration is needed
-  registerWidgetClass("UX.Button", Button);
+  // This test depends on Button, so get it from registry
+  const Button = getWidgetClass("UX.Button");
 
   const expect = chai.expect;
 
