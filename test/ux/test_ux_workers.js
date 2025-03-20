@@ -136,7 +136,7 @@ import {
       element = new Element(widgetClass, tagname, styleclass, elementQuerySelector, attributeDefines, elementDefines, triggerDefines);
     });
 
-    it("should initialize with correct properties Elements class", function () {
+    it("should initialize with correct properties for Elements class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.tagName).to.equal(tagname);
       expect(element.styleClass).to.equal(styleclass);
@@ -146,7 +146,7 @@ import {
       expect(element.triggerDefines).to.equal(triggerDefines);
     });
 
-    it("Check elementQuerySelector changed for all elements Elements class", function () {
+    it("Check elementQuerySelector changed for all elements for Elements class", function () {
       attributeDefines.forEach((attributeDefine) => {
         expect(attributeDefine.elementQuerySelector).to.equal("div");
       });
@@ -156,7 +156,7 @@ import {
     });
 
     // Definitions doesn't do anything
-    it("Check Generate layout Elements class", function () {
+    it("Check Generate layout for Elements class", function () {
       let layoutElement = element.getLayout(definitions);
 
       expect(layoutElement).to.have.tagName("DIV");
@@ -212,7 +212,7 @@ import {
       slottedElement = new SlottedElement(widgetClass, "", "", "", "", propText, defaultText, propIcon, defaultIcon);
     });
 
-    it("should initialize with correct properties Slotted Elements class", function () {
+    it("should initialize with correct properties for Slotted Elements class", function () {
       expect(slottedElement.widgetClass).to.equal(widgetClass);
       expect(slottedElement.textPropId).to.equal(propText);
       expect(slottedElement.textDefaultValue).to.equal(defaultText);
@@ -220,12 +220,12 @@ import {
       expect(slottedElement.iconDefaultValue).to.equal(defaultIcon);
     });
 
-    it("Check getters/setters changed for propIcon, propText Slotted Elements class", function () {
+    it("Check getters/setters changed for propIcon, propText for Slotted Elements class", function () {
       expect(slottedElement.widgetClass.defaultValues.icon).to.equal(defaultIcon);
       expect(slottedElement.widgetClass.defaultValues.text).to.equal(defaultText);
     });
 
-    it('should refresh correctly Slotted Elements class', function () {
+    it('should refresh correctly for Slotted Elements class', function () {
       slottedElement.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.hidden).to.equal(false);
       expect(widgetInstance.elements.widget.classList[0]).to.equal("ms-Icon");
@@ -259,11 +259,11 @@ import {
       slottedError = new SlottedError(widgetClass, "", "", "", "");
     });
 
-    it("should initialize with correct properties SlottedError class", function () {
+    it("should initialize with correct properties for SlottedError class", function () {
       expect(slottedError.widgetClass).to.equal(widgetClass);
     });
 
-    it("Check setters were added SlottedError class", function () {
+    it("Check setters were added for SlottedError class", function () {
       let setters = Object.keys(slottedError.widgetClass.setters);
       let errorArray = [
         "error",
@@ -278,7 +278,7 @@ import {
       expect(setters).to.include(errorArray[3]);
     });
 
-    it('should refresh correctly SlottedError class', function () {
+    it('should refresh correctly for SlottedError class', function () {
       const widgetInstance = {
         "data": {
           "error": true,
@@ -343,16 +343,16 @@ import {
       slottedWidget = new SlottedSubWidget(widgetClass, tagName, "styleClass", "", "", subWidgetId, subWidgetName, {}, "");
     });
 
-    it("should initialize with correct properties SlottedSubWidget class", function () {
+    it("should initialize with correct properties for SlottedSubWidget class", function () {
       expect(slottedWidget.widgetClass).to.equal(widgetClass);
     });
 
-    it("Check getters/setters changed and subWidget added SlottedSubWidget class", function () {
+    it("Check getters/setters changed and subWidget added for SlottedSubWidget class", function () {
       expect(slottedWidget.subWidgetClass.name).to.equal("Button");
       expect(slottedWidget.propId).to.equal("undefined");
     });
 
-    it("Check Generate Layout", function () {
+    it("Check Generate Layout for SlottedSubWidget class", function () {
       let layoutElement = slottedWidget.getLayout();
 
       expect(layoutElement).to.have.class('u-sw-undefined');
@@ -360,7 +360,7 @@ import {
       expect(layoutElement).to.have.tagName('FLUENT-BUTTON');
     });
 
-    it('should refresh correctly SlottedSubWidget class', function () {
+    it('should refresh correctly for SlottedSubWidget class', function () {
       const widgetInstance = {
         "data": {
           "undefined": true
@@ -416,7 +416,7 @@ import {
       worker = new BaseHtmlAttribute(widgetClass, propId, attrName, defaultValue);
     });
 
-    it("should initialize with correct properties BaseHtmlAttribute class", function () {
+    it("should initialize with correct properties for BaseHtmlAttribute class", function () {
       expect(worker.widgetClass).to.equal(widgetClass);
       expect(worker.propId).to.equal(propId);
       expect(worker.attrName).to.equal(attrName);
@@ -424,14 +424,14 @@ import {
 
     });
 
-    it("Check Getters/Setters BaseHtmlAttribute class", function () {
+    it("Check Getters/Setters for BaseHtmlAttribute class", function () {
       let length = worker.widgetClass.setters.value.length;
 
       expect(worker.widgetClass.getters.value.propId).to.equal(propId);
       expect(worker.widgetClass.setters.value[length - 1].propId).to.equal(propId);
     });
 
-    it("Check setHtmlAttribute BaseHtmlAttribute class", function () {
+    it("Check setHtmlAttribute for BaseHtmlAttribute class", function () {
       element = {
         "elements": {
           "widget": document.createElement("div")
@@ -442,11 +442,11 @@ import {
     });
 
     // Refresh doesn't do anything
-    it("check refresh BaseHtmlAttribute class", function () {
+    it("check refresh for BaseHtmlAttribute class", function () {
       worker.refresh({});
     });
 
-    it("check getValue BaseHtmlAttribute class", function () {
+    it("check getValue for BaseHtmlAttribute class", function () {
       const widgetInstance = {
         "elements": {
           "widget": document.createElement("div")
@@ -460,7 +460,7 @@ import {
     });
 
     // getValueUpdaters doesn't do anything
-    it("check getValueUpdaters BaseHtmlAttribute class", function () {
+    it("check getValueUpdaters for BaseHtmlAttribute class", function () {
       const widgetInstance = {
         "elements": {
           "widget": [document.createElement("div"), document.createElement("span")]
@@ -501,12 +501,12 @@ import {
       element = new HtmlAttribute(widgetClass, propId, attrName, defaultValue);
     });
 
-    it("should initialize with correct properties HtmlAttribute class", function () {
+    it("should initialize with correct properties for HtmlAttribute class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
     });
 
 
-    it('should refresh correctly HtmlAttribute class', function () {
+    it('should refresh correctly for HtmlAttribute class', function () {
       const widgetInstance = {
         "data": {
           "icon-position": "start-end"
@@ -554,13 +554,13 @@ import {
       element = new HtmlAttributeChoice(widgetClass, propId, attrName, choices, defaultValue);
     });
 
-    it("should initialize with correct properties HtmlAttributeChoice class", function () {
+    it("should initialize with correct properties for HtmlAttributeChoice class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.choices).to.equal(choices);
     });
 
 
-    it('should refresh correctly HtmlAttributeChoice class', function () {
+    it('should refresh correctly for HtmlAttributeChoice class', function () {
       const widgetInstance = {
         "data": {
           "icon-position": "start-end"
@@ -610,14 +610,14 @@ import {
       element = new HtmlAttributeNumber(widgetClass, propId, attrName, min, max, defaultValue);
     });
 
-    it("should initialize with correct properties HtmlAttributeNumber class", function () {
+    it("should initialize with correct properties for HtmlAttributeNumber class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.min).to.equal(min);
       expect(element.max).to.equal(max);
     });
 
 
-    it('should refresh correctly HtmlAttributeNumber class', function () {
+    it('should refresh correctly for HtmlAttributeNumber class', function () {
       const widgetInstance = {
         "data": {
           "numberValue": "126"
@@ -663,12 +663,12 @@ import {
       element = new HtmlAttributeBoolean(widgetClass, propId, attrName, defaultValue);
     });
 
-    it("should initialize with correct properties HtmlAttributeBoolean class", function () {
+    it("should initialize with correct properties for HtmlAttributeBoolean class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
     });
 
 
-    it('should refresh correctly HtmlAttributeBoolean class', function () {
+    it('should refresh correctly for HtmlAttributeBoolean class', function () {
       const widgetInstance = {
         "data": {
           "icon-position": "1-start-end"
@@ -722,11 +722,11 @@ import {
       returnedProcess = Button.processLayout(buttonWidget, "");
     });
 
-    it("should initialize with correct properties HtmlValueAttributeBoolean class", function () {
+    it("should initialize with correct properties for HtmlValueAttributeBoolean class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
     });
 
-    it('should refresh correctly HtmlValueAttributeBoolean class', function () {
+    it('should refresh correctly for HtmlValueAttributeBoolean class', function () {
       const widgetInstance = {
         "data": {
           "icon-position": "1-start-end"
@@ -780,7 +780,7 @@ import {
       element = new HtmlAttributeMinMaxLength(widgetClass, propMin, propMax, defaultMin, defaultMax);
     });
 
-    it("should initialize with correct properties HtmlAttributeMinMaxLength class", function () {
+    it("should initialize with correct properties for HtmlAttributeMinMaxLength class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.propMin).to.equal(propMin);
       expect(element.propMax).to.equal(propMax);
@@ -788,7 +788,7 @@ import {
       expect(element.defaultMax).to.equal(defaultMax);
     });
 
-    it("Check Setters HtmlAttributeMinMaxLength class", function () {
+    it("Check Setters for HtmlAttributeMinMaxLength class", function () {
       let setterKeys = Object.keys(element.widgetClass.setters);
 
       expect(setterKeys[setterKeys.length - 2]).to.equal("min");
@@ -796,7 +796,7 @@ import {
     });
 
 
-    it('should refresh correctly HtmlAttributeMinMaxLength class', function () {
+    it('should refresh correctly for HtmlAttributeMinMaxLength class', function () {
 
       divElement = document.createElement("div");
       divElement.value = "";
@@ -854,11 +854,11 @@ import {
       element = new StyleProperty(widgetClass, property);
     });
 
-    it("should initialize with correct properties StyleProperty class", function () {
+    it("should initialize with correct properties for StyleProperty class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
     });
 
-    it("Check Setters and Default values StyleProperty class", function () {
+    it("Check Setters and Default values for StyleProperty class", function () {
       let setterKeys = Object.keys(element.widgetClass.setters);
       let defaultKeys = Object.keys(element.widgetClass.defaultValues);
       let lengthKeys = setterKeys.length;
@@ -871,7 +871,7 @@ import {
     });
 
 
-    it('should refresh correctly StyleProperty class', function () {
+    it('should refresh correctly for StyleProperty class', function () {
       const widgetInstance = {
         "data": {
           "style:color": "red"
@@ -916,17 +916,17 @@ import {
       element = new Trigger(widgetClass, triggerName, eventName, validate);
     });
 
-    it("should initialize with correct properties Trigger class", function () {
+    it("should initialize with correct properties for Trigger class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.triggerName).to.equal(triggerName);
     });
 
-    it("Check registerTrigger functionality Trigger class", function () {
+    it("Check registerTrigger functionality for Trigger class", function () {
       let registerTriggerKey = Object.keys(element.widgetClass.triggers);
       expect(registerTriggerKey).to.include(triggerName);
     });
 
-    it("Check getTriggerMapping functionality Trigger class", function () {
+    it("Check getTriggerMapping functionality for Trigger class", function () {
       const widgetInstance = {
         "elements": {
           "widget": document.createElement("div")
@@ -967,12 +967,12 @@ import {
       element = new IgnoreProperty(widgetClass, propId, defaultValue);
     });
 
-    it("Should initialize with correct properties IgnoreProperty worker", function () {
+    it("Should initialize with correct properties for IgnoreProperty worker", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.propId).to.equal(propId);
     });
 
-    it("Check Setters and Default values IgnoreProperty worker", function () {
+    it("Check Setters and Default values for IgnoreProperty worker", function () {
       let setterKeys = Object.keys(element.widgetClass.setters);
       expect(setterKeys[setterKeys.length - 1]).to.equal("tri-state");
       expect(element.defaultValue).to.equal(defaultValue);
@@ -1013,7 +1013,7 @@ import {
       expect(element.elementQuerySelector).to.equal(elementQuerySelector);
     });
 
-    it("Check Setters and Default values SlottedElementsByValRep worker", function () {
+    it("Check Setters and Default values for SlottedElementsByValRep worker", function () {
       let setterKeys = Object.keys(element.widgetClass.setters);
       let defaultValues = element.widgetClass.defaultValues;
       let setterKeysForUniface = Object.keys(element.widgetClass.setters);
@@ -1025,7 +1025,7 @@ import {
       expect(defaultValues["valrep"].length).to.equal(0);
     });
 
-    it('Should refresh correctly SlottedElementsByValRep worker', function () {
+    it('Should refresh correctly for SlottedElementsByValRep worker', function () {
       const valRepArray = [
         {
           "value": "1",
@@ -1142,7 +1142,7 @@ import {
       element = new SubWidgetsByProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
     });
 
-    it("should initialize with correct properties for subWidgetsByProperty worker", function () {
+    it("should initialize with correct properties for SubWidgetsByProperty worker", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.tagName).to.equal(tagName);
       expect(element.styleClass).to.equal(styleClass);
@@ -1150,14 +1150,14 @@ import {
       expect(element.propId).to.equal(propId);
     });
 
-    it("getLayout() method should generate and return layout for this setter", function () {
+    it("getLayout() method should generate and return layout for this setter for SubWidgetsByProperty worker", function () {
       // eslint-disable-next-line no-undef
       let returnedLayoutElement  = element.getLayout(_uf.createUxDefinitions(dataObjReturnLayout, true));
       expect(returnedLayoutElement[0].getAttribute('class')).to.equal("u-sw-select u-controlbar-item");
       expect(returnedLayoutElement[0].getAttribute('sub-widget-id')).to.equal("select");
     });
 
-    it("getLayout() method should generate correct warning for incorrect property/not defined for object in the browser's console", function () {
+    it("getLayout() method should generate correct warning for incorrect property/not defined for object in the browser's console for SubWidgetsByProperty worker", function () {
       const warnSpy = sinon.spy(console, 'warn');
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjIncorrectProperty, true));
@@ -1165,7 +1165,7 @@ import {
       warnSpy.restore(); // Restore the original console.warn.
     });
 
-    it("getLayout() method should generate correct warning for Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry with incorrect widget definition in the browser's console", function () {
+    it("getLayout() method should generate correct warning for Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry with incorrect widget definition in the browser's console for SubWidgetsByProperty worker", function () {
       const warnSpy = sinon.spy(console, 'warn');
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjSubwidgetNotFoundInClassRegistry, true));
@@ -1173,7 +1173,7 @@ import {
       warnSpy.restore(); // Restore the original console.warn.
     });
 
-    it("getLayout() method should generate correct warning for property name not defined for object creation of sub-widget '${subWidgetId}' skipped in the browser console", function () {
+    it("getLayout() method should generate correct warning for property name not defined for object creation of sub-widget '${subWidgetId}' skipped in the browser console for SubWidgetsByProperty worker", function () {
       let data = Object.assign({}, dataObjPropertyNameNotDefined);
       const warnSpy = sinon.spy(console, 'warn');
       // eslint-disable-next-line no-undef
@@ -1182,7 +1182,7 @@ import {
       warnSpy.restore(); // Restore the original console.warn.
     });
 
-    it("getSubWidgetDefinitions() method should collects the subWidget definitions based on the properties and returns them correctly", function () {
+    it("getSubWidgetDefinitions() method should collects the subWidget definitions based on the properties and returns them correctly for SubWidgetsByProperty worker", function () {
       let subWidgetDefinitionToCompare = {
         "select": {
           "styleClass": "u-sw-select",
@@ -1196,7 +1196,7 @@ import {
       expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
     });
 
-    it("getSubWidgetDefinitions() method should return styleClass,propPrefix,delegatedProperties,usefield as subWidgetDefinitions, if objectDefinition do not have correct propid", function () {
+    it("getSubWidgetDefinitions() method should return styleClass,propPrefix,delegatedProperties,usefield as subWidgetDefinitions, if objectDefinition do not have correct propid for SubWidgetsByProperty worker", function () {
       let subWidgetDefinitionToCompare = {
         "select1": {
           "styleClass": "u-sw-select1",
@@ -1210,7 +1210,7 @@ import {
       expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
     });
 
-    it("getSubWidgetDefinitions() method should return array of object with all subWidget definition,if it have more than 1 subwidgets", function () {
+    it("getSubWidgetDefinitions() method should return array of object with all subWidget definition,if it have more than 1 subwidgets for SubWidgetsByProperty worker", function () {
       let subWidgetDefinitionToCompare = {
         "select": {
           "styleClass": "u-sw-select",
