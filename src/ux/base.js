@@ -11,8 +11,6 @@ import { Worker } from "./workers.js"; // eslint-disable-line no-unused-vars
 export class Base {
 
   static formatErrorMessage = "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.";
-  // The uxInterfaceVersion is used to specify which UX Interface API is utilized.
-  static uxInterfaceVersion = 2;
 
   constructor() {}
 
