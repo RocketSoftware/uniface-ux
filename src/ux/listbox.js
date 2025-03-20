@@ -124,7 +124,7 @@ export class Listbox extends Widget {
      * Creates an instance of SizeAttribute.
      * @param {typeof Widget} widgetClass
      * @param {String} propId
-     * @param {String} defaultValue
+     * @param {String|undefined} defaultValue
      */
     constructor(widgetClass, propId, defaultValue) {
       super(widgetClass);
@@ -245,11 +245,9 @@ export class Listbox extends Widget {
     new this.ListboxSelectedValue(this, "value", ""),
     new this.SizeAttribute(this, "size", undefined),
     new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength")
-  ], [
+    new IgnoreProperty(this, "html:maxlength"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error")
-  ], [
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error"),
     new Trigger(this, "onchange", "change", true)
   ]);
 
