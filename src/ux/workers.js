@@ -419,10 +419,8 @@ export class SlottedSubWidget extends Element {
  *   "sub-widget1;sub-widget2;sub-widget3;sub-widget4"
  * For each sub-widget, additional properties need to be available:
  *   - "<subWidgetId>_widget-class" - defines the sub-widget's widget-class as registered with UNIFACE.classRegistry
- *   - "<subWidgetId>:properties" - defines a list of property ids that need to be passed on to the sub-widget;
- *     if not defined, all properties are passed on to the sub-widget.
- *   - "<subWidgetId>:triggers" - defines a list of trigger names that need to be mapped on to the wub-widget;
- *     if not defined, all triggers are mapped to the sub-widget.
+ *   - "<subWidgetId>_delegated-properties" - defines a list of properties that need to be delegated to the sub-widget;
+ *      if not defined nothing will be delegated to the sub-widget.
  * The sub-widgets receive a style-class, of syntax "u-sw-<subWidgetId>", to allow custom styling of the sub-widgets.
  * @export
  * @class WidgetsByProperty
@@ -501,18 +499,15 @@ export class SubWidgetsByProperty extends Element {
     if (subWidgetIds) {
       subWidgetIds.split("")?.forEach((subWidgetId) => {
         const classNamePropId = `${subWidgetId}_widget-class`;
-        const triggersPropId = `${subWidgetId}:widget-triggers`;
         const useFieldPropId = `${subWidgetId}_usefield`;
         const usefield = objectDefinition.getProperty(useFieldPropId);
         const delegatedPropertiesPropId = `${subWidgetId}_delegated-properties`;
         const className = objectDefinition.getProperty(classNamePropId);
         const subWidgetClass = UNIFACE.ClassRegistry.get(className);
-        const subWidgetTriggers = objectDefinition.getProperty(triggersPropId);
         const delegatedProperties = objectDefinition.getProperty(delegatedPropertiesPropId);
         let subWidgetDefinition = {};
         subWidgetDefinition.class = subWidgetClass;
         subWidgetDefinition.styleClass = `u-sw-${subWidgetId}`;
-        subWidgetDefinition.triggers = subWidgetTriggers?.split("") || [];
         subWidgetDefinition.propPrefix = subWidgetId;
         subWidgetDefinition.usefield = this.toBoolean(usefield);
         subWidgetDefinition.delegatedProperties = delegatedProperties ? delegatedProperties.split("") : [];
