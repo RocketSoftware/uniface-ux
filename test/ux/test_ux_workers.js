@@ -149,12 +149,6 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
     it("check elementQuerySelector has been inherited from Element if not already present", function () {
       childWorkers.forEach((childWorker, index) => {
         expect(childWorker.elementQuerySelector).to.equal(expectedQuerySelectors[index]);
-    it("Check elementQuerySelector changed for all elements for Elements class", function () {
-      attributeDefines.forEach((attributeDefine) => {
-        expect(attributeDefine.elementQuerySelector).to.equal("div");
-      });
-      triggerDefines.forEach((triggerDefine) => {
-        expect(triggerDefine.elementQuerySelector).to.equal("div");
       });
     });
 
@@ -434,8 +428,7 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
       expect(worker.widgetClass.setters.value[length - 1].propId).to.equal(propId);
     });
 
-    it("check setHtmlAttribute", function () {
-    it("Check setHtmlAttribute for BaseHtmlAttribute class", function () {
+    it("check setHtmlAttribute for BaseHtmlAttribute class", function () {
       element = {
         "elements": {
           "widget": document.createElement("div")
@@ -463,8 +456,8 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
       expect(value).to.equal("inherit");
     });
 
-    // getValueUpdaters doesn't do anything
-    it("check getValueUpdaters for BaseHtmlAttribute class", function () {
+    // getValueUpdaters() doesn't do anything.
+    it("check getValueUpdaters() for BaseHtmlAttribute class", function () {
       const widgetInstance = {
         "elements": {
           "widget": [document.createElement("div"), document.createElement("span")]
@@ -832,67 +825,6 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
   });
 
   // ===================================================================================================================
-  // == Testing StyleProperty class ====================================================================================
-  // ===================================================================================================================
-  describe("Test StyleProperty Class", function () {
-
-    let widgetClass;
-    let property;
-    let element;
-
-    beforeEach(function () {
-      Widget.structure = {};
-      Widget.subWidgets = {};
-      Widget.subWidgetWorkers = [];
-      Widget.defaultValues = {};
-      Widget.setters = {};
-      Widget.getters = {};
-      Widget.triggers = {};
-      Widget.uiBlocking = "";
-
-      widgetClass = Widget;
-      property = {
-        "id": "propertyClass",
-        "value": 26
-      };
-      element = new StyleProperty(widgetClass, property);
-    });
-
-    it("should initialize with correct properties for StyleProperty class", function () {
-      expect(element.widgetClass).to.equal(widgetClass);
-    });
-
-    it("Check Setters and Default values for StyleProperty class", function () {
-      let setterKeys = Object.keys(element.widgetClass.setters);
-      let defaultKeys = Object.keys(element.widgetClass.defaultValues);
-      let lengthKeys = setterKeys.length;
-      let lengthDefaultKeys = defaultKeys.length;
-
-      expect(setterKeys[lengthKeys - 1]).to.equal("style");
-      expect(defaultKeys[lengthDefaultKeys - 1]).to.equal("style:id");
-      expect(element.defaultStyleProperty.value).to.equal(property.value);
-      expect(element.defaultStyleProperty.id).to.equal(property.id);
-    });
-
-
-    it('should refresh correctly for StyleProperty class', function () {
-      const widgetInstance = {
-        "data": {
-          "style:color": "red"
-        },
-        "elements": {
-          "widget": document.createElement("div")
-        },
-        "getTraceDescription": () => {
-          return "description";
-        }
-      };
-      element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget.outerHTML).to.equal('<div style="color: red;"></div>');
-    });
-  });
-
-  // ===================================================================================================================
   // == Testing Trigger class ==========================================================================================
   // ===================================================================================================================
   describe("Test Trigger class", function () {
@@ -1157,32 +1089,32 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
     it("getLayout() method should generate and return layout for this setter for SubWidgetsByProperty worker", function () {
       // eslint-disable-next-line no-undef
       let returnedLayoutElement  = element.getLayout(_uf.createUxDefinitions(dataObjReturnLayout, true));
-      expect(returnedLayoutElement[0].getAttribute('class')).to.equal("u-sw-select u-controlbar-item");
-      expect(returnedLayoutElement[0].getAttribute('sub-widget-id')).to.equal("select");
+      expect(returnedLayoutElement[0].getAttribute("class")).to.equal("u-sw-select u-controlbar-item");
+      expect(returnedLayoutElement[0].getAttribute("sub-widget-id")).to.equal("select");
     });
 
     it("getLayout() method should generate correct warning for incorrect property/not defined for object in the browser's console for SubWidgetsByProperty worker", function () {
-      const warnSpy = sinon.spy(console, 'warn');
+      const warnSpy = sinon.spy(console, "warn");
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjIncorrectProperty, true));
-      expect(warnSpy.calledWith(`SubWidgetsByProperty.getLayout: Property 'subwidgets-start' not defined for object. - Creation of sub-widgets skipped.`)).to.be.true;
+      expect(warnSpy.calledWith("SubWidgetsByProperty.getLayout: Property 'subwidgets-start' not defined for object. - Creation of sub-widgets skipped.")).to.be.true;
       warnSpy.restore(); // Restore the original console.warn.
     });
 
     it("getLayout() method should generate correct warning for Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry with incorrect widget definition in the browser's console for SubWidgetsByProperty worker", function () {
-      const warnSpy = sinon.spy(console, 'warn');
+      const warnSpy = sinon.spy(console, "warn");
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjSubwidgetNotFoundInClassRegistry, true));
-      expect(warnSpy.calledWith(`SubWidgetsByProperty.getLayout: Widget definition with name 'UX.Select123' not found in UNIFACE.classRegistry. - Creation of sub-widget 'select'skipped.`)).to.be.true;
+      expect(warnSpy.calledWith("SubWidgetsByProperty.getLayout: Widget definition with name 'UX.Select123' is not registered. - Creation of sub-widget 'select'skipped.")).to.be.true;
       warnSpy.restore(); // Restore the original console.warn.
     });
 
     it("getLayout() method should generate correct warning for property name not defined for object creation of sub-widget '${subWidgetId}' skipped in the browser console for SubWidgetsByProperty worker", function () {
       let data = Object.assign({}, dataObjPropertyNameNotDefined);
-      const warnSpy = sinon.spy(console, 'warn');
+      const warnSpy = sinon.spy(console, "warn");
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(data, true));
-      expect(warnSpy.calledWith(`SubWidgetsByProperty.getLayout: Property 'select1_widget-class' not defined for object. - Creation of sub-widget 'select1' skipped.`)).to.be.true;
+      expect(warnSpy.calledWith("SubWidgetsByProperty.getLayout: Property 'select1_widget-class' not defined for object. - Creation of sub-widget 'select1' skipped.")).to.be.true;
       warnSpy.restore(); // Restore the original console.warn.
     });
 

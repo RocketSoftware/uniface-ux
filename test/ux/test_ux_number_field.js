@@ -203,7 +203,7 @@
     });
 
     it("check delegated property disabled", function () {
-      assert.equal(tester.widget.subWidgetDefinitions["changebutton"].delegatedProperties, 'html:disabled', "Delegated property html:disabled is not present");
+      assert.equal(tester.widget.subWidgetDefinitions["changebutton"].delegatedProperties, "html:disabled", "Delegated property html:disabled is not present");
     });
 
   });

@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   Element,
@@ -311,15 +310,14 @@ export class Controlbar extends Widget {
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new StyleClass(this, ["u-controlbar"]),
     new this.HandleOverFlowPropertyWorker(this, "widget-resize", false),
-    new HtmlSubWidgetValueWorker(this, "value", "value", null)
-  ], [
-    new Element(this, "div", "u-start-section", ".u-start-section", [], [
+    new HtmlSubWidgetValueWorker(this, "value", "value", null),
+    new Element(this, "div", "u-start-section", ".u-start-section", [
       new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-start")
     ]),
-    new Element(this, "div", "u-center-section", ".u-center-section", [], [
+    new Element(this, "div", "u-center-section", ".u-center-section", [
       new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-center")
     ]),
-    new Element(this, "div", "u-end-section", ".u-end-section", [], [
+    new Element(this, "div", "u-end-section", ".u-end-section", [
       new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-end")
     ])
   ]);
@@ -511,4 +509,3 @@ export class Controlbar extends Widget {
     super.setProperties(data);
   }
 }
-UNIFACE.ClassRegistry.add("UX.Controlbar", Controlbar);
