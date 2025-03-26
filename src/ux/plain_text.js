@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   StyleClass,
@@ -224,8 +223,7 @@ export class PlainText extends Widget {
     new HtmlAttribute(this, "html:slot", "slot", ""),
     new IgnoreProperty(this, "html:maxlength"),
     new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:readonly")
-  ], [
+    new IgnoreProperty(this, "html:readonly"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "prefix-text", "", "prefix-icon", ""),
     new this.SlottedPlainTextFormat(this, "span", "u-control", ".u-control"),
@@ -402,5 +400,3 @@ export class PlainText extends Widget {
     return formattedValue;
   }
 }
-
-UNIFACE.ClassRegistry.add("UX.PlainText", PlainText);

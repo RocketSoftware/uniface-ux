@@ -1,13 +1,6 @@
 // @ts-check
 
 /**
- * @typedef {Object} UClassRegistry
- *  @property {function(UWidgetClassName): *} get - Return class definition of widget.
- *  @property {function(UWidgetClassName, *): void} add - Add class definition of widget to registry.
- *
- * @typedef {Object} UTYPE_UNIFACE
- *  @property {UClassRegistry} ClassRegistry
- *
  * @typedef {"component"|"entity"|"collection"|"occurrence"|"field"} UObjectType
  * @typedef {String} UObjectName
  * @typedef {String | undefined} UPropName
@@ -58,7 +51,3 @@
  *  @property {String|undefined} [labelText] - Unformatted label-text.
  *  @property {Boolean|undefined} [isNotSupported] - Whether this representation is supported in the parent widget or not.
  */
-
-/** @type {UTYPE_UNIFACE} */
-let UNIFACE;  // eslint-disable-line no-unused-vars
-let uniface;  // eslint-disable-line no-unused-vars
