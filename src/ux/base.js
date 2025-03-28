@@ -357,27 +357,11 @@ export class Base {
           subWidgetData = subWidgetData || {};
           if (key === "valrep") {
             subWidgetData[key] = this.getFormattedValrep(data[property]);
-          } else if (key === "value" && subWidgetDefinition && subWidgetDefinition["usefield"]) {
-            try {
-              const valueObject = JSON.parse(data.value) ?? {};
-              subWidgetData[key] = valueObject[subWidgetPropPrefix] ?? '';
-            } catch (error) {
-              console.log("Invalid JSON value", data.value, error);
-            }
           } else {
             subWidgetData[key] = data[property];
           }
           // Remove the property from the original data to avoid duplication.
           delete data[property];
-        }
-        // If usefield value is true and there is update in field widget then subwidget value should be updated with field value.
-      } else if (property === "value" && subWidgetDefinition && subWidgetDefinition["usefield"] && data.value) {
-        subWidgetData = subWidgetData || {};
-        try {
-          const valueObject = JSON.parse(data.value);
-          subWidgetData[property] = String(valueObject[subWidgetPropPrefix]) ?? '';
-        } catch (error) {
-          console.log("Invalid JSON value", data.value, error);
         }
       }
     }
