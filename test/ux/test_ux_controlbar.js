@@ -36,8 +36,7 @@
     "html:hidden": false,
     "class:u-controlbar": true,
     "orientation": "horizontal",
-    "widget-resize": false,
-    "value": null
+    "widget-resize": false
   };
 
   const MOCK_EMPTY_START_CONTROLS_DEFINITION = {
@@ -263,7 +262,8 @@
    * Function to determine whether the widget class has been loaded.
    */
   function verifyWidgetClass(widgetClass) {
-    assert(widgetClass, `Widget class '${widgetName}' is not defined! Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
+    assert(widgetClass, `Widget class '${widgetName}' is not defined!
+          Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
   }
 
   describe("Uniface Mockup tests", function () {
@@ -569,6 +569,7 @@
   });
 
   describe(`${widgetName}.dataUpdate()`, function () {
+
     describe("When there is change in the controlbar properties", function () {
       let element;
       const tester = new umockup.WidgetTester();
@@ -645,12 +646,12 @@
           tester.dataInit();
           tester.dataUpdate(MOCK_CONTROLBAR_CONTROLS_DATA);
         }).then(function () {
-          // Check if there is any change in subwidgets properties.
+          // Check if there is any change in properties of the subwidgets.
           expect(element.querySelector("fluent-select .u-label-text").textContent).to.equal(updatedData["size:label-text"]);
           expect(element.querySelector("fluent-number-field .u-label-text").hasAttribute("hidden")).to.be.true;
           expect(element.querySelector("fluent-checkbox .u-label-text").hasAttribute("hidden")).to.be.true;
 
-          // Check if any change in subwidget's html properties.
+          // Check if there is any change in html properties of the subwidgets.
           expect(element.querySelector("fluent-select").hasAttribute("disabled")).to.be.true;
           expect(String(element.querySelector("fluent-select").hasAttribute("disabled")).toLowerCase()).to.equal(updatedData["size:html:disabled"]);
           expect(String(element.querySelector("fluent-number-field").hasAttribute("hide-step")).toLowerCase()).to.equal(
@@ -725,6 +726,7 @@
 
   describe(`${widgetName} OverFlow tests`, function () {
     let element, tester, data, widget, node;
+
     before(function () {
       tester = new umockup.WidgetTester();
       element = tester.processLayout(MOCK_DATA_FOR_OVERFLOW_COMMON);
@@ -781,8 +783,7 @@
 
     it("when the overflow behavior is set to hide for some widgets and none for others, sub-widgets with none overflow behavior should not get hidden", function () {
       return asyncRun(function () {
-        data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_HIDE_AND_NONE);
-        tester.dataUpdate(data);
+        tester.dataUpdate(MOCK_DATA_WITH_OVERFLOW_HIDE_AND_NONE);
         node = document.querySelector("#widget-container");
         node.style.width = "100px";
       }, 1).then(function () {
@@ -800,6 +801,8 @@
   describe("OverFlow tests with priority not defined and overflow behavior as hide", function () {
     let element, tester, data, widget, node;
 
+    // Using beforeEach instead of before to increase the time between execution of each it() block.
+    // If the widget is resized rapidly again and again, the ResizeObserver will throw "ResizeObserver loop completed with undelivered notifications" exception and tests will fail.
     beforeEach(function () {
       tester = new umockup.WidgetTester();
       data = {
@@ -915,6 +918,8 @@
   describe("OverFlow tests with priority defined and overflow behavior as hide", function () {
     let element, tester, data, widget, node;
 
+    // Using beforeEach instead of before to increase the time between execution of each it() block.
+    // If the widget is resized rapidly again and again, the ResizeObserver will throw "ResizeObserver loop completed with undelivered notifications" exception and tests will fail.
     beforeEach(function () {
       tester = new umockup.WidgetTester();
       data = {
