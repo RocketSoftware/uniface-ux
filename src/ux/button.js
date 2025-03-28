@@ -219,22 +219,6 @@ export class Button extends Widget {
   }
 
   /**
-   * Will be invoked from complex widgets like controlbar to add content to the overflow-menu.
-   * Returns an object that contains the text, icon and css classnames of individual menu items.
-   * @return {UValueFormatting}
-   */
-  getMenuItem() {
-
-    /** @type {UValueFormatting} */
-    let formattedValue = {
-      ...Button.getValueFormatted(this.data),
-      "isNotSupported": false
-    };
-    this.log("getMenuItem", formattedValue);
-    return formattedValue;
-  }
-
-  /**
    * Private Uniface API methods are used for the button class since we don’t implement any error handling for it.
    * However, we can still log errors if any occur from Uniface.
    */
