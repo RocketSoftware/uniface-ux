@@ -488,6 +488,8 @@ export class Controlbar extends Widget {
   setProperties(data) {
     const subWidgetIds = this.getSubWidgetIds();
     const overflowProperties = subWidgetIds.flatMap((subWidget) => [`${subWidget}_${"overflow-behavior"}`, `${subWidget}_${"priority"}`]);
+    const subWidgetProperties = subWidgetIds.flatMap((subWidget) => [`${subWidget}_${"widget-class"}`,`${subWidget}_${"delegated-properties"}`]);
+    subWidgetProperties.push("subwidgets-start","subwidgets-center","subwidgets-end");
     const setter = Controlbar.setters["widget-resize"][0];
     let invokeRefresh = false;
     for (const property in data) {
@@ -506,6 +508,10 @@ export class Controlbar extends Widget {
         }
         delete data[property];
       }
+      if (subWidgetProperties.includes(property)) {
+        delete data[property];
+      }
+
     }
     invokeRefresh && setter?.refresh(this);
     super.setProperties(data);
