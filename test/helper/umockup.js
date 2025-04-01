@@ -243,25 +243,6 @@
    * @param {Function} testFunction a function including test actions;
    * @returns a promise.
    */
-  // async function asyncRun(testFunction) {
-
-  //   debugLog("asyncRun");
-
-  //   return new Promise(function(resolve, _reject) {
-  //     function callback(_timestamp) {
-  //       debugLog("Callback done");
-
-  //       resolve();  // resolve immediately
-  //     }
-
-  //     // Call the function that updates the DOM
-  //     testFunction();
-
-  //     // Ask browser to callback before next repaint
-  //     window.requestAnimationFrame(callback);
-  //   });
-  // }
-
   async function asyncRun(testFunction, delay = 0) {
     debugLog("asyncRun");
 
