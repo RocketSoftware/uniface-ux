@@ -9,39 +9,39 @@
   const widgetClass = tester.getWidgetClass();
   const asyncRun = umockup.asyncRun;
 
-  // custom test variables
+  // Custom test variables.
   const valRepArray = [
     {
-      value: "1",
-      representation: "option one"
+      "value": "1",
+      "representation": "option one"
     },
     {
-      value: "2",
-      representation: "option two"
+      "value": "2",
+      "representation": "option two"
     },
     {
-      value: "3",
-      representation: "option three"
+      "value": "3",
+      "representation": "option three"
     }
   ];
 
   /**
-     * Function to determine whether the widget class has been loaded.
-     */
+    * Function to determine whether the widget class has been loaded.
+    */
   function verifyWidgetClass(widgetClass) {
     assert(widgetClass, `Widget class '${widgetName}' is not defined!
             Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
   }
 
-  describe("Uniface Mockup tests", function () {
+  describe("Uniface mockup tests", function () {
 
-    it("get class " + widgetName, function () {
+    it(`get class ${widgetName}`, function () {
       verifyWidgetClass(widgetClass);
     });
 
   });
 
-  describe("Uniface static structure constructor definition", function () {
+  describe("Uniface static structure constructor() definition", function () {
 
     it("should have a static property structure of type Element", function () {
       verifyWidgetClass(widgetClass);
@@ -50,17 +50,15 @@
       expect(structure.tagName).to.equal("fluent-radio-group");
       expect(structure.styleClass).to.equal("");
       expect(structure.elementQuerySelector).to.equal("");
-      expect(structure.attributeDefines).to.be.an("array");
-      expect(structure.elementDefines).to.be.an("array");
-      expect(structure.triggerDefines).to.be.an("array");
+      expect(structure.childWorkers).to.be.an("array");
     });
 
   });
 
-  describe(widgetName + ".processLayout", function () {
+  describe(`${widgetName}.processLayout()`, function () {
     let element;
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       verifyWidgetClass(widgetClass);
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
@@ -74,7 +72,7 @@
       });
 
       it("check instance of HTMLElement", function () {
-        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+        expect(element).instanceOf(HTMLElement, `Function processLayout of ${widgetName} does not return an HTMLElement.`);
       });
 
       it("check tagName", function () {
@@ -86,11 +84,11 @@
       });
 
       it("check u-label-text", function () {
-        assert(element.querySelector("label.u-label-text"), "Widget misses or has incorrect u-label-text element");
+        assert(element.querySelector("label.u-label-text"), "Widget misses or has incorrect u-label-text element.");
       });
 
       it("check u-error-icon", function () {
-        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
+        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element.");
       });
     });
 
@@ -103,34 +101,40 @@
       tester.construct();
     });
 
-    it("constructor", function () {
+    it("constructor()", function () {
       try {
         const widget = tester.construct();
-        assert(widget, "widget is not defined!");
+        assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes["u-radio-group"], "Class is not defined");
+        assert(widgetClass.defaultValues["class:u-radio-group"], "Class is not defined!");
       } catch (e) {
-        assert(false, "Failed to construct new widget, exception " + e);
+        assert(false, `Failed to construct new widget, exception ${e}.`);
       }
     });
 
-    it("On Connect", function () {
+    it("onConnect()", function () {
       const element = tester.processLayout();
       const widget = tester.onConnect();
       assert(element, "Target element is not defined!");
-      assert(widget.elements.widget === element, "widget is not connected");
+      assert(widget.elements.widget === element, "Widget is not connected!");
     });
 
   });
 
-  describe("mapTrigger", function () {
+  describe("mapTrigger()", function () {
+    const element = tester.processLayout();
     const widget = tester.onConnect();
-    widget.mapTrigger("onchange");
+
+    it("defined mapTrigger() and onchange event", function () {
+      widget.mapTrigger("onchange");
+      const event = new window.Event("onchange");
+      element.dispatchEvent(event);
+      assert(widget.elements.widget === element, "Widget is not connected.");
+    });
   });
 
-  describe("Data Init", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+  describe("dataInit()", function () {
+    const classes = tester.getDefaultClasses();
     var element;
 
     beforeEach(function () {
@@ -140,17 +144,17 @@
     });
 
     for (const defaultClass in classes) {
-      it("check class '" + defaultClass + "'", function () {
+      it(`check class '${defaultClass}'`, function () {
         if (classes[defaultClass]) {
-          expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+          expect(element).to.have.class(defaultClass, `Widget element has class ${defaultClass}.`);
         } else {
-          expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
+          expect(element).not.to.have.class(defaultClass, `Widget element has no class ${defaultClass}.`);
         }
       });
     }
 
     it("check 'hidden' attributes", function () {
-      assert(element.querySelector("label.u-label-text").hasAttribute("hidden"), "Label Text element should be hidden by default");
+      assert(element.querySelector("label.u-label-text").hasAttribute("hidden"), "Label text element should be hidden by default.");
     });
 
     it("check widget id", function () {
@@ -171,7 +175,7 @@
     });
   });
 
-  describe("Data Update", function () {
+  describe("dataUpdate()", function () {
     let element;
     before(function () {
       tester.createWidget();
@@ -179,10 +183,10 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("Set HTML property hidden to true", function () {
+    it("set html property hidden to true", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          html: { hidden: true }
+          "html:hidden": true
         });
       }).then(function () {
         expect(element.getAttribute("hidden"));
@@ -190,22 +194,20 @@
       });
     });
 
-    it("Set Uniface label text", function () {
+    it("set Uniface label-text", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-text": "Test Label"
-          }
+          "label-text": "Test Label"
         });
       }).then(function () {
         expect(element.querySelector("label.u-label-text").innerText).equal("Test Label");
       });
     });
 
-    it("Set HTML property readonly to true", function () {
+    it("set html property readonly to true", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          html: { readonly: true }
+          "html:readonly": true
         });
       }).then(function () {
         expect(element.getAttribute("readonly"));
@@ -213,10 +215,10 @@
       });
     });
 
-    it("Set HTML property disabled to true", function () {
+    it("set html property disabled to true", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          html: { disabled: true }
+          "html:disabled": true
         });
       }).then(function () {
         expect(element.getAttribute("disabled"));
@@ -224,10 +226,10 @@
       });
     });
 
-    it("Set valrep property with default display value as rep", function () {
+    it("set valrep property with default display value as rep", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray
+          "valrep": valRepArray
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -238,13 +240,11 @@
       });
     });
 
-    it("Set valrep property with default display-format as value", function () {
+    it("set valrep property with default display-format as value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          uniface: {
-            "display-format": "val"
-          }
+          "valrep": valRepArray,
+          "display-format": "val"
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -255,13 +255,11 @@
       });
     });
 
-    it("Set valrep property with default display value as valrep", function () {
+    it("set valrep property with default display value as valrep", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          uniface: {
-            "display-format": "valrep"
-          }
+          "valrep": valRepArray,
+          "display-format": "valrep"
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -273,11 +271,11 @@
       });
     });
 
-    it("Set value to 2 and expect the radio button to be checked", function () {
+    it("set value to 2 and expect the radio button to be checked", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "2"
+          "valrep": valRepArray,
+          "value": "2"
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -291,16 +289,16 @@
       });
     });
 
-    it("Set value to empty string ('') and expect the radio button to be checked", function () {
+    it("set value to empty string ('') and expect the radio button to be checked", function () {
       let valRepArrayWithEmptyOption = [{
-        value: "",
-        representation: "Empty Option"
+        "value": "",
+        "representation": "Empty Option"
       }, ...valRepArray];
 
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArrayWithEmptyOption,
-          value: ""
+          "valrep": valRepArrayWithEmptyOption,
+          "value": ""
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -314,19 +312,17 @@
       });
     });
 
-    it("Set layout property to horizontal", function () {
+    it("set layout property to horizontal", function () {
       let valRepArrayLongText = [{
-        value: "0",
-        representation: "Option zero, test horizontal css specification changes when there is more than 25 characters."
+        "value": "0",
+        "representation": "Option zero, test horizontal css specification changes when there is more than 25 characters."
       }, ...valRepArray];
 
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArrayLongText,
-          uniface: {
-            "display-format": "rep",
-            "layout": "horizontal"
-          }
+          "valrep": valRepArrayLongText,
+          "display-format": "rep",
+          "layout": "horizontal"
         });
       }).then(function () {
         expect(element.getAttribute("orientation")).equal("horizontal");
@@ -342,23 +338,19 @@
       });
     });
 
-    it("Change multiple properties", function () {
+    it("change multiple properties", function () {
       let selectedValue = "2";
 
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: selectedValue,
-          html: {
-            "disabled": true,
-            "readonly": false
-          },
-          classes: { "ClassA": true },
-          uniface: {
-            "label-text": "Test Label",
-            "display-format": "val",
-            "layout": "horizontal"
-          }
+          "valrep": valRepArray,
+          "value": selectedValue,
+          "html:disabled": true,
+          "html:readonly": false,
+          "class:ClassA": true,
+          "label-text": "Test Label",
+          "display-format": "val",
+          "layout": "horizontal"
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -389,11 +381,11 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("Set a valid initial value and ensure the corresponding element is checked", function () {
+    it("set a valid initial value and ensure the corresponding element is checked", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "2"
+          "valrep": valRepArray,
+          "value": "2"
         });
       }).then(function () {
         let radioButtonArray = element.querySelectorAll("fluent-radio");
@@ -407,10 +399,10 @@
       });
     });
 
-    it("Set value to empty string ('') and ensure there is no checked element", function () {
+    it("set value to empty string ('') and ensure there is no checked element", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          value: ""
+          "value": ""
         });
       }).then(function () {
         expect(element.querySelector("fluent-radio[current-checked=true]")).equal(null);
@@ -418,7 +410,7 @@
     });
   });
 
-  describe("Invalid state, user interaction and again set to invalid state", function () {
+  describe("Invalid state, user interaction, and set to invalid state", function () {
     let element;
     before(function () {
       tester.createWidget();
@@ -427,11 +419,11 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("Set invalid initial value", function () {
+    it("set invalid initial value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "0"
+          "valrep": valRepArray,
+          "value": "0"
         });
       }).then(function () {
         let errorIconTooltip = element.querySelector(".u-error-icon");
@@ -440,7 +432,7 @@
     });
 
 
-    it("Simulate user interaction and select first option", function () {
+    it("simulate user interaction and select first option", function () {
       return asyncRun(function () {
         const firstRadioOption = document.querySelector("fluent-radio");
 
@@ -460,11 +452,11 @@
       });
     });
 
-    it("Now again set the same invalid value", function () {
+    it("now again set the same invalid value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "0"
+          "valrep": valRepArray,
+          "value": "0"
         });
       }).then(function () {
         const radioOption1 = document.querySelector("fluent-radio");
@@ -482,28 +474,28 @@
       tester.createWidget();
       radioElement = tester.element.querySelector("fluent-radio");
 
-      // Create a spy for the onchange event
+      // Create a spy for the onchange event.
       onchangeSpy = sinon.spy();
 
-      // Add the onchange event listener to the radio element
+      // Add the onchange event listener to the radio element.
       radioElement.addEventListener("onchange", onchangeSpy);
       // Add the change event listener to the radio-group element.
       tester.element.addEventListener("change", onchangeSpy);
     });
 
-    // Clean up after each test
+    // Clean up after each test.
     afterEach(function () {
-      // Restore the spy to its original state
+      // Restore the spy to its original state.
       sinon.restore();
     });
 
-    // Test case for the onchange event
+    // Test case for the onchange event.
     it("should call the onchange event handler when a radio button is clicked", function () {
-      // Simulate a change event
+      // Simulate a change event.
       const event = new window.Event("onchange");
       radioElement.dispatchEvent(event);
 
-      // Assert that the onchange event handler was called once
+      // Assert that the onchange event handler was called once.
       expect(onchangeSpy.calledOnce).to.be.true;
     });
 
@@ -513,12 +505,12 @@
 
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: initialValue
+          "valrep": valRepArray,
+          "value": initialValue
         });
       }).then(function () {
         // Assert that the change event handler was called not twice.
-        // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
+        // The change event will be invoked once in onConnect(), but it should not propagate further hence we check calledTwice.
         expect(onchangeSpy.calledTwice).to.be.false;
       });
     });
@@ -529,14 +521,14 @@
 
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: initialValue
+          "valrep": valRepArray,
+          "value": initialValue
         });
       }).then(function () {
         // Change the display-format property.
         tester.element.setAttribute("display-format", "valrep");
         // Assert that the change event handler was not called twice.
-        // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
+        // The change event will be invoked once in onConnect(), but it should not propagate further hence we check calledTwice.
         expect(onchangeSpy.calledTwice).to.be.false;
       });
     });
@@ -547,14 +539,14 @@
 
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: initialValue
+          "valrep": valRepArray,
+          "value": initialValue
         });
       }).then(function () {
         // Change the layout property.
         tester.element.setAttribute("layout", "horizontal");
         // Assert that the change event handler was not called twice.
-        // The change event will be invoked once in onConnect but it should not propogate further hence we check calledTwice.
+        // The change event will be invoked once in onConnect(), but it should not propagate further hence we check calledTwice.
         expect(onchangeSpy.calledTwice).to.be.false;
       });
     });
@@ -564,96 +556,93 @@
       let initialValue = "2";
       const valRepArray2 = [
         {
-          value: "1",
-          representation: "option one"
+          "value": "1",
+          "representation": "option one"
         },
         {
-          value: "2",
-          representation: "option two"
+          "value": "2",
+          "representation": "option two"
         },
         {
-          value: "3",
-          representation: "option three"
+          "value": "3",
+          "representation": "option three"
         },
         {
-          value: "4",
-          representation: "option four"
+          "value": "4",
+          "representation": "option four"
         }
       ];
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: initialValue
+          "valrep": valRepArray,
+          "value": initialValue
         });
       }).then(function () {
         // Update the valrep with new valRepArray2.
         tester.dataUpdate({
-          valrep: valRepArray2
+          "valrep": valRepArray2
         });
       }).then(function () {
         // Assert that the change event handler was not called thrice.
-        // The change event will be invoked twice in onConnect but it should not propogate further hence we check calledTwice.
+        // The change event will be invoked twice in onConnect(), but it should not propagate further hence we check calledTwice.
         expect(onchangeSpy.calledThrice).to.be.false;
       });
     });
   });
 
-  describe("showError", function () {
-    let radioElement;
+  describe("showError()", function () {
+    let element;
     beforeEach(function () {
       tester.createWidget();
-      radioElement = tester.element;
+      element = tester.element;
     });
 
-    it("When invalid value is set, should show error and none of the options should be selected", function () {
+    it("when invalid value is set, should show error and none of the options should be selected", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "random",
+          "valrep": valRepArray,
+          "value": "random",
           "display-format": "valrep"
         });
       }).then(function () {
-        const selectedOption = radioElement.querySelector("fluent-radio[current-checked=true]");
+        const selectedOption = element.querySelector("fluent-radio[current-checked=true]");
         expect(selectedOption).equal(null);
-        expect(radioElement).to.have.class("u-format-invalid");
-        assert(!radioElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon");
-        assert.equal(radioElement.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'");
-        assert.equal(radioElement.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(element).to.have.class("u-format-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'.");
+        assert.equal(element.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
       });
     });
   });
 
-  describe("hideError", function () {
-    let radioElement;
+  describe("hideError()", function () {
+    let element;
     beforeEach(function () {
       tester.createWidget();
-      radioElement = tester.element;
+      element = tester.element;
     });
 
-    it("Set error to false", function () {
+    it("set error to false", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "format-error": false,
-            "format-error-message": ""
-          }
+          "format-error": false,
+          "format-error-message": ""
         });
       }).then(function () {
-        expect(radioElement).to.not.have.class("u-format-invalid");
-        assert(radioElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon");
-        expect(radioElement.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
-        expect(radioElement.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+        expect(element).to.not.have.class("u-format-invalid");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("");
       });
     });
   });
 
-  describe("reset all properties", function () {
+  describe("Reset all properties", function () {
     it("reset all property", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
-        console.error(e);
-        assert(false, "Failed to reset all properties, exception " + e);
+        assert(false, `Failed to reset all properties, exception ${e}.`);
       }
     });
   });

@@ -71,7 +71,7 @@ export class Button extends Widget {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
       super.refresh(widgetInstance);
       let element = this.getElement(widgetInstance);
-      let text = this.getNode(widgetInstance.data.properties, "value");
+      let text = this.getNode(widgetInstance.data, "value");
       if (text) {
         element.hidden = false;
         element.innerText = text;
@@ -83,7 +83,7 @@ export class Button extends Widget {
 
     getValue(widgetInstance) {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
-      let text = this.getNode(widgetInstance.data.properties, "value");
+      let text = this.getNode(widgetInstance.data, "value");
       return text;
     }
 
@@ -120,10 +120,10 @@ export class Button extends Widget {
       super(widgetClass);
       // A setter is necessary for the value in SlottedButtonIcon because the class should respond to any changes in the value.
       this.registerSetter(widgetClass, "value", this);
-      this.registerSetter(widgetClass, "uniface:icon", this);
-      this.registerSetter(widgetClass, "uniface:icon-position", this);
-      this.registerDefaultValue(widgetClass, "uniface:icon", "");
-      this.registerDefaultValue(widgetClass, "uniface:icon-position", "start");
+      this.registerSetter(widgetClass, "icon", this);
+      this.registerSetter(widgetClass, "icon-position", this);
+      this.registerDefaultValue(widgetClass, "icon", "");
+      this.registerDefaultValue(widgetClass, "icon-position", "start");
       this.styleClass = styleClass;
       this.elementQuerySelector = elementQuerySelector;
     }
@@ -141,15 +141,15 @@ export class Button extends Widget {
       this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
       super.refresh(widgetInstance);
       let element = this.getElement(widgetInstance);
-      let text = this.getNode(widgetInstance.data.properties, "value");
-      let icon = this.getNode(widgetInstance.data.properties, "uniface:icon");
-      let iconPosition = this.getNode(widgetInstance.data.properties, "uniface:icon-position");
-      let defaultIconPosition = this.getNode(this.widgetClass.defaultValues, "uniface:icon-position");
+      let text = this.getNode(widgetInstance.data, "value");
+      let icon = this.getNode(widgetInstance.data, "icon");
+      let iconPosition = this.getNode(widgetInstance.data, "icon-position");
+      let defaultIconPosition = this.getNode(this.widgetClass.defaultValues, "icon-position");
       if (iconPosition !== "start" && iconPosition !== "end") {
         iconPosition = defaultIconPosition;
       }
 
-      deleteIconClasses();
+      this.deleteIconClasses(element);
       if (icon) {
         element.hidden = false;
         element.classList.add("ms-Icon", `ms-Icon--${icon}`);
@@ -164,14 +164,6 @@ export class Button extends Widget {
       } else {
         element.hidden = true;
         element.setAttribute("slot", "");
-      }
-
-      function deleteIconClasses() {
-        Array.from(element.classList).forEach((key) => {
-          if (key.startsWith("ms-Icon")) {
-            element.classList.remove(key);
-          }
-        });
       }
     }
   };
@@ -190,11 +182,9 @@ export class Button extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new IgnoreProperty(this, "html:readonly"),
-    new StyleClass(this, ["u-button", "neutral"])
-  ], [
+    new StyleClass(this, ["u-button", "neutral"]),
     new this.SlottedButtonIcon(this, "u-icon", ".u-icon"),
-    new this.SlottedButtonText(this, "u-text", ".u-text")
-  ], [
+    new this.SlottedButtonText(this, "u-text", ".u-text"),
     new Trigger(this, "detail", "click", true)
   ]);
 
@@ -206,9 +196,9 @@ export class Button extends Widget {
   static getValueFormattedSetters() {
     return [
       "value",
-      "uniface:error",
-      "uniface:error-message",
-      "uniface:icon"
+      "error",
+      "error-message",
+      "icon"
     ];
   }
 
@@ -223,7 +213,7 @@ export class Button extends Widget {
     /** @type {UValueFormatting} */
     let formattedValue = {};
     formattedValue.primaryPlainText = this.getNode(properties, "value") || "";
-    formattedValue.prefixIcon = this.getNode(properties, "uniface:icon");
+    formattedValue.prefixIcon = this.getNode(properties, "icon");
     this.staticLog("getValueFormatted", formattedValue);
     return formattedValue;
   }

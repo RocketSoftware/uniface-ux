@@ -17,15 +17,15 @@
           Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
   }
 
-  describe("Uniface Mockup tests", function () {
+  describe("Uniface mockup tests", function () {
 
-    it("get class " + widgetName, function () {
+    it(`get class ${widgetName}`, function () {
       verifyWidgetClass(widgetClass);
     });
 
   });
 
-  describe("Uniface static structure constructor definition", function () {
+  describe("Uniface static structure constructor() definition", function () {
 
     it("should have a static property structure of type Element", function () {
       verifyWidgetClass(widgetClass);
@@ -34,17 +34,15 @@
       expect(structure.tagName).to.equal("fluent-button");
       expect(structure.styleClass).to.equal("");
       expect(structure.elementQuerySelector).to.equal("");
-      expect(structure.attributeDefines).to.be.an("array");
-      expect(structure.elementDefines).to.be.an("array");
-      expect(structure.triggerDefines).to.be.an("array");
+      expect(structure.childWorkers).to.be.an("array");
     });
 
   });
 
-  describe(widgetName + ".processLayout", function () {
+  describe(`${widgetName}.processLayout()`, function () {
     let element;
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       verifyWidgetClass(widgetClass);
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
@@ -58,7 +56,7 @@
       });
 
       it("check instance of HTMLElement", function () {
-        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+        expect(element).instanceOf(HTMLElement, `Function processLayout() of ${widgetName} does not return an HTMLElement.`);
       });
 
       it("check tagName", function () {
@@ -70,11 +68,11 @@
       });
 
       it("check u-text", function () {
-        assert(element.querySelector("span.u-text"), "Widget misses or has incorrect u-text element");
+        assert(element.querySelector("span.u-text"), "Widget misses or has incorrect u-text element.");
       });
 
       it("check u-icon", function () {
-        assert(element.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
+        assert(element.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element.");
       });
 
     });
@@ -88,37 +86,44 @@
       tester.construct();
     });
 
-    it("constructor", function () {
+    it("constructor()", function () {
       try {
         const widget = tester.construct();
-        assert(widget, "widget is not defined!");
+        assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes["u-button"], "Class is not defined");
+        assert(widgetClass.defaultValues["class:u-button"], "Class is not defined!");
       } catch (e) {
-        assert(false, "Failed to construct new widget, exception " + e);
+        assert(false, `Failed to construct new widget, exception ${e}.`);
       }
     });
 
-    describe("On Connect", function () {
+    describe("onConnect()", function () {
       const element = tester.processLayout();
       const widget = tester.onConnect();
 
-      it("check element created and connected", function () {
+      it("check that the element is created and connected", function () {
         assert(element, "Target element is not defined!");
-        assert(widget.elements.widget === element, "widget is not connected");
+        assert(widget.elements.widget === element, "Widget is not connected!");
       });
     });
 
   });
 
-  describe("mapTrigger", function () {
+  describe("mapTrigger()", function () {
+    const element = tester.processLayout();
     const widget = tester.onConnect();
-    widget.mapTrigger("click");
+
+    it("define mapTrigger() and click event", function () {
+      widget.mapTrigger("click");
+      const event = new window.Event("click");
+      element.dispatchEvent(event);
+      assert(widget.elements.widget === element, "Widget is not connected.");
+    });
+
   });
 
-  describe("Data Init", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+  describe("dataInit()", function () {
+    const classes = tester.getDefaultClasses();
     var element;
 
     beforeEach(function () {
@@ -128,18 +133,18 @@
     });
 
     for (const defaultClass in classes) {
-      it("check class '" + defaultClass + "'", function () {
+      it(`check class ${defaultClass}`, function () {
         if (classes[defaultClass]) {
-          expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+          expect(element).to.have.class(defaultClass, `Widget element has class ${defaultClass}.`);
         } else {
-          expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
+          expect(element).not.to.have.class(defaultClass, `Widget element has no class ${defaultClass}.`);
         }
       });
     }
 
     it("check 'hidden' attributes", function () {
-      assert(element.querySelector("span.u-text").hasAttribute("hidden"), "Text span element should be hidden by default");
-      assert(element.querySelector("span.u-icon").hasAttribute("hidden"), "Icon span element should be hidden by default");
+      assert(element.querySelector("span.u-text").hasAttribute("hidden"), "Text span element should be hidden by default.");
+      assert(element.querySelector("span.u-icon").hasAttribute("hidden"), "Icon span element should be hidden by default.");
     });
 
     it("check widget id", function () {
@@ -147,18 +152,17 @@
     });
 
     it("check 'icon' and 'icon-position'", function () {
-      let unifaceProperties = tester.defaultValues.uniface;
-      assert.equal(unifaceProperties["icon"], "", "Default value of icon should be ''");
-      assert.equal(unifaceProperties["icon-position"], "start", "Default value of icon-position will be start");
+      assert.equal(tester.defaultValues["icon"], "", "Default value of icon should be ''.");
+      assert.equal(tester.defaultValues["icon-position"], "start", "Default value of icon-position will be start.");
     });
 
     it("check value", function () {
-      assert.equal(tester.defaultValues.value, "", "Default value of attribute value should be ''");
+      assert.equal(tester.defaultValues.value, "", "Default value of attribute value should be ''.");
     });
 
   });
 
-  describe("Data Update", function () {
+  describe("dataUpdate()", function () {
     let element;
 
     before(function () {
@@ -167,95 +171,89 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("update only button text", function () {
+    it("update button text", function () {
       let buttonText = "Button";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          value: buttonText
+          "value": buttonText
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
-        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
-        assert(element.querySelector("span.u-icon").hasAttribute("hidden"), "Icon Element should be hidden");
+        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text.");
+        assert(element.querySelector("span.u-icon").hasAttribute("hidden"), "Icon element should be hidden.");
       });
     });
 
     it("update button text, icon and icon-position to default", function () {
       let buttonText = "Button";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          value: buttonText,
-          uniface: {
-            icon: "Home"
-          }
+          "value": buttonText,
+          "icon": "Home"
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
-        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
-        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
-        expect(element.querySelector("span.u-icon").getAttribute("slot")).equal(tester.defaultValues.uniface["icon-position"]);
+        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text.");
+        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon.");
+        expect(element.querySelector("span.u-icon").getAttribute("slot")).equal(tester.defaultValues["icon-position"]);
       });
     });
 
     it("update icon-position to end", function () {
       let buttonText = "Button";
       let iconPosition = "end";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "icon-position": iconPosition
-          },
-          value: buttonText
+          "icon-position": iconPosition,
+          "value": buttonText
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
-        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
-        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
+        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text.");
+        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon.");
         expect(element.querySelector("span.u-icon").getAttribute("slot")).equal(iconPosition);
       });
     });
 
     it("update icon only button", function () {
       let buttonText = "";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          value: buttonText
+          "value": buttonText
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
-        assert(element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text");
-        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
+        assert(element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text.");
+        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon.");
         expect(element.querySelector("span.u-icon").getAttribute("slot")).equal("");
       });
     });
 
     it("update button text and icon will move to last selected slot", function () {
       let buttonText = "Button";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          value: buttonText
+          "value": buttonText
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
-        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text");
-        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
-        expect(element.querySelector("span.u-icon").getAttribute("slot")).equal(tester.widget.data.properties.uniface["icon-position"]);
+        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to hide the button text.");
+        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon.");
+        expect(element.querySelector("span.u-icon").getAttribute("slot")).equal(tester.widget.data["icon-position"]);
       });
     });
 
     it("if icon-position is other than start and end then it should allot default slot to icon", function () {
       let buttonText = "Button";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "icon-position": "stat"
-          }
+          "icon-position": "stat"
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
-        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text");
-        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon");
-        expect(element.querySelector("span.u-icon").getAttribute("slot")).equal(tester.defaultValues.uniface["icon-position"]);
+        assert(!element.querySelector("span.u-text").hasAttribute("hidden"), "Failed to show the button text.");
+        assert(!element.querySelector("span.u-icon").hasAttribute("hidden"), "Failed to show the icon.");
+        expect(element.querySelector("span.u-icon").getAttribute("slot")).equal(tester.defaultValues["icon-position"]);
       });
     });
 
@@ -268,36 +266,36 @@
       tester.createWidget();
       buttonElement = tester.element;
 
-      // Create a spy for the click event
+      // Create a spy for the click event.
       onClickSpy = sinon.spy();
 
-      // Add the click event listener to the button element
+      // Add the click event listener to the button element.
       buttonElement.addEventListener("click", onClickSpy);
     });
 
-    // Clean up after each test
+    // Clean up after each test.
     afterEach(function () {
-      // Restore the spy to its original state
+      // Restore the spy to its original state.
       sinon.restore();
     });
 
-    // Test case for the click event
+    // Test case for the click event.
     it("should call the click event handler when the button is clicked", function () {
       // Simulate a click event
       const event = new window.Event("click");
       buttonElement.dispatchEvent(event);
 
-      // Assert that the click event handler was called once
+      // Assert that the click event handler was called once.
       expect(onClickSpy.calledOnce).to.be.true;
     });
 
   });
 
-  describe("Show Error", function () {
+  describe("showError()", function () {
     it("not required", function () { });
   });
 
-  describe("Hide Error", function () {
+  describe("hideError()", function () {
     it("not required", function () { });
   });
 
@@ -326,20 +324,16 @@
       expect(layout.classList.contains(styleClass)).to.be.true;
     });
 
-    it("should refresh correctly and modify the element text and may be icon if we add icon in button", function () {
+    it("should refresh correctly and modify the element text and the icon if an icon is added to the button", function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
-          properties: {
-            uniface: {
-              "icon": "",
-              "icon-position": "start"
-            },
-            value: ""
-          }
+        "data": {
+          "icon": "",
+          "icon-position": "start",
+          "value": ""
         },
-        elements: tester.construct().elements,
-        getTraceDescription: () => {
+        "elements": tester.construct().elements,
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -366,8 +360,8 @@
     });
 
     it("should register default values for icon properties", function () {
-      expect(instance.widgetClass.defaultValues.uniface.icon).equal("");
-      expect(instance.widgetClass.defaultValues.uniface["icon-position"]).equal("start");
+      expect(instance.widgetClass.defaultValues.icon).equal("");
+      expect(instance.widgetClass.defaultValues["icon-position"]).equal("start");
     });
 
     it("should generate and return layout correctly", function () {
@@ -377,20 +371,16 @@
       expect(layout.classList.contains(styleClass)).to.be.true;
     });
 
-    it("should refresh correctly and modify the element text and may be icon if we add icon in button", function () {
+    it("should refresh correctly and modify the element text and the icon if an icon is added to the button", function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
-          properties: {
-            uniface: {
-              "icon": "",
-              "icon-position": "start"
-            },
-            value: ""
-          }
+        "data": {
+          "icon": "",
+          "icon-position": "start",
+          "value": ""
         },
-        elements: tester.construct().elements,
-        getTraceDescription: () => {
+        "elements": tester.construct().elements,
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -401,43 +391,37 @@
       expect(element.querySelector("span.u-icon").getAttribute("slot")).equal("");
     });
 
-    it("add icon to test classes are added in the icon slot or not", function () {
+    it("test add icon class functionality in slotted icon element", function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
-          properties: {
-            uniface: {
-              "icon": "Home"
-            },
-            value: ""
-          }
+        "data": {
+          "icon": "Home",
+          "value": ""
         },
-        elements: tester.construct().elements,
-        getTraceDescription: () => {
+
+        "elements": tester.construct().elements,
+        "getTraceDescription": function () {
           return "description";
         }
       };
 
       instance.refresh(widgetInstance);
       const element = widgetInstance.elements.widget;
+      const mockIconClasses = ["ms-Icon", "ms-Icon--Home"];
       expect(element.querySelector("span.u-icon").hasAttribute("hidden")).to.be.false;
       expect(element.querySelector("span.u-icon").getAttribute("slot")).equal("");
-      expect(element.querySelector("span.u-icon").classList.contains("ms-Icon")).to.be.true;
+      expect([...element.querySelector("span.u-icon").classList].includes(...mockIconClasses)).to.equal(true);
     });
 
     it("test delete icon class functionality in slotted icon element", function () {
       const widgetInstance = {
         ...widgetClass,
-        data: {
-          properties: {
-            uniface: {
-              "icon": ""
-            },
-            value: ""
-          }
+        "data": {
+          "icon": "",
+          "value": ""
         },
-        elements: tester.construct().elements,
-        getTraceDescription: () => {
+        "elements": tester.construct().elements,
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -455,8 +439,7 @@
       try {
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
-        console.error(e);
-        assert(false, "Failed to reset the properties, exception " + e);
+        assert(false, `Failed to reset the properties, exception ${e}.`);
       }
     });
   });

@@ -55,8 +55,8 @@ export class Switch extends Widget {
 
     refresh(widgetInstance) {
       super.refresh(widgetInstance);
-      let error = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:error"));
-      let formatError = this.toBoolean(this.getNode(widgetInstance.data.properties, "uniface:format-error"));
+      let error = this.toBoolean(this.getNode(widgetInstance.data, "error"));
+      let formatError = this.toBoolean(this.getNode(widgetInstance.data, "format-error"));
       let element = widgetInstance.elements.widget;
       let errorElement = this.getElement(widgetInstance);
       if (errorElement && this.selectorUsingSameErrorSlot) {
@@ -92,14 +92,12 @@ export class Switch extends Widget {
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength")
-  ], [
-    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text", ""),
-    new SlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "uniface:checked-message"),
-    new SlottedElement(this, "span", "u-unchecked-message", ".u-unchecked-message", "unchecked-message", "uniface:unchecked-message"),
+    new IgnoreProperty(this, "html:maxlength"),
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text", ""),
+    new SlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"),
+    new SlottedElement(this, "span", "u-unchecked-message", ".u-unchecked-message", "unchecked-message", "unchecked-message"),
     new this.SwitchSlottedError(this, "span", "u-error-icon-unchecked", ".u-error-icon-unchecked", "unchecked-message", ".u-unchecked-message"),
-    new this.SwitchSlottedError(this, "span", "u-error-icon-checked", ".u-error-icon-checked", "checked-message", ".u-checked-message")
-  ], [
+    new this.SwitchSlottedError(this, "span", "u-error-icon-checked", ".u-error-icon-checked", "checked-message", ".u-checked-message"),
     new Trigger(this, "onchange", "change", true)
   ]);
 
@@ -119,10 +117,10 @@ export class Switch extends Widget {
   static getValueFormattedSetters() {
     return [
       "value",
-      "uniface:error",
-      "uniface:error-message",
-      "uniface:checked-message",
-      "uniface:unchecked-message"
+      "error",
+      "error-message",
+      "checked-message",
+      "unchecked-message"
     ];
   }
 
@@ -138,12 +136,12 @@ export class Switch extends Widget {
     let formattedValue = {};
     try {
       if (this.fieldValueToBoolean(this.getNode(properties, "value"))) {
-        formattedValue.primaryHtmlText = this.getNode(properties, "uniface:checked-message") || "On";
+        formattedValue.primaryHtmlText = this.getNode(properties, "checked-message") || "On";
       } else {
-        formattedValue.primaryHtmlText = this.getNode(properties, "uniface:unchecked-message") || "Off";
+        formattedValue.primaryHtmlText = this.getNode(properties, "unchecked-message") || "Off";
       }
-      if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
-        formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+      if (this.toBoolean(this.getNode(properties, "error"))) {
+        formattedValue.errorMessage = this.getNode(properties, "error-message");
       }
     } catch (err) {
       formattedValue.primaryPlainText = "ERROR";

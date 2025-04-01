@@ -54,7 +54,7 @@ export class NumberField extends Widget {
     new HtmlAttribute(this, "html:title", "title", undefined),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline", false),
-    new HtmlAttributeChoice(this, "uniface:label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
+    new HtmlAttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeBoolean(this, "html:hide-step", "hideStep", false),
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
@@ -62,20 +62,20 @@ export class NumberField extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new HtmlAttributeMinMax(this, "html:min", "html:max", undefined, undefined),
-    new StyleClass(this, ["u-number-field", "outline"])
-  ], [
-    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "uniface:label-text"),
-    new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "uniface:prefix-text", "", "uniface:prefix-icon", ""),
+    new StyleClass(this, ["u-number-field", "outline"]),
+    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
+    new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
-    new SlottedElement(this, "span", "u-suffix", ".u-suffix", "end", "uniface:suffix-text", "", "uniface:suffix-icon", ""),
+    new SlottedElement(this, "span", "u-suffix", ".u-suffix", "end", "suffix-text", "", "suffix-icon", ""),
     new SlottedSubWidget(this, "span", "", "", "end", "changebutton", "UX.Button", {
-      "uniface:icon-position": "end",
+      "icon-position": "end",
       "html:tabindex": "-1",
       "html:appearance": "stealth"
     }, false, [
       "detail"
-    ])
-  ], [
+    ], [
+      "html:disabled"
+    ]),
     new Trigger(this, "onchange", "change", true)
   ]);
 
@@ -114,12 +114,12 @@ export class NumberField extends Widget {
   static getValueFormattedSetters() {
     return [
       "value",
-      "uniface:error",
-      "uniface:error-message",
-      "uniface:prefix-icon",
-      "uniface:prefix-text",
-      "uniface:suffix-icon",
-      "uniface:suffix-text"
+      "error",
+      "error-message",
+      "prefix-icon",
+      "prefix-text",
+      "suffix-icon",
+      "suffix-text"
     ];
   }
 
@@ -134,16 +134,16 @@ export class NumberField extends Widget {
     /** @type {UValueFormatting} */
     let formattedValue = {};
     formattedValue.primaryPlainText = this.getNode(properties, "value");
-    formattedValue.prefixIcon = this.getNode(properties, "uniface:prefix-icon");
+    formattedValue.prefixIcon = this.getNode(properties, "prefix-icon");
     if (!formattedValue.prefixIcon) {
-      formattedValue.prefixText = this.getNode(properties, "uniface:prefix-text");
+      formattedValue.prefixText = this.getNode(properties, "prefix-text");
     }
-    formattedValue.suffixIcon = this.getNode(properties, "uniface:suffix-icon");
+    formattedValue.suffixIcon = this.getNode(properties, "suffix-icon");
     if (!formattedValue.suffixIcon) {
-      formattedValue.suffixText = this.getNode(properties, "uniface:suffix-text");
+      formattedValue.suffixText = this.getNode(properties, "suffix-text");
     }
-    if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
-      formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+    if (this.toBoolean(this.getNode(properties, "error"))) {
+      formattedValue.errorMessage = this.getNode(properties, "error-message");
     }
     this.staticLog("getValueFormatted", formattedValue);
     return formattedValue;

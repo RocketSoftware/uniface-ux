@@ -9,19 +9,19 @@
   const widgetClass = tester.getWidgetClass();
   const asyncRun = umockup.asyncRun;
 
-  // custom test variables
+  // Custom test variables.
   const valRepArray = [
     {
-      value: "1",
-      representation: "option one"
+      "value": "1",
+      "representation": "option one"
     },
     {
-      value: "2",
-      representation: "option two"
+      "value": "2",
+      "representation": "option two"
     },
     {
-      value: "3",
-      representation: "option three"
+      "value": "3",
+      "representation": "option three"
     }
   ];
 
@@ -34,15 +34,15 @@
               Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
   }
 
-  describe("Uniface Mockup tests", function () {
+  describe("Uniface mockup tests", function () {
 
-    it("get class " + widgetName, function () {
+    it(`get class ${widgetName}`, function () {
       verifyWidgetClass(widgetClass);
     });
 
   });
 
-  describe("Uniface static structure constructor definition", function () {
+  describe("Uniface static structure constructor() definition", function () {
 
     it("should have a static property structure of type Element", function () {
       verifyWidgetClass(widgetClass);
@@ -51,18 +51,16 @@
       expect(structure.tagName).to.equal("fluent-select");
       expect(structure.styleClass).to.equal("");
       expect(structure.elementQuerySelector).to.equal("");
-      expect(structure.attributeDefines).to.be.an("array");
-      expect(structure.elementDefines).to.be.an("array");
-      expect(structure.triggerDefines).to.be.an("array");
+      expect(structure.childWorkers).to.be.an("array");
     });
 
   });
 
 
-  describe(widgetName + ".processLayout", function () {
+  describe(`${widgetName}.processLayout()`, function () {
     let element;
 
-    it("processLayout", function () {
+    it("processLayout()", function () {
       verifyWidgetClass(widgetClass);
       element = tester.processLayout();
       expect(element).to.have.tagName(tester.uxTagName);
@@ -75,7 +73,7 @@
       });
 
       it("check instance of HTMLElement", function () {
-        expect(element).instanceOf(HTMLElement, "Function processLayout of " + widgetName + " does not return an HTMLElement.");
+        expect(element).instanceOf(HTMLElement, `Function processLayout() of ${widgetName} does not return an HTMLElement.`);
       });
 
       it("check tagName", function () {
@@ -87,11 +85,11 @@
       });
 
       it("check u-label-text", function () {
-        assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element");
+        assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element.");
       });
 
       it("check u-error-icon", function () {
-        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element");
+        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element.");
       });
 
     });
@@ -105,34 +103,40 @@
       tester.construct();
     });
 
-    it("constructor", function () {
+    it("constructor()", function () {
       try {
         const widget = tester.construct();
-        assert(widget, "widget is not defined!");
+        assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues.classes["u-select"], "Class is not defined");
+        assert(widgetClass.defaultValues["class:u-select"], "Class is not defined!");
       } catch (e) {
-        assert(false, "Failed to construct new widget, exception " + e);
+        assert(false, `Failed to construct new widget, exception ${e}.`);
       }
     });
 
-    it("onConnect", function () {
+    it("onConnect()", function () {
       const element = tester.processLayout();
       const widget = tester.construct();
       widget.onConnect(element);
       assert(element, "Target element is not defined!");
-      assert(widget.elements.widget === element, "widget is not connected");
+      assert(widget.elements.widget === element, "Widget is not connected!");
     });
   });
 
-  describe("mapTrigger", function () {
+  describe("mapTrigger()", function () {
+    const element = tester.processLayout();
     const widget = tester.onConnect();
-    widget.mapTrigger("onchange");
+
+    it("defined mapTrigger() and onchange event", function () {
+      widget.mapTrigger("onchange");
+      const event = new window.Event("onchange");
+      element.dispatchEvent(event);
+      assert(widget.elements.widget === element, "Widget is not connected.");
+    });
   });
 
-  describe("Data Init", function () {
-    const defaultValues = tester.getDefaultValues();
-    const classes = defaultValues.classes;
+  describe("dataInit()", function () {
+    const classes = tester.getDefaultClasses();
     let element;
 
     beforeEach(function () {
@@ -142,11 +146,11 @@
     });
 
     for (const defaultClass in classes) {
-      it("check class '" + defaultClass + "'", function () {
+      it(`check class '${defaultClass}'`, function () {
         if (classes[defaultClass]) {
-          expect(element).to.have.class(defaultClass, "widget element has class " + defaultClass);
+          expect(element).to.have.class(defaultClass, `Widget element has class ${defaultClass}.`);
         } else {
-          expect(element).not.to.have.class(defaultClass, "widget element has no class " + defaultClass);
+          expect(element).not.to.have.class(defaultClass, `Widget element has no class ${defaultClass}.`);
         }
       });
     }
@@ -170,7 +174,7 @@
 
   });
 
-  describe("dataUpdate", function () {
+  describe("dataUpdate()", function () {
     let element;
     before(function () {
       tester.createWidget();
@@ -180,101 +184,87 @@
 
     it("show label", function () {
       let selectFieldLabel = "Label";
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-text": selectFieldLabel
-          }
+          "label-text": selectFieldLabel
         });
       }).then(function () {
         let labelElement = element.querySelector("span.u-label-text");
         let labelText = labelElement.innerText;
         expect(selectFieldLabel).equal(labelText);
-        assert(!labelElement.hasAttribute("hidden"), "Failed to show the label text");
+        assert(!labelElement.hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
 
-    it("Set label position before", function () {
-      const widget = tester.construct();
-      return asyncRun(function() {
+    it("set label position before", function () {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": "before"
-          }
+          "label-position": "before"
         });
       }).then(function () {
-        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "before");
       });
     });
 
     it("check label position before styles", function () {
-      // if u-label-position attribute is added element display is changed
-      const widget = tester.construct();
-      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      // If u-label-position attribute is added element display is changed.
+      let numberFieldStyle = window.getComputedStyle(element, null);
       let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
       assert.equal(displayPropertyValue, "inline-flex");
-      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector(".label"), null);
+      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
       let alignPropertyValue = labelStyle.getPropertyValue("align-content");
       assert.equal(alignPropertyValue, "center");
     });
 
-    it("Set label position below", function () {
-      return asyncRun(function() {
+    it("set label position below", function () {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": "below"
-          }
+          "label-position": "below"
         });
       }).then(function () {
-        const widget = tester.construct();
-        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "below");
       });
     });
 
     it("check label position below styles", function () {
-      // if u-label-position attribute is added element display is changed
-      const widget = tester.construct();
-      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      // If u-label-position attribute is added element display is changed.
+      let numberFieldStyle = window.getComputedStyle(element, null);
       let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
       assert.equal(flexPropertyValue, "column");
-      let labelStyle = window.getComputedStyle(widget.elements.widget.shadowRoot.querySelector(".label"), null);
+      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
       let orderPropertyValue = labelStyle.getPropertyValue("order");
       assert.equal(orderPropertyValue, 2);
     });
 
     it("reset label and its position", function () {
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "label-position": uniface.RESET,
-            "label-text": uniface.RESET
-          }
+          "label-position": uniface.RESET,
+          "label-text": uniface.RESET
         });
       }).then(function () {
-        const widget = tester.construct();
-        let labelElement = widget.elements.widget.querySelector("span.u-label-text");
-        let labelPosition = widget.elements.widget.getAttribute("u-label-position");
+        let labelElement = element.querySelector("span.u-label-text");
+        let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "above");
-        assert(labelElement.hasAttribute("hidden"), "Failed to hide the label text");
+        assert(labelElement.hasAttribute("hidden"), "Failed to hide the label text.");
         assert.equal(labelElement.innerText, "");
         assert.equal(labelElement.getAttribute("slot"), "");
       });
     });
 
     it("check reset label position styles", function () {
-      // if u-label-position attribute is added element display is changed
-      const widget = tester.construct();
-      let numberFieldStyle = window.getComputedStyle(widget.elements.widget, null);
+      // If u-label-position attribute is added element display is changed.
+      let numberFieldStyle = window.getComputedStyle(element, null);
       let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
       assert.equal(flexPropertyValue, "column");
     });
 
-    it("Set HTML property readonly to true", function () {
-      return asyncRun(function() {
+    it("set html property readonly to true", function () {
+      return asyncRun(function () {
         tester.dataUpdate({
-          html: { readonly: true }
+          "html:readonly": true
         });
       }).then(function () {
         // ux-select is using disabled attribute instead.
@@ -282,10 +272,10 @@
       });
     });
 
-    it("Set HTML property disabled to true", function () {
-      return asyncRun(function() {
+    it("set html property disabled to true", function () {
+      return asyncRun(function () {
         tester.dataUpdate({
-          html: { disabled: true }
+          "html:disabled": true
         });
       }).then(function () {
         expect(element.getAttribute("disabled"));
@@ -293,10 +283,10 @@
       });
     });
 
-    it("Set valrep property with default display value as rep", function () {
-      return asyncRun(function() {
+    it("set valrep property with default display value as rep", function () {
+      return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray
+          "valrep": valRepArray
         });
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
@@ -306,13 +296,11 @@
       });
     });
 
-    it("Set valrep property with default display-format as value", function () {
-      return asyncRun(function() {
+    it("set valrep property with default display-format as value", function () {
+      return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          uniface: {
-            "display-format": "val"
-          }
+          "valrep": valRepArray,
+          "display-format": "val"
         });
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
@@ -322,13 +310,11 @@
       });
     });
 
-    it("Set valrep property with default display value as valrep", function () {
-      return asyncRun(function() {
+    it("set valrep property with default display value as valrep", function () {
+      return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          uniface: {
-            "display-format": "valrep"
-          }
+          "valrep": valRepArray,
+          "display-format": "valrep"
         });
       }).then(function () {
         let selectOptionArray = element.querySelectorAll("fluent-option");
@@ -339,21 +325,19 @@
       });
     });
 
-    it("Ensure value is set using textContent", function () {
+    it("ensure value is set using textContent", function () {
       const valRepArray1 = [
         ...valRepArray,
         {
-          value: "<script> alert('XSS attack') </script>",
-          representation: "<script> alert('XSS attack') </script>"
+          "value": "<script> alert('XSS attack') </script>",
+          "representation": "<script> alert('XSS attack') </script>"
         }
       ];
-      return asyncRun(function() {
+      return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray1,
-          value: "<script> alert('XSS attack') </script>",
-          uniface: {
-            "display-format": "valrep"
-          }
+          "valrep": valRepArray1,
+          "value": "<script> alert('XSS attack') </script>",
+          "display-format": "valrep"
         });
       }).then(function () {
         let valStr = "<script> alert('XSS attack') </script>";
@@ -364,95 +348,89 @@
       });
     });
 
-    it("Set value to 2 and expect the second option to be selected", function () {
+    it("set value to 2 and expect the second option to be selected", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "2",
-          uniface: {
-            "display-format": "rep"
-          }
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "rep"
         });
       }).then(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("option two");
-        // find index of expected value and compare against index of selected option
+        // Find index of expected value and compare against index of selected option.
         const selectOption = element.querySelector("fluent-option.selected");
         expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
       });
     });
 
-    it("Set value to empty string ('') and expect the empty option to be selected", function () {
+    it("set value to empty string ('') and expect the empty option to be selected", function () {
       const valRepArrayWithEmpty = [
         {
-          value: "",
-          representation: ""
+          "value": "",
+          "representation": ""
         },
         ...valRepArray
       ];
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArrayWithEmpty,
-          value: "",
-          uniface: {
-            "display-format": "rep"
-          }
+          "valrep": valRepArrayWithEmpty,
+          "value": "",
+          "display-format": "rep"
         });
       }).then(function () {
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
         expect(selectedValue.textContent).equal("");
-        // find index of expected value and compare against index of selected option
+        // Find index of expected value and compare against index of selected option.
         const selectOption = element.querySelector("fluent-option.selected");
         expect(selectOption.value).equal(valRepArrayWithEmpty.findIndex((item) => item.value === "").toString());
       });
     });
   });
 
-  describe("showError", function () {
-    let selectElement;
+  describe("showError()", function () {
+    let element;
     beforeEach(function () {
       tester.createWidget();
-      selectElement = tester.element;
+      element = tester.element;
     });
 
-    it("When invalid value is set, should show error and none of the options should be selected", function () {
+    it("when invalid value is set, should show error and none of the options should be selected", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "random",
+          "valrep": valRepArray,
+          "value": "random",
           "display-format": "valrep"
         });
       }).then(function () {
-        const selectedValue = selectElement.querySelector("fluent-option.selected");
+        const selectedValue = element.querySelector("fluent-option.selected");
         expect(selectedValue).equal(null);
-        expect(selectElement).to.have.class("u-format-invalid");
-        assert(!selectElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon");
-        assert.equal(selectElement.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'");
-        assert.equal(selectElement.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(element).to.have.class("u-format-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'.");
+        assert.equal(element.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
       });
     });
   });
 
-  describe("hideError", function () {
-    let selectElement;
+  describe("hideError()", function () {
+    let element;
     beforeEach(function () {
       tester.createWidget();
-      selectElement = tester.element;
+      element = tester.element;
     });
 
-    it("Set error to false", function () {
+    it("set error to false", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          uniface: {
-            "format-error": false,
-            "format-error-message": ""
-          }
+          "format-error": false,
+          "format-error-message": ""
         });
       }).then(function () {
-        expect(selectElement).to.not.have.class("u-format-invalid");
-        assert(selectElement.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon");
-        expect(selectElement.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
-        expect(selectElement.querySelector("span.u-error-icon").getAttribute("title")).equal("");
+        expect(element).to.not.have.class("u-format-invalid");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("");
       });
     });
   });
@@ -466,11 +444,11 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("Set invalid initial value", function () {
+    it("set invalid initial value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "0"
+          "valrep": valRepArray,
+          "value": "0"
         });
       }).then(function () {
         let errorIconTooltip = element.querySelector(".u-error-icon");
@@ -480,7 +458,7 @@
       });
     });
 
-    it("Simulate user interaction and select first option", function () {
+    it("simulate user interaction and select first option", function () {
       return asyncRun(function () {
         const selectElement = document.querySelector("fluent-select");
 
@@ -492,7 +470,7 @@
         optionToSelect.selected = true; // Mark the option as selected.
 
         // Dispatch the change event.
-        const event = new window.Event("change", { bubbles: true });
+        const event = new window.Event("change", { "bubbles": true });
         selectElement.dispatchEvent(event);
       }).then(function () {
         let errorIconTooltip = element.querySelector(".u-error-icon");
@@ -505,11 +483,11 @@
       });
     });
 
-    it("Now again set the same invalid value", function () {
+    it("now again set the same invalid value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "0"
+          "valrep": valRepArray,
+          "value": "0"
         });
       }).then(function () {
         const selectOption1 = document.querySelector("fluent-option");
@@ -523,7 +501,7 @@
     });
   });
 
-  describe("Set valrep, display format to val and set a initial value, user interaction and check values in selected element", function () {
+  describe("Set valrep, display-format to val and set a initial value, user interaction and check values in selected element", function () {
     let element;
     before(function () {
       tester.createWidget();
@@ -532,14 +510,12 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("Set valrep and initial value to 1", function () {
+    it("set valrep and initial value to 1", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          value: "1",
-          uniface: {
-            "display-format": "val"
-          }
+          "valrep": valRepArray,
+          "value": "1",
+          "display-format": "val"
         });
       }).then(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");
@@ -550,7 +526,7 @@
       });
     });
 
-    it("Simulate user interaction and select second option", function () {
+    it("simulate user interaction and select second option", function () {
       return asyncRun(function () {
         const selectElement = document.querySelector("fluent-select");
         // Simulate click event on select widget.
@@ -559,7 +535,7 @@
         const optionToSelect = selectElement.options[1]; // Index of the desired option (Option 2).
         optionToSelect.selected = true; // Mark the option as selected.
         // Dispatch the change event.
-        const event = new window.Event("change", { bubbles: true });
+        const event = new window.Event("change", { "bubbles": true });
         selectElement.dispatchEvent(event);
       }).then(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");
@@ -580,15 +556,13 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("Set placeholder with no initial value and expect placeholder to be shown", function () {
+    it("set placeholder with no initial value and expect placeholder to be shown", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          valrep: valRepArray,
-          uniface: {
-            "display-format": "val",
-            "placeholder-text": "Select",
-            "show-placeholder": true
-          }
+          "valrep": valRepArray,
+          "display-format": "val",
+          "placeholder-text": "Select",
+          "show-placeholder": true
         });
       }).then(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");
@@ -596,7 +570,7 @@
       });
     });
 
-    it("Simulate user interaction and select third option, placeholder slot should be null", function () {
+    it("simulate user interaction and select third option, placeholder slot should be null", function () {
       return asyncRun(function () {
         const selectElement = document.querySelector("fluent-select");
         // Simulate click event on select widget.
@@ -605,7 +579,7 @@
         const optionToSelect = selectElement.options[2]; // Index of the desired option (Option 3).
         optionToSelect.selected = true; // Mark the option as selected.
         // Dispatch the change event.
-        const event = new window.Event("change", { bubbles: true });
+        const event = new window.Event("change", { "bubbles": true });
         selectElement.dispatchEvent(event);
       }).then(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");
@@ -625,42 +599,37 @@
       tester.createWidget();
       selectElement = tester.element;
 
-      // Create a spy for the onchange event
+      // Create a spy for the onchange event.
       onchangeSpy = sinon.spy();
 
-      // Add the onchange event listener to the select element
+      // Add the onchange event listener to the select element.
       selectElement.addEventListener("onchange", onchangeSpy);
     });
 
-    // Clean up after each test
+    // Clean up after each test.
     afterEach(function () {
-      // Restore the spy to its original state
+      // Restore the spy to its original state.
       sinon.restore();
     });
 
-    // Test case for the onchange event
+    // Test case for the onchange event.
     it("should call the onchange event handler when a select option is clicked", function () {
-      // Simulate a change event
+      // Simulate a change event.
       const event = new window.Event("onchange");
       selectElement.dispatchEvent(event);
 
-      // Assert that the onchange event handler was called once
+      // Assert that the onchange event handler was called once.
       expect(onchangeSpy.calledOnce).to.be.true;
     });
   });
 
-  describe("dataCleanup", function () {
-    let widget;
-    before(function () {
-      widget = tester.createWidget();
-    });
-
+  describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {
-        widget.dataCleanup(tester.widgetProperties);
+        tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
-        assert(false, "Failed to call dataCleanup(), exception " + e);
+        assert(false, `Failed to reset the properties, exception ${e}`);
       }
     });
   });

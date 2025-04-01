@@ -118,8 +118,8 @@ export class Widget extends Base {
   static getValueFormattedSetters() {
     return [
       "value",
-      "uniface:error",
-      "uniface:error-message"
+      "error",
+      "error-message"
     ];
   }
 
@@ -133,8 +133,8 @@ export class Widget extends Base {
     /** @type {UValueFormatting} */
     let formattedValue = {};
     formattedValue.primaryPlainText = this.getNode(properties, "value");
-    if (this.toBoolean(this.getNode(properties, "uniface:error"))) {
-      formattedValue.errorMessage = this.getNode(properties, "uniface:error-message");
+    if (this.toBoolean(this.getNode(properties, "error"))) {
+      formattedValue.errorMessage = this.getNode(properties, "error-message");
     }
     this.staticLog("getValueFormatted", formattedValue);
     return formattedValue;
@@ -212,6 +212,11 @@ export class Widget extends Base {
       });
     });
 
+    // Iterate over all sub-widget ids to update delegated properties from the widgetClass.
+    Object.keys(widgetClass.subWidgets).forEach((subWidgetId) => {
+      this.subWidgets[subWidgetId].delegatedProperties = widgetClass.subWidgets[subWidgetId].delegatedProperties;
+    });
+
     // Add the value-updater(s) of widget itself.
     let valueWorker = widgetClass.getters.value;
     let widgetUpdaters = valueWorker?.getValueUpdaters(this);
@@ -279,41 +284,24 @@ export class Widget extends Base {
   dataInit() {
     this.data = {};
     this.data.id = Math.random();
-    this.data.properties = {};
 
     /** @type {Object} */
     let widgetClass = this.constructor;
     this.log("dataInit", widgetClass.defaultValues);
 
-    /** @NOTE: This loop only deletes the attributes of the widget's root element,
-     * it does not delete any attributes on child elements. This means the widget is
-     * potentially still not reset properly and state might by left behind on child
-     * elements by previous use. (UNI-39487)
-     * This loop needs to be rewritten and should cleanup all child elements as well.
-     * However, this has as a consequence that style-classes of child elements get deleted too
-     * meaning child elements cannot be found anymore. To resolve that, the onConnect() needs to
-     * build a element index first, like we had in the old widgets. It can do so by iterating
-     * the widget's workers and have them add their e reference to their element to this admin.
-     * Once this is available, workers don't rely on the style-class to lookup their element
-     * and elements can be safely cleaned up by the dataInit(). (UNI-39488)
-     * For now, we disable this code. Separate stories are created to deal with this.
-    // Remove all html attributes except id but including class and style attributes.
-    */
-    // this.elements.widget.getAttributeNames().forEach((attributeName) => {
-    //   if (attributeName !== "id") {
-    //     this.elements.widget.removeAttribute(attributeName);
-    //   }
-    // });
-
-    // Get default property values.
+    // Get deep copy of default property values.
     /** @type {UData} */
-    let data = widgetClass.defaultValues;
+    let data = globalThis.structuredClone(widgetClass.defaultValues);
 
     // Iterate sub-widgets and call their dataInit() followed by their dataUpdate() with default values targeted at the sub-widgets.
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
       this.subWidgets[subWidgetId].dataInit();
-      if (data[subWidgetId]) {
-        this.subWidgets[subWidgetId]?.dataUpdate(data[subWidgetId]);
+      const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
+      const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
+      const subWidgetDelegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties);
+      if (subWidgetData) {
+        this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
     });
 
@@ -326,15 +314,16 @@ export class Widget extends Base {
    * @param {UData} data
    */
   dataUpdate(data) {
-    data = this.fixData(data);
     this.log("dataUpdate", data);
 
     // Send property data to sub-widgets.
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      if (data[subWidgetPropPrefix]) {
-        this.subWidgets[subWidgetId].dataUpdate(data[subWidgetPropPrefix]);
+      const subWidgetDelegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties);
+      if (subWidgetData) {
+        this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
     });
 
@@ -344,14 +333,22 @@ export class Widget extends Base {
 
   /**
    * Cleans up the widget.
+   * @param {UPropertyNames} propertyNames
    */
-  dataCleanup() {
-    this.log("dataCleanup");
+  dataCleanup(propertyNames) {
+    this.log("dataCleanup", propertyNames);
 
     // Call dataCleanup() of sub-widgets (if any).
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
-      this.subWidgets[subWidgetId].dataCleanup();
+      const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
+      const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
+      const subWidgetPropertyNames = this.extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix);
+      if (subWidgetPropertyNames) {
+        this.subWidgets[subWidgetId].dataCleanup(subWidgetPropertyNames);
+      }
     });
+    // Clean up class properties.
+    this.cleanupClassProperties(propertyNames);
   }
 
   /**
@@ -417,27 +414,21 @@ export class Widget extends Base {
           });
         } else {
           this.setProperties({
-            "uniface": {
-              "error": true,
-              "error-message": errorMessage
-            }
+            "error": true,
+            "error-message": errorMessage
           });
         }
         // eslint-disable-next-line no-unused-vars
       } catch (_) {
         this.setProperties({
-          "uniface": {
-            "error": true,
-            "error-message": errorMessage
-          }
+          "error": true,
+          "error-message": errorMessage
         });
       }
     } else {
       this.setProperties({
-        "uniface": {
-          "error": true,
-          "error-message": errorMessage
-        }
+        "error": true,
+        "error-message": errorMessage
       });
     }
   }
@@ -452,10 +443,8 @@ export class Widget extends Base {
       this.subWidgets[subWidgetId].hideError();
     });
     this.setProperties({
-      "uniface": {
-        "error": false,
-        "error-message": ""
-      }
+      "error": false,
+      "error-message": ""
     });
   }
 
@@ -513,12 +502,12 @@ export class Widget extends Base {
         case "disabled":
           // If uiBlocking is set to "disabled",
           // set the widget's disabled property based on the corresponding HTML property value.
-          this.elements.widget.disabled = this.toBoolean(this.data.properties.html.disabled);
+          this.elements.widget.disabled = this.toBoolean(this.data["html:disabled"]);
           break;
         case "readonly":
           // If uiBlocking is set to "readonly",
           // set the widget's readOnly property based on the corresponding HTML property value.
-          this.elements.widget.readOnly = this.toBoolean(this.data.properties.html.readonly);
+          this.elements.widget.readOnly = this.toBoolean(this.data["html:readonly"]);
           break;
         default:
           // If uiBlocking has an invalid value, log an error.
@@ -535,86 +524,47 @@ export class Widget extends Base {
 
     /** @type {Object} */
     let widgetClass = this.constructor;
-    let setters = [];
+    const defaultValues = widgetClass.defaultValues;
+    const widgetSetters = widgetClass.setters;
+    const reportUnsupportedPropertyWarnings = widgetClass.reportUnsupportedPropertyWarnings;
+    let setOfSetters = new Set();
     this.log("setProperties", data);
-    // Iterate properties in data, update widget state, and collect setter information.
+
     if (data) {
-      for(const prefix in data) {
-        switch (prefix) {
-          case "uniface":
-          case "html":
-          case "style":
-          case "classes":
-            this.data.properties[prefix] = this.data.properties[prefix] ?? {};
-            for(const property in data[prefix]) {
-              // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
-              // eslint-disable-next-line eqeqeq, no-undef
-              if (data[prefix][property] == uniface.RESET) {
-                this.data.properties[prefix][property] = widgetClass.defaultValues[
-                  prefix
-                ][property]
-                  ?? (prefix === "style" ? "unset" : null);
-              } else {
-                this.data.properties[prefix][property] = data[prefix][property];
-              }
-              if (
-                widgetClass.setters[prefix] &&
-                widgetClass.setters[prefix][property]
-              ) {
-                widgetClass.setters[prefix][property].forEach((setter) => {
-                  if(!setters.includes(setter)) {
-                    setters.push(setter);
-                  }
-                });
-              } else if (widgetClass.setters[prefix] && (prefix === "style" || prefix === "classes")) {
-                widgetClass.setters[prefix].forEach((setter) => {
-                  if(!setters.includes(setter)) {
-                    setters.push(setter);
-                  }
-                });
-              } else {
-                if (widgetClass.reportUnsupportedPropertyWarnings) {
-                  this.warn(
-                    "setProperties(data)",
-                    `Widget does not support property '${prefix}:${property}'`,
-                    "Ignored"
-                  );
-                }
-              }
-            }
-            break;
-          case "value":
-          case "valrep":
-            // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
-            // eslint-disable-next-line eqeqeq, no-undef
-            if (data[prefix] == uniface.RESET) {
-              this.data.properties[prefix] = widgetClass.defaultValues[prefix];
-            } else {
-              this.data.properties[prefix] = data[prefix];
-            }
-            if (widgetClass.setters[prefix]) {
-              widgetClass.setters[prefix].forEach((setter) => {
-                if(!setters.includes(setter)) {
-                  setters.push(setter);
-                }
-              });
-            } else {
-              if (widgetClass.reportUnsupportedPropertyWarnings) {
-                this.warn(
-                  "setProperties(data)",
-                  `Widget does not support property '${prefix}'`,
-                  "Ignored"
-                );
-              }
-            }
-            break;
-          default:
-          // This is a sub widget -> delicate TBD.
+      for (const property in data) {
+        // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
+        // eslint-disable-next-line eqeqeq, no-undef
+        if (data[property] == uniface.RESET) {
+          this.data[property] = defaultValues[property];
+        } else {
+          this.data[property] = data[property];
+        }
+        let setters = property.startsWith("class:") ? widgetSetters["class"] : widgetSetters[property];
+        if (setters) {
+          setOfSetters.add(setters);
+        } else if (reportUnsupportedPropertyWarnings) {
+          this.warn("setProperties(data)", `Widget does not support property '${property}'`, "Ignored");
         }
       }
     }
-    setters.forEach((setter) => {
-      setter.refresh(this);
+    setOfSetters.forEach((setterList) => {
+      setterList.forEach((setter) => {
+        setter.refresh(this);
+      });
+    });
+  }
+
+  /**
+   * Removes the CSS class names from the widget element based on the provided property names.
+   * @param {UPropertyNames} propertyNames - A set of property names, where some may start with "class:".
+   * If a property name starts with "class:", the corresponding class is removed from the widget element.
+   */
+  cleanupClassProperties(propertyNames) {
+    propertyNames.forEach((propertyName) => {
+      if (propertyName.startsWith("class:")) {
+        const className = propertyName.split(":")[1];
+        this.elements.widget.classList.remove(className);
+      }
     });
   }
 

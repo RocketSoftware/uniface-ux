@@ -20,26 +20,11 @@ export class Base {
    * dataInit() and dataUpdate() call this worker (via setProperties()) to make the widget react to the property change.
    * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
-   * @param {Worker} worker - Specified the worker.
+   * @param {Worker} worker - Specifies the worker.
    */
   registerSetter(widgetClass, propId, worker) {
-    let pos = propId.search(":");
-    if (pos > 0) {
-      let prefix = propId.substring(0, pos);
-      propId = propId.substring(pos + 1);
-      if (!widgetClass.setters[prefix]) {
-        widgetClass.setters[prefix] = {};
-      }
-      if (!widgetClass.setters[prefix][propId]) {
-        widgetClass.setters[prefix][propId] = [];
-      }
-      widgetClass.setters[prefix][propId].push(worker);
-    } else {
-      if (!widgetClass.setters[propId]) {
-        widgetClass.setters[propId] = [];
-      }
-      widgetClass.setters[propId].push(worker);
-    }
+    widgetClass.setters[propId] ??= [];
+    widgetClass.setters[propId].push(worker);
   }
 
   /**
@@ -52,17 +37,7 @@ export class Base {
    * @param {Worker} worker - Specifies the worker.
    */
   registerGetter(widgetClass, propId, worker) {
-    let pos = propId.search(":");
-    if (pos > 0) {
-      let prefix = propId.substring(0, pos);
-      propId = propId.substring(pos + 1);
-      if (!widgetClass.getters[prefix]) {
-        widgetClass.getters[prefix] = {};
-      }
-      widgetClass.getters[prefix][propId] = worker;
-    } else {
-      widgetClass.getters[propId] = worker;
-    }
+    widgetClass.getters[propId] = worker;
   }
 
   /**
@@ -74,16 +49,7 @@ export class Base {
    * @param {UPropValue} defaultValue - Specifies the default value.
    */
   registerDefaultValue(widgetClass, propId, defaultValue) {
-    let node = widgetClass.defaultValues;
-    let ids = propId.split(":");
-    let i;
-    for (i = 0; i < ids.length - 1; i++) {
-      if (node[ids[i]] === undefined) {
-        node[ids[i]] = {};
-      }
-      node = node[ids[i]];
-    }
-    node[ids[i]] = defaultValue;
+    widgetClass.defaultValues[propId] = defaultValue;
   }
 
   /**
@@ -109,12 +75,14 @@ export class Base {
    * @param {typeof Widget} subWidgetClass
    * @param {String} subWidgetStyleClass
    * @param {Array} subWidgetTriggers
+   * @param {Array} subWidgetDelegatedProperties
    */
-  registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers) {
+  registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, subWidgetDelegatedProperties) {
     widgetClass.subWidgets[subWidgetId] = {
       "class": subWidgetClass,
       "styleClass": subWidgetStyleClass,
-      "triggers": subWidgetTriggers
+      "triggers": subWidgetTriggers,
+      "delegatedProperties": subWidgetDelegatedProperties
     };
   }
 
@@ -136,7 +104,7 @@ export class Base {
   /**
    * Looks up the node within node as specified by propId.
    * @param {UData} node
-   * @param {UPropName|undefined} propId
+   * @param {UPropName} propId
    * @return {Object}
    */
   getNode(node, propId) {
@@ -146,22 +114,11 @@ export class Base {
   /**
    * Looks up the node within node as specified by propId.
    * @param {UData} node
-   * @param {UPropName|undefined} propId
+   * @param {UPropName} propId
    * @return {Object}
    */
   static getNode(node, propId) {
-    if (propId) {
-      let url = propId.split(":");
-      for (let i = 0; i < url.length; i++) {
-        node = node[url[i]];
-        if (node === undefined) {
-          return undefined;
-        }
-      }
-      return node;
-    } else {
-      return undefined;
-    }
+    return propId ? node[propId] : undefined;
   }
 
   /**
@@ -238,58 +195,6 @@ export class Base {
         break;
     }
     throw this.formatErrorMessage;
-  }
-
-  /**
-   * Fix properties data.
-   * @param {UData} data
-   * @return {UData}
-   */
-  fixData(data) {
-    return Base.fixData(data);
-  }
-
-  /**
-   * Fix properties data.
-   * @param {UData} data
-   * @return {UData}
-   */
-  static fixData(data) {
-    let newData = {};
-    for (let key in data) {
-      if (key === "uniface") {
-        newData.uniface = newData.uniface || {};
-        for (let key in data.uniface) {
-          let prefixes = key.split(":");
-          if (prefixes.length === 1) {
-            newData.uniface[key] = data.uniface[key];
-          } else {
-            let newDataNode = newData;
-            let prefix;
-            let i;
-            for (i = 0; i < prefixes.length - 1; i++) {
-              prefix = prefixes[i];
-              let id = prefix === "class" ? "classes" : prefix;
-              newDataNode[id] = newDataNode[id] || {};
-              newDataNode = newDataNode[id];
-            }
-            if (prefixes[i] === "valrep") {
-              newDataNode[prefixes[i]] = this.getFormattedValrep(data.uniface[key]);
-            } else if (prefix === "class") {
-              newDataNode[prefixes[i]] = this.toBoolean(data.uniface[key]);
-            } else if (prefix === "html" || prefix === "style" || prefixes[i] === "value") {
-              newDataNode[prefixes[i]] = data.uniface[key];
-            } else {
-              newDataNode.uniface = newDataNode.uniface || {};
-              newDataNode = newDataNode.uniface[prefixes[i]] = data.uniface[key];
-            }
-          }
-        }
-      } else {
-        newData[key] = data[key];
-      }
-    }
-    return newData;
   }
 
   /**
@@ -430,5 +335,73 @@ export class Base {
    */
   error(functionName, message, consequence) {
     console.error(`${this.constructor.name}.${functionName}: ${message} - ${consequence}.`);
+  }
+
+  /**
+   * Extracts sub-widget data from the original data object and removes the corresponding
+   * properties from original data object.
+   * @param {UData} data - The source object containing properties to extract.
+   * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
+   * @param {Array} subWidgetDelegatedProperties - An array containing list of delegated properties.
+   * @returns {UData|undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
+   */
+  extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties) {
+    let subWidgetData;
+    for (let property in data) {
+      if (property.startsWith(`${subWidgetPropPrefix}:`)) {
+        const key = property.substring(subWidgetPropPrefix.length + 1);
+        if (key) {
+          subWidgetData = subWidgetData || {};
+          subWidgetData[key] = key === "valrep" ? this.getFormattedValrep(data[property]) : data[property];
+          // Remove the property from the original data to avoid duplication.
+          delete data[property];
+        }
+      }
+    }
+    // Iterate over each delegated property and add matching delegated property to subWidgetData.
+    subWidgetDelegatedProperties?.forEach((property) => {
+      // Check if the data object has the property.
+      if (data.hasOwnProperty(property)) {
+        subWidgetData = subWidgetData || {};
+        // Add the property to subWidgetData.
+        subWidgetData[property] = data[property];
+      }
+    });
+    return subWidgetData;
+  }
+
+  /**
+   * Extracts sub-widget property names from the original property names set and removes the corresponding
+   * property names from original property names set.
+   * @param {UPropertyNames} propertyNames - The source set containing property names to extract.
+   * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
+   * @returns {UPropertyNames|undefined} A set of extracted sub-widget property names, or `undefined` if no property names are found.
+   */
+  extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix) {
+    let subWidgetPropertyNames;
+    propertyNames.forEach((propertyName) => {
+      if (propertyName.startsWith(`${subWidgetPropPrefix}:`)) {
+        const key = propertyName.substring(subWidgetPropPrefix.length + 1);
+        if (key) {
+          subWidgetPropertyNames = subWidgetPropertyNames || new Set();
+          subWidgetPropertyNames.add(key);
+          // Remove the property names from the original set to avoid duplication.
+          propertyNames.delete(propertyName);
+        }
+      }
+    });
+    return subWidgetPropertyNames;
+  }
+
+  /**
+   * Removes all classes from the given element that start with "ms-Icon".
+   * @param {HTMLElement} element - The DOM element from which the classes that start with "ms-Icon" will be removed.
+   */
+  deleteIconClasses(element) {
+    Array.from(element.classList).forEach((key) => {
+      if (key.startsWith("ms-Icon")) {
+        element.classList.remove(key);
+      }
+    });
   }
 }

@@ -323,6 +323,19 @@
         return this.defaultValues;
       }
 
+      getDefaultClasses() {
+        const widgetClass = this.getWidgetClass();
+        this.defaultValues = widgetClass.defaultValues;
+        const classes = Object.keys(this.defaultValues).reduce((accumulator, key) => {
+          if (key.startsWith("class:")) {
+            let newKey = key.replace("class:", "");
+            accumulator[newKey] = this.defaultValues[key];
+          }
+          return accumulator;
+        }, {});
+        return classes;
+      }
+
       dataUpdate(data) {
         // This is to remember the updated value from widget test so that this.widgetProperties can be used in dataCleanup()
         Object.keys(data).forEach((key) => {
