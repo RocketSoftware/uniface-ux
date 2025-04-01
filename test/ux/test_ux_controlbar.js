@@ -1151,28 +1151,38 @@
       });
     });
 
-    it("check if opened select dropdown closes on scrolling", function () {
+    describe("Check the dropdown menu behavior of select widget on scroll", function () {
       let selectElement;
-      return asyncRun(function () {
+
+      // Moving the scrolling related code to a separate block to add an additional delay.
+      before(function () {
         node = document.querySelector("#widget-container");
         node.style.width = "500px";
-
-        const isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
-        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
-        // Open the select dropdown.
         selectElement = element.querySelector(".u-select");
+        // Expect the select drodpown to be closed by default.
         expect(selectElement.open).to.be.false;
-        selectElement.click();
-      }).then(function () {
-        expect(selectElement.open).to.be.true;
-        // Scroll to the opposite end and check if the dropdown got closed.
-        element.scrollTo({
-          "left": element.scrollWidth
+
+        return asyncRun(function () {
+          // Simulate a click event to open the dropdown.
+          selectElement.click();
+        }).then(function () {
+          expect(selectElement.open).to.be.true;
+          // Scroll to the opposite end to close the dropdown.
+          element.scrollTo({
+            "left": element.scrollWidth
+          });
         });
-      }, 1000).then(function () {
-        // setTimeout(function (){
-        expect(selectElement.open).to.be.false;
-        // }, 1);
+      });
+
+
+      it("check if opened select dropdown closes on scrolling", function () {
+        return asyncRun(function () {
+          const isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+          assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
+        }).then(function () {
+          // After the scrolling, expect the select dropdown to be closed.
+          expect(selectElement.open).to.be.false;
+        });
       });
     });
   });
