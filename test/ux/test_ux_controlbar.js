@@ -692,7 +692,7 @@
       return asyncRun(function () {
         let conn = tester.onConnect(element);
         tester.dataInit();
-        conn.blockUI(); 
+        conn.blockUI();
       }).then(function () {
         expect(element.querySelector(".u-start-section").firstChild.className).contains("u-blocked");
         expect(element.querySelector(".u-start-section").firstChild.className).contains("readonly");
