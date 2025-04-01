@@ -725,7 +725,7 @@
   });
 
   describe(`${widgetName} OverFlow tests`, function () {
-    let element, tester, data, widget, node;
+    let element, tester, data, widget, node, warnSpy;
 
     before(function () {
       tester = new umockup.WidgetTester();
@@ -794,6 +794,54 @@
         expect(element.querySelector("fluent-switch.u-sw-switch").classList.contains("u-overflown-item")).to.be.false;
         expect(element.querySelector("fluent-text-field.u-sw-textfield").classList.contains("u-overflown-item")).to.be.true;
         expect(element.querySelector("fluent-checkbox.u-sw-checkbox").classList.contains("u-overflown-item")).to.be.true;
+      });
+    });
+
+    it("when the overflow behavior is set to 'move' a warning is shown", function () {
+      return asyncRun(function () {
+        warnSpy = sinon.spy(console, "warn");
+        tester.dataUpdate({
+          "select_overflow-behavior": "move"
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith("Controlbar.setProperties: Property 'select_overflow-behavior' is given invalid value '(move)' - Ignored.")).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("when the overflow behavior is set to 'menu' a warning is shown", function () {
+      return asyncRun(function () {
+        warnSpy = sinon.spy(console, "warn");
+        tester.dataUpdate({
+          "select_overflow-behavior": "menu"
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith("Controlbar.setProperties: Property 'select_overflow-behavior' is given invalid value '(menu)' - Ignored.")).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("when the overflow behavior is set to any invalid value a warning is shown", function () {
+      return asyncRun(function () {
+        warnSpy = sinon.spy(console, "warn");
+        tester.dataUpdate({
+          "select_overflow-behavior": "random"
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith("Controlbar.setProperties: Property 'select_overflow-behavior' is given invalid value '(random)' - Ignored.")).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("when the priority is set to an invalid value a warning is shown", function () {
+      return asyncRun(function () {
+        warnSpy = sinon.spy(console, "warn");
+        tester.dataUpdate({
+          "select_priority": "random"
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith("Controlbar.setProperties: Property 'select_priority' is given invalid value '(random)' - Ignored.")).to.be.true;
+        warnSpy.restore();
       });
     });
   });
@@ -1100,6 +1148,31 @@
 
         isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
         assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
+      });
+    });
+
+    it("check if opened select dropdown closes on scrolling", function () {
+      let selectElement;
+      return asyncRun(function () {
+        node = document.querySelector("#widget-container");
+        node.style.width = "500px";
+
+        const isHorizontalScrollPresent = element.scrollWidth > element.clientWidth;
+        assert(isHorizontalScrollPresent === true, "Horizontal scrollbar is not shown when there is an overflow.");
+        // Open the select dropdown.
+        selectElement = element.querySelector(".u-select");
+        expect(selectElement.open).to.be.false;
+        selectElement.click();
+      }).then(function () {
+        expect(selectElement.open).to.be.true;
+        // Scroll to the opposite end and check if the dropdown got closed.
+        element.scrollTo({
+          "left": element.scrollWidth
+        });
+      }, 1000).then(function () {
+        // setTimeout(function (){
+        expect(selectElement.open).to.be.false;
+        // }, 1);
       });
     });
   });
