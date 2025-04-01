@@ -1123,7 +1123,6 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
         "select": {
           "styleClass": "u-sw-select",
           "propPrefix": "select",
-          "usefield": true,
           "delegatedProperties": ["html:disabled"]
         }
       };
@@ -1137,7 +1136,6 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
         "select1": {
           "styleClass": "u-sw-select1",
           "propPrefix": "select1",
-          "usefield": false,
           "delegatedProperties": []
         }
       };
@@ -1151,13 +1149,11 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
         "select": {
           "styleClass": "u-sw-select",
           "propPrefix": "select",
-          "usefield": true,
           "delegatedProperties": ["html:disabled"]
         },
         "button": {
           "styleClass": "u-sw-button",
           "propPrefix": "button",
-          "usefield": true,
           "delegatedProperties": ["html:readonly"]
         }
       };
