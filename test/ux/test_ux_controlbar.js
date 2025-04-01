@@ -738,7 +738,7 @@
       node = document.querySelector("#widget-container");
     });
 
-    it("resize the widget container and expect the widget-resize property to be true and expect widgets to not be removed", function () {
+    it("resize the widget container and expect the widget-resize property to be true and for the widgets to not be removed", function () {
       return asyncRun(function () {
         node.style.width = "200px";
       }, 1).then(function () {
@@ -798,7 +798,7 @@
       });
     });
 
-    it("when the overflow behavior is set to 'move' a warning is shown", function () {
+    it("when the overflow behavior is set to 'move', a warning should be shown", function () {
       return asyncRun(function () {
         warnSpy = sinon.spy(console, "warn");
         tester.dataUpdate({
@@ -810,7 +810,7 @@
       });
     });
 
-    it("when the overflow behavior is set to 'menu' a warning is shown", function () {
+    it("when the overflow behavior is set to 'menu', a warning should be shown", function () {
       return asyncRun(function () {
         warnSpy = sinon.spy(console, "warn");
         tester.dataUpdate({
@@ -822,7 +822,7 @@
       });
     });
 
-    it("when the overflow behavior is set to any invalid value a warning is shown", function () {
+    it("when the overflow behavior is set to any invalid value, a warning should be shown", function () {
       return asyncRun(function () {
         warnSpy = sinon.spy(console, "warn");
         tester.dataUpdate({
@@ -834,7 +834,7 @@
       });
     });
 
-    it("when the priority is set to an invalid value a warning is shown", function () {
+    it("when the priority is set to any invalid value, a warning should be shown", function () {
       return asyncRun(function () {
         warnSpy = sinon.spy(console, "warn");
         tester.dataUpdate({
