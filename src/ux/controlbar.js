@@ -210,6 +210,15 @@ export class Controlbar extends Widget {
     // Observe the controlbar for changes in screen size.
     resizeObserver.observe(widgetElement);
 
+    // Close the select dropdown on scroll.
+    widgetElement.addEventListener("scroll", () => {
+      // Only one select widget can be kept opened at a time, since opening one will close the others.
+      const selectWidgetWithOpenDropDown = widgetElement.querySelector(".u-select.open");
+      if (selectWidgetWithOpenDropDown) {
+        selectWidgetWithOpenDropDown.open = false;
+      }
+    });
+
     return valueUpdaters;
   }
 
