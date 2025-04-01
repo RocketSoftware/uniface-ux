@@ -6,7 +6,8 @@ import {
   StyleClass,
   SubWidgetsByProperty,
   HtmlAttributeChoice,
-  HtmlAttributeBoolean
+  HtmlAttributeBoolean,
+  HtmlAttribute
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -182,6 +183,7 @@ export class Controlbar extends Widget {
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new StyleClass(this, ["u-controlbar"]),
     new this.HandleOverFlowPropertyWorker(this, "widget-resize", false),
+    new HtmlAttribute(this, "value", "value", ""),
     new Element(this, "div", "u-start-section", ".u-start-section", [
       new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-start")
     ]),

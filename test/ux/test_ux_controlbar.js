@@ -36,7 +36,8 @@
     "html:hidden": false,
     "class:u-controlbar": true,
     "orientation": "horizontal",
-    "widget-resize": false
+    "widget-resize": false,
+    "value": ""
   };
 
   const MOCK_EMPTY_START_CONTROLS_DEFINITION = {
