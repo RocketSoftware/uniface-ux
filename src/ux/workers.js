@@ -479,7 +479,7 @@ export class SubWidgetsByProperty extends Element {
         const classNamePropId = `${subWidgetId}_widget-class`;
         const delegatedPropertiesPropId = `${subWidgetId}_delegated-properties`;
         const className = objectDefinition.getProperty(classNamePropId);
-        const subWidgetClass = UNIFACE.ClassRegistry.get(className);
+        const subWidgetClass = getWidgetClass(className);
         const delegatedProperties = objectDefinition.getProperty(delegatedPropertiesPropId);
         let subWidgetDefinition = {};
         subWidgetDefinition.class = subWidgetClass;
