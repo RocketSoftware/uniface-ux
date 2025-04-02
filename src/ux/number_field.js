@@ -1,5 +1,5 @@
 // @ts-check
-/* global UNIFACE */
+import { registerWidgetClass } from "./dsp_connector.js";
 import { Widget } from "./widget.js";
 import {
   Trigger,
@@ -16,6 +16,10 @@ import {
   IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
+
+// This widget also depends on Button, still registration is needed
+import { Button } from "./button.js";
+registerWidgetClass("UX.Button", Button);
 
 /**
  * NumberField Widget.
@@ -58,8 +62,7 @@ export class NumberField extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new HtmlAttributeMinMax(this, "html:min", "html:max", undefined, undefined),
-    new StyleClass(this, ["u-number-field", "outline"])
-  ], [
+    new StyleClass(this, ["u-number-field", "outline"]),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
@@ -72,8 +75,7 @@ export class NumberField extends Widget {
       "detail"
     ], [
       "html:disabled"
-    ])
-  ], [
+    ]),
     new Trigger(this, "onchange", "change", true)
   ]);
 
@@ -147,5 +149,3 @@ export class NumberField extends Widget {
     return formattedValue;
   }
 }
-
-UNIFACE.ClassRegistry.add("UX.NumberField", NumberField);

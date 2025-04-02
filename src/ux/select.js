@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   Element,
@@ -96,7 +95,7 @@ export class Select extends Widget {
       this.log("createPlaceholderElement", null);
       const element = document.createElement("div");
       element.setAttribute("value", value);
-      const placeholderElement = document.createElement('span');
+      const placeholderElement = document.createElement("span");
       placeholderElement.className = "u-placeholder";
       placeholderElement.textContent = text;
       element.appendChild(placeholderElement);
@@ -290,14 +289,12 @@ export class Select extends Widget {
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new HtmlAttributeChoice(this, "popup-position", "u-position", ["above", "below"], "below", true),
-    new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ".u-placeholder"),
+    new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ""),
     new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength")
-  ], [
+    new IgnoreProperty(this, "html:maxlength"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
-    new SlottedElementsByValRep(this, "fluent-option", "", "")
-  ], [
+    new SlottedElementsByValRep(this, "fluent-option", "", ""),
     new Trigger(this, "onchange", "change", true)
   ]);
 
@@ -441,12 +438,12 @@ export class Select extends Widget {
     // Apply popup position and size styles and unhide popup.
     this.stylingSetRule(1, popupElementSelector, "visibility", "unset");
     this.stylingSetRule(2, ".ignore", "display", "unset");
-    this.stylingSetRule(3, popupElementSelector, "top", popupElementRect.top ? `${popupElementRect.top}px` : `unset`);
-    this.stylingSetRule(4, popupElementSelector, "bottom", popupElementRect.bottom ? `${popupElementRect.bottom}px` : `unset`);
-    this.stylingSetRule(5, popupElementSelector, "height", popupElementRect.height ? `${popupElementRect.height}px` : `unset`);
-    this.stylingSetRule(6, popupElementSelector, "left", popupElementRect.left ? `${popupElementRect.left}px` : `unset`);
-    this.stylingSetRule(7, popupElementSelector, "right", popupElementRect.right ? `${popupElementRect.right}px` : `unset`);
-    this.stylingSetRule(8, popupElementSelector, "width", popupElementRect.width ? `${popupElementRect.width}px` : `unset`);
+    this.stylingSetRule(3, popupElementSelector, "top", popupElementRect.top ? `${popupElementRect.top}px` : "unset");
+    this.stylingSetRule(4, popupElementSelector, "bottom", popupElementRect.bottom ? `${popupElementRect.bottom}px` : "unset");
+    this.stylingSetRule(5, popupElementSelector, "height", popupElementRect.height ? `${popupElementRect.height}px` : "unset");
+    this.stylingSetRule(6, popupElementSelector, "left", popupElementRect.left ? `${popupElementRect.left}px` : "unset");
+    this.stylingSetRule(7, popupElementSelector, "right", popupElementRect.right ? `${popupElementRect.right}px` : "unset");
+    this.stylingSetRule(8, popupElementSelector, "width", popupElementRect.width ? `${popupElementRect.width}px` : "unset");
   }
 
   popupGetRect(anchorElement, popupElement, position) {
@@ -645,4 +642,3 @@ export class Select extends Widget {
     return formattedValue;
   }
 }
-UNIFACE.ClassRegistry.add("UX.Select", Select);

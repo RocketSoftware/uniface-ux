@@ -3,12 +3,15 @@ import { Widget } from "../../src/ux/widget.js";
 import {
   StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget,
   SubWidgetsByProperty, BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean,
-  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, StyleProperty, Worker, IgnoreProperty, SlottedElementsByValRep
+  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep
 } from "../../src/ux/workers.js";
-
+import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
 
 (function () {
-  'use strict';
+  "use strict";
+
+  // This test also depends on Button, still registration is needed
+  registerWidgetClass("UX.Button", Button);
 
   const expect = chai.expect;
 
@@ -40,7 +43,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -52,7 +55,7 @@ import {
   // ===================================================================================================================
   // == Testing ClassStyle class =======================================================================================
   // ===================================================================================================================
-  describe("Test ClassStyle Class", function () {
+  describe("Test ClassStyle class", function () {
     let widgetClass;
     let defaultClassList;
     let instance;
@@ -68,7 +71,7 @@ import {
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      defaultClassList = ['class1', 'class2'];
+      defaultClassList = ["class1", "class2"];
       instance = new StyleClass(widgetClass, defaultClassList);
     });
 
@@ -85,35 +88,36 @@ import {
     it('should refresh correctly and modify the element classes for ClassStyle class', function () {
       const widgetInstance = {
         "data": {
-          "class1": true,
-          "class2": false
+          "class:class1": true,
+          "class:class2": false,
+          "class1:class3": true,
+          "class2:class4":true
         },
-        "getTraceDescription": sinon.stub().returns('description')
+        "getTraceDescription": sinon.stub().returns("description")
       };
-      const element = document.createElement('div');
-      sinon.stub(instance, 'getElement').returns(element);
+      const element = document.createElement("div");
+      sinon.stub(instance, "getElement").returns(element);
 
       instance.refresh(widgetInstance);
 
-      expect(element.classList.contains('class1')).to.be.true;
-      expect(element.classList.contains('class2')).to.be.false;
+      expect(element.classList.contains("class1")).to.be.true;
+      expect([...element.classList].includes(...["class2, class3", "class4"])).to.be.false;
     });
   });
 
   // ===================================================================================================================
   // == Testing Elements class =========================================================================================
   // ===================================================================================================================
-  describe("Test Element Class", function () {
+  describe("Test Element class", function () {
 
     let widgetClass;
-    let tagname;
-    let styleclass;
+    let tagName;
+    let styleClass;
     let elementQuerySelector;
-    let attributeDefines;
-    let elementDefines;
-    let triggerDefines;
+    let childWorkers;
     let element;
     let definitions;
+    let expectedQuerySelectors;
 
     beforeEach(function () {
       Widget.structure = {};
@@ -126,24 +130,20 @@ import {
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      tagname = "DIV";
+      tagName = "DIV";
       elementQuerySelector = "div";
-      styleclass = "styleClass";
-      attributeDefines = [new StyleClass(widgetClass, ["u-switch"]), new HtmlAttribute(widgetClass, "html:role", "role", "switch")];
-      elementDefines = [new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "label-text"),
-        new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message")];
-      triggerDefines = [new Trigger(widgetClass, "onchange", "change", true)];
-      element = new Element(widgetClass, tagname, styleclass, elementQuerySelector, attributeDefines, elementDefines, triggerDefines);
+      styleClass = "styleClass";
+      childWorkers = [new StyleClass(widgetClass, ["u-switch"]), new HtmlAttribute(widgetClass, "html:role", "role", "switch"), new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "label-text"), new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"), new Trigger(widgetClass, "onchange", "change", true)];
+      expectedQuerySelectors = ["div", "div", ".u-label-text", ".u-checked-message", "div"];
+      element = new Element(widgetClass, tagName, styleClass, elementQuerySelector, childWorkers);
     });
 
     it("should initialize with correct properties for Elements class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
-      expect(element.tagName).to.equal(tagname);
-      expect(element.styleClass).to.equal(styleclass);
+      expect(element.tagName).to.equal(tagName);
+      expect(element.styleClass).to.equal(styleClass);
       expect(element.elementQuerySelector).to.equal(elementQuerySelector);
-      expect(element.attributeDefines).to.equal(attributeDefines);
-      expect(element.elementDefines).to.equal(elementDefines);
-      expect(element.triggerDefines).to.equal(triggerDefines);
+      expect(element.childWorkers).to.equal(childWorkers);
     });
 
     it("Check elementQuerySelector changed for all elements for Elements class", function () {
@@ -160,16 +160,16 @@ import {
       let layoutElement = element.getLayout(definitions);
 
       expect(layoutElement).to.have.tagName("DIV");
-      expect(layoutElement).to.have.class('styleClass');
+      expect(layoutElement).to.have.class("styleClass");
       expect(layoutElement.querySelector("u-label-text"));
       expect(layoutElement.querySelector("u-checked-message"));
     });
   });
 
   // ===================================================================================================================
-  // == Testing Slotted Elements class =================================================================================
+  // == Testing SlottedElements class =================================================================================
   // ===================================================================================================================
-  describe("Test Slotted Elements Class", function () {
+  describe("Test SlottedElements class", function () {
 
     let widgetClass;
     let propText;
@@ -188,11 +188,10 @@ import {
       "elements": {
         "widget": document.createElement("div")
       },
-      "getTraceDescription": () => {
+      "getTraceDescription": function () {
         return "description";
       }
     };
-
 
     beforeEach(function () {
       Widget.structure = {};
@@ -227,20 +226,21 @@ import {
 
     it('should refresh correctly for Slotted Elements class', function () {
       slottedElement.refresh(widgetInstance);
+      let mockIconClasses = ["ms-Icon", "ms-Icon--testicon.png"];
       expect(widgetInstance.elements.widget.hidden).to.equal(false);
-      expect(widgetInstance.elements.widget.classList[0]).to.equal("ms-Icon");
-      expect(widgetInstance.elements.widget.classList[1]).to.equal("ms-Icon--testicon.png");
+      expect([...widgetInstance.elements.widget.classList].includes(...mockIconClasses)).to.equal(true);
 
       widgetInstance.data["icon"] = "";
       slottedElement.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.innerText).to.equal("defaultText");
+      expect([...widgetInstance.elements.widget.classList].includes(...mockIconClasses)).to.equal(false);
     });
   });
 
   // ===================================================================================================================
   // == Testing SlottedError class =====================================================================================
   // ===================================================================================================================
-  describe("Test SlottedError Class", function () {
+  describe("Test SlottedError class", function () {
 
     let widgetClass;
     let slottedError;
@@ -289,7 +289,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -318,7 +318,7 @@ import {
   // ===================================================================================================================
   // == Testing SlottedSubWidget class =====================================================================================
   // ====================================================================================================================
-  describe("Test SlottedSubWidget Class", function () {
+  describe("Test SlottedSubWidget class", function () {
     let widgetClass;
     let subWidgetId;
     let subWidgetName;
@@ -355,9 +355,9 @@ import {
     it("Check Generate Layout for SlottedSubWidget class", function () {
       let layoutElement = slottedWidget.getLayout();
 
-      expect(layoutElement).to.have.class('u-sw-undefined');
+      expect(layoutElement).to.have.class("u-sw-undefined");
       expect(layoutElement.hidden).to.equal(true);
-      expect(layoutElement).to.have.tagName('FLUENT-BUTTON');
+      expect(layoutElement).to.have.tagName("FLUENT-BUTTON");
     });
 
     it('should refresh correctly for SlottedSubWidget class', function () {
@@ -368,7 +368,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -389,7 +389,7 @@ import {
   // ===================================================================================================================
   // == Testing BaseHtmlAttribute class ================================================================================
   // ===================================================================================================================
-  describe("Test BaseHtmlAttribute Class", function () {
+  describe("Test BaseHtmlAttribute class", function () {
 
     let widgetClass;
     let propId;
@@ -451,7 +451,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -465,7 +465,7 @@ import {
         "elements": {
           "widget": [document.createElement("div"), document.createElement("span")]
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -476,7 +476,7 @@ import {
   // ===================================================================================================================
   // == Testing HtmlAttribute class ====================================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttribute Class", function () {
+  describe("Test HtmlAttribute class", function () {
 
     let widgetClass;
     let propId;
@@ -514,12 +514,12 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
       element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget).to.have.all.keys('button');
+      expect(widgetInstance.elements.widget).to.have.all.keys("button");
       expect(widgetInstance.elements.widget.button).to.equal("start-end");
     });
   });
@@ -527,7 +527,7 @@ import {
   // ===================================================================================================================
   // == Testing HtmlAttributeChoice class ==============================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeChoice Class", function () {
+  describe("Test HtmlAttributeChoice class", function () {
 
     let widgetClass;
     let propId;
@@ -568,12 +568,12 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
       element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget).to.have.all.keys('button');
+      expect(widgetInstance.elements.widget).to.have.all.keys("button");
       expect(widgetInstance.elements.widget.button).to.equal("start-end");
     });
   });
@@ -581,7 +581,7 @@ import {
   // ===================================================================================================================
   // == Testing HtmlAttributeNumber class ==============================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeNumber Class", function () {
+  describe("Test HtmlAttributeNumber class", function () {
 
     let widgetClass;
     let propId;
@@ -625,12 +625,12 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
       element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget).to.have.all.keys('newReturnNumber');
+      expect(widgetInstance.elements.widget).to.have.all.keys("newReturnNumber");
       expect(widgetInstance.elements.widget.newReturnNumber).to.equal(126);
     });
   });
@@ -638,7 +638,7 @@ import {
   // ===================================================================================================================
   // == Testing HtmlAttributeBoolean class =============================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeBoolean Class", function () {
+  describe("Test HtmlAttributeBoolean class", function () {
 
     let widgetClass;
     let propId;
@@ -676,7 +676,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -693,7 +693,7 @@ import {
   // ===================================================================================================================
   // == Testing HtmlValueAttributeBoolean class ========================================================================
   // ===================================================================================================================
-  describe("Test HtmlValueAttributeBoolean Class", function () {
+  describe("Test HtmlValueAttributeBoolean class", function () {
 
     let widgetClass;
     let propId;
@@ -734,7 +734,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -752,7 +752,7 @@ import {
   // ===================================================================================================================
   // == Testing HtmlAttributeMinMaxLength class ========================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeMinMaxLength Class", function () {
+  describe("Test HtmlAttributeMinMaxLength class", function () {
 
     let widgetClass;
     let propMin;
@@ -813,7 +813,7 @@ import {
         "widget": {
           "maxlengthHasBeenSet": ""
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -891,7 +891,7 @@ import {
   // ===================================================================================================================
   // == Testing Trigger class ==========================================================================================
   // ===================================================================================================================
-  describe("Test Trigger Class", function () {
+  describe("Test Trigger class", function () {
 
     let widgetClass;
     let triggerName;
@@ -931,7 +931,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -945,7 +945,7 @@ import {
   // ===================================================================================================================
   // == Testing IgnoreProperty class ===================================================================================
   // ===================================================================================================================
-  describe("Test IgnoreProperty Class", function () {
+  describe("Test IgnoreProperty class", function () {
     let widgetClass;
     let propId;
     let defaultValue;
@@ -982,7 +982,7 @@ import {
   // ===================================================================================================================
   // == Testing SlottedElementsByValRep class ==========================================================================
   // ===================================================================================================================
-  describe("Test SlottedElementsByValRep Class", function () {
+  describe("Test SlottedElementsByValRep class", function () {
     let widgetClass;
     let tagName;
     let styleClass;
@@ -1049,7 +1049,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
