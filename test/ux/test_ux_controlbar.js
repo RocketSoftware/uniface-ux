@@ -509,6 +509,7 @@
         assert(element.querySelector("div.u-end-section"), "Widget misses or has incorrect u-end-section element");
       });
     });
+
   });
 
   describe(`${widgetName}.onConnect()`, function () {
