@@ -477,8 +477,6 @@ export class SubWidgetsByProperty extends Element {
     if (subWidgetIds) {
       subWidgetIds.split("")?.forEach((subWidgetId) => {
         const classNamePropId = `${subWidgetId}_widget-class`;
-        const useFieldPropId = `${subWidgetId}_usefield`;
-        const usefield = objectDefinition.getProperty(useFieldPropId);
         const delegatedPropertiesPropId = `${subWidgetId}_delegated-properties`;
         const className = objectDefinition.getProperty(classNamePropId);
         const subWidgetClass = getWidgetClass(className);
@@ -487,7 +485,6 @@ export class SubWidgetsByProperty extends Element {
         subWidgetDefinition.class = subWidgetClass;
         subWidgetDefinition.styleClass = `u-sw-${subWidgetId}`;
         subWidgetDefinition.propPrefix = subWidgetId;
-        subWidgetDefinition.usefield = this.toBoolean(usefield);
         subWidgetDefinition.delegatedProperties = delegatedProperties ? delegatedProperties.split("") : [];
         subWidgetDefinitions[subWidgetId] = subWidgetDefinition;
       });
@@ -1468,27 +1465,5 @@ export class SlottedElementsByValRep extends Element {
   refresh(widgetInstance) {
     this.removeValRepElements(widgetInstance);
     this.createValRepElements(widgetInstance);
-  }
-}
-
-/**
- * A specialized value worker for subwidgets that identifies and returns values where the useField property is set to true.
- * @export
- * @class HtmlSubWidgetValueWorker
- * @extends {HtmlAttribute}
- */
-export class HtmlSubWidgetValueWorker extends HtmlAttribute {
-  getValue(widgetInstance) {
-    this.log("getValue", {
-      "widgetInstance": widgetInstance.getTraceDescription(),
-      "attrName": "value"
-    });
-    let value = {};
-    Object.keys(widgetInstance.subWidgets).forEach((subWidgetId) => {
-      if (widgetInstance.subWidgetDefinitions[subWidgetId] && widgetInstance.subWidgetDefinitions[subWidgetId].usefield) {
-        value[subWidgetId] = widgetInstance.subWidgets[subWidgetId].getValue();
-      }
-    });
-    return JSON.stringify(value);
   }
 }

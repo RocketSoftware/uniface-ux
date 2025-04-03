@@ -243,21 +243,32 @@
    * @param {Function} testFunction a function including test actions;
    * @returns a promise.
    */
-  async function asyncRun(testFunction) {
-
+  async function asyncRun(testFunction, delay = 0) {
     debugLog("asyncRun");
 
-    return new Promise(function(resolve, _reject) {
-      function callback(_timestamp) {
-        debugLog("Callback done");
+    return new Promise(function (resolve, _reject) {
+      let startTime;
 
-        resolve();  // resolve immediately
+      function callback(timestamp) {
+        if (!startTime) {
+          startTime = timestamp;
+        }
+        const elapsed = timestamp - startTime;
+
+        if (elapsed >= delay) {
+          debugLog("Callback done");
+          // Resolve with the timestamp after the delay.
+          resolve(timestamp);
+        } else {
+          // Call requestAnimationFrame again to continue the loop until the elapsed time is greater than the delay.
+          window.requestAnimationFrame(callback);
+        }
       }
 
-      // Call the function that updates the DOM
+      // Call the function that updates the DOM.
       testFunction();
 
-      // Ask browser to callback before next repaint
+      // Ask browser to callback before next repaint.
       window.requestAnimationFrame(callback);
     });
   }
