@@ -8,7 +8,8 @@ import {
   SubWidgetsByProperty,
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
-  HtmlSubWidgetValueWorker
+  HtmlSubWidgetValueWorker,
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -309,9 +310,14 @@ export class Controlbar extends Widget {
   static structure = new Element(this, "div", "", "", [
     new HtmlAttributeChoice(this, "orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
+    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
     new StyleClass(this, ["u-controlbar"]),
     new this.HandleOverFlowPropertyWorker(this, "widget-resize", false),
-    new HtmlSubWidgetValueWorker(this, "value", "value", null)
+    new HtmlSubWidgetValueWorker(this, "value", "value", null),
+    new IgnoreProperty(this, "error", "false"),
+    new IgnoreProperty(this, "error-message", ""),
+    new IgnoreProperty(this, "html:disabled", "false"),
+    new IgnoreProperty(this, "html:readonly", "false")
   ], [
     new Element(this, "div", "u-start-section", ".u-start-section", [], [
       new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-start")

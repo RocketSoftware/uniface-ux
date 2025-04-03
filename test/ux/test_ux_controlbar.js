@@ -806,6 +806,7 @@
 
       it("if disabled is set to true, it should be reflected on the subwidgets with disabled as delegated property", function () {
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        const warnSpy = sinon.spy(console, 'warn');
         return asyncRun(function() {
           tester.onConnect(element);
           tester.dataUpdate({
@@ -818,6 +819,8 @@
           expect(element.querySelector("fluent-select").hasAttribute("disabled")).to.be.false;
           expect(element.querySelector(".u-sw-first.u-controlbar-item.neutral").hasAttribute("disabled")).to.be.false;
           expect(element.querySelector("fluent-checkbox").hasAttribute("disabled")).to.be.false;
+          expect(warnSpy.notCalled).to.be.true;
+          warnSpy.restore(); // Restore the original console.warn
         });
       });
 
@@ -1251,6 +1254,7 @@
       let element, widget;
       const tester = new umockup.WidgetTester();
       let node = document.querySelector('#widget-container');
+      const warnSpy = sinon.spy(console, 'warn');
       element = tester.processLayout(MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
       let data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_MOVE_AND_PRIORITY);
       return asyncRun(function() {
@@ -1272,6 +1276,9 @@
         expect(element.querySelector(".u-overflow-menu [item-id=numberfield]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=textfld1]").hasAttribute('hidden')).to.be.true;
         expect(element.querySelector(".u-overflow-menu [item-id=switch1]").hasAttribute('hidden')).to.be.true;
+
+        expect(warnSpy.notCalled).to.be.true;
+        warnSpy.restore(); // Restore the original console.warn
       });
     });
 
