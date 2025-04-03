@@ -1,5 +1,4 @@
 // @ts-check
-
 import "./typedef.js";
 import "./workers.js";
 import { Base } from "./base.js";
@@ -227,33 +226,6 @@ export class Widget extends Base {
   }
 
   /**
-   * Will be invoked from complex widgets like controlbar to add content to the overflow-menu.
-   * Widgets that cannot be displayed as menu items,
-   * will appear as a label or show an error message indicating they are not supported in a menu.
-   * Returns an object that contains the text, icon and css classnames of individual menu items.
-   * Can be specialized in individual widget classes.
-   * @param {String} widgetClass
-   * @return {UValueFormatting}
-   */
-  getMenuItem(widgetClass) {
-
-    /** @type {UValueFormatting} */
-    const formattedValue = {
-      "primaryPlainText": `ERROR: ${widgetClass ?? ""} not supported as menu-item!`,
-      "secondaryPlainText": "",
-      "primaryHtmlText": "",
-      "prefixText": "",
-      "suffixText": "",
-      "prefixIcon": "Blocked",
-      "suffixIcon": "",
-      "errorMessage": "",
-      "isNotSupported": true
-    };
-    this.log("getMenuItem", formattedValue);
-    return formattedValue;
-  }
-
-  /**
    * Use this method to map a Uniface trigger to an event of your (sub) widget.
    * @param {String} triggerName
    * @return {TriggerMapping|undefined} [triggerMapping].
@@ -313,26 +285,6 @@ export class Widget extends Base {
     /** @type {Object} */
     let widgetClass = this.constructor;
     this.log("dataInit", widgetClass.defaultValues);
-
-    /** @NOTE: This loop only deletes the attributes of the widget's root element,
-     * it does not delete any attributes on child elements. This means the widget is
-     * potentially still not reset properly and state might by left behind on child
-     * elements by previous use. (UNI-39487)
-     * This loop needs to be rewritten and should cleanup all child elements as well.
-     * However, this has as a consequence that style-classes of child elements get deleted too
-     * meaning child elements cannot be found anymore. To resolve that, the onConnect() needs to
-     * build a element index first, like we had in the old widgets. It can do so by iterating
-     * the widget's workers and have them add their e reference to their element to this admin.
-     * Once this is available, workers don't rely on the style-class to lookup their element
-     * and elements can be safely cleaned up by the dataInit(). (UNI-39488)
-     * For now, we disable this code. Separate stories are created to deal with this.
-    // Remove all html attributes except id but including class and style attributes.
-    */
-    // this.elements.widget.getAttributeNames().forEach((attributeName) => {
-    //   if (attributeName !== "id") {
-    //     this.elements.widget.removeAttribute(attributeName);
-    //   }
-    // });
 
     // Get deep copy of default property values.
     /** @type {UData} */
@@ -582,7 +534,7 @@ export class Widget extends Base {
         } else {
           this.data[property] = data[property];
         }
-        let setters = property.startsWith("class:") ? widgetSetters["class"] : property.startsWith("style:") ? widgetSetters["style"] : widgetSetters[property];
+        let setters = property.startsWith("class:") ? widgetSetters["class"] : widgetSetters[property];
         if (setters) {
           setOfSetters.add(setters);
         } else if (reportUnsupportedPropertyWarnings) {

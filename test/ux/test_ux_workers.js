@@ -3,12 +3,15 @@ import { Widget } from "../../src/ux/widget.js";
 import {
   StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget,
   SubWidgetsByProperty, BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean,
-  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, StyleProperty, Worker, IgnoreProperty, SlottedElementsByValRep
+  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep
 } from "../../src/ux/workers.js";
-
+import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
 
 (function () {
-  'use strict';
+  "use strict";
+
+  // This test also depends on Button, still registration is needed
+  registerWidgetClass("UX.Button", Button);
 
   const expect = chai.expect;
 
@@ -40,7 +43,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -52,7 +55,7 @@ import {
   // ===================================================================================================================
   // == Testing ClassStyle class =======================================================================================
   // ===================================================================================================================
-  describe("Test ClassStyle Class", function () {
+  describe("Test ClassStyle class", function () {
     let widgetClass;
     let defaultClassList;
     let instance;
@@ -68,52 +71,53 @@ import {
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      defaultClassList = ['class1', 'class2'];
+      defaultClassList = ["class1", "class2"];
       instance = new StyleClass(widgetClass, defaultClassList);
     });
 
-    it('should initialize with the correct properties for ClassStyle class', function () {
+    it("should initialize with the correct properties for ClassStyle class", function () {
       expect(instance.widgetClass).to.equal(widgetClass);
     });
 
-    it('should register default class values for ClassStyle class', function () {
+    it("should register default class values for ClassStyle class", function () {
       defaultClassList.forEach((className) => {
         expect(instance.widgetClass.defaultValues[`class:${className}`]).to.be.true;
       });
     });
 
-    it('should refresh correctly and modify the element classes for ClassStyle class', function () {
+    it("should refresh correctly and modify the element classes for ClassStyle class", function () {
       const widgetInstance = {
         "data": {
-          "class1": true,
-          "class2": false
+          "class:class1": true,
+          "class:class2": false,
+          "class1:class3": true,
+          "class2:class4":true
         },
-        "getTraceDescription": sinon.stub().returns('description')
+        "getTraceDescription": sinon.stub().returns("description")
       };
-      const element = document.createElement('div');
-      sinon.stub(instance, 'getElement').returns(element);
+      const element = document.createElement("div");
+      sinon.stub(instance, "getElement").returns(element);
 
       instance.refresh(widgetInstance);
 
-      expect(element.classList.contains('class1')).to.be.true;
-      expect(element.classList.contains('class2')).to.be.false;
+      expect(element.classList.contains("class1")).to.be.true;
+      expect([...element.classList].includes(...["class2, class3", "class4"])).to.be.false;
     });
   });
 
   // ===================================================================================================================
   // == Testing Elements class =========================================================================================
   // ===================================================================================================================
-  describe("Test Element Class", function () {
+  describe("Test Element class", function () {
 
     let widgetClass;
-    let tagname;
-    let styleclass;
+    let tagName;
+    let styleClass;
     let elementQuerySelector;
-    let attributeDefines;
-    let elementDefines;
-    let triggerDefines;
+    let childWorkers;
     let element;
     let definitions;
+    let expectedQuerySelectors;
 
     beforeEach(function () {
       Widget.structure = {};
@@ -126,50 +130,43 @@ import {
       Widget.uiBlocking = "";
 
       widgetClass = Widget;
-      tagname = "DIV";
+      tagName = "DIV";
       elementQuerySelector = "div";
-      styleclass = "styleClass";
-      attributeDefines = [new StyleClass(widgetClass, ["u-switch"]), new HtmlAttribute(widgetClass, "html:role", "role", "switch")];
-      elementDefines = [new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "label-text"),
-        new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message")];
-      triggerDefines = [new Trigger(widgetClass, "onchange", "change", true)];
-      element = new Element(widgetClass, tagname, styleclass, elementQuerySelector, attributeDefines, elementDefines, triggerDefines);
+      styleClass = "styleClass";
+      childWorkers = [new StyleClass(widgetClass, ["u-switch"]), new HtmlAttribute(widgetClass, "html:role", "role", "switch"), new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "label-text"), new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"), new Trigger(widgetClass, "onchange", "change", true)];
+      expectedQuerySelectors = ["div", "div", ".u-label-text", ".u-checked-message", "div"];
+      element = new Element(widgetClass, tagName, styleClass, elementQuerySelector, childWorkers);
     });
 
     it("should initialize with correct properties for Elements class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
-      expect(element.tagName).to.equal(tagname);
-      expect(element.styleClass).to.equal(styleclass);
+      expect(element.tagName).to.equal(tagName);
+      expect(element.styleClass).to.equal(styleClass);
       expect(element.elementQuerySelector).to.equal(elementQuerySelector);
-      expect(element.attributeDefines).to.equal(attributeDefines);
-      expect(element.elementDefines).to.equal(elementDefines);
-      expect(element.triggerDefines).to.equal(triggerDefines);
+      expect(element.childWorkers).to.equal(childWorkers);
     });
 
-    it("Check elementQuerySelector changed for all elements for Elements class", function () {
-      attributeDefines.forEach((attributeDefine) => {
-        expect(attributeDefine.elementQuerySelector).to.equal("div");
-      });
-      triggerDefines.forEach((triggerDefine) => {
-        expect(triggerDefine.elementQuerySelector).to.equal("div");
+    it("check elementQuerySelector has been inherited from Element if not already present", function () {
+      childWorkers.forEach((childWorker, index) => {
+        expect(childWorker.elementQuerySelector).to.equal(expectedQuerySelectors[index]);
       });
     });
 
-    // Definitions doesn't do anything
-    it("Check Generate layout for Elements class", function () {
+    // Definitions doesn't do anything.
+    it("check generate layout for Elements class", function () {
       let layoutElement = element.getLayout(definitions);
 
       expect(layoutElement).to.have.tagName("DIV");
-      expect(layoutElement).to.have.class('styleClass');
+      expect(layoutElement).to.have.class("styleClass");
       expect(layoutElement.querySelector("u-label-text"));
       expect(layoutElement.querySelector("u-checked-message"));
     });
   });
 
   // ===================================================================================================================
-  // == Testing Slotted Elements class =================================================================================
+  // == Testing SlottedElements class =================================================================================
   // ===================================================================================================================
-  describe("Test Slotted Elements Class", function () {
+  describe("Test SlottedElements class", function () {
 
     let widgetClass;
     let propText;
@@ -188,11 +185,10 @@ import {
       "elements": {
         "widget": document.createElement("div")
       },
-      "getTraceDescription": () => {
+      "getTraceDescription": function () {
         return "description";
       }
     };
-
 
     beforeEach(function () {
       Widget.structure = {};
@@ -220,27 +216,28 @@ import {
       expect(slottedElement.iconDefaultValue).to.equal(defaultIcon);
     });
 
-    it("Check getters/setters changed for propIcon, propText for Slotted Elements class", function () {
+    it("check getters/setters changed for propIcon, propText for Slotted Elements class", function () {
       expect(slottedElement.widgetClass.defaultValues.icon).to.equal(defaultIcon);
       expect(slottedElement.widgetClass.defaultValues.text).to.equal(defaultText);
     });
 
-    it('should refresh correctly for Slotted Elements class', function () {
+    it("should refresh correctly for Slotted Elements class", function () {
       slottedElement.refresh(widgetInstance);
+      let mockIconClasses = ["ms-Icon", "ms-Icon--testicon.png"];
       expect(widgetInstance.elements.widget.hidden).to.equal(false);
-      expect(widgetInstance.elements.widget.classList[0]).to.equal("ms-Icon");
-      expect(widgetInstance.elements.widget.classList[1]).to.equal("ms-Icon--testicon.png");
+      expect([...widgetInstance.elements.widget.classList].includes(...mockIconClasses)).to.equal(true);
 
       widgetInstance.data["icon"] = "";
       slottedElement.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.innerText).to.equal("defaultText");
+      expect([...widgetInstance.elements.widget.classList].includes(...mockIconClasses)).to.equal(false);
     });
   });
 
   // ===================================================================================================================
   // == Testing SlottedError class =====================================================================================
   // ===================================================================================================================
-  describe("Test SlottedError Class", function () {
+  describe("Test SlottedError class", function () {
 
     let widgetClass;
     let slottedError;
@@ -263,7 +260,7 @@ import {
       expect(slottedError.widgetClass).to.equal(widgetClass);
     });
 
-    it("Check setters were added for SlottedError class", function () {
+    it("check setters were added for SlottedError class", function () {
       let setters = Object.keys(slottedError.widgetClass.setters);
       let errorArray = [
         "error",
@@ -278,7 +275,7 @@ import {
       expect(setters).to.include(errorArray[3]);
     });
 
-    it('should refresh correctly for SlottedError class', function () {
+    it("should refresh correctly for SlottedError class", function () {
       const widgetInstance = {
         "data": {
           "error": true,
@@ -289,7 +286,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -318,7 +315,7 @@ import {
   // ===================================================================================================================
   // == Testing SlottedSubWidget class =====================================================================================
   // ====================================================================================================================
-  describe("Test SlottedSubWidget Class", function () {
+  describe("Test SlottedSubWidget class", function () {
     let widgetClass;
     let subWidgetId;
     let subWidgetName;
@@ -347,20 +344,20 @@ import {
       expect(slottedWidget.widgetClass).to.equal(widgetClass);
     });
 
-    it("Check getters/setters changed and subWidget added for SlottedSubWidget class", function () {
+    it("check getters/setters changed and subWidget added for SlottedSubWidget class", function () {
       expect(slottedWidget.subWidgetClass.name).to.equal("Button");
       expect(slottedWidget.propId).to.equal("undefined");
     });
 
-    it("Check Generate Layout for SlottedSubWidget class", function () {
+    it("check generate layout for SlottedSubWidget class", function () {
       let layoutElement = slottedWidget.getLayout();
 
-      expect(layoutElement).to.have.class('u-sw-undefined');
+      expect(layoutElement).to.have.class("u-sw-undefined");
       expect(layoutElement.hidden).to.equal(true);
-      expect(layoutElement).to.have.tagName('FLUENT-BUTTON');
+      expect(layoutElement).to.have.tagName("FLUENT-BUTTON");
     });
 
-    it('should refresh correctly for SlottedSubWidget class', function () {
+    it("should refresh correctly for SlottedSubWidget class", function () {
       const widgetInstance = {
         "data": {
           "undefined": true
@@ -368,7 +365,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -389,7 +386,7 @@ import {
   // ===================================================================================================================
   // == Testing BaseHtmlAttribute class ================================================================================
   // ===================================================================================================================
-  describe("Test BaseHtmlAttribute Class", function () {
+  describe("Test BaseHtmlAttribute class", function () {
 
     let widgetClass;
     let propId;
@@ -424,14 +421,14 @@ import {
 
     });
 
-    it("Check Getters/Setters for BaseHtmlAttribute class", function () {
+    it("check getters/setters for BaseHtmlAttribute class", function () {
       let length = worker.widgetClass.setters.value.length;
 
       expect(worker.widgetClass.getters.value.propId).to.equal(propId);
       expect(worker.widgetClass.setters.value[length - 1].propId).to.equal(propId);
     });
 
-    it("Check setHtmlAttribute for BaseHtmlAttribute class", function () {
+    it("check setHtmlAttribute for BaseHtmlAttribute class", function () {
       element = {
         "elements": {
           "widget": document.createElement("div")
@@ -441,17 +438,17 @@ import {
       expect(element[attrName]).to.equal("new Value");
     });
 
-    // Refresh doesn't do anything
-    it("check refresh for BaseHtmlAttribute class", function () {
+    // refresh() doesn't do anything.
+    it("check refresh() for BaseHtmlAttribute class", function () {
       worker.refresh({});
     });
 
-    it("check getValue for BaseHtmlAttribute class", function () {
+    it("check getValue() for BaseHtmlAttribute class" , function () {
       const widgetInstance = {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -459,13 +456,13 @@ import {
       expect(value).to.equal("inherit");
     });
 
-    // getValueUpdaters doesn't do anything
-    it("check getValueUpdaters for BaseHtmlAttribute class", function () {
+    // getValueUpdaters() doesn't do anything.
+    it("check getValueUpdaters() for BaseHtmlAttribute class", function () {
       const widgetInstance = {
         "elements": {
           "widget": [document.createElement("div"), document.createElement("span")]
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -476,7 +473,7 @@ import {
   // ===================================================================================================================
   // == Testing HtmlAttribute class ====================================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttribute Class", function () {
+  describe("Test HtmlAttribute class", function () {
 
     let widgetClass;
     let propId;
@@ -506,7 +503,7 @@ import {
     });
 
 
-    it('should refresh correctly for HtmlAttribute class', function () {
+    it("should refresh correctly for HtmlAttribute class", function () {
       const widgetInstance = {
         "data": {
           "icon-position": "start-end"
@@ -514,12 +511,12 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
       element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget).to.have.all.keys('button');
+      expect(widgetInstance.elements.widget).to.have.all.keys("button");
       expect(widgetInstance.elements.widget.button).to.equal("start-end");
     });
   });
@@ -527,7 +524,7 @@ import {
   // ===================================================================================================================
   // == Testing HtmlAttributeChoice class ==============================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeChoice Class", function () {
+  describe("Test HtmlAttributeChoice class", function () {
 
     let widgetClass;
     let propId;
@@ -560,7 +557,7 @@ import {
     });
 
 
-    it('should refresh correctly for HtmlAttributeChoice class', function () {
+    it("should refresh correctly for HtmlAttributeChoice class", function () {
       const widgetInstance = {
         "data": {
           "icon-position": "start-end"
@@ -568,12 +565,12 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
       element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget).to.have.all.keys('button');
+      expect(widgetInstance.elements.widget).to.have.all.keys("button");
       expect(widgetInstance.elements.widget.button).to.equal("start-end");
     });
   });
@@ -581,7 +578,7 @@ import {
   // ===================================================================================================================
   // == Testing HtmlAttributeNumber class ==============================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeNumber Class", function () {
+  describe("Test HtmlAttributeNumber class", function () {
 
     let widgetClass;
     let propId;
@@ -617,7 +614,7 @@ import {
     });
 
 
-    it('should refresh correctly for HtmlAttributeNumber class', function () {
+    it("should refresh correctly for HtmlAttributeNumber class", function () {
       const widgetInstance = {
         "data": {
           "numberValue": "126"
@@ -625,12 +622,12 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
       element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget).to.have.all.keys('newReturnNumber');
+      expect(widgetInstance.elements.widget).to.have.all.keys("newReturnNumber");
       expect(widgetInstance.elements.widget.newReturnNumber).to.equal(126);
     });
   });
@@ -638,7 +635,7 @@ import {
   // ===================================================================================================================
   // == Testing HtmlAttributeBoolean class =============================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeBoolean Class", function () {
+  describe("Test HtmlAttributeBoolean class", function () {
 
     let widgetClass;
     let propId;
@@ -668,7 +665,7 @@ import {
     });
 
 
-    it('should refresh correctly for HtmlAttributeBoolean class', function () {
+    it("should refresh correctly for HtmlAttributeBoolean class", function () {
       const widgetInstance = {
         "data": {
           "icon-position": "1-start-end"
@@ -676,7 +673,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -693,7 +690,7 @@ import {
   // ===================================================================================================================
   // == Testing HtmlValueAttributeBoolean class ========================================================================
   // ===================================================================================================================
-  describe("Test HtmlValueAttributeBoolean Class", function () {
+  describe("Test HtmlValueAttributeBoolean class", function () {
 
     let widgetClass;
     let propId;
@@ -726,7 +723,7 @@ import {
       expect(element.widgetClass).to.equal(widgetClass);
     });
 
-    it('should refresh correctly for HtmlValueAttributeBoolean class', function () {
+    it("should refresh correctly for HtmlValueAttributeBoolean class", function () {
       const widgetInstance = {
         "data": {
           "icon-position": "1-start-end"
@@ -734,7 +731,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -752,7 +749,7 @@ import {
   // ===================================================================================================================
   // == Testing HtmlAttributeMinMaxLength class ========================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeMinMaxLength Class", function () {
+  describe("Test HtmlAttributeMinMaxLength class", function () {
 
     let widgetClass;
     let propMin;
@@ -788,7 +785,7 @@ import {
       expect(element.defaultMax).to.equal(defaultMax);
     });
 
-    it("Check Setters for HtmlAttributeMinMaxLength class", function () {
+    it("check setters for HtmlAttributeMinMaxLength class", function () {
       let setterKeys = Object.keys(element.widgetClass.setters);
 
       expect(setterKeys[setterKeys.length - 2]).to.equal("min");
@@ -796,7 +793,7 @@ import {
     });
 
 
-    it('should refresh correctly for HtmlAttributeMinMaxLength class', function () {
+    it("should refresh correctly for HtmlAttributeMinMaxLength class", function () {
 
       divElement = document.createElement("div");
       divElement.value = "";
@@ -813,7 +810,7 @@ import {
         "widget": {
           "maxlengthHasBeenSet": ""
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -828,70 +825,9 @@ import {
   });
 
   // ===================================================================================================================
-  // == Testing StyleProperty class ====================================================================================
-  // ===================================================================================================================
-  describe("Test StyleProperty Class", function () {
-
-    let widgetClass;
-    let property;
-    let element;
-
-    beforeEach(function () {
-      Widget.structure = {};
-      Widget.subWidgets = {};
-      Widget.subWidgetWorkers = [];
-      Widget.defaultValues = {};
-      Widget.setters = {};
-      Widget.getters = {};
-      Widget.triggers = {};
-      Widget.uiBlocking = "";
-
-      widgetClass = Widget;
-      property = {
-        "id": "propertyClass",
-        "value": 26
-      };
-      element = new StyleProperty(widgetClass, property);
-    });
-
-    it("should initialize with correct properties for StyleProperty class", function () {
-      expect(element.widgetClass).to.equal(widgetClass);
-    });
-
-    it("Check Setters and Default values for StyleProperty class", function () {
-      let setterKeys = Object.keys(element.widgetClass.setters);
-      let defaultKeys = Object.keys(element.widgetClass.defaultValues);
-      let lengthKeys = setterKeys.length;
-      let lengthDefaultKeys = defaultKeys.length;
-
-      expect(setterKeys[lengthKeys - 1]).to.equal("style");
-      expect(defaultKeys[lengthDefaultKeys - 1]).to.equal("style:id");
-      expect(element.defaultStyleProperty.value).to.equal(property.value);
-      expect(element.defaultStyleProperty.id).to.equal(property.id);
-    });
-
-
-    it('should refresh correctly for StyleProperty class', function () {
-      const widgetInstance = {
-        "data": {
-          "style:color": "red"
-        },
-        "elements": {
-          "widget": document.createElement("div")
-        },
-        "getTraceDescription": () => {
-          return "description";
-        }
-      };
-      element.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget.outerHTML).to.equal('<div style="color: red;"></div>');
-    });
-  });
-
-  // ===================================================================================================================
   // == Testing Trigger class ==========================================================================================
   // ===================================================================================================================
-  describe("Test Trigger Class", function () {
+  describe("Test Trigger class", function () {
 
     let widgetClass;
     let triggerName;
@@ -921,17 +857,17 @@ import {
       expect(element.triggerName).to.equal(triggerName);
     });
 
-    it("Check registerTrigger functionality for Trigger class", function () {
+    it("check registerTrigger() functionality", function () {
       let registerTriggerKey = Object.keys(element.widgetClass.triggers);
       expect(registerTriggerKey).to.include(triggerName);
     });
 
-    it("Check getTriggerMapping functionality for Trigger class", function () {
+    it("check getTriggerMapping() functionality", function () {
       const widgetInstance = {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -945,7 +881,7 @@ import {
   // ===================================================================================================================
   // == Testing IgnoreProperty class ===================================================================================
   // ===================================================================================================================
-  describe("Test IgnoreProperty Class", function () {
+  describe("Test IgnoreProperty class", function () {
     let widgetClass;
     let propId;
     let defaultValue;
@@ -967,12 +903,12 @@ import {
       element = new IgnoreProperty(widgetClass, propId, defaultValue);
     });
 
-    it("Should initialize with correct properties for IgnoreProperty worker", function () {
+    it("should initialize with correct properties for IgnoreProperty worker", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.propId).to.equal(propId);
     });
 
-    it("Check Setters and Default values for IgnoreProperty worker", function () {
+    it("check setters and default values for IgnoreProperty worker", function () {
       let setterKeys = Object.keys(element.widgetClass.setters);
       expect(setterKeys[setterKeys.length - 1]).to.equal("tri-state");
       expect(element.defaultValue).to.equal(defaultValue);
@@ -982,7 +918,7 @@ import {
   // ===================================================================================================================
   // == Testing SlottedElementsByValRep class ==========================================================================
   // ===================================================================================================================
-  describe("Test SlottedElementsByValRep Class", function () {
+  describe("Test SlottedElementsByValRep class", function () {
     let widgetClass;
     let tagName;
     let styleClass;
@@ -1006,14 +942,14 @@ import {
       element = new SlottedElementsByValRep(widgetClass, tagName, styleClass, elementQuerySelector);
     });
 
-    it("Should initialize with correct properties for SlottedElementsByValRep worker", function () {
+    it("should initialize with correct properties for SlottedElementsByValRep worker", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.tagName).to.equal(tagName);
       expect(element.styleClass).to.equal(styleClass);
       expect(element.elementQuerySelector).to.equal(elementQuerySelector);
     });
 
-    it("Check Setters and Default values for SlottedElementsByValRep worker", function () {
+    it("check setters and default values for SlottedElementsByValRep worker", function () {
       let setterKeys = Object.keys(element.widgetClass.setters);
       let defaultValues = element.widgetClass.defaultValues;
       let setterKeysForUniface = Object.keys(element.widgetClass.setters);
@@ -1025,7 +961,7 @@ import {
       expect(defaultValues["valrep"].length).to.equal(0);
     });
 
-    it('Should refresh correctly for SlottedElementsByValRep worker', function () {
+    it("should refresh correctly for SlottedElementsByValRep worker", function () {
       const valRepArray = [
         {
           "value": "1",
@@ -1049,7 +985,7 @@ import {
         "elements": {
           "widget": document.createElement("div")
         },
-        "getTraceDescription": () => {
+        "getTraceDescription": function () {
           return "description";
         }
       };
@@ -1153,32 +1089,32 @@ import {
     it("getLayout() method should generate and return layout for this setter for SubWidgetsByProperty worker", function () {
       // eslint-disable-next-line no-undef
       let returnedLayoutElement  = element.getLayout(_uf.createUxDefinitions(dataObjReturnLayout, true));
-      expect(returnedLayoutElement[0].getAttribute('class')).to.equal("u-sw-select u-controlbar-item");
-      expect(returnedLayoutElement[0].getAttribute('sub-widget-id')).to.equal("select");
+      expect(returnedLayoutElement[0].getAttribute("class")).to.equal("u-sw-select u-controlbar-item");
+      expect(returnedLayoutElement[0].getAttribute("sub-widget-id")).to.equal("select");
     });
 
     it("getLayout() method should generate correct warning for incorrect property/not defined for object in the browser's console for SubWidgetsByProperty worker", function () {
-      const warnSpy = sinon.spy(console, 'warn');
+      const warnSpy = sinon.spy(console, "warn");
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjIncorrectProperty, true));
-      expect(warnSpy.calledWith(`SubWidgetsByProperty.getLayout: Property 'subwidgets-start' not defined for object. - Creation of sub-widgets skipped.`)).to.be.true;
+      expect(warnSpy.calledWith("SubWidgetsByProperty.getLayout: Property 'subwidgets-start' not defined for object. - Creation of sub-widgets skipped.")).to.be.true;
       warnSpy.restore(); // Restore the original console.warn.
     });
 
     it("getLayout() method should generate correct warning for Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry with incorrect widget definition in the browser's console for SubWidgetsByProperty worker", function () {
-      const warnSpy = sinon.spy(console, 'warn');
+      const warnSpy = sinon.spy(console, "warn");
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjSubwidgetNotFoundInClassRegistry, true));
-      expect(warnSpy.calledWith(`SubWidgetsByProperty.getLayout: Widget definition with name 'UX.Select123' not found in UNIFACE.classRegistry. - Creation of sub-widget 'select'skipped.`)).to.be.true;
+      expect(warnSpy.calledWith("SubWidgetsByProperty.getLayout: Widget definition with name 'UX.Select123' is not registered. - Creation of sub-widget 'select'skipped.")).to.be.true;
       warnSpy.restore(); // Restore the original console.warn.
     });
 
     it("getLayout() method should generate correct warning for property name not defined for object creation of sub-widget '${subWidgetId}' skipped in the browser console for SubWidgetsByProperty worker", function () {
       let data = Object.assign({}, dataObjPropertyNameNotDefined);
-      const warnSpy = sinon.spy(console, 'warn');
+      const warnSpy = sinon.spy(console, "warn");
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(data, true));
-      expect(warnSpy.calledWith(`SubWidgetsByProperty.getLayout: Property 'select1_widget-class' not defined for object. - Creation of sub-widget 'select1' skipped.`)).to.be.true;
+      expect(warnSpy.calledWith("SubWidgetsByProperty.getLayout: Property 'select1_widget-class' not defined for object. - Creation of sub-widget 'select1' skipped.")).to.be.true;
       warnSpy.restore(); // Restore the original console.warn.
     });
 
@@ -1187,7 +1123,6 @@ import {
         "select": {
           "styleClass": "u-sw-select",
           "propPrefix": "select",
-          "usefield": true,
           "delegatedProperties": ["html:disabled"]
         }
       };
@@ -1201,7 +1136,6 @@ import {
         "select1": {
           "styleClass": "u-sw-select1",
           "propPrefix": "select1",
-          "usefield": false,
           "delegatedProperties": []
         }
       };
@@ -1215,13 +1149,11 @@ import {
         "select": {
           "styleClass": "u-sw-select",
           "propPrefix": "select",
-          "usefield": true,
           "delegatedProperties": ["html:disabled"]
         },
         "button": {
           "styleClass": "u-sw-button",
           "propPrefix": "button",
-          "usefield": true,
           "delegatedProperties": ["html:readonly"]
         }
       };

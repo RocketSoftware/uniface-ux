@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   Worker,
@@ -150,10 +149,10 @@ export class Button extends Widget {
         iconPosition = defaultIconPosition;
       }
 
-      deleteIconClasses();
+      this.deleteIconClasses(element);
       if (icon) {
         element.hidden = false;
-        element.classList.add(`ms-Icon`, `ms-Icon--${icon}`);
+        element.classList.add("ms-Icon", `ms-Icon--${icon}`);
         // Set the iconPosition if there is buttonText.
         if (text) {
           element.setAttribute("slot", iconPosition);
@@ -165,14 +164,6 @@ export class Button extends Widget {
       } else {
         element.hidden = true;
         element.setAttribute("slot", "");
-      }
-
-      function deleteIconClasses() {
-        Array.from(element.classList).forEach((key) => {
-          if (key.startsWith("ms-Icon")) {
-            element.classList.remove(key);
-          }
-        });
       }
     }
   };
@@ -191,11 +182,9 @@ export class Button extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new IgnoreProperty(this, "html:readonly"),
-    new StyleClass(this, ["u-button", "neutral"])
-  ], [
+    new StyleClass(this, ["u-button", "neutral"]),
     new this.SlottedButtonIcon(this, "u-icon", ".u-icon"),
-    new this.SlottedButtonText(this, "u-text", ".u-text")
-  ], [
+    new this.SlottedButtonText(this, "u-text", ".u-text"),
     new Trigger(this, "detail", "click", true)
   ]);
 
@@ -230,22 +219,6 @@ export class Button extends Widget {
   }
 
   /**
-   * Will be invoked from complex widgets like controlbar to add content to the overflow-menu.
-   * Returns an object that contains the text, icon and css classnames of individual menu items.
-   * @return {UValueFormatting}
-   */
-  getMenuItem() {
-
-    /** @type {UValueFormatting} */
-    let formattedValue = {
-      ...Button.getValueFormatted(this.data),
-      "isNotSupported": false
-    };
-    this.log("getMenuItem", formattedValue);
-    return formattedValue;
-  }
-
-  /**
    * Private Uniface API methods are used for the button class since we don’t implement any error handling for it.
    * However, we can still log errors if any occur from Uniface.
    */
@@ -259,4 +232,3 @@ export class Button extends Widget {
     this.log("hideError");
   }
 }
-UNIFACE.ClassRegistry.add("UX.Button", Button);

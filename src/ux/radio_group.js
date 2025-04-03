@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   Element,
@@ -190,12 +189,10 @@ export class RadioGroup extends Widget {
     new HtmlAttributeChoice(this, "layout", "orientation", ["vertical", "horizontal"], "vertical", true),
     new this.RadioGroupSelectedValue(this, "value", "value", ""),
     new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength")
-  ], [
+    new IgnoreProperty(this, "html:maxlength"),
     new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
     new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label")
-  ], [
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label"),
     new Trigger(this, "onchange", "change", true)
   ]);
 
@@ -264,7 +261,7 @@ export class RadioGroup extends Widget {
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
     let shadowRoot = this.elements.widget.shadowRoot;
-    let labelSlot = shadowRoot.querySelector('slot[name="label"]');
+    let labelSlot = shadowRoot.querySelector("slot[name=\"label\"]");
     labelSlot.setAttribute("part", "label");
     // Stop propagating further change events when valrep has been updated.
     // This is to prevent fluent-radio-group from firing unwanted change events.
@@ -277,5 +274,3 @@ export class RadioGroup extends Widget {
     return valueUpdaters;
   }
 }
-
-UNIFACE.ClassRegistry.add("UX.RadioGroup", RadioGroup);

@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   StyleClass,
@@ -234,11 +233,9 @@ export class Checkbox extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeBoolean(this, undefined, "currentChecked", false)
-  ], [
+    new HtmlAttributeBoolean(this, undefined, "currentChecked", false),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "")
-  ], [
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
     new Trigger(this, "onchange", "valuechange", true)
   ]);
 
@@ -290,4 +287,3 @@ export class Checkbox extends Widget {
     return formattedValue;
   }
 }
-UNIFACE.ClassRegistry.add("UX.Checkbox", Checkbox);

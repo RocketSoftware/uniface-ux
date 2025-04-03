@@ -11,10 +11,8 @@ import { Worker } from "./workers.js"; // eslint-disable-line no-unused-vars
 export class Base {
 
   static formatErrorMessage = "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.";
-  // Flag to enable or disable the usage of flat properties.
-  static useFlatProperties = true;
 
-  constructor() { }
+  constructor() {}
 
   /**
    * This method registers the worker that Uniface calls to update the widget caused by a property change.
@@ -357,32 +355,16 @@ export class Base {
           subWidgetData = subWidgetData || {};
           if (key === "valrep") {
             subWidgetData[key] = this.getFormattedValrep(data[property]);
-          } else if (key === "value" && subWidgetDefinition && subWidgetDefinition["usefield"]) {
-            try {
-              const valueObject = JSON.parse(data.value) ?? {};
-              subWidgetData[key] = valueObject[subWidgetPropPrefix] ?? '';
-            } catch (error) {
-              console.log("Invalid JSON value", data.value, error);
-            }
           } else {
             subWidgetData[key] = data[property];
           }
           // Remove the property from the original data to avoid duplication.
           delete data[property];
         }
-        // If usefield value is true and there is update in field widget then subwidget value should be updated with field value.
-      } else if (property === "value" && subWidgetDefinition && subWidgetDefinition["usefield"] && data.value) {
-        subWidgetData = subWidgetData || {};
-        try {
-          const valueObject = JSON.parse(data.value);
-          subWidgetData[property] = String(valueObject[subWidgetPropPrefix]) ?? '';
-        } catch (error) {
-          console.log("Invalid JSON value", data.value, error);
-        }
       }
     }
     // Iterate over each delegated property and add matching delegated property to subWidgetData.
-    subWidgetDelegatedProperties?.forEach(property => {
+    subWidgetDelegatedProperties?.forEach((property) => {
       // Check if the data object has the property.
       if (data.hasOwnProperty(property)) {
         subWidgetData = subWidgetData || {};
@@ -414,5 +396,17 @@ export class Base {
       }
     });
     return subWidgetPropertyNames;
+  }
+
+  /**
+   * Removes all classes from the given element that start with "ms-Icon".
+   * @param {HTMLElement} element - The DOM element from which the classes that start with "ms-Icon" will be removed.
+   */
+  deleteIconClasses(element) {
+    Array.from(element.classList).forEach((key) => {
+      if (key.startsWith("ms-Icon")) {
+        element.classList.remove(key);
+      }
+    });
   }
 }

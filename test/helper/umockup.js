@@ -1,4 +1,4 @@
-/* global _uf MutationObserver UNIFACE URLSearchParams clearTimeout setTimeout*/
+/* global _uf UNIFACE URLSearchParams  */
 (function (global) {
   "use strict";
 
@@ -237,100 +237,40 @@
     });
   }
 
-  const defaultAsyncTimeout = 100; // ms
-  let defaultIdleTime = 25; // ms
-
   /**
-   * Run asynchronous test actions via setTimeout.
+   * Run asynchronous test actions.
    *
    * @param {Function} testFunction a function including test actions;
-   * @param {Number} timeout the milliseconds delay of setTimeout for resolve
-   *                   the returned promise;
    * @returns a promise.
    */
-  async function asyncRunST(testFunction, timeout) {
-    if (timeout === undefined) {
-      timeout = defaultAsyncTimeout;
-    }
-    return new Promise(function(resolve, _reject) {
+  async function asyncRun(testFunction, delay = 0) {
+    debugLog("asyncRun");
+
+    return new Promise(function (resolve, _reject) {
+      let startTime;
+
+      function callback(timestamp) {
+        if (!startTime) {
+          startTime = timestamp;
+        }
+        const elapsed = timestamp - startTime;
+
+        if (elapsed >= delay) {
+          debugLog("Callback done");
+          // Resolve with the timestamp after the delay.
+          resolve(timestamp);
+        } else {
+          // Call requestAnimationFrame again to continue the loop until the elapsed time is greater than the delay.
+          window.requestAnimationFrame(callback);
+        }
+      }
+
+      // Call the function that updates the DOM.
       testFunction();
-      setTimeout(function(){
-        resolve();
-      }, timeout);
+
+      // Ask browser to callback before next repaint.
+      window.requestAnimationFrame(callback);
     });
-  }
-
-  /**
-   * Run asynchronous test actions via MutationObserver.
-   *
-   * @param {Function} testFunction a function including test actions;
-   * @param {Function} callbackFunction a callback function;
-   * @param {Number} idleTime the idle time to waiting next round of callback;
-   * @returns a promise.
-   */
-  async function asyncRunMO(testFunction, callbackFunction, idleTime) {
-    if (!idleTime || typeof idleTime !== "number") {
-      idleTime = defaultIdleTime;
-    }
-    const container = document.getElementById("widget-container");
-    let lastTimeoutId = 0;
-
-    let count = 0;
-
-    debugLog("asyncRunMO");
-
-    if (typeof callbackFunction !== "function") {
-      callbackFunction = function (records, observer, resolve, _reject) {
-        const _count = ++count;
-        debugLog("Callback " + _count);
-        setTimeout(function () {
-          debugLog("Timeout Callback " + _count);
-
-          if (lastTimeoutId) {
-            clearTimeout(lastTimeoutId);
-          }
-          lastTimeoutId = setTimeout(function () {
-            debugLog("Timeout 2 callback " + _count);
-            resolve();
-            observer.disconnect();
-          }, idleTime);
-        });
-      };
-    }
-
-    return new Promise(function(resolve, reject){
-      const observer = new MutationObserver(function (records, observer) {
-        callbackFunction(records, observer, resolve, reject);
-      });
-
-      observer.observe(container, {
-        "attributes" : true,
-        "attributeOldValue" : true,
-        "characterData" : true,
-        "childList" : true,
-        "subtree" : true
-      });
-
-      testFunction();
-    });
-  }
-
-  /**
-   * The helper function for running asynchronous test actions.
-   *
-   * @param {Function} testFunction a function including test actions;
-   * @param {Function} option optional, if option is a number, it calls
-   *                   asyncRunST(testFunction, option); otherwise, it calls
-   *                   asyncRunMO(testFunction, option).
-   * @param {Number}   idleTime the idle time to waiting next round of callback;
-   * @returns a promise.
-   */
-  async function asyncRun(testFunction, option, idleTime) {
-    if (typeof option === "number") {
-      return asyncRunST(testFunction, option);
-    } else {
-      return asyncRunMO(testFunction, option, idleTime);
-    }
   }
 
   /**
@@ -355,14 +295,6 @@
         }
       }
       return scriptName;
-    },
-
-    "getDefaultIdleTime" : function () {
-      return defaultIdleTime;
-    },
-
-    "setDefaultIdleTime" : function (idolTime) {
-      defaultIdleTime = idolTime;
     },
 
     "asyncRun" : asyncRun,

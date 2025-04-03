@@ -55,55 +55,10 @@ div:has(> .u-controlbar) {
   white-space: nowrap;
 }
 
-.u-controlbar .u-overflow-menu {
-  position: absolute;
-  width: max-content;
-  inset-inline-end: 10px;
-  z-index: 100;
-}
-
 .u-controlbar .u-controlbar-item {
   flex-shrink: 0;
 }
 
-/* 
-  To display the overflow menu properly in vertical orientation, it should be positioned half the width of the overflow button towards the end (right in ltr direction) from the actual center of the controlbar.
-  To get the width of the button for this, we use the formula used by Fluent for setting the min-width.
- */
-.u-controlbar[u-orientation="vertical"] .u-overflow-menu {
-  inset-inline-end: calc(50% - ((var(--base-height-multiplier) + var(--density)) * var(--design-unit) * 1px) / 2);
-}
-
 .u-controlbar .u-controlbar-item.u-overflown-item {
   display: none;
-}
-
-.u-controlbar .u-overflow-menu .u-menu-item {
-  white-space: normal;
-  height: auto;
-  padding: 5px calc((10 + (var(--design-unit) * 2 * var(--density))) * 1px);
-  display: flex;
-  cursor: pointer;
-}
-
-.u-controlbar .u-overflow-menu .u-menu-item::part(content) {
-  display: flex;
-}
-
-.u-controlbar .u-overflow-menu .u-menu-item .u-prefix {
-  margin-inline-end: 11px;
-}
-
-.u-controlbar .u-overflow-menu .u-menu-item .u-suffix {
-  margin-inline-start: 11px;
-}
-
-.u-controlbar .u-overflow-menu .u-menu-item[hidden] {
-  display: none;
-}
-
-.u-controlbar .u-overflow-menu .u-menu-item.u-not-supported,
-.u-controlbar .u-overflow-menu .u-menu-item.u-invalid {
-  cursor: default;
-  color: #d83b01;
 }

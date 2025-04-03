@@ -1,5 +1,4 @@
 // @ts-check
-/* global UNIFACE */
 import { Widget } from "./widget.js";
 import {
   Element,
@@ -16,6 +15,11 @@ import {
   HtmlAttributeMinMaxLength
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
+
+// This widget also depends on Button, still registration is needed
+import { Button } from "./button.js";
+import { registerWidgetClass } from "./dsp_connector.js";
+registerWidgetClass("UX.Button", Button);
 
 /**
  * TextField Widget.
@@ -56,8 +60,7 @@ export class TextField extends Widget {
     new HtmlAttributeReadonlyDisabled(this, "html:readonly", "html:disabled", "uiblocked", false, false, false),
     new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
     new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
-    new StyleClass(this, ["u-text-field", "outline"])
-  ], [
+    new StyleClass(this, ["u-text-field", "outline"]),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
@@ -70,8 +73,7 @@ export class TextField extends Widget {
       "detail"
     ], [
       "html:disabled"
-    ])
-  ], [
+    ]),
     new Trigger(this, "onchange", "change", true)
   ]);
 
@@ -177,7 +179,7 @@ export class TextField extends Widget {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    let plainTextValue = this.getNode(properties, "value");
+    let plainTextValue = this.getNode(properties, "value") ?? "";
     formattedValue.primaryPlainText = plainTextValue.replaceAll(/\n/g, " ");
     formattedValue.prefixIcon = this.getNode(properties, "prefix-icon");
     if (!formattedValue.prefixIcon) {
@@ -195,4 +197,3 @@ export class TextField extends Widget {
   }
 }
 
-UNIFACE.ClassRegistry.add("UX.TextField", TextField);
