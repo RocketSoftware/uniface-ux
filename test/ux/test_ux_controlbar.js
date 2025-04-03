@@ -37,7 +37,11 @@
     "class:u-controlbar": true,
     "orientation": "horizontal",
     "widget-resize": false,
-    "value": ""
+    "value": "",
+    "error":"false",
+    "error-message":"",
+    "html:disabled": "false",
+    "html:readonly":"false"
   };
 
   const MOCK_EMPTY_START_CONTROLS_DEFINITION = {
@@ -592,7 +596,7 @@
 
       it("if disabled is set to true, it should be reflected on the subwidgets with disabled as delegated property", function () {
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
-        const warnSpy = sinon.spy(console, 'warn');
+        const warnSpy = sinon.spy(console, "warn");
         return asyncRun(function () {
           tester.onConnect(element);
           tester.dataUpdate({
@@ -770,6 +774,7 @@
     });
 
     it("when the overflow behavior is set to hide for all sub-widgets, they should be hidden when no space is available", function () {
+      warnSpy = sinon.spy(console, "warn");
       return asyncRun(function () {
         data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_HIDE_AND_PRIORITY);
         tester.dataUpdate(data);
@@ -783,6 +788,8 @@
         expect(element.querySelector("fluent-switch.u-sw-switch").classList.contains("u-overflown-item")).to.be.true;
         expect(element.querySelector("fluent-text-field.u-sw-textfield").classList.contains("u-overflown-item")).to.be.true;
         expect(element.querySelector("fluent-checkbox.u-sw-checkbox").classList.contains("u-overflown-item")).to.be.true;
+        expect(warnSpy.notCalled).to.be.true;
+        warnSpy.restore(); // Restore the original console.warn
       });
     });
 
@@ -976,7 +983,6 @@
     beforeEach(function () {
       tester = new umockup.WidgetTester();
       data = {
-      const warnSpy = sinon.spy(console, 'warn');
         ...MOCK_DATA_FOR_OVERFLOW_COMMON,
         ...MOCK_DATA_WITH_OVERFLOW_HIDE_AND_PRIORITY
       };
@@ -988,6 +994,7 @@
     });
 
     it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to  1000px", function () {
+      const warnSpy = sinon.spy(console, "warn");
       return asyncRun(function () {
         node.style.width = "1000px";
       }, 1).then(function () {
