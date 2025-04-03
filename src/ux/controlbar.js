@@ -310,7 +310,6 @@ export class Controlbar extends Widget {
   static structure = new Element(this, "div", "", "", [
     new HtmlAttributeChoice(this, "orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
     new StyleClass(this, ["u-controlbar"]),
     new this.HandleOverFlowPropertyWorker(this, "widget-resize", false),
     new HtmlSubWidgetValueWorker(this, "value", "value", null),
