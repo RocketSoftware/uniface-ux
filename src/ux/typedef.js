@@ -48,5 +48,6 @@
  *  @property {String} [suffixText] - Suffix as plain text.
  *  @property {String} [suffixIcon] - Suffix icon name.
  *  @property {String} [errorMessage] - (Format) Error message.
- *  @property {String} [labelText] - Unformatted label-text.
+ *  @property {String|undefined} [labelText] - Unformatted label-text.
+ *  @property {Boolean|undefined} [isNotSupported] - Whether this representation is supported in the parent widget or not.
  */

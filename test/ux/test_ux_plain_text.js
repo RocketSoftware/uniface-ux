@@ -467,6 +467,195 @@
     });
   });
 
+  describe(`${widgetName} getValueFormatted() function test`, function () {
+    it("getValueFormatted() should return correct formatted values with plaintext-format as valrep-html", function () {
+      let formattedData;
+      let returnedFormattedVal = {
+        "primaryHtmlText": "<b>This is test valrep html</b>",
+        "secondaryPlainText": "One",
+        "prefixIcon": "",
+        "prefixText": "Prefix-Text",
+        "suffixIcon": "Home"
+      };
+      let props = {
+        "id": 0.191159463627403,
+        "class:u-plain-text": true,
+        "html:hidden": false,
+        "html:slot": "",
+        "html:maxlength": null,
+        "html:minlength": null,
+        "html:readonly": null,
+        "prefix-icon": "",
+        "prefix-text": "Prefix-Text",
+        "valrep": [
+          {
+            "value": "One",
+            "representation": "<b>This is test valrep html</b>"
+          }
+        ],
+        "plaintext-format": "valrep-html",
+        "value": "One",
+        "suffix-icon": "Home",
+        "suffix-text": "",
+        "format-error": false,
+        "format-error-message": "",
+        "error": false,
+        "error-message": ""
+      };
+      formattedData = widgetClass.getValueFormatted(props);
+      assert.equal(JSON.stringify(formattedData), JSON.stringify(returnedFormattedVal));
+    });
+
+    it("getValueFormatted() should return correct formatted values with plaintext-format as valrep-text", function () {
+      let formattedData;
+      let returnedFormattedVal = {
+        "primaryPlainText": "This is test valrep html",
+        "secondaryPlainText": "One",
+        "prefixIcon": "",
+        "prefixText": "Prefix-Text",
+        "suffixIcon": "Home"
+      };
+      let props = {
+        "id": 0.191159463627403,
+        "class:u-plain-text": true,
+        "html:hidden": false,
+        "html:slot": "",
+        "html:maxlength": null,
+        "html:minlength": null,
+        "html:readonly": null,
+        "prefix-icon": "",
+        "prefix-text": "Prefix-Text",
+        "valrep": [
+          {
+            "value": "One",
+            "representation": "This is test valrep html"
+          }
+        ],
+        "plaintext-format": "valrep-text",
+        "value": "One",
+        "suffix-icon": "Home",
+        "suffix-text": "",
+        "format-error": false,
+        "format-error-message": "",
+        "error": false,
+        "error-message": ""
+      };
+      formattedData = widgetClass.getValueFormatted(props);
+      assert.equal(JSON.stringify(formattedData), JSON.stringify(returnedFormattedVal));
+    });
+
+    it("getValueFormatted() should return correct formatted values with plaintext-format as representation-only", function () {
+      let formattedData;
+      let returnedFormattedVal = {
+        "primaryHtmlText": "This is test valrep html",
+        "prefixIcon": "Home",
+        "suffixIcon": "Home"
+      };
+      let props = {
+        "id": 0.191159463627403,
+        "class:u-plain-text": true,
+        "html:hidden": false,
+        "html:slot": "",
+        "html:maxlength": null,
+        "html:minlength": null,
+        "html:readonly": null,
+        "prefix-icon": "Home",
+        "prefix-text": "PrefixText",
+        "valrep": [
+          {
+            "value": "One",
+            "representation": "This is test valrep html"
+          }
+        ],
+        "plaintext-format": "representation-only",
+        "value": "One",
+        "suffix-icon": "Home",
+        "suffix-text": "SuffixText",
+        "format-error": false,
+        "format-error-message": "",
+        "error": false,
+        "error-message": ""
+      };
+      formattedData = widgetClass.getValueFormatted(props);
+      assert.equal(JSON.stringify(formattedData), JSON.stringify(returnedFormattedVal));
+    });
+
+    it("getValueFormatted() should return correct formatted values with plaintext-format as value-only", function () {
+      let formattedData;
+      let returnedFormattedVal = {
+        "primaryPlainText": "One",
+        "prefixIcon": "Home",
+        "suffixIcon": "Home"
+      };
+      let props = {
+        "id": 0.191159463627403,
+        "class:u-plain-text": true,
+        "html:hidden": false,
+        "html:slot": "",
+        "html:maxlength": null,
+        "html:minlength": null,
+        "html:readonly": null,
+        "prefix-icon": "Home",
+        "prefix-text": "PrefixText",
+        "valrep": [
+          {
+            "value": "One",
+            "representation": "This is test value only"
+          }
+        ],
+        "plaintext-format": "value-only",
+        "value": "One",
+        "suffix-icon": "Home",
+        "suffix-text": "SuffixText",
+        "format-error": false,
+        "format-error-message": "",
+        "error": false,
+        "error-message": ""
+      };
+      formattedData = widgetClass.getValueFormatted(props);
+      assert.equal(JSON.stringify(formattedData), JSON.stringify(returnedFormattedVal));
+    });
+
+    it("getValueFormatted() should return correct formatted values with plaintext-format as valrep-html and format-error as true", function () {
+      let formattedData;
+      let returnedFormattedVal = {
+        "primaryPlainText": "ERROR",
+        "secondaryPlainText": "OneTwoThree",
+        "errorMessage": "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.",
+        "prefixIcon": "Home",
+        "suffixIcon": "Home"
+      };
+
+      let props = {
+        "id": 0.191159463627403,
+        "class:u-plain-text": true,
+        "html:hidden": false,
+        "html:slot": "",
+        "html:maxlength": null,
+        "html:minlength": null,
+        "html:readonly": null,
+        "prefix-icon": "Home",
+        "prefix-text": "PrefixText",
+        "valrep": [
+          {
+            "value": "One",
+            "representation": "<b>This is test value only</b>"
+          }
+        ],
+        "plaintext-format": "valrep-html",
+        "value": "OneTwoThree",
+        "suffix-icon": "Home",
+        "suffix-text": "SuffixText",
+        "format-error": true,
+        "format-error-message": "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.",
+        "error": false,
+        "error-message": ""
+      };
+      formattedData = widgetClass.getValueFormatted(props);
+      assert.equal(JSON.stringify(formattedData), JSON.stringify(returnedFormattedVal));
+    });
+  });
+
   describe("showError()", function () {
     let element;
     before(function () {

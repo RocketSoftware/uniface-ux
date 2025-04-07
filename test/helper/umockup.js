@@ -61,7 +61,7 @@
               // original implementation, will cause error if called in mockup env.
               layout = UNIFACE.widget.custom_widget_container.callStaticPluginFunction("processLayout", customPluginClass, args);
             } else {
-              layout = customPluginClass.processLayout.apply(customPluginClass, args);
+              layout = customPluginClass.processLayout.apply(customPluginClass, [args[0], _uf.createUxDefinitions(args[1], true)]);
             }
           }
         } else {
@@ -100,6 +100,43 @@
         }
         return node;
       }
+    },
+
+    /**
+     * This is a mock function same as uniface to create the UX-definition object,
+     * and define its getter functions and setter functions.
+     * @param {Object} defs The properties defined for the widget.
+     * @param {Boolean} isUpdatable Allowed only in process layout.
+     * @returns {Object} Return definition object.
+     */
+    "createUxDefinitions" : function (defs, isUpdatable = false) {
+      const definition = {
+        "getProperty" : function (propertyName) {
+          return defs[propertyName];
+        },
+        "getPropertyNames" : function () {
+          // This  relies on the syntax and valrep-range having been translated into html properties.
+          var propertyNames;
+          var prop;
+          if (Object.keys(defs).length > 0) {
+            propertyNames = [];
+            for (prop in defs) {
+              if (defs.hasOwnProperty(prop)) {
+                propertyNames.push(externalizePropertyName(prop));
+              }
+            }
+            // Make sure that the property names are in a defined order.
+            propertyNames.sort();
+          }
+          return propertyNames;
+        }
+      };
+      if (isUpdatable) {
+        definition.setProperty = function (propertyName, propertyValue) {
+          defs[propertyName] = propertyValue;
+        };
+      }
+      return definition;
     },
 
     "uconsole" : (function() {
@@ -168,6 +205,23 @@
     return queryString.get(name);
   }
 
+  function externalizePropertyName(propertyName) {
+    var colon = propertyName.indexOf(":");
+    if (colon > 0) {
+      var prefix = propertyName.slice(0, colon).toLowerCase();
+      if (prefix === "class") {
+        // Return lower case "class:" followed by case sensitive name.
+        return prefix + propertyName.slice(colon);
+      }
+      if (prefix === "html" || prefix === "style") {
+        // Property name is case insensitive. Return it in lower case.
+        return propertyName.toLowerCase();
+      }
+    }
+    // The property name has no known prefix.
+    return propertyName.toLowerCase();
+  }
+
   function getWidgetName() {
     if (!widgetName) {
       const value = getUrlParam("widget_name");
@@ -189,21 +243,32 @@
    * @param {Function} testFunction a function including test actions;
    * @returns a promise.
    */
-  async function asyncRun(testFunction) {
-
+  async function asyncRun(testFunction, delay = 0) {
     debugLog("asyncRun");
 
-    return new Promise(function(resolve, _reject) {
-      function callback(_timestamp) {
-        debugLog("Callback done");
+    return new Promise(function (resolve, _reject) {
+      let startTime;
 
-        resolve();  // resolve immediately
+      function callback(timestamp) {
+        if (!startTime) {
+          startTime = timestamp;
+        }
+        const elapsed = timestamp - startTime;
+
+        if (elapsed >= delay) {
+          debugLog("Callback done");
+          // Resolve with the timestamp after the delay.
+          resolve(timestamp);
+        } else {
+          // Call requestAnimationFrame again to continue the loop until the elapsed time is greater than the delay.
+          window.requestAnimationFrame(callback);
+        }
       }
 
-      // Call the function that updates the DOM
+      // Call the function that updates the DOM.
       testFunction();
 
-      // Ask browser to callback before next repaint
+      // Ask browser to callback before next repaint.
       window.requestAnimationFrame(callback);
     });
   }
@@ -256,8 +321,13 @@
         let args = [...arguments];
         if (!this.uxTagName) {
           if (args.length) {
+            // This is to check explicitly if null param is passed.
             if (!args[0]) {
               args[0] = document.getElementById(this.widgetId);
+            }
+            // This will always keep a check that first parameter should always be HTML element.
+            if (!(args[0] instanceof HTMLElement)) {
+              args.unshift(document.getElementById(this.widgetId));
             }
           } else {
             args = [document.getElementById(this.widgetId)];
@@ -282,7 +352,7 @@
         if (!this.widget || !this.widget.elements) {
           const element = this.processLayout.apply(this, this.layoutArgs);
           const widget = this.construct();
-          widget.onConnect(element);
+          widget.onConnect(element, _uf.createUxDefinitions(this.layoutArgs[1]));
         }
         return this.widget;
       }

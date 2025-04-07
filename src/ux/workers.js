@@ -396,11 +396,9 @@ export class SlottedSubWidget extends Element {
  * The property, of which the name is specified by propId, holds a Uniface list of subWidgetIds which are be added as sub-widgets:
  *   "sub-widget1;sub-widget2;sub-widget3;sub-widget4"
  * For each sub-widget, additional properties need to be available:
- *   - "<subWidgetId>:widget-class" - defines the sub-widget's widget-class as registered with function registerWidgetClass
- *   - "<subWidgetId>:properties" - defines a list of property ids that need to be passed on to the sub-widget;
- *     if not defined, all properties are passed on to the sub-widget.
- *   - "<subWidgetId>:triggers" - defines a list of trigger names that need to be mapped on to the wub-widget;
- *     if not defined, all triggers are mapped to the sub-widget.
+ *   - "<subWidgetId>_widget-class" - defines the sub-widget's widget-class as registered with UNIFACE.classRegistry
+ *   - "<subWidgetId>_delegated-properties" - defines a list of properties that need to be delegated to the sub-widget;
+ *      if not defined nothing will be delegated to the sub-widget.
  * The sub-widgets receive a style-class, of syntax "u-sw-<subWidgetId>", to allow custom styling of the sub-widgets.
  * @export
  * @class WidgetsByProperty
@@ -421,9 +419,6 @@ export class SubWidgetsByProperty extends Element {
     this.styleClass = styleClass;
     this.propId = propId;
     this.registerSubWidgetWorker(widgetClass, this);
-    this.registerSetter(widgetClass, "value", this);
-    this.registerDefaultValue(widgetClass, "value", null);
-    this.registerGetter(widgetClass, "value", this);
   }
 
   /**
@@ -437,7 +432,7 @@ export class SubWidgetsByProperty extends Element {
     let subWidgetIds = objectDefinition.getProperty(this.propId);
     if (subWidgetIds) {
       subWidgetIds.split("")?.forEach((subWidgetId) => {
-        let propName = `${subWidgetId}:widget-class`;
+        let propName = `${subWidgetId}_widget-class`;
         let subWidgetClassName = objectDefinition.getProperty(propName);
         if (subWidgetClassName) {
           let subWidgetClass = getWidgetClass(subWidgetClassName);
@@ -447,6 +442,10 @@ export class SubWidgetsByProperty extends Element {
             element = subWidgetClass.processLayout(element, objectDefinition);
             let subWidgetStyleClass = `u-sw-${subWidgetId}`;
             element.classList.add(subWidgetStyleClass);
+            if (this.styleClass) {
+              element.classList.add(this.styleClass);
+            }
+            element.setAttribute("sub-widget-id", subWidgetId);
             elements.push(element);
           } else {
             this.warn(
@@ -477,33 +476,20 @@ export class SubWidgetsByProperty extends Element {
     let subWidgetIds = objectDefinition.getProperty(this.propId);
     if (subWidgetIds) {
       subWidgetIds.split("")?.forEach((subWidgetId) => {
-        const classNamePropId = `${subWidgetId}:widget-class`;
-        const triggersPropId = `${subWidgetId}:widget-triggers`;
+        const classNamePropId = `${subWidgetId}_widget-class`;
+        const delegatedPropertiesPropId = `${subWidgetId}_delegated-properties`;
         const className = objectDefinition.getProperty(classNamePropId);
         const subWidgetClass = getWidgetClass(className);
-        const subWidgetTriggers = objectDefinition.getProperty(triggersPropId);
+        const delegatedProperties = objectDefinition.getProperty(delegatedPropertiesPropId);
         let subWidgetDefinition = {};
         subWidgetDefinition.class = subWidgetClass;
         subWidgetDefinition.styleClass = `u-sw-${subWidgetId}`;
-        subWidgetDefinition.triggers = subWidgetTriggers?.split("") || [];
         subWidgetDefinition.propPrefix = subWidgetId;
+        subWidgetDefinition.delegatedProperties = delegatedProperties ? delegatedProperties.split("") : [];
         subWidgetDefinitions[subWidgetId] = subWidgetDefinition;
       });
     }
     return subWidgetDefinitions;
-  }
-
-  getValue(widgetInstance) {
-    let value = {};
-    Object.keys(widgetInstance.subWidgets).forEach((subWidgetId) => {
-      value[subWidgetId] = widgetInstance.subWidgets[subWidgetId].getValue();
-    });
-    return JSON.stringify(value);
-  }
-
-  getValueUpdaters(widgetInstance) {
-    this.log("getValueUpdaters", { "widgetInstance": widgetInstance.getTraceDescription() });
-    return;
   }
 }
 
