@@ -299,10 +299,10 @@ export class Controlbar extends Widget {
         }
         delete data[property];
       }
+
       if (subWidgetProperties.includes(property)) {
         delete data[property];
       }
-
     }
     invokeRefresh && setter?.refresh(this);
     super.setProperties(data);
