@@ -610,12 +610,13 @@
           expect(element.querySelector(".u-sw-first.u-controlbar-item.neutral").hasAttribute("disabled")).to.be.false;
           expect(element.querySelector("fluent-checkbox").hasAttribute("disabled")).to.be.false;
           expect(warnSpy.notCalled).to.be.true;
-          warnSpy.restore(); // Restore the original console.warn
+          warnSpy.restore(); // Restore the original console.warn.
         });
       });
 
       it("if readonly is set to true, it should be reflected on the subwidgets with readonly as delegated property", function () {
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        const warnSpy = sinon.spy(console, "warn");
         return asyncRun(function () {
           tester.onConnect(element);
           tester.dataUpdate({
@@ -627,6 +628,8 @@
           expect(element.querySelector("fluent-select").hasAttribute("readonly")).to.be.false;
           expect(element.querySelector(".u-sw-first.u-controlbar-item.neutral").hasAttribute("readonly")).to.be.false;
           expect(element.querySelector("fluent-checkbox").hasAttribute("readonly")).to.be.false;
+          expect(warnSpy.notCalled).to.be.true;
+          warnSpy.restore(); // Restore the original console.warn.
         });
       });
 
@@ -689,6 +692,20 @@
         }).then(function () {
           expect(element.hasAttribute("hidden")).to.equal(true);
           expect(window.getComputedStyle(element).display).equal("none");
+        });
+      });
+
+      it("if invalid property name is passed, warning should be generated", function () {
+        element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        const warnSpy = sinon.spy(console, "warn");
+        return asyncRun(function () {
+          tester.onConnect(element);
+          tester.dataUpdate({
+            "html:hiden": "true"
+          });
+        }).then(function () {
+          expect(warnSpy.calledWith("Controlbar.setProperties(data): Widget does not support property 'html:hiden' - Ignored.")).to.be.true;
+          warnSpy.restore();
         });
       });
     });
@@ -774,7 +791,6 @@
     });
 
     it("when the overflow behavior is set to hide for all sub-widgets, they should be hidden when no space is available", function () {
-      warnSpy = sinon.spy(console, "warn");
       return asyncRun(function () {
         data = Object.assign({}, MOCK_DATA_WITH_OVERFLOW_HIDE_AND_PRIORITY);
         tester.dataUpdate(data);
@@ -788,13 +804,12 @@
         expect(element.querySelector("fluent-switch.u-sw-switch").classList.contains("u-overflown-item")).to.be.true;
         expect(element.querySelector("fluent-text-field.u-sw-textfield").classList.contains("u-overflown-item")).to.be.true;
         expect(element.querySelector("fluent-checkbox.u-sw-checkbox").classList.contains("u-overflown-item")).to.be.true;
-        expect(warnSpy.notCalled).to.be.true;
-        warnSpy.restore(); // Restore the original console.warn
       });
     });
 
     it("when the overflow behavior is set to hide for some widgets and none for others, sub-widgets with none overflow behavior should not get hidden", function () {
       return asyncRun(function () {
+        warnSpy = sinon.spy(console, "warn");
         tester.dataUpdate(MOCK_DATA_WITH_OVERFLOW_HIDE_AND_NONE);
         node = document.querySelector("#widget-container");
         node.style.width = "100px";
@@ -806,6 +821,8 @@
         expect(element.querySelector("fluent-switch.u-sw-switch").classList.contains("u-overflown-item")).to.be.false;
         expect(element.querySelector("fluent-text-field.u-sw-textfield").classList.contains("u-overflown-item")).to.be.true;
         expect(element.querySelector("fluent-checkbox.u-sw-checkbox").classList.contains("u-overflown-item")).to.be.true;
+        expect(warnSpy.notCalled).to.be.true;
+        warnSpy.restore(); // Restore the original console.warn.
       });
     });
 
@@ -994,7 +1011,6 @@
     });
 
     it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to  1000px", function () {
-      const warnSpy = sinon.spy(console, "warn");
       return asyncRun(function () {
         node.style.width = "1000px";
       }, 1).then(function () {
@@ -1005,9 +1021,6 @@
         expect(element.querySelector("fluent-checkbox.u-sw-checkbox").getAttribute("class")).not.to.includes("u-overflown-item");
         expect(element.querySelector("fluent-switch.u-sw-switch").getAttribute("class")).not.to.includes("u-overflown-item");
         expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).not.to.includes("u-overflown-item");
-
-        expect(warnSpy.notCalled).to.be.true;
-        warnSpy.restore(); // Restore the original console.warn
       });
     });
 
