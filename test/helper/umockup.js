@@ -135,7 +135,7 @@
           return defs.nm;
         },
         "getType": function() {
-          return defs.type;
+          return defs.type ?? "";
         },
         "getChildDefinitions": function() {
           if (children === undefined && defs.occs) {
@@ -157,7 +157,7 @@
           defs[propertyName] = propertyValue;
         };
       }
-      if (defs.type === "field") {
+      if (defs  && defs.type  === "field") {
         definition.getWidgetClass = function() {
           return defs.widget_class;
         };
@@ -166,7 +166,7 @@
             defs.widget_class = widgetClass;
           };
         }
-      } else if (defs.type === "entity") {
+      } else if (defs  && defs.type === "entity") {
         definition.getOccurrenceWidgetClass = function() {
           if (defs.occs) {
             return defs.occs.widget_class;
