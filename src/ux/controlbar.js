@@ -189,6 +189,8 @@ export class Controlbar extends Widget {
     new IgnoreProperty(this, "error-message", ""),
     new IgnoreProperty(this, "html:disabled", "false"),
     new IgnoreProperty(this, "html:readonly", "false"),
+    new IgnoreProperty(this, "html:minlength"),
+    new IgnoreProperty(this, "html:maxlength"),
     new Element(this, "div", "u-start-section", ".u-start-section", [
       new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-start")
     ]),
