@@ -41,7 +41,9 @@
     "error":"false",
     "error-message":"",
     "html:disabled": "false",
-    "html:readonly":"false"
+    "html:readonly":"false",
+    "html:minlength" : null,
+    "html:maxlength" : null
   };
 
   const MOCK_EMPTY_START_CONTROLS_DEFINITION = {
