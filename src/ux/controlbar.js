@@ -185,6 +185,7 @@ export class Controlbar extends Widget {
     new StyleClass(this, ["u-controlbar"]),
     new this.HandleOverFlowPropertyWorker(this, "widget-resize", false),
     new HtmlAttribute(this, "value", "value", ""),
+    new HtmlAttribute(this, undefined, "role", "toolbar"),
     new IgnoreProperty(this, "error", "false"),
     new IgnoreProperty(this, "error-message", ""),
     new IgnoreProperty(this, "html:disabled", "false"),
