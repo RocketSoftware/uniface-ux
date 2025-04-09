@@ -110,7 +110,6 @@
      * @returns {Object} Return definition object.
      */
     "createUxDefinitions" : function (defs, isUpdatable = false) {
-      let children;
       const definition = {
         "getProperty" : function (propertyName) {
           return defs[propertyName];
@@ -130,63 +129,12 @@
             propertyNames.sort();
           }
           return propertyNames;
-        },
-        "getName": function() {
-          return defs.nm;
-        },
-        "getType": function() {
-          return defs.type ?? "";
-        },
-        "getChildDefinitions": function() {
-          if (children === undefined && defs.occs) {
-            children = [];
-            for (var prop in defs.occs) {
-              if (typeof defs.occs[prop] === "object") {
-                var child_def = defs.occs[prop];
-                if (child_def.nm !== undefined) {
-                  children.push(_uf.createUxDefinitions(child_def, isUpdatable));
-                }
-              }
-            }
-          }
-          return children;
         }
       };
       if (isUpdatable) {
         definition.setProperty = function (propertyName, propertyValue) {
           defs[propertyName] = propertyValue;
         };
-      }
-      if (defs  && defs.type  === "field") {
-        definition.getWidgetClass = function() {
-          return defs.widget_class;
-        };
-        if (isUpdatable) {
-          definition.setWidgetClass = function(widgetClass) {
-            defs.widget_class = widgetClass;
-          };
-        }
-      } else if (defs  && defs.type === "entity") {
-        definition.getOccurrenceWidgetClass = function() {
-          if (defs.occs) {
-            return defs.occs.widget_class;
-          }
-          return undefined;
-        };
-        definition.getCollectionWidgetClass = function() {
-          return defs.widget_class;
-        };
-        if (isUpdatable) {
-          definition.setOccurrenceWidgetClass = function(widgetClass) {
-            if (!defs.occs) {
-              defs.occs = {};
-            }
-            defs.occs.widget_class = widgetClass;
-          };
-          definition.setCollectionWidgetClass = function(widgetClass) {
-            defs.widget_class = widgetClass;
-          };
-        }
       }
       return definition;
     },
