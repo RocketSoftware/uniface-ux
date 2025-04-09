@@ -1,5 +1,5 @@
 // @ts-check
-import { Widget } from "./widget.js";
+import { Widget } from "../framework/widget.js";
 import {
   Element,
   StyleClass,
@@ -11,7 +11,7 @@ import {
   HtmlAttributeBoolean,
   HtmlAttributeNumber,
   HtmlAttributeMinMaxLength
-} from "./workers.js";
+} from "../framework/workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
 /**

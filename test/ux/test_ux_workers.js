@@ -1,11 +1,11 @@
-import { Button } from "../../src/ux/button.js";
-import { Widget } from "../../src/ux/widget.js";
+import { Button } from "../../src/ux/button/button.js";
+import { Widget } from "../../src/ux/framework/widget.js";
 import {
   StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget,
   SubWidgetsByProperty, BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean,
   HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep
-} from "../../src/ux/workers.js";
-import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
+} from "../../src/ux/framework/workers.js";
+import { registerWidgetClass } from "../../src/ux/framework/dsp_connector.js";
 
 (function () {
   "use strict";
