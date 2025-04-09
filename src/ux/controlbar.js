@@ -7,7 +7,8 @@ import {
   SubWidgetsByProperty,
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
-  HtmlAttribute
+  HtmlAttribute,
+  IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -184,6 +185,12 @@ export class Controlbar extends Widget {
     new StyleClass(this, ["u-controlbar"]),
     new this.HandleOverFlowPropertyWorker(this, "widget-resize", false),
     new HtmlAttribute(this, "value", "value", ""),
+    new IgnoreProperty(this, "error", "false"),
+    new IgnoreProperty(this, "error-message", ""),
+    new IgnoreProperty(this, "html:disabled", "false"),
+    new IgnoreProperty(this, "html:readonly", "false"),
+    new IgnoreProperty(this, "html:minlength"),
+    new IgnoreProperty(this, "html:maxlength"),
     new Element(this, "div", "u-start-section", ".u-start-section", [
       new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-start")
     ]),
@@ -274,6 +281,8 @@ export class Controlbar extends Widget {
   setProperties(data) {
     const subWidgetIds = this.getSubWidgetIds();
     const overflowProperties = subWidgetIds.flatMap((subWidget) => [`${subWidget}_${"overflow-behavior"}`, `${subWidget}_${"priority"}`]);
+    const subWidgetProperties = subWidgetIds.flatMap((subWidget) => [`${subWidget}_${"widget-class"}`,`${subWidget}_${"delegated-properties"}`]);
+    subWidgetProperties.push("subwidgets-start","subwidgets-center","subwidgets-end");
     const setter = Controlbar.setters["widget-resize"][0];
     let invokeRefresh = false;
     for (const property in data) {
@@ -290,6 +299,10 @@ export class Controlbar extends Widget {
         } else {
           this.warn("setProperties", `Property '${property}' is given invalid value '(${value})'`, "Ignored");
         }
+        delete data[property];
+      }
+
+      if (subWidgetProperties.includes(property)) {
         delete data[property];
       }
     }
