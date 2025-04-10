@@ -36,7 +36,7 @@
   });
 
   describe("Uniface static structure constructor definition for DataGridColumnHeader class", function () {
-    it(`${widgetName} should have a static property structure of type Element DataGridColumnHeader`, function () {
+    it("UX.DataGridColumnHeader class should have a static property structure of type Element", function () {
       // eslint-disable-next-line no-undef
       const widgetClassName  = UNIFACE.ClassRegistry.get("UX.DataGridColumnHeader");
       verifyWidgetClass(widgetClassName);
@@ -52,7 +52,7 @@
   });
 
   describe("Uniface static structure constructor definition for DataGridOccurrence class", function () {
-    it(`${widgetName} should have a static property structure of type Element DataGridOccurrence`, function () {
+    it("UX.DataGridOccurrence class should have a static property structure of type Element", function () {
       // eslint-disable-next-line no-undef
       const widgetClassName  = UNIFACE.ClassRegistry.get("UX.DataGridOccurrence");
       verifyWidgetClass(widgetClassName);
@@ -68,7 +68,7 @@
   });
 
   describe("Uniface static structure constructor definition for DataGridField class", function () {
-    it(`${widgetName}should have a static property structure of type Element DataGridField`, function () {
+    it("UX.DataGridField class should have a static property structure of type Element", function () {
       // eslint-disable-next-line no-undef
       const widgetClassName  = UNIFACE.ClassRegistry.get("UX.DataGridField");
       verifyWidgetClass(widgetClassName);
