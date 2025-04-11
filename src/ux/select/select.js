@@ -16,9 +16,8 @@ import {
 } from "../framework/workers.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
-import { fluentOption, fluentSelect, provideFluentDesignSystem } from "@fluentui/web-components";
-provideFluentDesignSystem().register(fluentOption());
-provideFluentDesignSystem().register(fluentSelect());
+import { fluentSelect, provideFluentDesignSystem } from "@fluentui/web-components";
+provideFluentDesignSystem().register(fluentSelect()); // for custom elements "fluent-select" and "fluent-option"
 
 /**
  * Select Widget
