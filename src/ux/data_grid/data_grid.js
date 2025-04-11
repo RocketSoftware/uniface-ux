@@ -1,7 +1,7 @@
 // @ts-check
-import { Widget } from "./widget.js";
-import * as Worker from "./workers.js";
-import { getWidgetClass, registerWidgetClass } from "./dsp_connector.js";
+import { Widget } from "../framework/widget.js";
+import * as Worker from "../framework/workers.js";
+import { getWidgetClass, registerWidgetClass } from "../framework/dsp_connector.js";
 // The import of Fluent UI web-components is done in loader.js
 
 /**

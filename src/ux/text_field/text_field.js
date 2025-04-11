@@ -1,9 +1,9 @@
 // @ts-check
-import { registerWidgetClass } from "./dsp_connector.js";
-import { Widget } from "./widget.js";
+import { Widget } from "../framework/widget.js";
 import {
-  Trigger,
   Element,
+  StyleClass,
+  Trigger,
   SlottedElement,
   SlottedError,
   SlottedSubWidget,
@@ -11,23 +11,23 @@ import {
   HtmlAttributeNumber,
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
-  HtmlAttributeMinMax,
-  StyleClass,
-  IgnoreProperty
-} from "./workers.js";
+  HtmlAttributeReadonlyDisabled,
+  HtmlAttributeMinMaxLength
+} from "../framework/workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
 // This widget also depends on Button, still registration is needed
-import { Button } from "./button.js";
+import { Button } from "../button/button.js";
+import { registerWidgetClass } from "../framework/dsp_connector.js";
 registerWidgetClass("UX.Button", Button);
 
 /**
- * NumberField Widget.
+ * TextField Widget.
  * @export
- * @class NumberField
+ * @class TextField
  * @extends {Widget}
  */
-export class NumberField extends Widget {
+export class TextField extends Widget {
 
   /**
    * Initialize as static at derived level, so definitions are unique per widget class.
@@ -45,24 +45,22 @@ export class NumberField extends Widget {
    * Widget Definition.
    */
   // prettier-ignore
-  static structure = new Element(this, "fluent-number-field", "", "", [
+  static structure = new Element(this, "fluent-text-field", "", "", [
     new HtmlAttribute(this, undefined, "currentValue", ""),
     new HtmlAttribute(this, "value", "value", "", false, "change"),
-    new HtmlAttribute(this, "html:size", "size", "", true),
-    new HtmlAttribute(this, "html:step", "step", 1),
-    new HtmlAttribute(this, "html:placeholder", "placeholder", undefined),
     new HtmlAttribute(this, "html:title", "title", undefined),
+    new HtmlAttribute(this, "html:size", "size", "20", true),
+    new HtmlAttribute(this, "html:pattern", "pattern", undefined),
+    new HtmlAttribute(this, "html:placeholder", "placeholder", undefined),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline", false),
+    new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
+    new HtmlAttributeChoice(this, "html:type", "type", ["text", "email", "password", "tel", "url", "date"], "text"),
     new HtmlAttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new HtmlAttributeBoolean(this, "html:hide-step", "hideStep", false),
-    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
-    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
-    new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength"),
-    new HtmlAttributeMinMax(this, "html:min", "html:max", undefined, undefined),
-    new StyleClass(this, ["u-number-field", "outline"]),
+    new HtmlAttributeReadonlyDisabled(this, "html:readonly", "html:disabled", "uiblocked", false, false, false),
+    new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
+    new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
+    new StyleClass(this, ["u-text-field", "outline"]),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
@@ -81,7 +79,7 @@ export class NumberField extends Widget {
 
   /**
    * Private Uniface API method - onConnect.
-   * This method is used for the number-field class since we need change event for change button when clicked.
+   * This method is used for the textfield class since we need change event for change button when clicked.
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
@@ -104,6 +102,54 @@ export class NumberField extends Widget {
       this.elements.widget.dispatchEvent(new window.Event("change", { "bubbles": false }));
     });
     return valueUpdaters;
+  }
+
+  /**
+   * Private Uniface API method - validate.
+   * This method is used to ensure that all validation errors are caught, as Fluent doesn't detect some validation errors.
+   */
+  validate() {
+    this.log("validate");
+
+    // Return any HTML5 validation errors.
+    let html5ValidationMessage;
+    if (!this.elements.widget.control.checkValidity()) {
+      html5ValidationMessage = this.elements.widget.control.validationMessage;
+    } else if (this.data["html:minlength"] > 0 && this.elements.widget.value.length < this.data["html:minlength"]) {
+      // HTML5 minlength validation errors are not detected by fluent, Hence we manually add the HTML5 minlength validation message.
+      html5ValidationMessage = `Please lengthen this text to ${this.data["html:minlength"]} characters or more (you are currently using ${this.elements.widget.value.length} characters).`;
+    }
+    return html5ValidationMessage;
+  }
+
+  /**
+   * Private Uniface API method - blockUI.
+   * Blocks user interaction with the widget.
+   */
+  blockUI() {
+    this.log("blockUI");
+    // Call blockUI() for each sub-widget.
+    Object.keys(this.subWidgets).forEach((key) => {
+      this.subWidgets[key].blockUI();
+    });
+    // Add the 'u-blocked' class to the widget element.
+    this.elements.widget.classList.add("u-blocked");
+    this.setProperties({ "uiblocked": true });
+  }
+
+  /**
+   * Private Uniface API method - unblockUI.
+   * Unblocks user interaction with the widget.
+   */
+  unblockUI() {
+    this.log("unblockUI");
+    // Call unblockUI() for each sub-widget.
+    Object.keys(this.subWidgets).forEach((key) => {
+      this.subWidgets[key].unblockUI();
+    });
+    // Remove the 'u-blocked' class from the widget element.
+    this.elements.widget.classList.remove("u-blocked");
+    this.setProperties({ "uiblocked": false });
   }
 
   /**
@@ -133,7 +179,8 @@ export class NumberField extends Widget {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    formattedValue.primaryPlainText = this.getNode(properties, "value");
+    let plainTextValue = this.getNode(properties, "value") ?? "";
+    formattedValue.primaryPlainText = plainTextValue.replaceAll(/\n/g, " ");
     formattedValue.prefixIcon = this.getNode(properties, "prefix-icon");
     if (!formattedValue.prefixIcon) {
       formattedValue.prefixText = this.getNode(properties, "prefix-text");
@@ -149,3 +196,4 @@ export class NumberField extends Widget {
     return formattedValue;
   }
 }
+

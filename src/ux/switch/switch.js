@@ -1,5 +1,5 @@
 // @ts-check
-import { Widget } from "./widget.js";
+import { Widget } from "../framework/widget.js";
 import {
   Element,
   SlottedError,
@@ -11,7 +11,7 @@ import {
   SlottedElement,
   HtmlValueAttributeBoolean,
   IgnoreProperty
-} from "./workers.js";
+} from "../framework/workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
 /**
