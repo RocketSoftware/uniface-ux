@@ -8,7 +8,7 @@
   const widgetClass = tester.getWidgetClass();
 
   /**
-   * Function to determine whether the widget class has been loaded.
+    Function to determine whether the widget class has been loaded.
   **/
   function verifyWidgetClass(widgetClass) {
     assert(widgetClass, `Widget class '${widgetName}' is not defined!
@@ -22,7 +22,7 @@
     });
   });
 
-  describe("Uniface static structure constructor definition for DataGridCollection class", function () {
+  describe("Uniface static structure constructor() definition for DataGridCollection class", function () {
     it(`${widgetName} should have a static property structure of type Element`, function () {
       verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
