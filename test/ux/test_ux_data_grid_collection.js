@@ -8,8 +8,8 @@
   const widgetClass = tester.getWidgetClass();
 
   /**
-    Function to determine whether the widget class has been loaded.
-  **/
+   * Function to determine whether the widget class has been loaded.
+   */
   function verifyWidgetClass(widgetClass) {
     assert(widgetClass, `Widget class '${widgetName}' is not defined!
             Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`);
@@ -35,7 +35,7 @@
     });
   });
 
-  describe("Uniface static structure constructor definition for DataGridColumnHeader class", function () {
+  describe("Uniface static structure constructor() definition for DataGridColumnHeader class", function () {
     it("UX.DataGridColumnHeader class should have a static property structure of type Element", function () {
       // eslint-disable-next-line no-undef
       const widgetClassName  = UNIFACE.ClassRegistry.get("UX.DataGridColumnHeader");
@@ -51,7 +51,7 @@
     });
   });
 
-  describe("Uniface static structure constructor definition for DataGridOccurrence class", function () {
+  describe("Uniface static structure constructor() definition for DataGridOccurrence class", function () {
     it("UX.DataGridOccurrence class should have a static property structure of type Element", function () {
       // eslint-disable-next-line no-undef
       const widgetClassName  = UNIFACE.ClassRegistry.get("UX.DataGridOccurrence");
@@ -67,7 +67,7 @@
     });
   });
 
-  describe("Uniface static structure constructor definition for DataGridField class", function () {
+  describe("Uniface static structure constructor() definition for DataGridField class", function () {
     it("UX.DataGridField class should have a static property structure of type Element", function () {
       // eslint-disable-next-line no-undef
       const widgetClassName  = UNIFACE.ClassRegistry.get("UX.DataGridField");
