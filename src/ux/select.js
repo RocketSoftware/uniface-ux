@@ -165,10 +165,7 @@ export class Select extends Widget {
         selectedValSpan ? selectedValSpan.textContent : ""
       );
       // Always call hideFormatError as we cannot select an invalid option.
-      widgetInstance.setProperties({
-        "format-error": false,
-        "format-error-message": ""
-      });
+      this.setErrorProperties(widgetInstance, "format-error");
     }
 
     getValue(widgetInstance) {
@@ -225,15 +222,9 @@ export class Select extends Widget {
       }
 
       if (!isPlaceholderElementCreated && valueToSet === -1) {
-        widgetInstance.setProperties({
-          "format-error": true,
-          "format-error-message": Select.formatErrorMessage
-        });
+        this.setErrorProperties(widgetInstance, "format-error", Select.formatErrorMessage);
       } else {
-        widgetInstance.setProperties({
-          "format-error": false,
-          "format-error-message": ""
-        });
+        this.setErrorProperties(widgetInstance, "format-error");
       }
       // When the value doesn't match any of the options in the option list
       // then Fluent sets the first option as selected.

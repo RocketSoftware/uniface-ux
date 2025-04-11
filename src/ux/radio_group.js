@@ -107,15 +107,9 @@ export class RadioGroup extends Widget {
             radioButton["checked"] = false;
           });
         }
-        widgetInstance.setProperties({
-          "format-error": false,
-          "format-error-message": ""
-        });
+        this.setErrorProperties(widgetInstance, "format-error");
       } else {
-        widgetInstance.setProperties({
-          "format-error": true,
-          "format-error-message": RadioGroup.formatErrorMessage
-        });
+        this.setErrorProperties(widgetInstance, "format-error", RadioGroup.formatErrorMessage);
       }
       this.setHtmlAttribute(element, valueToSet.toString());
     }

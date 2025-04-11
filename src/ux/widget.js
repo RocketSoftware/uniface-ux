@@ -413,23 +413,14 @@ export class Widget extends Base {
             this.subWidgets[subWidgetId].showError(parsedErrorMsg.validationMessages[subWidgetId]);
           });
         } else {
-          this.setProperties({
-            "error": true,
-            "error-message": errorMessage
-          });
+          this.setErrorProperties(this, "error", errorMessage);
         }
         // eslint-disable-next-line no-unused-vars
       } catch (_) {
-        this.setProperties({
-          "error": true,
-          "error-message": errorMessage
-        });
+        this.setErrorProperties(this, "error", errorMessage);
       }
     } else {
-      this.setProperties({
-        "error": true,
-        "error-message": errorMessage
-      });
+      this.setErrorProperties(this, "error", errorMessage);
     }
   }
 
@@ -442,10 +433,7 @@ export class Widget extends Base {
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
       this.subWidgets[subWidgetId].hideError();
     });
-    this.setProperties({
-      "error": false,
-      "error-message": ""
-    });
+    this.setErrorProperties(this);
   }
 
   /**
