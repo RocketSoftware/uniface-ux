@@ -76,7 +76,7 @@
         expect(element).instanceOf(HTMLElement, `Function processLayout() of ${widgetName} does not return an HTMLElement.`);
       });
 
-      it("check depended custom elements", function () {
+      it("check import of web component and dependecies", function () {
         const customElementNames = ["fluent-option", "fluent-select"];
         for (const name of customElementNames) {
           assert(window.customElements.get(name), `Web component ${name} has not been imported!`);

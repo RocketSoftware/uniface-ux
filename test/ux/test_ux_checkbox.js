@@ -60,6 +60,13 @@
         expect(element).instanceOf(HTMLElement, `Function processLayout() of ${widgetName} does not return an HTMLElement.`);
       });
 
+      it("check import of web component", function () {
+        const customElementNames = ["fluent-checkbox"];
+        for (const name of customElementNames) {
+          assert(window.customElements.get(name), `Web component ${name} has not been imported!`);
+        }
+      });
+
       it("check tagName", function () {
         expect(element).to.have.tagName(tester.uxTagName);
       });
