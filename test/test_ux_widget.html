@@ -52,7 +52,7 @@
           Uncaught error: ${message}<br>
           In file: ${source}<br>
           At line: ${lineno}, column: ${colno}<br>
-          Error stack: ${error ? message : 'N/A'}
+          Error stack: ${error ? error : 'N/A'}
         `;
         return true;  // Prevent the default browser error handling
       };
