@@ -594,6 +594,22 @@
         });
       });
 
+      it("if there is change in any controlbar properties, should be reflected on the widgetElement", function () {
+        const tester = new umockup.WidgetTester();
+        element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        return asyncRun(function () {
+          tester.onConnect(element);
+          tester.dataInit();
+          tester.dataUpdate(MOCK_CONTROLBAR_DATA);
+        }).then(function () {
+          expect(element.classList.contains("classC")).to.be.true;
+          expect(element.getAttribute("u-orientation")).to.equal("vertical");
+          expect(window.getComputedStyle(element)["flex-direction"]).to.equal("column");
+          expect(element.getAttribute("role")).to.equal("toolbar");
+          expect(!element.getAttribute("tabindex"));
+        });
+      });
+
       it("if disabled is set to true, it should be reflected on the subwidgets with disabled as delegated property", function () {
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
         const warnSpy = sinon.spy(console, "warn");
@@ -705,6 +721,22 @@
           });
         }).then(function () {
           expect(warnSpy.calledWith("Controlbar.setProperties(data): Widget does not support property 'html:hiden' - Ignored.")).to.be.true;
+          warnSpy.restore();
+        });
+      });
+
+      it("set tabindex to some value, warning should get generated in browser console and tabindex should be ignored", function () {
+        element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        const warnSpy = sinon.spy(console, "warn");
+        return asyncRun(function () {
+          tester.onConnect(element);
+          tester.dataInit();
+          tester.dataUpdate({
+            "tabindex": 100
+          });
+        }).then(function () {
+          expect(!element.getAttribute("tabindex"));
+          expect(warnSpy.calledWith("Controlbar.setProperties(data): Widget does not support property 'tabindex' - Ignored.")).to.be.true;
           warnSpy.restore();
         });
       });
