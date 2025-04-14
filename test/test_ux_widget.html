@@ -43,7 +43,20 @@
     <h2 id="test-error"></h2>
 
     <div id="mocha"></div>
+
     <script class="mocha-exec" type="module">
+      // Handle uncaught errors globally
+      window.onerror = function (message, source, lineno, colno, error) {
+        console.error("Error captured: ", message);
+        document.getElementById("test-error").innerHTML = `
+          Uncaught error: ${message}<br>
+          In file: ${source}<br>
+          At line: ${lineno}, column: ${colno}<br>
+          Error stack: ${error ? message : 'N/A'}
+        `;
+        return true;  // Prevent the default browser error handling
+      };
+
       // update document
       const widgetName = umockup.getWidgetName();
       const scriptName = umockup.getTestJsName();
@@ -59,9 +72,14 @@
       el = document.getElementById("test-script");
       if (scriptName) {
         el.src = "ux/" + scriptName;
-        // this block of code ensures that the end of file is reached and add an element to asset the number of test cases
+
+        // this block of code ensures that the end of file is reached and add an element to assert the number of test cases
         el.onload = function () {
           mocha.run().on('end', function () {
+            if (this.stats.passes === 0 && this.stats.failures === 0) {
+              throw new Error('Test could not run, please check for errors in JavaScript');
+            }
+            
             var line;
             line = "Results Passed : " + this.stats.passes + " || Failed : " + this.stats.failures;
 
