@@ -140,7 +140,7 @@ import { Widget } from "../../src/ux/widget.js";
       expect(formattedValReps[1].representation).to.eql("value2");
     });
 
-    it("warn", function () {
+    it("warn()", function () {
       functionName = "tooBoolean";
       message = "Function does not return that value";
       consequence = "Aborting";
@@ -150,7 +150,7 @@ import { Widget } from "../../src/ux/widget.js";
       sandbox.restore();
     });
 
-    it("error", function () {
+    it("error()", function () {
       functionName = "tooBoolean";
       message = "Function does not return that value";
       consequence = "Aborting";
@@ -173,7 +173,7 @@ import { Widget } from "../../src/ux/widget.js";
       expect(formattedValReps.querySelector(".u-valrep-representation").className).to.eql("u-valrep-representation");
     });
 
-    describe("extractSubWidgetData", function () {
+    describe("extractSubWidgetData()", function () {
       it("return the sub-widget data correctly and delete corresponding sub-widget properties from data source", function () {
         let data = {
           "subWidgetId:widget-class": "Some class",
@@ -223,7 +223,7 @@ import { Widget } from "../../src/ux/widget.js";
       });
     });
 
-    describe("extractSubWidgetPropertyNames", function () {
+    describe("extractSubWidgetPropertyNames()", function () {
       it("return the sub-widget property names correctly and delete corresponding sub-widget property names from property names source", function () {
         let propertyNames = new Set([
           "subWidgetId:widget-class",
@@ -265,7 +265,7 @@ import { Widget } from "../../src/ux/widget.js";
       });
     });
 
-    describe("deleteIconClasses", function () {
+    describe("deleteIconClasses()", function () {
       it("delete the classes starting with 'ms-Icon' from the element", function () {
         let element = document.createElement("div");
         let mockClassList = ["ms-Icon", "Ms-icon", "Ms-icon--Home", "class-1", "ms-Icon--Home", "ms-icon", "ms-icon--Home"];
@@ -280,7 +280,7 @@ import { Widget } from "../../src/ux/widget.js";
       });
     });
 
-    describe("setErrorProperties", function () {
+    describe("setErrorProperties()", function () {
       it("call setProperties() with correct format-error related properties", function () {
         let widgetInstance = new Widget();
         let spy = sinon.spy(widgetInstance, "setProperties");
