@@ -75,7 +75,7 @@
       });
 
       it("check import of web component and dependencies", function () {
-        const customElementNames = ["fluent-listbox", "fluent-select"];
+        const customElementNames = ["fluent-listbox", "fluent-option"];
         for (const name of customElementNames) {
           assert(window.customElements.get(name), `Web component ${name} has not been imported!`);
         }
