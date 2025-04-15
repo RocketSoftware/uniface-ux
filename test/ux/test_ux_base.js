@@ -279,5 +279,51 @@ import { Widget } from "../../src/ux/widget.js";
         expect([...element.classList].includes(...mockNonIconClasses)).to.equal(true);
       });
     });
+
+    describe("setErrorProperties", function () {
+      it("call setProperties() with correct format-error related properties", function () {
+        let widgetInstance = new Widget();
+        let spy = sinon.spy(widgetInstance, "setProperties");
+        base.setErrorProperties(widgetInstance, "format-error", "Some format error message");
+        expect(spy.called).to.be.true;
+        expect(
+          spy.calledWith({
+            "format-error": true,
+            "format-error-message": "Some format error message"
+          })
+        ).to.be.true;
+
+        base.setErrorProperties(widgetInstance, "format-error", "");
+        expect(spy.called).to.be.true;
+        expect(
+          spy.calledWith({
+            "format-error": false,
+            "format-error-message": ""
+          })
+        ).to.be.true;
+      });
+
+      it("call setProperties() with correct error related properties", function () {
+        let widgetInstance = new Widget();
+        let spy = sinon.spy(widgetInstance, "setProperties");
+        base.setErrorProperties(widgetInstance, "error", "Some error message");
+        expect(spy.called).to.be.true;
+        expect(
+          spy.calledWith({
+            "error": true,
+            "error-message": "Some error message"
+          })
+        ).to.be.true;
+
+        base.setErrorProperties(widgetInstance, "error", "");
+        expect(spy.called).to.be.true;
+        expect(
+          spy.calledWith({
+            "error": false,
+            "error-message": ""
+          })
+        ).to.be.true;
+      });
+    });
   });
 })();
