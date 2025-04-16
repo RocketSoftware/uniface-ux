@@ -12,7 +12,10 @@ import {
   HtmlAttributeNumber,
   HtmlAttributeMinMaxLength
 } from "../framework/workers.js";
-// The import of Fluent UI web-components is done in loader.js
+
+// Optimized way to reduce the size of bundle, only import necessary fluent-ui components
+import { fluentTextArea, provideFluentDesignSystem } from "@fluentui/web-components";
+provideFluentDesignSystem().register(fluentTextArea());
 
 /**
  * TextArea Widget.

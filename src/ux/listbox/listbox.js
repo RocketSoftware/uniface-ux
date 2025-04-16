@@ -15,6 +15,11 @@ import {
 } from "../framework/workers.js";
 // The import of Fluent UI web-components is done in loader.js.
 
+// Optimized way to reduce the size of bundle, only import necessary fluent-ui components
+import { fluentOption, fluentListbox, provideFluentDesignSystem } from "@fluentui/web-components";
+provideFluentDesignSystem().register(fluentOption());
+provideFluentDesignSystem().register(fluentListbox());
+
 /**
  * Listbox Widget
  * @export

@@ -14,17 +14,20 @@
     "serve:dev": "webpack -- serve --progress --config webpack.dev.js",
     "test": "cd testAutomation && npx playwright test"
   },
+  "dependencies": {
+    "@fluentui/web-components": "^2.6.1"
+  },
   "devDependencies": {
     "@playwright/test": "^1.51.1",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.2",
-    "eslint": "^9.22.0",
+    "eslint": "^9.24.0",
     "http-server": "^14.1.1",
     "mini-css-extract-plugin": "^2.9.2",
     "terser-webpack-plugin": "^5.3.14",
     "webpack-cli": "^6.0.1",
     "webpack-dev-middleware": "^7.4.2",
-    "webpack-dev-server": "^5.2.0",
+    "webpack-dev-server": "^5.2.1",
     "webpack-merge": "^6.0.1"
   }
 }

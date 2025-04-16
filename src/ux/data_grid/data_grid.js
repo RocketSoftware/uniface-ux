@@ -2,7 +2,20 @@
 import { Widget } from "../framework/widget.js";
 import * as Worker from "../framework/workers.js";
 import { getWidgetClass, registerWidgetClass } from "../framework/dsp_connector.js";
-// The import of Fluent UI web-components is done in loader.js
+
+// Optimized way to reduce the size of bundle, only import necessary fluent-ui components
+import {
+  fluentDesignSystemProvider,
+  fluentDataGrid,
+  fluentDataGridCell,
+  fluentDataGridRow,
+  provideFluentDesignSystem
+} from "@fluentui/web-components";
+
+provideFluentDesignSystem().register(fluentDesignSystemProvider());
+provideFluentDesignSystem().register(fluentDataGrid());
+provideFluentDesignSystem().register(fluentDataGridCell());
+provideFluentDesignSystem().register(fluentDataGridRow());
 
 /**
  * This file describes all widget classes needed to construct the DataGrid entity widget.
