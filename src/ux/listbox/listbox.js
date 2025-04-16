@@ -96,15 +96,9 @@ export class Listbox extends Widget {
       const isValueEmpty = (value === null || value === "");
 
       if (valrep.length > 0 && (valueToSet !== -1 || isValueEmpty)) {
-        widgetInstance.setProperties({
-          "format-error": false,
-          "format-error-message": ""
-        });
+        this.setErrorProperties(widgetInstance, "format-error");
       } else {
-        widgetInstance.setProperties({
-          "format-error": true,
-          "format-error-message": Listbox.formatErrorMessage
-        });
+        this.setErrorProperties(widgetInstance, "format-error", Listbox.formatErrorMessage);
       }
 
       window.queueMicrotask(() => {

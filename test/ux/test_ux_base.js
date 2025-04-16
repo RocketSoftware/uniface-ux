@@ -140,7 +140,7 @@ import { Widget } from "../../src/ux/framework/widget.js";
       expect(formattedValReps[1].representation).to.eql("value2");
     });
 
-    it("warn", function () {
+    it("warn()", function () {
       functionName = "tooBoolean";
       message = "Function does not return that value";
       consequence = "Aborting";
@@ -150,7 +150,7 @@ import { Widget } from "../../src/ux/framework/widget.js";
       sandbox.restore();
     });
 
-    it("error", function () {
+    it("error()", function () {
       functionName = "tooBoolean";
       message = "Function does not return that value";
       consequence = "Aborting";
@@ -173,7 +173,7 @@ import { Widget } from "../../src/ux/framework/widget.js";
       expect(formattedValReps.querySelector(".u-valrep-representation").className).to.eql("u-valrep-representation");
     });
 
-    describe("extractSubWidgetData", function () {
+    describe("extractSubWidgetData()", function () {
       it("return the sub-widget data correctly and delete corresponding sub-widget properties from data source", function () {
         let data = {
           "subWidgetId:widget-class": "Some class",
@@ -223,7 +223,7 @@ import { Widget } from "../../src/ux/framework/widget.js";
       });
     });
 
-    describe("extractSubWidgetPropertyNames", function () {
+    describe("extractSubWidgetPropertyNames()", function () {
       it("return the sub-widget property names correctly and delete corresponding sub-widget property names from property names source", function () {
         let propertyNames = new Set([
           "subWidgetId:widget-class",
@@ -265,7 +265,7 @@ import { Widget } from "../../src/ux/framework/widget.js";
       });
     });
 
-    describe("deleteIconClasses", function () {
+    describe("deleteIconClasses()", function () {
       it("delete the classes starting with 'ms-Icon' from the element", function () {
         let element = document.createElement("div");
         let mockClassList = ["ms-Icon", "Ms-icon", "Ms-icon--Home", "class-1", "ms-Icon--Home", "ms-icon", "ms-icon--Home"];
@@ -277,6 +277,52 @@ import { Widget } from "../../src/ux/framework/widget.js";
         base.deleteIconClasses(element);
         expect([...element.classList].includes(...mockIconClasses)).to.equal(false);
         expect([...element.classList].includes(...mockNonIconClasses)).to.equal(true);
+      });
+    });
+
+    describe("setErrorProperties()", function () {
+      it("call setProperties() with correct format-error related properties", function () {
+        let widgetInstance = new Widget();
+        let spy = sinon.spy(widgetInstance, "setProperties");
+        base.setErrorProperties(widgetInstance, "format-error", "Some format error message");
+        expect(spy.called).to.be.true;
+        expect(
+          spy.calledWith({
+            "format-error": true,
+            "format-error-message": "Some format error message"
+          })
+        ).to.be.true;
+
+        base.setErrorProperties(widgetInstance, "format-error", "");
+        expect(spy.called).to.be.true;
+        expect(
+          spy.calledWith({
+            "format-error": false,
+            "format-error-message": ""
+          })
+        ).to.be.true;
+      });
+
+      it("call setProperties() with correct error related properties", function () {
+        let widgetInstance = new Widget();
+        let spy = sinon.spy(widgetInstance, "setProperties");
+        base.setErrorProperties(widgetInstance, "error", "Some error message");
+        expect(spy.called).to.be.true;
+        expect(
+          spy.calledWith({
+            "error": true,
+            "error-message": "Some error message"
+          })
+        ).to.be.true;
+
+        base.setErrorProperties(widgetInstance, "error", "");
+        expect(spy.called).to.be.true;
+        expect(
+          spy.calledWith({
+            "error": false,
+            "error-message": ""
+          })
+        ).to.be.true;
       });
     });
   });

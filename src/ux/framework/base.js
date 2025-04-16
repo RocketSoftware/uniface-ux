@@ -404,4 +404,18 @@ export class Base {
       }
     });
   }
+
+  /**
+   * Sets error related properties.
+   * @param {Widget} widgetInstance
+   * @param {String} errorType
+   * @param {String} errorMessage
+   */
+  setErrorProperties(widgetInstance, errorType = "error", errorMessage = "") {
+    const isSettingError = errorMessage !== "";
+    widgetInstance.setProperties({
+      [errorType]: isSettingError,
+      [`${errorType}-message`]: isSettingError ? errorMessage : ""
+    });
+  }
 }

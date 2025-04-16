@@ -1031,14 +1031,8 @@ export class HtmlValueAttributeBoolean extends BaseHtmlAttribute {
       "element": element,
       "event_name": this.valueChangedEventName || "",
       "handler": () => {
-        widgetInstance.setProperties({
-          "format-error": false,
-          "format-error-message": ""
-        });
-        widgetInstance.setProperties({
-          "error": false,
-          "error-message": ""
-        });
+        this.setErrorProperties(widgetInstance, "format-error");
+        this.setErrorProperties(widgetInstance);
       }
     });
     return updaters;
@@ -1054,15 +1048,9 @@ export class HtmlValueAttributeBoolean extends BaseHtmlAttribute {
     // Validate value before assigning.
     try {
       this.setHtmlAttribute(element, this.fieldValueToBoolean(value));
-      widgetInstance.setProperties({
-        "format-error": false,
-        "format-error-message": ""
-      });
+      this.setErrorProperties(widgetInstance, "format-error");
     } catch (error) {
-      widgetInstance.setProperties({
-        "format-error": true,
-        "format-error-message": error
-      });
+      this.setErrorProperties(widgetInstance, "format-error", error);
     }
   }
 }

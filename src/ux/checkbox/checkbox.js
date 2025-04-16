@@ -149,12 +149,8 @@ export class Checkbox extends Widget {
     }
 
     clearErrors(widgetInstance) {
-      widgetInstance.setProperties({
-        "format-error": false,
-        "format-error-message": "",
-        "error": false,
-        "error-message": ""
-      });
+      this.setErrorProperties(widgetInstance);
+      this.setErrorProperties(widgetInstance, "format-error");
     }
 
     getValueUpdaters(widgetInstance) {
@@ -195,16 +191,10 @@ export class Checkbox extends Widget {
 
       try {
         newValue = this.fieldValueToTriState(value);
-        widgetInstance.setProperties({
-          "format-error": false,
-          "format-error-message": ""
-        });
+        this.setErrorProperties(widgetInstance, "format-error");
       } catch (error) {
         isError = true;
-        widgetInstance.setProperties({
-          "format-error": true,
-          "format-error-message": error
-        });
+        this.setErrorProperties(widgetInstance, "format-error", error);
       }
 
       if (newValue !== widgetInstance.data.currentValue) {
