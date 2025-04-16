@@ -725,7 +725,7 @@
         });
       });
 
-      it("set tabindex to some value, warning should get generated in browser console and tabindex should be ignored", function () {
+      it("set tabindex to some value, warning should get generated in the browser console and tabindex should be ignored", function () {
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
         const warnSpy = sinon.spy(console, "warn");
         return asyncRun(function () {
