@@ -40,19 +40,19 @@
     <script id="test-script" type="module"></script>
 
     <h2>Widget Test: <span id="test-script-name"></span></h2>
-    <h2 id="test-error"></h2>
+    <span id="test-error"></span>
 
     <div id="mocha"></div>
 
+    
     <script class="mocha-exec" type="module">
       // Handle uncaught errors globally
       window.onerror = function (message, source, lineno, colno, error) {
         console.error("Error captured: ", message);
+        const filename = source ? source.split('/').pop() : 'unknown';
         document.getElementById("test-error").innerHTML = `
           Uncaught error: ${message}<br>
-          In file: ${source}<br>
-          At line: ${lineno}, column: ${colno}<br>
-          Error stack: ${error ? error : 'N/A'}
+          at: ${filename}:${lineno}:${colno} <br>
         `;
         return true;  // Prevent the default browser error handling
       };
