@@ -32,20 +32,6 @@
     "first_widget-class": "UX.TextField"
   };
 
-  const MOCK_CONTROLBAR_DEFAULT_PROPERTIES = {
-    "html:hidden": false,
-    "class:u-controlbar": true,
-    "orientation": "horizontal",
-    "widget-resize": false,
-    "value": "",
-    "error":"false",
-    "error-message":"",
-    "html:disabled": "false",
-    "html:readonly":"false",
-    "html:minlength" : null,
-    "html:maxlength" : null
-  };
-
   const MOCK_EMPTY_START_CONTROLS_DEFINITION = {
     "subwidgets-start": "",
     "subwidgets-center": "size",
@@ -557,7 +543,17 @@
     });
 
     it("should have default properties added", function () {
-      expect(widgetClass.defaultValues).to.deep.equal(MOCK_CONTROLBAR_DEFAULT_PROPERTIES);
+      assert.equal(widgetClass.defaultValues["class:u-controlbar"], true, "Default value of class:u-controlbar should be true.");
+      assert.equal(widgetClass.defaultValues["html:hidden"], false, "Default value of hidden should be false.");
+      assert.equal(widgetClass.defaultValues["orientation"], "horizontal", "Default value of orientation should be horizontal.");
+      assert.equal(widgetClass.defaultValues["widget-resize"], false, "Default value of widget-resize should be false.");
+      assert.equal(widgetClass.defaultValues["value"], "", "Default value should be ''.");
+      assert.equal(widgetClass.defaultValues["error"], "false", "Default value of error should be false.");
+      assert.equal(widgetClass.defaultValues["error-message"], "", "Default value of error-message should be ''.");
+      assert.equal(widgetClass.defaultValues["html:disabled"], "false", "Default value of html:disabled should be false.");
+      assert.equal(widgetClass.defaultValues["html:readonly"], "false", "Default value of html:readonly should be false.");
+      assert.equal(widgetClass.defaultValues["html:minlength"], null, "Default value of html:minlength should be null.");
+      assert.equal(widgetClass.defaultValues["html:maxlength"], null, "Default value of html:maxlength should be null.");
     });
   });
 
@@ -593,6 +589,24 @@
           expect(element.classList.contains("classC")).to.be.true;
           expect(element.getAttribute("u-orientation")).to.equal("vertical");
           expect(window.getComputedStyle(element)["flex-direction"]).to.equal("column");
+          expect(element.getAttribute("role")).to.equal("toolbar");
+          expect(!element.getAttribute("tabindex"));
+        });
+      });
+
+      it("if there is change in any controlbar properties, should be reflected on the widgetElement", function () {
+        const tester = new umockup.WidgetTester();
+        element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        return asyncRun(function () {
+          tester.onConnect(element);
+          tester.dataInit();
+          tester.dataUpdate(MOCK_CONTROLBAR_DATA);
+        }).then(function () {
+          expect(element.classList.contains("classC")).to.be.true;
+          expect(element.getAttribute("u-orientation")).to.equal("vertical");
+          expect(window.getComputedStyle(element)["flex-direction"]).to.equal("column");
+          expect(element.getAttribute("role")).to.equal("toolbar");
+          expect(!element.getAttribute("tabindex"));
         });
       });
 
@@ -707,6 +721,22 @@
           });
         }).then(function () {
           expect(warnSpy.calledWith("Controlbar.setProperties(data): Widget does not support property 'html:hiden' - Ignored.")).to.be.true;
+          warnSpy.restore();
+        });
+      });
+
+      it("set tabindex to some value, warning should get generated in the browser console and tabindex should be ignored", function () {
+        element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+        const warnSpy = sinon.spy(console, "warn");
+        return asyncRun(function () {
+          tester.onConnect(element);
+          tester.dataInit();
+          tester.dataUpdate({
+            "tabindex": 100
+          });
+        }).then(function () {
+          expect(!element.getAttribute("tabindex"));
+          expect(warnSpy.calledWith("Controlbar.setProperties(data): Widget does not support property 'tabindex' - Ignored.")).to.be.true;
           warnSpy.restore();
         });
       });
