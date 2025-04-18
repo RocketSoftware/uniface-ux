@@ -50,7 +50,7 @@
       window.onerror = function (message, source, lineno, colno, error) {
         console.error("Error captured: ", message);
         const filename = source ? source.split('/').pop() : 'unknown';
-        document.getElementById("test-error").innerHTML = `
+        document.getElementById("test-error").innerHTML += `
           Uncaught error: ${message}<br>
           at: ${filename}:${lineno}:${colno} <br>
         `;
@@ -101,10 +101,10 @@
 
         el.onerror = function () {
           console.log("Failed to load test script " + scriptName);
-          document.getElementById("test-error").innerHTML = "Failed to load the script! Please check script name or verify that file <u><i>"+scriptName+"</i></u> is available in folder!";
+          document.getElementById("test-error").innerHTML += "Failed to load the script! Please check script name or verify that file <u><i>"+scriptName+"</i></u> is available in folder!";
         };
       } else {
-        document.getElementById("test-error").innerHTML = "The script name \"\" entered is empty. Please enter a widget name!!";
+        document.getElementById("test-error").innerHTML += "The script name \"\" entered is empty. Please enter a widget name!!";
       }
     </script>
 
