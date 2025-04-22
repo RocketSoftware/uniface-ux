@@ -40,10 +40,23 @@
     <script id="test-script" type="module"></script>
 
     <h2>Widget Test: <span id="test-script-name"></span></h2>
-    <h2 id="test-error"></h2>
+    <span id="test-error"></span>
 
     <div id="mocha"></div>
+
+    
     <script class="mocha-exec" type="module">
+      // Handle uncaught errors globally
+      window.onerror = function (message, source, lineno, colno, error) {
+        console.error("Error captured: ", message);
+        const filename = source ? source.split('/').pop() : 'unknown';
+        document.getElementById("test-error").innerHTML += `
+          Uncaught error: ${message}<br>
+          at: ${filename}:${lineno}:${colno} <br>
+        `;
+        return true;  // Prevent the default browser error handling
+      };
+
       // update document
       const widgetName = umockup.getWidgetName();
       const scriptName = umockup.getTestJsName();
@@ -59,9 +72,14 @@
       el = document.getElementById("test-script");
       if (scriptName) {
         el.src = "ux/" + scriptName;
-        // this block of code ensures that the end of file is reached and add an element to asset the number of test cases
+
+        // this block of code ensures that the end of file is reached and add an element to assert the number of test cases
         el.onload = function () {
           mocha.run().on('end', function () {
+            if (this.stats.passes === 0 && this.stats.failures === 0) {
+              throw new Error('Test could not run, please check for errors in JavaScript');
+            }
+            
             var line;
             line = "Results Passed : " + this.stats.passes + " || Failed : " + this.stats.failures;
 
@@ -83,10 +101,10 @@
 
         el.onerror = function () {
           console.log("Failed to load test script " + scriptName);
-          document.getElementById("test-error").innerHTML = "Failed to load the script! Please check script name or verify that file <u><i>"+scriptName+"</i></u> is available in folder!";
+          document.getElementById("test-error").innerHTML += "Failed to load the script! Please check script name or verify that file <u><i>"+scriptName+"</i></u> is available in folder!";
         };
       } else {
-        document.getElementById("test-error").innerHTML = "The script name \"\" entered is empty. Please enter a widget name!!";
+        document.getElementById("test-error").innerHTML += "The script name \"\" entered is empty. Please enter a widget name!!";
       }
     </script>
 
