@@ -179,14 +179,15 @@
       assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
     });
 
-    it("check tri-state, tabindex, hidden , disabled, readonly, and title", function () {
+    it("check label-position, tri-state, tabindex, hidden , disabled, readonly, and title", function () {
 
       assert.equal(tester.defaultValues["html:tabindex"], 0, "Default value of html:tabindex should be 0.");
       assert.equal(tester.defaultValues["html:title"], undefined, "Default value of html:title should be undefined.");
       assert.equal(tester.defaultValues["html:disabled"], false, "Default value of disabled should be false.");
       assert.equal(tester.defaultValues["html:readonly"], false, "Default value of readonly should be false.");
       assert.equal(tester.defaultValues["html:hidden"], false, "Default value of hidden should be false.");
-      assert.equal(tester.defaultValues["tri-state"], false, "Default value of label-position will be above.");
+      assert.equal(tester.defaultValues["tri-state"], false, "Default value of tri-state.");
+      assert.equal(tester.defaultValues["label-position"], "after", "Default value of label-position will be above.");
     });
 
     it("check value", function () {
@@ -308,6 +309,31 @@
         let labelText = element.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, "Changed Label Text"); // Check for visibility.
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label-text.");
+      });
+    });
+
+    it("set label-position before", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "before"
+        });
+      }).then(function () {
+        let labelPosition = element.getAttribute("u-label-position");
+        assert.equal(labelPosition, "before", "Label position is not set to before.");
+      });
+    });
+
+    it("reset label and its position", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": uniface.RESET,
+          "label-text": uniface.RESET
+        });
+      }).then(function () {
+        let labelPosition = element.getAttribute("u-label-position");
+        assert.equal(labelPosition, "after");
+        assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text.");
+        assert.equal(element.querySelector("span.u-label-text").innerText, "", "Text is not empty.");
       });
     });
   });

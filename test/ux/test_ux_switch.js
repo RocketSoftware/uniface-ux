@@ -61,6 +61,10 @@
         assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element.");
       });
 
+      it("check u-label-position", function () {
+        assert.equal(element.querySelector("span.u-label-position"), "before","Widget misses or has incorrect u-label-position element.");
+      });
+
       it("check u-checked-message", function () {
         assert(element.querySelector("span.u-checked-message"), "Widget misses or has incorrect u-checked-message element.");
       });
@@ -182,6 +186,31 @@
         let labelText = element.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, switchLabelText); // Check for visibility.
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
+      });
+    });
+
+    it("set label-position after", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "after"
+        });
+      }).then(function () {
+        let labelPosition = element.getAttribute("u-label-position");
+        assert.equal(labelPosition, "after", "Label position is not set to after.");
+      });
+    });
+
+    it("reset label and its position", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": uniface.RESET,
+          "label-text": uniface.RESET
+        });
+      }).then(function () {
+        let labelPosition = element.getAttribute("u-label-position");
+        assert.equal(labelPosition, "before");
+        assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text.");
+        assert.equal(element.querySelector("span.u-label-text").innerText, "", "Text is not empty.");
       });
     });
 
