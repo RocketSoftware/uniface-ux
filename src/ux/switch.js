@@ -10,6 +10,7 @@ import {
   HtmlAttributeBoolean,
   SlottedElement,
   HtmlValueAttributeBoolean,
+  HtmlAttributeChoice,
   IgnoreProperty
 } from "./workers.js";
 // The import of Fluent UI web-components is done in loader.js
@@ -91,6 +92,7 @@ export class Switch extends Widget {
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new HtmlAttributeChoice(this, "label-position", "u-label-position", ["before", "after"], "before", true),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text", ""),

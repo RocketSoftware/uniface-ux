@@ -8,6 +8,8 @@
 
 .u-checkbox::part(label) {
   display: inline-flex;
+  padding-inline-start: unset; 
+  margin-inline-end: unset;
 }
 
 /* Styling Indeterminate state as per fluent design system */
@@ -30,6 +32,15 @@
 .u-checkbox.u-invalid .u-error-icon,
 .u-checkbox.u-format-invalid .u-error-icon {
   color: #d13438;
+}
+
+.u-checkbox[u-label-position="before"].u-invalid .u-error-icon,
+.u-checkbox[u-label-position="before"].u-format-invalid .u-error-icon {
+  padding-inline-end: calc(var(--design-unit) * 2px + 2px);
+}
+
+.u-checkbox[u-label-position="after"].u-invalid .u-error-icon,
+.u-checkbox[u-label-position="after"].u-format-invalid .u-error-icon {
   padding-inline-start: calc(var(--design-unit) * 2px + 2px);
 }
 
@@ -86,4 +97,19 @@
 .u-checkbox.u-format-invalid.indeterminate:active::part(control) {
   --neutral-stroke-strong-active: #d54649;
   --neutral-foreground-rest: #d54649;
+}
+
+/* Styling label-text in different positions */
+.u-checkbox[u-label-position="before"]:has(.u-label-text:not([hidden]))::part(control),
+.u-checkbox[u-label-position="before"]:has(.u-error-icon:not([hidden]))::part(control) {
+  order: 2;
+}
+
+.u-checkbox[u-label-position="after"] .u-label-text:not([hidden]) {
+  order: 2;
+  padding-inline-start: calc(var(--design-unit) * 2px + 2px);
+}
+
+.u-checkbox[u-label-position="before"] .u-label-text:not([hidden]) {
+  padding-inline-end: calc(var(--design-unit) * 2px + 2px);
 }

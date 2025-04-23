@@ -8,6 +8,18 @@
   flex-shrink: 0;
 }
 
+.u-switch::part(status-message) {
+  order: 2;
+}
+
+.u-switch::part(checked-message),
+.u-switch::part(unchecked-message) {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 10ch;
+}
+
 .u-switch.checked::part(switch-toggle) {
   left: 0%;
   transform: translateX(20px);
@@ -37,12 +49,12 @@
 
 .u-switch.u-invalid:hover::part(switch),
 .u-switch.u-format-invalid:hover::part(switch) {
-    --neutral-stroke-strong-hover: #d13438;
+  --neutral-stroke-strong-hover: #d13438;
 }
 
 .u-switch.u-invalid:active::part(switch),
 .u-switch.u-format-invalid:active::part(switch) {
-    --neutral-stroke-strong-active: #d13438;
+  --neutral-stroke-strong-active: #d13438;
 }
 
 /* Styling the unchecked switch toggle when the widget is in an invalid state. */
@@ -60,8 +72,48 @@
 
 /* To ensure no margin right is applied when label is empty. */
 .u-switch::part(label) {
-  margin-inline-end: 0;
+  margin-inline-end: unset;
 }
-.u-switch .u-label-text:not([hidden]) {
-  margin-inline-end: calc(var(--design-unit)* 2px + 2px);
+
+.u-switch[u-label-position="before"]::part(switch),
+.u-switch[u-label-position="after"]::part(label) {
+  order: 3;
+}
+
+.u-switch[u-label-position="after"]::part(switch),
+.u-switch[u-label-position="before"]::part(label) {
+  order: 1;
+}
+
+.u-switch[u-label-position="before"] .u-label-text:not([hidden]) {
+  margin-inline-end: calc(var(--design-unit) * 2px + 2px);
+}
+
+.u-switch[u-label-position="after"] .u-label-text:not([hidden]) {
+  margin-inline-start: calc(var(--design-unit) * 2px + 2px);
+}
+
+.u-switch[u-label-position="before"] .u-checked-message,
+.u-switch[u-label-position="before"] .u-unchecked-message,
+.u-switch[u-label-position="before"] .u-error-icon-checked,
+.u-switch[u-label-position="before"] .u-error-icon-unchecked {
+  margin-inline-end: calc(var(--design-unit) * 2px + 2px);
+}
+
+.u-switch[u-label-position="before"] .u-checked-message,
+.u-switch[u-label-position="before"] .u-unchecked-message {
+  margin-inline-start: 5px;
+}
+
+.u-switch[u-label-position="before"] .u-error-icon-checked,
+.u-switch[u-label-position="before"] .u-error-icon-unchecked {
+  margin-inline-start: unset;
+}
+
+.u-switch[u-label-position="after"] .u-checked-message,
+.u-switch[u-label-position="after"] .u-unchecked-message,
+.u-switch[u-label-position="after"] .u-error-icon-checked,
+.u-switch[u-label-position="after"] .u-error-icon-unchecked {
+  margin-inline-start: calc(var(--design-unit) * 2px + 2px);
+  margin-inline-end: unset;
 }
