@@ -42,9 +42,9 @@ export class PlainText extends Widget {
     /**
      * Creates an instance of SlottedPlainTextFormat.
      * @param {typeof Widget} widgetClass
-     * @param {String} tagName
-     * @param {String} styleClass
-     * @param {String} elementQuerySelector
+     * @param {string} tagName
+     * @param {string} styleClass
+     * @param {string} elementQuerySelector
      */
     constructor(widgetClass, tagName, styleClass, elementQuerySelector) {
       super(widgetClass, tagName, styleClass, elementQuerySelector);
@@ -139,8 +139,8 @@ export class PlainText extends Widget {
 
     /**
      * Create DOM element for 'valrep-html'.
-     * @param {Object} matchedValrepObj
-     * @param {String} value
+     * @param {object} matchedValrepObj
+     * @param {string} value
      * @param {HTMLElement} element
      */
     createValrepHtmlElement(matchedValrepObj, value, element) {
@@ -154,7 +154,7 @@ export class PlainText extends Widget {
 
     /**
      * Create DOM element for rep html element.
-     * @param {Object} matchedValrepObj
+     * @param {object} matchedValrepObj
      * @param {HTMLElement} element
      */
     createRepElement(matchedValrepObj, element) {
@@ -166,7 +166,7 @@ export class PlainText extends Widget {
 
     /**
      * Create a text node element.
-     * @param {String} text
+     * @param {string} text
      * @param {HTMLElement} element
      */
     createTextElement(text, element) {
@@ -175,7 +175,7 @@ export class PlainText extends Widget {
 
     /**
      * Create a DOM structure for multi-paragraphs.
-     * @param {String} value
+     * @param {string} value
      * @param {HTMLElement} element
      */
     createMultiParagraphsElement(value, element) {

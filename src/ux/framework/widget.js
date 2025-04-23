@@ -156,7 +156,7 @@ export class Widget extends Base {
     /**
      * Perform a deep copy of the sub-widgets registered with the widget class to widget object.
      * This to make sure widget object changes do not affect the widget class definition.
-     * @type {Object}
+     * @type {object}
      */
     let widgetClass = this.constructor;
     Object.keys(widgetClass.subWidgets).forEach((subWidgetId) => {
@@ -183,7 +183,7 @@ export class Widget extends Base {
   onConnect(widgetElement, objectDefinition) {
     this.elements = {};
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     this.elements.widget = widgetElement;
     this.log("onConnect");
@@ -230,13 +230,13 @@ export class Widget extends Base {
 
   /**
    * Use this method to map a Uniface trigger to an event of your (sub) widget.
-   * @param {String} triggerName
-   * @return {TriggerMapping|undefined} [triggerMapping].
+   * @param {string} triggerName
+   * @return {TriggerMapping | undefined} [triggerMapping].
    */
   mapTrigger(triggerName) {
     this.log("mapTrigger", triggerName);
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     let triggerMapping = null;
 
@@ -285,7 +285,7 @@ export class Widget extends Base {
     this.data = {};
     this.data.id = Math.random();
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     this.log("dataInit", widgetClass.defaultValues);
 
@@ -358,7 +358,7 @@ export class Widget extends Base {
   getValue() {
     let value = {};
     // Use 'value' worker to get the widget value.
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     let valueWorker = widgetClass.getters.value;
     if (valueWorker) {
@@ -372,7 +372,7 @@ export class Widget extends Base {
 
   /**
    * Validates the value of the widget before passing it back to Uniface.
-   * @return {UDataError|null} [result]
+   * @return {UDataError | null} [result]
    */
   validate() {
     this.log("validate");
@@ -397,7 +397,7 @@ export class Widget extends Base {
 
   /**
    * Shows the error as provided by Uniface.
-   * @param {String} errorMessage
+   * @param {string} errorMessage
    */
   showError(errorMessage) {
     this.log("showError", errorMessage);
@@ -442,7 +442,7 @@ export class Widget extends Base {
   blockUI() {
     this.log("blockUI");
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     // Call blockUI() for each sub-widget.
     Object.keys(this.subWidgets).forEach((key) => {
@@ -475,7 +475,7 @@ export class Widget extends Base {
   unblockUI() {
     this.log("unblockUI");
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     // Call unblockUI() for each sub-widget.
     Object.keys(this.subWidgets).forEach((key) => {
@@ -510,7 +510,7 @@ export class Widget extends Base {
    */
   setProperties(data) {
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     const defaultValues = widgetClass.defaultValues;
     const widgetSetters = widgetClass.setters;
@@ -558,7 +558,7 @@ export class Widget extends Base {
 
   /**
    * Collects trace information and returns a trace message.
-   * @return {String}
+   * @return {string}
    */
   getTraceDescription() {
     let widgetId = "<noWidgetId>";
@@ -604,12 +604,12 @@ export class Widget extends Base {
 
   /**
    * Logs the provided tracing info in console.log.
-   * @param {String} functionName
-   * @param {Object} [data]
+   * @param {string} functionName
+   * @param {object} [data]
    */
   log(functionName, data) {
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     if (widgetClass.tracing.classNames.all || widgetClass.tracing.classNames[this.constructor.name]) {
       if (widgetClass.tracing.functionNames.all || widgetClass.tracing.functionNames[functionName]) {

@@ -58,7 +58,7 @@ export class Base {
    * Per trigger-mapping, one worker needs to be registered.
    * mapTrigger() calls this worker to get the trigger-mapping.
    * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
-   * @param {String} triggerName - Specifies the trigger-name for which the worker will be registered.
+   * @param {string} triggerName - Specifies the trigger-name for which the worker will be registered.
    * @param {Worker} worker - Specifies the worker.
    */
   registerTrigger(widgetClass, triggerName, worker) {
@@ -72,9 +72,9 @@ export class Base {
    * The UXWF deals with sub-widgets transparently, like generate their layouts, instantiate them, invoke their onConnect
    * get their value, map their triggers, update their properties, etc.
    * @param {typeof import("./widget.js").Widget} widgetClass
-   * @param {String} subWidgetId
+   * @param {string} subWidgetId
    * @param {typeof import("./widget.js").Widget} subWidgetClass
-   * @param {String} subWidgetStyleClass
+   * @param {string} subWidgetStyleClass
    * @param {Array} subWidgetTriggers
    * @param {Array} subWidgetDelegatedProperties
    */
@@ -106,7 +106,7 @@ export class Base {
    * Looks up the node within node as specified by propId.
    * @param {UData} node
    * @param {UPropName} propId
-   * @return {Object}
+   * @return {object}
    */
   getNode(node, propId) {
     return Base.getNode(node, propId);
@@ -116,7 +116,7 @@ export class Base {
    * Looks up the node within node as specified by propId.
    * @param {UData} node
    * @param {UPropName} propId
-   * @return {Object}
+   * @return {object}
    */
   static getNode(node, propId) {
     return propId ? node[propId] : undefined;
@@ -124,7 +124,7 @@ export class Base {
 
   /**
    * Convert Uniface property values into JS Boolean.
-   * @param {String|boolean|number} value
+   * @param {string | boolean | number} value
    * @return {boolean}
    */
   toBoolean(value) {
@@ -133,7 +133,7 @@ export class Base {
 
   /**
    * Convert Uniface property values into JS Boolean.
-   * @param {String|boolean|number} value
+   * @param {string | boolean | number} value
    * @return {boolean}
    */
   static toBoolean(value) {
@@ -159,7 +159,7 @@ export class Base {
   /**
    * Convert Uniface field value to JS Boolean.
    * @param {any} value
-   * @return {Boolean}
+   * @return {boolean}
    * @throws {*} - Conversion failure.
    */
   fieldValueToBoolean(value) {
@@ -169,7 +169,7 @@ export class Base {
   /**
    * Convert Uniface field value to JS Boolean.
    * @param {any} value
-   * @return {Boolean}
+   * @return {boolean}
    * @throws {*} - Conversion failure.
    */
   static fieldValueToBoolean(value) {
@@ -202,7 +202,7 @@ export class Base {
    * Returns the valrep-item for the provided value
    * @param {Array} valrep
    * @param {any} value
-   * @return {Object}
+   * @return {object}
    */
   static getValrepItem(valrep, value) {
     if (Array.isArray(valrep)) {
@@ -247,7 +247,7 @@ export class Base {
    * Calls an objectDefinition function, as specified by the instruction string, and returns the result of that function call.
    * Returns a error message if the instruction is of an incorrect format or the requested function does not exist.
    * @param {UObjectDefinition} objectDefinition
-   * @param {String} instruction  ; Instruction string of syntax: "function({arg1{,arg2{...,argN}}})"
+   * @param {string} instruction  ; Instruction string of syntax: "function({arg1{,arg2{...,argN}}})"
    * @return {*}
    * @memberof Base
    */
@@ -291,9 +291,9 @@ export class Base {
    * u-valrep-value - this class is used for querying the value element in both valrep and val display formats.
    * u-value - this class is specific to valrep format and is used to style the value section.
    * u-valrep-representation - this class is used both as a query-selector and for styling the representation section.
-   * @param {String} displayFormat
-   * @param {String | null} value
-   * @param {String} representation
+   * @param {string} displayFormat
+   * @param {string | null} value
+   * @param {string} representation
    * @returns {HTMLElement | DocumentFragment}
    */
   getFormattedValrepItemAsHTML(displayFormat, value, representation) {
@@ -320,9 +320,9 @@ export class Base {
 
   /**
    * Warning log function.
-   * @param {String} functionName
-   * @param {String} message
-   * @param {String} consequence
+   * @param {string} functionName
+   * @param {string} message
+   * @param {string} consequence
    */
   warn(functionName, message, consequence) {
     console.warn(`${this.constructor.name}.${functionName}: ${message} - ${consequence}.`);
@@ -330,9 +330,9 @@ export class Base {
 
   /**
    * Error log function.
-   * @param {String} functionName
-   * @param {String} message
-   * @param {String} consequence
+   * @param {string} functionName
+   * @param {string} message
+   * @param {string} consequence
    */
   error(functionName, message, consequence) {
     console.error(`${this.constructor.name}.${functionName}: ${message} - ${consequence}.`);
@@ -342,9 +342,9 @@ export class Base {
    * Extracts sub-widget data from the original data object and removes the corresponding
    * properties from original data object.
    * @param {UData} data - The source object containing properties to extract.
-   * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
+   * @param {string} subWidgetPropPrefix - Sub-widget property prefix.
    * @param {Array} subWidgetDelegatedProperties - An array containing list of delegated properties.
-   * @returns {UData|undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
+   * @returns {UData | undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
    */
   extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties) {
     let subWidgetData;
@@ -375,8 +375,8 @@ export class Base {
    * Extracts sub-widget property names from the original property names set and removes the corresponding
    * property names from original property names set.
    * @param {UPropertyNames} propertyNames - The source set containing property names to extract.
-   * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
-   * @returns {UPropertyNames|undefined} A set of extracted sub-widget property names, or `undefined` if no property names are found.
+   * @param {string} subWidgetPropPrefix - Sub-widget property prefix.
+   * @returns {UPropertyNames | undefined} A set of extracted sub-widget property names, or `undefined` if no property names are found.
    */
   extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix) {
     let subWidgetPropertyNames;
@@ -409,8 +409,8 @@ export class Base {
   /**
    * Sets error related properties.
    * @param {Widget} widgetInstance
-   * @param {String} errorType
-   * @param {String} errorMessage
+   * @param {string} errorType
+   * @param {string} errorMessage
    */
   setErrorProperties(widgetInstance, errorType = "error", errorMessage = "") {
     const isSettingError = errorMessage !== "";

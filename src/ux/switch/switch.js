@@ -49,7 +49,7 @@ export class Switch extends Widget {
     /**
      * Creates an instance of SwitchSlottedError.
      * @param {typeof Widget} widgetClass
-     * @param {String} selectorUsingSameErrorSlot
+     * @param {string} selectorUsingSameErrorSlot
      */
     constructor(widgetClass, tagName, styleClass, elementQuerySelector, slot, selectorUsingSameErrorSlot) {
       super(widgetClass, tagName, styleClass, elementQuerySelector, slot);

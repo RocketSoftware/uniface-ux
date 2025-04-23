@@ -39,7 +39,7 @@ export class Worker extends Base {
 
   /**
    * Sets the styleClass that identifies the element this setters work on.
-   * @param {String} elementQuerySelector
+   * @param {string} elementQuerySelector
    */
   setElementQuerySelector(elementQuerySelector) {
     this.elementQuerySelector = elementQuerySelector;
@@ -66,8 +66,8 @@ export class Worker extends Base {
 
   /**
    * Provides setter-specific tracing.
-   * @param {String} functionName
-   * @param {Object} data
+   * @param {string} functionName
+   * @param {object} data
    */
   log(functionName, data) {
     const classNames = {
@@ -95,9 +95,9 @@ export class Element extends Worker {
   /**
    * Creates an instance of Element.
    * @param {typeof import("./widget.js").Widget} widgetClass
-   * @param {String} tagName
-   * @param {String} styleClass
-   * @param {String} elementQuerySelector
+   * @param {string} tagName
+   * @param {string} styleClass
+   * @param {string} elementQuerySelector
    * @param {Array} [childWorkers]
    */
   constructor(widgetClass, tagName, styleClass, elementQuerySelector, childWorkers) {
@@ -171,10 +171,10 @@ export class SlottedElement extends Element {
   /**
    * Creates an instance of SlottedElement.
    * @param {typeof import("./widget.js").Widget} widgetClass
-   * @param {String} tagName
-   * @param {String} styleClass
-   * @param {String} elementQuerySelector
-   * @param {String} slot
+   * @param {string} tagName
+   * @param {string} styleClass
+   * @param {string} elementQuerySelector
+   * @param {string} slot
    * @param {UPropName} [textPropId]
    * @param {UPropValue} [textDefaultValue]
    * @param {UPropName} [iconPropId]
@@ -252,10 +252,10 @@ export class SlottedError extends Element {
   /**
    * Creates an instance of SlottedError.
    * @param {typeof import("./widget.js").Widget} widgetClass
-   * @param {String} tagName
-   * @param {String} styleClass
-   * @param {String} elementQuerySelector
-   * @param {String} slot
+   * @param {string} tagName
+   * @param {string} styleClass
+   * @param {string} elementQuerySelector
+   * @param {string} slot
    */
   constructor(widgetClass, tagName, styleClass, elementQuerySelector, slot) {
     super(widgetClass, tagName, styleClass, elementQuerySelector);
@@ -320,14 +320,14 @@ export class SlottedSubWidget extends Element {
   /**
    * Creates an instance of SlottedWidget.
    * @param {typeof import("./widget.js").Widget} widgetClass
-   * @param {String} tagName
-   * @param {String} subWidgetStyleClass
-   * @param {String} elementQuerySelector
-   * @param {String} slot
-   * @param {String} subWidgetId
-   * @param {String} subWidgetClassName
-   * @param {Object} subWidgetDefaultValues
-   * @param {Boolean} visible
+   * @param {string} tagName
+   * @param {string} subWidgetStyleClass
+   * @param {string} elementQuerySelector
+   * @param {string} slot
+   * @param {string} subWidgetId
+   * @param {string} subWidgetClassName
+   * @param {object} subWidgetDefaultValues
+   * @param {boolean} visible
    * @param {Array} subWidgetTriggers
    * @param {Array} subWidgetDelegatedProperties
    */
@@ -414,9 +414,9 @@ export class SubWidgetsByProperty extends Element {
   /**
    * Creates an instance of WidgetsByProperty.
    * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget class definition the setter is created for.
-   * @param {String} tagName - Specifies the wub-widget's element tag-name.
-   * @param {String} styleClass - Specifies the style class for custom styling of the sub-widget.
-   * @param {String} elementQuerySelector - Specifies the querySelector to find the sub-widget back.
+   * @param {string} tagName - Specifies the wub-widget's element tag-name.
+   * @param {string} styleClass - Specifies the style class for custom styling of the sub-widget.
+   * @param {string} elementQuerySelector - Specifies the querySelector to find the sub-widget back.
    * @param {UPropName} propId - specifies the property used to get the ids of the to be added sub-widgets.
    */
   constructor(widgetClass, tagName, styleClass, elementQuerySelector, propId) {
@@ -473,7 +473,7 @@ export class SubWidgetsByProperty extends Element {
   /**
    * Collects the subWidget definitions based on the properties and returns them.
    * @param {UObjectDefinition} objectDefinition
-   * @returns {Object}
+   * @returns {object}
    */
   getSubWidgetDefinitions(objectDefinition) {
     let subWidgetDefinitions = {};
@@ -525,7 +525,7 @@ export class SubWidgetsByFields extends Worker {
    * Creates an instance of WidgetsByProperty.
    * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget class definition the setter is created for.
    * @param {UPropName} propId - Specifies the id of a Boolean property that, if true, excludes the field from the process.
-   * @param {String} subWidgetClassName - Specifies the name of the sub-widget to be included for every field.
+   * @param {string} subWidgetClassName - Specifies the name of the sub-widget to be included for every field.
    */
   constructor(widgetClass, propId, subWidgetClassName) {
     super(widgetClass);
@@ -592,7 +592,7 @@ export class SubWidgetsByFields extends Worker {
   /**
    * Returns the subWidget definitions.
    * @param {UObjectDefinition} objectDefinition
-   * @returns {Object}
+   * @returns {object}
    */
   getSubWidgetDefinitions(objectDefinition) {
     let excludePropId = this.propId;
@@ -648,9 +648,9 @@ export class WidgetsByFields extends Worker {
   /**
    * Creates an instance of WidgetsByFields.
    * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget class definition the worker is created for.
-   * @param {String} tagName - Specifies the widget's element tag-name in the skeleton layout.
+   * @param {string} tagName - Specifies the widget's element tag-name in the skeleton layout.
    * @param {UPropName} propId - Specifies the exclude property id.
-   * @param {String} bindingId - Specifies the binding id.
+   * @param {string} bindingId - Specifies the binding id.
    */
   constructor(widgetClass, tagName, propId, bindingId) {
     super(widgetClass);
@@ -696,8 +696,8 @@ export class WidgetForOccurrence extends Worker {
   /**
    * Creates an instance of WidgetForOccurrence.
    * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget class definition the worker is created for.
-   * @param {String} tagName - Specifies the sub-widget's element tag-name in the skeleton layout.
-   * @param {String} bindingId - Specifies the binding id.
+   * @param {string} tagName - Specifies the sub-widget's element tag-name in the skeleton layout.
+   * @param {string} bindingId - Specifies the binding id.
    */
   constructor(widgetClass, tagName, bindingId) {
     super(widgetClass);
@@ -743,7 +743,7 @@ export class IgnoreProperty extends Worker {
 
   /**
    * Method that will be invoked when there is an update to any of the registered properties.
-   * @param {Object} widgetInstance
+   * @param {object} widgetInstance
    */
   refresh(widgetInstance) {
     this.log("refresh", {
@@ -768,10 +768,10 @@ export class BaseHtmlAttribute extends Worker {
    * Creates an instance of BaseHtmlAttribute.
    * @param {typeof import("./widget.js").Widget} widgetClass
    * @param {UPropName | undefined} [propId]
-   * @param {String} [attrName]
+   * @param {string} [attrName]
    * @param {UPropValue} [defaultValue]
-   * @param {Boolean} [setAsAttribute]
-   * @param {String} [valueChangedEventName]
+   * @param {boolean} [setAsAttribute]
+   * @param {string} [valueChangedEventName]
    */
   constructor(widgetClass, propId, attrName, defaultValue, setAsAttribute, valueChangedEventName) {
     super(widgetClass);
@@ -1420,9 +1420,9 @@ export class SlottedElementsByValRep extends Element {
   /**
    * Creates an instance of SlottedElementsByValRep.
    * @param {typeof import("./widget.js").Widget} widgetClass
-   * @param {String} tagName
-   * @param {String} styleClass
-   * @param {String} elementQuerySelector
+   * @param {string} tagName
+   * @param {string} styleClass
+   * @param {string} elementQuerySelector
    */
   constructor(widgetClass, tagName, styleClass, elementQuerySelector) {
     super(widgetClass, tagName, styleClass, elementQuerySelector);

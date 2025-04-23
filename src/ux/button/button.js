@@ -116,8 +116,8 @@ export class Button extends Widget {
      * Creates an instance of SlottedButtonIcon.
      * @constructor
      * @param {typeof Widget} widgetClass
-     * @param {String} styleClass
-     * @param {String} elementQuerySelector
+     * @param {string} styleClass
+     * @param {string} elementQuerySelector
      */
     constructor(widgetClass, styleClass, elementQuerySelector) {
       super(widgetClass);

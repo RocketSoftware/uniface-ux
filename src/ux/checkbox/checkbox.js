@@ -49,7 +49,7 @@ export class Checkbox extends Widget {
      * Creates an instance of HTMLValueAttributeTristate.
      * @param {typeof Widget} widgetClass
      * @param {UPropName} propId
-     * @param {String} attrName
+     * @param {string} attrName
      * @param {UPropValue} defaultValue
      */
     constructor(widgetClass, propId, attrName, defaultValue) {
@@ -59,9 +59,9 @@ export class Checkbox extends Widget {
 
     /**
      * Updates the value of the widget, sets the indeterminate state based on the new value and dispatches a new change event.
-     * @param {Object} widgetInstance
+     * @param {object} widgetInstance
      * @param {any} newValue
-     * @param {Boolean} isError
+     * @param {boolean} isError
      */
     changeValue(widgetInstance, newValue, isError = false) {
       widgetInstance.data.ignoreChangeEvent = true;
@@ -85,7 +85,7 @@ export class Checkbox extends Widget {
     /**
      * Converts the input value to a Boolean or null value or throws an error in case of an invalid value.
      * @param {any} value
-     * @returns {Boolean|null}
+     * @returns {boolean | null}
      */
     fieldValueToTriState(value) {
       let type = typeof value;
@@ -125,7 +125,7 @@ export class Checkbox extends Widget {
      * Used to decide the next value of the checkbox when the user clicks on it.
      * Takes into account the current value of the checkbox and whether the tri-state is set or not.
      * @param {Event} event
-     * @param {Object} widgetInstance
+     * @param {object} widgetInstance
      */
     handleChange(event, widgetInstance) {
       if (!widgetInstance.data.ignoreChangeEvent) {

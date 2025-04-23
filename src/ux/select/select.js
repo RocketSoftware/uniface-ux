@@ -69,8 +69,8 @@ export class Select extends Widget {
     /**
      * Creates an instance of SlottedSelectedValueWithPlaceholder.
      * @param {typeof Widget} widgetClass
-     * @param {String} styleClass
-     * @param {String} elementQuerySelector
+     * @param {string} styleClass
+     * @param {string} elementQuerySelector
      */
     constructor(widgetClass, styleClass, elementQuerySelector) {
       super(widgetClass);
@@ -539,7 +539,7 @@ export class Select extends Widget {
   blockUI() {
     this.log("blockUI");
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     // Check if uiBlocking is defined in the constructor.
     if (widgetClass.uiBlocking) {
@@ -565,7 +565,7 @@ export class Select extends Widget {
   unblockUI() {
     this.log("unblockUI");
 
-    /** @type {Object} */
+    /** @type {object} */
     const widgetClass = this.constructor;
     // Check if uiBlocking is defined in the constructor.
     if (widgetClass.uiBlocking) {
