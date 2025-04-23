@@ -123,8 +123,7 @@
 
     it("onConnect()", function () {
       const element = tester.processLayout();
-      const widget = tester.construct();
-      widget.onConnect(element);
+      const widget = tester.onConnect();
       assert(element, "Target element is not defined!");
       assert(widget.elements.widget === element, "Widget is not connected!");
     });
@@ -449,7 +448,6 @@
     let element;
     before(function () {
       tester.createWidget();
-      tester.bindUpdatorsEventToElement();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
@@ -515,7 +513,6 @@
     let element;
     before(function () {
       tester.createWidget();
-      tester.bindUpdatorsEventToElement();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
@@ -561,7 +558,6 @@
     let element;
     before(function () {
       tester.createWidget();
-      tester.bindUpdatorsEventToElement();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
