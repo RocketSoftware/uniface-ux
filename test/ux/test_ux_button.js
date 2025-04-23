@@ -130,7 +130,11 @@
       it(`Test mapping of trigger '${triggerName}'`, function () {
         const trigger = widget.mapTrigger(triggerName);
         assert(trigger, `Trigger '${triggerName}' is not mapped!`);
+<<<<<<< HEAD
         assert(trigger.event_name === testTriggers[triggerName],
+=======
+        assert(trigger.event_name === testTriggers[triggerName], 
+>>>>>>> branch 'feature/UNI-43774-Mockup-and-helper-functions-for-user-interaction' of git@gitlab.com:Uniface/sources/ux-widgets.git
           `trigger '${triggerName}' should be mapped to event '${testTriggers[triggerName]}', but got '${trigger.event_name}'!`);
       });
     });
