@@ -426,6 +426,15 @@
       assert(element, "Widget top element is not defined!");
     });
 
+    beforeEach(async function() {
+      await asyncRun(() => {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "value": "0"
+        });
+      });
+    });
+
     it("set invalid initial value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
