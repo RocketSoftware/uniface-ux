@@ -430,7 +430,7 @@
       await asyncRun(() => {
         tester.dataUpdate({
           "valrep": valRepArray,
-          "value": "0"
+          "value": "2"
         });
       });
     });
@@ -438,7 +438,6 @@
     it("set invalid initial value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "valrep": valRepArray,
           "value": "0"
         });
       }).then(function () {
@@ -446,7 +445,6 @@
         expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
       });
     });
-
 
     it("simulate user interaction and select first option", function () {
       return asyncRun(function () {
@@ -471,7 +469,6 @@
     it("now again set the same invalid value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "valrep": valRepArray,
           "value": "0"
         });
       }).then(function () {
