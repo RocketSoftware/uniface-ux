@@ -75,6 +75,7 @@
   margin-inline-end: unset;
 }
 
+/* Styling label-text in different positions */
 .u-switch[u-label-position="before"]::part(switch),
 .u-switch[u-label-position="after"]::part(label) {
   order: 3;
@@ -98,15 +99,6 @@
 .u-switch[u-label-position="before"] .u-error-icon-checked,
 .u-switch[u-label-position="before"] .u-error-icon-unchecked {
   margin-inline-end: calc(var(--design-unit) * 2px + 2px);
-}
-
-.u-switch[u-label-position="before"] .u-checked-message,
-.u-switch[u-label-position="before"] .u-unchecked-message {
-  margin-inline-start: 5px;
-}
-
-.u-switch[u-label-position="before"] .u-error-icon-checked,
-.u-switch[u-label-position="before"] .u-error-icon-unchecked {
   margin-inline-start: unset;
 }
 
@@ -115,5 +107,15 @@
 .u-switch[u-label-position="after"] .u-error-icon-checked,
 .u-switch[u-label-position="after"] .u-error-icon-unchecked {
   margin-inline-start: calc(var(--design-unit) * 2px + 2px);
-  margin-inline-end: unset;
+}
+
+/* Adding additional margin between checked/un-checked message and label-text */
+.u-switch[u-label-position="before"]:has(.u-label-text:not([hidden])) .u-checked-message,
+.u-switch[u-label-position="before"]:has(.u-label-text:not([hidden])) .u-unchecked-message {
+  margin-inline-start: 5px;
+}
+
+.u-switch[u-label-position="after"]:has(.u-label-text:not([hidden])) .u-checked-message,
+.u-switch[u-label-position="after"]:has(.u-label-text:not([hidden])) .u-unchecked-message {
+  margin-inline-end: 5px;
 }
