@@ -12,14 +12,6 @@
   order: 2;
 }
 
-.u-switch::part(checked-message),
-.u-switch::part(unchecked-message) {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  max-width: 10ch;
-}
-
 .u-switch.checked::part(switch-toggle) {
   left: 0%;
   transform: translateX(20px);
@@ -107,15 +99,4 @@
 .u-switch[u-label-position="after"] .u-error-icon-checked,
 .u-switch[u-label-position="after"] .u-error-icon-unchecked {
   margin-inline-start: calc(var(--design-unit) * 2px + 2px);
-}
-
-/* Adding additional margin between checked/un-checked message and label-text */
-.u-switch[u-label-position="before"]:has(.u-label-text:not([hidden])) .u-checked-message,
-.u-switch[u-label-position="before"]:has(.u-label-text:not([hidden])) .u-unchecked-message {
-  margin-inline-start: 5px;
-}
-
-.u-switch[u-label-position="after"]:has(.u-label-text:not([hidden])) .u-checked-message,
-.u-switch[u-label-position="after"]:has(.u-label-text:not([hidden])) .u-unchecked-message {
-  margin-inline-end: 5px;
 }
