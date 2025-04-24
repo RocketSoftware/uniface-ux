@@ -404,4 +404,17 @@ export class Base {
       }
     });
   }
+
+  /**
+   * Truncates the text passed to have a maximum length and then adds ellipses at the end.
+   * @param {String} text - The text to be truncated.
+   * @param {Number} maxLength - The maximum number of characters after which the ellipses should be added.
+   */
+
+  truncateText(text, maxLength) {
+    if (text?.length > maxLength) {
+      return text.slice(0, maxLength - 3) + "...";
+    }
+    return text;
+  }
 }
