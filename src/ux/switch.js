@@ -75,6 +75,23 @@ export class Switch extends Widget {
   };
 
   /**
+   * Private worker: SwitchSlottedElement.
+   * It adds text to the slotted element after truncating it to a maximum length.
+   * @export
+   * @class SwitchSlottedElement
+   * @extends {SlottedElement}
+   */
+  static SwitchSlottedElement = class extends SlottedElement {
+    refresh(widgetInstance) {
+      super.refresh(widgetInstance);
+      let element = this.getElement(widgetInstance);
+      let text = this.getNode(widgetInstance.data, this.textPropId);
+      const truncatedText = this.truncateText(text, 10);
+      this.setIconOrText(element, this.slot, undefined, truncatedText);
+    }
+  };
+
+  /**
    * Widget definition.
    */
   // prettier-ignore
@@ -96,8 +113,8 @@ export class Switch extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text", ""),
-    new SlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"),
-    new SlottedElement(this, "span", "u-unchecked-message", ".u-unchecked-message", "unchecked-message", "unchecked-message"),
+    new this.SwitchSlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"),
+    new this.SwitchSlottedElement(this, "span", "u-unchecked-message", ".u-unchecked-message", "unchecked-message", "unchecked-message"),
     new this.SwitchSlottedError(this, "span", "u-error-icon-unchecked", ".u-error-icon-unchecked", "unchecked-message", ".u-unchecked-message"),
     new this.SwitchSlottedError(this, "span", "u-error-icon-checked", ".u-error-icon-checked", "checked-message", ".u-checked-message"),
     new Trigger(this, "onchange", "change", true)
