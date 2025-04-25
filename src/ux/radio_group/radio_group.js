@@ -16,8 +16,7 @@ import {
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentRadio, fluentRadioGroup, provideFluentDesignSystem } from "@fluentui/web-components";
-provideFluentDesignSystem().register(fluentRadio());
-provideFluentDesignSystem().register(fluentRadioGroup());
+provideFluentDesignSystem().register(fluentRadio(), fluentRadioGroup());
 
 /**
  * Radio-Group Widget Definition
