@@ -10,6 +10,7 @@
 
 .u-switch::part(status-message) {
   order: 2;
+  text-wrap: nowrap;
 }
 
 .u-switch.checked::part(switch-toggle) {
@@ -68,6 +69,10 @@
 }
 
 /* Styling label-text in different positions */
+.u-switch .u-label-text {
+  display: inline-block;
+}
+
 .u-switch[u-label-position="before"]::part(switch),
 .u-switch[u-label-position="after"]::part(label) {
   order: 3;
