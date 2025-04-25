@@ -540,7 +540,6 @@
     let widget, element;
     before(function () {
       widget = tester.createWidget();
-      tester.bindUpdatorsEventToElement();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
       tester.dataUpdate({
