@@ -61,10 +61,6 @@
         assert(element.querySelector("span.u-label-text"), "Widget misses or has incorrect u-label-text element.");
       });
 
-      it("check u-label-position", function () {
-        assert.equal(element.querySelector("span.u-label-position"), "before","Widget misses or has incorrect u-label-position element.");
-      });
-
       it("check u-checked-message", function () {
         assert(element.querySelector("span.u-checked-message"), "Widget misses or has incorrect u-checked-message element.");
       });
@@ -144,6 +140,10 @@
         }
       });
     }
+
+    it("default label position before", function () {
+      assert.equal(tester.defaultValues["label-position"], "before", "Default value of label-position will be above.");
+    });
   });
 
   describe("dataUpdate()", function () {
@@ -295,6 +295,46 @@
         assert(element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text");
         expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("");
         expect(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
+      });
+    });
+
+    it("shows error icon on correct side when label-position is 'before'", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label Text",
+          "label-position": "before",
+          "value": 123
+        });
+      }).then(function () {
+        expect(element).to.have.class("u-format-invalid");
+        assert(element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text");
+        expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("");
+        expect(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
+
+        // Check if error icon comes after the label in DOM order when label is "before"
+        const statusMsg = element.shadowRoot.querySelector(".status-message").getBoundingClientRect();
+        const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
+        expect(statusMsg.left).to.be.greaterThan(label.right);
+      });
+    });
+
+    it("shows error icon on correct side when label-position is 'after'", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label Text",
+          "label-position": "after",
+          "value": 123
+        });
+      }).then(function () {
+        expect(element).to.have.class("u-format-invalid");
+        assert(element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text");
+        expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("");
+        expect(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
+
+        // Check if error icon comes after the label in DOM order when label is "after"
+        const statusMsg = element.shadowRoot.querySelector(".status-message").getBoundingClientRect();
+        const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
+        expect(label.right).to.be.greaterThan(statusMsg.left);
       });
     });
   });

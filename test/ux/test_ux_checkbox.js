@@ -360,6 +360,48 @@
         assert.equal(element.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."); // Check for visibility.
       });
     });
+
+    it("shows error icon on correct side when label-position is 'before'", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label Text",
+          "label-position": "before",
+          "value": 123
+        });
+      }).then(function () {
+        expect(element).to.have.class("u-format-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid");
+
+        // Check if error icon comes after the label in DOM order when label is "before"
+        const label = element.querySelector(".u-label-text").getBoundingClientRect();
+        const error = element.querySelector("span.u-error-icon").getBoundingClientRect();
+        expect(error.left).to.be.greaterThan(label.right);
+
+      });
+    });
+
+    it("shows error icon on correct side when label-position is 'after'", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label Text",
+          "label-position": "after",
+          "value": 123
+        });
+      }).then(function () {
+        expect(element).to.have.class("u-format-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid");
+
+        // Check if error icon comes after the label in DOM order when label is "after"
+        const label = element.querySelector(".u-label-text").getBoundingClientRect();
+        const error = element.querySelector("span.u-error-icon").getBoundingClientRect();
+        expect(label.right).to.be.greaterThan(error.right);
+
+      });
+    });
   });
 
   describe("hideError()", function () {
