@@ -388,7 +388,7 @@
         const error = element.querySelector("span.u-error-icon").getBoundingClientRect();
         const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
         expect(control.right).to.be.greaterThan(label.right);
-        expect(error.left).to.be.greaterThan(label.right);
+        expect(error.right).to.be.greaterThan(label.right);
 
       });
     });
