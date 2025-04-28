@@ -125,8 +125,24 @@
   });
 
   describe("mapTrigger()", function () {
-    const widget = tester.onConnect();
-    widget.mapTrigger("onchange");
+    const testData = {
+      "onchange" : "valuechange"
+    };
+    let widget;
+
+    beforeEach(function () {
+      widget = tester.onConnect();
+    });
+
+    Object.keys(testData).forEach((triggerName) => {
+      it(`Test mapping of trigger '${triggerName}'`, function () {
+        const triggerMapping = widget.mapTrigger(triggerName);
+        assert(triggerMapping, `Trigger '${triggerName}' is not mapped!`);
+        assert(triggerMapping.element === tester.element, `Trigger '${triggerName}' is not mapped to correct HTMLElement!`);
+        assert(triggerMapping.event_name === testData[triggerName],
+          `trigger '${triggerName}' should be mapped to event '${testData[triggerName]}', but got '${triggerMapping.event_name}'!`);
+      });
+    });
   });
 
   describe("dataInit()", function () {
