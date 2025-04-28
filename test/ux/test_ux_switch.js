@@ -190,7 +190,7 @@
         let labelText = element.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, switchLabelText); // Check for visibility.
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
-        // To check order of elements
+        // To check order of elements.
         const label = element.querySelector("span.u-label-text").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
         expect(widget.right).to.be.greaterThan(label.right);
@@ -208,7 +208,7 @@
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "after", "Label position is not set to after.");
-        // To check order of elements
+        // To check order of elements.
         const label = element.querySelector("span.u-label-text").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
         expect(label.right).to.be.greaterThan(widget.right);
@@ -274,7 +274,7 @@
         expect(element.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
         expect(element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide unchecked message.");
 
-        // To check order of elements
+        // To check order of elements.
         const statusMsg = element.querySelector("span.u-checked-message").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
         expect(widget.right).to.be.greaterThan(statusMsg.right);
@@ -295,7 +295,7 @@
         const displayedText = checkedText.innerText;
         expect(displayedText.length).to.be.at.most(10);
         assert.equal(displayedText, "This is...");
-        // To check order of elements
+        // To check order of elements.
         const statusMsg = element.querySelector("span.u-checked-message").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
         expect(widget.right).to.be.greaterThan(statusMsg.right);
@@ -318,7 +318,7 @@
         expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
         expect(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message.");
 
-        // To check order of elements
+        // To check order of elements.
         const statusMsg = element.querySelector("span.u-unchecked-message").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
         expect(widget.right).to.be.greaterThan(statusMsg.right);
@@ -339,7 +339,7 @@
         const displayedText = uncheckedText.innerText;
         expect(displayedText.length).to.be.at.most(10);
         assert.equal(displayedText, "This is...");
-        // To check order of elements
+        // To check order of elements.
         const statusMsg = element.querySelector("span.u-unchecked-message").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
         expect(widget.right).to.be.greaterThan(statusMsg.right);
@@ -411,7 +411,7 @@
         expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("");
         expect(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
 
-        // Check if error icon comes after the label in DOM order when label is "before"
+        // Check if error icon comes after the label in DOM order when label is "before".
         const statusMsg = element.shadowRoot.querySelector(".status-message").getBoundingClientRect();
         const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
@@ -433,14 +433,12 @@
         expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("");
         expect(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
 
-        // Check if error icon comes after the label in DOM order when label is "after"
+        // Check if error icon comes after the label in DOM order when label is "after".
         const statusMsg = element.shadowRoot.querySelector(".status-message").getBoundingClientRect();
-        console.log(statusMsg);
         const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
-        console.log(widget);
         expect(statusMsg.right).to.be.greaterThan(widget.right);
-        expect(label.right).to.be.greaterThan(statusMsg.left);
+        expect(label.right).to.be.greaterThan(statusMsg.right);
       });
     });
   });

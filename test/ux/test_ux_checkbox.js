@@ -383,7 +383,7 @@
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
         assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid");
 
-        // Check if error icon comes after the label in DOM order when label is "before"
+        // Check if error icon comes after the label in DOM order when label is "before".
         const label = element.querySelector(".u-label-text").getBoundingClientRect();
         const error = element.querySelector("span.u-error-icon").getBoundingClientRect();
         const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
@@ -406,7 +406,7 @@
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
         assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid");
 
-        // Check if error icon comes after the label in DOM order when label is "after"
+        // Check if error icon comes after the label in DOM order when label is "after".
         const label = element.querySelector(".u-label-text").getBoundingClientRect();
         const error = element.querySelector("span.u-error-icon").getBoundingClientRect();
         const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
