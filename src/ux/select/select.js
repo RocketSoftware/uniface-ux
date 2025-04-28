@@ -17,8 +17,7 @@ import {
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentOption, fluentSelect, provideFluentDesignSystem } from "@fluentui/web-components";
-provideFluentDesignSystem().register(fluentOption());
-provideFluentDesignSystem().register(fluentSelect());
+provideFluentDesignSystem().register(fluentOption(), fluentSelect());
 
 /**
  * Select Widget

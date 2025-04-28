@@ -17,8 +17,7 @@ import {
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentOption, fluentListbox, provideFluentDesignSystem } from "@fluentui/web-components";
-provideFluentDesignSystem().register(fluentOption());
-provideFluentDesignSystem().register(fluentListbox());
+provideFluentDesignSystem().register(fluentOption(), fluentListbox());
 
 /**
  * Listbox Widget
