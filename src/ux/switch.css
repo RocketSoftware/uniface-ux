@@ -68,7 +68,7 @@
   margin-inline-end: unset;
 }
 
-/* Styling label-text in different positions */
+/* Styling label-text in different positions. */
 .u-switch .u-label-text {
   display: inline-block;
 }

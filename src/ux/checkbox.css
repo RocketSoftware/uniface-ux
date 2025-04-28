@@ -12,7 +12,7 @@
   margin-inline-end: unset;
 }
 
-/* Styling Indeterminate state as per fluent design system */
+/* Styling Indeterminate state as per fluent design system. */
 .u-checkbox.indeterminate::part(control) {
   --neutral-stroke-strong-rest: var(--accent-fill-rest);
   --neutral-foreground-rest: var(--accent-fill-rest);
@@ -28,7 +28,7 @@
   --neutral-foreground-rest: var(--accent-fill-active);
 }
 
-/* Styling error icons as per fluent design system  */
+/* Styling error icons as per fluent design system. */
 .u-checkbox.u-invalid .u-error-icon,
 .u-checkbox.u-format-invalid .u-error-icon {
   color: #d13438;
@@ -48,7 +48,7 @@
   display: none;
 }
 
-/* Styling Checked Checkbox in error or invalid state */
+/* Styling Checked Checkbox in error or invalid state. */
 .u-checkbox.u-invalid.checked::part(control),
 .u-checkbox.u-format-invalid.checked::part(control) {
   --accent-fill-rest: #d13438;
@@ -64,7 +64,7 @@
   --accent-fill-active: #d54649;
 }
 
-/* Styling Unchecked Checkbox in error or invalid state */
+/* Styling Unchecked Checkbox in error or invalid state. */
 .u-checkbox.u-invalid::part(control),
 .u-checkbox.u-format-invalid::part(control) {
   --neutral-stroke-strong-rest: #d13438;
@@ -80,7 +80,7 @@
   --neutral-stroke-strong-active: #d54649;
 }
 
-/* Styling Indeterminate Checkbox in error or invalid state */
+/* Styling Indeterminate Checkbox in error or invalid state. */
 .u-checkbox.u-invalid.indeterminate::part(control),
 .u-checkbox.u-format-invalid.indeterminate::part(control) {
   --neutral-stroke-strong-rest: #d13438;
@@ -99,7 +99,7 @@
   --neutral-foreground-rest: #d54649;
 }
 
-/* Styling label-text in different positions */
+/* Styling label-text in different positions. */
 .u-checkbox[u-label-position="before"]:has(.u-label-text:not([hidden]))::part(control),
 .u-checkbox[u-label-position="before"]:has(.u-error-icon:not([hidden]))::part(control) {
   order: 2;
