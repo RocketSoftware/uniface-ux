@@ -146,7 +146,6 @@
       const label = element.querySelector("span.u-label-text").getBoundingClientRect();
       const control = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
       expect(control.right).to.be.greaterThan(label.right);
-
     });
   });
 
@@ -194,8 +193,6 @@
         const label = element.querySelector("span.u-label-text").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
         expect(widget.right).to.be.greaterThan(label.right);
-
-
       });
     });
 

@@ -250,7 +250,7 @@
 
         assert.equal(labelText, checkBoxLabelText); // Check for visibility.
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
-        // Checking order of elements
+        // Checking order of elements.
         const label = element.querySelector("span.u-label-text").getBoundingClientRect();
         const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
         expect(label.right).to.be.greaterThan(control.right);
@@ -389,7 +389,6 @@
         const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
         expect(control.right).to.be.greaterThan(label.right);
         expect(error.right).to.be.greaterThan(label.right);
-
       });
     });
 
@@ -412,7 +411,6 @@
         const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
         expect(label.right).to.be.greaterThan(control.right);
         expect(label.right).to.be.greaterThan(error.right);
-
       });
     });
   });
