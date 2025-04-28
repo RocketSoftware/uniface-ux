@@ -279,7 +279,7 @@
       }
 
       onConnect() {
-        if (!this.widget || !this.widget.elements) {
+        if (!this.widget || !this.widget.elements || !this.widget.elements.widget) {
           const element = this.processLayout.apply(this, this.layoutArgs);
           const widget = this.construct();
           widget.onConnect(element);
