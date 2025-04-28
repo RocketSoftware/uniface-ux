@@ -13,7 +13,8 @@ import {
   HtmlAttributeBoolean,
   HtmlAttributeMinMax,
   StyleClass,
-  IgnoreProperty
+  IgnoreProperty,
+  UIBlockElement
 } from "../framework/workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -62,6 +63,7 @@ export class NumberField extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new HtmlAttributeMinMax(this, "html:min", "html:max", undefined, undefined),
+    new UIBlockElement(this, "u-blocked"),
     new StyleClass(this, ["u-number-field", "outline"]),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),

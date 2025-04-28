@@ -454,31 +454,14 @@ export class Widget extends Base {
   blockUI() {
     this.log("blockUI");
 
-    /** @type {Object} */
-    let widgetClass = this.constructor;
+    this.setProperties({
+      "uiblocked": true
+    });
+
     // Call blockUI() for each sub-widget.
     Object.keys(this.subWidgets).forEach((key) => {
       this.subWidgets[key].blockUI();
     });
-    // Check if uiBlocking is defined in the constructor.
-    if (widgetClass.uiBlocking) {
-      // Add the 'u-blocked' class to the widget element.
-      this.elements.widget.classList.add("u-blocked");
-      // Handle different types of UI blocking.
-      switch (widgetClass.uiBlocking) {
-        case "disabled":
-          // If uiBlocking is set to "disabled", disable the widget element.
-          this.elements.widget.disabled = true;
-          break;
-        case "readonly":
-          // If uiBlocking is set to "readonly", set the widget element to read-only.
-          this.elements.widget.readOnly = true;
-          break;
-        default:
-          // If uiBlocking has an invalid value, log an error.
-          this.error("blockUI()", "Static uiBlocking not defined or invalid value", "No UI blocking");
-      }
-    }
   }
 
   /**
@@ -487,33 +470,14 @@ export class Widget extends Base {
   unblockUI() {
     this.log("unblockUI");
 
-    /** @type {Object} */
-    let widgetClass = this.constructor;
+    this.setProperties({
+      "uiblocked": false
+    });
+
     // Call unblockUI() for each sub-widget.
     Object.keys(this.subWidgets).forEach((key) => {
       this.subWidgets[key].unblockUI();
     });
-    // Check if uiBlocking is defined in the constructor.
-    if (widgetClass.uiBlocking) {
-      // Remove the 'u-blocked' class from the widget element.
-      this.elements.widget.classList.remove("u-blocked");
-      // Handle different types of UI blocking.
-      switch (widgetClass.uiBlocking) {
-        case "disabled":
-          // If uiBlocking is set to "disabled",
-          // set the widget's disabled property based on the corresponding HTML property value.
-          this.elements.widget.disabled = this.toBoolean(this.data["html:disabled"]);
-          break;
-        case "readonly":
-          // If uiBlocking is set to "readonly",
-          // set the widget's readOnly property based on the corresponding HTML property value.
-          this.elements.widget.readOnly = this.toBoolean(this.data["html:readonly"]);
-          break;
-        default:
-          // If uiBlocking has an invalid value, log an error.
-          this.error("unblockUI()", "Static uiBlocking not defined or invalid value", "No UI blocking");
-      }
-    }
   }
 
   /**

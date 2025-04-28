@@ -10,7 +10,8 @@ import {
   SlottedElement,
   SlottedError,
   HtmlAttributeNumber,
-  IgnoreProperty
+  IgnoreProperty,
+  UIBlockElement
 } from "../framework/workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -235,6 +236,7 @@ export class Checkbox extends Widget {
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeBoolean(this, undefined, "currentChecked", false),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
+    new UIBlockElement(this, "u-blocked"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
     new Trigger(this, "onchange", "valuechange", true)
   ]);

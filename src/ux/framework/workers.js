@@ -1481,3 +1481,43 @@ export class SlottedElementsByValRep extends Element {
     this.createValRepElements(widgetInstance);
   }
 }
+
+/**
+ * Worker: Applies UI blocking behavior based on the `uiblocked` property.
+ * This worker updates your widget’s DOM element by:
+ * - Toggling a CSS class (e.g. `u-blocked`) to reflect the blocked state visually.
+ * - Applying or restoring the `disabled` or `readonly` properties based on the `uiBlocking` configuration of the widget.
+ * @export
+ * @class UIBlockElement
+ * @extends {Element}
+ */
+export class UIBlockElement extends Element {
+  constructor(widgetClass,tagName, styleClass = "u-blocked") {
+    super(widgetClass, tagName, styleClass, "");
+    this.registerSetter(widgetClass, "uiblocked", this);
+  }
+
+  refresh(widgetInstance) {
+    let element = widgetInstance.elements.widget;
+    const isBlocked = this.toBoolean(this.getNode(widgetInstance.data, "uiblocked"));
+    const blockType = widgetInstance.constructor.uiBlocking;
+
+    if (isBlocked) {
+      element.classList.add(this.styleClass);
+      if (blockType === "disabled") {
+        element.disabled = true;
+      } else if (blockType === "readonly") {
+        element.readOnly = true;
+      } else {
+        widgetInstance.error("UIBlockElement", "Invalid block type", blockType);
+      }
+    } else {
+      element.classList.remove(this.styleClass);
+      if (blockType === "disabled") {
+        element.disabled = widgetInstance.toBoolean(widgetInstance.data["html:disabled"]);
+      } else if (blockType === "readonly") {
+        element.readOnly = widgetInstance.toBoolean(widgetInstance.data["html:readonly"]);
+      }
+    }
+  }
+}

@@ -9,7 +9,8 @@ import {
   HtmlAttributeNumber,
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
-  IgnoreProperty
+  IgnoreProperty,
+  UIBlockElement
 } from "../framework/workers.js";
 // The import of Fluent UI web-components is done in loader.js
 
@@ -182,6 +183,7 @@ export class Button extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new IgnoreProperty(this, "html:readonly"),
+    new UIBlockElement(this, "u-blocked"),
     new StyleClass(this, ["u-button", "neutral"]),
     new this.SlottedButtonIcon(this, "u-icon", ".u-icon"),
     new this.SlottedButtonText(this, "u-text", ".u-text"),

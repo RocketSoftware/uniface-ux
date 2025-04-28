@@ -11,7 +11,8 @@ import {
   HtmlAttributeBoolean,
   IgnoreProperty,
   SlottedError,
-  Worker
+  Worker,
+  UIBlockElement
 } from "../framework/workers.js";
 // The import of Fluent UI web-components is done in loader.js.
 
@@ -225,6 +226,34 @@ export class Listbox extends Widget {
   };
 
   /**
+  * Private Worker: This is specialized worker to handle blockUI and unblockUI methods.
+  * @class ListboxUIBlockElement
+  * @extends {UIBlockElement}
+  */
+  static ListboxUIBlockElement = class extends UIBlockElement {
+    refresh(widgetInstance) {
+      super.refresh(widgetInstance);
+
+      const element = widgetInstance.elements.widget;
+      const isBlocked = this.toBoolean(this.getNode(widgetInstance.data, "uiblocked"));
+      const blockType = widgetInstance.constructor.uiBlocking;
+
+      if (blockType === "readonly") {
+        if (isBlocked) {
+          element.setAttribute("readonly", "true");
+          element.setAttribute("aria-readonly", "true");
+        } else {
+          const htmlReadonly = widgetInstance.toBoolean(widgetInstance.data["html:readonly"]);
+          if (!htmlReadonly) {
+            element.removeAttribute("readonly");
+            element.setAttribute("aria-readonly", "false");
+          }
+        }
+      }
+    }
+  };
+
+  /**
    * Widget definition.
    */
   // prettier-ignore
@@ -244,6 +273,7 @@ export class Listbox extends Widget {
     new this.ListBoxValRep(this, "fluent-option", "u-option", ""),
     new this.ListboxSelectedValue(this, "value", ""),
     new this.SizeAttribute(this, "size", undefined),
+    new this.ListboxUIBlockElement(this, "u-blocked"),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
