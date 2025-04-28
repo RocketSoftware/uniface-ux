@@ -12,7 +12,7 @@ export function registerWidgetClass(widgetName, widgetClass) {
 /**
  * Get the UX Widget class from the Uniface registry.
  * @param {string} widgetName - the name of the UX widget to get.
- * @return {typeof import("./widget.js").Widget | undefined} the UX Widget class.
+ * @returns {typeof import("./widget.js").Widget | undefined} the UX Widget class.
  */
 export function getWidgetClass(widgetName) {
   return globalThis.UNIFACE.ClassRegistry.get(widgetName);

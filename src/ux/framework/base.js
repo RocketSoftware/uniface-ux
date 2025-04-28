@@ -75,8 +75,8 @@ export class Base {
    * @param {string} subWidgetId
    * @param {typeof import("./widget.js").Widget} subWidgetClass
    * @param {string} subWidgetStyleClass
-   * @param {Array} subWidgetTriggers
-   * @param {Array} subWidgetDelegatedProperties
+   * @param {Array<string>} subWidgetTriggers
+   * @param {Array<string>} subWidgetDelegatedProperties
    */
   registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, subWidgetDelegatedProperties) {
     widgetClass.subWidgets[subWidgetId] = {
@@ -106,7 +106,7 @@ export class Base {
    * Looks up the node within node as specified by propId.
    * @param {UData} node
    * @param {UPropName} propId
-   * @return {object}
+   * @returns {object}
    */
   getNode(node, propId) {
     return Base.getNode(node, propId);
@@ -116,7 +116,7 @@ export class Base {
    * Looks up the node within node as specified by propId.
    * @param {UData} node
    * @param {UPropName} propId
-   * @return {object}
+   * @returns {object}
    */
   static getNode(node, propId) {
     return propId ? node[propId] : undefined;
@@ -125,7 +125,7 @@ export class Base {
   /**
    * Convert Uniface property values into JS Boolean.
    * @param {string | boolean | number} value
-   * @return {boolean}
+   * @returns {boolean}
    */
   toBoolean(value) {
     return Base.toBoolean(value);
@@ -134,7 +134,7 @@ export class Base {
   /**
    * Convert Uniface property values into JS Boolean.
    * @param {string | boolean | number} value
-   * @return {boolean}
+   * @returns {boolean}
    */
   static toBoolean(value) {
     let result = false;
@@ -159,7 +159,7 @@ export class Base {
   /**
    * Convert Uniface field value to JS Boolean.
    * @param {any} value
-   * @return {boolean}
+   * @returns {boolean}
    * @throws {*} - Conversion failure.
    */
   fieldValueToBoolean(value) {
@@ -169,7 +169,7 @@ export class Base {
   /**
    * Convert Uniface field value to JS Boolean.
    * @param {any} value
-   * @return {boolean}
+   * @returns{boolean}
    * @throws {*} - Conversion failure.
    */
   static fieldValueToBoolean(value) {
@@ -200,9 +200,9 @@ export class Base {
 
   /**
    * Returns the valrep-item for the provided value
-   * @param {Array} valrep
+   * @param {Array<object>} valrep
    * @param {any} value
-   * @return {object}
+   * @returns {object}
    */
   static getValrepItem(valrep, value) {
     if (Array.isArray(valrep)) {
@@ -218,7 +218,7 @@ export class Base {
   /**
    * Converts a string format valrep into [{"value": "representation"},....] format.
    * @param {string} valrep - The valrep string to be formatted.
-   * @returns {Array} An array of objects with "value" and "representation" properties.
+   * @returns {Array<object>} An array of objects with "value" and "representation" properties.
    */
   getFormattedValrep(valrep) {
     return Base.getFormattedValrep(valrep);
@@ -227,7 +227,7 @@ export class Base {
   /**
    * Converts a string format valrep into [{"value": "representation"},....] format.
    * @param {string} valrep - The valrep string to be formatted.
-   * @returns {Array} An array of objects with "value" and "representation" properties.
+   * @returns {Array<object>} An array of objects with "value" and "representation" properties.
    */
   static getFormattedValrep(valrep) {
     let formattedValrep = [];
@@ -248,7 +248,7 @@ export class Base {
    * Returns a error message if the instruction is of an incorrect format or the requested function does not exist.
    * @param {UObjectDefinition} objectDefinition
    * @param {string} instruction  ; Instruction string of syntax: "function({arg1{,arg2{...,argN}}})"
-   * @return {*}
+   * @returns {*}
    * @memberof Base
    */
   objectDefinitionFunctionCall(objectDefinition, instruction) {
@@ -343,7 +343,7 @@ export class Base {
    * properties from original data object.
    * @param {UData} data - The source object containing properties to extract.
    * @param {string} subWidgetPropPrefix - Sub-widget property prefix.
-   * @param {Array} subWidgetDelegatedProperties - An array containing list of delegated properties.
+   * @param {Array<string>} subWidgetDelegatedProperties - An array containing list of delegated properties.
    * @returns {UData | undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
    */
   extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties) {

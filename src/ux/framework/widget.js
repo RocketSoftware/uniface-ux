@@ -80,7 +80,7 @@ export class Widget extends Base {
 
   /**
    * Holds references to elements on which updaters, getters, and events handlers need to work.
-   * @property {Object} elements
+   * @property {object} elements
    */
   elements = {};
 
@@ -90,7 +90,7 @@ export class Widget extends Base {
    * @static
    * @param {Element} skeletonWidgetElement - references to the placeholder element as defined by the IDE or parent widget.
    * @param {UObjectDefinition} objectDefinition - reference to the the definition of the object for which this widget is created.
-   * @return {Element} - reference to the root created widget DOM.
+   * @returns {Element} - reference to the root created widget DOM.
    */
   static processLayout(skeletonWidgetElement, objectDefinition) {
     this.staticLog("processLayout", skeletonWidgetElement);
@@ -126,7 +126,7 @@ export class Widget extends Base {
   /**
    * Returns the value as format-object.
    * @param {UData} properties
-   * @return {UValueFormatting}
+   * @returns {UValueFormatting}
    */
   static getValueFormatted(properties) {
 
@@ -178,7 +178,7 @@ export class Widget extends Base {
    * Returns an array of events descriptions that indicate the value is changed allowing Uniface to react.
    * @param {Element} widgetElement
    * @param {UObjectDefinition} objectDefinition - reference to the component definitions.
-   * @return {Updaters}
+   * @returns {Array<Updater> | undefined | null}
    */
   onConnect(widgetElement, objectDefinition) {
     this.elements = {};
@@ -231,7 +231,7 @@ export class Widget extends Base {
   /**
    * Use this method to map a Uniface trigger to an event of your (sub) widget.
    * @param {string} triggerName
-   * @return {TriggerMapping | undefined} [triggerMapping].
+   * @returns {TriggerMapping | undefined | null} [triggerMapping].
    */
   mapTrigger(triggerName) {
     this.log("mapTrigger", triggerName);
@@ -353,7 +353,7 @@ export class Widget extends Base {
 
   /**
    * Returns the (field) value back to Uniface.
-   * @return {any}
+   * @returns {any}
    */
   getValue() {
     let value = {};
@@ -372,7 +372,7 @@ export class Widget extends Base {
 
   /**
    * Validates the value of the widget before passing it back to Uniface.
-   * @return {UDataError | null} [result]
+   * @returns {UDataError | null} [result]
    */
   validate() {
     this.log("validate");
@@ -558,7 +558,7 @@ export class Widget extends Base {
 
   /**
    * Collects trace information and returns a trace message.
-   * @return {string}
+   * @returns {string}
    */
   getTraceDescription() {
     let widgetId = "<noWidgetId>";

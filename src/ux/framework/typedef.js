@@ -8,11 +8,11 @@
  * @typedef {any} UPropValue
  * @typedef {string} UWidgetClassName
  *
- * @typedef {Object} UObjectDefinition
+ * @typedef {object} UObjectDefinition
  *  @property {function(): UObjectType} getType - Returns type of the object.
  *  @property {function(): UObjectName} getName - Returns full qualified object name.
  *  @property {function(): UObjectName} getShortName - Returns unqualified object name.
- *  @property {function(): UPropName[] | undefined} getPropertyNames - Returns array of property names.
+ *  @property {function(): Array<UPropName> | undefined} getPropertyNames - Returns array of property names.
  *  @property {function(UPropName): UPropValue} getProperty - Returns property value.
  *  @property {function(UPropName, UPropValue): void} setProperty - Sets property value.
  *  @property {function(): UWidgetClassName} getWidgetClass - Returns widget class of a field.
@@ -21,13 +21,13 @@
  *  @property {function(UWidgetClassName): void} setWidgetClass - Sets the widget class.
  *  @property {function(UWidgetClassName): void} setCollectionWidgetClass - Sets the collection widget class of an entity.
  *  @property {function(UWidgetClassName): void} setOccurrenceWidgetClass - Sets the occurrence widget class of an entity.
- *  @property {function(): UObjectDefinition[]} getChildDefinitions - Returns array of child object definitions.
+ *  @property {function(): Array<UObjectDefinition>} getChildDefinitions - Returns array of child object definitions.
  *
- * @typedef {object[] | undefined} Updaters
- *  @property {Element} Updaters[].element
- *  @property {Event} Updaters[].event_name
+ * @typedef {object} Updater
+ *  @property {Element} element
+ *  @property {Event} event_name
  *
- * @typedef {Object} TriggerMapping
+ * @typedef {object} TriggerMapping
  *  @property {Element} TriggerMapping.element
  *  @property {Event} TriggerMapping.event_name
  *  @property {boolean} TriggerMapping.validate
@@ -38,7 +38,7 @@
  *
  * @typedef {string} UDataError
  *
- * @typedef {Object} UValueFormatting - Object describing the formatting of a widget value.
+ * @typedef {object} UValueFormatting - Object describing the formatting of a widget value.
  *  @property {string} [primaryPlainText] - Primary value representation (not between parentheses) as plain text (secure).
  *  @property {string} [primaryHtmlText] - Primary value representation (not between parentheses) as HTML formatted text (not secure).
  *  @property {string} [secondaryPlainText] - Secondary value representation (between parentheses) as plain text (secure).

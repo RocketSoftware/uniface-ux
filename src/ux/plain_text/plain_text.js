@@ -226,7 +226,7 @@ export class PlainText extends Widget {
 
   /**
    * Returns an array of property ids that affect the formatted value.
-   * @returns {string[]}
+   * @returns {Array<string>}
    */
   static getValueFormattedSetters() {
     return [
@@ -245,7 +245,7 @@ export class PlainText extends Widget {
   /**
    * Returns true if display format is related to valrep.
    * @param {string} displayFormat
-   * @return {boolean}
+   * @returns {boolean}
    */
   static isValrepRelatedDisplayProperty(displayFormat) {
     switch (displayFormat) {
@@ -261,7 +261,7 @@ export class PlainText extends Widget {
   /**
    * Returns true if display format is related to text.
    * @param {string} displayFormat
-   * @return {boolean}
+   * @returns {boolean}
    */
   static isTextRelatedDisplayProperty(displayFormat) {
     switch (displayFormat) {
@@ -278,7 +278,7 @@ export class PlainText extends Widget {
    * Returns the value as format-object.
    * @param {string} displayFormat
    * @param {object} valrepItem
-   * @return {UValueFormatting}
+   * @returns {UValueFormatting}
    */
   static formatValrepItem(displayFormat, valrepItem) {
     const formattedValue = {};
@@ -307,7 +307,7 @@ export class PlainText extends Widget {
    * Returns the value as format-object.
    * @param {string} displayFormat
    * @param {any} value
-   * @return {UValueFormatting}
+   * @returns {UValueFormatting}
    */
   static formatText(displayFormat, value) {
     const formattedValue = {};
@@ -339,7 +339,7 @@ export class PlainText extends Widget {
   /**
    * Returns the value as format-object.
    * @param {UData} properties
-   * @return {UValueFormatting}
+   * @returns {UValueFormatting}
    */
   static getValueFormatted(properties) {
 

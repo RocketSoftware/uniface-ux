@@ -31,7 +31,7 @@ export class Worker extends Base {
   /**
    * Generate and return layout for this setter.
    * @param {UObjectDefinition} _objectDefinition
-   * @return {HTMLElement[] | HTMLElement}
+   * @returns {Array<HTMLElement> | HTMLElement}
    */
   getLayout(_objectDefinition) {
     return [];
@@ -48,7 +48,7 @@ export class Worker extends Base {
   /**
    * Uses the provided styleClass, which should be unique within the widget, to return the element this setter work on.
    * @param {Widget} widgetInstance
-   * @return {HTMLElement}
+   * @returns {HTMLElement}
    */
   getElement(widgetInstance) {
     let element = widgetInstance.elements.widget;
@@ -98,7 +98,7 @@ export class Element extends Worker {
    * @param {string} tagName
    * @param {string} styleClass
    * @param {string} elementQuerySelector
-   * @param {Array} [childWorkers]
+   * @param {Array<Worker>} [childWorkers]
    */
   constructor(widgetClass, tagName, styleClass, elementQuerySelector, childWorkers) {
     super(widgetClass);
@@ -120,7 +120,7 @@ export class Element extends Worker {
   /**
    * Generate and return layout for this setter.
    * @param {UObjectDefinition} objectDefinition
-   * @return {HTMLElement[] | HTMLElement}
+   * @returns {Array<HTMLElement> | HTMLElement}
    */
   getLayout(objectDefinition) {
     this.log("getLayout", null);
@@ -328,8 +328,8 @@ export class SlottedSubWidget extends Element {
    * @param {string} subWidgetClassName
    * @param {object} subWidgetDefaultValues
    * @param {boolean} visible
-   * @param {Array} subWidgetTriggers
-   * @param {Array} subWidgetDelegatedProperties
+   * @param {Array<string>} subWidgetTriggers
+   * @param {Array<string>} subWidgetDelegatedProperties
    */
   constructor(
     widgetClass,
@@ -432,7 +432,7 @@ export class SubWidgetsByProperty extends Element {
   /**
    * Generate and return layout for this setter.
    * @param {UObjectDefinition} objectDefinition
-   * @return {HTMLElement[]}
+   * @returns {Array<HTMLElement>}
    */
   getLayout(objectDefinition) {
     let elements = [];
@@ -540,7 +540,7 @@ export class SubWidgetsByFields extends Worker {
   /**
    * Generate and return layout for this setter.
    * @param {UObjectDefinition} objectDefinition
-   * @return {HTMLElement[]}
+   * @returns {Array<HTMLElement>}
    */
   getLayout(objectDefinition) {
     let excludePropId = this.propId;
@@ -662,7 +662,7 @@ export class WidgetsByFields extends Worker {
   /**
    * Generate and return layout for this worker.
    * @param {UObjectDefinition} objectDefinition
-   * @return {HTMLElement[]}
+   * @returns {Array<HTMLElement>}
    */
   getLayout(objectDefinition) {
     let excludePropId = this.propId;
@@ -708,7 +708,7 @@ export class WidgetForOccurrence extends Worker {
   /**
    * Generate and return layout for this setter.
    * @param {UObjectDefinition} objectDefinition
-   * @return {HTMLElement[]}
+   * @returns {Array<HTMLElement>}
    */
   getLayout(objectDefinition) {
     let elements = [];
@@ -767,7 +767,7 @@ export class BaseHtmlAttribute extends Worker {
   /**
    * Creates an instance of BaseHtmlAttribute.
    * @param {typeof import("./widget.js").Widget} widgetClass
-   * @param {UPropName | undefined} [propId]
+   * @param {UPropName} [propId]
    * @param {string} [attrName]
    * @param {UPropValue} [defaultValue]
    * @param {boolean} [setAsAttribute]
@@ -1084,7 +1084,7 @@ export class HtmlAttributeMinMaxLength extends Worker {
       return;
     }
 
-    /** @type {Number|null} */
+    /** @type {number | null} */
     let minlength = parseInt(this.getNode(widgetInstance.data, this.propMin));
     if (Number.isNaN(minlength)) {
       minlength = null;
@@ -1093,7 +1093,7 @@ export class HtmlAttributeMinMaxLength extends Worker {
       return;
     }
 
-    /** @type {Number|null} */
+    /** @type {number | null} */
     let maxlength = parseInt(this.getNode(widgetInstance.data, this.propMax));
     if (Number.isNaN(maxlength)) {
       maxlength = null;
