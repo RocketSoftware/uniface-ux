@@ -114,7 +114,6 @@
   });
 
   describe("mapTrigger()", function () {
-    const element = tester.processLayout();
     const testData = {
       "onchange" : "valuechange"
     };
