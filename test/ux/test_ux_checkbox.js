@@ -187,7 +187,7 @@
       assert.equal(tester.defaultValues["html:readonly"], false, "Default value of readonly should be false.");
       assert.equal(tester.defaultValues["html:hidden"], false, "Default value of hidden should be false.");
       assert.equal(tester.defaultValues["tri-state"], false, "Default value of tri-state.");
-      assert.equal(tester.defaultValues["label-position"], "after", "Default value of label-position will be above.");
+      assert.equal(tester.defaultValues["label-position"], "after", "Default value of label-position will be after.");
     });
 
     it("check value", function () {
@@ -247,8 +247,13 @@
         });
       }).then(function () {
         let labelText = element.querySelector("span.u-label-text").innerText;
+
         assert.equal(labelText, checkBoxLabelText); // Check for visibility.
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
+        // Checking order of elements
+        const label = element.querySelector("span.u-label-text").getBoundingClientRect();
+        const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
+        expect(label.right).to.be.greaterThan(control.right);
       });
     });
 
@@ -315,11 +320,15 @@
     it("set label-position before", function () {
       return asyncRun(function () {
         tester.dataUpdate({
+          "label-text": "Label Text",
           "label-position": "before"
         });
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "before", "Label position is not set to before.");
+        const label = element.querySelector("span.u-label-text").getBoundingClientRect();
+        const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
+        expect(control.right).to.be.greaterThan(label.right);
       });
     });
 
@@ -377,6 +386,8 @@
         // Check if error icon comes after the label in DOM order when label is "before"
         const label = element.querySelector(".u-label-text").getBoundingClientRect();
         const error = element.querySelector("span.u-error-icon").getBoundingClientRect();
+        const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
+        expect(control.right).to.be.greaterThan(label.right);
         expect(error.left).to.be.greaterThan(label.right);
 
       });
@@ -398,6 +409,8 @@
         // Check if error icon comes after the label in DOM order when label is "after"
         const label = element.querySelector(".u-label-text").getBoundingClientRect();
         const error = element.querySelector("span.u-error-icon").getBoundingClientRect();
+        const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
+        expect(label.right).to.be.greaterThan(control.right);
         expect(label.right).to.be.greaterThan(error.right);
 
       });

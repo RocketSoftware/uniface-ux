@@ -142,7 +142,11 @@
     }
 
     it("default label position before", function () {
-      assert.equal(tester.defaultValues["label-position"], "before", "Default value of label-position will be above.");
+      assert.equal(tester.defaultValues["label-position"], "before", "Default value of label-position will be before.");
+      const label = element.querySelector("span.u-label-text").getBoundingClientRect();
+      const control = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
+      expect(control.right).to.be.greaterThan(label.right);
+
     });
   });
 
@@ -186,17 +190,28 @@
         let labelText = element.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, switchLabelText); // Check for visibility.
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
+        // To check order of elements
+        const label = element.querySelector("span.u-label-text").getBoundingClientRect();
+        const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
+        expect(widget.right).to.be.greaterThan(label.right);
+
+
       });
     });
 
     it("set label-position after", function () {
       return asyncRun(function () {
         tester.dataUpdate({
+          "label-text": "Label Text",
           "label-position": "after"
         });
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "after", "Label position is not set to after.");
+        // To check order of elements
+        const label = element.querySelector("span.u-label-text").getBoundingClientRect();
+        const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
+        expect(label.right).to.be.greaterThan(widget.right);
       });
     });
 
@@ -254,9 +269,15 @@
       }).then(function () {
         let checkedText = element.querySelector("span.u-checked-message").innerText;
         assert.equal(checkedText, switchCheckedText); // Check for visibility.
+        expect(checkedText.length).to.be.at.most(10);
         assert(!element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message text.");
         expect(element.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
         expect(element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide unchecked message.");
+
+        // To check order of elements
+        const statusMsg = element.querySelector("span.u-checked-message").getBoundingClientRect();
+        const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
+        expect(widget.right).to.be.greaterThan(statusMsg.right);
       });
     });
 
@@ -272,15 +293,12 @@
         assert(checkedText, "Checked message element not found.");
         assert(!checkedText.hasAttribute("hidden"), "Checked message should be visible.");
         const displayedText = checkedText.innerText;
-        // console.log("Displayed checked message:", checkedText);
-        // expect(displayedText.endsWith("...")).to.be.true;
         expect(displayedText.length).to.be.at.most(10);
-        const computedStyles = window.getComputedStyle(checkedText);
-        expect(computedStyles.overflow).to.not.equal("hidden");
-        // expect(computedStyles.textOverflow).to.equal("ellipsis");
-        expect(computedStyles.whiteSpace).to.match(/nowrap|pre/); // should prevent wrapping
-        expect(parseInt(computedStyles.maxWidth)).to.be.lessThan(200);
-        console.log(computedStyles);
+        assert.equal(displayedText, "This is...");
+        // To check order of elements
+        const statusMsg = element.querySelector("span.u-checked-message").getBoundingClientRect();
+        const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
+        expect(widget.right).to.be.greaterThan(statusMsg.right);
       });
     });
 
@@ -295,9 +313,36 @@
       }).then(function () {
         let uncheckedText = element.querySelector("span.u-unchecked-message").innerText;
         assert.equal(uncheckedText, switchUnCheckedText); // Check for visibility.
+        expect(uncheckedText.length).to.be.at.most(10);
         assert(!element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text.");
         expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
         expect(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message.");
+
+        // To check order of elements
+        const statusMsg = element.querySelector("span.u-unchecked-message").getBoundingClientRect();
+        const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
+        expect(widget.right).to.be.greaterThan(statusMsg.right);
+      });
+    });
+
+    it("truncates unchecked message with ellipsis if length exceeds 10 characters", function () {
+      let longMessage = "This is a very long checked message";
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "unchecked-message": longMessage,
+          "value": 1
+        });
+      }).then(function () {
+        const uncheckedText = element.querySelector("span.u-unchecked-message");
+        assert(uncheckedText, "Checked message element not found.");
+        assert(!uncheckedText.hasAttribute("hidden"), "Checked message should be visible.");
+        const displayedText = uncheckedText.innerText;
+        expect(displayedText.length).to.be.at.most(10);
+        assert.equal(displayedText, "This is...");
+        // To check order of elements
+        const statusMsg = element.querySelector("span.u-unchecked-message").getBoundingClientRect();
+        const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
+        expect(widget.right).to.be.greaterThan(statusMsg.right);
       });
     });
   });
@@ -369,7 +414,9 @@
         // Check if error icon comes after the label in DOM order when label is "before"
         const statusMsg = element.shadowRoot.querySelector(".status-message").getBoundingClientRect();
         const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
-        expect(statusMsg.left).to.be.greaterThan(label.right);
+        const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
+        expect(widget.right).to.be.greaterThan(statusMsg.right);
+        expect(statusMsg.right).to.be.greaterThan(label.right);
       });
     });
 
@@ -388,7 +435,11 @@
 
         // Check if error icon comes after the label in DOM order when label is "after"
         const statusMsg = element.shadowRoot.querySelector(".status-message").getBoundingClientRect();
+        console.log(statusMsg);
         const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
+        const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
+        console.log(widget);
+        expect(statusMsg.right).to.be.greaterThan(widget.right);
         expect(label.right).to.be.greaterThan(statusMsg.left);
       });
     });
