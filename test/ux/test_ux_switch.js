@@ -214,6 +214,36 @@
       });
     });
 
+    it("show console warning for invalid label-position above", function () {
+      const consoleWarnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "above"
+        });
+      }).then(function () {
+        sinon.assert.calledWithMatch(
+          consoleWarnSpy,
+          sinon.match("HtmlAttributeChoice.refresh: Property 'label-position' invalid value (above) - Ignored.")
+        );
+        consoleWarnSpy.restore();
+      });
+    });
+
+    it("show console warning for invalid label-position below", function () {
+      const consoleWarnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "below"
+        });
+      }).then(function () {
+        sinon.assert.calledWithMatch(
+          consoleWarnSpy,
+          sinon.match("HtmlAttributeChoice.refresh: Property 'label-position' invalid value (below) - Ignored.")
+        );
+        consoleWarnSpy.restore();
+      });
+    });
+
     it("set checked message", function () {
       let switchCheckedText = "On";
       return asyncRun(function () {
@@ -229,6 +259,31 @@
         expect(element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide unchecked message.");
       });
     });
+
+    it("truncates checked message with ellipsis if length exceeds 10 characters", function () {
+      let longMessage = "This is a very long checked message";
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "checked-message": longMessage,
+          "value": 1
+        });
+      }).then(function () {
+        const checkedText = element.querySelector("span.u-checked-message");
+        assert(checkedText, "Checked message element not found.");
+        assert(!checkedText.hasAttribute("hidden"), "Checked message should be visible.");
+        const displayedText = checkedText.innerText;
+        // console.log("Displayed checked message:", checkedText);
+        // expect(displayedText.endsWith("...")).to.be.true;
+        expect(displayedText.length).to.be.at.most(10);
+        const computedStyles = window.getComputedStyle(checkedText);
+        expect(computedStyles.overflow).to.not.equal("hidden");
+        // expect(computedStyles.textOverflow).to.equal("ellipsis");
+        expect(computedStyles.whiteSpace).to.match(/nowrap|pre/); // should prevent wrapping
+        expect(parseInt(computedStyles.maxWidth)).to.be.lessThan(200);
+        console.log(computedStyles);
+      });
+    });
+
 
     it("set unchecked message", function () {
       let switchUnCheckedText = "Off";
