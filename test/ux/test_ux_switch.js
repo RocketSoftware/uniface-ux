@@ -238,7 +238,7 @@
           "label-position": "above"
         });
       }).then(function () {
-        expect(warnSpy.calledWith("b.refresh: Property 'label-position' invalid value (above) - Ignored.")).to.be.true;
+        expect(warnSpy.calledWith(sinon.match("Property 'label-position' invalid value (above) - Ignored."))).to.be.true;
         warnSpy.restore();
       });
     });
@@ -250,7 +250,7 @@
           "label-position": "below"
         });
       }).then(function () {
-        expect(warnSpy.calledWith("b.refresh: Property 'label-position' invalid value (below) - Ignored.")).to.be.true;
+        expect(warnSpy.calledWith(sinon.match("Property 'label-position' invalid value (below) - Ignored."))).to.be.true;
         warnSpy.restore();
       });
     });
