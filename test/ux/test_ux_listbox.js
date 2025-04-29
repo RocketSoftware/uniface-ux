@@ -126,7 +126,7 @@
 
   describe("mapTrigger()", function () {
     const testData = {
-      "onchange" : "valuechange"
+      "onchange" : "change"
     };
     let widget;
 
