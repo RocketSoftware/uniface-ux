@@ -283,17 +283,6 @@
           const element = this.processLayout.apply(this, this.layoutArgs);
           const widget = this.construct();
           this.updaters = widget.onConnect(element);
-          let updaters = this.updaters;
-          if (false && updaters !== undefined) {
-            // Make sure we have an *array* of validators.
-            if (!(updaters instanceof Array)) {
-              updaters = [updaters];
-            }
-            // Create the event listeners for the updaters.
-            updaters.forEach((updater) => {
-              updater.element.addEventListener(updater.event_name, updater.handler);
-            });
-          }
         }
         return this.widget;
       }
@@ -308,7 +297,7 @@
       createWidget() {
         const widget = this.dataInit();
         let updaters = this.updaters;
-        if (updaters !== undefined) {
+        if (!this.updatersNotConnected && updaters !== undefined) {
           // Make sure we have an *array* of validators.
           if (!(updaters instanceof Array)) {
             updaters = [updaters];
@@ -317,6 +306,7 @@
           updaters.forEach((updater) => {
             updater.element.addEventListener(updater.event_name, updater.handler);
           });
+          this.updatersNotConnected = true;
         }
 
         return widget;
