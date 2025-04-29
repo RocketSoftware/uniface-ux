@@ -1,5 +1,5 @@
 import { Widget } from "../../src/ux/framework/widget.js";
-import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedSubWidget, Element } from "../../src/ux/framework/workers.js";
+import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedSubWidget, Element, UIBlockElement } from "../../src/ux/framework/workers.js";
 
 // Simple widget that has both subwidgets and triggers for easier testing and doens't mess with other widgets.
 export class TestWidget extends Widget {
@@ -15,6 +15,7 @@ export class TestWidget extends Widget {
     new StyleClass(this, ["u-test-field", "u-test-field-2"]),
     new HtmlAttribute(this, "html:current-value", "current-value", ""),
     new HtmlValueAttributeBoolean(this, "value", "checked", false),
+    new UIBlockElement(this, "u-blocked"),
     new SlottedSubWidget(this, "span", "u-change-button", ".u-change-button", "end", "change-button", "UX.Button", {
       "icon": "",
       "icon-position": "end",
