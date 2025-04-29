@@ -282,15 +282,16 @@
         if (!this.widget || !this.widget.elements || !this.widget.elements.widget) {
           const element = this.processLayout.apply(this, this.layoutArgs);
           const widget = this.construct();
-          let updaters = widget.onConnect(element);
-          if (updaters !== undefined) {
+          this.updaters = widget.onConnect(element);
+          let updaters = this.updaters;
+          if (false && updaters !== undefined) {
             // Make sure we have an *array* of validators.
             if (!(updaters instanceof Array)) {
               updaters = [updaters];
             }
             // Create the event listeners for the updaters.
             updaters.forEach((updater) => {
-              element.addEventListener(updater.event_name, updater.handler);
+              updater.element.addEventListener(updater.event_name, updater.handler);
             });
           }
         }
@@ -299,12 +300,26 @@
 
       dataInit() {
         const widget = this.onConnect();
+        // TODO: this.mapTriggers();
         widget.dataInit();
         return widget;
       }
 
       createWidget() {
-        return this.dataInit();
+        const widget = this.dataInit();
+        let updaters = this.updaters;
+        if (updaters !== undefined) {
+          // Make sure we have an *array* of validators.
+          if (!(updaters instanceof Array)) {
+            updaters = [updaters];
+          }
+          // Create the event listeners for the updaters.
+          updaters.forEach((updater) => {
+            updater.element.addEventListener(updater.event_name, updater.handler);
+          });
+        }
+
+        return widget;
       }
 
       getDefaultValues() {
