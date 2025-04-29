@@ -194,7 +194,8 @@
       assert.equal(tester.defaultValues["html:readonly"], false, "Default value of readonly should be false.");
       assert.equal(tester.defaultValues["html:hidden"], false, "Default value of hidden should be false.");
       assert.equal(tester.defaultValues["tri-state"], false, "Default value of tri-state.");
-      assert.equal(tester.defaultValues["label-position"], "after", "Default value of label-position will be after.");
+      assert.equal(tester.defaultValues["label-text"], undefined, "Default value of label-text should be undefined.");
+      assert.equal(tester.defaultValues["label-position"], "after", "Default value of label-position should be after.");
     });
 
     it("check value", function () {
@@ -350,6 +351,30 @@
         assert.equal(labelPosition, "after");
         assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text.");
         assert.equal(element.querySelector("span.u-label-text").innerText, "", "Text is not empty.");
+      });
+    });
+
+    it("show console warning for invalid label-position above", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "above"
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith("b.refresh: Property 'label-position' invalid value (above) - Ignored.")).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("show console warning for invalid label-position below", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "below"
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith("b.refresh: Property 'label-position' invalid value (below) - Ignored.")).to.be.true;
+        warnSpy.restore();
       });
     });
   });

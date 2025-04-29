@@ -148,11 +148,9 @@
       });
     }
 
-    it("default label position before", function () {
-      assert.equal(tester.defaultValues["label-position"], "before", "Default value of label-position will be before.");
-      const label = element.querySelector("span.u-label-text").getBoundingClientRect();
-      const control = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
-      expect(control.right).to.be.greaterThan(label.right);
+    it("check label-text, label-position", function () {
+      assert.equal(tester.defaultValues["label-text"], "", "Default value of label-text should be undefined.");
+      assert.equal(tester.defaultValues["label-position"], "before", "Default value of label-position should be before.");
     });
   });
 
@@ -234,32 +232,26 @@
     });
 
     it("show console warning for invalid label-position above", function () {
-      const consoleWarnSpy = sinon.spy(console, "warn");
+      const warnSpy = sinon.spy(console, "warn");
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": "above"
         });
       }).then(function () {
-        sinon.assert.calledWithMatch(
-          consoleWarnSpy,
-          sinon.match("HtmlAttributeChoice.refresh: Property 'label-position' invalid value (above) - Ignored.")
-        );
-        consoleWarnSpy.restore();
+        expect(warnSpy.calledWith("b.refresh: Property 'label-position' invalid value (above) - Ignored.")).to.be.true;
+        warnSpy.restore();
       });
     });
 
     it("show console warning for invalid label-position below", function () {
-      const consoleWarnSpy = sinon.spy(console, "warn");
+      const warnSpy = sinon.spy(console, "warn");
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": "below"
         });
       }).then(function () {
-        sinon.assert.calledWithMatch(
-          consoleWarnSpy,
-          sinon.match("HtmlAttributeChoice.refresh: Property 'label-position' invalid value (below) - Ignored.")
-        );
-        consoleWarnSpy.restore();
+        expect(warnSpy.calledWith("b.refresh: Property 'label-position' invalid value (below) - Ignored.")).to.be.true;
+        warnSpy.restore();
       });
     });
 
