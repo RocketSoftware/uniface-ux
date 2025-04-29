@@ -25,7 +25,11 @@ ux-widgets/
   (node_modules/)           // working folder for npm packages, ignored
   src/                      // source folder
     fluentui/
-    ux/                     // UX widget sources
+    ux/                     // UX widgets
+      framework/            // UX framework sources
+      [widget A]/           // UX widget A sources
+      loader.js             // load UX widgets and register them to Uniface
+      loader.css            // load all the CSS files related to the Uniface UX widgets
   test/                     // test folder
     helper/
       umockup.js            // test mockup and helper module

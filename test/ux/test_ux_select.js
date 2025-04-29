@@ -76,6 +76,13 @@
         expect(element).instanceOf(HTMLElement, `Function processLayout() of ${widgetName} does not return an HTMLElement.`);
       });
 
+      it("check registration of web component", function () {
+        const customElementNames = ["fluent-option", "fluent-select"];
+        for (const name of customElementNames) {
+          assert(window.customElements.get(name), `Web component ${name} has not been registered!`);
+        }
+      });
+
       it("check tagName", function () {
         expect(element).to.have.tagName(tester.uxTagName);
       });
@@ -124,10 +131,13 @@
   });
 
   describe("mapTrigger()", function () {
-    const element = tester.processLayout();
-    const widget = tester.onConnect();
+    beforeEach(function () {
+      tester.onConnect();
+    });
 
     it("defined mapTrigger() and onchange event", function () {
+      const widget = tester.widget;
+      const element = tester.element;
       widget.mapTrigger("onchange");
       const event = new window.Event("onchange");
       element.dispatchEvent(event);

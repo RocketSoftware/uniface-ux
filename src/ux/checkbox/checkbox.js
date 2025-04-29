@@ -1,5 +1,5 @@
 // @ts-check
-import { Widget } from "./widget.js";
+import { Widget } from "../framework/widget.js";
 import {
   StyleClass,
   HtmlAttribute,
@@ -12,8 +12,11 @@ import {
   HtmlAttributeNumber,
   HtmlAttributeChoice,
   IgnoreProperty
-} from "./workers.js";
-// The import of Fluent UI web-components is done in loader.js
+} from "../framework/workers.js";
+
+// Optimized way to reduce the size of bundle, only import necessary fluent-ui components
+import { fluentCheckbox, provideFluentDesignSystem } from "@fluentui/web-components";
+provideFluentDesignSystem().register(fluentCheckbox());
 
 /**
  * Checkbox Widget
@@ -150,12 +153,8 @@ export class Checkbox extends Widget {
     }
 
     clearErrors(widgetInstance) {
-      widgetInstance.setProperties({
-        "format-error": false,
-        "format-error-message": "",
-        "error": false,
-        "error-message": ""
-      });
+      this.setErrorProperties(widgetInstance);
+      this.setErrorProperties(widgetInstance, "format-error");
     }
 
     getValueUpdaters(widgetInstance) {
@@ -196,16 +195,10 @@ export class Checkbox extends Widget {
 
       try {
         newValue = this.fieldValueToTriState(value);
-        widgetInstance.setProperties({
-          "format-error": false,
-          "format-error-message": ""
-        });
+        this.setErrorProperties(widgetInstance, "format-error");
       } catch (error) {
         isError = true;
-        widgetInstance.setProperties({
-          "format-error": true,
-          "format-error-message": error
-        });
+        this.setErrorProperties(widgetInstance, "format-error", error);
       }
 
       if (newValue !== widgetInstance.data.currentValue) {

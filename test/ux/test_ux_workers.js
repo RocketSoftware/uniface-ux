@@ -1,18 +1,17 @@
-import { Button } from "../../src/ux/button.js";
-import { Widget } from "../../src/ux/widget.js";
+import { Widget } from "../../src/ux/framework/widget.js";
 import {
   StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget,
   SubWidgetsByProperty, BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean,
   HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep
-} from "../../src/ux/workers.js";
-import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
+} from "../../src/ux/framework/workers.js";
+import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
 
 (function () {
   "use strict";
 
-  // This test also depends on Button, still registration is needed
-  registerWidgetClass("UX.Button", Button);
+  // This test depends on Button, see calls to getWidgetClass
 
+  const assert = chai.assert;
   const expect = chai.expect;
 
   describe("Tests for Workers", function () {
@@ -319,9 +318,9 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
     let widgetClass;
     let subWidgetId;
     let subWidgetName;
+    let subWidgetClass;
     let tagName;
     let slottedWidget;
-
 
     beforeEach(function () {
       Widget.structure = {};
@@ -335,6 +334,8 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
 
       widgetClass = Widget;
       subWidgetName = "UX.Button";
+      subWidgetClass = getWidgetClass(subWidgetName);
+      assert(subWidgetClass, `Widget class '${subWidgetName}' is not loaded!`);
       tagName = "DIV";
       subWidgetId = "undefined";
       slottedWidget = new SlottedSubWidget(widgetClass, tagName, "styleClass", "", "", subWidgetId, subWidgetName, {}, "");
@@ -345,7 +346,8 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
     });
 
     it("check getters/setters changed and subWidget added", function () {
-      expect(slottedWidget.subWidgetClass.name).to.equal("Button");
+      // debugger;
+      expect(slottedWidget.subWidgetClass).to.equal(subWidgetClass);
       expect(slottedWidget.propId).to.equal("undefined");
     });
 
@@ -537,7 +539,6 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
       expect(element.widgetClass).to.equal(widgetClass);
     });
 
-
     it("should refresh correctly", function () {
       const widgetInstance = {
         "data": {
@@ -590,7 +591,6 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.choices).to.equal(choices);
     });
-
 
     it("should refresh correctly", function () {
       const widgetInstance = {
@@ -648,7 +648,6 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
       expect(element.max).to.equal(max);
     });
 
-
     it("should refresh correctly", function () {
       const widgetInstance = {
         "data": {
@@ -699,7 +698,6 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
       expect(element.widgetClass).to.equal(widgetClass);
     });
 
-
     it("should refresh correctly", function () {
       const widgetInstance = {
         "data": {
@@ -718,7 +716,6 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
       element.attrName = "ariaValueMax";
       element.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.ariaValueMax).to.equal("true");
-
     });
   });
 
@@ -732,6 +729,7 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
     let attrName;
     let defaultValue;
     let element;
+    let buttonWidgetClass;
     let buttonWidget;
     let returnedProcess;
 
@@ -750,8 +748,10 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
       attrName = "ariaValueMax";
       defaultValue = "1";
       element = new HtmlValueAttributeBoolean(widgetClass, propId, attrName, defaultValue);
-      buttonWidget = new Button;
-      returnedProcess = Button.processLayout(buttonWidget, "");
+      buttonWidgetClass = getWidgetClass("UX.Button");
+      assert(buttonWidgetClass, "Widget class UX.Button is not loaded!");
+      buttonWidget = new buttonWidgetClass;
+      returnedProcess = buttonWidgetClass.processLayout(buttonWidget, "");
     });
 
     it("should initialize with correct properties", function () {
@@ -827,7 +827,6 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
       expect(setterKeys[setterKeys.length - 1]).to.equal("max");
     });
 
-
     it("should refresh correctly", function () {
 
       divElement = document.createElement("div");
@@ -855,7 +854,6 @@ import { registerWidgetClass } from "../../src/ux/dsp_connector.js";
       expect(widgetInstance.elements.widget.maxlength).to.equal(100);
       expect(widgetInstance.elements.widget.minlength).to.equal(12);
       expect(widgetInstance.widget.maxlengthHasBeenSet).to.equal(true);
-
     });
   });
 

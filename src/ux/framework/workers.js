@@ -1,5 +1,8 @@
 // @ts-check
-import { Widget } from "./widget.js"; // eslint-disable-line no-unused-vars
+
+/**
+ * @typedef {import("./widget.js").Widget} Widget
+ */
 import { Base } from "./base.js";
 import { getWidgetClass } from "./dsp_connector.js";
 
@@ -16,7 +19,7 @@ export class Worker extends Base {
 
   /**
    * Creates an instance of Worker.
-   * @param {typeof Widget} widgetClass
+   * @param {typeof import("./widget.js").Widget} widgetClass
    */
   constructor(widgetClass) {
     super();
@@ -91,7 +94,7 @@ export class Element extends Worker {
 
   /**
    * Creates an instance of Element.
-   * @param {typeof Widget} widgetClass
+   * @param {typeof import("./widget.js").Widget} widgetClass
    * @param {String} tagName
    * @param {String} styleClass
    * @param {String} elementQuerySelector
@@ -167,7 +170,7 @@ export class SlottedElement extends Element {
 
   /**
    * Creates an instance of SlottedElement.
-   * @param {typeof Widget} widgetClass
+   * @param {typeof import("./widget.js").Widget} widgetClass
    * @param {String} tagName
    * @param {String} styleClass
    * @param {String} elementQuerySelector
@@ -248,7 +251,7 @@ export class SlottedError extends Element {
 
   /**
    * Creates an instance of SlottedError.
-   * @param {typeof Widget} widgetClass
+   * @param {typeof import("./widget.js").Widget} widgetClass
    * @param {String} tagName
    * @param {String} styleClass
    * @param {String} elementQuerySelector
@@ -316,7 +319,7 @@ export class SlottedSubWidget extends Element {
 
   /**
    * Creates an instance of SlottedWidget.
-   * @param {typeof Widget} widgetClass
+   * @param {typeof import("./widget.js").Widget} widgetClass
    * @param {String} tagName
    * @param {String} subWidgetStyleClass
    * @param {String} elementQuerySelector
@@ -410,7 +413,7 @@ export class SubWidgetsByProperty extends Element {
 
   /**
    * Creates an instance of WidgetsByProperty.
-   * @param {typeof Widget} widgetClass - Specifies the widget class definition the setter is created for.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget class definition the setter is created for.
    * @param {String} tagName - Specifies the wub-widget's element tag-name.
    * @param {String} styleClass - Specifies the style class for custom styling of the sub-widget.
    * @param {String} elementQuerySelector - Specifies the querySelector to find the sub-widget back.
@@ -520,7 +523,7 @@ export class SubWidgetsByFields extends Worker {
 
   /**
    * Creates an instance of WidgetsByProperty.
-   * @param {typeof Widget} widgetClass - Specifies the widget class definition the setter is created for.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget class definition the setter is created for.
    * @param {UPropName} propId - Specifies the id of a Boolean property that, if true, excludes the field from the process.
    * @param {String} subWidgetClassName - Specifies the name of the sub-widget to be included for every field.
    */
@@ -644,7 +647,7 @@ export class WidgetsByFields extends Worker {
 
   /**
    * Creates an instance of WidgetsByFields.
-   * @param {typeof Widget} widgetClass - Specifies the widget class definition the worker is created for.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget class definition the worker is created for.
    * @param {String} tagName - Specifies the widget's element tag-name in the skeleton layout.
    * @param {UPropName} propId - Specifies the exclude property id.
    * @param {String} bindingId - Specifies the binding id.
@@ -692,7 +695,7 @@ export class WidgetForOccurrence extends Worker {
 
   /**
    * Creates an instance of WidgetForOccurrence.
-   * @param {typeof Widget} widgetClass - Specifies the widget class definition the worker is created for.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget class definition the worker is created for.
    * @param {String} tagName - Specifies the sub-widget's element tag-name in the skeleton layout.
    * @param {String} bindingId - Specifies the binding id.
    */
@@ -726,7 +729,7 @@ export class IgnoreProperty extends Worker {
 
   /**
    * Creates an instance of IgnoreProperty
-   * @param {typeof Widget} widgetClass
+   * @param {typeof import("./widget.js").Widget} widgetClass
    * @param {UPropName} propId
    * @param {UPropValue} defaultValue
    */
@@ -763,8 +766,8 @@ export class BaseHtmlAttribute extends Worker {
 
   /**
    * Creates an instance of BaseHtmlAttribute.
-   * @param {typeof Widget} widgetClass
-   * @param {UPropName} [propId]
+   * @param {typeof import("./widget.js").Widget} widgetClass
+   * @param {UPropName | undefined} [propId]
    * @param {String} [attrName]
    * @param {UPropValue} [defaultValue]
    * @param {Boolean} [setAsAttribute]
@@ -1031,14 +1034,8 @@ export class HtmlValueAttributeBoolean extends BaseHtmlAttribute {
       "element": element,
       "event_name": this.valueChangedEventName || "",
       "handler": () => {
-        widgetInstance.setProperties({
-          "format-error": false,
-          "format-error-message": ""
-        });
-        widgetInstance.setProperties({
-          "error": false,
-          "error-message": ""
-        });
+        this.setErrorProperties(widgetInstance, "format-error");
+        this.setErrorProperties(widgetInstance);
       }
     });
     return updaters;
@@ -1054,15 +1051,9 @@ export class HtmlValueAttributeBoolean extends BaseHtmlAttribute {
     // Validate value before assigning.
     try {
       this.setHtmlAttribute(element, this.fieldValueToBoolean(value));
-      widgetInstance.setProperties({
-        "format-error": false,
-        "format-error-message": ""
-      });
+      this.setErrorProperties(widgetInstance, "format-error");
     } catch (error) {
-      widgetInstance.setProperties({
-        "format-error": true,
-        "format-error-message": error
-      });
+      this.setErrorProperties(widgetInstance, "format-error", error);
     }
   }
 }
@@ -1226,7 +1217,7 @@ export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
 
   /**
    * Creates an instance of HtmlAttributeFormattedValue.
-   * @param {typeof Widget} widgetClass - Specifies the widget class definition the setter is created for.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget class definition the setter is created for.
    * @param {UPropName} propId - Specifies the id of the property that holds the object's original widget-class name.
    */
   constructor(widgetClass, propId) {
@@ -1428,7 +1419,7 @@ export class SlottedElementsByValRep extends Element {
 
   /**
    * Creates an instance of SlottedElementsByValRep.
-   * @param {typeof Widget} widgetClass
+   * @param {typeof import("./widget.js").Widget} widgetClass
    * @param {String} tagName
    * @param {String} styleClass
    * @param {String} elementQuerySelector

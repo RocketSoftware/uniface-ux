@@ -1,5 +1,5 @@
 // @ts-check
-import { Widget } from "./widget.js";
+import { Widget } from "../framework/widget.js";
 import {
   Element,
   StyleClass,
@@ -13,12 +13,15 @@ import {
   HtmlAttributeBoolean,
   HtmlAttributeReadonlyDisabled,
   HtmlAttributeMinMaxLength
-} from "./workers.js";
-// The import of Fluent UI web-components is done in loader.js
+} from "../framework/workers.js";
+
+// Optimized way to reduce the size of bundle, only import necessary fluent-ui components
+import { fluentTextField,  provideFluentDesignSystem } from "@fluentui/web-components";
+provideFluentDesignSystem().register(fluentTextField());
 
 // This widget also depends on Button, still registration is needed
-import { Button } from "./button.js";
-import { registerWidgetClass } from "./dsp_connector.js";
+import { Button } from "../button/button.js";
+import { registerWidgetClass } from "../framework/dsp_connector.js";
 registerWidgetClass("UX.Button", Button);
 
 /**

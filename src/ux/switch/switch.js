@@ -1,5 +1,5 @@
 // @ts-check
-import { Widget } from "./widget.js";
+import { Widget } from "../framework/widget.js";
 import {
   Element,
   SlottedError,
@@ -12,8 +12,11 @@ import {
   HtmlValueAttributeBoolean,
   HtmlAttributeChoice,
   IgnoreProperty
-} from "./workers.js";
-// The import of Fluent UI web-components is done in loader.js
+} from "../framework/workers.js";
+
+// Optimized way to reduce the size of bundle, only import necessary fluent-ui components
+import { fluentSwitch, provideFluentDesignSystem } from "@fluentui/web-components";
+provideFluentDesignSystem().register(fluentSwitch());
 
 /**
  * Switch widget
