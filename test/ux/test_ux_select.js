@@ -623,6 +623,35 @@
     });
   });
 
+  describe("Test blockUI() and unblockUI() through  UIBlockElement ", function () {
+    let element;
+
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+    });
+
+    it("check blockUI", function () {
+      let widget = tester.createWidget();
+      element = tester.element;
+      return asyncRun(function () {
+        widget.blockUI();
+      }).then(function () {
+        expect(element, "Class u-readonly is not applied").to.have.class("u-readonly");
+      });
+    });
+
+    it("check unblockUI", function () {
+      let widget = tester.createWidget();
+      element = tester.element;
+      return asyncRun(function () {
+        widget.unblockUI();
+      }).then(function () {
+        expect(element, "Class u-readonly is applied").not.to.have.class("u-readonly");
+      });
+    });
+  });
+
   describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {
