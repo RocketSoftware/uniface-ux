@@ -406,9 +406,10 @@ export class Base {
   }
 
   /**
-   * Truncates the text passed to have a maximum length and then adds ellipses at the end.
+   * Truncates the text passed to have a maximum length and adds ellipses at the end if it exceeds this length.
    * @param {string} text - The text to be truncated.
-   * @param {number} maxLength - The maximum number of characters after which the ellipses should be added.
+   * @param {number} maxLength - The maximum number of characters exceeding which the ellipses should be added.
+   * @returns {string} The text truncated to maximum number of characters.
    */
 
   truncateText(text, maxLength) {
