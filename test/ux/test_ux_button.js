@@ -117,16 +117,25 @@
   });
 
   describe("mapTrigger()", function () {
-    const element = tester.processLayout();
-    const widget = tester.onConnect();
+    const testData = {
+      // triggerName : eventName
+      "detail" : "click"
+    };
+    let widget;
 
-    it("define mapTrigger() and click event", function () {
-      widget.mapTrigger("click");
-      const event = new window.Event("click");
-      element.dispatchEvent(event);
-      assert(widget.elements.widget === element, "Widget is not connected.");
+    beforeEach(function () {
+      widget = tester.onConnect();
     });
 
+    Object.keys(testData).forEach((triggerName) => {
+      it(`Test mapping of trigger '${triggerName}'`, function () {
+        const triggerMapping = widget.mapTrigger(triggerName);
+        assert(triggerMapping, `Trigger '${triggerName}' is not mapped!`);
+        assert(triggerMapping.element === tester.element, `Trigger '${triggerName}' is not mapped to correct HTMLElement!`);
+        assert(triggerMapping.event_name === testData[triggerName],
+          `trigger '${triggerName}' should be mapped to event '${testData[triggerName]}', but got '${triggerMapping.event_name}'!`);
+      });
+    });
   });
 
   describe("dataInit()", function () {
