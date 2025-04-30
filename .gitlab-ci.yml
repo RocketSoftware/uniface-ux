@@ -7,6 +7,13 @@ stages:
 
 variables:
   TARGET_VERSION: "10403"
+  
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+    - if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "push"'
+      when: always
 
 include:
   - project: Uniface/tools/defaults
@@ -21,11 +28,6 @@ lint:
   script:
     - echo "Linting repository"
     - npm run lint
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-    - if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "push"'
-      when: always
 
 build:
   stage: build
@@ -38,11 +40,6 @@ build:
   artifacts:
     paths:
       - dist/
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-    - if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "push"'
-      when: always
 
 test:
   stage: test
@@ -56,11 +53,6 @@ test:
     paths:
       - testAutomation/test-results/
     when: always
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-    - if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "push"'
-      when: always
 
 polaris_scan:
   stage: polaris_scan
@@ -97,8 +89,3 @@ publish:
     - test -d dist || { echo "Error :dist/ not found!"; exit 1; }
     - cp -a dist "$TARGET_DIR/"
     - echo "Artifacts copied to $TARGET_DIR"
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: always
-    - if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "push"'
-      when: always
