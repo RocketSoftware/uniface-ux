@@ -129,14 +129,23 @@
   });
 
   describe("mapTrigger()", function () {
-    const element = tester.processLayout();
-    const widget = tester.onConnect();
+    const testData = {
+      "onchange" : "change"
+    };
+    let widget;
 
-    it("defined mapTrigger() and onchange event", function () {
-      widget.mapTrigger("onchange");
-      const event = new window.Event("onchange");
-      element.dispatchEvent(event);
-      assert(widget.elements.widget === element, "Widget is not connected.");
+    beforeEach(function () {
+      widget = tester.onConnect();
+    });
+
+    Object.keys(testData).forEach((triggerName) => {
+      it(`Test mapping of trigger '${triggerName}'`, function () {
+        const triggerMapping = widget.mapTrigger(triggerName);
+        assert(triggerMapping, `Trigger '${triggerName}' is not mapped!`);
+        assert(triggerMapping.element === tester.element, `Trigger '${triggerName}' is not mapped to correct HTMLElement!`);
+        assert(triggerMapping.event_name === testData[triggerName],
+          `trigger '${triggerName}' should be mapped to event '${testData[triggerName]}', but got '${triggerMapping.event_name}'!`);
+      });
     });
   });
 
@@ -429,7 +438,7 @@
       await asyncRun(() => {
         tester.dataUpdate({
           "valrep": valRepArray,
-          "value": "0"
+          "value": "2"
         });
       });
     });
@@ -437,7 +446,6 @@
     it("set invalid initial value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "valrep": valRepArray,
           "value": "0"
         });
       }).then(function () {
@@ -445,7 +453,6 @@
         expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
       });
     });
-
 
     it("simulate user interaction and select first option", function () {
       return asyncRun(function () {
@@ -470,7 +477,6 @@
     it("now again set the same invalid value", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "valrep": valRepArray,
           "value": "0"
         });
       }).then(function () {

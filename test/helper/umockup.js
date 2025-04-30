@@ -150,23 +150,25 @@
   };
 
   /**
-   * @namespace UNIFACE
-   * @private
-   *
-   * UNIFACE.widget.custom_widget_container
-   *
-   * Remark: This listener wrapper would cause redundant registration of listener when
-   * this function is called second time, because this wrapper will always be
-   * a new instance. Hence each caller will register a different instance.
-   * element.addEventListener is managed by instance of listener.
+   * Mockup of UNIFACE.widget.custom_widget_container in ucustomwidgetcontainer.js
    */
   const customWidgetContainer = {
     "apiCallDepth" : 0,
     "isBlocked" : function() {
       return false;
     },
-    // Adds an event listener that can execute a handler,
-    // and returns it to caller.
+
+    /**
+     * Mockup of custom_widget_container.addListerner without the part related to validation.
+     *
+     * Adds an event listener that can execute a handler,
+     * and returns it to caller.
+     *
+     * Remark: This listener wrapper would cause redundant registration of listener when
+     * this function is called second time, because this wrapper will always be
+     * a new instance. Hence each caller will register a different instance.
+     * element.addEventListener is managed by instance of listener.
+     */
     "addListener" : function(element, event_name, validateAndUpdate, bubbleEvent, handler) {
       // Sanity check.
       if (element === undefined || event_name === undefined) {
@@ -181,7 +183,7 @@
     },
 
     /**
-     * Mock up the function custom_widget_container.mapTriggers in ucustomwidgetcontainer.js
+     * Mock up the function custom_widget_container.mapTriggers
      * Map triggers with widget
      *
      * @param {*} triggers the triggers
@@ -206,9 +208,8 @@
 
   };
 
-  /*
-   * Implementation and private functions of WidgetTester class
-   */
+  // Implementation and private functions of WidgetTester class
+
   const widgetId = "ux-widget";
   let widgetName;
   let scriptName;
@@ -410,12 +411,6 @@
         }
 
         return widget;
-      }
-
-      fireTrigger(triggerName) {
-        const trigger = this.widget.mapTrigger(triggerName);
-        const event = new window.Event(trigger.event_name);
-        trigger.element.dispatchEvent(event);
       }
 
       dispatchEventFor(triggerName, options) {

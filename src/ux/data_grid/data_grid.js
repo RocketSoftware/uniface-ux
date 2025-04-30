@@ -12,10 +12,7 @@ import {
   provideFluentDesignSystem
 } from "@fluentui/web-components";
 
-provideFluentDesignSystem().register(fluentDesignSystemProvider());
-provideFluentDesignSystem().register(fluentDataGrid());
-provideFluentDesignSystem().register(fluentDataGridCell());
-provideFluentDesignSystem().register(fluentDataGridRow());
+provideFluentDesignSystem().register(fluentDesignSystemProvider(),fluentDataGrid(),fluentDataGridCell(),fluentDataGridRow());
 
 /**
  * This file describes all widget classes needed to construct the DataGrid entity widget.
