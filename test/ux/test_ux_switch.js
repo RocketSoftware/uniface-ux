@@ -149,7 +149,7 @@
     }
 
     it("check label-text, label-position", function () {
-      assert.equal(tester.defaultValues["label-text"], "", "Default value of label-text should be undefined.");
+      assert.equal(tester.defaultValues["label-text"], "", "Default value of label-text should be empty.");
       assert.equal(tester.defaultValues["label-position"], "before", "Default value of label-position should be before.");
     });
   });
