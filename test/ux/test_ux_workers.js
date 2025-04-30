@@ -3,7 +3,7 @@ import { Widget } from "../../src/ux/framework/widget.js";
 import {
   StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget,
   SubWidgetsByProperty, BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean,
-  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep
+  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep ,UIBlockElement
 } from "../../src/ux/framework/workers.js";
 import { registerWidgetClass } from "../../src/ux/framework/dsp_connector.js";
 
@@ -1031,6 +1031,90 @@ import { registerWidgetClass } from "../../src/ux/framework/dsp_connector.js";
         expect(node.value).to.equal(index.toString());
       });
     });
+  });
+
+  describe("Test UIBlockElement class", function () {
+    let widgetClass;
+    let styleClass;
+    let element;
+
+    beforeEach(function () {
+      Widget.structure = {};
+      Widget.subWidgets = {};
+      Widget.subWidgetWorkers = [];
+      Widget.defaultValues = {};
+      Widget.setters = {};
+      Widget.getters = {};
+      Widget.triggers = {};
+      Widget.uiBlocking = "";
+
+      widgetClass = Widget;
+      styleClass = "blocked-style";
+      element = new UIBlockElement(widgetClass, styleClass);
+    });
+
+    it("should initialize with correct properties", function () {
+      expect(element.widgetClass).to.equal(widgetClass);
+      expect(element.styleClass).to.equal(styleClass);
+    });
+
+    it("check setters and default values", function () {
+      let setterKeys = Object.keys(element.widgetClass.setters);
+      expect(setterKeys[setterKeys.length - 1]).to.equal("uiblocked");
+    });
+    it("should refresh correctly", function () {
+
+      const classListStub= {
+        "add" : sinon.spy(),
+        "remove" : sinon.spy()
+      };
+      const widgetInstance = {
+        "data": {
+          "uiblocked": true
+        },
+        "constructor": {
+          "uiBlocking": "disabled" // can be changed in tests
+        },
+        "elements": {
+          "widget": {
+            "classList" : classListStub,
+            "disabled" : false,
+            "readOnly" : false
+          }
+        },
+        "getTraceDescription": function () {
+          return "description";
+        },
+        "error": sinon.spy()
+      };
+
+      // should add class and  disable element when uiblocked is true and block type is 'disabled'
+      element.refresh(widgetInstance);
+      expect(widgetInstance.elements.widget.classList.add.calledWith(styleClass)).to.be.true;
+      expect(widgetInstance.elements.widget.disabled).to.be.true;
+
+      // should add class and set readOnly element when uiblocked is true and block type is 'readonly'
+      widgetInstance.constructor.uiBlocking = "readonly";
+      element.refresh(widgetInstance);
+      expect(widgetInstance.elements.widget.readOnly).to.be.true;
+
+
+      // should call error if block type is invalid
+      widgetInstance.constructor.uiBlocking = "invalid";
+      element.refresh(widgetInstance);
+      expect(widgetInstance.error.calledWith("UIBlockElement", "Invalid block type", "invalid")).to.be.true;
+
+      // should remove class and restore disabled state when uiblocked is false and block type is 'disabled'"
+      widgetInstance.data["uiblocked"] = false;
+      widgetInstance.data["html:disabled"] = true;
+
+      element.refresh(widgetInstance);
+
+      expect(widgetInstance.elements.widget.classList.remove.calledWith(styleClass)).to.be.true;
+      expect(widgetInstance.elements.widget.disabled).to.be.true;
+
+    });
+
   });
 
 })();
