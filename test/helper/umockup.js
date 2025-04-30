@@ -1,4 +1,4 @@
-/* global _uf UNIFACE URLSearchParams  */
+/* global _uf UNIFACE URLSearchParams */
 (function (global) {
   "use strict";
 
@@ -149,6 +149,67 @@
     })()
   };
 
+  /**
+   * Mockup of UNIFACE.widget.custom_widget_container in ucustomwidgetcontainer.js
+   */
+  const customWidgetContainer = {
+    "apiCallDepth" : 0,
+    "isBlocked" : function() {
+      return false;
+    },
+
+    /**
+     * Mockup of custom_widget_container.addListerner without the part related to validation.
+     *
+     * Adds an event listener that can execute a handler,
+     * and returns it to caller.
+     *
+     * Remark: This listener wrapper would cause redundant registration of listener when
+     * this function is called second time, because this wrapper will always be
+     * a new instance. Hence each caller will register a different instance.
+     * element.addEventListener is managed by instance of listener.
+     */
+    "addListener" : function(element, event_name, validateAndUpdate, bubbleEvent, handler) {
+      // Sanity check.
+      if (element === undefined || event_name === undefined) {
+        return;
+      }
+
+      debugLog("widgetContainer.addListener: element '"
+        + element.tagName + "." + element.id + "', event '" + event_name + "'");
+      // Add the event listener.
+      element.addEventListener(event_name, handler);
+      return handler;
+    },
+
+    /**
+     * Mock up the function custom_widget_container.mapTriggers
+     * Map triggers with widget
+     *
+     * @param {*} triggers the triggers
+     */
+    "mapTriggers" : function(widget, triggers) {
+      // Loop through the callback's triggers.
+      Object.keys(triggers).forEach((trg) => {
+        // Ask the widget for a mapping for the trigger.
+        let mappings = widget.mapTrigger(trg);
+        if (mappings) {
+          // Make sure we have an *array* of mappings.
+          if (!(mappings instanceof Array)) {
+            mappings = [mappings];
+          }
+          mappings.forEach((mapping) => {
+            // mapping.element.addEventListener(mapping.event_name, triggers[trg]);
+            this.addListener(mapping.element, mapping.event_name, mapping.validate, false, triggers[trg]);
+          });
+        }
+      });
+    }
+
+  };
+
+  // Implementation and private functions of WidgetTester class
+
   const widgetId = "ux-widget";
   let widgetName;
   let scriptName;
@@ -181,6 +242,22 @@
     return name.replace(/[A-Z]/g, (letter, offset) => {
       return (offset ? "_" : "") + letter.toLowerCase();
     });
+  }
+
+  function initTriggerProxy() {
+    this.triggers = {};
+    this.triggerProxies = {};
+    this.getTriggerProxy = function(triggerName) {
+      const _this = this;
+      if (typeof this.triggers[triggerName] === "function"
+        && !this.triggerProxies[triggerName]) {
+        this.triggerProxies[triggerName] = function (event) {
+          event.stopPropagation();
+          _this.triggers[triggerName].apply(this, arguments);
+        };
+      }
+      return this.triggerProxies[triggerName];
+    };
   }
 
   /**
@@ -246,6 +323,9 @@
         this.widgetName = getWidgetName();
         this.widgetProperties = {};
         this.layoutArgs = [];
+
+        // introduce triggerProxies for avoiding duplicated registration of trigger handlers
+        initTriggerProxy.call(this);
       }
 
       getWidgetClass() {
@@ -287,15 +367,36 @@
         return this.widget;
       }
 
-      dataInit() {
+      /**
+       * Map and register the trigger event handlers
+       * @param {*} triggerMap the given trigger handler map, a object with
+       *     key is trigger name and value is trigger handler.
+       */
+      mapTriggers(triggerMap) {
+        if (triggerMap) {
+          const _this = this;
+          const widget = this.onConnect();
+
+          Object.keys(triggerMap).forEach((trg) => {
+            if (typeof triggerMap[trg] === "function") {
+              _this.triggers[trg] = triggerMap[trg];
+              const trigger = {};
+              trigger[trg] = _this.getTriggerProxy(trg);
+              customWidgetContainer.mapTriggers(widget, trigger);
+            }
+          });
+        }
+      }
+
+      dataInit(triggerMap) {
         const widget = this.onConnect();
-        // TODO: this.mapTriggers();
+        this.mapTriggers(triggerMap);
         widget.dataInit();
         return widget;
       }
 
-      createWidget() {
-        const widget = this.dataInit();
+      createWidget(triggerMap) {
+        const widget = this.dataInit(triggerMap);
         let updaters = this.updaters;
         if (!this.updatersNotConnected && updaters !== undefined) {
           // Make sure we have an *array* of validators.
@@ -304,12 +405,28 @@
           }
           // Create the event listeners for the updaters.
           updaters.forEach((updater) => {
-            updater.element.addEventListener(updater.event_name, updater.handler);
+            customWidgetContainer.addListener(updater.element, updater.event_name, true, false, updater.handler);
           });
           this.updatersNotConnected = true;
         }
 
         return widget;
+      }
+
+      dispatchEventFor(triggerName, options) {
+        const trigger = this.widget.mapTrigger(triggerName);
+        if (this.widgetName === "UX.Button" && !options) {
+          options = {
+            "event" : trigger.event_name,
+            "element" : trigger.element
+          };
+        }
+        if (options.event === "click") {
+          if (!options.element) {
+            options.element = trigger.element;
+          }
+          options.element.click();
+        }
       }
 
       getDefaultValues() {
