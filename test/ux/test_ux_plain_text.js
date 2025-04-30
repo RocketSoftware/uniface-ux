@@ -130,6 +130,17 @@
     });
   });
 
+  describe("mapTrigger()", function () {
+    beforeEach(function () {
+      tester.onConnect();
+    });
+
+    it("Check there is no 'onchange' trigger is mapped", function () {
+      const triggerMapping = tester.widget.mapTrigger("onchange");
+      assert(!triggerMapping, "Trigger 'onchange' should not be mapped!");
+    });
+  });
+
   describe("dataInit()", function () {
     const classes = tester.getDefaultClasses();
     var element;
