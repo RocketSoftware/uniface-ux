@@ -307,6 +307,34 @@
 
   });
 
+  describe("Button click event (new)", function () {
+    let testTriggers;
+
+    beforeEach(function () {
+      testTriggers = {
+        "detail" : sinon.spy()
+      };
+      tester.createWidget(testTriggers);
+    });
+
+    // Clean up after each test.
+    afterEach(function () {
+      // Restore the spy to its original state.
+      sinon.restore();
+    });
+
+    // Test case for the click event.
+    it("should call the click event handler when the button is clicked", function () {
+      // Simulate a click event
+      const triggerName = "detail";
+      tester.dispatchEventFor(triggerName);
+
+      // Assert that the click event handler was called once.
+      expect(testTriggers[triggerName].calledOnce).to.be.true;
+    });
+
+  });
+
   describe("showError()", function () {
     it("not required", function () { });
   });
