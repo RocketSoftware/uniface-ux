@@ -60,9 +60,9 @@ export class Worker extends Base {
 
   /**
    * Refresh widget parts this setter is responsible for based on the widget properties.
-   * @param {Widget} widgetInstance
+   * @param {Widget} _widgetInstance
    */
-  refresh(widgetInstance) { } // eslint-disable-line no-unused-vars
+  refresh(_widgetInstance) { }
 
   /**
    * Provides setter-specific tracing.
