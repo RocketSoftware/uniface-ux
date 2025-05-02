@@ -7,7 +7,6 @@ stages:
 
 variables:
   TARGET_VERSION: "10403"
-  #test
   
 workflow:
   rules:
@@ -61,6 +60,8 @@ polaris_scan:
   tags:
     - docker-uniface-local
   script:
+    - echo "Cleaning up test-results before Polaris scan..."
+    - rm -rf testAutomation/test-results
     - echo "Running Polaris Scan..."
     - polaris -c polaris.yml analyze -w
   artifacts:
