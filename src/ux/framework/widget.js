@@ -273,6 +273,8 @@ export class Widget extends Base {
     if (widgetClass.reportUnsupportedTriggerWarnings) {
       this.warn("mapTrigger", `No trigger map found for (web)trigger '${triggerName}'.`, "Ignored");
     }
+
+    return undefined;
   }
 
   /**
