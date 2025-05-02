@@ -88,9 +88,9 @@ export class Widget extends Base {
    * This method is called by Uniface only once.
    * Returns the template layout to be used by the widget.
    * @static
-   * @param {Element} skeletonWidgetElement - references to the placeholder element as defined by the IDE or parent widget.
+   * @param {HTMLElement} skeletonWidgetElement - references to the placeholder element as defined by the IDE or parent widget.
    * @param {UObjectDefinition} objectDefinition - reference to the the definition of the object for which this widget is created.
-   * @returns {Element} - reference to the root created widget DOM.
+   * @returns {HTMLElement} - reference to the root created widget DOM.
    */
   static processLayout(skeletonWidgetElement, objectDefinition) {
     this.staticLog("processLayout", skeletonWidgetElement);

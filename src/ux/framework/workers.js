@@ -368,9 +368,9 @@ export class SlottedSubWidget extends Element {
     }
   }
 
-  getLayout(_objectDefinition) {
+  getLayout(objectDefinition) {
     let element = document.createElement(this.tagName);
-    element = this.subWidgetClass.processLayout(element);
+    element = this.subWidgetClass.processLayout(element, objectDefinition);
     element.hidden = true;
     element.classList.add(this.styleClass);
     return element;
