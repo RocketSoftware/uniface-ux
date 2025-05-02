@@ -199,10 +199,12 @@ export class DataGridField extends Widget {
     const objectClassNamePropId = "org-widget-class";
     const objectWidgetName = this.getNode(this.data, objectClassNamePropId);
     if (objectWidgetName) {
-      const objectWidgetClass = getWidgetClass(objectWidgetName);
       let formattedValueChange = false;
-      setterPropIds = [...setterPropIds, ...objectWidgetClass.getValueFormattedSetters()];
-      setterPropIds?.forEach((propId) => {
+      const objectWidgetClass = getWidgetClass(objectWidgetName);
+      if (objectWidgetClass) {
+        setterPropIds.push(...objectWidgetClass.getValueFormattedSetters());
+      }
+      setterPropIds.forEach((propId) => {
         if (this.getNode(data, propId) !== undefined) {
           formattedValueChange = true;
         }

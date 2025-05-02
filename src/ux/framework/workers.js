@@ -1289,7 +1289,7 @@ export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    if (typeof orgWidgetClass.getValueFormatted == "function") {
+    if (typeof orgWidgetClass?.getValueFormatted === "function") {
       formattedValue = orgWidgetClass.getValueFormatted(widgetInstance.data);
     } else {
       // Fallback if org widget does not provide this function.
