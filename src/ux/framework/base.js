@@ -1,6 +1,7 @@
 // @ts-check
 
 /**
+ * @typedef {import("./widget.js").Widget} Widget
  * @typedef {import("./workers.js").Worker} Worker
  */
 
@@ -97,7 +98,6 @@ export class Base {
    * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {Worker} worker - Specifies the worker.
    */
-  // @ts-ignore
   registerSubWidgetWorker(widgetClass, worker) {
     widgetClass.subWidgetWorkers.push(worker);
   }
