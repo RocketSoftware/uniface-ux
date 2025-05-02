@@ -1041,7 +1041,9 @@ export class HtmlValueAttributeBoolean extends BaseHtmlAttribute {
       this.setHtmlAttribute(element, this.fieldValueToBoolean(value));
       this.setErrorProperties(widgetInstance, "format-error");
     } catch (error) {
-      this.setErrorProperties(widgetInstance, "format-error", error);
+      if (typeof error === "string") {
+        this.setErrorProperties(widgetInstance, "format-error", error);
+      }
     }
   }
 }

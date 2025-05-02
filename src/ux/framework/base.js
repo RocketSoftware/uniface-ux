@@ -160,7 +160,7 @@ export class Base {
    * Convert Uniface field value to JS Boolean.
    * @param {any} value
    * @returns {boolean}
-   * @throws {*} - Conversion failure.
+   * @throws {string} - Conversion failure.
    */
   fieldValueToBoolean(value) {
     return Base.fieldValueToBoolean(value);
@@ -170,7 +170,7 @@ export class Base {
    * Convert Uniface field value to JS Boolean.
    * @param {any} value
    * @returns {boolean}
-   * @throws {*} - Conversion failure.
+   * @throws {string} - Conversion failure.
    */
   static fieldValueToBoolean(value) {
     let type = typeof value;
