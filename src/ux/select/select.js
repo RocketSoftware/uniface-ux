@@ -283,8 +283,10 @@ export class Select extends Widget {
       if (blockType === "readonly") {
         const htmlReadonly = widgetInstance.toBoolean(widgetInstance.data["html:readonly"]);
         if (isBlocked) {
+          element.classList.add(this.styleClass);
           element.classList.add("u-readonly");
         } else if (!htmlReadonly) {
+          element.classList.remove(this.styleClass);
           element.classList.remove("u-readonly");
         }
       } else {

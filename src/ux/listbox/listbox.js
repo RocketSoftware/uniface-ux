@@ -238,9 +238,11 @@ export class Listbox extends Widget {
 
       if (blockType === "readonly") {
         if (isBlocked) {
+          element.classList.add(this.styleClass);
           element.setAttribute("readonly", "true");
           element.setAttribute("aria-readonly", "true");
         } else {
+          element.classList.remove(this.styleClass);
           const htmlReadonly = widgetInstance.toBoolean(widgetInstance.data["html:readonly"]);
           if (!htmlReadonly) {
             element.removeAttribute("readonly");
