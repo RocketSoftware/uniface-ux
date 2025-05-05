@@ -881,6 +881,7 @@
         widget.blockUI();
       }).then(function () {
         expect(element, "Class u-blocked is not applied.").to.have.class("u-blocked");
+        expect(widgetClass.uiBlocking).equal("readonly");
         expect(element.getAttribute("readonly")).equal("true");
         expect(element.ariaReadOnly).equal("true");
       });

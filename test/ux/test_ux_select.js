@@ -638,6 +638,7 @@
         widget.blockUI();
       }).then(function () {
         expect(element, "Class u-readonly is not applied").to.have.class("u-readonly");
+        expect(widgetClass.uiBlocking).equal("readonly");
       });
     });
 

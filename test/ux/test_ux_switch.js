@@ -322,10 +322,12 @@
     it("check blockUI()", function () {
       let widget = tester.createWidget();
       element = tester.element;
+      const widgetClass = tester.getWidgetClass();
       return asyncRun(function () {
         widget.blockUI();
       }).then(function () {
         expect(element, "Class u-blocked is not applied.").to.have.class("u-blocked");
+        expect(widgetClass.uiBlocking).equal("disabled");
         expect(element.disabled).equal(true);
       });
     });
