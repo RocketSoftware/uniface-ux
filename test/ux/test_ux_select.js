@@ -623,7 +623,7 @@
     });
   });
 
-  describe("Test blockUI() and unblockUI() through  UIBlockElement ", function () {
+  describe("Test blockUI() and unblockUI() through UIBlockElement", function () {
     let element;
 
     before(function () {
@@ -631,7 +631,7 @@
       element = tester.element;
     });
 
-    it("check blockUI", function () {
+    it("check blockUI()", function () {
       let widget = tester.createWidget();
       element = tester.element;
       return asyncRun(function () {
@@ -641,7 +641,7 @@
       });
     });
 
-    it("check unblockUI", function () {
+    it("check unblockUI()", function () {
       let widget = tester.createWidget();
       element = tester.element;
       return asyncRun(function () {

@@ -866,7 +866,7 @@
     });
   });
 
-  describe("Test blockUI() and unblockUI() through  UIBlockElement ", function () {
+  describe("Test blockUI() and unblockUI() through UIBlockElement", function () {
     let element;
 
     before(function () {
@@ -874,25 +874,25 @@
       element = tester.element;
     });
 
-    it("check blockUI", function () {
+    it("check blockUI()", function () {
       let widget = tester.createWidget();
       element = tester.element;
       return asyncRun(function () {
         widget.blockUI();
       }).then(function () {
-        expect(element, "Class u-blocked is not applied").to.have.class("u-blocked");
+        expect(element, "Class u-blocked is not applied.").to.have.class("u-blocked");
         expect(element.getAttribute("readonly")).equal("true");
         expect(element.ariaReadOnly).equal("true");
       });
     });
 
-    it("check unblockUI", function () {
+    it("check unblockUI()", function () {
       let widget = tester.createWidget();
       element = tester.element;
       return asyncRun(function () {
         widget.unblockUI();
       }).then(function () {
-        expect(element, "Class u-blocked is applied").not.to.have.class("u-blocked");
+        expect(element, "Class u-blocked is applied.").not.to.have.class("u-blocked");
         expect(!element.getAttribute("readonly"));
         expect(element.ariaReadOnly).equal("false");
       });
