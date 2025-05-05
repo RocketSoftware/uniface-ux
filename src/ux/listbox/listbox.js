@@ -232,8 +232,6 @@ export class Listbox extends Widget {
   */
   static ListboxUIBlockElement = class extends UIBlockElement {
     refresh(widgetInstance) {
-      super.refresh(widgetInstance);
-
       const element = widgetInstance.elements.widget;
       const isBlocked = this.toBoolean(this.getNode(widgetInstance.data, "uiblocked"));
       const blockType = widgetInstance.constructor.uiBlocking;
@@ -249,6 +247,8 @@ export class Listbox extends Widget {
             element.setAttribute("aria-readonly", "false");
           }
         }
+      } else {
+        widgetInstance.error("UIBlockElement", "Invalid block type", blockType);
       }
     }
   };
@@ -407,55 +407,5 @@ export class Listbox extends Widget {
       this.handleSelectionChange();
     });
     return valueUpdaters;
-  }
-
-  /**
-   * Private Uniface API method - blockUI.
-   * Specialized blockUI method to explicitly add readonly as an attribute because it is not supported as a property.
-   */
-  blockUI() {
-    this.log("blockUI");
-
-    /** @type {Object} */
-    let widgetClass = this.constructor;
-    // Check if uiBlocking is defined in the constructor.
-    if (widgetClass.uiBlocking) {
-      // Add the 'u-blocked' class to the widget element.
-      this.elements.widget.classList.add("u-blocked");
-      if (widgetClass.uiBlocking === "readonly") {
-        // Add the readonly attribute to the widget element.
-        this.elements.widget.setAttribute("readonly", "true");
-        this.elements.widget.setAttribute("aria-readonly", "true");
-      } else {
-        // If uiBlocking has an invalid value, log an error.
-        this.error("blockUI()", "Static uiBlocking not defined or invalid value", "No UI blocking");
-      }
-    }
-  }
-
-  /**
-   * Private Uniface API method - unblockUI.
-   * Specialized unblockUI method to explicitly remove the readonly attribute.
-   */
-  unblockUI() {
-    this.log("unblockUI");
-
-    /** @type {Object} */
-    const widgetClass = this.constructor;
-    // Check if uiBlocking is defined in the constructor.
-    if (widgetClass.uiBlocking) {
-      // Remove the 'u-blocked' class from the widget element.
-      this.elements.widget.classList.remove("u-blocked");
-      if (widgetClass.uiBlocking === "readonly") {
-        if (!this.toBoolean(this.data["html:readonly"])) {
-          // Remove the readonly attribute from the widget element.
-          this.elements.widget.removeAttribute("readonly");
-          this.elements.widget.setAttribute("aria-readonly", "false");
-        }
-      } else {
-        // If uiBlocking has an invalid value, log an error.
-        this.error("unblockUI()", "Static uiBlocking not defined or invalid value", "No UI blocking");
-      }
-    }
   }
 }

@@ -276,8 +276,6 @@ export class Select extends Widget {
   */
   static SelectUIBlockElement = class extends UIBlockElement {
     refresh(widgetInstance) {
-      super.refresh(widgetInstance);
-
       const element = widgetInstance.elements.widget;
       const isBlocked = this.toBoolean(this.getNode(widgetInstance.data, "uiblocked"));
       const blockType = widgetInstance.constructor.uiBlocking;
@@ -289,6 +287,8 @@ export class Select extends Widget {
         } else if (!htmlReadonly) {
           element.classList.remove("u-readonly");
         }
+      } else {
+        widgetInstance.error("UIBlockElement", "Invalid block type", blockType);
       }
     }
   };
