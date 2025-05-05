@@ -169,7 +169,7 @@ export class Base {
   /**
    * Convert Uniface field value to JS Boolean.
    * @param {any} value
-   * @returns{boolean}
+   * @returns {boolean}
    * @throws {*} - Conversion failure.
    */
   static fieldValueToBoolean(value) {

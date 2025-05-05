@@ -231,7 +231,7 @@ export class Widget extends Base {
   /**
    * Use this method to map a Uniface trigger to an event of your (sub) widget.
    * @param {string} triggerName
-   * @returns {TriggerMapping | undefined | null} [triggerMapping].
+   * @returns {TriggerMapping | undefined | null}
    */
   mapTrigger(triggerName) {
     this.log("mapTrigger", triggerName);
@@ -372,7 +372,7 @@ export class Widget extends Base {
 
   /**
    * Validates the value of the widget before passing it back to Uniface.
-   * @returns {UDataError | null} [result]
+   * @returns {UDataError | null}
    */
   validate() {
     this.log("validate");
