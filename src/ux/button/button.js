@@ -12,7 +12,10 @@ import {
   IgnoreProperty,
   UIBlockElement
 } from "../framework/workers.js";
-// The import of Fluent UI web-components is done in loader.js
+
+// Optimized way to reduce the size of bundle, only import necessary fluent-ui components
+import { fluentButton, provideFluentDesignSystem } from "@fluentui/web-components";
+provideFluentDesignSystem().register(fluentButton());
 
 /**
  * Button Widget

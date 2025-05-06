@@ -14,7 +14,10 @@ import {
   IgnoreProperty,
   UIBlockElement
 } from "../framework/workers.js";
-// The import of Fluent UI web-components is done in loader.js
+
+// Optimized way to reduce the size of bundle, only import necessary fluent-ui components
+import { fluentRadio, fluentRadioGroup, provideFluentDesignSystem } from "@fluentui/web-components";
+provideFluentDesignSystem().register(fluentRadio(), fluentRadioGroup());
 
 /**
  * Radio-Group Widget Definition
@@ -108,15 +111,9 @@ export class RadioGroup extends Widget {
             radioButton["checked"] = false;
           });
         }
-        widgetInstance.setProperties({
-          "format-error": false,
-          "format-error-message": ""
-        });
+        this.setErrorProperties(widgetInstance, "format-error");
       } else {
-        widgetInstance.setProperties({
-          "format-error": true,
-          "format-error-message": RadioGroup.formatErrorMessage
-        });
+        this.setErrorProperties(widgetInstance, "format-error", RadioGroup.formatErrorMessage);
       }
       this.setHtmlAttribute(element, valueToSet.toString());
     }

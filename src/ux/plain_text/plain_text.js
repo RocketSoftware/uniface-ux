@@ -10,7 +10,6 @@ import {
   IgnoreProperty,
   UIBlockElement
 } from "../framework/workers.js";
-// The import of Fluent UI web-components is done in loader.js
 
 /**
  * PlaintText Widget
@@ -102,19 +101,13 @@ export class PlainText extends Widget {
       if (valrep && !matchedValrepObj) {
         const text = this.getFormatErrorText(widgetInstance);
         if (text) {
-          widgetInstance.setProperties({
-            "format-error": true,
-            "format-error-message": text
-          });
+          this.setErrorProperties(widgetInstance, "format-error", text);
           element.textContent = value;
           return;
         }
       }
 
-      widgetInstance.setProperties({
-        "format-error": false,
-        "format-error-message": ""
-      });
+      this.setErrorProperties(widgetInstance, "format-error");
 
       // Create elements dynamically for different plain text formats.
       switch (plainTextFormat) {

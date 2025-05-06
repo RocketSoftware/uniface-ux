@@ -1,7 +1,8 @@
 // @ts-check
 
-import { Widget } from "./widget.js"; // eslint-disable-line no-unused-vars
-import { Worker } from "./workers.js"; // eslint-disable-line no-unused-vars
+/**
+ * @typedef {import("./workers.js").Worker} Worker
+ */
 
 /**
  * UX Widget generic helper functions.
@@ -18,7 +19,7 @@ export class Base {
    * This method registers the worker that Uniface calls to update the widget caused by a property change.
    * Per property, one worker needs to be registered.
    * dataInit() and dataUpdate() call this worker (via setProperties()) to make the widget react to the property change.
-   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
    * @param {Worker} worker - Specifies the worker.
    */
@@ -32,7 +33,7 @@ export class Base {
    * Per property, one worker needs to be registered. Currently, only the 'value' property can be registered.
    * onConnect() calls the worker to get the updater information, which describes the events fired when the value has been changed.
    * getValue() calls this worker to get the value of the 'field' property.
-   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
    * @param {Worker} worker - Specifies the worker.
    */
@@ -44,7 +45,7 @@ export class Base {
    * This method registers a default value for a property.
    * Per property, one default value needs to be registered.
    * dataInit() uses the set of default values to reinitialize the widget for reuse.
-   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the default value will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the default value will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the default value will be registered.
    * @param {UPropValue} defaultValue - Specifies the default value.
    */
@@ -56,7 +57,7 @@ export class Base {
    * This method registers the worker that Uniface calls to get a trigger-mapping.
    * Per trigger-mapping, one worker needs to be registered.
    * mapTrigger() calls this worker to get the trigger-mapping.
-   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {String} triggerName - Specifies the trigger-name for which the worker will be registered.
    * @param {Worker} worker - Specifies the worker.
    */
@@ -70,9 +71,9 @@ export class Base {
    * Static sub-widgets are added to the widget instance at runtime.
    * The UXWF deals with sub-widgets transparently, like generate their layouts, instantiate them, invoke their onConnect
    * get their value, map their triggers, update their properties, etc.
-   * @param {typeof Widget} widgetClass
+   * @param {typeof import("./widget.js").Widget} widgetClass
    * @param {String} subWidgetId
-   * @param {typeof Widget} subWidgetClass
+   * @param {typeof import("./widget.js").Widget} subWidgetClass
    * @param {String} subWidgetStyleClass
    * @param {Array} subWidgetTriggers
    * @param {Array} subWidgetDelegatedProperties
@@ -93,7 +94,7 @@ export class Base {
    * Uniface iterates through all registered workers and adds their sub-widgets to the widget object at runtime.
    * The UXWF deals with sub-widgets transparently, like generate their layouts, instantiate them, invoke their onConnect
    * get their value, map their triggers, update their properties, etc.
-   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {Worker} worker - Specifies the worker.
    */
   // @ts-ignore
@@ -402,6 +403,20 @@ export class Base {
       if (key.startsWith("ms-Icon")) {
         element.classList.remove(key);
       }
+    });
+  }
+
+  /**
+   * Sets error related properties.
+   * @param {Widget} widgetInstance
+   * @param {String} errorType
+   * @param {String} errorMessage
+   */
+  setErrorProperties(widgetInstance, errorType = "error", errorMessage = "") {
+    const isSettingError = errorMessage !== "";
+    widgetInstance.setProperties({
+      [errorType]: isSettingError,
+      [`${errorType}-message`]: isSettingError ? errorMessage : ""
     });
   }
 }
