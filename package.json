@@ -9,6 +9,7 @@
     "build:dev": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
     "lint": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix",
     "watch": "webpack -- watch --progress --config webpack.dev.js",
     "serve": "http-server -p 9000",
     "serve:dev": "webpack -- serve --progress --config webpack.dev.js",
