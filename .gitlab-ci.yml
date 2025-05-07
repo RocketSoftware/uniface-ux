@@ -7,7 +7,6 @@ stages:
 
 variables:
   TARGET_VERSION: "10403"
-  #test
   
 workflow:
   rules:
