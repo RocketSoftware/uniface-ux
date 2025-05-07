@@ -1483,31 +1483,30 @@ export class SlottedElementsByValRep extends Element {
  * @extends {Worker}
  */
 export class UIBlockElement extends Worker {
-  constructor(widgetClass, styleClass) {
+  constructor(widgetClass, uiblocking) {
     super(widgetClass);
     this.registerSetter(widgetClass, "uiblocked", this);
-    this.styleClass = styleClass;
+    this.uiblocking = uiblocking;
   }
 
   refresh(widgetInstance) {
     let element = widgetInstance.elements.widget;
     const isBlocked = this.toBoolean(this.getNode(widgetInstance.data, "uiblocked"));
-    const blockType = widgetInstance.constructor.uiBlocking;
 
     if (isBlocked) {
-      element.classList.add(this.styleClass);
-      if (blockType === "disabled") {
+      element.classList.add("u-blocked");
+      if (this.uiblocking === "disabled") {
         element.disabled = true;
-      } else if (blockType === "readonly") {
+      } else if (this.uiblocking === "readonly") {
         element.readOnly = true;
       } else {
-        widgetInstance.error("UIBlockElement", "Invalid block type", blockType);
+        widgetInstance.error("UIBlockElement", "Invalid block type", this.uiblocking);
       }
     } else {
-      element.classList.remove(this.styleClass);
-      if (blockType === "disabled") {
+      element.classList.remove("u-blocked");
+      if (this.uiblocking === "disabled") {
         element.disabled = widgetInstance.toBoolean(widgetInstance.data["html:disabled"]);
-      } else if (blockType === "readonly") {
+      } else if (this.uiblocking === "readonly") {
         element.readOnly = widgetInstance.toBoolean(widgetInstance.data["html:readonly"]);
       }
     }

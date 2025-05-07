@@ -38,7 +38,6 @@ export class Listbox extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "readonly";
 
   /**
    * Private Worker: Used to handle changes in value and valrep.
@@ -232,15 +231,14 @@ export class Listbox extends Widget {
     refresh(widgetInstance) {
       const element = widgetInstance.elements.widget;
       const isBlocked = this.toBoolean(this.getNode(widgetInstance.data, "uiblocked"));
-      const blockType = widgetInstance.constructor.uiBlocking;
 
-      if (blockType === "readonly") {
+      if (this.uiblocking === "readonly") {
         if (isBlocked) {
-          element.classList.add(this.styleClass);
+          element.classList.add("u-blocked");
           element.setAttribute("readonly", "true");
           element.setAttribute("aria-readonly", "true");
         } else {
-          element.classList.remove(this.styleClass);
+          element.classList.remove("u-blocked");
           const htmlReadonly = widgetInstance.toBoolean(widgetInstance.data["html:readonly"]);
           if (!htmlReadonly) {
             element.removeAttribute("readonly");
@@ -248,7 +246,7 @@ export class Listbox extends Widget {
           }
         }
       } else {
-        widgetInstance.error("UIBlockElement", "Invalid block type", blockType);
+        widgetInstance.error("UIBlockElement", "Invalid block type", this.uiblocking);
       }
     }
   };
@@ -273,7 +271,7 @@ export class Listbox extends Widget {
     new this.ListBoxValRep(this, "fluent-option", "u-option", ""),
     new this.ListboxSelectedValue(this, "value", ""),
     new this.SizeAttribute(this, "size", undefined),
-    new this.ListboxUIBlockElement(this, "u-blocked"),
+    new this.ListboxUIBlockElement(this, "readonly"),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),

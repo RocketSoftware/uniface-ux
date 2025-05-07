@@ -36,7 +36,6 @@ export class Button extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "disabled";
 
   /**
    * Private Worker: Slotted Button Text
@@ -186,7 +185,7 @@ export class Button extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new IgnoreProperty(this, "html:readonly"),
-    new UIBlockElement(this, "u-blocked"),
+    new UIBlockElement(this, "disabled"),
     new StyleClass(this, ["u-button", "neutral"]),
     new this.SlottedButtonIcon(this, "u-icon", ".u-icon"),
     new this.SlottedButtonText(this, "u-text", ".u-text"),

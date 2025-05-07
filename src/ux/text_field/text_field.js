@@ -43,7 +43,6 @@ export class TextField extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "readonly";
 
   /**
    * Widget Definition.
@@ -64,7 +63,7 @@ export class TextField extends Widget {
     new HtmlAttributeReadonlyDisabled(this, "html:readonly", "html:disabled", "uiblocked", false, false, false),
     new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
     new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
-    new UIBlockElement(this, "u-blocked"),
+    new UIBlockElement(this, "readonly"),
     new StyleClass(this, ["u-text-field", "outline"]),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),

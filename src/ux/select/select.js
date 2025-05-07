@@ -38,7 +38,6 @@ export class Select extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "readonly";
 
   /**
    * Private Worker: HtmlAttributeBoolean ReadOnly Attribute.
@@ -272,19 +271,18 @@ export class Select extends Widget {
     refresh(widgetInstance) {
       const element = widgetInstance.elements.widget;
       const isBlocked = this.toBoolean(this.getNode(widgetInstance.data, "uiblocked"));
-      const blockType = widgetInstance.constructor.uiBlocking;
 
-      if (blockType === "readonly") {
+      if (this.uiblocking === "readonly") {
         const htmlReadonly = widgetInstance.toBoolean(widgetInstance.data["html:readonly"]);
         if (isBlocked) {
-          element.classList.add(this.styleClass);
+          element.classList.add("u-blocked");
           element.classList.add("u-readonly");
         } else if (!htmlReadonly) {
-          element.classList.remove(this.styleClass);
+          element.classList.remove("u-blocked");
           element.classList.remove("u-readonly");
         }
       } else {
-        widgetInstance.error("UIBlockElement", "Invalid block type", blockType);
+        widgetInstance.error("UIBlockElement", "Invalid block type", this.uiblocking);
       }
     }
   };
@@ -310,7 +308,7 @@ export class Select extends Widget {
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new HtmlAttributeChoice(this, "popup-position", "u-position", ["above", "below"], "below", true),
-    new this.SelectUIBlockElement(this, "u-blocked"),
+    new this.SelectUIBlockElement(this, "readonly"),
     new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ""),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),

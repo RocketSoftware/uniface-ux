@@ -29,7 +29,6 @@ export class PlainText extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "";
 
   /**
    * Private Worker: SlottedPlainTextFormat
@@ -218,9 +217,9 @@ export class PlainText extends Widget {
     new IgnoreProperty(this, "html:maxlength"),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:readonly"),
+    new IgnoreProperty(this, "uiblocked"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "prefix-text", "", "prefix-icon", ""),
-    new UIBlockElement(this, "u-blocked"),
     new this.SlottedPlainTextFormat(this, "span", "u-control", ".u-control"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
     new SlottedElement(this, "span", "u-suffix", ".u-suffix", "", "suffix-text", "", "suffix-icon", "")

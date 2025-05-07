@@ -650,7 +650,7 @@
         widget.blockUI();
       }).then(function () {
         expect(element, "Class u-readonly is not applied").to.have.class("u-readonly");
-        expect(widgetClass.uiBlocking).equal("readonly");
+        expect(widget.data.uiblocked).equal(true);
       });
     });
   });
@@ -671,6 +671,7 @@
         widget.unblockUI();
       }).then(function () {
         expect(element, "Class u-readonly is not applied").not.to.have.class("u-readonly");
+        expect(widget.data.uiblocked).equal(false);
       });
     });
   });

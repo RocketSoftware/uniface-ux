@@ -9,13 +9,12 @@ export class TestWidget extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "disabled";
 
   static structure = new Element(this, "fluent-text-field", "", "", [
     new StyleClass(this, ["u-test-field", "u-test-field-2"]),
     new HtmlAttribute(this, "html:current-value", "current-value", ""),
     new HtmlValueAttributeBoolean(this, "value", "checked", false),
-    new UIBlockElement(this, "u-blocked"),
+    new UIBlockElement(this, "readonly"),
     new SlottedSubWidget(this, "span", "u-change-button", ".u-change-button", "end", "change-button", "UX.Button", {
       "icon": "",
       "icon-position": "end",
@@ -207,20 +206,20 @@ export class TestWidget extends Widget {
     });
 
     it("blockUI()", function () {
-      expect(testWidget.elements.widget.disabled).to.equal(false);
+      expect(testWidget.elements.widget.readOnly).to.equal(undefined);
 
       testWidget.blockUI();
-      expect(testWidget.elements.widget.disabled).to.equal(true);
+      expect(testWidget.elements.widget.readOnly).to.equal(true);
     });
 
     it("unblockUI()", function () {
-      expect(testWidget.elements.widget.disabled).to.equal(false);
+      expect(testWidget.elements.widget.readOnly).to.equal(undefined);
 
       testWidget.blockUI();
-      expect(testWidget.elements.widget.disabled).to.equal(true);
+      expect(testWidget.elements.widget.readOnly).to.equal(true);
 
       testWidget.unblockUI();
-      expect(testWidget.elements.widget.disabled).to.equal(false);
+      expect(testWidget.elements.widget.readOnly).to.equal(false);
     });
   });
 })();

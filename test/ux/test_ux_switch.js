@@ -343,7 +343,7 @@
         widget.blockUI();
       }).then(function () {
         expect(element, "Class u-blocked is not applied.").to.have.class("u-blocked");
-        expect(widgetClass.uiBlocking).equal("disabled");
+        expect(widget.data.uiblocked).equal(true);
         expect(element.disabled).equal(true);
         expect(element.ariaDisabled).equal("true");
       });
@@ -367,6 +367,7 @@
         widget.unblockUI();
       }).then(function () {
         expect(element, "Class u-blocked is applied.").not.to.have.class("u-blocked");
+        expect(widget.data.uiblocked).equal(false);
         expect(element.disabled).equal(false);
         expect(element.ariaDisabled).equal("false");
       });

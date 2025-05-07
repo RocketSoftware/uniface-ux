@@ -37,7 +37,6 @@ export class TextArea extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "readonly";
 
   /**
    * Widget Definition.
@@ -59,7 +58,7 @@ export class TextArea extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
     new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
-    new UIBlockElement(this, "u-blocked"),
+    new UIBlockElement(this, "readonly"),
     new StyleClass(this, ["u-text-area", "outline"]),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
