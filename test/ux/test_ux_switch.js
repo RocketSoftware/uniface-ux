@@ -338,7 +338,7 @@
     it("apply blockUI() through UIBlockElement and check u-blocked class applies and widget disabled", function () {
       let widget = tester.createWidget();
       element = tester.element;
-      const widgetClass = tester.getWidgetClass();
+      tester.getWidgetClass();
       return asyncRun(function () {
         widget.blockUI();
       }).then(function () {
@@ -372,6 +372,7 @@
         expect(element.ariaDisabled).equal("false");
       });
     });
+
     it("test unblockUI() when widget has been set in disabled and verify that this is not removed on calling unblockUI()", function () {
       let widget = tester.createWidget();
       element = tester.element;

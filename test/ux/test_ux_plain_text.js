@@ -515,16 +515,15 @@
   });
 
   describe("Test blockUI() through UIBlockElement", function () {
-    let element;
 
     before(function () {
       tester.createWidget();
-      element = tester.element;
+      tester.element;
     });
 
     it("apply blockUI() through UIBlockElement and check u-blocked class applies", function () {
       let widget = tester.createWidget();
-      element = tester.element;
+      tester.element;
       return asyncRun(function () {
         widget.blockUI();
       }).then(function () {
@@ -534,16 +533,15 @@
   });
 
   describe("Test unblockUI() through UIBlockElement", function () {
-    let element;
 
     before(function () {
       tester.createWidget();
-      element = tester.element;
+      tester.element;
     });
 
     it("apply unblockUI() through UIBlockElement and check u-blocked class is not applied", function () {
       let widget = tester.createWidget();
-      element = tester.element;
+      tester.element;
       return asyncRun(function () {
         widget.blockUI();
         widget.unblockUI();

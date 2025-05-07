@@ -7,8 +7,7 @@ import {
   SlottedElement,
   SlottedError,
   HtmlAttribute,
-  IgnoreProperty,
-  UIBlockElement
+  IgnoreProperty
 } from "../framework/workers.js";
 
 /**
