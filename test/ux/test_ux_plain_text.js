@@ -514,7 +514,7 @@
     });
   });
 
-  describe("Test blockUI() and unblockUI() through UIBlockElement", function () {
+  describe("Test blockUI() through UIBlockElement", function () {
     let element;
 
     before(function () {
@@ -522,7 +522,7 @@
       element = tester.element;
     });
 
-    it("check blockUI()", function () {
+    it("apply blockUI() through UIBlockElement and check u-blocked class applies", function () {
       let widget = tester.createWidget();
       element = tester.element;
       return asyncRun(function () {
@@ -532,11 +532,21 @@
         expect(widgetClass.uiBlocking).equal("");
       });
     });
+  });
 
-    it("check unblockUI()", function () {
+  describe("Test unblockUI() through UIBlockElement", function () {
+    let element;
+
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+    });
+
+    it("apply unblockUI() through UIBlockElement and check u-blocked class is not applied", function () {
       let widget = tester.createWidget();
       element = tester.element;
       return asyncRun(function () {
+        widget.blockUI();
         widget.unblockUI();
       }).then(function () {
         expect(element, "Class u-blocked is applied.").not.to.have.class("u-blocked");
