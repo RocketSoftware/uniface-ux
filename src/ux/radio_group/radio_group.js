@@ -50,8 +50,8 @@ export class RadioGroup extends Widget {
     /**
      * Creates an instance of RadioGroupSelectedValue.
      * @param {typeof Widget} widgetClass
-     * @param {UPropName | undefined} [propId]
-     * @param {String} [attrName]
+     * @param {UPropName} [propId]
+     * @param {string} [attrName]
      * @param {UPropValue} [defaultValue]
      */
     constructor(widgetClass, propId, attrName, defaultValue) {
@@ -129,9 +129,9 @@ export class RadioGroup extends Widget {
     /**
      * Creates an instance of RadioGroupValRep.
      * @param {typeof Widget} widgetClass
-     * @param {String} tagName
-     * @param {String} styleClass
-     * @param {String} elementQuerySelector
+     * @param {string} tagName
+     * @param {string} styleClass
+     * @param {string} elementQuerySelector
      */
     constructor(widgetClass, tagName, styleClass, elementQuerySelector) {
       super(widgetClass, tagName, styleClass, elementQuerySelector);
@@ -197,7 +197,7 @@ export class RadioGroup extends Widget {
   /**
    * Returns an array of property ids that affect the formatted value for text-based widgets
    * like the cell widget of the data-grid.
-   * @returns {string[]}
+   * @returns {Array<string>}
    */
   static getValueFormattedSetters() {
     // prettier-ignore

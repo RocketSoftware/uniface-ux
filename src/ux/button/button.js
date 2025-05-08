@@ -116,8 +116,8 @@ export class Button extends Widget {
      * Creates an instance of SlottedButtonIcon.
      * @constructor
      * @param {typeof Widget} widgetClass
-     * @param {String} styleClass
-     * @param {String} elementQuerySelector
+     * @param {string} styleClass
+     * @param {string} elementQuerySelector
      */
     constructor(widgetClass, styleClass, elementQuerySelector) {
       super(widgetClass);
@@ -195,7 +195,7 @@ export class Button extends Widget {
   /**
    * Returns an array of property ids that affect the formatted value for text-based widgets
    * like the cell widget of the data-grid.
-   * @returns {string[]}
+   * @returns {Array<string>}
    */
   static getValueFormattedSetters() {
     return [
@@ -210,7 +210,7 @@ export class Button extends Widget {
    * Returns the value as format-object for text-based widgets
    * like the cell widget of the data-grid.
    * @param {UData} properties
-   * @return {UValueFormatting}
+   * @returns {UValueFormatting}
    */
   static getValueFormatted(properties) {
 

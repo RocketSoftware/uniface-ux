@@ -49,8 +49,8 @@ export class Listbox extends Widget {
     /**
      * Creates an instance of ListboxSelectedValue.
      * @param {typeof Widget} widgetClass
-     * @param {String} propId
-     * @param {String} defaultValue
+     * @param {string} propId
+     * @param {string} defaultValue
      */
     constructor(widgetClass, propId, defaultValue) {
       super(widgetClass);
@@ -121,8 +121,8 @@ export class Listbox extends Widget {
     /**
      * Creates an instance of SizeAttribute.
      * @param {typeof Widget} widgetClass
-     * @param {String} propId
-     * @param {String|undefined} defaultValue
+     * @param {string} propId
+     * @param {string | undefined} defaultValue
      */
     constructor(widgetClass, propId, defaultValue) {
       super(widgetClass);
