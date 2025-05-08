@@ -810,16 +810,26 @@
   });
 
   describe("Listbox onchange event", function () {
-    let element, onchangeSpy;
-    beforeEach(function () {
-      tester.createWidget();
-      element = tester.element;
+    const triggerSpy = sinon.spy();
 
-      // Create a spy for the onchange event.
-      onchangeSpy = sinon.spy();
+    beforeEach(async function () {
+      const triggerMap = {
+        "onchange" : function () {
+          const value = tester.widget.getValue();
+          console.log(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: ${value}`);
+          triggerSpy.apply(this, arguments);
+        }
+      };
 
-      // Add the onchange event listener to the select element.
-      element.addEventListener("onchange", onchangeSpy);
+      await asyncRun(function () {
+        tester.createWidget(triggerMap);
+        tester.dataUpdate({
+          "valrep" : valRepArray,
+          "value" : "2"
+        });
+      });
+
+      triggerSpy.resetHistory();
     });
 
     // Clean up after each test.
@@ -828,14 +838,16 @@
       sinon.restore();
     });
 
-    it("should call the onchange event handler when an onchange event is fired", function () {
-      // Simulate a change event.
-      const event = new window.Event("onchange");
-      element.dispatchEvent(event);
+    // Test case for the on change event.
+    it("should call the onchange event handler when the listbox is changed", function () {
+      // Simulate a onchange event.
+      tester.userClick(3);
 
       // Assert that the onchange event handler was called once.
-      sinon.assert.calledOnce(onchangeSpy);
+      expect(triggerSpy.calledOnce).to.be.true;
+      expect(tester.widget.getValue()).to.equal("3", "Widget value");
     });
+
   });
 
   describe("Error Visualization", function () {
