@@ -816,7 +816,7 @@
       const triggerMap = {
         "onchange" : function () {
           const value = tester.widget.getValue();
-          console.log("Onchange trigger has been called at " + new Date().toLocaleTimeString() + ", new value: " + value);
+          console.log(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: ${value}`);
           triggerSpy.apply(this, arguments);
         }
       };

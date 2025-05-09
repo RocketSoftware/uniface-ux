@@ -209,7 +209,7 @@ export class DataGridField extends Widget {
       });
       if (formattedValueChange) {
 
-        /** @type {Object} */
+        /** @type {object} */
         const widgetClass = this.constructor;
         const setter = this.getNode(widgetClass.setters, objectClassNamePropId)[0];
         setter.refresh(this);
