@@ -554,24 +554,23 @@
 
   describe("Update selection through user interaction", function () {
     let widget, element;
-    before(function () {
+    beforeEach(async function () {
       widget = tester.createWidget();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
-      tester.dataUpdate({
-        "valrep": valRepArray,
-        "display-format": "rep"
+
+      await asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "display-format": "rep"
+        });
       });
     });
 
-    // This test case will fail when run individually, fix for that yet to be done.
     it("simulate user interaction and select first option", function () {
       return asyncRun(function () {
-        // Programmatically select an option and dispatch the change event.
-        const firstOption = element.querySelector("fluent-option");
-        firstOption.selected = true;
-        const event = new window.Event("change");
-        element.dispatchEvent(event);
+        // Simulate user click on the first list item
+        tester.userClick(1);
       }).then(function () {
         const returnedValue = widget.getValue();
         const selectedOption = element.querySelector(".u-option.selected");
@@ -600,14 +599,10 @@
       });
     });
 
-    // This test case will fail when run individually, fix for that yet to be done.
     it("simulate user interaction again to select the same valid option and expect the error to be removed", function () {
       return asyncRun(function () {
-        // Programmatically select an option and dispatch the change event.
-        const firstOption = element.querySelector("fluent-option");
-        firstOption.selected = true;
-        const event = new window.Event("change");
-        element.dispatchEvent(event);
+        // Simulate user click on the first list item
+        tester.userClick(1);
       }).then(function () {
         const returnedValue = widget.getValue();
         const selectedOption = element.querySelector(".u-option.selected");
@@ -825,7 +820,7 @@
         tester.createWidget(triggerMap);
         tester.dataUpdate({
           "valrep" : valRepArray,
-          "value" : "2"
+          "value" : valRepArray[1].value // set value as the 2nd item of valRepArray.
         });
       });
 
@@ -840,12 +835,14 @@
 
     // Test case for the on change event.
     it("should call the onchange event handler when the listbox is changed", function () {
-      // Simulate a onchange event.
-      tester.userClick(3);
+      // Emulate a click on the list item 3.
+      const index = 3;
+      tester.userClick(index);
 
-      // Assert that the onchange event handler was called once.
+      // Assert that the onchange trigger handler was called once.
       expect(triggerSpy.calledOnce).to.be.true;
-      expect(tester.widget.getValue()).to.equal("3", "Widget value");
+      // Expected the value is the 3rd item of valRepArray.
+      expect(tester.widget.getValue()).to.equal(valRepArray[index-1].value, "Widget value");
     });
 
   });
