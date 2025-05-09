@@ -454,6 +454,23 @@
         }
       }
 
+      /**
+       * Emulate the user input on an editable widget.
+       *
+       * @param {String} value the new input value;
+       */
+      userInput(value) {
+        const currentValue = this.widget.getValue();
+        if (this.widgetName === "UX.TextField" && value !== currentValue) {
+          const control = this.element.shadowRoot.querySelector("#control.control");
+          control.value = value;
+          control.dispatchEvent(new window.Event("input"));
+
+          debugLog("userInput(" + value + "): dispatch event 'change'!");
+          control.dispatchEvent(new window.Event("change"));
+        }
+      }
+
       getDefaultValues() {
         if (!this.defaultValues) {
           const widgetClass = this.getWidgetClass();
