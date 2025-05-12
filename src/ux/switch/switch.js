@@ -62,7 +62,7 @@ export class Switch extends Widget {
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text", ""),
     new SlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"),
     new SlottedElement(this, "span", "u-unchecked-message", ".u-unchecked-message", "unchecked-message", "unchecked-message"),
-    new SlottedError(this, "span", "u-error-icon-unchecked", ".u-error-icon-unchecked", "error-icon"),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error-icon"),
     new Trigger(this, "onchange", "change", true)
   ]);
 

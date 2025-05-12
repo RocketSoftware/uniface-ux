@@ -91,16 +91,14 @@
   margin-inline-start: calc(var(--design-unit) * 2px + 2px);
 }
 
-.u-switch[u-label-position="before"] .u-error-icon-checked,
-.u-switch[u-label-position="before"] .u-error-icon-unchecked {
+.u-switch[u-label-position="before"] .u-error-icon {
   margin-inline-end: calc(var(--design-unit) * 2px + 2px);
   margin-inline-start: unset;
 }
 
+.u-switch[u-label-position="after"] .u-error-icon,
 .u-switch[u-label-position="after"] .u-checked-message,
-.u-switch[u-label-position="after"] .u-unchecked-message,
-.u-switch[u-label-position="after"] .u-error-icon-checked,
-.u-switch[u-label-position="after"] .u-error-icon-unchecked {
+.u-switch[u-label-position="after"] .u-unchecked-message{
   margin-inline-start: calc(var(--design-unit) * 2px + 2px);
 }
 
