@@ -660,15 +660,15 @@
 
   describe("Test blockUI()", function () {
     let element;
+    let widget;
 
     before(function () {
       tester.createWidget();
       element = tester.element;
+      widget = tester.createWidget();
     });
 
     it("check if the 'u-blocked' class is applied and ensure the widget is readOnly when the blockUI() is invoked", function () {
-      let widget = tester.createWidget();
-      element = tester.element;
       return asyncRun(function () {
         widget.blockUI();
       }).then(function () {

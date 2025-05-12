@@ -515,13 +515,13 @@
   });
 
   describe("Test blockUI()", function () {
-
+    let widget;
     before(function () {
       tester.createWidget();
+      widget = tester.createWidget();
     });
 
     it("check if the 'u-blocked' class is applied and ensure the blockUI() is invoked", function () {
-      let widget = tester.createWidget();
       return asyncRun(function () {
         widget.blockUI();
       }).then(function () {
@@ -531,13 +531,13 @@
   });
 
   describe("unblockUI()", function () {
-
+    let widget;
     before(function () {
       tester.createWidget();
+      widget = tester.createWidget();
     });
 
     it("check if the 'u-blocked' class is removed when the unblockUI() is invoked", function () {
-      let widget = tester.createWidget();
       return asyncRun(function () {
         widget.blockUI();
         widget.unblockUI();

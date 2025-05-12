@@ -329,15 +329,15 @@
 
   describe("Test blockUI()", function () {
     let element;
+    let widget;
 
     beforeEach(function () {
       tester.createWidget();
       element = tester.element;
+      widget = tester.createWidget();
     });
 
     it("check if the 'u-blocked' class is applied and ensure the widget is disabled when the blockUI() is invoked", function () {
-      let widget = tester.createWidget();
-      element = tester.element;
       return asyncRun(function () {
         widget.blockUI();
       }).then(function () {

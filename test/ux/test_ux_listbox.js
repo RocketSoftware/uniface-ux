@@ -934,8 +934,6 @@
     });
 
     it("test unblockUI() when widget has been set in readonly and verify that this is not removed on calling unblockUI()", function () {
-      let widget = tester.createWidget();
-      element = tester.element;
       return asyncRun(function () {
         tester.dataUpdate({
           "html:readonly": true
