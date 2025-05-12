@@ -637,15 +637,14 @@
 
   describe("Test blockUI() through SelectUIBlockElement ", function () {
     let element;
-
-    before(function () {
+    let widget;
+    beforeEach(function () {
       tester.createWidget();
       element = tester.element;
+      widget = tester.createWidget();
     });
 
-    it("apply blockUI() through SelectUIBlockElement and check u-readonly class applies", function () {
-      let widget = tester.createWidget();
-      element = tester.element;
+    it("check if the 'u-readonly' class is applied when the blockUI() is invoked", function () {
       return asyncRun(function () {
         widget.blockUI();
       }).then(function () {
@@ -657,15 +656,14 @@
 
   describe("Test unblockUI() through SelectUIBlockElement ", function () {
     let element;
-
-    before(function () {
+    let widget;
+    beforeEach(function () {
       tester.createWidget();
       element = tester.element;
+      widget = tester.createWidget();
     });
 
-    it("apply unblockUI() through SelectUIBlockElement and check u-readonly class removed", function () {
-      let widget = tester.createWidget();
-      element = tester.element;
+    it("check if the 'u-readonly' class is removed when the unblockUI() is invoked", function () {
       return asyncRun(function () {
         widget.blockUI();
         widget.unblockUI();

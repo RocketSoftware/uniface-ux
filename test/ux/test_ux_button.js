@@ -446,7 +446,7 @@
     });
   });
 
-  describe("Test blockUI() through UIBlockElement", function () {
+  describe("Test blockUI()", function () {
     let element;
 
     before(function () {
@@ -454,7 +454,7 @@
       element = tester.element;
     });
 
-    it("apply blockUI() through UIBlockElement and check u-blocked class applies and widget disabled", function () {
+    it("check if the 'u-blocked' class is applied and ensure the widget is disabled when the blockUI() is invoked", function () {
       let widget = tester.createWidget();
       element = tester.element;
       return asyncRun(function () {
@@ -467,16 +467,15 @@
     });
   });
 
-  describe("Test unblockUI() through UIBlockElement", function () {
+  describe("Test unblockUI()", function () {
     let element;
-    let disabled = "disabled";
 
     before(function () {
       tester.createWidget();
       element = tester.element;
     });
 
-    it("apply unblockUI() through UIBlockElement and check u-blocked class removed and widget is not disabled", function () {
+    it("check if the 'u-blocked' class is not applied and ensure the widget is not disabled when the unblockUI() is invoked", function () {
       let widget = tester.createWidget();
       element = tester.element;
       return asyncRun(function () {
@@ -497,7 +496,7 @@
         });
         widget.unblockUI();
       }).then(function () {
-        expect(element.hasAttribute(disabled)).to.be.true;
+        expect(element.hasAttribute("disabled")).to.be.true;
       });
     });
   });

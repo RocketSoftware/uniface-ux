@@ -890,15 +890,15 @@
 
   describe("Test blockUI() through ListboxUIBlockElement", function () {
     let element;
+    let widget;
 
     before(function () {
       tester.createWidget();
       element = tester.element;
+      widget = tester.createWidget();
     });
 
-    it("apply blockUI() through ListboxUIBlockElement and check u-blocked class applies and widget is readonly", function () {
-      let widget = tester.createWidget();
-      element = tester.element;
+    it("check if the 'u-blocked' class is applied and ensure the widget is readOnly when the blockUI() is invoked", function () {
       return asyncRun(function () {
         widget.blockUI();
       }).then(function () {
@@ -913,15 +913,15 @@
   describe("Test unblockUI() through ListboxUIBlockElement", function () {
     let element;
     let readonly = "readonly";
+    let widget;
 
-    before(function () {
+    beforeEach(function () {
       tester.createWidget();
       element = tester.element;
+      widget = tester.createWidget();
     });
 
-    it("apply unblockUI() through ListboxUIBlockElement and check u-blocked class removed and widget is not readonly", function () {
-      let widget = tester.createWidget();
-      element = tester.element;
+    it("check if the 'u-blocked' class is removed and ensure the widget is not readonly when the unblockUI() is invoked", function () {
       return asyncRun(function () {
         widget.blockUI();
         widget.unblockUI();
@@ -932,6 +932,7 @@
         expect(element.ariaReadOnly).equal("false");
       });
     });
+
     it("test unblockUI() when widget has been set in readonly and verify that this is not removed on calling unblockUI()", function () {
       let widget = tester.createWidget();
       element = tester.element;

@@ -578,7 +578,7 @@
     });
   });
 
-  describe("Test blockUI() through UIBlockElement", function () {
+  describe("Test blockUI()", function () {
     let element;
 
     before(function () {
@@ -586,7 +586,7 @@
       element = tester.element;
     });
 
-    it("apply blockUI() through UIBlockElement and check u-blocked class applies and widget is readonly", function () {
+    it("check if the 'u-blocked' class is applied and ensure the widget is readOnly when the blockUI() is invoked", function () {
       let widget = tester.createWidget();
       element = tester.element;
       return asyncRun(function () {
@@ -599,7 +599,7 @@
     });
   });
 
-  describe("Test unblockUI() through UIBlockElement", function () {
+  describe("unblockUI()", function () {
     let element;
     let readonly = "readonly";
 
@@ -608,7 +608,7 @@
       element = tester.element;
     });
 
-    it("apply unblockUI() through UIBlockElement and check u-blocked class removed and widget is not readonly", function () {
+    it("check if the 'u-blocked' class is removed and ensure the widget is not readonly when the unblockUI() is invoked", function () {
       let widget = tester.createWidget();
       element = tester.element;
       return asyncRun(function () {
@@ -620,6 +620,7 @@
         expect(element.readOnly).equal(false);
       });
     });
+
     it("test unblockUI() when widget has been set in readonly and verify that this is not removed on calling unblockUI()", function () {
       let widget = tester.createWidget();
       element = tester.element;

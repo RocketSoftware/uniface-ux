@@ -514,16 +514,14 @@
     });
   });
 
-  describe("Test blockUI() through UIBlockElement", function () {
+  describe("Test blockUI()", function () {
 
     before(function () {
       tester.createWidget();
-      tester.element;
     });
 
-    it("apply blockUI() through UIBlockElement and check u-blocked class applies", function () {
+    it("check if the 'u-blocked' class is applied and ensure the blockUI() is invoked", function () {
       let widget = tester.createWidget();
-      tester.element;
       return asyncRun(function () {
         widget.blockUI();
       }).then(function () {
@@ -532,16 +530,14 @@
     });
   });
 
-  describe("Test unblockUI() through UIBlockElement", function () {
+  describe("unblockUI()", function () {
 
     before(function () {
       tester.createWidget();
-      tester.element;
     });
 
-    it("apply unblockUI() through UIBlockElement and check u-blocked class is not applied", function () {
+    it("check if the 'u-blocked' class is removed when the unblockUI() is invoked", function () {
       let widget = tester.createWidget();
-      tester.element;
       return asyncRun(function () {
         widget.blockUI();
         widget.unblockUI();
