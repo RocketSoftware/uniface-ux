@@ -330,7 +330,7 @@
   describe("Test blockUI()", function () {
     let element;
 
-    before(function () {
+    beforeEach(function () {
       tester.createWidget();
       element = tester.element;
     });
@@ -353,7 +353,7 @@
     let element;
     let disabled = "disabled";
     let widget;
-    before(function () {
+    beforeEach(function () {
       tester.createWidget();
       element = tester.element;
       widget = tester.createWidget();
