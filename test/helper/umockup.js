@@ -461,7 +461,11 @@
        */
       userInput(value) {
         const currentValue = this.widget.getValue();
-        if (this.widgetName === "UX.TextField" && value !== currentValue) {
+        if (
+          (this.widgetName === "UX.NumberField"
+            || this.widgetName === "UX.TextArea"
+            || this.widgetName === "UX.TextField"
+          ) && value !== currentValue) {
           const control = this.element.shadowRoot.querySelector("#control.control");
           control.value = value;
           control.dispatchEvent(new window.Event("input"));
