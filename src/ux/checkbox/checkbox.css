@@ -1,5 +1,6 @@
 .u-checkbox {
   align-items: flex-start;
+  width: 100%;
 }
 
 .u-checkbox::part(control) {
@@ -103,6 +104,11 @@
 .u-checkbox[u-label-position="before"]:has(.u-label-text:not([hidden]))::part(control),
 .u-checkbox[u-label-position="before"]:has(.u-error-icon:not([hidden]))::part(control) {
   order: 2;
+}
+
+.u-checkbox[u-label-position="before"]:has(.u-label-text:not([hidden]))::part(label) {
+  flex-grow: 1;
+  justify-content: space-between;
 }
 
 .u-checkbox[u-label-position="after"] .u-label-text:not([hidden]) {

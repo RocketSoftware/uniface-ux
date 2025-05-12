@@ -1,16 +1,12 @@
 .u-switch {
   vertical-align: bottom;
   align-items: flex-start;
+  width: 100%;
 }
 
 /* Styling the toggle switch for consistent positioning during DOM update interruptions. */
 .u-switch::part(switch) {
   flex-shrink: 0;
-}
-
-.u-switch::part(status-message) {
-  order: 2;
-  text-wrap: nowrap;
 }
 
 .u-switch.checked::part(switch-toggle) {
@@ -57,8 +53,8 @@
 }
 
 /* Styling the error icon and line height (according to the fluent design system) when the widget is in invalid state. */
-.u-switch.u-invalid::part(status-message),
-.u-switch.u-format-invalid::part(status-message) {
+.u-switch.u-invalid::part(error),
+.u-switch.u-format-invalid::part(error) {
   --type-ramp-base-line-height: 18px;
   color: #d13438;
 }
@@ -83,6 +79,10 @@
   order: 1;
 }
 
+.u-switch[u-label-position="before"]:has(.u-label-text:not([hidden]))::part(label) {
+  flex-grow: 1;
+}
+
 .u-switch[u-label-position="before"] .u-label-text:not([hidden]) {
   margin-inline-end: calc(var(--design-unit) * 2px + 2px);
 }
@@ -91,8 +91,6 @@
   margin-inline-start: calc(var(--design-unit) * 2px + 2px);
 }
 
-.u-switch[u-label-position="before"] .u-checked-message,
-.u-switch[u-label-position="before"] .u-unchecked-message,
 .u-switch[u-label-position="before"] .u-error-icon-checked,
 .u-switch[u-label-position="before"] .u-error-icon-unchecked {
   margin-inline-end: calc(var(--design-unit) * 2px + 2px);
@@ -104,4 +102,35 @@
 .u-switch[u-label-position="after"] .u-error-icon-checked,
 .u-switch[u-label-position="after"] .u-error-icon-unchecked {
   margin-inline-start: calc(var(--design-unit) * 2px + 2px);
+}
+
+/* Styling the error-icon and checked/un-checked message in different positions. */
+.u-switch::part(error) {
+  order: 2;
+}
+
+.u-switch::part(status-message) {
+  order: 2;
+}
+.u-switch[u-label-position="before"]::part(status-message) {
+  order: 3;
+}
+
+.u-switch::part(checked-message),
+.u-switch::part(unchecked-message) {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.u-switch[u-label-position="before"]:has(.u-checked-message:not(:empty))::part(status-message),
+.u-switch[u-label-position="before"]:has(.u-unchecked-message:not(:empty))::part(status-message) {
+  width: 10ch;
+}
+
+.u-switch.u-invalid .u-checked-message,
+.u-switch.u-format-invalid .u-checked-message,
+.u-switch.u-invalid .u-unchecked-message,
+.u-switch.u-format-invalid .u-unchecked-message {
+  display: none;
 }
