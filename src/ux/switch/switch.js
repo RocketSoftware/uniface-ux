@@ -67,7 +67,7 @@ export class Switch extends Widget {
   ]);
 
   /**
-   * Creates a new label element with a slot to place the label.
+   * Creates a new error element with a slot inside it to place the error icon.
    */
   createErrorSlot() {
     let element = this.elements.widget;
