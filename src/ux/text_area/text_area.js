@@ -11,7 +11,7 @@ import {
   HtmlAttributeBoolean,
   HtmlAttributeNumber,
   HtmlAttributeMinMaxLength,
-  UIBlockElement
+  UIBlock
 } from "../framework/workers.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
@@ -58,7 +58,7 @@ export class TextArea extends Widget {
     new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
     new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
     new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
-    new UIBlockElement(this, "readonly"),
+    new UIBlock(this, "readonly"),
     new StyleClass(this, ["u-text-area", "outline"]),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),

@@ -12,7 +12,7 @@ import {
   IgnoreProperty,
   SlottedError,
   Worker,
-  UIBlockElement
+  UIBlock
 } from "../framework/workers.js";
 // The import of Fluent UI web-components is done in loader.js.
 
@@ -224,10 +224,10 @@ export class Listbox extends Widget {
 
   /**
   * Private Worker: This is specialized worker to handle blockUI and unblockUI methods.
-  * @class ListboxUIBlockElement
-  * @extends {UIBlockElement}
+  * @class ListboxUIBlock
+  * @extends {UIBlock}
   */
-  static ListboxUIBlockElement = class extends UIBlockElement {
+  static ListboxUIBlock = class extends UIBlock {
     refresh(widgetInstance) {
       const element = widgetInstance.elements.widget;
       const isBlocked = this.toBoolean(this.getNode(widgetInstance.data, "uiblocked"));
@@ -246,7 +246,7 @@ export class Listbox extends Widget {
           }
         }
       } else {
-        widgetInstance.error("UIBlockElement", "Invalid block type", this.uiblocking);
+        widgetInstance.error("UIBlock", "Invalid block type", this.uiblocking);
       }
     }
   };
@@ -271,7 +271,7 @@ export class Listbox extends Widget {
     new this.ListBoxValRep(this, "fluent-option", "u-option", ""),
     new this.ListboxSelectedValue(this, "value", ""),
     new this.SizeAttribute(this, "size", undefined),
-    new this.ListboxUIBlockElement(this, "readonly"),
+    new this.ListboxUIBlock(this, "readonly"),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),

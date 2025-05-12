@@ -13,7 +13,7 @@ import {
   SlottedElement,
   HtmlAttributeChoice,
   IgnoreProperty,
-  UIBlockElement
+  UIBlock
 } from "../framework/workers.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
@@ -264,10 +264,10 @@ export class Select extends Widget {
 
   /**
   * Private Worker: This is specialized worker to handle blockUI and unblockUI methods.
-  * @class SelectUIBlockElement
-  * @extends {UIBlockElement}
+  * @class SelectUIBlock
+  * @extends {UIBlock}
   */
-  static SelectUIBlockElement = class extends UIBlockElement {
+  static SelectUIBlock = class extends UIBlock {
     refresh(widgetInstance) {
       const element = widgetInstance.elements.widget;
       const isBlocked = this.toBoolean(this.getNode(widgetInstance.data, "uiblocked"));
@@ -282,7 +282,7 @@ export class Select extends Widget {
           element.classList.remove("u-readonly");
         }
       } else {
-        widgetInstance.error("UIBlockElement", "Invalid block type", this.uiblocking);
+        widgetInstance.error("UIBlock", "Invalid block type", this.uiblocking);
       }
     }
   };
@@ -308,7 +308,7 @@ export class Select extends Widget {
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new HtmlAttributeChoice(this, "popup-position", "u-position", ["above", "below"], "below", true),
-    new this.SelectUIBlockElement(this, "readonly"),
+    new this.SelectUIBlock(this, "readonly"),
     new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ""),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),

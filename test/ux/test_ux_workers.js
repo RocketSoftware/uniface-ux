@@ -2,7 +2,7 @@ import { Widget } from "../../src/ux/framework/widget.js";
 import {
   StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget,
   SubWidgetsByProperty, BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean,
-  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep ,UIBlockElement
+  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep ,UIBlock
 } from "../../src/ux/framework/workers.js";
 import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
 
@@ -1016,9 +1016,9 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
   });
 
   // ===================================================================================================================
-  // == Testing UIBlockElement class ==========================================================================
+  // == Testing UIBlock class ==========================================================================
   // ===================================================================================================================
-  describe("Test UIBlockElement class", function () {
+  describe("Test UIBlock class", function () {
     let widgetClass;
     let element;
 
@@ -1032,7 +1032,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.triggers = {};
 
       widgetClass = Widget;
-      element = new UIBlockElement(widgetClass, "readonly");
+      element = new UIBlock(widgetClass, "readonly");
     });
 
     it("should initialize with correct properties", function () {
@@ -1081,7 +1081,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
 
   });
 
-  describe("Test UIBlockElement class for invalid uiblocking", function () {
+  describe("Test UIBlock class for invalid uiblocking", function () {
     let widgetClass;
     let element;
 
@@ -1095,7 +1095,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.triggers = {};
 
       widgetClass = Widget;
-      element = new UIBlockElement(widgetClass, "invalid");
+      element = new UIBlock(widgetClass, "invalid");
     });
 
     it("should initialize with correct properties", function () {
@@ -1136,7 +1136,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       expect(widgetInstance.elements.widget.classList.add.calledWith("u-blocked")).to.be.true;
 
       expect(widgetInstance.error.calledOnce).to.be.true;
-      expect(widgetInstance.error.calledWith("UIBlockElement", "Invalid block type", "invalid")).to.be.true;
+      expect(widgetInstance.error.calledWith("UIBlock", "Invalid block type", "invalid")).to.be.true;
     });
   });
 })();

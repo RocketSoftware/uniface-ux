@@ -888,7 +888,7 @@
     });
   });
 
-  describe("Test blockUI() through ListboxUIBlockElement", function () {
+  describe("Test blockUI() through ListboxUIBlock", function () {
     let element;
     let widget;
 
@@ -910,7 +910,7 @@
     });
   });
 
-  describe("Test unblockUI() through ListboxUIBlockElement", function () {
+  describe("Test unblockUI() through ListboxUIBlock", function () {
     let element;
     let readonly = "readonly";
     let widget;

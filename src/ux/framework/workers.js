@@ -1479,10 +1479,10 @@ export class SlottedElementsByValRep extends Element {
  * - Toggling a CSS class (e.g. `u-blocked`) to reflect the blocked state visually.
  * - Applying or restoring the `disabled` or `readonly` properties based on the `uiBlocking` configuration of the widget.
  * @export
- * @class UIBlockElement
+ * @class UIBlock
  * @extends {Worker}
  */
-export class UIBlockElement extends Worker {
+export class UIBlock extends Worker {
   constructor(widgetClass, uiblocking) {
     super(widgetClass);
     this.registerSetter(widgetClass, "uiblocked", this);
@@ -1500,7 +1500,7 @@ export class UIBlockElement extends Worker {
       } else if (this.uiblocking === "readonly") {
         element.readOnly = true;
       } else {
-        widgetInstance.error("UIBlockElement", "Invalid block type", this.uiblocking);
+        widgetInstance.error("UIBlock", "Invalid block type", this.uiblocking);
       }
     } else {
       element.classList.remove("u-blocked");

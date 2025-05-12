@@ -11,7 +11,7 @@ import {
   SlottedElement,
   HtmlValueAttributeBoolean,
   IgnoreProperty,
-  UIBlockElement
+  UIBlock
 } from "../framework/workers.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
@@ -94,7 +94,7 @@ export class Switch extends Widget {
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new UIBlockElement(this, "disabled"),
+    new UIBlock(this, "disabled"),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text", ""),

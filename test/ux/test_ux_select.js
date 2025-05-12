@@ -635,7 +635,7 @@
     });
   });
 
-  describe("Test blockUI() through SelectUIBlockElement ", function () {
+  describe("Test blockUI() through SelectUIBlock ", function () {
     let element;
     let widget;
     beforeEach(function () {
@@ -654,7 +654,7 @@
     });
   });
 
-  describe("Test unblockUI() through SelectUIBlockElement ", function () {
+  describe("Test unblockUI() through SelectUIBlock ", function () {
     let element;
     let widget;
     beforeEach(function () {
