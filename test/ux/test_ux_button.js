@@ -117,16 +117,25 @@
   });
 
   describe("mapTrigger()", function () {
-    const element = tester.processLayout();
-    const widget = tester.onConnect();
+    const testData = {
+      // triggerName : eventName
+      "detail" : "click"
+    };
+    let widget;
 
-    it("define mapTrigger() and click event", function () {
-      widget.mapTrigger("click");
-      const event = new window.Event("click");
-      element.dispatchEvent(event);
-      assert(widget.elements.widget === element, "Widget is not connected.");
+    beforeEach(function () {
+      widget = tester.onConnect();
     });
 
+    Object.keys(testData).forEach((triggerName) => {
+      it(`Test mapping of trigger '${triggerName}'`, function () {
+        const triggerMapping = widget.mapTrigger(triggerName);
+        assert(triggerMapping, `Trigger '${triggerName}' is not mapped!`);
+        assert(triggerMapping.element === tester.element, `Trigger '${triggerName}' is not mapped to correct HTMLElement!`);
+        assert(triggerMapping.event_name === testData[triggerName],
+          `trigger '${triggerName}' should be mapped to event '${testData[triggerName]}', but got '${triggerMapping.event_name}'!`);
+      });
+    });
   });
 
   describe("dataInit()", function () {
@@ -267,17 +276,13 @@
   });
 
   describe("Button click event", function () {
-    let buttonElement, onClickSpy;
+    let testTriggers;
 
     beforeEach(function () {
-      tester.createWidget();
-      buttonElement = tester.element;
-
-      // Create a spy for the click event.
-      onClickSpy = sinon.spy();
-
-      // Add the click event listener to the button element.
-      buttonElement.addEventListener("click", onClickSpy);
+      testTriggers = {
+        "detail" : sinon.spy()
+      };
+      tester.createWidget(testTriggers);
     });
 
     // Clean up after each test.
@@ -287,13 +292,13 @@
     });
 
     // Test case for the click event.
-    it("should call the click event handler when the button is clicked", function () {
+    it("should call the detail trigger handler when the button is clicked", function () {
       // Simulate a click event
-      const event = new window.Event("click");
-      buttonElement.dispatchEvent(event);
+      const triggerName = "detail";
+      tester.dispatchEventFor(triggerName);
 
       // Assert that the click event handler was called once.
-      expect(onClickSpy.calledOnce).to.be.true;
+      expect(testTriggers[triggerName].calledOnce).to.be.true;
     });
 
   });

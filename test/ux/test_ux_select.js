@@ -123,25 +123,30 @@
 
     it("onConnect()", function () {
       const element = tester.processLayout();
-      const widget = tester.construct();
-      widget.onConnect(element);
+      const widget = tester.onConnect();
       assert(element, "Target element is not defined!");
       assert(widget.elements.widget === element, "Widget is not connected!");
     });
   });
 
   describe("mapTrigger()", function () {
+    const testData = {
+      "onchange" : "change"
+    };
+    let widget;
+
     beforeEach(function () {
-      tester.onConnect();
+      widget = tester.onConnect();
     });
 
-    it("defined mapTrigger() and onchange event", function () {
-      const widget = tester.widget;
-      const element = tester.element;
-      widget.mapTrigger("onchange");
-      const event = new window.Event("onchange");
-      element.dispatchEvent(event);
-      assert(widget.elements.widget === element, "Widget is not connected.");
+    Object.keys(testData).forEach((triggerName) => {
+      it(`Test mapping of trigger '${triggerName}'`, function () {
+        const triggerMapping = widget.mapTrigger(triggerName);
+        assert(triggerMapping, `Trigger '${triggerName}' is not mapped!`);
+        assert(triggerMapping.element === tester.element, `Trigger '${triggerName}' is not mapped to correct HTMLElement!`);
+        assert(triggerMapping.event_name === testData[triggerName],
+          `trigger '${triggerName}' should be mapped to event '${testData[triggerName]}', but got '${triggerMapping.event_name}'!`);
+      });
     });
   });
 
@@ -449,7 +454,6 @@
     let element;
     before(function () {
       tester.createWidget();
-      tester.bindUpdatorsEventToElement();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
@@ -515,7 +519,6 @@
     let element;
     before(function () {
       tester.createWidget();
-      tester.bindUpdatorsEventToElement();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
@@ -561,7 +564,6 @@
     let element;
     before(function () {
       tester.createWidget();
-      tester.bindUpdatorsEventToElement();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
