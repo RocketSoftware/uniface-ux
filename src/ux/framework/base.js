@@ -419,18 +419,4 @@ export class Base {
       [`${errorType}-message`]: isSettingError ? errorMessage : ""
     });
   }
-
-  /**
-   * Truncates the text passed to have a maximum length and adds ellipses at the end if it exceeds this length.
-   * @param {string} text - The text to be truncated.
-   * @param {number} maxLength - The maximum number of characters exceeding which the ellipses should be added.
-   * @returns {string} The text truncated to maximum number of characters.
-   */
-
-  truncateText(text, maxLength) {
-    if (text?.length > maxLength) {
-      return text.slice(0, maxLength - 3) + "...";
-    }
-    return text;
-  }
 }
