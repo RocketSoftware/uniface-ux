@@ -1,7 +1,6 @@
 .u-switch {
   vertical-align: bottom;
   align-items: flex-start;
-  width: 100%;
 }
 
 /* Styling the toggle switch for consistent positioning during DOM update interruptions. */
