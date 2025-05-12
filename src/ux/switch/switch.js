@@ -39,62 +39,6 @@ export class Switch extends Widget {
   static uiBlocking = "disabled";
 
   /**
-   * Private worker: SwitchSlottedError.
-   * It remembers the slot which is utilizing the same error slot.
-   * @export
-   * @class SwitchSlottedError
-   * @extends {SlottedError}
-   */
-  static SwitchSlottedError = class extends SlottedError {
-
-    /**
-     * Creates an instance of SwitchSlottedError.
-     * @param {typeof Widget} widgetClass
-     * @param {string} selectorUsingSameErrorSlot
-     */
-    constructor(widgetClass, tagName, styleClass, elementQuerySelector, slot, selectorUsingSameErrorSlot) {
-      super(widgetClass, tagName, styleClass, elementQuerySelector, slot);
-      this.selectorUsingSameErrorSlot = selectorUsingSameErrorSlot;
-    }
-
-    refresh(widgetInstance) {
-      super.refresh(widgetInstance);
-      let error = this.toBoolean(this.getNode(widgetInstance.data, "error"));
-      let formatError = this.toBoolean(this.getNode(widgetInstance.data, "format-error"));
-      let element = widgetInstance.elements.widget;
-      let errorElement = this.getElement(widgetInstance);
-      if (errorElement && this.selectorUsingSameErrorSlot) {
-        let slotElement = element.querySelector(this.selectorUsingSameErrorSlot);
-        if (formatError || error || slotElement.textContent.trim() === "") {
-          slotElement.slot = "";
-          slotElement.hidden = true;
-        } else {
-          // Resetting the slot again when error is hidden.
-          slotElement.slot = this.slot;
-          slotElement.hidden = false;
-        }
-      }
-    }
-  };
-
-  /**
-   * Private worker: SwitchSlottedElement.
-   * It adds text to the slotted element after truncating it to a maximum length.
-   * @export
-   * @class SwitchSlottedElement
-   * @extends {SlottedElement}
-   */
-  static SwitchSlottedElement = class extends SlottedElement {
-    refresh(widgetInstance) {
-      super.refresh(widgetInstance);
-      let element = this.getElement(widgetInstance);
-      let text = this.getNode(widgetInstance.data, this.textPropId);
-      const truncatedText = this.truncateText(text, 10);
-      this.setIconOrText(element, this.slot, undefined, truncatedText);
-    }
-  };
-
-  /**
    * Widget definition.
    */
   // prettier-ignore
@@ -116,18 +60,38 @@ export class Switch extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text", ""),
-    new this.SwitchSlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"),
-    new this.SwitchSlottedElement(this, "span", "u-unchecked-message", ".u-unchecked-message", "unchecked-message", "unchecked-message"),
-    new this.SwitchSlottedError(this, "span", "u-error-icon-unchecked", ".u-error-icon-unchecked", "unchecked-message", ".u-unchecked-message"),
-    new this.SwitchSlottedError(this, "span", "u-error-icon-checked", ".u-error-icon-checked", "checked-message", ".u-checked-message"),
+    new SlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"),
+    new SlottedElement(this, "span", "u-unchecked-message", ".u-unchecked-message", "unchecked-message", "unchecked-message"),
+    new SlottedError(this, "span", "u-error-icon-unchecked", ".u-error-icon-unchecked", "error-icon"),
     new Trigger(this, "onchange", "change", true)
   ]);
+
+  /**
+   * Creates a new label element with a slot to place the label.
+   */
+  createErrorSlot() {
+    let element = this.elements.widget;
+
+    // Create an error element.
+    let errorElement = document.createElement("div");
+    errorElement.setAttribute("part", "error");
+
+    // Create a slot element to hold the error-icon and append it to the error element.
+    let slot = document.createElement("slot");
+    slot.setAttribute("name", "error-icon");
+    errorElement.appendChild(slot);
+
+    // Append the error element to the shadow root.
+    element?.shadowRoot?.appendChild(errorElement);
+  }
 
   onConnect(widgetElement, objectDefinition) {
     this.elements = {};
     this.elements.widget = widgetElement;
     // Set the 'part' attribute on the switch slot so that CSS styling can be done.
     this.elements.widget.shadowRoot.querySelector("slot[name='switch']").setAttribute("part", "switch-toggle");
+    // Create a new slot for the error-icon since the fluent library does not provide it.
+    this.createErrorSlot();
     return super.onConnect(widgetElement, objectDefinition);
   }
 
