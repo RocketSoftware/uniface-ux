@@ -155,17 +155,23 @@
   });
 
   describe("Text field onchange event", function () {
-    let element, onChangeSpy;
+    const triggerSpy = sinon.spy();
 
-    beforeEach(function () {
-      tester.createWidget();
-      element = tester.element;
+    beforeEach(async function () {
+      const triggerMap = {
+        "onchange" : function () {
+          const value = tester.widget.getValue();
+          console.log(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}"`);
+          triggerSpy.apply(this, arguments);
+        }
+      };
 
-      // Create a spy for the onchange event.
-      onChangeSpy = sinon.spy();
-
-      // Add the onchange event listener to the number field element.
-      element.addEventListener("onchange", onChangeSpy);
+      await asyncRun(function () {
+        tester.createWidget(triggerMap);
+        tester.dataUpdate({
+          "value" : ""
+        });
+      });
     });
 
     // Clean up after each test.
@@ -177,11 +183,13 @@
     // Test case for the on change event.
     it("should call the onchange event handler when the text field is changed", function () {
       // Simulate a onchange event.
-      const event = new window.Event("onchange");
-      element.dispatchEvent(event);
+      const inputValue = "Hello";
+      tester.userInput(inputValue);
 
       // Assert that the onchange event handler was called once.
-      expect(onChangeSpy.calledOnce).to.be.true;
+      expect(triggerSpy.calledOnce).to.be.true;
+      // Expected the widget value is the inputValue.
+      expect(tester.widget.getValue()).to.equal(inputValue, "Widget value");
     });
 
   });
