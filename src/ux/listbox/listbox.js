@@ -223,7 +223,7 @@ export class Listbox extends Widget {
   };
 
   /**
-  * Private Worker: This is specialized worker to handle blockUI and unblockUI methods.
+  * Private Worker: Specialized worker to explicitly add readonly as an attribute because it is not supported as a property.
   * @class ListboxUIBlock
   * @extends {UIBlock}
   */

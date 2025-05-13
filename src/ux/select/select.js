@@ -264,6 +264,8 @@ export class Select extends Widget {
 
   /**
   * Private Worker: This is specialized worker to handle blockUI and unblockUI methods.
+  * Select should be in readonly during block state and this property is not defined by fluent.
+  * For this we explicitly need to add u-readonly class to the widget element.
   * @class SelectUIBlock
   * @extends {UIBlock}
   */
@@ -555,12 +557,6 @@ export class Select extends Widget {
     });
     return valueUpdaters;
   }
-
-  /**
-   * Specialized blockUI method because:
-   * Select should be in readonly during block state and this property is not defined by fluent.
-   * For this we explicitly need to add u-readonly class to the widget element.
-   */
 
   /**
    * Returns an array of property ids that affect the formatted value for text-based widgets

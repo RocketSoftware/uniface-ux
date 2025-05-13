@@ -1483,6 +1483,12 @@ export class SlottedElementsByValRep extends Element {
  * @extends {Worker}
  */
 export class UIBlock extends Worker {
+
+  /**
+   * Creates an instance of UIBlock.
+   * @param {typeof import("./widget.js").Widget} widgetClass
+   * @param {string} uiblocking
+   */
   constructor(widgetClass, uiblocking) {
     super(widgetClass);
     this.registerSetter(widgetClass, "uiblocked", this);
