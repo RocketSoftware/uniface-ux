@@ -1487,7 +1487,7 @@ export class UIBlock extends Worker {
   /**
    * Creates an instance of UIBlock.
    * @param {typeof import("./widget.js").Widget} widgetClass
-   * @param {string} uiblocking
+   * @param {string} uiblocking - Specifies the type of UI blocking behavior to apply. Supported values are "disabled" and "readonly".
    */
   constructor(widgetClass, uiblocking) {
     super(widgetClass);
