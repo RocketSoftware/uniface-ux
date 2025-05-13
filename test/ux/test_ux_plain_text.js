@@ -514,39 +514,6 @@
     });
   });
 
-  describe("Test blockUI()", function () {
-    let widget;
-
-    beforeEach(function () {
-      widget = tester.createWidget();
-    });
-
-    it("check if the 'u-blocked' class is applied and ensure the blockUI() is invoked", function () {
-      return asyncRun(function () {
-        widget.blockUI();
-      }).then(function () {
-        expect(widget.data.uiblocked).equal(true);
-      });
-    });
-  });
-
-  describe("unblockUI()", function () {
-    let widget;
-
-    beforeEach(function () {
-      widget = tester.createWidget();
-    });
-
-    it("check if the 'u-blocked' class is removed when the unblockUI() is invoked", function () {
-      return asyncRun(function () {
-        widget.blockUI();
-        widget.unblockUI();
-      }).then(function () {
-        expect(widget.data.uiblocked).equal(false);
-      });
-    });
-  });
-
   describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {

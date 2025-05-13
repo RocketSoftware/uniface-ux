@@ -581,7 +581,7 @@
   describe("Test blockUI()", function () {
     let element,widget;
 
-    beforeEach(function () {
+    before(function () {
       element = tester.element;
       widget = tester.createWidget();
     });
@@ -603,11 +603,11 @@
     beforeEach(function () {
       element = tester.element;
       widget = tester.createWidget();
+      widget.blockUI();
     });
 
     it("check if the 'u-blocked' class is removed and ensure the widget is not readonly when the unblockUI() is invoked", function () {
       return asyncRun(function () {
-        widget.blockUI();
         widget.unblockUI();
       }).then(function () {
         expect(element, "Class u-blocked is applied.").not.to.have.class("u-blocked");
@@ -616,7 +616,7 @@
       });
     });
 
-    it("test unblockUI() when widget has been set in readonly and verify that this is not removed on calling unblockUI()", function () {
+    it("when widget has been set in readonly and verify that this is not removed on calling unblockUI()", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "html:readonly": true

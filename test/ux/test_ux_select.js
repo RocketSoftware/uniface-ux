@@ -635,10 +635,10 @@
     });
   });
 
-  describe("Test blockUI() through SelectUIBlock ", function () {
+  describe("blockUI()", function () {
     let element,widget;
 
-    beforeEach(function () {
+    before(function () {
       element = tester.element;
       widget = tester.createWidget();
     });
@@ -653,17 +653,17 @@
     });
   });
 
-  describe("Test unblockUI() through SelectUIBlock ", function () {
+  describe("unblockUI()", function () {
     let element,widget;
 
-    beforeEach(function () {
+    before(function () {
       element = tester.element;
       widget = tester.createWidget();
+      widget.blockUI();
     });
 
     it("check if the 'u-readonly' class is removed when the unblockUI() is invoked", function () {
       return asyncRun(function () {
-        widget.blockUI();
         widget.unblockUI();
       }).then(function () {
         expect(element, "Class u-readonly is not applied").not.to.have.class("u-readonly");
