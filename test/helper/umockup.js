@@ -328,6 +328,10 @@
         initTriggerProxy.call(this);
       }
 
+      debugLog(message) {
+        debugLog(message);
+      }
+
       getWidgetClass() {
         return UNIFACE.ClassRegistry.get(this.widgetName);
       }
@@ -439,15 +443,26 @@
        */
       userClick(itemIndex) {
         let control;
-        if (itemIndex && (this.widgetName === "UX.Listbox")) {
-          control = this.element.querySelector("fluent-option[role='option']");
-          const id = control.id;
-          if (id.startsWith("option-") && id.length > 7) {
-            let index = Number.parseInt(id.substr(7)) + itemIndex - 1;
-            control = this.element.querySelector(`fluent-option#option-${index}`);
+        let openClick = (this.widgetName === "UX.Select");
+        if (itemIndex && (this.widgetName === "UX.Listbox" || this.widgetName === "UX.Select")) {
+          control = this.element.querySelector(`fluent-option[aria-posinset='${itemIndex}']`);
+        } else if (itemIndex && this.widgetName === "UX.NumberField") {
+          let controlClass;
+          if (itemIndex === 1) {
+            controlClass = "step-up";
+          } else if (itemIndex === -1) {
+            controlClass = "step-down";
           }
-        } else { // UX.Button
+          if (controlClass) {
+            control = this.element.shadowRoot.querySelector(".controls ." + controlClass);
+          }
+        } else if (itemIndex && this.widgetName === "UX.RadioGroup") {
+          control = this.element.querySelector(`fluent-radio[current-value='${itemIndex - 1}']`);
+        } else { // UX.Button, UX.Checkbox, UX.Switch
           control = this.element;
+        }
+        if (openClick) {
+          this.element.click();
         }
         if (control) {
           control.click();

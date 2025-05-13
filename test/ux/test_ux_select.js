@@ -605,34 +605,38 @@
     });
   });
 
-  describe("Select onchange event", function () {
-    let selectElement, onchangeSpy;
-    beforeEach(function () {
-      tester.createWidget();
-      selectElement = tester.element;
+  describe("Select onchange trigger", function () {
+    const triggerMap = {
+      "onchange" : function () {
+        const value = tester.widget.getValue();
+        console.log(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}".`);
+      }
+    };
+    const triggerSpy = sinon.spy(triggerMap, "onchange");
 
-      // Create a spy for the onchange event.
-      onchangeSpy = sinon.spy();
+    beforeEach(async function () {
+      await asyncRun(function () {
+        tester.createWidget(triggerMap);
+        tester.dataUpdate({
+          "valrep" : valRepArray,
+          "value" : "1"
+        });
+      });
 
-      // Add the onchange event listener to the select element.
-      selectElement.addEventListener("onchange", onchangeSpy);
+      triggerSpy.resetHistory();
     });
 
-    // Clean up after each test.
-    afterEach(function () {
-      // Restore the spy to its original state.
-      sinon.restore();
+    // Test case for the onchange trigger.
+    it("should call the onchange trigger handler when the checkbox is clicked", function () {
+      // Simulate a click event
+      tester.userClick(2);
+
+      // Assert that the click event handler was called once.
+      expect(triggerSpy.calledOnce).to.be.true;
+      // Expected the value is the 3rd item of valRepArray.
+      expect(tester.widget.getValue()).to.equal("2", "Widget value");
     });
 
-    // Test case for the onchange event.
-    it("should call the onchange event handler when a select option is clicked", function () {
-      // Simulate a change event.
-      const event = new window.Event("onchange");
-      selectElement.dispatchEvent(event);
-
-      // Assert that the onchange event handler was called once.
-      expect(onchangeSpy.calledOnce).to.be.true;
-    });
   });
 
   describe("Reset all properties", function () {

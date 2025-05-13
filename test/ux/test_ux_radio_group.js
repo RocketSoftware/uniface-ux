@@ -489,7 +489,41 @@
     });
   });
 
-  describe("Radio onchange event", function () {
+  describe("RadioGroup onchange trigger", function () {
+    const triggerMap = {
+      "onchange" : function () {
+        const value = tester.widget.getValue();
+        console.log(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}".`);
+      }
+    };
+    const triggerSpy = sinon.spy(triggerMap, "onchange");
+
+    beforeEach(async function () {
+      await asyncRun(function () {
+        tester.createWidget(triggerMap);
+        tester.dataUpdate({
+          "valrep" : valRepArray,
+          "value" : "1"
+        });
+      });
+
+      triggerSpy.resetHistory();
+    });
+
+    // Test case for the onchange trigger.
+    it("should call the onchange trigger handler when the checkbox is clicked", function () {
+      // Simulate a click event
+      tester.userClick(2);
+
+      // Assert that the click event handler was called once.
+      expect(triggerSpy.calledOnce).to.be.true;
+      // Expected the value is the 3rd item of valRepArray.
+      expect(tester.widget.getValue()).to.equal("2", "Widget value");
+    });
+
+  });
+
+  describe("Radio onchange event (old)", function () {
     let radioElement, onchangeSpy;
     beforeEach(function () {
       tester.createWidget();

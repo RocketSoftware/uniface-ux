@@ -135,35 +135,34 @@
   });
 
   describe("Checkbox onchange event", function () {
-    let checkBoxElement, onchangeSpy;
-    beforeEach(function () {
+    const triggerMap = {
+      "onchange" : function () {
+        const value = tester.widget.getValue();
+        tester.debugLog(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: ${value}!`);
+      }
+    };
+    const triggerSpy = sinon.spy(triggerMap, "onchange");
 
-      tester.createWidget();
-      checkBoxElement = tester.element;
-      // Create a spy for the onchange event.
-      onchangeSpy = sinon.spy();
+    beforeEach(async function () {
+      await asyncRun(function () {
+        tester.createWidget(triggerMap);
+      });
 
-      // Add the onchange event listener to the checkbox Element.
-      checkBoxElement.addEventListener("onchange", onchangeSpy);
+      triggerSpy.resetHistory();
     });
 
-    // Clean up after each test.
-    afterEach(function () {
-      // Restore the spy to its original state.
-      sinon.restore();
-    });
-
-    // Test case for the onchange event.
+    // Test case for the onchange trigger.
     it("should call the onchange event handler when the checkbox is clicked", function () {
-      // Simulate an onchange event.
-      const event = new window.Event("onchange");
-      checkBoxElement.dispatchEvent(event);
+      // Simulate a click event
+      tester.userClick();
 
-      // Assert that the onchange event handler was called once.
-      expect(onchangeSpy.calledOnce).to.be.true;
+      // Assert that the click event handler was called once.
+      expect(triggerSpy.calledOnce).to.be.true;
+      // Expected the value is the 3rd item of valRepArray.
+      expect(tester.widget.getValue()).to.equal(true, "Widget value");
     });
-  });
 
+  });
 
   describe("dataInit()", function () {
     const classes = tester.getDefaultClasses();
