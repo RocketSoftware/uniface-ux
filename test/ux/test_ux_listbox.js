@@ -585,6 +585,7 @@
         const returnedValue = widget.getValue();
         const selectedOption = element.querySelector(".u-option.selected");
 
+        expect(triggerSpy.calledOnce).to.be.true;
         expect(selectedOption?.value).equal("0");
         expect(returnedValue).to.equal(valRepArray[0].value);
         expect(selectedOption?.textContent).equal(valRepArray[0]?.representation);
@@ -617,6 +618,7 @@
         const returnedValue = widget.getValue();
         const selectedOption = element.querySelector(".u-option.selected");
 
+        expect(triggerSpy.calledOnce).to.be.true;
         expect(selectedOption?.value).equal("0");
         expect(returnedValue).to.equal(valRepArray[0].value);
         expect(selectedOption?.textContent).equal(valRepArray[0]?.representation);
