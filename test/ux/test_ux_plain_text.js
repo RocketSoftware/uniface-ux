@@ -516,8 +516,8 @@
 
   describe("Test blockUI()", function () {
     let widget;
-    before(function () {
-      tester.createWidget();
+
+    beforeEach(function () {
       widget = tester.createWidget();
     });
 
@@ -532,8 +532,8 @@
 
   describe("unblockUI()", function () {
     let widget;
-    before(function () {
-      tester.createWidget();
+
+    beforeEach(function () {
       widget = tester.createWidget();
     });
 

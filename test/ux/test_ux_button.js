@@ -447,11 +447,9 @@
   });
 
   describe("Test blockUI()", function () {
-    let element;
-    let widget;
+    let element,widget;
 
-    before(function () {
-      tester.createWidget();
+    beforeEach(function () {
       element = tester.element;
       widget = tester.createWidget();
     });
@@ -468,11 +466,9 @@
   });
 
   describe("Test unblockUI()", function () {
-    let element;
-    let widget;
+    let element,widget;
 
     beforeEach(function () {
-      tester.createWidget();
       element = tester.element;
       widget = tester.createWidget();
     });
@@ -487,6 +483,7 @@
         expect(widget.data.uiblocked).equal(false);
       });
     });
+
     it("test unblockUI() when widget has been set in disabled and verify that this is not removed on calling unblockUI()", function () {
       return asyncRun(function () {
         tester.dataUpdate({

@@ -636,10 +636,9 @@
   });
 
   describe("Test blockUI() through SelectUIBlock ", function () {
-    let element;
-    let widget;
+    let element,widget;
+
     beforeEach(function () {
-      tester.createWidget();
       element = tester.element;
       widget = tester.createWidget();
     });
@@ -655,10 +654,9 @@
   });
 
   describe("Test unblockUI() through SelectUIBlock ", function () {
-    let element;
-    let widget;
+    let element,widget;
+
     beforeEach(function () {
-      tester.createWidget();
       element = tester.element;
       widget = tester.createWidget();
     });

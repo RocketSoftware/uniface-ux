@@ -328,11 +328,9 @@
   });
 
   describe("Test blockUI()", function () {
-    let element;
-    let widget;
+    let element,widget;
 
     beforeEach(function () {
-      tester.createWidget();
       element = tester.element;
       widget = tester.createWidget();
     });
@@ -350,11 +348,9 @@
   });
 
   describe("unblockUI()", function () {
-    let element;
-    let disabled = "disabled";
-    let widget;
+    let element,widget;
+
     beforeEach(function () {
-      tester.createWidget();
       element = tester.element;
       widget = tester.createWidget();
     });
@@ -378,7 +374,7 @@
         });
         widget.unblockUI();
       }).then(function () {
-        expect(element.hasAttribute(disabled)).to.be.true;
+        expect(element.hasAttribute("disabled")).to.be.true;
       });
     });
   });

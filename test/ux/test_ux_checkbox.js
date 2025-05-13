@@ -376,11 +376,9 @@
   });
 
   describe("Test blockUI()", function () {
-    let element;
-    let widget;
+    let element,widget;
 
-    before(function () {
-      tester.createWidget();
+    beforeEach(function () {
       element = tester.element;
       widget = tester.createWidget();
     });
@@ -398,12 +396,9 @@
   });
 
   describe("unblockUI()", function () {
-    let element;
-    let readonly = "readonly";
-    let widget;
+    let element,widget;
 
     beforeEach(function () {
-      tester.createWidget();
       element = tester.element;
       widget = tester.createWidget();
     });
@@ -419,6 +414,7 @@
         expect(element.ariaReadOnly).equal("false");
       });
     });
+
     it("test unblockUI() when widget has been set in readonly and verify that this is not removed on calling unblockUI()", function () {
       return asyncRun(function () {
         tester.dataUpdate({
@@ -426,7 +422,7 @@
         });
         widget.unblockUI();
       }).then(function () {
-        expect(element.hasAttribute(readonly)).to.be.true;
+        expect(element.hasAttribute("readonly")).to.be.true;
       });
     });
   });
