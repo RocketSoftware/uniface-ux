@@ -62,7 +62,7 @@ export class Switch extends Widget {
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text", ""),
     new SlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"),
     new SlottedElement(this, "span", "u-unchecked-message", ".u-unchecked-message", "unchecked-message", "unchecked-message"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error-icon"),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error"),
     new Trigger(this, "onchange", "change", true)
   ]);
 
@@ -75,10 +75,11 @@ export class Switch extends Widget {
     // Create an error element.
     let errorElement = document.createElement("div");
     errorElement.setAttribute("part", "error");
+    errorElement.classList.add("error");
 
     // Create a slot element to hold the error-icon and append it to the error element.
     let slot = document.createElement("slot");
-    slot.setAttribute("name", "error-icon");
+    slot.setAttribute("name", "error");
     errorElement.appendChild(slot);
 
     // Append the error element to the shadow root.
