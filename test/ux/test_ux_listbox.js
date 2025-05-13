@@ -554,8 +554,18 @@
 
   describe("Update selection through user interaction", function () {
     let widget, element;
+    const triggerSpy = sinon.spy();
+
     beforeEach(async function () {
-      widget = tester.createWidget();
+      const triggerMap = {
+        "onchange" : function () {
+          const value = tester.widget.getValue();
+          console.log(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}"`);
+          triggerSpy.apply(this, arguments);
+        }
+      };
+
+      widget = tester.createWidget(triggerMap);
       element = tester.element;
       assert(element, "Widget top element is not defined!");
 

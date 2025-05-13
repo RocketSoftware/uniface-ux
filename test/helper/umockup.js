@@ -159,7 +159,7 @@
     },
 
     /**
-     * Mockup of custom_widget_container.addListener without the part related to validation.
+     * Mockup of custom_widget_container.addListerner without the part related to validation.
      *
      * Adds an event listener that can execute a handler,
      * and returns it to caller.
@@ -415,59 +415,17 @@
 
       dispatchEventFor(triggerName, options) {
         const trigger = this.widget.mapTrigger(triggerName);
-        if (this.widgetName === "UX.Button") {
-          if (!options) {
-            options = {
-              "event" : trigger.event_name,
-              "element" : trigger.element
-            };
-          }
+        if (this.widgetName === "UX.Button" && !options) {
+          options = {
+            "event" : trigger.event_name,
+            "element" : trigger.element
+          };
         }
         if (options.event === "click") {
           if (!options.element) {
             options.element = trigger.element;
           }
           options.element.click();
-        }
-      }
-
-      /**
-       * Emulate the user click on the item with the given itemIndex as its index (start from 1);
-       *
-       * @param {Number} itemIndex the index of the item to click on. Optional, default means
-       *                 the top item or element, or the first item.
-       */
-      userClick(itemIndex) {
-        let control;
-        if (itemIndex && (this.widgetName === "UX.Listbox")) {
-          control = this.element.querySelector("fluent-option[role='option']");
-          const id = control.id;
-          if (id.startsWith("option-") && id.length > 7) {
-            let index = Number.parseInt(id.substr(7)) + itemIndex - 1;
-            control = this.element.querySelector(`fluent-option#option-${index}`);
-          }
-        } else { // UX.Button
-          control = this.element;
-        }
-        if (control) {
-          control.click();
-        }
-      }
-
-      /**
-       * Emulate the user input on an editable widget.
-       *
-       * @param {String} value the new input value;
-       */
-      userInput(value) {
-        const currentValue = this.widget.getValue();
-        if (this.widgetName === "UX.TextField" && value !== currentValue) {
-          const control = this.element.shadowRoot.querySelector("#control.control");
-          control.value = value;
-          control.dispatchEvent(new window.Event("input"));
-
-          debugLog("userInput(" + value + "): dispatch event 'change'!");
-          control.dispatchEvent(new window.Event("change"));
         }
       }
 
