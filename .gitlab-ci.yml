@@ -70,9 +70,9 @@ polaris_scan:
     when: always
     expire_in: 7 days
   rules:
-    - if: '$CI_COMMIT_BRANCH == "UNI-45514_stage" && $CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
       when: always
-    - if: '$CI_COMMIT_BRANCH != "UNI-45514_stage"'
+    - if: '$CI_COMMIT_BRANCH != "main"'
       when: manual
 
 publish:
@@ -94,7 +94,7 @@ publish:
     - cp -a dist "$TARGET_DIR/"
     - echo "Artifacts copied to $TARGET_DIR"
     - |
-      if [ "$CI_COMMIT_BRANCH" = "UNI-45514_stage" ]; then
+      if [ "$CI_COMMIT_BRANCH" = "main" ]; then
         ln -sfn "./${TARGET_NAME}" "${TARGET_BASE}/latest"
         echo "Updated latest symlink to: $TARGET_NAME"
       else
