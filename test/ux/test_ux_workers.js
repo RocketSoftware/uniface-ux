@@ -1052,7 +1052,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
 
       const widgetInstance = {
         "data": {
-          "uiblocked": true,
+          "uiblocked": true
         },
         "elements": {
           "widget": {
