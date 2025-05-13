@@ -1019,8 +1019,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
   // == Testing UIBlock class ==========================================================================
   // ===================================================================================================================
   describe("Test UIBlock class", function () {
-    let widgetClass;
-    let element;
+    let widgetClass,element;
 
     beforeEach(function () {
       Widget.structure = {};
@@ -1044,15 +1043,16 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       let setterKeys = Object.keys(element.widgetClass.setters);
       expect(setterKeys[setterKeys.length - 1]).to.equal("uiblocked");
     });
-    it("should refresh correctly", function () {
 
+    it("should refresh correctly", function () {
       const classListStub= {
         "add" : sinon.spy(),
         "remove" : sinon.spy()
       };
+
       const widgetInstance = {
         "data": {
-          "uiblocked": true
+          "uiblocked": true,
         },
         "elements": {
           "widget": {
@@ -1064,18 +1064,22 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
         "getTraceDescription": function () {
           return "description";
         },
-        "error": sinon.spy()
+        "error": sinon.spy(),
+        "toBoolean" :function(val){
+          return Boolean(val);
+        }
       };
 
-      // should add class and readonly element when uiblocked is true and block type is 'readonly'.
+      // Should add class and readonly element when uiblocked is true and block type is 'readonly'.
       element.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.classList.add.calledWith("u-blocked")).to.be.true;
       expect(widgetInstance.elements.widget.readOnly).to.be.true;
 
-      // should remove class when uiblocked is false.
+      // Should remove class when uiblocked is false.
       widgetInstance.data["uiblocked"] = false;
-
-      expect(widgetInstance.elements.widget.classList.remove.calledWith("u-blocked")).to.be.false;
+      element.refresh(widgetInstance);
+      expect(widgetInstance.elements.widget.readOnly).to.be.false;
+      expect(widgetInstance.elements.widget.classList.remove.calledWith("u-blocked")).to.be.true;
 
     });
 

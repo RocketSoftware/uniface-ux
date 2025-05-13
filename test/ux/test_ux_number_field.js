@@ -678,9 +678,12 @@
   describe("unblockUI()", function () {
     let element,widget;
 
-    beforeEach(function () {
+    before(function () {
       element = tester.element;
       widget = tester.createWidget();
+    });
+
+    beforeEach(function () {
       widget.blockUI();
     });
 
@@ -697,7 +700,7 @@
       });
     });
 
-    it("when widget has been set in readonly and verify that this is not removed on calling unblockUI()", function () {
+    it("check if the readonly mode is retained when the unblockUI() is called", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "html:readonly": true
