@@ -70,9 +70,9 @@ polaris_scan:
     when: always
     expire_in: 7 days
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_COMMIT_BRANCH == "UNI-45514_stage" && $CI_PIPELINE_SOURCE == "push"'
       when: always
-    - if: '$CI_COMMIT_BRANCH != "main"'
+    - if: '$CI_COMMIT_BRANCH != "UNI-45514_stage"'
       when: manual
 
 publish:
@@ -87,15 +87,17 @@ publish:
     - sudo mount -v -o nfsvers=3 -o nolock cwnl-uxshares.unifaceforest.local:/export/common/dib/cc/cc /cwnl/files/dib_cc
   script:
     - echo "Publishing artifacts to shared location"
-    - TARGET_DIR="/cwnl/files/dib_cc/uxwidgets/${TARGET_VERSION}/$(date +%Y%m%d)_${CI_COMMIT_SHORT_SHA}" && mkdir -p "$TARGET_DIR"
+    - TARGET_BASE="/cwnl/files/dib_cc/uxwidgets/${TARGET_VERSION}"
+    - TARGET_NAME="$(date +%Y%m%d)_${CI_COMMIT_SHORT_SHA}"
+    - TARGET_DIR="${TARGET_BASE}/${TARGET_NAME}" && mkdir -p "$TARGET_DIR"
     - test -d dist || { echo "Error :dist/ not found!"; exit 1; }
     - cp -a dist "$TARGET_DIR/"
     - echo "Artifacts copied to $TARGET_DIR"
     - |
-      if [ "$CI_COMMIT_BRANCH" = "main" ]; then
-        cd "/cwnl/files/dib_cc/uxwidgets/${TARGET_VERSION}" && \
-        ln -sfn "$(basename "$TARGET_DIR")" latest
-        echo "Updated latest symlink to: $(basename "$TARGET_DIR")"
+      if [ "$CI_COMMIT_BRANCH" = "UNI-45514_stage" ]; then
+        ln -sfn "./${TARGET_NAME}" "${TARGET_BASE}/latest"
+        echo "Updated latest symlink to: $TARGET_NAME"
       else
         echo "Skipping latest symlink update (non-main branch)"
       fi
+      
