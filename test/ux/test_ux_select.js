@@ -672,6 +672,17 @@
         expect(widget.data.uiblocked).equal(false);
       });
     });
+
+    it("check if the readonly mode is retained when the unblockUI() is called", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": true
+        });
+        widget.unblockUI();
+      }).then(function () {
+        expect(element, "Class u-readonly is not applied").to.have.class("u-readonly");
+      });
+    });
   });
 
   describe("Reset all properties", function () {
