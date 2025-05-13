@@ -118,11 +118,10 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  max-width: 10ch;
 }
 
-.u-switch[u-label-position="before"]:has(.u-checked-message:not(:empty))::part(status-message),
-.u-switch[u-label-position="before"]:has(.u-unchecked-message:not(:empty))::part(status-message) {
+.u-switch:has(.u-checked-message:not(:empty))::part(status-message),
+.u-switch:has(.u-unchecked-message:not(:empty))::part(status-message) {
   width: 10ch;
 }
 
