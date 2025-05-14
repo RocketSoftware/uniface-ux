@@ -80,7 +80,7 @@ export class Widget extends Base {
 
   /**
    * Holds references to elements on which updaters, getters, and events handlers need to work.
-   * @property {Object} elements
+   * @property {object} elements
    */
   elements = {};
 
@@ -90,7 +90,7 @@ export class Widget extends Base {
    * @static
    * @param {Element} skeletonWidgetElement - references to the placeholder element as defined by the IDE or parent widget.
    * @param {UObjectDefinition} objectDefinition - reference to the the definition of the object for which this widget is created.
-   * @return {Element} - reference to the root created widget DOM.
+   * @returns {Element} - reference to the root created widget DOM.
    */
   static processLayout(skeletonWidgetElement, objectDefinition) {
     this.staticLog("processLayout", skeletonWidgetElement);
@@ -126,7 +126,7 @@ export class Widget extends Base {
   /**
    * Returns the value as format-object.
    * @param {UData} properties
-   * @return {UValueFormatting}
+   * @returns {UValueFormatting}
    */
   static getValueFormatted(properties) {
 
@@ -156,7 +156,7 @@ export class Widget extends Base {
     /**
      * Perform a deep copy of the sub-widgets registered with the widget class to widget object.
      * This to make sure widget object changes do not affect the widget class definition.
-     * @type {Object}
+     * @type {object}
      */
     let widgetClass = this.constructor;
     Object.keys(widgetClass.subWidgets).forEach((subWidgetId) => {
@@ -180,12 +180,12 @@ export class Widget extends Base {
    * Returns an array of events descriptions that indicate the value is changed allowing Uniface to react.
    * @param {Element} widgetElement
    * @param {UObjectDefinition} objectDefinition - reference to the component definitions.
-   * @return {Updaters}
+   * @returns {Array<Updater> | undefined | null}
    */
   onConnect(widgetElement, objectDefinition) {
     this.elements = {};
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     this.elements.widget = widgetElement;
     this.log("onConnect");
@@ -227,13 +227,13 @@ export class Widget extends Base {
 
   /**
    * Use this method to map a Uniface trigger to an event of your (sub) widget.
-   * @param {String} triggerName
-   * @return {TriggerMapping|undefined} [triggerMapping].
+   * @param {string} triggerName
+   * @returns {TriggerMapping | undefined | null}
    */
   mapTrigger(triggerName) {
     this.log("mapTrigger", triggerName);
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     let triggerMapping = null;
 
@@ -282,7 +282,7 @@ export class Widget extends Base {
     this.data = {};
     this.data.id = Math.random();
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     this.log("dataInit", widgetClass.defaultValues);
 
@@ -348,12 +348,12 @@ export class Widget extends Base {
 
   /**
    * Returns the (field) value back to Uniface.
-   * @return {any}
+   * @returns {any}
    */
   getValue() {
     let value = {};
     // Use 'value' worker to get the widget value.
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     let valueWorker = widgetClass.getters.value;
     if (valueWorker) {
@@ -367,7 +367,7 @@ export class Widget extends Base {
 
   /**
    * Validates the value of the widget before passing it back to Uniface.
-   * @return {UDataError|null} [result]
+   * @returns {UDataError | null}
    */
   validate() {
     this.log("validate");
@@ -392,7 +392,7 @@ export class Widget extends Base {
 
   /**
    * Shows the error as provided by Uniface.
-   * @param {String} errorMessage
+   * @param {string} errorMessage
    */
   showError(errorMessage) {
     this.log("showError", errorMessage);
@@ -408,23 +408,14 @@ export class Widget extends Base {
             this.subWidgets[subWidgetId].showError(parsedErrorMsg.validationMessages[subWidgetId]);
           });
         } else {
-          this.setProperties({
-            "error": true,
-            "error-message": errorMessage
-          });
+          this.setErrorProperties(this, "error", errorMessage);
         }
         // eslint-disable-next-line no-unused-vars
       } catch (_) {
-        this.setProperties({
-          "error": true,
-          "error-message": errorMessage
-        });
+        this.setErrorProperties(this, "error", errorMessage);
       }
     } else {
-      this.setProperties({
-        "error": true,
-        "error-message": errorMessage
-      });
+      this.setErrorProperties(this, "error", errorMessage);
     }
   }
 
@@ -437,10 +428,7 @@ export class Widget extends Base {
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
       this.subWidgets[subWidgetId].hideError();
     });
-    this.setProperties({
-      "error": false,
-      "error-message": ""
-    });
+    this.setErrorProperties(this);
   }
 
   /**
@@ -449,7 +437,7 @@ export class Widget extends Base {
   blockUI() {
     this.log("blockUI");
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     // Call blockUI() for each sub-widget.
     Object.keys(this.subWidgets).forEach((key) => {
@@ -482,7 +470,7 @@ export class Widget extends Base {
   unblockUI() {
     this.log("unblockUI");
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     // Call unblockUI() for each sub-widget.
     Object.keys(this.subWidgets).forEach((key) => {
@@ -517,7 +505,7 @@ export class Widget extends Base {
    */
   setProperties(data) {
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     const defaultValues = widgetClass.defaultValues;
     const widgetSetters = widgetClass.setters;
@@ -527,9 +515,9 @@ export class Widget extends Base {
 
     if (data) {
       for (const property in data) {
-        // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
-        // eslint-disable-next-line eqeqeq, no-undef
-        if (data[property] == uniface.RESET) {
+        // Use == (iso ===) to check whether both sides of compare refer to the same global uniface.RESET object.
+        // eslint-disable-next-line eqeqeq
+        if (data[property] == globalThis.uniface.RESET) {
           this.data[property] = defaultValues[property];
         } else {
           this.data[property] = data[property];
@@ -565,7 +553,7 @@ export class Widget extends Base {
 
   /**
    * Collects trace information and returns a trace message.
-   * @return {String}
+   * @returns {string}
    */
   getTraceDescription() {
     let widgetId = "<noWidgetId>";
@@ -611,12 +599,12 @@ export class Widget extends Base {
 
   /**
    * Logs the provided tracing info in console.log.
-   * @param {String} functionName
-   * @param {Object} [data]
+   * @param {string} functionName
+   * @param {object} [data]
    */
   log(functionName, data) {
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     if (widgetClass.tracing.classNames.all || widgetClass.tracing.classNames[this.constructor.name]) {
       if (widgetClass.tracing.functionNames.all || widgetClass.tracing.functionNames[functionName]) {

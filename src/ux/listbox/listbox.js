@@ -1,5 +1,5 @@
 // @ts-check
-import { Widget } from "./widget.js";
+import { Widget } from "../framework/widget.js";
 import {
   Element,
   StyleClass,
@@ -12,8 +12,12 @@ import {
   IgnoreProperty,
   SlottedError,
   Worker
-} from "./workers.js";
+} from "../framework/workers.js";
 // The import of Fluent UI web-components is done in loader.js.
+
+// Optimized way to reduce the size of bundle, only import necessary fluent-ui components
+import { fluentOption, fluentListbox, provideFluentDesignSystem } from "@fluentui/web-components";
+provideFluentDesignSystem().register(fluentOption(), fluentListbox());
 
 /**
  * Listbox Widget
@@ -45,8 +49,8 @@ export class Listbox extends Widget {
     /**
      * Creates an instance of ListboxSelectedValue.
      * @param {typeof Widget} widgetClass
-     * @param {String} propId
-     * @param {String} defaultValue
+     * @param {string} propId
+     * @param {string} defaultValue
      */
     constructor(widgetClass, propId, defaultValue) {
       super(widgetClass);
@@ -96,15 +100,9 @@ export class Listbox extends Widget {
       const isValueEmpty = (value === null || value === "");
 
       if (valrep.length > 0 && (valueToSet !== -1 || isValueEmpty)) {
-        widgetInstance.setProperties({
-          "format-error": false,
-          "format-error-message": ""
-        });
+        this.setErrorProperties(widgetInstance, "format-error");
       } else {
-        widgetInstance.setProperties({
-          "format-error": true,
-          "format-error-message": Listbox.formatErrorMessage
-        });
+        this.setErrorProperties(widgetInstance, "format-error", Listbox.formatErrorMessage);
       }
 
       window.queueMicrotask(() => {
@@ -123,8 +121,8 @@ export class Listbox extends Widget {
     /**
      * Creates an instance of SizeAttribute.
      * @param {typeof Widget} widgetClass
-     * @param {String} propId
-     * @param {String|undefined} defaultValue
+     * @param {string} propId
+     * @param {string | undefined} defaultValue
      */
     constructor(widgetClass, propId, defaultValue) {
       super(widgetClass);
@@ -386,7 +384,7 @@ export class Listbox extends Widget {
   blockUI() {
     this.log("blockUI");
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     // Check if uiBlocking is defined in the constructor.
     if (widgetClass.uiBlocking) {
@@ -410,7 +408,7 @@ export class Listbox extends Widget {
   unblockUI() {
     this.log("unblockUI");
 
-    /** @type {Object} */
+    /** @type {object} */
     const widgetClass = this.constructor;
     // Check if uiBlocking is defined in the constructor.
     if (widgetClass.uiBlocking) {

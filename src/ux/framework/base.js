@@ -1,7 +1,8 @@
 // @ts-check
 
-import { Widget } from "./widget.js"; // eslint-disable-line no-unused-vars
-import { Worker } from "./workers.js"; // eslint-disable-line no-unused-vars
+/**
+ * @typedef {import("./workers.js").Worker} Worker
+ */
 
 /**
  * UX Widget generic helper functions.
@@ -18,7 +19,7 @@ export class Base {
    * This method registers the worker that Uniface calls to update the widget caused by a property change.
    * Per property, one worker needs to be registered.
    * dataInit() and dataUpdate() call this worker (via setProperties()) to make the widget react to the property change.
-   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
    * @param {Worker} worker - Specifies the worker.
    */
@@ -32,7 +33,7 @@ export class Base {
    * Per property, one worker needs to be registered. Currently, only the 'value' property can be registered.
    * onConnect() calls the worker to get the updater information, which describes the events fired when the value has been changed.
    * getValue() calls this worker to get the value of the 'field' property.
-   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
    * @param {Worker} worker - Specifies the worker.
    */
@@ -44,7 +45,7 @@ export class Base {
    * This method registers a default value for a property.
    * Per property, one default value needs to be registered.
    * dataInit() uses the set of default values to reinitialize the widget for reuse.
-   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the default value will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the default value will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the default value will be registered.
    * @param {UPropValue} defaultValue - Specifies the default value.
    */
@@ -56,8 +57,8 @@ export class Base {
    * This method registers the worker that Uniface calls to get a trigger-mapping.
    * Per trigger-mapping, one worker needs to be registered.
    * mapTrigger() calls this worker to get the trigger-mapping.
-   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
-   * @param {String} triggerName - Specifies the trigger-name for which the worker will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {string} triggerName - Specifies the trigger-name for which the worker will be registered.
    * @param {Worker} worker - Specifies the worker.
    */
   registerTrigger(widgetClass, triggerName, worker) {
@@ -70,12 +71,12 @@ export class Base {
    * Static sub-widgets are added to the widget instance at runtime.
    * The UXWF deals with sub-widgets transparently, like generate their layouts, instantiate them, invoke their onConnect
    * get their value, map their triggers, update their properties, etc.
-   * @param {typeof Widget} widgetClass
-   * @param {String} subWidgetId
-   * @param {typeof Widget} subWidgetClass
-   * @param {String} subWidgetStyleClass
-   * @param {Array} subWidgetTriggers
-   * @param {Array} subWidgetDelegatedProperties
+   * @param {typeof import("./widget.js").Widget} widgetClass
+   * @param {string} subWidgetId
+   * @param {typeof import("./widget.js").Widget} subWidgetClass
+   * @param {string} subWidgetStyleClass
+   * @param {Array<string>} subWidgetTriggers
+   * @param {Array<string>} subWidgetDelegatedProperties
    */
   registerSubWidget(widgetClass, subWidgetId, subWidgetClass, subWidgetStyleClass, subWidgetTriggers, subWidgetDelegatedProperties) {
     widgetClass.subWidgets[subWidgetId] = {
@@ -93,7 +94,7 @@ export class Base {
    * Uniface iterates through all registered workers and adds their sub-widgets to the widget object at runtime.
    * The UXWF deals with sub-widgets transparently, like generate their layouts, instantiate them, invoke their onConnect
    * get their value, map their triggers, update their properties, etc.
-   * @param {typeof Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {Worker} worker - Specifies the worker.
    */
   // @ts-ignore
@@ -105,7 +106,7 @@ export class Base {
    * Looks up the node within node as specified by propId.
    * @param {UData} node
    * @param {UPropName} propId
-   * @return {Object}
+   * @returns {object}
    */
   getNode(node, propId) {
     return Base.getNode(node, propId);
@@ -115,7 +116,7 @@ export class Base {
    * Looks up the node within node as specified by propId.
    * @param {UData} node
    * @param {UPropName} propId
-   * @return {Object}
+   * @returns {object}
    */
   static getNode(node, propId) {
     return propId ? node[propId] : undefined;
@@ -123,8 +124,8 @@ export class Base {
 
   /**
    * Convert Uniface property values into JS Boolean.
-   * @param {String|boolean|number} value
-   * @return {boolean}
+   * @param {string | boolean | number} value
+   * @returns {boolean}
    */
   toBoolean(value) {
     return Base.toBoolean(value);
@@ -132,8 +133,8 @@ export class Base {
 
   /**
    * Convert Uniface property values into JS Boolean.
-   * @param {String|boolean|number} value
-   * @return {boolean}
+   * @param {string | boolean | number} value
+   * @returns {boolean}
    */
   static toBoolean(value) {
     let result = false;
@@ -158,7 +159,7 @@ export class Base {
   /**
    * Convert Uniface field value to JS Boolean.
    * @param {any} value
-   * @return {Boolean}
+   * @returns {boolean}
    * @throws {*} - Conversion failure.
    */
   fieldValueToBoolean(value) {
@@ -168,7 +169,7 @@ export class Base {
   /**
    * Convert Uniface field value to JS Boolean.
    * @param {any} value
-   * @return {Boolean}
+   * @returns {boolean}
    * @throws {*} - Conversion failure.
    */
   static fieldValueToBoolean(value) {
@@ -199,9 +200,9 @@ export class Base {
 
   /**
    * Returns the valrep-item for the provided value
-   * @param {Array} valrep
+   * @param {Array<object>} valrep
    * @param {any} value
-   * @return {Object}
+   * @returns {object}
    */
   static getValrepItem(valrep, value) {
     if (Array.isArray(valrep)) {
@@ -217,7 +218,7 @@ export class Base {
   /**
    * Converts a string format valrep into [{"value": "representation"},....] format.
    * @param {string} valrep - The valrep string to be formatted.
-   * @returns {Array} An array of objects with "value" and "representation" properties.
+   * @returns {Array<object>} An array of objects with "value" and "representation" properties.
    */
   getFormattedValrep(valrep) {
     return Base.getFormattedValrep(valrep);
@@ -226,7 +227,7 @@ export class Base {
   /**
    * Converts a string format valrep into [{"value": "representation"},....] format.
    * @param {string} valrep - The valrep string to be formatted.
-   * @returns {Array} An array of objects with "value" and "representation" properties.
+   * @returns {Array<object>} An array of objects with "value" and "representation" properties.
    */
   static getFormattedValrep(valrep) {
     let formattedValrep = [];
@@ -246,8 +247,8 @@ export class Base {
    * Calls an objectDefinition function, as specified by the instruction string, and returns the result of that function call.
    * Returns a error message if the instruction is of an incorrect format or the requested function does not exist.
    * @param {UObjectDefinition} objectDefinition
-   * @param {String} instruction  ; Instruction string of syntax: "function({arg1{,arg2{...,argN}}})"
-   * @return {*}
+   * @param {string} instruction  ; Instruction string of syntax: "function({arg1{,arg2{...,argN}}})"
+   * @returns {*}
    * @memberof Base
    */
   objectDefinitionFunctionCall(objectDefinition, instruction) {
@@ -290,9 +291,9 @@ export class Base {
    * u-valrep-value - this class is used for querying the value element in both valrep and val display formats.
    * u-value - this class is specific to valrep format and is used to style the value section.
    * u-valrep-representation - this class is used both as a query-selector and for styling the representation section.
-   * @param {String} displayFormat
-   * @param {String | null} value
-   * @param {String} representation
+   * @param {string} displayFormat
+   * @param {string | null} value
+   * @param {string} representation
    * @returns {HTMLElement | DocumentFragment}
    */
   getFormattedValrepItemAsHTML(displayFormat, value, representation) {
@@ -319,9 +320,9 @@ export class Base {
 
   /**
    * Warning log function.
-   * @param {String} functionName
-   * @param {String} message
-   * @param {String} consequence
+   * @param {string} functionName
+   * @param {string} message
+   * @param {string} consequence
    */
   warn(functionName, message, consequence) {
     console.warn(`${this.constructor.name}.${functionName}: ${message} - ${consequence}.`);
@@ -329,9 +330,9 @@ export class Base {
 
   /**
    * Error log function.
-   * @param {String} functionName
-   * @param {String} message
-   * @param {String} consequence
+   * @param {string} functionName
+   * @param {string} message
+   * @param {string} consequence
    */
   error(functionName, message, consequence) {
     console.error(`${this.constructor.name}.${functionName}: ${message} - ${consequence}.`);
@@ -379,8 +380,8 @@ export class Base {
    * Extracts sub-widget property names from the original property names set and removes the corresponding
    * property names from original property names set.
    * @param {UPropertyNames} propertyNames - The source set containing property names to extract.
-   * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
-   * @returns {UPropertyNames|undefined} A set of extracted sub-widget property names, or `undefined` if no property names are found.
+   * @param {string} subWidgetPropPrefix - Sub-widget property prefix.
+   * @returns {UPropertyNames | undefined} A set of extracted sub-widget property names, or `undefined` if no property names are found.
    */
   extractSubWidgetPropertyNames(propertyNames, subWidgetPropPrefix) {
     let subWidgetPropertyNames;
@@ -407,6 +408,20 @@ export class Base {
       if (key.startsWith("ms-Icon")) {
         element.classList.remove(key);
       }
+    });
+  }
+
+  /**
+   * Sets error related properties.
+   * @param {Widget} widgetInstance
+   * @param {string} errorType
+   * @param {string} errorMessage
+   */
+  setErrorProperties(widgetInstance, errorType = "error", errorMessage = "") {
+    const isSettingError = errorMessage !== "";
+    widgetInstance.setProperties({
+      [errorType]: isSettingError,
+      [`${errorType}-message`]: isSettingError ? errorMessage : ""
     });
   }
 }

@@ -2,10 +2,18 @@ stages:
   - lint
   - build
   - test
+  - polaris_scan
   - publish
 
 variables:
   TARGET_VERSION: "10403"
+  
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      when: always
 
 include:
   - project: Uniface/tools/defaults
@@ -45,6 +53,27 @@ test:
     paths:
       - testAutomation/test-results/
     when: always
+
+polaris_scan:
+  stage: polaris_scan
+  extends: .3gl_redhatubi8_polaris_build
+  tags:
+    - docker-uniface-local
+  script:
+    - echo "Cleaning up test-results before Polaris scan..."
+    - rm -rf testAutomation/test-results
+    - echo "Running Polaris Scan..."
+    - polaris -c polaris.yml analyze -w
+  artifacts:
+    paths:
+      - .blackduck/polaris/
+    when: always
+    expire_in: 7 days
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
+      when: always
+    - if: '$CI_COMMIT_BRANCH != "main"'
+      when: manual
 
 publish:
   stage: publish

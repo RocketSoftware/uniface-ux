@@ -1,5 +1,5 @@
 // @ts-check
-import { Widget } from "./widget.js";
+import { Widget } from "../framework/widget.js";
 import {
   Element,
   SlottedError,
@@ -13,8 +13,11 @@ import {
   SlottedElement,
   HtmlAttributeChoice,
   IgnoreProperty
-} from "./workers.js";
-// The import of Fluent UI web-components is done in loader.js
+} from "../framework/workers.js";
+
+// Optimized way to reduce the size of bundle, only import necessary fluent-ui components
+import { fluentOption, fluentSelect, provideFluentDesignSystem } from "@fluentui/web-components";
+provideFluentDesignSystem().register(fluentOption(), fluentSelect());
 
 /**
  * Select Widget
@@ -65,8 +68,8 @@ export class Select extends Widget {
     /**
      * Creates an instance of SlottedSelectedValueWithPlaceholder.
      * @param {typeof Widget} widgetClass
-     * @param {String} styleClass
-     * @param {String} elementQuerySelector
+     * @param {string} styleClass
+     * @param {string} elementQuerySelector
      */
     constructor(widgetClass, styleClass, elementQuerySelector) {
       super(widgetClass);
@@ -165,10 +168,7 @@ export class Select extends Widget {
         selectedValSpan ? selectedValSpan.textContent : ""
       );
       // Always call hideFormatError as we cannot select an invalid option.
-      widgetInstance.setProperties({
-        "format-error": false,
-        "format-error-message": ""
-      });
+      this.setErrorProperties(widgetInstance, "format-error");
     }
 
     getValue(widgetInstance) {
@@ -225,15 +225,9 @@ export class Select extends Widget {
       }
 
       if (!isPlaceholderElementCreated && valueToSet === -1) {
-        widgetInstance.setProperties({
-          "format-error": true,
-          "format-error-message": Select.formatErrorMessage
-        });
+        this.setErrorProperties(widgetInstance, "format-error", Select.formatErrorMessage);
       } else {
-        widgetInstance.setProperties({
-          "format-error": false,
-          "format-error-message": ""
-        });
+        this.setErrorProperties(widgetInstance, "format-error");
       }
       // When the value doesn't match any of the options in the option list
       // then Fluent sets the first option as selected.
@@ -544,7 +538,7 @@ export class Select extends Widget {
   blockUI() {
     this.log("blockUI");
 
-    /** @type {Object} */
+    /** @type {object} */
     let widgetClass = this.constructor;
     // Check if uiBlocking is defined in the constructor.
     if (widgetClass.uiBlocking) {
@@ -570,7 +564,7 @@ export class Select extends Widget {
   unblockUI() {
     this.log("unblockUI");
 
-    /** @type {Object} */
+    /** @type {object} */
     const widgetClass = this.constructor;
     // Check if uiBlocking is defined in the constructor.
     if (widgetClass.uiBlocking) {
@@ -589,7 +583,7 @@ export class Select extends Widget {
   /**
    * Returns an array of property ids that affect the formatted value for text-based widgets
    * like the cell widget of the data-grid.
-   * @returns {string[]}
+   * @returns {Array<string>}
    */
   static getValueFormattedSetters() {
     return [
@@ -605,7 +599,7 @@ export class Select extends Widget {
    * Returns the value as format-object for text-based widgets
    * like the cell widget of the data-grid.
    * @param {UData} properties
-   * @return {UValueFormatting}
+   * @returns {UValueFormatting}
    */
   static getValueFormatted(properties) {
 

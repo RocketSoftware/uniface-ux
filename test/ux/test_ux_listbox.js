@@ -74,6 +74,13 @@
         expect(element).instanceOf(HTMLElement, `Function processLayout() of ${widgetName} does not return an HTMLElement.`);
       });
 
+      it("check registration of web component", function () {
+        const customElementNames = ["fluent-listbox", "fluent-option"];
+        for (const name of customElementNames) {
+          assert(window.customElements.get(name), `Web component ${name} has not been registered!`);
+        }
+      });
+
       it("check tagName", function () {
         expect(element).to.have.tagName(tester.uxTagName);
       });
@@ -118,8 +125,24 @@
   });
 
   describe("mapTrigger()", function () {
-    const widget = tester.onConnect();
-    widget.mapTrigger("onchange");
+    const testData = {
+      "onchange" : "change"
+    };
+    let widget;
+
+    beforeEach(function () {
+      widget = tester.onConnect();
+    });
+
+    Object.keys(testData).forEach((triggerName) => {
+      it(`Test mapping of trigger '${triggerName}'`, function () {
+        const triggerMapping = widget.mapTrigger(triggerName);
+        assert(triggerMapping, `Trigger '${triggerName}' is not mapped!`);
+        assert(triggerMapping.element === tester.element, `Trigger '${triggerName}' is not mapped to correct HTMLElement!`);
+        assert(triggerMapping.event_name === testData[triggerName],
+          `trigger '${triggerName}' should be mapped to event '${testData[triggerName]}', but got '${triggerMapping.event_name}'!`);
+      });
+    });
   });
 
   describe("dataInit()", function () {
@@ -533,7 +556,6 @@
     let widget, element;
     before(function () {
       widget = tester.createWidget();
-      tester.bindUpdatorsEventToElement();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
       tester.dataUpdate({

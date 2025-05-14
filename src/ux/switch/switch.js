@@ -1,5 +1,5 @@
 // @ts-check
-import { Widget } from "./widget.js";
+import { Widget } from "../framework/widget.js";
 import {
   Element,
   SlottedError,
@@ -11,8 +11,11 @@ import {
   SlottedElement,
   HtmlValueAttributeBoolean,
   IgnoreProperty
-} from "./workers.js";
-// The import of Fluent UI web-components is done in loader.js
+} from "../framework/workers.js";
+
+// Optimized way to reduce the size of bundle, only import necessary fluent-ui components
+import { fluentSwitch, provideFluentDesignSystem } from "@fluentui/web-components";
+provideFluentDesignSystem().register(fluentSwitch());
 
 /**
  * Switch widget
@@ -46,7 +49,7 @@ export class Switch extends Widget {
     /**
      * Creates an instance of SwitchSlottedError.
      * @param {typeof Widget} widgetClass
-     * @param {String} selectorUsingSameErrorSlot
+     * @param {string} selectorUsingSameErrorSlot
      */
     constructor(widgetClass, tagName, styleClass, elementQuerySelector, slot, selectorUsingSameErrorSlot) {
       super(widgetClass, tagName, styleClass, elementQuerySelector, slot);
@@ -112,7 +115,7 @@ export class Switch extends Widget {
   /**
    * Returns an array of property ids that affect the formatted value for text-based widgets
    * like the cell widget of the data-grid.
-   * @returns {string[]}
+   * @returns {Array<string>}
    */
   static getValueFormattedSetters() {
     return [
@@ -128,7 +131,7 @@ export class Switch extends Widget {
    * Returns the value as format-object for text-based widgets
    * like the cell widget of the data-grid.
    * @param {UData} properties
-   * @return {UValueFormatting}
+   * @returns {UValueFormatting}
    */
   static getValueFormatted(properties) {
 

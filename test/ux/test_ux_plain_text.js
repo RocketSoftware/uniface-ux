@@ -131,14 +131,13 @@
   });
 
   describe("mapTrigger()", function () {
-    const element = tester.processLayout();
-    const widget = tester.onConnect();
+    beforeEach(function () {
+      tester.onConnect();
+    });
 
-    it("defined mapTrigger() and onchange event", function () {
-      widget.mapTrigger("onchange");
-      const event = new window.Event("onchange");
-      element.dispatchEvent(event);
-      assert(widget.elements.widget === element, "Widget is not connected.");
+    it("Check there is no 'onchange' trigger is mapped", function () {
+      const triggerMapping = tester.widget.mapTrigger("onchange");
+      assert(!triggerMapping, "Trigger 'onchange' should not be mapped!");
     });
   });
 
