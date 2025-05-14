@@ -275,7 +275,7 @@
 
   });
 
-  describe("Button click event", function () {
+  describe("Button detail trigger", function () {
     const trigger = "detail";
     const triggerMap = {};
     triggerMap[trigger] = function () {
@@ -295,7 +295,7 @@
       // Simulate a click event
       tester.userClick();
 
-      // Assert that the click event handler was called once.
+      // Assert that the detail trigger handler was called once.
       expect(tester.calledOnce(trigger)).to.be.true;
     });
 

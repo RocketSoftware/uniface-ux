@@ -170,7 +170,7 @@
     });
 
     // Test case for the on change event.
-    it("Should call the onchange event handler when the number field is changed", function () {
+    it("Should call the onchange trigger handler when the number field is changed", function () {
       // Simulate a change event by inputting a string.
       const inputValue = "1234";
       tester.userInput(inputValue);
@@ -184,7 +184,7 @@
     it("Test spin-up button of the number field", async function () {
       expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
 
-      // Simulate a onchange event by clicking the spin-up button.
+      // Simulate a change event by clicking the spin-up button.
       await tester.asyncUserClick(+1);
 
       // Assert that the onchange trigger handler was called once.
@@ -196,7 +196,7 @@
     it("Test spin-down button of the number field", async function () {
       expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
 
-      // Simulate a onchange event by clicking the spin-up button.
+      // Simulate a change event by clicking the spin-up button.
       await tester.asyncUserClick(-1);
 
       // Assert that the onchange trigger handler was called once.

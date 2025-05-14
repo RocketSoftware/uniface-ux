@@ -154,7 +154,7 @@
     });
 
     // Test case for change event by user input.
-    it("should call the onchange event handler when the text area is changed", function () {
+    it("should call the onchange trigger handler when the text area is changed", function () {
       // Simulate a change event.
       const inputValue = "Hello,\nworld";
       tester.userInput(inputValue);

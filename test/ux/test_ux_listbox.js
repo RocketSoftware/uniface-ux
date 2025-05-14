@@ -816,7 +816,7 @@
     });
   });
 
-  describe("Listbox onchange event", function () {
+  describe("Listbox onchange trigger", function () {
     const triggerMap = {
       "onchange" : function () {
         const value = tester.widget.getValue();
@@ -838,7 +838,7 @@
     });
 
     // Test case for the on change event.
-    it("should call the onchange event handler when the listbox is changed", async function () {
+    it("should call the onchange trigger handler when the listbox is changed", async function () {
       // Emulate a click on the list item 3.
       const index = 3;
       await tester.asyncUserClick(index);

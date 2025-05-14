@@ -256,7 +256,7 @@
       // Simulate a click event
       await tester.asyncUserClick();
 
-      // Assert that the click event handler was called once.
+      // Assert that the onchange trigger handler was called once.
       expect(tester.calledOnce(trigger)).to.be.true;
       // Expected the value is the 3rd item of valRepArray.
       expect(tester.widget.getValue()).to.equal(true, "Widget value");

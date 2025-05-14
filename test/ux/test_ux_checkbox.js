@@ -152,7 +152,7 @@
     });
 
     // Test case for the onchange trigger.
-    it("should call the onchange event handler when the checkbox is clicked", function () {
+    it("should call the onchange trigger handler when the checkbox is clicked", function () {
       // Simulate a click event
       tester.userClick();
 
