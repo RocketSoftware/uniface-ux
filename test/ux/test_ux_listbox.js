@@ -848,10 +848,12 @@
     });
 
     // Test case for the on change event.
-    it("should call the onchange event handler when the listbox is changed", function () {
+    it("should call the onchange event handler when the listbox is changed", async function () {
       // Emulate a click on the list item 3.
       const index = 3;
-      tester.userClick(index);
+      await tester.asyncUserClick(index);
+
+      tester.debugLog("check");
 
       // Assert that the onchange trigger handler was called once.
       expect(triggerSpy.calledOnce).to.be.true;

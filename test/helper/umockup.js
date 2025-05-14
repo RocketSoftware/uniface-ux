@@ -244,20 +244,25 @@
     });
   }
 
-  function initTriggerProxy() {
-    this.triggers = {};
-    this.triggerProxies = {};
-    this.getTriggerProxy = function(triggerName) {
-      const _this = this;
-      if (typeof this.triggers[triggerName] === "function"
-        && !this.triggerProxies[triggerName]) {
-        this.triggerProxies[triggerName] = function (event) {
-          event.stopPropagation();
-          _this.triggers[triggerName].apply(this, arguments);
-        };
-      }
-      return this.triggerProxies[triggerName];
-    };
+  function getTriggerProxy(triggerName) {
+    const _this = this;
+    const triggerInfo = this.triggers[triggerName];
+    if (triggerInfo && typeof triggerInfo.handler === "function"
+      && !this.triggerProxies[triggerName]) {
+      this.triggerProxies[triggerName] = function (event) {
+        event.stopPropagation();
+        const _triggerInfo = _this.triggers[triggerName];
+        if (_triggerInfo) {
+          if (typeof _triggerInfo.countOfCall !== "number") {
+            _triggerInfo.countOfCall = 0;
+          }
+          _triggerInfo.countOfCall++;
+          _triggerInfo.handler.apply(this, arguments);
+        }
+      };
+      triggerInfo.countOfCall = 0;
+    }
+    return this.triggerProxies[triggerName];
   }
 
   /**
@@ -300,7 +305,40 @@
       this.layoutArgs = [];
 
       // introduce triggerProxies for avoiding duplicated registration of trigger handlers
-      initTriggerProxy.call(this);
+      this.triggerProxies = {};
+      this.getTriggerProxy = getTriggerProxy;
+      this.resetMapTriggers();
+    }
+
+    /**
+     * Reset the trigger map (which has been set by mapTriggers()).
+     */
+    resetMapTriggers() {
+      this.triggers = {};
+      debugLog("Reset the trigger map");
+    }
+
+    countOfTriggerCalled(triggerName) {
+      const triggerInfo = this.triggers[triggerName];
+      return triggerInfo ? triggerInfo.countOfCall : 0;
+    }
+
+    calledOnce(triggerName) {
+      return (this.countOfTriggerCalled(triggerName) === 1);
+    }
+
+    resetTriggerCalled(triggerName) {
+      if (triggerName) {
+        const triggerInfo = this.triggers[triggerName];
+        if (triggerInfo) {
+          triggerInfo.countOfCall = 0;
+        }
+      } else {
+        const _this = this;
+        Object.keys(this.triggers).forEach((trg) => {
+          _this.resetTriggerCalled(trg);
+        });
+      }
     }
 
     setDebug(mode) {
@@ -353,8 +391,8 @@
     }
 
     /**
-     * Map and register the trigger event handlers
-     * @param {*} triggerMap the given trigger handler map, a object with
+     * Map and register the trigger event handlers.
+     * @param {Object} triggerMap the given trigger handler map, a object with
      *     key is trigger name and value is trigger handler.
      */
     mapTriggers(triggerMap) {
@@ -364,12 +402,17 @@
 
         Object.keys(triggerMap).forEach((trg) => {
           if (typeof triggerMap[trg] === "function") {
-            _this.triggers[trg] = triggerMap[trg];
+            _this.triggers[trg] = {
+              "handler" : triggerMap[trg],
+              "countOfCall" : 0
+            };
             const trigger = {};
             trigger[trg] = _this.getTriggerProxy(trg);
             customWidgetContainer.mapTriggers(widget, trigger);
           }
         });
+      } else {
+        this.resetMapTriggers();
       }
     }
 
@@ -451,6 +494,20 @@
     }
 
     /**
+     * Asynchronous version of userClick();
+     *
+     * @param {Number} itemIndex the index of the item to click on. Optional, default means
+     *                 the top item or element, or the first item.
+     * @returns a promise.
+     */
+    asyncUserClick(itemIndex) {
+      const _this = this;
+      return asyncRun(function() {
+        _this.userClick(itemIndex);
+      });
+    }
+
+    /**
      * Emulate the user input on an editable widget.
      *
      * @param {String} value the new input value;
@@ -469,6 +526,19 @@
         debugLog("userInput(" + value + "): dispatch event 'change'!");
         control.dispatchEvent(new window.Event("change"));
       }
+    }
+
+    /**
+     * Asynchronous version of userInput();
+     *
+     * @param {String} value the new input value;
+     * @returns a promise.
+     */
+    asyncUserInput(value) {
+      const _this = this;
+      return asyncRun(function() {
+        _this.userClick(value);
+      });
     }
 
     getDefaultValues() {
