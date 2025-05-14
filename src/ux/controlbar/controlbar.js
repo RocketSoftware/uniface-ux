@@ -292,9 +292,9 @@ export class Controlbar extends Widget {
     for (const property in data) {
       if (overflowProperties.includes(property)) {
         const value = data[property];
-        // Use == (iso ===) to check whether both sides of compare refer to the same uniface.RESET object.
-        // eslint-disable-next-line eqeqeq, no-undef
-        if (value == uniface.RESET) {
+        // Use == (iso ===) to check whether both sides of compare refer to the same global uniface.RESET object.
+        // eslint-disable-next-line eqeqeq
+        if (value == globalThis.uniface.RESET) {
           this.data[property] = Controlbar.defaultValues[property] ?? null;
           invokeRefresh = true;
         } else if (this.validateOverflowPropertyValue(property, value)) {
