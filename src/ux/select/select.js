@@ -271,6 +271,9 @@ export class Select extends Widget {
   */
   static SelectUIBlock = class extends UIBlock {
     refresh(widgetInstance) {
+      this.log("refresh", {
+        "widgetInstance": widgetInstance.getTraceDescription()
+      });
       const element = widgetInstance.elements.widget;
       const isBlocked = this.toBoolean(this.getNode(widgetInstance.data, "uiblocked"));
 

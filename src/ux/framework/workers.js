@@ -1496,6 +1496,9 @@ export class UIBlock extends Worker {
   }
 
   refresh(widgetInstance) {
+    this.log("refresh", {
+      "widgetInstance": widgetInstance.getTraceDescription()
+    });
     let element = widgetInstance.elements.widget;
     const isBlocked = this.toBoolean(this.getNode(widgetInstance.data, "uiblocked"));
 
