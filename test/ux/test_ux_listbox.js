@@ -575,6 +575,8 @@
           "display-format": "rep"
         });
       });
+
+      triggerSpy.resetHistory();
     });
 
     it("simulate user interaction and select first option", function () {
