@@ -286,12 +286,241 @@
   }
 
   /**
+   * Helper class for testing widget.
+   */
+  class WidgetTester {
+
+    // widget, element, uxTagName;
+    static debug = false;
+
+    constructor() {
+      this.widgetId = widgetId;
+      this.widgetName = getWidgetName();
+      this.widgetProperties = {};
+      this.layoutArgs = [];
+
+      // introduce triggerProxies for avoiding duplicated registration of trigger handlers
+      initTriggerProxy.call(this);
+    }
+
+    setDebug(mode) {
+      this.debug = mode;
+    }
+
+    debugLog(message) {
+      if (WidgetTester.debug) {
+        console.log(message);
+      }
+    }
+
+    getWidgetClass() {
+      return UNIFACE.ClassRegistry.get(this.widgetName);
+    }
+
+    processLayout() {
+      let args = [...arguments];
+      if (!this.uxTagName) {
+        if (args.length) {
+          if (!args[0]) {
+            args[0] = document.getElementById(this.widgetId);
+          }
+        } else {
+          args = [document.getElementById(this.widgetId)];
+        }
+        this.element = _uf.DOMNodeManager.parseCustomWidgetNode(this.widgetName, args);
+        this.uxTagName = this.element.tagName;
+        this.layoutArgs = args;
+      }
+
+      return this.element;
+    }
+
+    construct() {
+      if (!this.widget) {
+        const widgetClass = this.getWidgetClass(this.widgetName);
+        this.widget = new widgetClass();
+      }
+      return this.widget;
+    }
+
+    onConnect() {
+      if (!this.widget || !this.widget.elements || !this.widget.elements.widget) {
+        const element = this.processLayout.apply(this, this.layoutArgs);
+        const widget = this.construct();
+        this.updaters = widget.onConnect(element);
+      }
+      return this.widget;
+    }
+
+    /**
+     * Map and register the trigger event handlers
+     * @param {*} triggerMap the given trigger handler map, a object with
+     *     key is trigger name and value is trigger handler.
+     */
+    mapTriggers(triggerMap) {
+      if (triggerMap) {
+        const _this = this;
+        const widget = this.onConnect();
+
+        Object.keys(triggerMap).forEach((trg) => {
+          if (typeof triggerMap[trg] === "function") {
+            _this.triggers[trg] = triggerMap[trg];
+            const trigger = {};
+            trigger[trg] = _this.getTriggerProxy(trg);
+            customWidgetContainer.mapTriggers(widget, trigger);
+          }
+        });
+      }
+    }
+
+    dataInit(triggerMap) {
+      const widget = this.onConnect();
+      this.mapTriggers(triggerMap);
+      widget.dataInit();
+      return widget;
+    }
+
+    createWidget(triggerMap) {
+      const widget = this.dataInit(triggerMap);
+      let updaters = this.updaters;
+      if (!this.updatersNotConnected && updaters !== undefined) {
+        // Make sure we have an *array* of validators.
+        if (!(updaters instanceof Array)) {
+          updaters = [updaters];
+        }
+        // Create the event listeners for the updaters.
+        updaters.forEach((updater) => {
+          customWidgetContainer.addListener(updater.element, updater.event_name, true, false, updater.handler);
+        });
+        this.updatersNotConnected = true;
+      }
+
+      return widget;
+    }
+
+    dispatchEventFor(triggerName, options) {
+      const trigger = this.widget.mapTrigger(triggerName);
+      if (this.widgetName === "UX.Button") {
+        if (!options) {
+          options = {
+            "event" : trigger.event_name,
+            "element" : trigger.element
+          };
+        }
+      }
+      if (options.event === "click") {
+        if (!options.element) {
+          options.element = trigger.element;
+        }
+        options.element.click();
+      }
+    }
+
+    /**
+     * Emulate the user click on the item with the given itemIndex as its index (start from 1);
+     *
+     * @param {Number} itemIndex the index of the item to click on. Optional, default means
+     *                 the top item or element, or the first item.
+     */
+    userClick(itemIndex) {
+      let control;
+      let openClick = (this.widgetName === "UX.Select");
+      if (itemIndex && (this.widgetName === "UX.Listbox" || this.widgetName === "UX.Select")) {
+        control = this.element.querySelector(`fluent-option[aria-posinset='${itemIndex}']`);
+      } else if (itemIndex && this.widgetName === "UX.NumberField") {
+        let controlClass;
+        if (itemIndex === 1) {
+          controlClass = "step-up";
+        } else if (itemIndex === -1) {
+          controlClass = "step-down";
+        }
+        if (controlClass) {
+          control = this.element.shadowRoot.querySelector(".controls ." + controlClass);
+        }
+      } else if (itemIndex && this.widgetName === "UX.RadioGroup") {
+        control = this.element.querySelector(`fluent-radio[current-value='${itemIndex - 1}']`);
+      } else { // UX.Button, UX.Checkbox, UX.Switch
+        control = this.element;
+      }
+      if (openClick) {
+        this.element.click();
+      }
+      if (control) {
+        control.click();
+      }
+    }
+
+    /**
+     * Emulate the user input on an editable widget.
+     *
+     * @param {String} value the new input value;
+     */
+    userInput(value) {
+      const currentValue = this.widget.getValue();
+      if (
+        (this.widgetName === "UX.NumberField"
+          || this.widgetName === "UX.TextArea"
+          || this.widgetName === "UX.TextField"
+        ) && value !== currentValue) {
+        const control = this.element.shadowRoot.querySelector("#control.control");
+        control.value = value;
+        control.dispatchEvent(new window.Event("input"));
+
+        debugLog("userInput(" + value + "): dispatch event 'change'!");
+        control.dispatchEvent(new window.Event("change"));
+      }
+    }
+
+    getDefaultValues() {
+      if (!this.defaultValues) {
+        const widgetClass = this.getWidgetClass();
+        this.defaultValues = widgetClass.defaultValues;
+        if (!this.defaultValues) {
+          this.defaultValues = {};
+        }
+      }
+      return this.defaultValues;
+    }
+
+    getDefaultClasses() {
+      const widgetClass = this.getWidgetClass();
+      this.defaultValues = widgetClass.defaultValues;
+      const classes = Object.keys(this.defaultValues).reduce((accumulator, key) => {
+        if (key.startsWith("class:")) {
+          let newKey = key.replace("class:", "");
+          accumulator[newKey] = this.defaultValues[key];
+        }
+        return accumulator;
+      }, {});
+      return classes;
+    }
+
+    dataUpdate(data) {
+      // This is to remember the updated value from widget test so that this.widgetProperties can be used in dataCleanup()
+      Object.keys(data).forEach((key) => {
+        if (!this.widgetProperties[key]) {
+          this.widgetProperties[key] = new Set();
+        }
+        data[key] !== null && data[key] !== undefined && Object.keys(data[key]).forEach((childKey) => {
+          this.widgetProperties[key].add(childKey);
+        });
+      });
+      this.widget.dataUpdate(data);
+    }
+
+  }
+
+  /**
    * Utility functions of mockup
    */
   global.umockup = {
 
     "setDebug" : function(b) {
       _debug = b;
+    },
+
+    "setTestDebug" : function(b) {
+      this.WidgetTester.debug = !!(b);
     },
 
     "getWidgetName" : getWidgetName,
@@ -311,223 +540,7 @@
 
     "asyncRun" : asyncRun,
 
-    /**
-     * Helper class for testing widget.
-     */
-    "WidgetTester" : class {
-
-      // widget, element, uxTagName;
-
-      constructor() {
-        this.widgetId = widgetId;
-        this.widgetName = getWidgetName();
-        this.widgetProperties = {};
-        this.layoutArgs = [];
-
-        // introduce triggerProxies for avoiding duplicated registration of trigger handlers
-        initTriggerProxy.call(this);
-      }
-
-      debugLog(message) {
-        debugLog(message);
-      }
-
-      getWidgetClass() {
-        return UNIFACE.ClassRegistry.get(this.widgetName);
-      }
-
-      processLayout() {
-        let args = [...arguments];
-        if (!this.uxTagName) {
-          if (args.length) {
-            if (!args[0]) {
-              args[0] = document.getElementById(this.widgetId);
-            }
-          } else {
-            args = [document.getElementById(this.widgetId)];
-          }
-          this.element = _uf.DOMNodeManager.parseCustomWidgetNode(this.widgetName, args);
-          this.uxTagName = this.element.tagName;
-          this.layoutArgs = args;
-        }
-
-        return this.element;
-      }
-
-      construct() {
-        if (!this.widget) {
-          const widgetClass = this.getWidgetClass(this.widgetName);
-          this.widget = new widgetClass();
-        }
-        return this.widget;
-      }
-
-      onConnect() {
-        if (!this.widget || !this.widget.elements || !this.widget.elements.widget) {
-          const element = this.processLayout.apply(this, this.layoutArgs);
-          const widget = this.construct();
-          this.updaters = widget.onConnect(element);
-        }
-        return this.widget;
-      }
-
-      /**
-       * Map and register the trigger event handlers
-       * @param {*} triggerMap the given trigger handler map, a object with
-       *     key is trigger name and value is trigger handler.
-       */
-      mapTriggers(triggerMap) {
-        if (triggerMap) {
-          const _this = this;
-          const widget = this.onConnect();
-
-          Object.keys(triggerMap).forEach((trg) => {
-            if (typeof triggerMap[trg] === "function") {
-              _this.triggers[trg] = triggerMap[trg];
-              const trigger = {};
-              trigger[trg] = _this.getTriggerProxy(trg);
-              customWidgetContainer.mapTriggers(widget, trigger);
-            }
-          });
-        }
-      }
-
-      dataInit(triggerMap) {
-        const widget = this.onConnect();
-        this.mapTriggers(triggerMap);
-        widget.dataInit();
-        return widget;
-      }
-
-      createWidget(triggerMap) {
-        const widget = this.dataInit(triggerMap);
-        let updaters = this.updaters;
-        if (!this.updatersNotConnected && updaters !== undefined) {
-          // Make sure we have an *array* of validators.
-          if (!(updaters instanceof Array)) {
-            updaters = [updaters];
-          }
-          // Create the event listeners for the updaters.
-          updaters.forEach((updater) => {
-            customWidgetContainer.addListener(updater.element, updater.event_name, true, false, updater.handler);
-          });
-          this.updatersNotConnected = true;
-        }
-
-        return widget;
-      }
-
-      dispatchEventFor(triggerName, options) {
-        const trigger = this.widget.mapTrigger(triggerName);
-        if (this.widgetName === "UX.Button") {
-          if (!options) {
-            options = {
-              "event" : trigger.event_name,
-              "element" : trigger.element
-            };
-          }
-        }
-        if (options.event === "click") {
-          if (!options.element) {
-            options.element = trigger.element;
-          }
-          options.element.click();
-        }
-      }
-
-      /**
-       * Emulate the user click on the item with the given itemIndex as its index (start from 1);
-       *
-       * @param {Number} itemIndex the index of the item to click on. Optional, default means
-       *                 the top item or element, or the first item.
-       */
-      userClick(itemIndex) {
-        let control;
-        let openClick = (this.widgetName === "UX.Select");
-        if (itemIndex && (this.widgetName === "UX.Listbox" || this.widgetName === "UX.Select")) {
-          control = this.element.querySelector(`fluent-option[aria-posinset='${itemIndex}']`);
-        } else if (itemIndex && this.widgetName === "UX.NumberField") {
-          let controlClass;
-          if (itemIndex === 1) {
-            controlClass = "step-up";
-          } else if (itemIndex === -1) {
-            controlClass = "step-down";
-          }
-          if (controlClass) {
-            control = this.element.shadowRoot.querySelector(".controls ." + controlClass);
-          }
-        } else if (itemIndex && this.widgetName === "UX.RadioGroup") {
-          control = this.element.querySelector(`fluent-radio[current-value='${itemIndex - 1}']`);
-        } else { // UX.Button, UX.Checkbox, UX.Switch
-          control = this.element;
-        }
-        if (openClick) {
-          this.element.click();
-        }
-        if (control) {
-          control.click();
-        }
-      }
-
-      /**
-       * Emulate the user input on an editable widget.
-       *
-       * @param {String} value the new input value;
-       */
-      userInput(value) {
-        const currentValue = this.widget.getValue();
-        if (
-          (this.widgetName === "UX.NumberField"
-            || this.widgetName === "UX.TextArea"
-            || this.widgetName === "UX.TextField"
-          ) && value !== currentValue) {
-          const control = this.element.shadowRoot.querySelector("#control.control");
-          control.value = value;
-          control.dispatchEvent(new window.Event("input"));
-
-          debugLog("userInput(" + value + "): dispatch event 'change'!");
-          control.dispatchEvent(new window.Event("change"));
-        }
-      }
-
-      getDefaultValues() {
-        if (!this.defaultValues) {
-          const widgetClass = this.getWidgetClass();
-          this.defaultValues = widgetClass.defaultValues;
-          if (!this.defaultValues) {
-            this.defaultValues = {};
-          }
-        }
-        return this.defaultValues;
-      }
-
-      getDefaultClasses() {
-        const widgetClass = this.getWidgetClass();
-        this.defaultValues = widgetClass.defaultValues;
-        const classes = Object.keys(this.defaultValues).reduce((accumulator, key) => {
-          if (key.startsWith("class:")) {
-            let newKey = key.replace("class:", "");
-            accumulator[newKey] = this.defaultValues[key];
-          }
-          return accumulator;
-        }, {});
-        return classes;
-      }
-
-      dataUpdate(data) {
-        // This is to remember the updated value from widget test so that this.widgetProperties can be used in dataCleanup()
-        Object.keys(data).forEach((key) => {
-          if (!this.widgetProperties[key]) {
-            this.widgetProperties[key] = new Set();
-          }
-          data[key] !== null && data[key] !== undefined && Object.keys(data[key]).forEach((childKey) => {
-            this.widgetProperties[key].add(childKey);
-          });
-        });
-        this.widget.dataUpdate(data);
-      }
-
-    }
+    "WidgetTester" : WidgetTester
 
   };
 

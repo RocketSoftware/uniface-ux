@@ -61,6 +61,11 @@
       const widgetName = umockup.getWidgetName();
       const scriptName = umockup.getTestJsName();
 
+      const paramsString = window.location.search;
+      const params = new URLSearchParams(paramsString);
+      const debug = params.get("debug");
+      umockup.setTestDebug(debug);
+    
       document.title = "Widget test - " + widgetName + " - " + scriptName;
       let el = document.getElementById("widget-name");
       el.innerHTML = widgetName;
