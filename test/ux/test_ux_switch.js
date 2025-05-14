@@ -252,9 +252,9 @@
     });
 
     // Test case for the onchange trigger.
-    it("should call the onchange trigger handler when the switch is clicked", function () {
+    it("should call the onchange trigger handler when the switch is clicked", async function () {
       // Simulate a click event
-      tester.userClick();
+      await tester.asyncUserClick();
 
       // Assert that the click event handler was called once.
       expect(tester.calledOnce(trigger)).to.be.true;

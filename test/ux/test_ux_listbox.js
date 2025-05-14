@@ -554,17 +554,15 @@
 
   describe("Update selection through user interaction", function () {
     let widget, element;
-    const triggerSpy = sinon.spy();
+    const triggerMap = {
+      "onchange" : function () {
+        const value = tester.widget.getValue();
+        tester.debugLog(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}"`);
+      }
+    };
+    const trigger = "onchange";
 
     beforeEach(async function () {
-      const triggerMap = {
-        "onchange" : function () {
-          const value = tester.widget.getValue();
-          console.log(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}"`);
-          triggerSpy.apply(this, arguments);
-        }
-      };
-
       widget = tester.createWidget(triggerMap);
       element = tester.element;
       assert(element, "Widget top element is not defined!");
@@ -576,7 +574,7 @@
         });
       });
 
-      triggerSpy.resetHistory();
+      tester.resetTriggerCalled(trigger);
     });
 
     it("simulate user interaction and select first option", function () {
@@ -587,7 +585,7 @@
         const returnedValue = widget.getValue();
         const selectedOption = element.querySelector(".u-option.selected");
 
-        expect(triggerSpy.calledOnce).to.be.true;
+        expect(tester.calledOnce(trigger)).to.be.true;
         expect(selectedOption?.value).equal("0");
         expect(returnedValue).to.equal(valRepArray[0].value);
         expect(selectedOption?.textContent).equal(valRepArray[0]?.representation);
@@ -620,7 +618,7 @@
         const returnedValue = widget.getValue();
         const selectedOption = element.querySelector(".u-option.selected");
 
-        expect(triggerSpy.calledOnce).to.be.true;
+        expect(tester.calledOnce(trigger)).to.be.true;
         expect(selectedOption?.value).equal("0");
         expect(returnedValue).to.equal(valRepArray[0].value);
         expect(selectedOption?.textContent).equal(valRepArray[0]?.representation);
@@ -819,17 +817,15 @@
   });
 
   describe("Listbox onchange event", function () {
-    const triggerSpy = sinon.spy();
+    const triggerMap = {
+      "onchange" : function () {
+        const value = tester.widget.getValue();
+        tester.debugLog(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: ${value}`);
+      }
+    };
+    const trigger = "onchange";
 
     beforeEach(async function () {
-      const triggerMap = {
-        "onchange" : function () {
-          const value = tester.widget.getValue();
-          console.log(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: ${value}`);
-          triggerSpy.apply(this, arguments);
-        }
-      };
-
       await asyncRun(function () {
         tester.createWidget(triggerMap);
         tester.dataUpdate({
@@ -838,13 +834,7 @@
         });
       });
 
-      triggerSpy.resetHistory();
-    });
-
-    // Clean up after each test.
-    afterEach(function () {
-      // Restore the spy to its original state.
-      sinon.restore();
+      tester.resetTriggerCalled(trigger);
     });
 
     // Test case for the on change event.
@@ -856,7 +846,7 @@
       tester.debugLog("check");
 
       // Assert that the onchange trigger handler was called once.
-      expect(triggerSpy.calledOnce).to.be.true;
+      expect(tester.calledOnce(trigger)).to.be.true;
       // Expected the value is the 3rd item of valRepArray.
       expect(tester.widget.getValue()).to.equal(valRepArray[index-1].value, "Widget value");
     });
