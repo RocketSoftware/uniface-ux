@@ -441,24 +441,6 @@
       return widget;
     }
 
-    dispatchEventFor(triggerName, options) {
-      const trigger = this.widget.mapTrigger(triggerName);
-      if (this.widgetName === "UX.Button") {
-        if (!options) {
-          options = {
-            "event" : trigger.event_name,
-            "element" : trigger.element
-          };
-        }
-      }
-      if (options.event === "click") {
-        if (!options.element) {
-          options.element = trigger.element;
-        }
-        options.element.click();
-      }
-    }
-
     /**
      * Emulate the user click on the item with the given itemIndex as its index (start from 1);
      *
