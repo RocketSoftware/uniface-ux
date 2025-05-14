@@ -1086,8 +1086,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
   });
 
   describe("Test UIBlock class for invalid uiblocking", function () {
-    let widgetClass;
-    let element;
+    let widgetClass, element;
 
     beforeEach(function () {
       Widget.structure = {};
@@ -1113,7 +1112,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
     });
 
     it("should refresh correctly", function () {
-
       const classListStub= {
         "add" : sinon.spy(),
         "remove" : sinon.spy()
@@ -1135,7 +1133,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
         "error": sinon.spy()
       };
 
-      // should add class when uiblocked.
+      // Should add class when uiblocked.
       element.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.classList.add.calledWith("u-blocked")).to.be.true;
 
