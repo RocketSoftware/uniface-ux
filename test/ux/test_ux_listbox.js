@@ -578,7 +578,7 @@
 
         expect(selectedOption?.value).equal("0");
         expect(returnedValue).to.equal(valRepArray[0].value);
-        expect(selectedOption?.textContent).equal(valRepArray[0]?.representation);
+        expect(selectedOption?.textContent).equal(valRepArray[0].representation);
       });
     });
 
@@ -614,7 +614,7 @@
 
         expect(selectedOption?.value).equal("0");
         expect(returnedValue).to.equal(valRepArray[0].value);
-        expect(selectedOption?.textContent).equal(valRepArray[0]?.representation);
+        expect(selectedOption?.textContent).equal(valRepArray[0].representation);
 
         expect(element).to.not.have.class("u-format-invalid");
         assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");

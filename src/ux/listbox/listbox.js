@@ -66,7 +66,7 @@ export class Listbox extends Widget {
     getValue(widgetInstance) {
       const element = this.getElement(widgetInstance);
       const valrep = this.getNode(widgetInstance.data, "valrep");
-      const value = valrep[element["selectedIndex"]]?.value ?? widgetInstance?.data?.value;
+      const value = valrep[element["selectedIndex"]]?.value ?? widgetInstance.data.value;
       return value;
     }
 
@@ -162,7 +162,7 @@ export class Listbox extends Widget {
       }
 
       const fluentOptionElements = element.querySelectorAll("fluent-option");
-      const slotElement = element?.shadowRoot?.querySelector("slot:not([name])");
+      const slotElement = element.shadowRoot?.querySelector("slot:not([name])");
       size = parseInt(size);
 
       if(size > 0) {
@@ -354,7 +354,7 @@ export class Listbox extends Widget {
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
 
-    const labelElement = widgetElement?.shadowRoot?.querySelector(".label");
+    const labelElement = widgetElement.shadowRoot?.querySelector(".label");
     if (!labelElement) {
       this.createElement();
       this.styleListBox();

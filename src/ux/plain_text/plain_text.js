@@ -129,10 +129,10 @@ export class PlainText extends Widget {
           this.createMultiParagraphsElement(value, element);
           break;
         case "single-line":
-          this.createTextElement(value?.replaceAll(/\n/g, " ") || value, element);
+          this.createTextElement(value.replaceAll(/\n/g, " ") || value, element);
           break;
         default: // "first-line" or any other case
-          this.createTextElement(value?.split?.("\n", 2)[0] + (value.includes("\n") ? "..." : ""), element);
+          this.createTextElement(value.split?.("\n", 2)[0] + (value.includes("\n") ? "..." : ""), element);
           break;
       }
     }
