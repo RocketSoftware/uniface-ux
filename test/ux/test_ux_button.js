@@ -276,27 +276,18 @@
   });
 
   describe("Button click event", function () {
-    const triggerSpy = sinon.spy();
+    const trigger = "detail";
+    const triggerMap = {};
+    triggerMap[trigger] = function () {
+      console.log(`Detail trigger has been called at ${new Date().toLocaleTimeString()}!`);
+    };
 
     beforeEach(async function () {
-      const triggerMap = {
-        "detail" : function () {
-          console.log(`Detail trigger has been called at ${new Date().toLocaleTimeString()}!`);
-          triggerSpy.apply(this, arguments);
-        }
-      };
-
       await asyncRun(function () {
         tester.createWidget(triggerMap);
       });
 
-      triggerSpy.resetHistory();
-    });
-
-    // Clean up after each test.
-    afterEach(function () {
-      // Restore the spy to its original state.
-      sinon.restore();
+      tester.resetTriggerCalled(trigger);
     });
 
     // Test case for the click event.
@@ -305,7 +296,15 @@
       tester.userClick();
 
       // Assert that the click event handler was called once.
-      expect(triggerSpy.calledOnce).to.be.true;
+      expect(tester.calledOnce(trigger)).to.be.true;
+    });
+
+    it("Test reset trigger map", function () {
+      tester.resetMapTriggers();
+
+      tester.userClick();
+
+      expect(tester.calledOnce(trigger)).to.be.false;
     });
 
   });

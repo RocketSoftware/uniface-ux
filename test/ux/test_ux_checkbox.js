@@ -134,21 +134,21 @@
     });
   });
 
-  describe("Checkbox onchange event", function () {
+  describe("Checkbox onchange trigger", function () {
     const triggerMap = {
       "onchange" : function () {
         const value = tester.widget.getValue();
         tester.debugLog(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: ${value}!`);
       }
     };
-    const triggerSpy = sinon.spy(triggerMap, "onchange");
+    const trigger = "onchange";
 
     beforeEach(async function () {
       await asyncRun(function () {
         tester.createWidget(triggerMap);
       });
 
-      triggerSpy.resetHistory();
+      tester.resetTriggerCalled(trigger);
     });
 
     // Test case for the onchange trigger.
@@ -156,9 +156,9 @@
       // Simulate a click event
       tester.userClick();
 
-      // Assert that the click event handler was called once.
-      expect(triggerSpy.calledOnce).to.be.true;
-      // Expected the value is the 3rd item of valRepArray.
+      // Assert that the onchange trigger handler was called once.
+      expect(tester.calledOnce(trigger)).to.be.true;
+      // Expected the value is true.
       expect(tester.widget.getValue()).to.equal(true, "Widget value");
     });
 
