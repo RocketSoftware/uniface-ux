@@ -12,6 +12,9 @@ registerWidgetClass("UX.Button", Button);
 import {Checkbox} from "./checkbox/checkbox.js";
 registerWidgetClass("UX.Checkbox", Checkbox);
 
+import {Controlbar} from "./controlbar/controlbar.js";
+registerWidgetClass("UX.Controlbar", Controlbar);
+
 import {Listbox} from "./listbox/listbox.js";
 registerWidgetClass("UX.Listbox", Listbox);
 
