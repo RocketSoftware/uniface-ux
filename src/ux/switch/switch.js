@@ -10,7 +10,8 @@ import {
   HtmlAttributeBoolean,
   SlottedElement,
   HtmlValueAttributeBoolean,
-  IgnoreProperty
+  IgnoreProperty,
+  UIBlock
 } from "../framework/workers.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
@@ -35,7 +36,6 @@ export class Switch extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "disabled";
 
   /**
    * Private worker: SwitchSlottedError.
@@ -94,6 +94,7 @@ export class Switch extends Widget {
     new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new UIBlock(this, "disabled"),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text", ""),

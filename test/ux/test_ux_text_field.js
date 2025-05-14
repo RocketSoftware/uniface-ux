@@ -856,6 +856,65 @@
     });
   });
 
+  describe("blockUI()", function () {
+    let element,widget;
+
+    before(function () {
+      element = tester.element;
+      widget = tester.createWidget();
+    });
+
+    it("check if the 'u-blocked' class is applied and ensure the widget is readOnly when the blockUI() is invoked", function () {
+      return asyncRun(function () {
+        widget.blockUI();
+      }).then(function () {
+        expect(element, "Class u-blocked is not applied.").to.have.class("u-blocked");
+        expect(widget.data.uiblocked).equal(true);
+        expect(element.readOnly).equal(true);
+        let buttonElement = element.querySelector("fluent-button.u-sw-changebutton");
+        expect(buttonElement).to.have.class("u-blocked");
+        assert(buttonElement.hasAttribute("disabled"), "Failed to disable the subwidget attribute for button.");
+      });
+    });
+  });
+
+  describe("unblockUI()", function () {
+    let element,widget;
+
+    before(function () {
+      element = tester.element;
+      widget = tester.createWidget();
+    });
+
+    beforeEach(function () {
+      widget.blockUI();
+    });
+
+    it("check if the 'u-blocked' class is removed and ensure the widget is not readonly when the unblockUI() is invoked", function () {
+      return asyncRun(function () {
+        widget.unblockUI();
+      }).then(function () {
+        expect(element, "Class u-blocked is applied.").not.to.have.class("u-blocked");
+        expect(widget.data.uiblocked).equal(false);
+        expect(element.readOnly).equal(false);
+        let buttonElement = element.querySelector("fluent-button.u-sw-changebutton");
+        expect(buttonElement).not.to.have.class("u-blocked");
+        expect(buttonElement.hasAttribute("disabled")).to.be.false;
+      });
+    });
+
+    it("check if the readonly mode is retained when the unblockUI() is called", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": true
+        });
+        widget.unblockUI();
+      }).then(function () {
+        expect(element.hasAttribute("readonly")).to.be.true;
+      });
+    });
+  });
+
   describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {
