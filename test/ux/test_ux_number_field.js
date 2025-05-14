@@ -144,73 +144,70 @@
   });
 
   describe("Number field onchange event", function () {
-    const triggerSpy = sinon.spy();
+    const triggerMap = {
+      "onchange" : function () {
+        const value = tester.widget.getValue();
+        tester.debugLog(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}"`);
+      }
+    };
+    const triggerSpy = sinon.spy(triggerMap, "onchange");
+    const initialValue = 123;
 
-    beforeEach(async function () {
-      const triggerMap = {
-        "onchange" : function () {
-          const value = tester.widget.getValue();
-          console.log(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}"`);
-          triggerSpy.apply(this, arguments);
-        }
-      };
-
+    before(async function () {
       await asyncRun(function () {
         tester.createWidget(triggerMap);
-        tester.dataUpdate({
-          "value" : ""
-        });
       });
     });
 
     // Clean up after each test.
-    afterEach(function () {
+    after(function () {
       // Restore the spy to its original state.
-      sinon.restore();
+      triggerSpy.restore();
+    });
+
+    beforeEach(async function () {
+      await asyncRun(function () {
+        tester.dataUpdate({
+          "value" : initialValue
+        });
+      });
+      triggerSpy.resetHistory();
     });
 
     // Test case for the on change event.
-    it("should call the onchange event handler when the number field is changed", function () {
-      // Simulate a onchange event.
+    it("Should call the onchange event handler when the number field is changed", function () {
+      // Simulate a change event by inputting a string.
       const inputValue = "1234";
       tester.userInput(inputValue);
 
-      // Assert that the onchange event handler was called once.
+      // Assert that the onchange trigger handler was called once.
       expect(triggerSpy.calledOnce).to.be.true;
       // Expected the widget value is the inputValue.
       expect(tester.widget.getValue()).to.equal(inputValue, "Widget value");
     });
 
-  });
+    it("Test spin-up button of the number field", async function () {
+      expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
 
-  describe("Number field onchange event (old)", function () {
-    let numberElement, onChangeSpy;
+      // Simulate a onchange event by clicking the spin-up button.
+      await tester.asyncUserClick(+1);
 
-    beforeEach(function () {
-      tester.createWidget();
-      numberElement = tester.element;
-
-      // Create a spy for the onchange event.
-      onChangeSpy = sinon.spy();
-
-      // Add the onchange event listener to the number field element.
-      numberElement.addEventListener("onchange", onChangeSpy);
+      // Assert that the onchange trigger handler was called once.
+      expect(triggerSpy.calledOnce).to.be.true;
+      // Expected the widget value is the initialValue + 1.
+      expect(tester.widget.getValue()).to.equal("" + (initialValue + 1), "Widget value");
     });
 
-    // Clean up after each test.
-    afterEach(function () {
-      // Restore the spy to its original state.
-      sinon.restore();
-    });
+    it("Test spin-down button of the number field", async function () {
+      expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
 
-    // Test case for the on change event.
-    it("should call the onchange event handler when the number field is changed", function () {
-      // Simulate a onchange event.
-      const event = new window.Event("onchange");
-      numberElement.dispatchEvent(event);
+      // Simulate a onchange event by clicking the spin-up button.
+      await tester.asyncUserClick(-1);
 
-      // Assert that the onchange event handler was called once.
-      expect(onChangeSpy.calledOnce).to.be.true;
+      // Assert that the onchange trigger handler was called once.
+      expect(triggerSpy.calledOnce).to.be.true;
+      // Expected the widget value is the initialValue - 1.
+      expect(tester.widget.getValue()).to.equal("" + (initialValue - 1), "Widget value");
     });
 
   });

@@ -173,37 +173,6 @@
 
   });
 
-  describe("Text area onchange event (old)", function () {
-    let textAreaElement, onChangeSpy;
-
-    beforeEach(function () {
-      tester.createWidget();
-      textAreaElement = tester.element;
-
-      // Create a spy for the onchange event.
-      onChangeSpy = sinon.spy();
-
-      // Add the onchange event listener to the text area Element.
-      textAreaElement.addEventListener("onchange", onChangeSpy);
-    });
-
-    // Clean up after each test.
-    afterEach(function () {
-      // Restore the spy to its original state.
-      sinon.restore();
-    });
-
-    // Test case for the on change event.
-    it("should call the onchange event handler when the text area is changed", function () {
-      // Simulate a onchange event.
-      const event = new window.Event("onchange");
-      textAreaElement.dispatchEvent(event);
-
-      // Assert that the onchange event handler was called once.
-      expect(onChangeSpy.calledOnce).to.be.true;
-    });
-  });
-
   describe("dataInit()", function () {
     const classes = tester.getDefaultClasses();
 
