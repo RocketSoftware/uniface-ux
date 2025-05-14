@@ -76,11 +76,8 @@
         assert(element.querySelector("span.u-unchecked-message"), "Widget misses or has incorrect u-unchecked-message element.");
       });
 
-      it("check u-error-icon-unchecked", function () {
-        assert(element.querySelector("span.u-error-icon-unchecked"), "Widget misses or has incorrect u-error-icon-unchecked element.");
-      });
-      it("check u-error-icon-checked", function () {
-        assert(element.querySelector("span.u-error-icon-checked"), "Widget misses or has incorrect u-error-icon-checked element.");
+      it("check u-error-icon", function () {
+        assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element.");
       });
     });
 
@@ -282,7 +279,7 @@
         // To check order of elements.
         const statusMsg = element.querySelector("span.u-checked-message").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
-        expect(widget.right).to.be.greaterThan(statusMsg.right);
+        expect(statusMsg.right).to.be.greaterThan(widget.right);
       });
     });
 
@@ -294,16 +291,13 @@
           "value": 1
         });
       }).then(function () {
-        const checkedText = element.querySelector("span.u-checked-message");
-        assert(checkedText, "Checked message element not found.");
-        assert(!checkedText.hasAttribute("hidden"), "Checked message should be visible.");
-        const displayedText = checkedText.innerText;
-        expect(displayedText.length).to.be.at.most(10);
-        assert.equal(displayedText, "This is...");
-        // To check order of elements.
+        const checkText = element.shadowRoot.querySelector(".checked-message");
+        const textOverFlowProp = window.getComputedStyle(checkText).getPropertyValue("text-overflow");
+        assert(textOverFlowProp, "ellipsis");
+        // // To check order of elements.
         const statusMsg = element.querySelector("span.u-checked-message").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
-        expect(widget.right).to.be.greaterThan(statusMsg.right);
+        expect(statusMsg.left).to.be.greaterThan(widget.left);
       });
     });
 
@@ -326,7 +320,7 @@
         // To check order of elements.
         const statusMsg = element.querySelector("span.u-unchecked-message").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
-        expect(widget.right).to.be.greaterThan(statusMsg.right);
+        expect(statusMsg.right).to.be.greaterThan(widget.right);
       });
     });
 
@@ -335,19 +329,46 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "unchecked-message": longMessage,
-          "value": 1
+          "value": 0
         });
       }).then(function () {
-        const uncheckedText = element.querySelector("span.u-unchecked-message");
-        assert(uncheckedText, "Checked message element not found.");
-        assert(!uncheckedText.hasAttribute("hidden"), "Checked message should be visible.");
-        const displayedText = uncheckedText.innerText;
-        expect(displayedText.length).to.be.at.most(10);
-        assert.equal(displayedText, "This is...");
+        const checkText = element.shadowRoot.querySelector(".unchecked-message");
+        const textOverFlowProp = window.getComputedStyle(checkText).getPropertyValue("text-overflow");
+        assert(textOverFlowProp, "ellipsis");
         // To check order of elements.
         const statusMsg = element.querySelector("span.u-unchecked-message").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
-        expect(widget.right).to.be.greaterThan(statusMsg.right);
+        expect(statusMsg.left).to.be.greaterThan(widget.left);
+      });
+    });
+
+    it("shows reserve space after checked/unchecked message correct side and before label text when label-position is 'after'", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label Text",
+          "label-position": "after",
+          "value": 1,
+          "checked-message": "On",
+          "unchecked-message": "Off"
+        });
+      }).then(function () {
+        assert(!element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text");
+        expect(!element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
+        expect(element.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
+        expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
+        expect(element.querySelector("span.u-label-text").getAttribute("slot")).equal("");
+        expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
+        expect(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide error icon");
+
+
+        // Check if error icon comes after the label in DOM order when label is "after".
+        const checkedMessage = element.shadowRoot.querySelector(".status-message").getBoundingClientRect();
+        const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
+        const control = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
+        expect(label.right).to.be.greaterThan(control.right);
+        expect(label.left).to.be.greaterThan(control.left);
+        expect(checkedMessage.left).to.be.greaterThan(control.left);
+        expect(checkedMessage.right).to.be.greaterThan(control.right);
       });
     });
   });
@@ -417,11 +438,11 @@
         expect(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
 
         // Check if error icon comes after the label in DOM order when label is "before".
-        const statusMsg = element.shadowRoot.querySelector(".status-message").getBoundingClientRect();
+        const errorIconSlot = element.querySelector(".u-error-icon").getBoundingClientRect();
         const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
-        expect(widget.right).to.be.greaterThan(statusMsg.right);
-        expect(statusMsg.right).to.be.greaterThan(label.right);
+        expect(widget.right).to.be.greaterThan(errorIconSlot.right);
+        expect(errorIconSlot.right).to.be.greaterThan(label.right);
       });
     });
 
@@ -439,11 +460,75 @@
         expect(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
 
         // Check if error icon comes after the label in DOM order when label is "after".
-        const statusMsg = element.shadowRoot.querySelector(".status-message").getBoundingClientRect();
+        const errorIcon = element.querySelector(".u-error-icon").getBoundingClientRect();
         const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
-        const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
-        expect(statusMsg.right).to.be.greaterThan(widget.right);
-        expect(label.right).to.be.greaterThan(statusMsg.right);
+        const control = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
+        expect(errorIcon.right).to.be.greaterThan(control.right);
+        expect(label.right).to.be.greaterThan(errorIcon.right);
+      });
+    });
+
+    it("set error to true with checked and unchecked messages and label position after", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "checked-message": "On",
+          "unchecked-message": "Off",
+          "label-position": "after",
+          "label-text": "Label Text",
+          "value": 123
+        });
+      }).then(function () {
+        expect(element).to.have.class("u-format-invalid");
+        const checkText = element.shadowRoot.querySelector(".status-message");
+        let textOverFlowPropInt = parseInt(window.getComputedStyle(checkText).getPropertyValue("width").slice(0, -2));
+        let textOverFlowProp = window.getComputedStyle(checkText).getPropertyValue("width");
+        expect(textOverFlowPropInt).to.be.within(70,80);
+        assert(textOverFlowProp, "10ch", "Text oveflow property width in css is not 10ch");
+
+        // Check if error icon comes after the label in DOM order when label is "after".
+        const errorIcon = element.querySelector(".u-error-icon").getBoundingClientRect();
+        const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
+        const control = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
+        expect(errorIcon.right).to.be.greaterThan(control.right);
+        expect(label.left).to.be.greaterThan(errorIcon.left);
+
+        // If there are checked and unchecked messages to be shown, the slots should not be hidden once the error is removed.
+        assert(!element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the unchecked message slot");
+        expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
+        assert(!element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message slot");
+        expect(element.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
+      });
+    });
+
+    it("set error to true with checked and unchecked messages and label position before", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "checked-message": "On",
+          "unchecked-message": "Off",
+          "label-position": "before",
+          "label-text": "Label Text",
+          "value": 123
+        });
+      }).then(function () {
+        expect(element).to.have.class("u-format-invalid");
+        const checkText = element.shadowRoot.querySelector(".status-message");
+        let textOverFlowPropInt = parseInt(window.getComputedStyle(checkText).getPropertyValue("width").slice(0, -2));
+        let textOverFlowProp = window.getComputedStyle(checkText).getPropertyValue("width");
+        expect(textOverFlowPropInt).to.be.within(70,80);
+        assert(textOverFlowProp, "10ch");
+
+        // Check if error icon comes after the label and before control in DOM order when label is "before".
+        const errorIcon = element.querySelector(".u-error-icon").getBoundingClientRect();
+        const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
+        const control = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
+        expect(control.left).to.be.greaterThan(errorIcon.left);
+        expect(errorIcon.right).to.be.greaterThan(label.right);
+
+        // If there are checked and unchecked messages to be shown, the slots should not be hidden once the error is removed.
+        assert(!element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the unchecked message slot");
+        expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
+        assert(!element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message slot");
+        expect(element.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
       });
     });
   });
