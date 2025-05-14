@@ -2,7 +2,7 @@ import { Widget } from "../../src/ux/framework/widget.js";
 import {
   StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget,
   SubWidgetsByProperty, BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean,
-  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep
+  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep ,UIBlock
 } from "../../src/ux/framework/workers.js";
 import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
 
@@ -67,7 +67,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       defaultClassList = ["class1", "class2"];
@@ -126,7 +125,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       tagName = "DIV";
@@ -197,7 +195,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       propText = "text";
@@ -249,7 +246,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       slottedError = new SlottedError(widgetClass, "", "", "", "");
@@ -330,7 +326,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       subWidgetName = "UX.Button";
@@ -405,7 +400,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       element = new SubWidgetsByProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
@@ -441,7 +435,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       propId = "value";
@@ -526,7 +519,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       propId = "icon-position";
@@ -577,7 +569,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       propId = "icon-position";
@@ -631,7 +622,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       propId = "numberValue";
@@ -685,7 +675,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       propId = "icon-position";
@@ -741,7 +730,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       propId = "icon-position";
@@ -802,7 +790,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       propMin = "min";
@@ -876,7 +863,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       triggerName = "NameofTrigger";
@@ -928,7 +914,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       propId = "tri-state";
@@ -966,7 +951,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       Widget.setters = {};
       Widget.getters = {};
       Widget.triggers = {};
-      Widget.uiBlocking = "";
 
       widgetClass = Widget;
       tagName = "fluent-option";
@@ -1031,4 +1015,130 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
     });
   });
 
+  // ===================================================================================================================
+  // == Testing UIBlock class ==========================================================================
+  // ===================================================================================================================
+  describe("Test UIBlock class", function () {
+    let widgetClass,element;
+
+    beforeEach(function () {
+      Widget.structure = {};
+      Widget.subWidgets = {};
+      Widget.subWidgetWorkers = [];
+      Widget.defaultValues = {};
+      Widget.setters = {};
+      Widget.getters = {};
+      Widget.triggers = {};
+
+      widgetClass = Widget;
+      element = new UIBlock(widgetClass, "readonly");
+    });
+
+    it("should initialize with correct properties", function () {
+      expect(element.widgetClass).to.equal(widgetClass);
+      expect(element.uiblocking).to.equal("readonly");
+    });
+
+    it("check setters and default values", function () {
+      let setterKeys = Object.keys(element.widgetClass.setters);
+      expect(setterKeys[setterKeys.length - 1]).to.equal("uiblocked");
+    });
+
+    it("should refresh correctly", function () {
+      const classListStub= {
+        "add" : sinon.spy(),
+        "remove" : sinon.spy()
+      };
+
+      const widgetInstance = {
+        "data": {
+          "uiblocked": true
+        },
+        "elements": {
+          "widget": {
+            "classList" : classListStub,
+            "disabled" : false,
+            "readOnly" : false
+          }
+        },
+        "getTraceDescription": function () {
+          return "description";
+        },
+        "error": sinon.spy(),
+        "toBoolean" :function(val){
+          return Boolean(val);
+        }
+      };
+
+      // Should add class and readonly element when uiblocked is true and block type is 'readonly'.
+      element.refresh(widgetInstance);
+      expect(widgetInstance.elements.widget.classList.add.calledWith("u-blocked")).to.be.true;
+      expect(widgetInstance.elements.widget.readOnly).to.be.true;
+
+      // Should remove class when uiblocked is false.
+      widgetInstance.data["uiblocked"] = false;
+      element.refresh(widgetInstance);
+      expect(widgetInstance.elements.widget.readOnly).to.be.false;
+      expect(widgetInstance.elements.widget.classList.remove.calledWith("u-blocked")).to.be.true;
+
+    });
+
+  });
+
+  describe("Test UIBlock class for invalid uiblocking", function () {
+    let widgetClass, element;
+
+    beforeEach(function () {
+      Widget.structure = {};
+      Widget.subWidgets = {};
+      Widget.subWidgetWorkers = [];
+      Widget.defaultValues = {};
+      Widget.setters = {};
+      Widget.getters = {};
+      Widget.triggers = {};
+
+      widgetClass = Widget;
+      element = new UIBlock(widgetClass, "invalid");
+    });
+
+    it("should initialize with correct properties", function () {
+      expect(element.widgetClass).to.equal(widgetClass);
+      expect(element.uiblocking).to.equal("invalid");
+    });
+
+    it("check setters and default values", function () {
+      let setterKeys = Object.keys(element.widgetClass.setters);
+      expect(setterKeys[setterKeys.length - 1]).to.equal("uiblocked");
+    });
+
+    it("should refresh correctly", function () {
+      const classListStub= {
+        "add" : sinon.spy(),
+        "remove" : sinon.spy()
+      };
+      const widgetInstance = {
+        "data": {
+          "uiblocked": true
+        },
+        "elements": {
+          "widget": {
+            "classList" : classListStub,
+            "disabled" : false,
+            "readOnly" : false
+          }
+        },
+        "getTraceDescription": function () {
+          return "description";
+        },
+        "error": sinon.spy()
+      };
+
+      // Should add class when uiblocked.
+      element.refresh(widgetInstance);
+      expect(widgetInstance.elements.widget.classList.add.calledWith("u-blocked")).to.be.true;
+
+      expect(widgetInstance.error.calledOnce).to.be.true;
+      expect(widgetInstance.error.calledWith("UIBlock", "Invalid block type", "invalid")).to.be.true;
+    });
+  });
 })();
