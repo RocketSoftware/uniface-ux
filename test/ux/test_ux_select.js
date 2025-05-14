@@ -660,6 +660,9 @@
     before(function () {
       element = tester.element;
       widget = tester.createWidget();
+    });
+
+    beforeEach(function () {
       widget.blockUI();
     });
 
