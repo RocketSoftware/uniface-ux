@@ -310,37 +310,6 @@
       this.resetMapTriggers();
     }
 
-    /**
-     * Reset the trigger map (which has been set by mapTriggers()).
-     */
-    resetMapTriggers() {
-      this.triggers = {};
-      debugLog("Reset the trigger map");
-    }
-
-    countOfTriggerCalled(triggerName) {
-      const triggerInfo = this.triggers[triggerName];
-      return triggerInfo ? triggerInfo.countOfCall : 0;
-    }
-
-    calledOnce(triggerName) {
-      return (this.countOfTriggerCalled(triggerName) === 1);
-    }
-
-    resetTriggerCalled(triggerName) {
-      if (triggerName) {
-        const triggerInfo = this.triggers[triggerName];
-        if (triggerInfo) {
-          triggerInfo.countOfCall = 0;
-        }
-      } else {
-        const _this = this;
-        Object.keys(this.triggers).forEach((trg) => {
-          _this.resetTriggerCalled(trg);
-        });
-      }
-    }
-
     setDebug(mode) {
       this.debug = mode;
     }
@@ -439,6 +408,50 @@
       }
 
       return widget;
+    }
+
+    /**
+     * Reset the trigger map (which has been set by mapTriggers()).
+     */
+    resetMapTriggers() {
+      this.triggers = {};
+      debugLog("Reset the trigger map");
+    }
+
+    /**
+     * Returns the count of the specified trigger called.
+     * @param {String} triggerName the trigger name;
+     * @returns the count of the specified trigger called.
+     */
+    countOfTriggerCalled(triggerName) {
+      const triggerInfo = this.triggers[triggerName];
+      return triggerInfo ? triggerInfo.countOfCall : 0;
+    }
+
+    /**
+     * Reset the count of the specified trigger called to 0.
+     * @param {String} triggerName the trigger name;
+     */
+    resetTriggerCalled(triggerName) {
+      if (triggerName) {
+        const triggerInfo = this.triggers[triggerName];
+        if (triggerInfo) {
+          triggerInfo.countOfCall = 0;
+        }
+      } else {
+        const _this = this;
+        Object.keys(this.triggers).forEach((trg) => {
+          _this.resetTriggerCalled(trg);
+        });
+      }
+    }
+
+    /**
+     * Return true if the specified trigger has been called once.
+     * @param {String} triggerName the trigger name;
+     */
+    calledOnce(triggerName) {
+      return (this.countOfTriggerCalled(triggerName) === 1);
     }
 
     /**

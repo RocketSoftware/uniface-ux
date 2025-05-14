@@ -843,8 +843,6 @@
       const index = 3;
       await tester.asyncUserClick(index);
 
-      tester.debugLog("check");
-
       // Assert that the onchange trigger handler was called once.
       expect(tester.calledOnce(trigger)).to.be.true;
       // Expected the value is the 3rd item of valRepArray.
