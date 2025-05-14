@@ -609,10 +609,10 @@
     const triggerMap = {
       "onchange" : function () {
         const value = tester.widget.getValue();
-        console.log(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}".`);
+        tester.debugLog(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}".`);
       }
     };
-    const triggerSpy = sinon.spy(triggerMap, "onchange");
+    const trigger = "onchange";
 
     beforeEach(async function () {
       await asyncRun(function () {
@@ -623,7 +623,7 @@
         });
       });
 
-      triggerSpy.resetHistory();
+      tester.resetTriggerCalled(trigger);
     });
 
     // Test case for the onchange trigger.
@@ -632,7 +632,7 @@
       tester.userClick(2);
 
       // Assert that the click event handler was called once.
-      expect(triggerSpy.calledOnce).to.be.true;
+      expect(tester.calledOnce(trigger)).to.be.true;
       // Expected the value is the 3rd item of valRepArray.
       expect(tester.widget.getValue()).to.equal("2", "Widget value");
     });

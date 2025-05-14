@@ -143,14 +143,14 @@
     });
   });
 
-  describe("Number field onchange event", function () {
+  describe("Number field onchange trigger", function () {
     const triggerMap = {
       "onchange" : function () {
         const value = tester.widget.getValue();
         tester.debugLog(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}"`);
       }
     };
-    const triggerSpy = sinon.spy(triggerMap, "onchange");
+    const trigger = "onchange";
     const initialValue = 123;
 
     before(async function () {
@@ -159,19 +159,14 @@
       });
     });
 
-    // Clean up after each test.
-    after(function () {
-      // Restore the spy to its original state.
-      triggerSpy.restore();
-    });
-
     beforeEach(async function () {
       await asyncRun(function () {
         tester.dataUpdate({
           "value" : initialValue
         });
       });
-      triggerSpy.resetHistory();
+
+      tester.resetTriggerCalled(trigger);
     });
 
     // Test case for the on change event.
@@ -181,7 +176,7 @@
       tester.userInput(inputValue);
 
       // Assert that the onchange trigger handler was called once.
-      expect(triggerSpy.calledOnce).to.be.true;
+      expect(tester.calledOnce(trigger)).to.be.true;
       // Expected the widget value is the inputValue.
       expect(tester.widget.getValue()).to.equal(inputValue, "Widget value");
     });
@@ -193,7 +188,7 @@
       await tester.asyncUserClick(+1);
 
       // Assert that the onchange trigger handler was called once.
-      expect(triggerSpy.calledOnce).to.be.true;
+      expect(tester.calledOnce(trigger)).to.be.true;
       // Expected the widget value is the initialValue + 1.
       expect(tester.widget.getValue()).to.equal("" + (initialValue + 1), "Widget value");
     });
@@ -205,7 +200,7 @@
       await tester.asyncUserClick(-1);
 
       // Assert that the onchange trigger handler was called once.
-      expect(triggerSpy.calledOnce).to.be.true;
+      expect(tester.calledOnce(trigger)).to.be.true;
       // Expected the widget value is the initialValue - 1.
       expect(tester.widget.getValue()).to.equal("" + (initialValue - 1), "Widget value");
     });

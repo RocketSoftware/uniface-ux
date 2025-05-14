@@ -133,40 +133,34 @@
     });
   });
 
-  describe("Text area onchange event", function () {
-    const triggerSpy = sinon.spy();
+  describe("Text area onchange trigger", function () {
+    const triggerMap = {
+      "onchange" : function () {
+        const value = tester.widget.getValue();
+        tester.debugLog(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}"`);
+      }
+    };
+    const trigger = "onchange";
 
     beforeEach(async function () {
-      const triggerMap = {
-        "onchange" : function () {
-          const value = tester.widget.getValue();
-          console.log(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}"`);
-          triggerSpy.apply(this, arguments);
-        }
-      };
-
       await asyncRun(function () {
         tester.createWidget(triggerMap);
         tester.dataUpdate({
           "value" : ""
         });
       });
+
+      tester.resetTriggerCalled(trigger);
     });
 
-    // Clean up after each test.
-    afterEach(function () {
-      // Restore the spy to its original state.
-      sinon.restore();
-    });
-
-    // Test case for the on change event.
+    // Test case for change event by user input.
     it("should call the onchange event handler when the text area is changed", function () {
-      // Simulate a onchange event.
+      // Simulate a change event.
       const inputValue = "Hello,\nworld";
       tester.userInput(inputValue);
 
-      // Assert that the onchange event handler was called once.
-      expect(triggerSpy.calledOnce).to.be.true;
+      // Assert that the onchange trigger handler was called once.
+      expect(tester.calledOnce(trigger)).to.be.true;
       // Expected the widget value is the inputValue.
       expect(tester.widget.getValue()).to.equal(inputValue, "Widget value");
     });
