@@ -122,7 +122,7 @@
 
 .u-switch:has(.u-checked-message:not(:empty))::part(status-message),
 .u-switch:has(.u-unchecked-message:not(:empty))::part(status-message) {
-  width: 10ch;
+  width: 12ch;
 }
 
 .u-switch.u-invalid .u-checked-message,
