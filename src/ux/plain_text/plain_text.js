@@ -82,6 +82,9 @@ export class PlainText extends Widget {
      * Format the text according to the specified format.
      * If the `valrep` object does not match the expected value, a format error is shown.
      */
+    /**
+     * @param {Widget} widgetInstance
+     */
     setTextAsPlaintextFormat(widgetInstance) {
       let value = this.getNode(widgetInstance.data, "value");
       const valrep = this.getNode(widgetInstance.data, "valrep");
@@ -89,7 +92,7 @@ export class PlainText extends Widget {
       const element = this.getElement(widgetInstance);
       element.innerHTML = "";
       // Convert value to string if it's not a string already.
-      value = value && typeof value !== "string" ? value.toString() : value;
+      value = typeof value === "boolean" ? value.toString() : (typeof value !== "string" ? value.toString() : value);
       if (value) {
         element.hidden = false;
       }

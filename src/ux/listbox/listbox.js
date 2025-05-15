@@ -63,6 +63,10 @@ export class Listbox extends Widget {
       this.registerGetter(widgetClass, "value", this);
     }
 
+    /**
+     * @param {Widget} widgetInstance
+     * @returns {string}
+     */
     getValue(widgetInstance) {
       const element = this.getElement(widgetInstance);
       const valrep = this.getNode(widgetInstance.data, "valrep");
@@ -350,6 +354,12 @@ export class Listbox extends Widget {
   /**
    * Private Uniface API method - onConnect.
    * Specialized onConnect method to add a change event for the listbox when user interaction occurs.
+   */
+  /**
+   *
+   * @param {any} widgetElement
+   * @param {any} objectDefinition
+   * @returns {*}
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
