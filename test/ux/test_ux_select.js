@@ -635,6 +635,59 @@
     });
   });
 
+  describe("blockUI()", function () {
+    let element,widget;
+
+    before(function () {
+      element = tester.element;
+      widget = tester.createWidget();
+    });
+
+    it("check if the 'u-readonly' and 'u-blocked' class is applied when the blockUI() is invoked", function () {
+      return asyncRun(function () {
+        widget.blockUI();
+      }).then(function () {
+        expect(element, "Class u-readonly is not applied").to.have.class("u-readonly");
+        expect(element, "Class u-blocked is not applied.").to.have.class("u-blocked");
+        expect(widget.data.uiblocked).equal(true);
+      });
+    });
+  });
+
+  describe("unblockUI()", function () {
+    let element,widget;
+
+    before(function () {
+      element = tester.element;
+      widget = tester.createWidget();
+    });
+
+    beforeEach(function () {
+      widget.blockUI();
+    });
+
+    it("check if the 'u-readonly' and 'u-blocked' class is removed when the unblockUI() is invoked", function () {
+      return asyncRun(function () {
+        widget.unblockUI();
+      }).then(function () {
+        expect(element, "Class u-readonly is not applied").not.to.have.class("u-readonly");
+        expect(element, "Class u-blocked is applied.").not.to.have.class("u-blocked");
+        expect(widget.data.uiblocked).equal(false);
+      });
+    });
+
+    it("check if the readonly mode is retained when the unblockUI() is called", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": true
+        });
+        widget.unblockUI();
+      }).then(function () {
+        expect(element, "Class u-readonly is not applied").to.have.class("u-readonly");
+      });
+    });
+  });
+
   describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {

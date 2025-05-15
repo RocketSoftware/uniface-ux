@@ -12,7 +12,8 @@ import {
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
   HtmlAttributeReadonlyDisabled,
-  HtmlAttributeMinMaxLength
+  HtmlAttributeMinMaxLength,
+  UIBlock
 } from "../framework/workers.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
@@ -42,7 +43,6 @@ export class TextField extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "readonly";
 
   /**
    * Widget Definition.
@@ -63,6 +63,7 @@ export class TextField extends Widget {
     new HtmlAttributeReadonlyDisabled(this, "html:readonly", "html:disabled", "uiblocked", false, false, false),
     new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
     new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
+    new UIBlock(this, "readonly"),
     new StyleClass(this, ["u-text-field", "outline"]),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
@@ -123,36 +124,6 @@ export class TextField extends Widget {
       html5ValidationMessage = `Please lengthen this text to ${this.data["html:minlength"]} characters or more (you are currently using ${this.elements.widget.value.length} characters).`;
     }
     return html5ValidationMessage;
-  }
-
-  /**
-   * Private Uniface API method - blockUI.
-   * Blocks user interaction with the widget.
-   */
-  blockUI() {
-    this.log("blockUI");
-    // Call blockUI() for each sub-widget.
-    Object.keys(this.subWidgets).forEach((key) => {
-      this.subWidgets[key].blockUI();
-    });
-    // Add the 'u-blocked' class to the widget element.
-    this.elements.widget.classList.add("u-blocked");
-    this.setProperties({ "uiblocked": true });
-  }
-
-  /**
-   * Private Uniface API method - unblockUI.
-   * Unblocks user interaction with the widget.
-   */
-  unblockUI() {
-    this.log("unblockUI");
-    // Call unblockUI() for each sub-widget.
-    Object.keys(this.subWidgets).forEach((key) => {
-      this.subWidgets[key].unblockUI();
-    });
-    // Remove the 'u-blocked' class from the widget element.
-    this.elements.widget.classList.remove("u-blocked");
-    this.setProperties({ "uiblocked": false });
   }
 
   /**
