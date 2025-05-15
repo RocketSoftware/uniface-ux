@@ -10,7 +10,8 @@ import {
   SlottedElement,
   SlottedError,
   HtmlAttributeNumber,
-  IgnoreProperty
+  IgnoreProperty,
+  UIBlock
 } from "../framework/workers.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
@@ -35,7 +36,6 @@ export class Checkbox extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "readonly";
 
   /**
    * Extends HtmlValueAttributeBoolean worker and adds tri-state functionality to it.
@@ -228,6 +228,7 @@ export class Checkbox extends Widget {
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeBoolean(this, undefined, "currentChecked", false),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
+    new UIBlock(this, "readonly"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
     new Trigger(this, "onchange", "valuechange", true)
   ]);

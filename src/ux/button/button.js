@@ -9,7 +9,8 @@ import {
   HtmlAttributeNumber,
   HtmlAttributeChoice,
   HtmlAttributeBoolean,
-  IgnoreProperty
+  IgnoreProperty,
+  UIBlock
 } from "../framework/workers.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
@@ -35,7 +36,6 @@ export class Button extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "disabled";
 
   /**
    * Private Worker: Slotted Button Text
@@ -185,6 +185,7 @@ export class Button extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new IgnoreProperty(this, "html:readonly"),
+    new UIBlock(this, "disabled"),
     new StyleClass(this, ["u-button", "neutral"]),
     new this.SlottedButtonIcon(this, "u-icon", ".u-icon"),
     new this.SlottedButtonText(this, "u-text", ".u-text"),

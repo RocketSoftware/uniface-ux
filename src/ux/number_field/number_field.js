@@ -13,7 +13,8 @@ import {
   HtmlAttributeBoolean,
   HtmlAttributeMinMax,
   StyleClass,
-  IgnoreProperty
+  IgnoreProperty,
+  UIBlock
 } from "../framework/workers.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
@@ -42,7 +43,6 @@ export class NumberField extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "readonly";
 
   /**
    * Widget Definition.
@@ -65,6 +65,7 @@ export class NumberField extends Widget {
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new HtmlAttributeMinMax(this, "html:min", "html:max", undefined, undefined),
+    new UIBlock(this, "readonly"),
     new StyleClass(this, ["u-number-field", "outline"]),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
