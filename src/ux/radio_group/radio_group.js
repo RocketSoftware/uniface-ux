@@ -11,7 +11,8 @@ import {
   HtmlAttributeNumber,
   StyleClass,
   Trigger,
-  IgnoreProperty
+  IgnoreProperty,
+  UIBlock
 } from "../framework/workers.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
@@ -37,7 +38,6 @@ export class RadioGroup extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "readonly";
 
   /**
    * Private Worker: RadioGroupSelectedValue
@@ -187,6 +187,7 @@ export class RadioGroup extends Widget {
     new this.RadioGroupSelectedValue(this, "value", "value", ""),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
+    new UIBlock(this, "readonly"),
     new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
     new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "label-text"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label"),

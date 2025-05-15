@@ -12,7 +12,8 @@ import {
   HtmlAttributeBoolean,
   SlottedElement,
   HtmlAttributeChoice,
-  IgnoreProperty
+  IgnoreProperty,
+  UIBlock
 } from "../framework/workers.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
@@ -37,7 +38,6 @@ export class Select extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  static uiBlocking = "readonly";
 
   /**
    * Private Worker: HtmlAttributeBoolean ReadOnly Attribute.
@@ -263,6 +263,36 @@ export class Select extends Widget {
   };
 
   /**
+  * Private Worker: This is specialized worker to handle blockUI and unblockUI methods.
+  * Select should be in readonly during block state and this property is not defined by fluent.
+  * For this we explicitly need to add u-readonly class to the widget element.
+  * @class SelectUIBlock
+  * @extends {UIBlock}
+  */
+  static SelectUIBlock = class extends UIBlock {
+    refresh(widgetInstance) {
+      this.log("refresh", {
+        "widgetInstance": widgetInstance.getTraceDescription()
+      });
+      const element = widgetInstance.elements.widget;
+      const isBlocked = this.toBoolean(this.getNode(widgetInstance.data, "uiblocked"));
+
+      if (this.uiblocking === "readonly") {
+        const htmlReadonly = widgetInstance.toBoolean(widgetInstance.data["html:readonly"]);
+        if (isBlocked) {
+          element.classList.add("u-blocked");
+          element.classList.add("u-readonly");
+        } else if (!htmlReadonly) {
+          element.classList.remove("u-blocked");
+          element.classList.remove("u-readonly");
+        }
+      } else {
+        widgetInstance.error("UIBlock", "Invalid block type", this.uiblocking);
+      }
+    }
+  };
+
+  /**
    * Widget definition.
    */
   // prettier-ignore
@@ -283,6 +313,7 @@ export class Select extends Widget {
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new HtmlAttributeChoice(this, "popup-position", "u-position", ["above", "below"], "below", true),
+    new this.SelectUIBlock(this, "readonly"),
     new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ""),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
@@ -528,56 +559,6 @@ export class Select extends Widget {
       }
     });
     return valueUpdaters;
-  }
-
-  /**
-   * Specialized blockUI method because:
-   * Select should be in readonly during block state and this property is not defined by fluent.
-   * For this we explicitly need to add u-readonly class to the widget element.
-   */
-  blockUI() {
-    this.log("blockUI");
-
-    /** @type {object} */
-    let widgetClass = this.constructor;
-    // Check if uiBlocking is defined in the constructor.
-    if (widgetClass.uiBlocking) {
-      // Add the 'u-blocked' class to the widget element.
-      this.elements.widget.classList.add("u-blocked");
-      // Handle different types of UI blocking.
-      if (widgetClass.uiBlocking === "readonly") {
-        this.elements.widget.classList.add("u-readonly");
-      } else {
-        // If uiBlocking has an invalid value, log an error.
-        this.error(
-          "blockUI()",
-          "Static uiBlocking not defined or invalid value",
-          "No UI blocking"
-        );
-      }
-    }
-  }
-
-  /**
-   * Specialized UnblockUI method to remove u-readonly class.
-   */
-  unblockUI() {
-    this.log("unblockUI");
-
-    /** @type {object} */
-    const widgetClass = this.constructor;
-    // Check if uiBlocking is defined in the constructor.
-    if (widgetClass.uiBlocking) {
-      // Remove the 'u-blocked' class from the widget element.
-      this.elements.widget.classList.remove("u-blocked");
-      if (widgetClass.uiBlocking === "readonly") {
-        if (!this.toBoolean(this.data["html:readonly"])) {
-          this.elements.widget.classList.remove("u-readonly");
-        }
-      } else {
-        this.error("unblockUI()", "Static uiBlocking not defined or invalid value", "No UI blocking");
-      }
-    }
   }
 
   /**

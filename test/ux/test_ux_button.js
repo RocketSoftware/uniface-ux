@@ -500,6 +500,59 @@
     });
   });
 
+  describe("blockUI()", function () {
+    let element,widget;
+
+    before(function () {
+      element = tester.element;
+      widget = tester.createWidget();
+    });
+
+    it("check if the 'u-blocked' class is applied and ensure the widget is disabled when the blockUI() is invoked", function () {
+      return asyncRun(function () {
+        widget.blockUI();
+      }).then(function () {
+        expect(element, "Class u-blocked is not applied.").to.have.class("u-blocked");
+        expect(widget.data.uiblocked).equal(true);
+        expect(element.disabled).equal(true);
+      });
+    });
+  });
+
+  describe("unblockUI()", function () {
+    let element,widget;
+
+    before(function () {
+      element = tester.element;
+      widget = tester.createWidget();
+    });
+
+    beforeEach(function () {
+      widget.blockUI();
+    });
+
+    it("check if the 'u-blocked' class is removed and ensure the widget is not disabled when the unblockUI() is invoked", function () {
+      return asyncRun(function () {
+        widget.unblockUI();
+      }).then(function () {
+        expect(element, "Class u-blocked is applied.").not.to.have.class("u-blocked");
+        expect(element.disabled).equal(false);
+        expect(widget.data.uiblocked).equal(false);
+      });
+    });
+
+    it("check if the disabled mode is retained when the unblockUI() is called", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:disabled": true
+        });
+        widget.unblockUI();
+      }).then(function () {
+        expect(element.hasAttribute("disabled")).to.be.true;
+      });
+    });
+  });
+
   describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {
