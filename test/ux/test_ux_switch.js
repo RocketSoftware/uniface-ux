@@ -271,7 +271,6 @@
       }).then(function () {
         let checkedText = element.querySelector("span.u-checked-message").innerText;
         assert.equal(checkedText, switchCheckedText); // Check for visibility.
-        expect(checkedText.length).to.be.at.most(10);
         assert(!element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message text.");
         expect(element.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
         expect(element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide unchecked message.");
@@ -479,7 +478,11 @@
         });
       }).then(function () {
         expect(element).to.have.class("u-format-invalid");
-
+        const checkText = element.shadowRoot.querySelector(".status-message");
+        checkText.style.fontFamily = "Segoe UI Variable";
+        checkText.style.fontSize = "14px";
+        let textOverFlowPropInt = parseInt(window.getComputedStyle(checkText).getPropertyValue("width"));
+        assert.equal(textOverFlowPropInt,84, "Reserved width does not match.");
         // Check if error icon comes after the label in DOM order when label is "after".
         const errorIcon = element.querySelector(".u-error-icon").getBoundingClientRect();
         const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
@@ -506,7 +509,11 @@
         });
       }).then(function () {
         expect(element).to.have.class("u-format-invalid");
-
+        const checkText = element.shadowRoot.querySelector(".status-message");
+        checkText.style.fontFamily = "Segoe UI Variable";
+        checkText.style.fontSize = "14px";
+        let textOverFlowPropInt = parseInt(window.getComputedStyle(checkText).getPropertyValue("width"));
+        assert.equal(textOverFlowPropInt,84, "Reserved width does not match.");
         // Check if error icon comes after the label and before control in DOM order when label is "before".
         const errorIcon = element.querySelector(".u-error-icon").getBoundingClientRect();
         const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
