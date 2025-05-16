@@ -12,8 +12,6 @@ import {
 } from "../framework/workers.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
-import { fluentCheckbox, provideFluentDesignSystem } from "@fluentui/web-components";
-provideFluentDesignSystem().register(fluentCheckbox());
 
 /**
  * Controlbar Widget
@@ -34,7 +32,6 @@ export class Controlbar extends Widget {
   static getters = {};
   static triggers = {};
   // This widget does not have uiBlocking of its own but the subWidget may have.
-  static uiBlocking = "";
 
   /**
    * Private Worker: HandleOverFlowPropertyWorker.
@@ -55,7 +52,7 @@ export class Controlbar extends Widget {
     refresh(widgetInstance) {
       const element = this.getElement(widgetInstance);
       const properties = widgetInstance.data;
-      const subWidgets = Object.values(widgetInstance?.subWidgets);
+      const subWidgets = Object.values(widgetInstance.subWidgets);
 
       // Create a map of subWidgets with their ids as key and the widgetInstance as value.
       let subWidgetsMap = {};
