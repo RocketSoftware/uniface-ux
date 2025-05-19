@@ -9,7 +9,6 @@
   const widgetName = tester.widgetName;
 
   describe("Uniface mockup tests", function () {
-
     it(`Get class ${widgetName}`, function () {
       const widgetClass = tester.getWidgetClass();
       assert(widgetClass, `Widget class '${widgetName}' is not defined!
@@ -18,7 +17,6 @@
   });
 
   describe("Uniface static structure constructor() definition", function () {
-
     it("should have a static property structure of type Element", function () {
       const widgetClass = tester.getWidgetClass();
       const structure = widgetClass.structure;
@@ -28,7 +26,6 @@
       expect(structure.elementQuerySelector).to.equal("");
       expect(structure.childWorkers).to.be.an("array");
     });
-
   });
 
   describe(`${widgetName}.processLayout()`, function () {
@@ -40,7 +37,6 @@
     });
 
     describe("Checks", function () {
-
       before(function () {
         element = tester.processLayout();
       });
@@ -80,11 +76,9 @@
         assert(element.querySelector("span.u-error-icon"), "Widget misses or has incorrect u-error-icon element.");
       });
     });
-
   });
 
   describe("Create widget", function () {
-
     before(function () {
       tester.construct();
     });
@@ -108,12 +102,11 @@
       assert(element, "Target element is not defined!");
       assert(widget.elements.widget === element, "Widget is not connected.");
     });
-
   });
 
   describe("mapTrigger()", function () {
     const testData = {
-      "onchange" : "change"
+      "onchange": "change"
     };
     let widget;
 
@@ -131,7 +124,6 @@
       });
     });
   });
-
 
   describe("dataInit()", function () {
     const classes = tester.getDefaultClasses();
@@ -270,7 +262,11 @@
         });
       }).then(function () {
         let checkedText = element.querySelector("span.u-checked-message").innerText;
-        assert.equal(checkedText, switchCheckedText); // Check for visibility.
+        const checkedTextSlot = element.shadowRoot.querySelector(".checked-message");
+
+        assert.equal(checkedText, switchCheckedText);
+        expect(checkedTextSlot.scrollWidth).not.to.be.greaterThan(checkedTextSlot.clientWidth);
+
         assert(!element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message text.");
         expect(element.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
         expect(element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide unchecked message.");
@@ -282,7 +278,7 @@
       });
     });
 
-    it("truncates checked message with ellipsis if length exceeds 10 characters", function () {
+    it("truncates checked message with ellipsis if length exceeds 12 characters", function () {
       let longMessage = "This is a very long checked message";
       return asyncRun(function () {
         tester.dataUpdate({
@@ -290,16 +286,24 @@
           "value": 1
         });
       }).then(function () {
-        const checkText = element.shadowRoot.querySelector(".checked-message");
-        const textOverFlowProp = window.getComputedStyle(checkText).getPropertyValue("text-overflow");
-        assert(textOverFlowProp, "ellipsis");
-        // // To check order of elements.
+        const checkedText = element.querySelector("span.u-checked-message").innerText;
+        const checkedTextSlot = element.shadowRoot.querySelector(".checked-message");
+
+        assert.equal(checkedText, longMessage);
+
+        const computedStyle = window.getComputedStyle(checkedTextSlot);
+        expect(computedStyle.overflow).to.equal("hidden");
+        expect(computedStyle.whiteSpace).to.equal("nowrap");
+        expect(computedStyle.textOverflow).to.equal("ellipsis");
+
+        expect(checkedTextSlot.scrollWidth).to.be.greaterThan(checkedTextSlot.clientWidth);
+
+        // To check order of elements.
         const statusMsg = element.querySelector("span.u-checked-message").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
         expect(statusMsg.left).to.be.greaterThan(widget.left);
       });
     });
-
 
     it("set unchecked message", function () {
       let switchUnCheckedText = "Off";
@@ -310,8 +314,11 @@
         });
       }).then(function () {
         let uncheckedText = element.querySelector("span.u-unchecked-message").innerText;
-        assert.equal(uncheckedText, switchUnCheckedText); // Check for visibility.
-        expect(uncheckedText.length).to.be.at.most(10);
+        const uncheckedTextSlot = element.shadowRoot.querySelector(".unchecked-message");
+
+        assert.equal(uncheckedText, switchUnCheckedText);
+        expect(uncheckedTextSlot.scrollWidth).not.to.be.greaterThan(uncheckedTextSlot.clientWidth);
+
         assert(!element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text.");
         expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
         expect(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message.");
@@ -323,25 +330,33 @@
       });
     });
 
-    it("truncates unchecked message with ellipsis if length exceeds 10 characters", function () {
-      let longMessage = "This is a very long checked message";
+    it("truncates unchecked message with ellipsis if length exceeds 12 characters", function () {
+      let longMessage = "This is a very long unchecked message";
       return asyncRun(function () {
         tester.dataUpdate({
           "unchecked-message": longMessage,
           "value": 0
         });
       }).then(function () {
-        const checkText = element.shadowRoot.querySelector(".unchecked-message");
-        const textOverFlowProp = window.getComputedStyle(checkText).getPropertyValue("text-overflow");
-        assert(textOverFlowProp, "ellipsis");
-        // To check order of elements.
+        let uncheckedText = element.querySelector("span.u-unchecked-message").innerText;
+        const uncheckedTextSlot = element.shadowRoot.querySelector(".unchecked-message");
+
+        assert.equal(uncheckedText, longMessage);
+
+        const computedStyle = window.getComputedStyle(uncheckedTextSlot);
+        expect(computedStyle.overflow).to.equal("hidden");
+        expect(computedStyle.whiteSpace).to.equal("nowrap");
+        expect(computedStyle.textOverflow).to.equal("ellipsis");
+
+        expect(uncheckedTextSlot.scrollWidth).to.be.greaterThan(uncheckedTextSlot.clientWidth);
+
         const statusMsg = element.querySelector("span.u-unchecked-message").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
         expect(statusMsg.left).to.be.greaterThan(widget.left);
       });
     });
 
-    it("shows reserve space after checked/unchecked message correct side and before label text when label-position is 'after'", function () {
+    it("checked/unchecked message should be present between control and label text when label-position is 'after'", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-text": "Label Text",
@@ -358,7 +373,6 @@
         expect(element.querySelector("span.u-label-text").getAttribute("slot")).equal("");
         expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
         expect(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide error icon");
-
 
         // Check if error icon comes after the label in DOM order when label is "after".
         const checkedMessage = element.shadowRoot.querySelector(".status-message").getBoundingClientRect();
@@ -437,11 +451,11 @@
         expect(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
 
         // Check if error icon comes after the label in DOM order when label is "before".
-        const errorIconSlot = element.querySelector(".u-error-icon").getBoundingClientRect();
+        const errorIcon = element.querySelector(".u-error-icon").getBoundingClientRect();
         const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
-        expect(widget.right).to.be.greaterThan(errorIconSlot.right);
-        expect(errorIconSlot.right).to.be.greaterThan(label.right);
+        expect(widget.right).to.be.greaterThan(errorIcon.right);
+        expect(errorIcon.right).to.be.greaterThan(label.right);
       });
     });
 
@@ -562,7 +576,7 @@
   });
 
   describe("blockUI()", function () {
-    let element,widget;
+    let element, widget;
 
     before(function () {
       element = tester.element;
@@ -582,7 +596,7 @@
   });
 
   describe("unblockUI()", function () {
-    let element,widget;
+    let element, widget;
 
     before(function () {
       element = tester.element;
@@ -626,5 +640,4 @@
       }
     });
   });
-
 })();
