@@ -90,7 +90,7 @@ export class PlainText extends Widget {
       const element = this.getElement(widgetInstance);
       element.innerHTML = "";
       // Convert value to string if it's not a string already.
-      value = typeof value !== "string" ? value.toString() : value;
+      value = typeof value !== "string" ? value?.toString() ?? "" : value;
 
       const matchedValrepObj = valrep?.find((valrepObj) => valrepObj.value === value);
 
@@ -108,9 +108,6 @@ export class PlainText extends Widget {
 
       if (value) {
         element.hidden = false;
-      }else{
-        element.hidden = true;
-        return;
       }
 
       // Create elements dynamically for different plain text formats.
