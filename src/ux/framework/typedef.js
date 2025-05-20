@@ -38,16 +38,17 @@
  *
  * @typedef {string} UDataError
  *
- * @typedef {Object} UValueFormatting - Object describing the formatting of a widget value.
- *  @property {String} [primaryPlainText] - Primary value representation (not between parentheses) as plain text (secure).
- *  @property {String} [primaryHtmlText] - Primary value representation (not between parentheses) as HTML formatted text (not secure).
- *  @property {String} [secondaryPlainText] - Secondary value representation (between parentheses) as plain text (secure).
- *  @property {String} [secondaryHtmlText] - Secondary  value representation (between parentheses) as HTML formatted text (not secure).
- *  @property {String} [prefixText] - Prefix as plain text.
- *  @property {String} [prefixIcon] - Prefix icon name.
- *  @property {String} [suffixText] - Suffix as plain text.
- *  @property {String} [suffixIcon] - Suffix icon name.
- *  @property {String} [errorMessage] - (Format) Error message.
- *  @property {String|undefined} [labelText] - Unformatted label-text.
- *  @property {Boolean|undefined} [isNotSupported] - Whether this representation is supported in the parent widget or not.
+ * @typedef {object} UValueFormatting - Object describing the formatting of a widget value.
+ *  @property {string} [primaryPlainText] - Primary value representation (not between parentheses) as plain text (secure).
+ *  @property {string} [primaryHtmlText] - Primary value representation (not between parentheses) as HTML formatted text (not secure).
+ *  @property {string} [secondaryPlainText] - Secondary value representation (between parentheses) as plain text (secure).
+ *  @property {string} [secondaryHtmlText] - Secondary  value representation (between parentheses) as HTML formatted text (not secure).
+ *  @property {string} [prefixText] - Prefix as plain text.
+ *  @property {string} [prefixIcon] - Prefix icon name.
+ *  @property {string} [suffixText] - Suffix as plain text.
+ *  @property {string} [suffixIcon] - Suffix icon name.
+ *  @property {string} [errorMessage] - (Format) Error message.
+ *  @property {string} [labelText] - Unformatted label-text.
+ *  @property {string|undefined} [labelText] - Unformatted label-text.
+ *  @property {boolean|undefined} [isNotSupported] - Whether this representation is supported in the parent widget or not.
  */

@@ -40,6 +40,13 @@ export class Controlbar extends Widget {
    * @extends {Worker}
    */
   static HandleOverFlowPropertyWorker = class extends Worker {
+
+    /**
+     * Creates an instance of HandleOverFlowPropertyWorker.
+     * @param {typeof Widget} widgetClass
+     * @param {string} propId
+     * @param {string} defaultValue
+     */
     constructor(widgetClass, propId, defaultValue) {
       super(widgetClass);
       this.propId = propId;

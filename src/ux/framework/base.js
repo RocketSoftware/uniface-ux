@@ -342,9 +342,10 @@ export class Base {
    * Extracts sub-widget data from the original data object and removes the corresponding
    * properties from original data object.
    * @param {UData} data - The source object containing properties to extract.
-   * @param {String} subWidgetPropPrefix - Sub-widget property prefix.
-   * @param {Object} subWidgetDefinition - subWidget definitions registered by the widget class.
-   * @returns {UData|undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
+   * @param {string} subWidgetPropPrefix - Sub-widget property prefix.
+   * @param {object} subWidgetDefinition - subWidget definitions registered by the widget class.
+   * @param {Array<string>} subWidgetDelegatedProperties - An array containing list of delegated properties.
+   * @returns {UData | undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
    */
   extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDefinition) {
     let subWidgetData;
