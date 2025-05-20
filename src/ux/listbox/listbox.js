@@ -354,12 +354,9 @@ export class Listbox extends Widget {
   /**
    * Private Uniface API method - onConnect.
    * Specialized onConnect method to add a change event for the listbox when user interaction occurs.
-   */
-  /**
-   *
-   * @param {any} widgetElement
-   * @param {any} objectDefinition
-   * @returns {*}
+   * @param {HTMLElement} widgetElement
+   * @param {UObjectDefinition} objectDefinition - reference to the component definitions.
+   * @returns {Array<Updater> | undefined | null}
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
@@ -372,7 +369,7 @@ export class Listbox extends Widget {
 
     // Add event listener to prevent the widget from getting focus when clicking on error-icon.
     const errorIcon = widgetElement.querySelector(".u-error-icon");
-    errorIcon.addEventListener("mousedown", (event) => {
+    errorIcon?.addEventListener("mousedown", (event) => {
       event.preventDefault();
       event.stopPropagation();
     });
