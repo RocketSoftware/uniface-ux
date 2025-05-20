@@ -161,9 +161,9 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
   });
 
   // ===================================================================================================================
-  // == Testing SlottedElements class =================================================================================
+  // == Testing SlottedElement class =================================================================================
   // ===================================================================================================================
-  describe("Test SlottedElements class", function () {
+  describe("Test SlottedElement class", function () {
 
     let widgetClass;
     let propText;
@@ -204,7 +204,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       slottedElement = new SlottedElement(widgetClass, "", "", "", "", propText, defaultText, propIcon, defaultIcon);
     });
 
-    it("should initialize with correct properties for Slotted Elements class", function () {
+    it("should initialize with correct properties for SlottedElement class", function () {
       expect(slottedElement.widgetClass).to.equal(widgetClass);
       expect(slottedElement.textPropId).to.equal(propText);
       expect(slottedElement.textDefaultValue).to.equal(defaultText);
@@ -212,12 +212,12 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       expect(slottedElement.iconDefaultValue).to.equal(defaultIcon);
     });
 
-    it("check getters/setters changed for propIcon, propText for Slotted Elements class", function () {
+    it("check getters/setters changed for propIcon, propText for SlottedElement class", function () {
       expect(slottedElement.widgetClass.defaultValues.icon).to.equal(defaultIcon);
       expect(slottedElement.widgetClass.defaultValues.text).to.equal(defaultText);
     });
 
-    it("should refresh correctly for Slotted Elements class", function () {
+    it("should refresh correctly for SlottedElement class", function () {
       slottedElement.refresh(widgetInstance);
       let mockIconClasses = ["ms-Icon", "ms-Icon--testicon.png"];
       expect(widgetInstance.elements.widget.hidden).to.equal(false);
