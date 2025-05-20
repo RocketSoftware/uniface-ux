@@ -720,7 +720,7 @@
             "html:hiden": "true"
           });
         }).then(function () {
-          expect(warnSpy.calledWith("Controlbar.setProperties(data): Widget does not support property 'html:hiden' - Ignored.")).to.be.true;
+          expect(warnSpy.calledWith(sinon.match("setProperties(data): Widget does not support property 'html:hiden' - Ignored."))).to.be.true;
           warnSpy.restore();
         });
       });
@@ -736,7 +736,7 @@
           });
         }).then(function () {
           expect(!element.getAttribute("tabindex"));
-          expect(warnSpy.calledWith("Controlbar.setProperties(data): Widget does not support property 'tabindex' - Ignored.")).to.be.true;
+          expect(warnSpy.calledWith(sinon.match("setProperties(data): Widget does not support property 'tabindex' - Ignored."))).to.be.true;
           warnSpy.restore();
         });
       });
@@ -865,7 +865,7 @@
           "select_overflow-behavior": "move"
         });
       }).then(function () {
-        expect(warnSpy.calledWith("Controlbar.setProperties: Property 'select_overflow-behavior' is given invalid value '(move)' - Ignored.")).to.be.true;
+        expect(warnSpy.calledWith(sinon.match("setProperties: Property 'select_overflow-behavior' is given invalid value '(move)' - Ignored."))).to.be.true;
         warnSpy.restore();
       });
     });
@@ -877,7 +877,7 @@
           "select_overflow-behavior": "menu"
         });
       }).then(function () {
-        expect(warnSpy.calledWith("Controlbar.setProperties: Property 'select_overflow-behavior' is given invalid value '(menu)' - Ignored.")).to.be.true;
+        expect(warnSpy.calledWith(sinon.match("setProperties: Property 'select_overflow-behavior' is given invalid value '(menu)' - Ignored."))).to.be.true;
         warnSpy.restore();
       });
     });
@@ -889,7 +889,7 @@
           "select_overflow-behavior": "random"
         });
       }).then(function () {
-        expect(warnSpy.calledWith("Controlbar.setProperties: Property 'select_overflow-behavior' is given invalid value '(random)' - Ignored.")).to.be.true;
+        expect(warnSpy.calledWith(sinon.match("setProperties: Property 'select_overflow-behavior' is given invalid value '(random)' - Ignored."))).to.be.true;
         warnSpy.restore();
       });
     });
@@ -901,7 +901,7 @@
           "select_priority": "random"
         });
       }).then(function () {
-        expect(warnSpy.calledWith("Controlbar.setProperties: Property 'select_priority' is given invalid value '(random)' - Ignored.")).to.be.true;
+        expect(warnSpy.calledWith(sinon.match("setProperties: Property 'select_priority' is given invalid value '(random)' - Ignored."))).to.be.true;
         warnSpy.restore();
       });
     });
