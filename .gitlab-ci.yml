@@ -70,9 +70,9 @@ polaris_scan:
     when: always
     expire_in: 7 days
   rules:
-    - if: '$CI_COMMIT_BRANCH == "UNI-45717_emailNotify" && $CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
       when: always
-    - if: '$CI_COMMIT_BRANCH != "UNI-45717_emailNotify"'
+    - if: '$CI_COMMIT_BRANCH != "main"'
       when: manual
 
 publish:
@@ -94,12 +94,12 @@ publish:
     - cp -a dist "$TARGET_DIR/"
     - echo "Artifacts copied to $TARGET_DIR"
     - |
-      if [ "$CI_COMMIT_BRANCH" = "UNI-45717_emailNotify" ]; then
+      if [ "$CI_COMMIT_BRANCH" = "main" ]; then
         ln -sfn "./${TARGET_NAME}" "${TARGET_BASE}/latest"
         echo "Updated latest symlink to: $TARGET_NAME"
         echo -e "New UX Widgets build published\n\nBUILD INFO\n------------------\nTarget Version:\t${TARGET_VERSION}\nCommit SHA:\t${CI_COMMIT_SHORT_SHA}\n\nBranch:\t${CI_COMMIT_BRANCH}\n\nPath:\t${TARGET_DIR}" > "${TARGET_DIR}/publish.txt"
         cat "${TARGET_DIR}/publish.txt" | python ${CPF_HOME}/scripts/mail.py \
-          --to "sgupta@rocketsoftware.com" \
+          --to "uniface.lab.buildreport@rocketsoftware.com" \
           --subject "[Build Report] UX Widgets ${TARGET_VERSION} ${CI_COMMIT_SHORT_SHA}"
       else
         echo "Skipping latest symlink update (non-main branch)"
