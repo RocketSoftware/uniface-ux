@@ -267,9 +267,9 @@
         assert.equal(checkedText, switchCheckedText);
         expect(checkedTextSlot.scrollWidth).not.to.be.greaterThan(checkedTextSlot.clientWidth);
 
-        assert(!element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message text.");
+        assert(!element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message span.");
+        assert(element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide the unchecked message span.");
         expect(element.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
-        expect(element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide unchecked message.");
 
         // To check order of elements.
         const statusMsg = element.querySelector("span.u-checked-message").getBoundingClientRect();
@@ -309,6 +309,7 @@
       let switchUnCheckedText = "Off";
       return asyncRun(function () {
         tester.dataUpdate({
+          "checked-message": "",
           "unchecked-message": switchUnCheckedText,
           "value": 0
         });
@@ -319,9 +320,9 @@
         assert.equal(uncheckedText, switchUnCheckedText);
         expect(uncheckedTextSlot.scrollWidth).not.to.be.greaterThan(uncheckedTextSlot.clientWidth);
 
-        assert(!element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text.");
+        assert(!element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the unchecked message span.");
+        assert(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide the checked message span.");
         expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
-        expect(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message.");
 
         // To check order of elements.
         const statusMsg = element.querySelector("span.u-unchecked-message").getBoundingClientRect();
@@ -366,15 +367,16 @@
           "unchecked-message": "Off"
         });
       }).then(function () {
-        assert(!element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message text");
-        expect(!element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide unchecked message");
+        assert(!element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message span.");
+        assert(!element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the unchecked message span.");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+
         expect(element.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
         expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
         expect(element.querySelector("span.u-label-text").getAttribute("slot")).equal("");
         expect(element.querySelector("span.u-error-icon").getAttribute("slot")).equal("");
-        expect(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide error icon");
 
-        // Check if error icon comes after the label in DOM order when label is "after".
+        // To check order of elements.
         const checkedMessage = element.shadowRoot.querySelector(".status-message").getBoundingClientRect();
         const label = element.shadowRoot.querySelector("label").getBoundingClientRect();
         const control = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
@@ -382,6 +384,88 @@
         expect(label.left).to.be.greaterThan(control.left);
         expect(checkedMessage.left).to.be.greaterThan(control.left);
         expect(checkedMessage.right).to.be.greaterThan(control.right);
+        expect(label.right).to.be.greaterThan(checkedMessage.right);
+        expect(label.left).to.be.greaterThan(checkedMessage.left);
+      });
+    });
+
+    it("verify space is reserved when switch is in checked state and unchecked message is defined", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label Text",
+          "label-position": "after",
+          "checked-message": "",
+          "unchecked-message": "Off",
+          "value": 1
+        });
+      }).then(function () {
+        assert(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide the checked message span.");
+        assert(!element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the unchecked message span.");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+
+        const statusMsgSlot = element.shadowRoot.querySelector(".status-message");
+        const reservedWidthInPixels = parseFloat(window.getComputedStyle(statusMsgSlot).width);
+        expect(reservedWidthInPixels).to.be.greaterThan(0);
+      });
+    });
+
+    it("verify space is reserved when switch is in unchecked state and checked message is defined", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label Text",
+          "label-position": "before",
+          "checked-message": "On",
+          "unchecked-message": "",
+          "value": 0
+        });
+      }).then(function () {
+        assert(!element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message span.");
+        assert(element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide the unchecked message span.");
+        assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
+
+        const statusMsgSlot = element.shadowRoot.querySelector(".status-message");
+        const reservedWidthInPixels = parseFloat(window.getComputedStyle(statusMsgSlot).width);
+        expect(reservedWidthInPixels).to.be.greaterThan(0);
+      });
+    });
+
+    it("verify space is reserved when switch is in error state and checked message is defined", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label Text",
+          "label-position": "after",
+          "checked-message": "On",
+          "unchecked-message": "",
+          "value": 2
+        });
+      }).then(function () {
+        assert(!element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the checked message span.");
+        assert(element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide the unchecked message span.");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+
+        const statusMsgSlot = element.shadowRoot.querySelector(".status-message");
+        const reservedWidthInPixels = parseFloat(window.getComputedStyle(statusMsgSlot).width);
+        expect(reservedWidthInPixels).to.be.greaterThan(0);
+      });
+    });
+
+    it("verify no space is reserved when switch is in error state and neither checked/unchecked message is defined", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label Text",
+          "label-position": "after",
+          "checked-message": "",
+          "unchecked-message": "",
+          "value": 2
+        });
+      }).then(function () {
+        assert(element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to hide the checked message span.");
+        assert(element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to hide the unchecked message span.");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+
+        const statusMsgSlot = element.shadowRoot.querySelector(".status-message");
+        const reservedWidthInPixels = parseFloat(window.getComputedStyle(statusMsgSlot).width);
+        expect(reservedWidthInPixels).to.equal(0);
       });
     });
   });
