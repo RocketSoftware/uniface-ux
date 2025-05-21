@@ -554,28 +554,38 @@
 
   describe("Update selection through user interaction", function () {
     let widget, element;
-    before(function () {
-      widget = tester.createWidget();
+    const triggerMap = {
+      "onchange" : function () {
+        const value = tester.widget.getValue();
+        tester.debugLog(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}"`);
+      }
+    };
+    const trigger = "onchange";
+
+    beforeEach(async function () {
+      widget = tester.createWidget(triggerMap);
       element = tester.element;
       assert(element, "Widget top element is not defined!");
-      tester.dataUpdate({
-        "valrep": valRepArray,
-        "display-format": "rep"
+
+      await asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "display-format": "rep"
+        });
       });
+
+      tester.resetTriggerCalled(trigger);
     });
 
-    // This test case will fail when run individually, fix for that yet to be done.
     it("simulate user interaction and select first option", function () {
       return asyncRun(function () {
-        // Programmatically select an option and dispatch the change event.
-        const firstOption = element.querySelector("fluent-option");
-        firstOption.selected = true;
-        const event = new window.Event("change");
-        element.dispatchEvent(event);
+        // Simulate user click on the first list item
+        tester.userClick(1);
       }).then(function () {
         const returnedValue = widget.getValue();
         const selectedOption = element.querySelector(".u-option.selected");
 
+        expect(tester.calledOnce(trigger)).to.be.true;
         expect(selectedOption?.value).equal("0");
         expect(returnedValue).to.equal(valRepArray[0].value);
         expect(selectedOption?.textContent).equal(valRepArray[0]?.representation);
@@ -600,18 +610,15 @@
       });
     });
 
-    // This test case will fail when run individually, fix for that yet to be done.
     it("simulate user interaction again to select the same valid option and expect the error to be removed", function () {
       return asyncRun(function () {
-        // Programmatically select an option and dispatch the change event.
-        const firstOption = element.querySelector("fluent-option");
-        firstOption.selected = true;
-        const event = new window.Event("change");
-        element.dispatchEvent(event);
+        // Simulate user click on the first list item
+        tester.userClick(1);
       }).then(function () {
         const returnedValue = widget.getValue();
         const selectedOption = element.querySelector(".u-option.selected");
 
+        expect(tester.calledOnce(trigger)).to.be.true;
         expect(selectedOption?.value).equal("0");
         expect(returnedValue).to.equal(valRepArray[0].value);
         expect(selectedOption?.textContent).equal(valRepArray[0]?.representation);
@@ -809,33 +816,39 @@
     });
   });
 
-  describe("Listbox onchange event", function () {
-    let element, onchangeSpy;
-    beforeEach(function () {
-      tester.createWidget();
-      element = tester.element;
+  describe("Listbox onchange trigger", function () {
+    const triggerMap = {
+      "onchange" : function () {
+        const value = tester.widget.getValue();
+        tester.debugLog(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: ${value}`);
+      }
+    };
+    const trigger = "onchange";
 
-      // Create a spy for the onchange event.
-      onchangeSpy = sinon.spy();
+    beforeEach(async function () {
+      await asyncRun(function () {
+        tester.createWidget(triggerMap);
+        tester.dataUpdate({
+          "valrep" : valRepArray,
+          "value" : valRepArray[1].value // set value as the 2nd item of valRepArray.
+        });
+      });
 
-      // Add the onchange event listener to the select element.
-      element.addEventListener("onchange", onchangeSpy);
+      tester.resetTriggerCalled(trigger);
     });
 
-    // Clean up after each test.
-    afterEach(function () {
-      // Restore the spy to its original state.
-      sinon.restore();
+    // Test case for the on change event.
+    it("should call the onchange trigger handler when the listbox is changed", async function () {
+      // Emulate a click on the list item 3.
+      const index = 3;
+      await tester.asyncUserClick(index);
+
+      // Assert that the onchange trigger handler was called once.
+      expect(tester.calledOnce(trigger)).to.be.true;
+      // Expected the value is the 3rd item of valRepArray.
+      expect(tester.widget.getValue()).to.equal(valRepArray[index-1].value, "Widget value");
     });
 
-    it("should call the onchange event handler when an onchange event is fired", function () {
-      // Simulate a change event.
-      const event = new window.Event("onchange");
-      element.dispatchEvent(event);
-
-      // Assert that the onchange event handler was called once.
-      sinon.assert.calledOnce(onchangeSpy);
-    });
   });
 
   describe("Error Visualization", function () {

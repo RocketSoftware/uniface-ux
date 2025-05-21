@@ -234,34 +234,34 @@
     });
   });
 
-  describe("Switch onchange event", function () {
-    let element, onchangeSpy;
-    beforeEach(function () {
-      tester.createWidget();
-      element = tester.element;
+  describe("Switch onchange trigger", function () {
+    const triggerMap = {
+      "onchange" : function () {
+        const value = tester.widget.getValue();
+        tester.debugLog(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: ${value}!`);
+      }
+    };
+    const trigger = "onchange";
 
-      // Create a spy for the onchange event.
-      onchangeSpy = sinon.spy();
+    beforeEach(async function () {
+      await asyncRun(function () {
+        tester.createWidget(triggerMap);
+      });
 
-      // Add the onchange event listener to the switch element.
-      element.addEventListener("onchange", onchangeSpy);
+      tester.resetTriggerCalled(trigger);
     });
 
-    // Clean up after each test.
-    afterEach(function () {
-      // Restore the spy to its original state.
-      sinon.restore();
+    // Test case for the onchange trigger.
+    it("should call the onchange trigger handler when the switch is clicked", async function () {
+      // Simulate a click event
+      await tester.asyncUserClick();
+
+      // Assert that the onchange trigger handler was called once.
+      expect(tester.calledOnce(trigger)).to.be.true;
+      // Expected the value is the 3rd item of valRepArray.
+      expect(tester.widget.getValue()).to.equal(true, "Widget value");
     });
 
-    // Test case for the onchange event.
-    it("should call the onchange event handler when the switch is toggled", function () {
-      // Simulate a change event.
-      const event = new window.Event("onchange");
-      element.dispatchEvent(event);
-
-      // Assert that the onchange event handler was called once.
-      expect(onchangeSpy.calledOnce).to.be.true;
-    });
   });
 
   describe("showError()", function () {
