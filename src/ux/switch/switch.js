@@ -74,7 +74,7 @@ export class Switch extends Widget {
     let element = this.elements.widget;
 
     // Create an error element.
-    let errorElement = document.createElement("div");
+    let errorElement = document.createElement("span");
     errorElement.setAttribute("part", "error");
     errorElement.classList.add("error");
 

@@ -105,10 +105,10 @@
   });
 
   describe("mapTrigger()", function () {
+    let widget;
     const testData = {
       "onchange": "change"
     };
-    let widget;
 
     beforeEach(function () {
       widget = tester.onConnect();
@@ -127,7 +127,6 @@
 
   describe("dataInit()", function () {
     const classes = tester.getDefaultClasses();
-
     let element;
 
     beforeEach(function () {
@@ -190,8 +189,9 @@
         });
       }).then(function () {
         let labelText = element.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, switchLabelText); // Check for visibility.
+        assert.equal(labelText, switchLabelText);
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
+
         // To check order of elements.
         const label = element.querySelector("span.u-label-text").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
@@ -208,6 +208,7 @@
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "after", "Label position is not set to after.");
+
         // To check order of elements.
         const label = element.querySelector("span.u-label-text").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
@@ -225,7 +226,7 @@
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "before");
         assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text.");
-        assert.equal(element.querySelector("span.u-label-text").innerText, "", "Text is not empty.");
+        assert.equal(element.querySelector("span.u-label-text").innerText, "", "Label text is not empty.");
       });
     });
 
@@ -263,7 +264,6 @@
       }).then(function () {
         let checkedText = element.querySelector("span.u-checked-message").innerText;
         const checkedTextSlot = element.shadowRoot.querySelector(".checked-message");
-
         assert.equal(checkedText, switchCheckedText);
         expect(checkedTextSlot.scrollWidth).not.to.be.greaterThan(checkedTextSlot.clientWidth);
 
@@ -288,14 +288,12 @@
       }).then(function () {
         const checkedText = element.querySelector("span.u-checked-message").innerText;
         const checkedTextSlot = element.shadowRoot.querySelector(".checked-message");
-
         assert.equal(checkedText, longMessage);
 
         const computedStyle = window.getComputedStyle(checkedTextSlot);
         expect(computedStyle.overflow).to.equal("hidden");
         expect(computedStyle.whiteSpace).to.equal("nowrap");
         expect(computedStyle.textOverflow).to.equal("ellipsis");
-
         expect(checkedTextSlot.scrollWidth).to.be.greaterThan(checkedTextSlot.clientWidth);
 
         // To check order of elements.
@@ -316,7 +314,6 @@
       }).then(function () {
         let uncheckedText = element.querySelector("span.u-unchecked-message").innerText;
         const uncheckedTextSlot = element.shadowRoot.querySelector(".unchecked-message");
-
         assert.equal(uncheckedText, switchUnCheckedText);
         expect(uncheckedTextSlot.scrollWidth).not.to.be.greaterThan(uncheckedTextSlot.clientWidth);
 
@@ -341,16 +338,15 @@
       }).then(function () {
         let uncheckedText = element.querySelector("span.u-unchecked-message").innerText;
         const uncheckedTextSlot = element.shadowRoot.querySelector(".unchecked-message");
-
         assert.equal(uncheckedText, longMessage);
 
         const computedStyle = window.getComputedStyle(uncheckedTextSlot);
         expect(computedStyle.overflow).to.equal("hidden");
         expect(computedStyle.whiteSpace).to.equal("nowrap");
         expect(computedStyle.textOverflow).to.equal("ellipsis");
-
         expect(uncheckedTextSlot.scrollWidth).to.be.greaterThan(uncheckedTextSlot.clientWidth);
 
+        // To check order of elements.
         const statusMsg = element.querySelector("span.u-unchecked-message").getBoundingClientRect();
         const widget = element.shadowRoot.querySelector(".switch").getBoundingClientRect();
         expect(statusMsg.left).to.be.greaterThan(widget.left);
@@ -370,7 +366,6 @@
         assert(!element.querySelector("span.u-unchecked-message").hasAttribute("hidden"), "Failed to show the checked message span.");
         assert(!element.querySelector("span.u-checked-message").hasAttribute("hidden"), "Failed to show the unchecked message span.");
         assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to hide the error icon.");
-
         expect(element.querySelector("span.u-checked-message").getAttribute("slot")).equal("checked-message");
         expect(element.querySelector("span.u-unchecked-message").getAttribute("slot")).equal("unchecked-message");
         expect(element.querySelector("span.u-label-text").getAttribute("slot")).equal("");

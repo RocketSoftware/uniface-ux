@@ -18,15 +18,12 @@
   }
 
   describe("Uniface mockup tests", function () {
-
     it(`get class ${widgetName}`, function () {
       verifyWidgetClass(widgetClass);
     });
-
   });
 
   describe("Uniface static structure constructor() definition", function () {
-
     it("should have a static property structure of type Element", function () {
       verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
@@ -37,7 +34,6 @@
       expect(structure.hidden).to.equal(false);
       expect(structure.childWorkers).to.be.an("array");
     });
-
   });
 
   describe(`${widgetName}.processLayout()`, function () {
@@ -50,7 +46,6 @@
     });
 
     describe("Checks", function () {
-
       before(function () {
         verifyWidgetClass(widgetClass);
         element = tester.processLayout();
@@ -86,7 +81,6 @@
   });
 
   describe("Create widget", function () {
-
     before(function () {
       verifyWidgetClass(widgetClass);
       tester.construct();
@@ -115,7 +109,7 @@
 
   describe("mapTrigger()", function () {
     const testData = {
-      "onchange" : "valuechange"
+      "onchange": "valuechange"
     };
     let widget;
 
@@ -136,8 +130,8 @@
 
   describe("Checkbox onchange event", function () {
     let checkBoxElement, onchangeSpy;
-    beforeEach(function () {
 
+    beforeEach(function () {
       tester.createWidget();
       checkBoxElement = tester.element;
       // Create a spy for the onchange event.
@@ -164,7 +158,6 @@
     });
   });
 
-
   describe("dataInit()", function () {
     const classes = tester.getDefaultClasses();
     let element;
@@ -173,7 +166,6 @@
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
-
 
     for (const defaultClass in classes) {
       it(`check class ${defaultClass}`, function () {
@@ -195,7 +187,6 @@
     });
 
     it("check label-position, tri-state, tabindex, hidden , disabled, readonly, and title", function () {
-
       assert.equal(tester.defaultValues["html:tabindex"], 0, "Default value of html:tabindex should be 0.");
       assert.equal(tester.defaultValues["html:title"], undefined, "Default value of html:title should be undefined.");
       assert.equal(tester.defaultValues["html:disabled"], false, "Default value of disabled should be false.");
@@ -263,9 +254,9 @@
         });
       }).then(function () {
         let labelText = element.querySelector("span.u-label-text").innerText;
-
-        assert.equal(labelText, checkBoxLabelText); // Check for visibility.
+        assert.equal(labelText, checkBoxLabelText);
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
+
         // Checking order of elements.
         const label = element.querySelector("span.u-label-text").getBoundingClientRect();
         const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
@@ -295,7 +286,7 @@
         });
       }).then(function () {
         let labelText = element.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, checkBoxLabelText); // Check for visibility.
+        assert.equal(labelText, checkBoxLabelText);
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
@@ -309,7 +300,7 @@
         });
       }).then(function () {
         let labelText = element.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, checkBoxLabelText); // Check for visibility.
+        assert.equal(labelText, checkBoxLabelText);
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
@@ -328,7 +319,7 @@
         });
       }).then(function () {
         let labelText = element.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, "Changed Label Text"); // Check for visibility.
+        assert.equal(labelText, "Changed Label Text");
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label-text.");
       });
     });
@@ -358,7 +349,7 @@
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "after");
         assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text.");
-        assert.equal(element.querySelector("span.u-label-text").innerText, "", "Text is not empty.");
+        assert.equal(element.querySelector("span.u-label-text").innerText, "", "Label text is not empty.");
       });
     });
 
@@ -480,7 +471,7 @@
   });
 
   describe("blockUI()", function () {
-    let element,widget;
+    let element, widget;
 
     before(function () {
       element = tester.element;
@@ -500,7 +491,7 @@
   });
 
   describe("unblockUI()", function () {
-    let element,widget;
+    let element, widget;
 
     before(function () {
       element = tester.element;
@@ -535,7 +526,6 @@
   });
 
   describe("Reset all properties", function () {
-
     it("reset all properties", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());
@@ -544,5 +534,4 @@
       }
     });
   });
-
 })();
