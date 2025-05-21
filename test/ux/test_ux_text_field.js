@@ -265,6 +265,7 @@
 
   describe("dataUpdate()", function () {
     let element;
+
     before(function () {
       tester.createWidget();
       element = tester.element;
@@ -750,19 +751,11 @@
       let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
       assert.equal(flexPropertyValue, "column");
     });
-  });
-
-  describe("showError()", function () {
-    let element;
-    let minlength = 2;
-    let maxlength = 5;
-    before(function () {
-      tester.createWidget();
-      element = tester.element;
-      verifyWidgetClass(widgetClass);
-    });
 
     it("setting minlength and maxlength", function () {
+      let minlength = 2;
+      let maxlength = 5;
+
       return asyncRun(function () {
         tester.dataUpdate({
           "html:minlength": minlength,
@@ -774,6 +767,15 @@
         assert.equal(element.getAttribute("minlength"), minlength, `Min is not same ${minlength}.`);
         assert.equal(element.getAttribute("maxlength"), maxlength, `Max is not same ${maxlength}.`);
       });
+    });
+  });
+
+  describe("showError()", function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+      verifyWidgetClass(widgetClass);
     });
 
     it("set invalid value in text field", function () {

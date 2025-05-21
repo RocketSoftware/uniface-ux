@@ -501,7 +501,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "error": false,
-          "error-message": "Field Value length mismatch."
+          "error-message": ""
         });
       }).then(function () {
         widget.hideError("Field Value length mismatch.");
