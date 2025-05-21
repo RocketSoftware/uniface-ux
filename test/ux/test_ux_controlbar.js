@@ -939,9 +939,9 @@
       });
     });
 
-    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 900px", function () {
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 910px", function () {
       return asyncRun(function () {
-        node.style.width = "900px";
+        node.style.width = "910px";
       }, 1).then(function () {
         expect(widget.data["widget-resize"]).to.be.true;
         expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
@@ -967,9 +967,9 @@
       });
     });
 
-    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 550px", function () {
+    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 560px", function () {
       return asyncRun(function () {
-        node.style.width = "550px";
+        node.style.width = "560px";
       }, 1).then(function () {
         expect(widget.data["widget-resize"]).to.be.true;
         expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
