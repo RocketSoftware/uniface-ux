@@ -389,25 +389,25 @@
       return UNIFACE.ClassRegistry.get(this.widgetName);
     }
 
-      processLayout() {
-        let args = [...arguments];
-        if (!this.uxTagName) {
-          if (args.length) {
-            // This is to check explicitly if null param is passed.
-            if (!args[0]) {
-              args[0] = document.getElementById(this.widgetId);
-            }
-            // This will always keep a check that first parameter should always be HTML element.
-            if (!(args[0] instanceof HTMLElement)) {
-              args.unshift(document.getElementById(this.widgetId));
-            }
-          } else {
-            args = [document.getElementById(this.widgetId)];
+    processLayout() {
+      let args = [...arguments];
+      if (!this.uxTagName) {
+        if (args.length) {
+          // This is to check explicitly if null param is passed.
+          if (!args[0]) {
+            args[0] = document.getElementById(this.widgetId);
           }
-          this.element = _uf.DOMNodeManager.parseCustomWidgetNode(this.widgetName, args);
-          this.uxTagName = this.element.tagName;
-          this.layoutArgs = args;
+          // This will always keep a check that first parameter should always be HTML element.
+          if (!(args[0] instanceof HTMLElement)) {
+            args.unshift(document.getElementById(this.widgetId));
+          }
+        } else {
+          args = [document.getElementById(this.widgetId)];
         }
+        this.element = _uf.DOMNodeManager.parseCustomWidgetNode(this.widgetName, args);
+        this.uxTagName = this.element.tagName;
+        this.layoutArgs = args;
+      }
 
       return this.element;
     }
@@ -420,14 +420,14 @@
       return this.widget;
     }
 
-      onConnect() {
-        if (!this.widget || !this.widget.elements || !this.widget.elements.widget) {
-          const element = this.processLayout.apply(this, this.layoutArgs);
-          const widget = this.construct();
-          this.updaters = widget.onConnect(element, _uf.createUxDefinitions(this.layoutArgs[1]));
-        }
-        return this.widget;
+    onConnect() {
+      if (!this.widget || !this.widget.elements || !this.widget.elements.widget) {
+        const element = this.processLayout.apply(this, this.layoutArgs);
+        const widget = this.construct();
+        this.updaters = widget.onConnect(element, _uf.createUxDefinitions(this.layoutArgs[1]));
       }
+      return this.widget;
+    }
 
     /**
      * Map and register the trigger event handlers.
