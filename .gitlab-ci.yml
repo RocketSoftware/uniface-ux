@@ -97,10 +97,11 @@ publish:
       if [ "$CI_COMMIT_BRANCH" = "main" ]; then
         ln -sfn "./${TARGET_NAME}" "${TARGET_BASE}/latest"
         echo "Updated latest symlink to: $TARGET_NAME"
-        echo -e "New UX Widgets build published\n\nBUILD INFO\n------------------\nTarget Version:\t${TARGET_VERSION}\nCommit SHA:\t${CI_COMMIT_SHORT_SHA}\n\nBranch:\t${CI_COMMIT_BRANCH}\n\nPath:\t${TARGET_DIR}" > "${TARGET_DIR}/publish.txt"
-        cat "${TARGET_DIR}/publish.txt" | python ${CPF_HOME}/scripts/mail.py \
+        BUILD_UX_WIN=\\\\\\\\cwnl-uxshares.unifaceforest.local\\\\dib_cc\\\\uxwidgets\\\\${TARGET_VERSION}\\\\${TARGET_NAME}
+        echo -e "New Uniface UX Widgets build published\n\nBUILD INFO\n------------------\nTarget Version:\t${TARGET_VERSION}\nCommit SHA:\t${CI_COMMIT_SHORT_SHA}\n\nIncluded Branches\n-------------------------\n${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}\n\nOUTPUT\n------------\n${BUILD_UX_WIN}" > "${TARGET_BASE}/publish.txt"
+        cat "${TARGET_BASE}/publish.txt" | python ${CPF_HOME}/scripts/mail.py \
           --to "uniface.lab.buildreport@rocketsoftware.com" \
-          --subject "[Build Report] UX Widgets ${TARGET_VERSION} ${CI_COMMIT_SHORT_SHA}"
+          --subject "[Build Report] Uniface UX Widgets ${TARGET_VERSION} ${TARGET_NAME}"
       else
         echo "Skipping latest symlink update (non-main branch)"
       fi
