@@ -143,34 +143,66 @@
     });
   });
 
-  describe("Number field onchange event", function () {
-    let numberElement, onChangeSpy;
+  describe("Number field onchange trigger", function () {
+    const triggerMap = {
+      "onchange" : function () {
+        const value = tester.widget.getValue();
+        tester.debugLog(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}"`);
+      }
+    };
+    const trigger = "onchange";
+    const initialValue = 123;
 
-    beforeEach(function () {
-      tester.createWidget();
-      numberElement = tester.element;
-
-      // Create a spy for the onchange event.
-      onChangeSpy = sinon.spy();
-
-      // Add the onchange event listener to the number field element.
-      numberElement.addEventListener("onchange", onChangeSpy);
+    before(async function () {
+      await asyncRun(function () {
+        tester.createWidget(triggerMap);
+      });
     });
 
-    // Clean up after each test.
-    afterEach(function () {
-      // Restore the spy to its original state.
-      sinon.restore();
+    beforeEach(async function () {
+      await asyncRun(function () {
+        tester.dataUpdate({
+          "value" : initialValue
+        });
+      });
+
+      tester.resetTriggerCalled(trigger);
     });
 
     // Test case for the on change event.
-    it("should call the onchange event handler when the number field is changed", function () {
-      // Simulate a onchange event.
-      const event = new window.Event("onchange");
-      numberElement.dispatchEvent(event);
+    it("Should call the onchange trigger handler when the number field is changed", function () {
+      // Simulate a change event by inputting a string.
+      const inputValue = "1234";
+      tester.userInput(inputValue);
 
-      // Assert that the onchange event handler was called once.
-      expect(onChangeSpy.calledOnce).to.be.true;
+      // Assert that the onchange trigger handler was called once.
+      expect(tester.calledOnce(trigger)).to.be.true;
+      // Expected the widget value is the inputValue.
+      expect(tester.widget.getValue()).to.equal(inputValue, "Widget value");
+    });
+
+    it("Test spin-up button of the number field", async function () {
+      expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
+
+      // Simulate a change event by clicking the spin-up button.
+      await tester.asyncUserClick(+1);
+
+      // Assert that the onchange trigger handler was called once.
+      expect(tester.calledOnce(trigger)).to.be.true;
+      // Expected the widget value is the initialValue + 1.
+      expect(tester.widget.getValue()).to.equal("" + (initialValue + 1), "Widget value");
+    });
+
+    it("Test spin-down button of the number field", async function () {
+      expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
+
+      // Simulate a change event by clicking the spin-up button.
+      await tester.asyncUserClick(-1);
+
+      // Assert that the onchange trigger handler was called once.
+      expect(tester.calledOnce(trigger)).to.be.true;
+      // Expected the widget value is the initialValue - 1.
+      expect(tester.widget.getValue()).to.equal("" + (initialValue - 1), "Widget value");
     });
 
   });

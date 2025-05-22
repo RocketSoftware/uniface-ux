@@ -154,34 +154,36 @@
     });
   });
 
-  describe("Text field onchange event", function () {
-    let element, onChangeSpy;
+  describe("Text field onchange trigger", function () {
+    const triggerMap = {
+      "onchange" : function () {
+        const value = tester.widget.getValue();
+        tester.debugLog(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}"`);
+      }
+    };
+    const trigger = "onchange";
 
-    beforeEach(function () {
-      tester.createWidget();
-      element = tester.element;
+    beforeEach(async function () {
+      await asyncRun(function () {
+        tester.createWidget(triggerMap);
+        tester.dataUpdate({
+          "value" : ""
+        });
+      });
 
-      // Create a spy for the onchange event.
-      onChangeSpy = sinon.spy();
-
-      // Add the onchange event listener to the number field element.
-      element.addEventListener("onchange", onChangeSpy);
+      tester.resetTriggerCalled(trigger);
     });
 
-    // Clean up after each test.
-    afterEach(function () {
-      // Restore the spy to its original state.
-      sinon.restore();
-    });
+    // Test case for the change event by user input.
+    it("should call the onchange trigger handler when the text field is changed", function () {
+      // Simulate a change event.
+      const inputValue = "Hello";
+      tester.userInput(inputValue);
 
-    // Test case for the on change event.
-    it("should call the onchange event handler when the text field is changed", function () {
-      // Simulate a onchange event.
-      const event = new window.Event("onchange");
-      element.dispatchEvent(event);
-
-      // Assert that the onchange event handler was called once.
-      expect(onChangeSpy.calledOnce).to.be.true;
+      // Assert that the onchange trigger handler was called once.
+      expect(tester.calledOnce(trigger)).to.be.true;
+      // Expected the widget value is the inputValue.
+      expect(tester.widget.getValue()).to.equal(inputValue, "Widget value");
     });
 
   });

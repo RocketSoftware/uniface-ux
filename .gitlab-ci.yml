@@ -97,6 +97,10 @@ publish:
       if [ "$CI_COMMIT_BRANCH" = "main" ]; then
         ln -sfn "./${TARGET_NAME}" "${TARGET_BASE}/latest"
         echo "Updated latest symlink to: $TARGET_NAME"
+        echo -e "New UX Widgets build published\n\nBUILD INFO\n------------------\nTarget Version:\t${TARGET_VERSION}\nCommit SHA:\t${CI_COMMIT_SHORT_SHA}\n\nBranch:\t${CI_COMMIT_BRANCH}\n\nPath:\t${TARGET_DIR}" > "${TARGET_DIR}/publish.txt"
+        cat "${TARGET_DIR}/publish.txt" | python ${CPF_HOME}/scripts/mail.py \
+          --to "uniface.lab.buildreport@rocketsoftware.com" \
+          --subject "[Build Report] UX Widgets ${TARGET_VERSION} ${CI_COMMIT_SHORT_SHA}"
       else
         echo "Skipping latest symlink update (non-main branch)"
       fi

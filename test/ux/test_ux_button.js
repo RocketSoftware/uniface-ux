@@ -275,30 +275,36 @@
 
   });
 
-  describe("Button click event", function () {
-    let testTriggers;
+  describe("Button detail trigger", function () {
+    const trigger = "detail";
+    const triggerMap = {};
+    triggerMap[trigger] = function () {
+      console.log(`Detail trigger has been called at ${new Date().toLocaleTimeString()}!`);
+    };
 
-    beforeEach(function () {
-      testTriggers = {
-        "detail" : sinon.spy()
-      };
-      tester.createWidget(testTriggers);
-    });
+    beforeEach(async function () {
+      await asyncRun(function () {
+        tester.createWidget(triggerMap);
+      });
 
-    // Clean up after each test.
-    afterEach(function () {
-      // Restore the spy to its original state.
-      sinon.restore();
+      tester.resetTriggerCalled(trigger);
     });
 
     // Test case for the click event.
     it("should call the detail trigger handler when the button is clicked", function () {
       // Simulate a click event
-      const triggerName = "detail";
-      tester.dispatchEventFor(triggerName);
+      tester.userClick();
 
-      // Assert that the click event handler was called once.
-      expect(testTriggers[triggerName].calledOnce).to.be.true;
+      // Assert that the detail trigger handler was called once.
+      expect(tester.calledOnce(trigger)).to.be.true;
+    });
+
+    it("Test reset trigger map", function () {
+      tester.resetMapTriggers();
+
+      tester.userClick();
+
+      expect(tester.calledOnce(trigger)).to.be.false;
     });
 
   });
