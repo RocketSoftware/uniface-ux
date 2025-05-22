@@ -104,7 +104,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
   });
 
   // ===================================================================================================================
-  // == Testing Elements class =========================================================================================
+  // == Testing Element class =========================================================================================
   // ===================================================================================================================
   describe("Test Element class", function () {
 
@@ -135,7 +135,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       element = new Element(widgetClass, tagName, styleClass, elementQuerySelector, childWorkers);
     });
 
-    it("should initialize with correct properties for Elements class", function () {
+    it("should initialize with correct properties for Element class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.tagName).to.equal(tagName);
       expect(element.styleClass).to.equal(styleClass);
@@ -150,7 +150,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
     });
 
     // Definitions doesn't do anything.
-    it("check generate layout for Elements class", function () {
+    it("check generate layout for Element class", function () {
       let layoutElement = element.getLayout(definitions);
 
       expect(layoutElement).to.have.tagName("DIV");

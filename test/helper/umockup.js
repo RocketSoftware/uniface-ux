@@ -47,8 +47,8 @@
 
       /**
        * get custom widget processed layout
-       * @param {String} customWidgetName custom widget name
-       * @param {Boolean} mockUp optional, default is undefined or false;
+       * @param {string} customWidgetName custom widget name
+       * @param {boolean} mockUp optional, default is undefined or false;
        *       and true if this function is used for mockup;
        * @param {Array} args arguments for processLayout.
        */
@@ -75,7 +75,7 @@
        * that indicate they are relevant to the Uniface entity, occurrence and field.
        * If it is custom widget then get custom widget processed layout for given node
        * and return processed node.
-       * @param {String} customWidgetName optional, default is undefined or false for
+       * @param {string} customWidgetName optional, default is undefined or false for
        *      DSP front-end runtime; the custom widget name for umockup module.
        * @param {Array} args the arguments for processLayout
        */
@@ -105,9 +105,9 @@
     /**
      * This is a mock function same as uniface to create the UX-definition object,
      * and define its getter functions and setter functions.
-     * @param {Object} defs The properties defined for the widget.
-     * @param {Boolean} isUpdatable Allowed only in process layout.
-     * @returns {Object} Return definition object.
+     * @param {object} defs The properties defined for the widget.
+     * @param {boolean} isUpdatable Allowed only in process layout.
+     * @returns {object} Return definition object.
      */
     "createUxDefinitions" : function (defs, isUpdatable = false) {
       const definition = {

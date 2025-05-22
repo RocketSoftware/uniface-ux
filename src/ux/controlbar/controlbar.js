@@ -31,7 +31,6 @@ export class Controlbar extends Widget {
   static setters = {};
   static getters = {};
   static triggers = {};
-  // This widget does not have uiBlocking of its own but the subWidget may have.
 
   /**
    * Private Worker: HandleOverFlowPropertyWorker.
