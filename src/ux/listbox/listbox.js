@@ -64,6 +64,7 @@ export class Listbox extends Widget {
     }
 
     /**
+     * Returns the (field) value back to Uniface.
      * @param {Widget} widgetInstance
      * @returns {string}
      */
