@@ -484,19 +484,44 @@
         assert.equal(appearanceStyle, appearanceStylePropertyText, `Failed to show appearance filled style${appearanceStylePropertyText}.`);
       });
     });
-  });
 
-  describe("showError()", function () {
-    let element;
-    let minlength = 2;
-    let maxlength = 5;
-    before(function () {
-      tester.createWidget();
-      element = tester.element;
-      verifyWidgetClass(widgetClass);
+    it("set html:rows property positive integer", function () {
+      let rowsProp = 25;
+      let colsProp = 20;
+      // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:rows": rowsProp,
+          "html:cols": colsProp
+        });
+      }).then(function () {
+        let colsText = element.shadowRoot.querySelector("textarea").getAttribute("cols");
+        assert.equal(colsText, 20);// Check for visibility.
+        let rowsText = element.shadowRoot.querySelector("textarea").getAttribute("rows");
+        assert.equal(rowsText, rowsProp);
+      });
+    });
+
+    it("set html:rows property negative integer", function () {
+      let rowsProp = -1;
+      let colsProp = 20;
+      // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:rows": rowsProp,
+          "html:cols": colsProp
+        });
+      }).then(function () {
+        let colsText = element.shadowRoot.querySelector("textarea").getAttribute("cols");
+        assert.equal(colsText, 20);// Check for visibility.
+        let rowsText = element.shadowRoot.querySelector("textarea").getAttribute("rows");
+        assert.equal(rowsText, rowsProp);
+      });
     });
 
     it("setting minlength and maxlength", function () {
+      let minlength = 2;
+      let maxlength = 5;
       return asyncRun(function () {
         tester.dataUpdate({
           "html:minlength": minlength,
@@ -508,6 +533,15 @@
         assert.equal(element.getAttribute("minlength"), minlength, `Min is not same ${minlength}.`);
         assert.equal(element.getAttribute("maxlength"), maxlength, `Max is not same ${maxlength}.`);
       });
+    });
+  });
+
+  describe("showError()", function () {
+    let element;
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+      verifyWidgetClass(widgetClass);
     });
 
     it("set invalid value in text area", function () {
@@ -522,36 +556,6 @@
         assert.equal(element.childNodes[1].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid.");
         assert.equal(element.querySelector("span.u-error-icon").getAttribute("slot"), "end", "Slot end does not match.");
         assert.equal(element.querySelector("span.u-error-icon").getAttribute("title"), "Field Value length mismatch.", "Error title does not match.");
-      });
-    });
-
-    it("html rows property positive integer", function () {
-      let rowsProp = 25;
-      // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "html:rows": rowsProp
-        });
-      }).then(function () {
-        let colsText = element.shadowRoot.querySelector("textarea").getAttribute("cols");
-        assert.equal(colsText, 20);// Check for visibility.
-        let rowsText = element.shadowRoot.querySelector("textarea").getAttribute("rows");
-        assert.equal(rowsText, rowsProp);
-      });
-    });
-
-    it("html rows property negative integer", function () {
-      let rowsProp = -1;
-      // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "html:rows": rowsProp
-        });
-      }).then(function () {
-        let colsText = element.shadowRoot.querySelector("textarea").getAttribute("cols");
-        assert.equal(colsText, 20);// Check for visibility.
-        let rowsText = element.shadowRoot.querySelector("textarea").getAttribute("rows");
-        assert.equal(rowsText, rowsProp);
       });
     });
   });

@@ -310,11 +310,11 @@
   });
 
   describe("showError()", function () {
-    it("not required", function () { });
+    it("no test required", function () { });
   });
 
   describe("hideError()", function () {
-    it("not required", function () { });
+    it("no test required", function () { });
   });
 
   describe("Test SlottedButtonText class", function () {
