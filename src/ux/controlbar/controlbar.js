@@ -11,7 +11,6 @@ import {
   IgnoreProperty
 } from "../framework/workers.js";
 
-// Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 
 /**
  * Controlbar Widget
@@ -212,6 +211,9 @@ export class Controlbar extends Widget {
   /**
    * Specialized onConnect to specifically manage the control bar's resize behavior,
    * and incorporated event listeners for opening and closing the overflow menu.
+   * @param {any} widgetElement
+   * @param {any} objectDefinition
+   * @returns {Updater[] | null | undefined}
    */
   onConnect(widgetElement, objectDefinition) {
     const valueUpdaters = super.onConnect(widgetElement, objectDefinition);
