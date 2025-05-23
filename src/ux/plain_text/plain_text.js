@@ -48,7 +48,6 @@ export class PlainText extends Widget {
      */
     constructor(widgetClass, tagName, styleClass, elementQuerySelector) {
       super(widgetClass, tagName, styleClass, elementQuerySelector);
-      this.hidden = true;
 
       this.registerSetter(widgetClass, "valrep", this);
       this.registerDefaultValue(widgetClass, "valrep", []);
@@ -90,10 +89,13 @@ export class PlainText extends Widget {
       const element = this.getElement(widgetInstance);
       element.innerHTML = "";
       // Convert value to string if it's not a string already.
-      value = typeof value !== "string" ? value?.toString() ?? "" : value;
+      value = typeof value !== "string" ? value?.toString() : value;
 
       const matchedValrepObj = valrep?.find((valrepObj) => valrepObj.value === value);
 
+      if(!value) {
+        value = "";
+      }
       // Handle format errors.
       if (valrep && !matchedValrepObj) {
         const text = this.getFormatErrorText(widgetInstance);
@@ -105,10 +107,6 @@ export class PlainText extends Widget {
       }
 
       this.setErrorProperties(widgetInstance, "format-error");
-
-      if (value) {
-        element.hidden = false;
-      }
 
       // Create elements dynamically for different plain text formats.
       switch (plainTextFormat) {
