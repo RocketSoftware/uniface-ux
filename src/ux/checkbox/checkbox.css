@@ -101,7 +101,6 @@
   --neutral-foreground-rest: #d54649;
 }
 
-
 /* When label-position is before, the checkbox control should appear at the very end, after label and error-icon. */
 .u-checkbox[u-label-position="before"]:has(.u-label-text:not([hidden]))::part(control),
 .u-checkbox[u-label-position="before"]:has(.u-error-icon:not([hidden]))::part(control) {
