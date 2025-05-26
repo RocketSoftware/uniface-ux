@@ -483,13 +483,15 @@ export class SubWidgetsByProperty extends Element {
         const delegatedPropertiesPropId = `${subWidgetId}_delegated-properties`;
         const className = objectDefinition.getProperty(classNamePropId);
         const subWidgetClass = getWidgetClass(className);
-        const delegatedProperties = objectDefinition.getProperty(delegatedPropertiesPropId);
-        let subWidgetDefinition = {};
-        subWidgetDefinition.class = subWidgetClass;
-        subWidgetDefinition.styleClass = `u-sw-${subWidgetId}`;
-        subWidgetDefinition.propPrefix = subWidgetId;
-        subWidgetDefinition.delegatedProperties = delegatedProperties ? delegatedProperties.split("") : [];
-        subWidgetDefinitions[subWidgetId] = subWidgetDefinition;
+        if (subWidgetClass) {
+          const delegatedProperties = objectDefinition.getProperty(delegatedPropertiesPropId);
+          let subWidgetDefinition = {};
+          subWidgetDefinition.class = subWidgetClass;
+          subWidgetDefinition.styleClass = `u-sw-${subWidgetId}`;
+          subWidgetDefinition.propPrefix = subWidgetId;
+          subWidgetDefinition.delegatedProperties = delegatedProperties ? delegatedProperties.split("") : [];
+          subWidgetDefinitions[subWidgetId] = subWidgetDefinition;
+        }
       });
     }
     return subWidgetDefinitions;
