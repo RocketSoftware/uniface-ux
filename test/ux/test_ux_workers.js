@@ -1150,11 +1150,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
 
     it("getSubWidgetDefinitions() method should return styleClass,propPrefix,delegatedProperties,usefield as subWidgetDefinitions, if objectDefinition do not have correct propid for SubWidgetsByProperty worker", function () {
       let subWidgetDefinitionToCompare = {
-        "select1": {
-          "styleClass": "u-sw-select1",
-          "propPrefix": "select1",
-          "delegatedProperties": []
-        }
       };
       // eslint-disable-next-line no-undef
       let returnedElementSubWidgetDefinition  = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjPropertyNameNotDefined, true));

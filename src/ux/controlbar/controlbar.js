@@ -211,9 +211,9 @@ export class Controlbar extends Widget {
   /**
    * Specialized onConnect to specifically manage the control bar's resize behavior,
    * and incorporated event listeners for opening and closing the overflow menu.
-   * @param {any} widgetElement
-   * @param {any} objectDefinition
-   * @returns {Updater[] | null | undefined}
+   * @param {HTMLElement} widgetElement
+   * @param {UObjectDefinition} objectDefinition - reference to the component definitions.
+   * @returns {Array<Updater> | undefined | null}
    */
   onConnect(widgetElement, objectDefinition) {
     const valueUpdaters = super.onConnect(widgetElement, objectDefinition);
