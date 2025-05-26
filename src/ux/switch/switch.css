@@ -63,56 +63,61 @@
   margin-inline-end: unset;
 }
 
-/* Styling label-text in different positions. */
-.u-switch .u-label-text {
-  display: inline-block;
-}
-
+/* When label position is before, switch control should be at the very end. And when label position is after, label should be at the very end. */
 .u-switch[u-label-position="before"]::part(switch),
 .u-switch[u-label-position="after"]::part(label) {
   order: 3;
 }
 
+/* When label position is after, switch control should be at the start. And when label position is before, label should be at the start. */
 .u-switch[u-label-position="after"]::part(switch),
 .u-switch[u-label-position="before"]::part(label) {
   order: 1;
 }
 
+/* When label position is before in flex and grid layouts, the label slot should grow to fill the available space. */
 .u-switch[u-label-position="before"]:has(.u-label-text:not([hidden]))::part(label) {
   flex-grow: 1;
 }
 
+/* Adding space between label and error-icon when label position is before. */
 .u-switch[u-label-position="before"] .u-label-text:not([hidden]) {
   margin-inline-end: calc(var(--design-unit) * 2px + 2px);
 }
 
+/* Adding space between error-icon and label when label position is after. */
 .u-switch[u-label-position="after"] .u-label-text:not([hidden]) {
   margin-inline-start: calc(var(--design-unit) * 2px + 2px);
 }
 
+/* Adding space between error-icon and the switch control when label position is before. */
 .u-switch[u-label-position="before"] .u-error-icon {
   margin-inline-end: calc(var(--design-unit) * 2px + 2px);
-  margin-inline-start: unset;
 }
 
+/* Adding space between error-icon/checked/un-checked messages and the label when label position is after. */
 .u-switch[u-label-position="after"] .u-error-icon,
 .u-switch[u-label-position="after"] .u-checked-message,
-.u-switch[u-label-position="after"] .u-unchecked-message{
+.u-switch[u-label-position="after"] .u-unchecked-message {
   margin-inline-start: calc(var(--design-unit) * 2px + 2px);
 }
 
-/* Styling the error-icon and checked/un-checked message in different positions. */
+/* The error-icon should always be positioned between the label and the switch control. */
 .u-switch::part(error) {
   order: 2;
 }
 
-.u-switch::part(status-message) {
+/* The checked/un-checked message should be positioned between the switch control and the label when label position is after. */
+.u-switch[u-label-position="after"]::part(status-message) {
   order: 2;
 }
+
+/* The checked/un-checked message should be positioned at the very end (after the control) when label position is before. */
 .u-switch[u-label-position="before"]::part(status-message) {
   order: 3;
 }
 
+/* When there is an overflow, checked/un-checked messages should be shown with ellipses. */
 .u-switch::part(checked-message),
 .u-switch::part(unchecked-message) {
   overflow: hidden;
@@ -120,11 +125,13 @@
   text-overflow: ellipsis;
 }
 
+/* If either checked or un-checked message is not empty, reserve a specific width. */
 .u-switch:has(.u-checked-message:not(:empty))::part(status-message),
 .u-switch:has(.u-unchecked-message:not(:empty))::part(status-message) {
   width: 12ch;
 }
 
+/* If switch is in invalid state, do not show checked or unchecked messages. */
 .u-switch.u-invalid .u-checked-message,
 .u-switch.u-format-invalid .u-checked-message,
 .u-switch.u-invalid .u-unchecked-message,

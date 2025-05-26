@@ -84,14 +84,21 @@ export class Switch extends Widget {
     errorElement.appendChild(slot);
 
     // Append the error element to the shadow root.
-    element?.shadowRoot?.appendChild(errorElement);
+    element.shadowRoot?.appendChild(errorElement);
   }
 
+  /**
+   * Private Uniface API method - onConnect.
+   * Specialized onConnect method to set the 'part' attribute on the switch slot and to create a new slot for the error-icon.
+   * @param {HTMLElement} widgetElement
+   * @param {UObjectDefinition} objectDefinition - reference to the component definitions.
+   * @returns {Array<Updater> | undefined | null}
+   */
   onConnect(widgetElement, objectDefinition) {
     this.elements = {};
     this.elements.widget = widgetElement;
     // Set the 'part' attribute on the switch slot so that CSS styling can be done.
-    this.elements.widget.shadowRoot.querySelector("slot[name='switch']").setAttribute("part", "switch-toggle");
+    this.elements.widget.shadowRoot?.querySelector("slot[name='switch']").setAttribute("part", "switch-toggle");
     // Create a new slot for the error-icon since the fluent library does not provide it.
     this.createErrorSlot();
     return super.onConnect(widgetElement, objectDefinition);
