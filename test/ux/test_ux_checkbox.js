@@ -177,7 +177,7 @@
       });
     }
 
-    it("check 'hidden' attributes", function () {
+    it("check default values of 'hidden' attributes", function () {
       assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label text span element should be hidden by default.");
       assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Icon span element should be hidden by default.");
     });
@@ -186,7 +186,7 @@
       assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
     });
 
-    it("check label-position, tri-state, tabindex, hidden , disabled, readonly, and title", function () {
+    it("check default values of label-position, tri-state, tabindex, hidden , disabled, readonly and title", function () {
       assert.equal(tester.defaultValues["html:tabindex"], 0, "Default value of html:tabindex should be 0.");
       assert.equal(tester.defaultValues["html:title"], undefined, "Default value of html:title should be undefined.");
       assert.equal(tester.defaultValues["html:disabled"], false, "Default value of disabled should be false.");
@@ -197,8 +197,8 @@
       assert.equal(tester.defaultValues["label-position"], "after", "Default value of label-position should be after.");
     });
 
-    it("check value", function () {
-      assert.equal(tester.defaultValues.value, null, "Default value of attribute value should be null.");
+    it("check default value of the widget", function () {
+      assert.equal(tester.defaultValues.value, null, "Default value of the widget should be null.");
     });
   });
 

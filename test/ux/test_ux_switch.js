@@ -145,7 +145,7 @@
       });
     }
 
-    it("check label-text, label-position", function () {
+    it("check default values of label-text and label-position", function () {
       assert.equal(tester.defaultValues["label-text"], "", "Default value of label-text should be empty.");
       assert.equal(tester.defaultValues["label-position"], "before", "Default value of label-position should be before.");
     });
