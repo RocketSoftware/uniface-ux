@@ -421,6 +421,18 @@
         const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
         expect(control.right).to.be.greaterThan(label.right);
         expect(error.right).to.be.greaterThan(label.right);
+        // // New approach
+        // const labelEl = element.querySelector(".u-label-text");
+        // const errorIconEl = element.querySelector("span.u-error-icon");
+
+        // // Check actual computed order
+        // const labelOrder = window.getComputedStyle(labelEl).order;
+        // const errorIconOrder = window.getComputedStyle(errorIconEl).order;
+
+        // // Assert the visual (CSS) order
+        // expect(parseInt(errorIconOrder)).to.be.greaterThan(parseInt(labelOrder));
+        // console.log(errorIconOrder);
+        // console.log(labelOrder);
       });
     });
 
