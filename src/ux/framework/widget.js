@@ -176,7 +176,7 @@ export class Widget extends Base {
    * Connects the widget DOM element (as created and returned by processLayout()) with the widget instance.
    * Invokes the onConnect of registered sub-widgets.
    * Returns an array of events descriptions that indicate the value is changed allowing Uniface to react.
-   * @param {Element} widgetElement
+   * @param {HTMLElement} widgetElement
    * @param {UObjectDefinition} objectDefinition - reference to the component definitions.
    * @returns {Array<Updater> | undefined | null}
    */

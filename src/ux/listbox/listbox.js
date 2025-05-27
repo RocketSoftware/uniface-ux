@@ -63,10 +63,15 @@ export class Listbox extends Widget {
       this.registerGetter(widgetClass, "value", this);
     }
 
+    /**
+     * Returns the (field) value back to Uniface.
+     * @param {Widget} widgetInstance
+     * @returns {string}
+     */
     getValue(widgetInstance) {
       const element = this.getElement(widgetInstance);
       const valrep = this.getNode(widgetInstance.data, "valrep");
-      const value = valrep[element["selectedIndex"]]?.value ?? widgetInstance?.data?.value;
+      const value = valrep[element["selectedIndex"]]?.value ?? widgetInstance.data.value;
       return value;
     }
 
@@ -162,7 +167,7 @@ export class Listbox extends Widget {
       }
 
       const fluentOptionElements = element.querySelectorAll("fluent-option");
-      const slotElement = element?.shadowRoot?.querySelector("slot:not([name])");
+      const slotElement = element.shadowRoot?.querySelector("slot:not([name])");
       size = parseInt(size);
 
       if(size > 0) {
@@ -383,11 +388,14 @@ export class Listbox extends Widget {
   /**
    * Private Uniface API method - onConnect.
    * Specialized onConnect method to add a change event for the listbox when user interaction occurs.
+   * @param {HTMLElement} widgetElement
+   * @param {UObjectDefinition} objectDefinition - reference to the component definitions.
+   * @returns {Array<Updater> | undefined | null}
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
 
-    const labelElement = widgetElement?.shadowRoot?.querySelector(".label");
+    const labelElement = widgetElement.shadowRoot?.querySelector(".label");
     if (!labelElement) {
       this.createElement();
       this.styleListBox();
@@ -395,7 +403,7 @@ export class Listbox extends Widget {
 
     // Add event listener to prevent the widget from getting focus when clicking on error-icon.
     const errorIcon = widgetElement.querySelector(".u-error-icon");
-    errorIcon.addEventListener("mousedown", (event) => {
+    errorIcon?.addEventListener("mousedown", (event) => {
       event.preventDefault();
       event.stopPropagation();
     });

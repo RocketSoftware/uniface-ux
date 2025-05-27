@@ -163,7 +163,6 @@
 
     it("check 'hidden' attributes", function () {
       assert(element.querySelector("span.u-prefix").hasAttribute("hidden"), "PlainText span.u-prefix element should be hidden by default.");
-      assert(element.querySelector("span.u-control").hasAttribute("hidden"), "PlainText span.u-control element should be hidden by default.");
       assert(element.querySelector("span.u-suffix").hasAttribute("hidden"), "PlainText span.u-suffix element should be hidden by default.");
       assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Icon span element should be hidden by default.");
     });

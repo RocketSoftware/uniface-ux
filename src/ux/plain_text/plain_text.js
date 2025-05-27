@@ -47,7 +47,6 @@ export class PlainText extends Widget {
      */
     constructor(widgetClass, tagName, styleClass, elementQuerySelector) {
       super(widgetClass, tagName, styleClass, elementQuerySelector);
-      this.hidden = true;
 
       this.registerSetter(widgetClass, "valrep", this);
       this.registerDefaultValue(widgetClass, "valrep", []);
@@ -80,6 +79,7 @@ export class PlainText extends Widget {
     /**
      * Format the text according to the specified format.
      * If the `valrep` object does not match the expected value, a format error is shown.
+     * @param {Widget} widgetInstance
      */
     setTextAsPlaintextFormat(widgetInstance) {
       let value = this.getNode(widgetInstance.data, "value");
@@ -88,13 +88,13 @@ export class PlainText extends Widget {
       const element = this.getElement(widgetInstance);
       element.innerHTML = "";
       // Convert value to string if it's not a string already.
-      value = value && typeof value !== "string" ? value.toString() : value;
-      if (value) {
-        element.hidden = false;
-      }
+      value = typeof value !== "string" ? value?.toString() : value;
 
       const matchedValrepObj = valrep?.find((valrepObj) => valrepObj.value === value);
 
+      if(!value) {
+        value = "";
+      }
       // Handle format errors.
       if (valrep && !matchedValrepObj) {
         const text = this.getFormatErrorText(widgetInstance);
@@ -128,10 +128,10 @@ export class PlainText extends Widget {
           this.createMultiParagraphsElement(value, element);
           break;
         case "single-line":
-          this.createTextElement(value?.replaceAll(/\n/g, " ") || value, element);
+          this.createTextElement(value.replaceAll(/\n/g, " ") || value, element);
           break;
         default: // "first-line" or any other case
-          this.createTextElement(value?.split?.("\n", 2)[0] + (value.includes("\n") ? "..." : ""), element);
+          this.createTextElement(value.split?.("\n", 2)[0] + (value.includes("\n") ? "..." : ""), element);
           break;
       }
     }
