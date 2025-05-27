@@ -51,11 +51,22 @@
   --neutral-foreground-rest: #d13438;
 }
 
+.u-switch::part(error) {
+  order: 2; /* The error-icon should always be positioned between the label and the switch control. */
+  cursor: pointer;
+}
+
 /* Styling the error icon and line height (according to the fluent design system) when the widget is in invalid state. */
 .u-switch.u-invalid::part(error),
 .u-switch.u-format-invalid::part(error) {
   --type-ramp-base-line-height: 18px;
   color: #d13438;
+}
+
+/* Styling the error icon when the switch is in disabled or readonly state */
+.u-switch.readonly::part(error),
+.u-switch.disabled::part(error) {
+  cursor: not-allowed;
 }
 
 /* To ensure no margin right is applied when label is empty. */
@@ -98,11 +109,6 @@
 .u-switch[u-label-position="after"] .u-checked-message,
 .u-switch[u-label-position="after"] .u-unchecked-message {
   margin-inline-start: calc(var(--design-unit) * 2px + 2px);
-}
-
-/* The error-icon should always be positioned between the label and the switch control. */
-.u-switch::part(error) {
-  order: 2;
 }
 
 /* The checked/un-checked message should be positioned between the switch control and the label when label position is after. */
