@@ -118,7 +118,7 @@
 
 /* The checked/un-checked message should be positioned at the very end (after the control) when label position is before. */
 .u-switch[u-label-position="before"]::part(status-message) {
-  order: 3;
+  order: 4;
 }
 
 /* When there is an overflow, checked/un-checked messages should be shown with ellipses. */
