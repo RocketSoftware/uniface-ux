@@ -43,7 +43,7 @@ export class Controlbar extends Widget {
      * Creates an instance of HandleOverFlowPropertyWorker.
      * @param {typeof Widget} widgetClass
      * @param {string} propId
-     * @param {string} defaultValue
+     * @param {UPropValue} defaultValue
      */
     constructor(widgetClass, propId, defaultValue) {
       super(widgetClass);
@@ -233,7 +233,7 @@ export class Controlbar extends Widget {
       // Only one select widget can be kept opened at a time, since opening one will close the others.
       const selectWidgetWithOpenDropDown = widgetElement.querySelector(".u-select.open");
       if (selectWidgetWithOpenDropDown) {
-        selectWidgetWithOpenDropDown.open = false;
+        selectWidgetWithOpenDropDown["open"] = false;
       }
     });
 

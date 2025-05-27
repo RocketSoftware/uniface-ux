@@ -666,7 +666,6 @@
       });
 
       it("if there is any change in subwidgets properties and html properties, should be reflected on the subwidgets", function () {
-        // dataUpdate() deletes the property of object hence creating a deep copy of object for checking.
         let updatedData = Object.assign({}, MOCK_CONTROLBAR_CONTROLS_DATA);
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
         return asyncRun(function () {
@@ -910,8 +909,6 @@
   describe("OverFlow tests with priority not defined and overflow behavior as hide", function () {
     let element, tester, data, widget, node;
 
-    // Using beforeEach instead of before to increase the time between execution of each it() block.
-    // If the widget is resized rapidly again and again, the ResizeObserver will throw "ResizeObserver loop completed with undelivered notifications" exception and tests will fail.
     beforeEach(function () {
       tester = new umockup.WidgetTester();
       data = {

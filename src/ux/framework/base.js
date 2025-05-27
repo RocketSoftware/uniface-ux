@@ -344,7 +344,6 @@ export class Base {
    * @param {UData} data - The source object containing properties to extract.
    * @param {string} subWidgetPropPrefix - Sub-widget property prefix.
    * @param {object} subWidgetDefinition - subWidget definitions registered by the widget class.
-   * @param {Array<string>} subWidgetDelegatedProperties - An array containing list of delegated properties.
    * @returns {UData | undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
    */
   extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDefinition) {
@@ -414,7 +413,7 @@ export class Base {
 
   /**
    * Sets error related properties.
-   * @param {Widget} widgetInstance
+   * @param {import("./widget.js").Widget} widgetInstance
    * @param {string} errorType
    * @param {string} errorMessage
    */
