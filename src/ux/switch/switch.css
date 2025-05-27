@@ -63,15 +63,13 @@
   margin-inline-end: unset;
 }
 
-/* When label position is before, switch control should be at the very end. And when label position is after, label should be at the very end. */
-.u-switch[u-label-position="before"]::part(switch),
-.u-switch[u-label-position="after"]::part(label) {
+.u-switch[u-label-position="before"]::part(switch), /* When label position is before, switch control should be at the very end. */
+.u-switch[u-label-position="after"]::part(label) { /* When label position is after, label should be at the very end. */
   order: 3;
 }
 
-/* When label position is after, switch control should be at the start. And when label position is before, label should be at the start. */
-.u-switch[u-label-position="after"]::part(switch),
-.u-switch[u-label-position="before"]::part(label) {
+.u-switch[u-label-position="after"]::part(switch), /* When label position is after, switch control should be at the start. */
+.u-switch[u-label-position="before"]::part(label) { /* When label position is before, label should be at the start. */
   order: 1;
 }
 
