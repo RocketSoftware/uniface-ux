@@ -179,10 +179,10 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
     describe("extractSubWidgetData()", function () {
       it("return the sub-widget data correctly and delete corresponding sub-widget properties from data source", function () {
         let data = {
-          "subWidgetId:widget-class": "Some class",
+          "subWidgetId_widget-class": "Some class",
           "subWidgetId:value": "Some value 1",
           "subWidgetId:html:readonly": "Something",
-          "subWidgetId2:widget-class": "Something",
+          "subWidgetId2_widget-class": "Something",
           "subWidgetId2:value": "Some value 2",
           "subWidgetId2:html:disabled": "Something",
           "subWidgetId:class:class-test": "Something",
@@ -190,7 +190,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
         };
         let subWidgetPropPrefix = "subWidgetId";
         let mockSubWidgetData = {
-          "widget-class": "Some class",
           "value": "Some value 1",
           "html:readonly": "Something",
           "class:class-test": "Something",
@@ -203,10 +202,10 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
         }
 
         data = {
-          "subWidgetId:widget-class": "Some class",
+          "subWidgetId_widget-class": "Some class",
           "subWidgetId:value": "Some value 1",
           "subWidgetId:html:readonly": "Something",
-          "subWidgetId2:widget-class": "Something",
+          "subWidgetId2_widget-class": "Something",
           "subWidgetId2:value": "Some value 2",
           "subWidgetId2:html:disabled": "Something",
           "subWidgetId:class:class-test": "Something",
@@ -214,7 +213,6 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
         };
         subWidgetPropPrefix = "subWidgetId2";
         mockSubWidgetData = {
-          "widget-class": "Something",
           "value": "Some value 2",
           "html:disabled": "Something"
         };

@@ -343,17 +343,22 @@ export class Base {
    * properties from original data object.
    * @param {UData} data - The source object containing properties to extract.
    * @param {string} subWidgetPropPrefix - Sub-widget property prefix.
-   * @param {Array<string>} subWidgetDelegatedProperties - An array containing list of delegated properties.
+   * @param {object} subWidgetDefinition - subWidget definitions registered by the widget class.
    * @returns {UData | undefined} An object containing the extracted sub-widget data, or `undefined` if no data is found.
    */
-  extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties) {
+  extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDefinition) {
     let subWidgetData;
+    let subWidgetDelegatedProperties = subWidgetDefinition?.delegatedProperties;
     for (let property in data) {
       if (property.startsWith(`${subWidgetPropPrefix}:`)) {
         const key = property.substring(subWidgetPropPrefix.length + 1);
         if (key) {
           subWidgetData = subWidgetData || {};
-          subWidgetData[key] = key === "valrep" ? this.getFormattedValrep(data[property]) : data[property];
+          if (key === "valrep") {
+            subWidgetData[key] = this.getFormattedValrep(data[property]);
+          } else {
+            subWidgetData[key] = data[property];
+          }
           // Remove the property from the original data to avoid duplication.
           delete data[property];
         }
@@ -408,7 +413,7 @@ export class Base {
 
   /**
    * Sets error related properties.
-   * @param {Widget} widgetInstance
+   * @param {import("./widget.js").Widget} widgetInstance
    * @param {string} errorType
    * @param {string} errorMessage
    */

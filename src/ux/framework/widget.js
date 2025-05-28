@@ -167,6 +167,8 @@ export class Widget extends Base {
       this.subWidgetDefinitions[subWidgetId].styleClass = widgetClass.subWidgets[subWidgetId].styleClass;
       // Copy array of triggers.
       this.subWidgetDefinitions[subWidgetId].triggers = JSON.parse(JSON.stringify(widgetClass.subWidgets[subWidgetId].triggers));
+      // Copy array of delegated properties.
+      this.subWidgetDefinitions[subWidgetId].delegatedProperties = widgetClass.subWidgets[subWidgetId].delegatedProperties;
       // propPrefix for static widgets is always the subWidgetId
       this.subWidgetDefinitions[subWidgetId].propPrefix = subWidgetId;
     });
@@ -210,11 +212,6 @@ export class Widget extends Base {
           valueUpdaters.push(subWidgetUpdater);
         }
       });
-    });
-
-    // Iterate over all sub-widget ids to update delegated properties from the widgetClass.
-    Object.keys(widgetClass.subWidgets).forEach((subWidgetId) => {
-      this.subWidgets[subWidgetId].delegatedProperties = widgetClass.subWidgets[subWidgetId].delegatedProperties;
     });
 
     // Add the value-updater(s) of widget itself.
@@ -298,8 +295,7 @@ export class Widget extends Base {
       this.subWidgets[subWidgetId].dataInit();
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      const subWidgetDelegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
-      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties);
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDefinition);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
@@ -320,8 +316,7 @@ export class Widget extends Base {
     Object.keys(this.subWidgets).forEach((subWidgetId) => {
       const subWidgetDefinition = this.subWidgetDefinitions[subWidgetId];
       const subWidgetPropPrefix = subWidgetDefinition.propPrefix;
-      const subWidgetDelegatedProperties = this.subWidgets[subWidgetId].delegatedProperties;
-      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDelegatedProperties);
+      const subWidgetData = this.extractSubWidgetData(data, subWidgetPropPrefix, subWidgetDefinition);
       if (subWidgetData) {
         this.subWidgets[subWidgetId].dataUpdate(subWidgetData);
       }
