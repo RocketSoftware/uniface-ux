@@ -10,6 +10,7 @@ import {
   SlottedElement,
   SlottedError,
   HtmlAttributeNumber,
+  HtmlAttributeChoice,
   IgnoreProperty,
   UIBlock
 } from "../framework/workers.js";
@@ -227,6 +228,7 @@ export class Checkbox extends Widget {
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new HtmlAttributeBoolean(this, undefined, "currentChecked", false),
+    new HtmlAttributeChoice(this, "label-position", "u-label-position", ["before", "after"], "after", true),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new UIBlock(this, "readonly"),
     new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),

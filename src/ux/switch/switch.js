@@ -10,6 +10,7 @@ import {
   HtmlAttributeBoolean,
   SlottedElement,
   HtmlValueAttributeBoolean,
+  HtmlAttributeChoice,
   IgnoreProperty,
   UIBlock
 } from "../framework/workers.js";
@@ -38,45 +39,6 @@ export class Switch extends Widget {
   static triggers = {};
 
   /**
-   * Private worker: SwitchSlottedError.
-   * It remembers the slot which is utilizing the same error slot.
-   * @export
-   * @class SwitchSlottedError
-   * @extends {SlottedError}
-   */
-  static SwitchSlottedError = class extends SlottedError {
-
-    /**
-     * Creates an instance of SwitchSlottedError.
-     * @param {typeof Widget} widgetClass
-     * @param {string} selectorUsingSameErrorSlot
-     */
-    constructor(widgetClass, tagName, styleClass, elementQuerySelector, slot, selectorUsingSameErrorSlot) {
-      super(widgetClass, tagName, styleClass, elementQuerySelector, slot);
-      this.selectorUsingSameErrorSlot = selectorUsingSameErrorSlot;
-    }
-
-    refresh(widgetInstance) {
-      super.refresh(widgetInstance);
-      let error = this.toBoolean(this.getNode(widgetInstance.data, "error"));
-      let formatError = this.toBoolean(this.getNode(widgetInstance.data, "format-error"));
-      let element = widgetInstance.elements.widget;
-      let errorElement = this.getElement(widgetInstance);
-      if (errorElement && this.selectorUsingSameErrorSlot) {
-        let slotElement = element.querySelector(this.selectorUsingSameErrorSlot);
-        if (formatError || error || slotElement.textContent.trim() === "") {
-          slotElement.slot = "";
-          slotElement.hidden = true;
-        } else {
-          // Resetting the slot again when error is hidden.
-          slotElement.slot = this.slot;
-          slotElement.hidden = false;
-        }
-      }
-    }
-  };
-
-  /**
    * Widget definition.
    */
   // prettier-ignore
@@ -95,21 +57,50 @@ export class Switch extends Widget {
     new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
     new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new UIBlock(this, "disabled"),
+    new HtmlAttributeChoice(this, "label-position", "u-label-position", ["before", "after"], "before", true),
     new IgnoreProperty(this, "html:minlength"),
     new IgnoreProperty(this, "html:maxlength"),
     new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text", ""),
     new SlottedElement(this, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"),
     new SlottedElement(this, "span", "u-unchecked-message", ".u-unchecked-message", "unchecked-message", "unchecked-message"),
-    new this.SwitchSlottedError(this, "span", "u-error-icon-unchecked", ".u-error-icon-unchecked", "unchecked-message", ".u-unchecked-message"),
-    new this.SwitchSlottedError(this, "span", "u-error-icon-checked", ".u-error-icon-checked", "checked-message", ".u-checked-message"),
+    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error"),
     new Trigger(this, "onchange", "change", true)
   ]);
 
+  /**
+   * Creates a new error element with a slot inside it to place the error icon.
+   */
+  createErrorSlot() {
+    let element = this.elements.widget;
+
+    // Create an error element.
+    let errorElement = document.createElement("span");
+    errorElement.setAttribute("part", "error");
+    errorElement.classList.add("error");
+
+    // Create a slot element to hold the error-icon and append it to the error element.
+    let slot = document.createElement("slot");
+    slot.setAttribute("name", "error");
+    errorElement.appendChild(slot);
+
+    // Append the error element to the shadow root.
+    element.shadowRoot?.appendChild(errorElement);
+  }
+
+  /**
+   * Private Uniface API method - onConnect.
+   * Specialized onConnect method to set the 'part' attribute on the switch slot and to create a new slot for the error-icon.
+   * @param {HTMLElement} widgetElement
+   * @param {UObjectDefinition} objectDefinition - reference to the component definitions.
+   * @returns {Array<Updater> | undefined | null}
+   */
   onConnect(widgetElement, objectDefinition) {
     this.elements = {};
     this.elements.widget = widgetElement;
     // Set the 'part' attribute on the switch slot so that CSS styling can be done.
-    this.elements.widget.shadowRoot.querySelector("slot[name='switch']").setAttribute("part", "switch-toggle");
+    this.elements.widget.shadowRoot?.querySelector("slot[name='switch']").setAttribute("part", "switch-toggle");
+    // Create a new slot for the error-icon since the fluent library does not provide it.
+    this.createErrorSlot();
     return super.onConnect(widgetElement, objectDefinition);
   }
 

@@ -18,15 +18,12 @@
   }
 
   describe("Uniface mockup tests", function () {
-
     it(`get class ${widgetName}`, function () {
       verifyWidgetClass(widgetClass);
     });
-
   });
 
   describe("Uniface static structure constructor() definition", function () {
-
     it("should have a static property structure of type Element", function () {
       verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
@@ -37,7 +34,6 @@
       expect(structure.hidden).to.equal(false);
       expect(structure.childWorkers).to.be.an("array");
     });
-
   });
 
   describe(`${widgetName}.processLayout()`, function () {
@@ -50,7 +46,6 @@
     });
 
     describe("Checks", function () {
-
       before(function () {
         verifyWidgetClass(widgetClass);
         element = tester.processLayout();
@@ -86,7 +81,6 @@
   });
 
   describe("Create widget", function () {
-
     before(function () {
       verifyWidgetClass(widgetClass);
       tester.construct();
@@ -115,7 +109,7 @@
 
   describe("mapTrigger()", function () {
     const testData = {
-      "onchange" : "valuechange"
+      "onchange": "valuechange"
     };
     let widget;
 
@@ -173,7 +167,6 @@
       assert(element, "Widget top element is not defined!");
     });
 
-
     for (const defaultClass in classes) {
       it(`check class ${defaultClass}`, function () {
         if (classes[defaultClass]) {
@@ -184,7 +177,7 @@
       });
     }
 
-    it("check 'hidden' attributes", function () {
+    it("check default values of 'hidden' attributes", function () {
       assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label text span element should be hidden by default.");
       assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Icon span element should be hidden by default.");
     });
@@ -193,18 +186,19 @@
       assert.strictEqual(tester.widget.widget.id.toString().length > 0, true);
     });
 
-    it("check tri-state, tabindex, hidden , disabled, readonly, and title", function () {
-
+    it("check default values of label-position, tri-state, tabindex, hidden , disabled, readonly and title", function () {
       assert.equal(tester.defaultValues["html:tabindex"], 0, "Default value of html:tabindex should be 0.");
       assert.equal(tester.defaultValues["html:title"], undefined, "Default value of html:title should be undefined.");
       assert.equal(tester.defaultValues["html:disabled"], false, "Default value of disabled should be false.");
       assert.equal(tester.defaultValues["html:readonly"], false, "Default value of readonly should be false.");
       assert.equal(tester.defaultValues["html:hidden"], false, "Default value of hidden should be false.");
-      assert.equal(tester.defaultValues["tri-state"], false, "Default value of label-position will be above.");
+      assert.equal(tester.defaultValues["tri-state"], false, "Default value of tri-state.");
+      assert.equal(tester.defaultValues["label-text"], undefined, "Default value of label-text should be undefined.");
+      assert.equal(tester.defaultValues["label-position"], "after", "Default value of label-position should be after.");
     });
 
-    it("check value", function () {
-      assert.equal(tester.defaultValues.value, null, "Default value of attribute value should be null.");
+    it("check default value of the widget", function () {
+      assert.equal(tester.defaultValues.value, null, "Default value of the widget should be null.");
     });
   });
 
@@ -259,9 +253,19 @@
           "label-text": checkBoxLabelText
         });
       }).then(function () {
-        let labelText = element.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, checkBoxLabelText); // Check for visibility.
-        assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
+        const labelElement = element.querySelector("span.u-label-text");
+        let labelText = labelElement.innerText;
+        assert.equal(labelText, checkBoxLabelText);
+        assert(!labelElement.hasAttribute("hidden"), "Failed to show the label text.");
+
+        // Checking the visual order of elements.
+        const label = labelElement.getBoundingClientRect();
+        const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
+        expect(label.right).to.be.greaterThan(control.right);
+
+        // Checking the value of style property 'order' for label-text.
+        const computedStyles = window.getComputedStyle(labelElement);
+        expect(computedStyles.order).to.equal("2");
       });
     });
 
@@ -287,7 +291,7 @@
         });
       }).then(function () {
         let labelText = element.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, checkBoxLabelText); // Check for visibility.
+        assert.equal(labelText, checkBoxLabelText);
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
@@ -301,7 +305,7 @@
         });
       }).then(function () {
         let labelText = element.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, checkBoxLabelText); // Check for visibility.
+        assert.equal(labelText, checkBoxLabelText);
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
       });
     });
@@ -320,18 +324,69 @@
         });
       }).then(function () {
         let labelText = element.querySelector("span.u-label-text").innerText;
-        assert.equal(labelText, "Changed Label Text"); // Check for visibility.
+        assert.equal(labelText, "Changed Label Text");
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label-text.");
       });
     });
-  });
 
-  describe("showError()", function () {
-    let element;
-    before(function () {
-      tester.createWidget();
-      element = tester.element;
-      assert(element, "Widget top element is not defined!");
+    it("set label-position before", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label Text",
+          "label-position": "before"
+        });
+      }).then(function () {
+        const controlElement = element.shadowRoot.querySelector(".control");
+        let labelPosition = element.getAttribute("u-label-position");
+        assert.equal(labelPosition, "before", "Label position is not set to before.");
+
+        // Checking the visual order of elements.
+        const label = element.querySelector("span.u-label-text").getBoundingClientRect();
+        const control = controlElement.getBoundingClientRect();
+        expect(control.right).to.be.greaterThan(label.right);
+
+        // Checking the value of style property 'order' for checkbox control.
+        const computedStyles = window.getComputedStyle(controlElement);
+        expect(computedStyles.order).to.equal("2");
+      });
+    });
+
+    it("reset label and its position", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": uniface.RESET,
+          "label-text": uniface.RESET
+        });
+      }).then(function () {
+        let labelPosition = element.getAttribute("u-label-position");
+        assert.equal(labelPosition, "after");
+        assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to hide the label text.");
+        assert.equal(element.querySelector("span.u-label-text").innerText, "", "Label text is not empty.");
+      });
+    });
+
+    it("show console warning for invalid label-position above", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "above"
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'label-position' invalid value (above) - Ignored."))).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("show console warning for invalid label-position below", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "below"
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'label-position' invalid value (below) - Ignored."))).to.be.true;
+        warnSpy.restore();
+      });
     });
 
     it("Need fix: set invalid value when checkbox checked state is false", function () {
@@ -349,21 +404,69 @@
         console.log("Need fix: " + e.message);
       });
     });
-  });
 
-  describe("hideError()", function () {
-    let element;
-    before(function () {
-      tester.createWidget();
-      element = tester.element;
-      assert(element, "Widget top element is not defined!");
+    it("shows error icon on correct side when label-position is 'before'", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label Text",
+          "label-position": "before",
+          "value": 123
+        });
+      }).then(function () {
+        expect(element).to.have.class("u-format-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid");
+
+        // Checking the visual order of elements.
+        const controlElement = element.shadowRoot.querySelector(".control");
+        const label = element.querySelector(".u-label-text").getBoundingClientRect();
+        const error = element.querySelector("span.u-error-icon").getBoundingClientRect();
+        const control = controlElement.getBoundingClientRect();
+        expect(control.right).to.be.greaterThan(label.right);
+        expect(error.right).to.be.greaterThan(label.right);
+
+        // Checking the value of style property 'order' for checkbox control.
+        const computedStyles = window.getComputedStyle(controlElement);
+        expect(computedStyles.order).to.equal("2");
+      });
+    });
+
+    it("shows error icon on correct side when label-position is 'after'", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label Text",
+          "label-position": "after",
+          "value": 123
+        });
+      }).then(function () {
+        expect(element).to.have.class("u-format-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid");
+
+        // Checking the visual order of elements.
+        const labelElement = element.querySelector(".u-label-text");
+        const errorElement = element.querySelector("span.u-error-icon");
+        const label = labelElement.getBoundingClientRect();
+        const error = errorElement.getBoundingClientRect();
+        const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
+        expect(label.right).to.be.greaterThan(control.right);
+        expect(label.right).to.be.greaterThan(error.right);
+
+        // Checking the value of style property 'order' for label-text.
+        const computedStylesLabel = window.getComputedStyle(labelElement);
+        expect(computedStylesLabel.order).to.equal("2");
+        // Checking the value of style property 'order' for erronIcon.
+        const computedStylesError = window.getComputedStyle(labelElement);
+        expect(computedStylesError.order).to.equal("2");
+      });
     });
 
     it("set error to false", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "error": false,
-          "error-message": ""
+          "value": 1
         });
       }).then(function () {
         expect(element).to.not.have.class("u-format-invalid");
@@ -375,7 +478,7 @@
   });
 
   describe("blockUI()", function () {
-    let element,widget;
+    let element, widget;
 
     before(function () {
       element = tester.element;
@@ -395,7 +498,7 @@
   });
 
   describe("unblockUI()", function () {
-    let element,widget;
+    let element, widget;
 
     before(function () {
       element = tester.element;
@@ -430,7 +533,6 @@
   });
 
   describe("Reset all properties", function () {
-
     it("reset all properties", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());
@@ -439,5 +541,4 @@
       }
     });
   });
-
 })();

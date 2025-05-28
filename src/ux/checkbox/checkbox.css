@@ -8,9 +8,11 @@
 
 .u-checkbox::part(label) {
   display: inline-flex;
+  padding-inline-start: unset;
+  margin-inline-end: unset;
 }
 
-/* Styling Indeterminate state as per fluent design system */
+/* Styling Indeterminate state as per fluent design system. */
 .u-checkbox.indeterminate::part(control) {
   --neutral-stroke-strong-rest: var(--accent-fill-rest);
   --neutral-foreground-rest: var(--accent-fill-rest);
@@ -26,10 +28,21 @@
   --neutral-foreground-rest: var(--accent-fill-active);
 }
 
-/* Styling error icons as per fluent design system  */
+/* Styling error icons as per fluent design system. */
 .u-checkbox.u-invalid .u-error-icon,
 .u-checkbox.u-format-invalid .u-error-icon {
   color: #d13438;
+}
+
+/* To add space between error-icon and the checkbox control in before label-position. */
+.u-checkbox[u-label-position="before"].u-invalid .u-error-icon,
+.u-checkbox[u-label-position="before"].u-format-invalid .u-error-icon {
+  padding-inline-end: calc(var(--design-unit) * 2px + 2px);
+}
+
+/* To add space between the checkbox control and error-icon in after label-position. */
+.u-checkbox[u-label-position="after"].u-invalid .u-error-icon,
+.u-checkbox[u-label-position="after"].u-format-invalid .u-error-icon {
   padding-inline-start: calc(var(--design-unit) * 2px + 2px);
 }
 
@@ -37,7 +50,7 @@
   display: none;
 }
 
-/* Styling Checked Checkbox in error or invalid state */
+/* Styling Checked Checkbox in error or invalid state. */
 .u-checkbox.u-invalid.checked::part(control),
 .u-checkbox.u-format-invalid.checked::part(control) {
   --accent-fill-rest: #d13438;
@@ -53,7 +66,7 @@
   --accent-fill-active: #d54649;
 }
 
-/* Styling Unchecked Checkbox in error or invalid state */
+/* Styling Unchecked Checkbox in error or invalid state. */
 .u-checkbox.u-invalid::part(control),
 .u-checkbox.u-format-invalid::part(control) {
   --neutral-stroke-strong-rest: #d13438;
@@ -69,7 +82,7 @@
   --neutral-stroke-strong-active: #d54649;
 }
 
-/* Styling Indeterminate Checkbox in error or invalid state */
+/* Styling Indeterminate Checkbox in error or invalid state. */
 .u-checkbox.u-invalid.indeterminate::part(control),
 .u-checkbox.u-format-invalid.indeterminate::part(control) {
   --neutral-stroke-strong-rest: #d13438;
@@ -86,4 +99,27 @@
 .u-checkbox.u-format-invalid.indeterminate:active::part(control) {
   --neutral-stroke-strong-active: #d54649;
   --neutral-foreground-rest: #d54649;
+}
+
+/* When label-position is before, the checkbox control should appear at the very end, after label and error-icon. */
+.u-checkbox[u-label-position="before"]:has(.u-label-text:not([hidden]))::part(control),
+.u-checkbox[u-label-position="before"]:has(.u-error-icon:not([hidden]))::part(control) {
+  order: 2;
+}
+
+/* When label position is before in flex and grid layouts, the label slot should grow to fill the available space. And since label and error-icon occupy the same slot, they should be arranged at opposite ends. */
+.u-checkbox[u-label-position="before"]:has(.u-label-text:not([hidden]))::part(label) {
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+/* When label position is after, label should appear at the very end, after control and error-icon. Also, adding space between error-icon and label. */
+.u-checkbox[u-label-position="after"] .u-label-text:not([hidden]) {
+  order: 2;
+  padding-inline-start: calc(var(--design-unit) * 2px + 2px);
+}
+
+/* Adding space between label and error-icon when label position is before. */
+.u-checkbox[u-label-position="before"] .u-label-text:not([hidden]) {
+  padding-inline-end: calc(var(--design-unit) * 2px + 2px);
 }
