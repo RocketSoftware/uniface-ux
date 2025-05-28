@@ -253,14 +253,19 @@
           "label-text": checkBoxLabelText
         });
       }).then(function () {
-        let labelText = element.querySelector("span.u-label-text").innerText;
+        const labelElement = element.querySelector("span.u-label-text");
+        let labelText = labelElement.innerText;
         assert.equal(labelText, checkBoxLabelText);
-        assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
+        assert(!labelElement.hasAttribute("hidden"), "Failed to show the label text.");
 
-        // Checking order of elements.
-        const label = element.querySelector("span.u-label-text").getBoundingClientRect();
+        // Checking the visual order of elements.
+        const label = labelElement.getBoundingClientRect();
         const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
         expect(label.right).to.be.greaterThan(control.right);
+
+        // Checking the value of style property 'order' for label-text.
+        const computedStyles = window.getComputedStyle(labelElement);
+        expect(computedStyles.order).to.equal("2");
       });
     });
 
@@ -331,11 +336,18 @@
           "label-position": "before"
         });
       }).then(function () {
+        const controlElement = element.shadowRoot.querySelector(".control");
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "before", "Label position is not set to before.");
+
+        // Checking the visual order of elements.
         const label = element.querySelector("span.u-label-text").getBoundingClientRect();
-        const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
+        const control = controlElement.getBoundingClientRect();
         expect(control.right).to.be.greaterThan(label.right);
+
+        // Checking the value of style property 'order' for checkbox control.
+        const computedStyles = window.getComputedStyle(controlElement);
+        expect(computedStyles.order).to.equal("2");
       });
     });
 
@@ -376,15 +388,6 @@
         warnSpy.restore();
       });
     });
-  });
-
-  describe("showError()", function () {
-    let element;
-    before(function () {
-      tester.createWidget();
-      element = tester.element;
-      assert(element, "Widget top element is not defined!");
-    });
 
     it("Need fix: set invalid value when checkbox checked state is false", function () {
       return asyncRun(function () {
@@ -415,24 +418,17 @@
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
         assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid");
 
-        // Check if error icon comes after the label in DOM order when label is "before".
+        // Checking the visual order of elements.
+        const controlElement = element.shadowRoot.querySelector(".control");
         const label = element.querySelector(".u-label-text").getBoundingClientRect();
         const error = element.querySelector("span.u-error-icon").getBoundingClientRect();
-        const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
+        const control = controlElement.getBoundingClientRect();
         expect(control.right).to.be.greaterThan(label.right);
         expect(error.right).to.be.greaterThan(label.right);
-        // // New approach
-        // const labelEl = element.querySelector(".u-label-text");
-        // const errorIconEl = element.querySelector("span.u-error-icon");
 
-        // // Check actual computed order
-        // const labelOrder = window.getComputedStyle(labelEl).order;
-        // const errorIconOrder = window.getComputedStyle(errorIconEl).order;
-
-        // // Assert the visual (CSS) order
-        // expect(parseInt(errorIconOrder)).to.be.greaterThan(parseInt(labelOrder));
-        // console.log(errorIconOrder);
-        // console.log(labelOrder);
+        // Checking the value of style property 'order' for checkbox control.
+        const computedStyles = window.getComputedStyle(controlElement);
+        expect(computedStyles.order).to.equal("2");
       });
     });
 
@@ -449,29 +445,28 @@
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
         assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid");
 
-        // Check if error icon comes after the label in DOM order when label is "after".
-        const label = element.querySelector(".u-label-text").getBoundingClientRect();
-        const error = element.querySelector("span.u-error-icon").getBoundingClientRect();
+        // Checking the visual order of elements.
+        const labelElement = element.querySelector(".u-label-text");
+        const errorElement = element.querySelector("span.u-error-icon");
+        const label = labelElement.getBoundingClientRect();
+        const error = errorElement.getBoundingClientRect();
         const control = element.shadowRoot.querySelector(".control").getBoundingClientRect();
         expect(label.right).to.be.greaterThan(control.right);
         expect(label.right).to.be.greaterThan(error.right);
-      });
-    });
-  });
 
-  describe("hideError()", function () {
-    let element;
-    before(function () {
-      tester.createWidget();
-      element = tester.element;
-      assert(element, "Widget top element is not defined!");
+        // Checking the value of style property 'order' for label-text.
+        const computedStylesLabel = window.getComputedStyle(labelElement);
+        expect(computedStylesLabel.order).to.equal("2");
+        // Checking the value of style property 'order' for erronIcon.
+        const computedStylesError = window.getComputedStyle(labelElement);
+        expect(computedStylesError.order).to.equal("2");
+      });
     });
 
     it("set error to false", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "error": false,
-          "error-message": ""
+          "value": 1
         });
       }).then(function () {
         expect(element).to.not.have.class("u-format-invalid");
