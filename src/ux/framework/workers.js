@@ -198,6 +198,11 @@ export class SlottedElement extends Element {
     }
   }
 
+  /**
+   * Generate and return layout for this setter.
+   * @param {UObjectDefinition} _objectDefinition
+   * @returns {HTMLElement}
+   */
   getLayout(_objectDefinition) {
     this.log("getLayout", null);
     let element = document.createElement(this.tagName);
@@ -368,9 +373,16 @@ export class SlottedSubWidget extends Element {
     }
   }
 
+  /**
+   * Generate and return layout for this setter.
+   * @param {UObjectDefinition} objectDefinition
+   * @returns {HTMLElement}
+   */
   getLayout(objectDefinition) {
     let element = document.createElement(this.tagName);
-    element = this.subWidgetClass.processLayout(element, objectDefinition);
+    if (this.subWidgetClass) {
+      element = this.subWidgetClass.processLayout(element, objectDefinition);
+    }
     element.hidden = true;
     element.classList.add(this.styleClass);
     return element;
