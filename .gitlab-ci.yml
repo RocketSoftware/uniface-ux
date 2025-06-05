@@ -1,5 +1,5 @@
 stages:
-  - lint
+  - check
   - build
   - test
   - polaris_scan
@@ -20,14 +20,16 @@ include:
     ref: master
     file: .gitlab-ci-defaults.yml
 
-lint:
-  stage: lint
+check:
+  stage: check
   extends: .uxwidgets
   tags:
     - docker-uniface-local
   script:
     - echo "Linting repository"
     - npm run lint
+    - echo "Type checking repository"
+    - npx tsc --noEmit
 
 build:
   stage: build
