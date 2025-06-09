@@ -338,7 +338,7 @@
       });
     });
 
-    it("set label-position before", function () {
+    it("set label-position before and verify before style", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": "before"
@@ -346,20 +346,18 @@
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "before", "Label position is not set to before.");
+
+        // If u-label-position attribute is added element display is changed.
+        let numberFieldStyle = window.getComputedStyle(element, null);
+        let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
+        assert.equal(displayPropertyValue, "inline-flex");
+        let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
+        let alignPropertyValue = labelStyle.getPropertyValue("align-content");
+        assert.equal(alignPropertyValue, "center", "Label position below is not center.");
       });
     });
 
-    it("check label position before styles", function () {
-      // If u-label-position attribute is added element display is changed.
-      let numberFieldStyle = window.getComputedStyle(element, null);
-      let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
-      assert.equal(displayPropertyValue, "inline-flex");
-      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
-      let alignPropertyValue = labelStyle.getPropertyValue("align-content");
-      assert.equal(alignPropertyValue, "center", "Label position below is not center.");
-    });
-
-    it("set label-position below", function () {
+    it("set label-position below and verify below style", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": "below"
@@ -367,17 +365,15 @@
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "below", "Label position below is not below.");
-      });
-    });
 
-    it("check label position below styles", function () {
-      // If u-label-position attribute is added element display is changed.
-      let numberFieldStyle = window.getComputedStyle(element, null);
-      let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
-      assert.equal(flexPropertyValue, "column");
-      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
-      let orderPropertyValue = labelStyle.getPropertyValue("order");
-      assert.equal(orderPropertyValue, 2, "Label position below is not in order.");
+        // If u-label-position attribute is added element display is changed.
+        let numberFieldStyle = window.getComputedStyle(element, null);
+        let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
+        assert.equal(flexPropertyValue, "column");
+        let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
+        let orderPropertyValue = labelStyle.getPropertyValue("order");
+        assert.equal(orderPropertyValue, 2, "Label position below is not in order.");
+      });
     });
 
     it("reset label and its position", function () {
