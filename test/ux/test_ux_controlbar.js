@@ -702,7 +702,9 @@
       });
 
       it("if hidden property is set to be true, it should be reflected", function () {
+        element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
         return asyncRun(function () {
+          tester.onConnect(element);
           tester.dataUpdate(MOCK_HIDDEN_PROPERTY);
         }).then(function () {
           expect(element.hasAttribute("hidden")).to.equal(true);
