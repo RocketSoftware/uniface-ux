@@ -626,11 +626,9 @@
   });
 
   describe("Reset all properties", function () {
-    let element,widget;
-
     before(function () {
-      widget = tester.createWidget();
-      element = tester.element;
+      tester.createWidget();
+      tester.element;
     });
 
     it("reset all property", function () {
