@@ -169,10 +169,10 @@
 
   describe("dataInit()", function () {
     const classes = tester.getDefaultClasses();
-
-    var element;
+    let element;
 
     beforeEach(function () {
+      tester.dataInit();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
@@ -234,13 +234,19 @@
     });
 
     it("check label position before styles", function () {
-      // If u-label-position attribute is added element display is changed.
-      let numberFieldStyle = window.getComputedStyle(element, null);
-      let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
-      assert.equal(displayPropertyValue, "inline-flex");
-      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
-      let alignPropertyValue = labelStyle.getPropertyValue("align-content");
-      assert.equal(alignPropertyValue, "center", "Label position below is not center.");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "before"
+        });
+      }).then(function () {
+        // If u-label-position attribute is added element display is changed.
+        let numberFieldStyle = window.getComputedStyle(element, null);
+        let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
+        assert.equal(displayPropertyValue, "inline-flex");
+        let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
+        let alignPropertyValue = labelStyle.getPropertyValue("align-content");
+        assert.equal(alignPropertyValue, "center", "Label position below is not center.");
+      });
     });
 
     it("set label position below", function () {
@@ -255,13 +261,19 @@
     });
 
     it("check label position below styles", function () {
-      // If u-label-position attribute is added element display is changed.
-      let numberFieldStyle = window.getComputedStyle(element, null);
-      let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
-      assert.equal(flexPropertyValue, "column");
-      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
-      let orderPropertyValue = labelStyle.getPropertyValue("order");
-      assert.equal(orderPropertyValue, 2, "Label position below is not in order.");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "below"
+        });
+      }).then(function () {
+        // If u-label-position attribute is added element display is changed.
+        let numberFieldStyle = window.getComputedStyle(element, null);
+        let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
+        assert.equal(flexPropertyValue, "column");
+        let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
+        let orderPropertyValue = labelStyle.getPropertyValue("order");
+        assert.equal(orderPropertyValue, 2, "Label position below is not in order.");
+      });
     });
 
     it("reset label and its position", function () {
@@ -369,7 +381,7 @@
         let colsText = element.shadowRoot.querySelector("textarea").getAttribute("cols");
         assert.equal(colsText, defaultColsProp); // Check for visibility.
         let rowsText = element.shadowRoot.querySelector("textarea").getAttribute("rows");
-        assert.equal(rowsText, 0);
+        assert.equal(Number(rowsText), 0);
       }
     });
 
