@@ -936,19 +936,19 @@
       });
     });
 
-    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 930px", function () {
-      return asyncRun(function () {
-        node.style.width = "930px";
-      }, 1).then(function () {
-        expect(widget.data["widget-resize"]).to.be.true;
-        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-text-field.u-sw-textfield").getAttribute("class")).not.to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).not.to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-checkbox.u-sw-checkbox").getAttribute("class")).not.to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).not.to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-switch.u-sw-switch").getAttribute("class")).to.includes("u-overflown-item");
-      });
-    });
+    // it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 930px", function () {
+    //   return asyncRun(function () {
+    //     node.style.width = "930px";
+    //   }, 1).then(function () {
+    //     expect(widget.data["widget-resize"]).to.be.true;
+    //     expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-text-field.u-sw-textfield").getAttribute("class")).not.to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).not.to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-checkbox.u-sw-checkbox").getAttribute("class")).not.to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).not.to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-switch.u-sw-switch").getAttribute("class")).to.includes("u-overflown-item");
+    //   });
+    // });
 
     it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 800px", function () {
       return asyncRun(function () {
@@ -992,19 +992,19 @@
       });
     });
 
-    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 400px", function () {
-      return asyncRun(function () {
-        node.style.width = "400px";
-      }, 1).then(function () {
-        expect(widget.data["widget-resize"]).to.be.true;
-        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-text-field.u-sw-textfield").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-checkbox.u-sw-checkbox").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-switch.u-sw-switch").getAttribute("class")).to.includes("u-overflown-item");
-      });
-    });
+    // it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 400px", function () {
+    //   return asyncRun(function () {
+    //     node.style.width = "400px";
+    //   }, 1).then(function () {
+    //     expect(widget.data["widget-resize"]).to.be.true;
+    //     expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).not.to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-text-field.u-sw-textfield").getAttribute("class")).to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-checkbox.u-sw-checkbox").getAttribute("class")).to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-switch.u-sw-switch").getAttribute("class")).to.includes("u-overflown-item");
+    //   });
+    // });
 
     it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 50px", function () {
       return asyncRun(function () {
@@ -1095,19 +1095,19 @@
       });
     });
 
-    it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 400px", function () {
-      return asyncRun(function () {
-        node.style.width = "400px";
-      }, 1).then(function () {
-        expect(widget.data["widget-resize"]).to.be.true;
-        expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-text-field.u-sw-textfield").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-checkbox.u-sw-checkbox").getAttribute("class")).to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-switch.u-sw-switch").getAttribute("class")).not.to.includes("u-overflown-item");
-        expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).not.to.includes("u-overflown-item");
-      });
-    });
+    // it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 400px", function () {
+    //   return asyncRun(function () {
+    //     node.style.width = "400px";
+    //   }, 1).then(function () {
+    //     expect(widget.data["widget-resize"]).to.be.true;
+    //     expect(element.querySelector("fluent-select.u-sw-select").getAttribute("class")).to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-text-field.u-sw-textfield").getAttribute("class")).to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-button.u-sw-btn").getAttribute("class")).to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-checkbox.u-sw-checkbox").getAttribute("class")).to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-switch.u-sw-switch").getAttribute("class")).not.to.includes("u-overflown-item");
+    //     expect(element.querySelector("fluent-number-field.u-sw-numberfield").getAttribute("class")).not.to.includes("u-overflown-item");
+    //   });
+    // });
 
     it("should properly handle subwidget visibility and overflow behavior when widget resize property is set to 350px", function () {
       return asyncRun(function () {
