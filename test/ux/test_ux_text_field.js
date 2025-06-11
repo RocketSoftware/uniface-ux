@@ -616,9 +616,9 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "changebutton": true,
-          "changebutton:icon": "PublicEmail"
-          // "changebutton:icon-position" : "start",
-          // "changebutton:value":"Click Me"
+          "changebutton:icon": "PublicEmail",
+          "changebutton:icon-position" : "start",
+          "changebutton:value":"Click Me"
         });
       }).then(function () {
         const event = new window.Event("hover");
@@ -691,7 +691,7 @@
       });
     });
 
-    it("set label position before", function () {
+    it("set label position before and check label position styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": "before"
@@ -699,20 +699,17 @@
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "before");
+        // If u-label-position attribute is added element display is changed.
+        let numberFieldStyle = window.getComputedStyle(element, null);
+        let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
+        assert.equal(displayPropertyValue, "inline-flex");
+        let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
+        let alignPropertyValue = labelStyle.getPropertyValue("align-content");
+        assert.equal(alignPropertyValue, "center");
       });
     });
 
-    it("check label position before styles", function () {
-      // If u-label-position attribute is added element display is changed.
-      let numberFieldStyle = window.getComputedStyle(element, null);
-      let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
-      assert.equal(displayPropertyValue, "inline-flex");
-      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
-      let alignPropertyValue = labelStyle.getPropertyValue("align-content");
-      assert.equal(alignPropertyValue, "center");
-    });
-
-    it("set label position below", function () {
+    it("set label position below and check label position styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": "below"
@@ -720,17 +717,16 @@
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "below");
-      });
-    });
+        let numberFieldStyle = window.getComputedStyle(element, null);
+        let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
+        assert.equal(flexPropertyValue, "column");
+        let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
+        console.log(labelStyle);
+        let orderPropertyValue = labelStyle.getPropertyValue("order");
+        console.log(orderPropertyValue);
 
-    it("check label position below styles", function () {
-      // If u-label-position attribute is added element display is changed.
-      let numberFieldStyle = window.getComputedStyle(element, null);
-      let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
-      assert.equal(flexPropertyValue, "column");
-      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
-      let orderPropertyValue = labelStyle.getPropertyValue("order");
-      assert.equal(orderPropertyValue, 2);
+        assert.equal(orderPropertyValue, 2);
+      });
     });
 
     it("reset label and its position", function () {
@@ -856,8 +852,8 @@
     let element,widget;
 
     before(function () {
-      element = tester.element;
       widget = tester.createWidget();
+      element = tester.element;
     });
 
     it("check if the 'u-blocked' class is applied and ensure the widget is readOnly when the blockUI() is invoked", function () {
@@ -878,8 +874,9 @@
     let element,widget;
 
     before(function () {
-      element = tester.element;
+      // element = tester.element;
       widget = tester.createWidget();
+      element = tester.element;
     });
 
     beforeEach(function () {
@@ -912,6 +909,8 @@
   });
 
   describe("Reset all properties", function () {
+    tester.createWidget();
+    tester.element;
     it("reset all properties", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());
