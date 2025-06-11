@@ -161,6 +161,7 @@
   describe("dataInit()", function () {
     const classes = tester.getDefaultClasses();
     let element;
+    tester.createWidget();
 
     beforeEach(function () {
       element = tester.element;
