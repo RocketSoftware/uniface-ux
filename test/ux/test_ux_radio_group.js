@@ -574,8 +574,8 @@
     let element,widget;
 
     before(function () {
-      widget = tester.createWidget();
       element = tester.element;
+      widget = tester.createWidget();
     });
 
     it("check if the 'u-blocked' class is applied and ensure the widget is readOnly when the blockUI() is invoked", function () {
@@ -594,8 +594,8 @@
     let element,widget;
 
     before(function () {
-      widget = tester.createWidget();
       element = tester.element;
+      widget = tester.createWidget();
     });
 
     beforeEach(function () {
@@ -626,10 +626,8 @@
   });
 
   describe("Reset all properties", function () {
-    before(function () {
-      tester.createWidget();
-      tester.element;
-    });
+    tester.createWidget();
+    tester.element;
 
     it("reset all property", function () {
       try {
