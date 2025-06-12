@@ -1248,9 +1248,6 @@
   });
 
   describe("Reset all properties to default", function () {
-    tester.processLayout(MOCK_EMPTY_CENTER_CONTROLS_DEFINITION);
-    tester.createWidget();
-
     it("reset all property", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());

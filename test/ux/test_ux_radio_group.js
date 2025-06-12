@@ -626,9 +626,6 @@
   });
 
   describe("Reset all properties", function () {
-    tester.createWidget();
-    tester.element;
-
     it("reset all property", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());

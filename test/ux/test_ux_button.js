@@ -187,18 +187,11 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    beforeEach(function () {
-      tester.dataUpdate({
-        "icon": "Home"
-      });
-    });
-
     it("update button text", function () {
       let buttonText = "Button";
       return asyncRun(function () {
         tester.dataUpdate({
-          "value": buttonText,
-          "icon": uniface.reset
+          "value": buttonText
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
@@ -211,7 +204,8 @@
       let buttonText = "Button";
       return asyncRun(function () {
         tester.dataUpdate({
-          "value": buttonText
+          "value": buttonText,
+          "icon": "Home"
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
@@ -227,7 +221,8 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "icon-position": iconPosition,
-          "value": buttonText
+          "value": buttonText,
+          "icon": "Home"
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
@@ -241,7 +236,8 @@
       let buttonText = "";
       return asyncRun(function () {
         tester.dataUpdate({
-          "value": buttonText
+          "value": buttonText,
+          "icon": "Home"
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
@@ -255,7 +251,8 @@
       let buttonText = "Button";
       return asyncRun(function () {
         tester.dataUpdate({
-          "value": buttonText
+          "value": buttonText,
+          "icon": "Home"
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
@@ -270,8 +267,8 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "icon-position": "stat",
-          "value": buttonText
-
+          "value": buttonText,
+          "icon": "Home"
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
