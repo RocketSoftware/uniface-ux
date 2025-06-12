@@ -222,7 +222,7 @@
       });
     });
 
-    it("set label position before", function () {
+    it("set label position before and check label position styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": "before"
@@ -230,15 +230,6 @@
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "before", "Label position before is not before.");
-      });
-    });
-
-    it("check label position before styles", function () {
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "label-position": "before"
-        });
-      }).then(function () {
         // If u-label-position attribute is added element display is changed.
         let numberFieldStyle = window.getComputedStyle(element, null);
         let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
@@ -249,7 +240,7 @@
       });
     });
 
-    it("set label position below", function () {
+    it("set label position below and check label position styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": "below"
@@ -257,15 +248,6 @@
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "below", "Label position below is not below.");
-      });
-    });
-
-    it("check label position below styles", function () {
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "label-position": "below"
-        });
-      }).then(function () {
         // If u-label-position attribute is added element display is changed.
         let numberFieldStyle = window.getComputedStyle(element, null);
         let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
@@ -376,13 +358,14 @@
     });
 
     it("check default html cols value", function () {
-      let defaultColsProp = 20;
-      {
+      return asyncRun(function () {
+      }).then(function () {
+        let defaultColsProp = 20;
         let colsText = element.shadowRoot.querySelector("textarea").getAttribute("cols");
         assert.equal(colsText, defaultColsProp); // Check for visibility.
         let rowsText = element.shadowRoot.querySelector("textarea").getAttribute("rows");
-        assert.equal(Number(rowsText), 0);
-      }
+        assert.equal(rowsText, 0);
+      });
     });
 
     it("html cols property negative integer", function () {
