@@ -721,9 +721,7 @@
         let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
         assert.equal(flexPropertyValue, "column");
         let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
-        console.log(labelStyle);
         let orderPropertyValue = labelStyle.getPropertyValue("order");
-        console.log(orderPropertyValue);
 
         assert.equal(orderPropertyValue, 2);
       });
@@ -817,9 +815,10 @@
   });
 
   describe("getValueFormatted()", function () {
-    let properties, valueProperty;
+    let widget, properties, valueProperty;
     before(function () {
-      properties = tester.widget.data;
+      widget = tester.createWidget();
+      properties = widget.data;
     });
 
     it("verify single line value matches primaryPlainText returned by getValueFormatted()", function () {
@@ -874,7 +873,6 @@
     let element,widget;
 
     before(function () {
-      // element = tester.element;
       widget = tester.createWidget();
       element = tester.element;
     });
@@ -909,8 +907,6 @@
   });
 
   describe("Reset all properties", function () {
-    tester.createWidget();
-    tester.element;
     it("reset all properties", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());
