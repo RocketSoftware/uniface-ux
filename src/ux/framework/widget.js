@@ -274,7 +274,7 @@ export class Widget extends Base {
       this.warn("mapTrigger", `No trigger map found for (web)trigger '${triggerName}'.`, "Ignored");
     }
 
-    return undefined;
+    return;
   }
 
   /**
