@@ -198,7 +198,9 @@ export class Checkbox extends Widget {
         this.setErrorProperties(widgetInstance, "format-error");
       } catch (error) {
         isError = true;
-        this.setErrorProperties(widgetInstance, "format-error", error);
+        if (typeof error === "string") {
+          this.setErrorProperties(widgetInstance, "format-error", error);
+        }
       }
 
       if (newValue !== widgetInstance.data.currentValue) {
@@ -274,9 +276,11 @@ export class Checkbox extends Widget {
         if (this.toBoolean(this.getNode(properties, "error"))) {
           formattedValue.errorMessage = this.getNode(properties, "error-message");
         }
-      } catch (err) {
+      } catch (error) {
         formattedValue.primaryPlainText = "ERROR";
-        formattedValue.errorMessage = err;
+        if (typeof error === "string") {
+          formattedValue.errorMessage = error;
+        }
       }
     }
     this.staticLog("getValueFormatted", formattedValue);

@@ -138,9 +138,11 @@ export class Switch extends Widget {
       if (this.toBoolean(this.getNode(properties, "error"))) {
         formattedValue.errorMessage = this.getNode(properties, "error-message");
       }
-    } catch (err) {
+    } catch (error) {
       formattedValue.primaryPlainText = "ERROR";
-      formattedValue.errorMessage = err;
+      if (typeof error === "string") {
+        formattedValue.errorMessage = error;
+      }
     }
     this.staticLog("getValueFormatted", formattedValue);
     return formattedValue;

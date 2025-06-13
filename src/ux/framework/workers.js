@@ -60,9 +60,11 @@ export class Worker extends Base {
 
   /**
    * Refresh widget parts this setter is responsible for based on the widget properties.
-   * @param {Widget} widgetInstance
+   * @param {Widget} _widgetInstance
    */
-  refresh(widgetInstance) { } // eslint-disable-line no-unused-vars
+  refresh(_widgetInstance) {
+    // intentionally left empty
+  }
 
   /**
    * Provides setter-specific tracing.
@@ -198,6 +200,11 @@ export class SlottedElement extends Element {
     }
   }
 
+  /**
+   * Generate and return layout for this setter.
+   * @param {UObjectDefinition} _objectDefinition
+   * @returns {HTMLElement}
+   */
   getLayout(_objectDefinition) {
     this.log("getLayout", null);
     let element = document.createElement(this.tagName);
@@ -368,9 +375,16 @@ export class SlottedSubWidget extends Element {
     }
   }
 
-  getLayout(_objectDefinition) {
+  /**
+   * Generate and return layout for this setter.
+   * @param {UObjectDefinition} objectDefinition
+   * @returns {HTMLElement}
+   */
+  getLayout(objectDefinition) {
     let element = document.createElement(this.tagName);
-    element = this.subWidgetClass.processLayout(element);
+    if (this.subWidgetClass) {
+      element = this.subWidgetClass.processLayout(element, objectDefinition);
+    }
     element.hidden = true;
     element.classList.add(this.styleClass);
     return element;
@@ -1041,7 +1055,9 @@ export class HtmlValueAttributeBoolean extends BaseHtmlAttribute {
       this.setHtmlAttribute(element, this.fieldValueToBoolean(value));
       this.setErrorProperties(widgetInstance, "format-error");
     } catch (error) {
-      this.setErrorProperties(widgetInstance, "format-error", error);
+      if (typeof error === "string") {
+        this.setErrorProperties(widgetInstance, "format-error", error);
+      }
     }
   }
 }
@@ -1287,7 +1303,7 @@ export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
 
     /** @type {UValueFormatting} */
     let formattedValue = {};
-    if (typeof orgWidgetClass.getValueFormatted == "function") {
+    if (typeof orgWidgetClass?.getValueFormatted === "function") {
       formattedValue = orgWidgetClass.getValueFormatted(widgetInstance.data);
     } else {
       // Fallback if org widget does not provide this function.
