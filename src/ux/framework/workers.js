@@ -62,7 +62,9 @@ export class Worker extends Base {
    * Refresh widget parts this setter is responsible for based on the widget properties.
    * @param {Widget} _widgetInstance
    */
-  refresh(_widgetInstance) { }
+  refresh(_widgetInstance) {
+    // intentionally left empty
+  }
 
   /**
    * Provides setter-specific tracing.
