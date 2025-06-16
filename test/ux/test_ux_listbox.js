@@ -182,9 +182,12 @@
   describe("dataUpdate()", function () {
     let element;
     before(function () {
-      tester.createWidget();
-      element = tester.element;
-      assert(element, "Widget top element is not defined!");
+      return asyncRun(function () {
+        tester.createWidget();
+        element = tester.element;
+      }).then(function () {
+        assert(element, "Widget top element is not defined!");
+      });
     });
 
     it("no valrep and show empty fluent option with format error", function () {
@@ -431,6 +434,11 @@
         ...valRepArray
       ];
       return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "rep"
+        });
         tester.dataUpdate({
           "valrep": valRepArrayWithExtraOptions
         });
@@ -854,16 +862,19 @@
   describe("Error Visualization", function () {
     let widget, element;
     before(function () {
-      widget = tester.createWidget();
-      element = tester.element;
-      verifyWidgetClass(widgetClass);
+      return asyncRun(function () {
+        widget = tester.createWidget();
+        element = tester.element;
+      }).then(function () {
+        verifyWidgetClass(widgetClass);
+      });
     });
 
     it("clear the format error and expect no error to be shown", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "format-error": false,
-          "format-error-message": ""
+          "valrep": valRepArray,
+          "value": "2"
         });
       }).then(function () {
         expect(element).to.not.have.class("u-format-invalid");
@@ -877,6 +888,10 @@
 
     it("call the showError() method and expect validation error to be shown", function () {
       return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "value": "2"
+        });
         widget.showError("Validation Error");
       }).then(function () {
         expect(element).to.have.class("u-invalid");
@@ -889,6 +904,11 @@
 
     it("call the hideError() method and expect validation error to be removed", function () {
       return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "value": "2"
+        });
+        widget.showError("Validation Error");
         widget.hideError();
       }).then(function () {
         expect(element).to.not.have.class("u-invalid");
@@ -905,8 +925,8 @@
     let element,widget;
 
     before(function () {
-      element = tester.element;
       widget = tester.createWidget();
+      element = tester.element;
     });
 
     it("check if the 'u-blocked' class is applied and ensure the widget is readOnly when the blockUI() is invoked", function () {
@@ -925,8 +945,8 @@
     let element,widget;
 
     before(function () {
-      element = tester.element;
       widget = tester.createWidget();
+      element = tester.element;
     });
 
     beforeEach(function () {

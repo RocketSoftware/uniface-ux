@@ -162,7 +162,8 @@
     const classes = tester.getDefaultClasses();
     let element;
 
-    beforeEach(function () {
+    before(function () {
+      tester.createWidget();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
