@@ -222,7 +222,7 @@
       });
     });
 
-    it("set label position before and check label position styles", function () {
+    it("should position the label before and apply the correct styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": "before"
@@ -240,7 +240,7 @@
       });
     });
 
-    it("set label position below and check label position styles", function () {
+    it("should position the label below and apply the correct styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": "below"

@@ -191,6 +191,8 @@
 
   describe("dataUpdate()", function () {
     let element;
+    let selectFieldLabel = "Label";
+
     before(function () {
       tester.createWidget();
       element = tester.element;
@@ -198,7 +200,6 @@
     });
 
     it("show label", function () {
-      let selectFieldLabel = "Label";
       return asyncRun(function () {
         tester.dataUpdate({
           "label-text": selectFieldLabel
@@ -211,10 +212,11 @@
       });
     });
 
-    it("set label position before and check below styles", function () {
+    it("should position the label before and apply the correct styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "label-position": "before"
+          "label-position": "before",
+          "label-text": selectFieldLabel
         });
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
@@ -229,10 +231,11 @@
       });
     });
 
-    it("set label position below and check below styles", function () {
+    it("should position the label below and apply the correct styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "label-position": "below"
+          "label-position": "below",
+          "label-text": selectFieldLabel
         });
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
