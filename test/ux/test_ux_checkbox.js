@@ -330,7 +330,7 @@
       });
     });
 
-    it("set label-position before", function () {
+    it("should position the label before and apply the correct styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-text": "Label Text",

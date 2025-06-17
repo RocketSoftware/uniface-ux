@@ -691,10 +691,12 @@
       });
     });
 
-    it("set label position before and check label position styles", function () {
+    it("should position the label before and apply the correct styles", function () {
+      let textFieldLabel = "Label";
       return asyncRun(function () {
         tester.dataUpdate({
-          "label-position": "before"
+          "label-position": "before",
+          "label-text": textFieldLabel
         });
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
@@ -709,10 +711,12 @@
       });
     });
 
-    it("set label position below and check label position styles", function () {
+    it("should position the label below and apply the correct styles", function () {
+      let textFieldLabel = "Label";
       return asyncRun(function () {
         tester.dataUpdate({
-          "label-position": "below"
+          "label-position": "below",
+          "label-text": textFieldLabel
         });
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
