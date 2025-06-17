@@ -876,12 +876,9 @@
   describe("unblockUI()", function () {
     let element,widget;
 
-    before(function () {
+    before(async function () {
       widget = tester.createWidget();
       element = tester.element;
-    });
-
-    beforeEach(function () {
       widget.blockUI();
     });
 

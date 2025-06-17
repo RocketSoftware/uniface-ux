@@ -475,7 +475,7 @@
       return asyncRun(async function () {
         // Simulate click event on select widget.
         await tester.asyncUserClick(1);
-      }).then(async function () {
+      }).then(function () {
         let errorIconTooltip = element.querySelector(".u-error-icon");
         expect(errorIconTooltip.getAttribute("title")).equal("");
         const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
@@ -534,7 +534,7 @@
       return asyncRun(async function () {
         // Simulate user click on the first list item
         await tester.asyncUserClick(2);
-      }).then(async function () {
+      }).then(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");
         expect(selectedValue.textContent).equal("2");
         // Find index of expected value and compare against index of selected option.
@@ -546,13 +546,10 @@
 
   describe("Set placeholder and change the value with user interaction", function () {
     let element;
-    before(function () {
+    before(async function () {
       tester.createWidget();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
-    });
-
-    beforeEach(async function () {
       await asyncRun(function () {
         tester.dataUpdate({
           "valrep": valRepArray,
