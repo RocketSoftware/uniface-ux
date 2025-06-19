@@ -1,23 +1,22 @@
-# UX widget sources & tests
+# UX Widgets
 
-## How to start a HTTP server and open the test page
+UX Widgets (or Uniface UX) is referred to a set of widgets that are implemented using the UX Widget Interface. This set is provided by Rocket Software, and is a part of its Uniface product, and it can be used to implement the Web UI widgets in DSP components.
 
-### Use npm HTTP servers
-- Open a command prompt in top folder ux-widgets;
-- Run command: ```npm run serve```,
-  This will start http-server;
-- Or run command: ```npm run serve:dev```,
-  This will start webpack-dev-server;
-- Open a browser with URL: http://localhost:9000/test/index.html
+UX Widgets is published under the BSD 3-Clause [License](LICENSE).
 
-### Configuration with Tomcat
+For current release, see [RELEASENOTE.md](RELEASENOTE.md).
 
-- Clone this repository to your web server as a WebApp named ux-widgets
-- Goto inside the WebApp ux-widgets
-- Start your Uniface Tomcat
-- Open a browser with URL: http://localhost:8080/ux-widgets/test/index.html
+For history change logs on the older versions, see [CHANGELOG.md](CHANGELOG.md).
 
-## Folder structure
+For the detail of UX Widgets, see 
+- UX Widgets,  Uniface Library 10.4
+  https://docs.rocketsoftware.com/bundle/uniface_104/page/lzi1701171069984.html
+
+## Repo structure
+
+This repo is the home of UX Widgets project. And it has a [NPM](https://www.npmjs.com/) project structure.
+
+Here is its content:
 
 ```
 ux-widgets/
@@ -46,6 +45,8 @@ ux-widgets/
     pageobjects/
     tests/
   README.md                 // this file
+  CHANGELOG.md              // the change log file [CHANGELOG.md](CHANGELOG.md)
+  RELEASENOTE.md           // the note on current release;
   eslint.config.js          // ESLint configuration
   package-lock.json         // npm lock file
   package.json              // npm configuration
@@ -54,9 +55,16 @@ ux-widgets/
   webpack.prod.js           // webpack production configuration
 ```
 
+## Installation of UX Widgets project
+
+Users can install UX Widgets into their local development environment by the following step:
+- Open a command prompt;
+- Go to a directory where you want to locate your local UX Widgets project;
+- Clone the project by the command: ```git clone <ux_widgets_repository_url>```;
+
 ## How to build bundles
 
-- Open a command prompt in top folder ux-widgets;
+- Open a command prompt in your top folder ux-widgets of your local UX Widgets repo;
 - Run command: ```npm install```,
   This will install all nessesary npm packages;
 - Run command: ```npm run lint```,
@@ -69,3 +77,24 @@ ux-widgets/
   This will build the bundles for development mode, start a web server and watch for source changes;
 - Run command: ```npm run watch```,
   This will build the bundles for development mode and watch for source changes.
+
+## How to start a HTTP server and open the test page
+
+### Use npm HTTP servers
+- Open a command prompt in top folder ux-widgets;
+- Run command: ```npm run serve```,
+  This will start http-server;
+- Or run command: ```npm run serve:dev```,
+  This will start webpack-dev-server;
+- Open a browser with URL: http://localhost:9000/test/index.html
+
+## How to integrate with the Uniface installation
+
+### Configuration with Tomcat
+
+- Clone this repository to your web server as a WebApp named ux-widgets
+- Goto inside the WebApp ux-widgets
+- Start your Uniface Tomcat
+- Open a browser with URL: http://localhost:8080/ux-widgets/test/index.html
+
+### TODO: more
