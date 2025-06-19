@@ -2,12 +2,27 @@
 
 UX Widgets (or Uniface UX) is referred to a set of widgets that are implemented using the UX Widget Interface. This set is provided by Rocket Software, and is a part of its Uniface product, and it can be used to implement the Web UI widgets in DSP components.
 
+<<<<<<< HEAD
 UX Widgets is published under the BSD 3-Clause [License](LICENSE).
+=======
+For the detail of UX Widgets, see 
+- UX Widgets,  Uniface Library 10.4
+  https://docs.rocketsoftware.com/bundle/uniface_104/page/lzi1701171069984.html
+>>>>>>> branch 'feature/UNI-46320-README-and-related-public-docs-for-github' of git@gitlab.com:Uniface/sources/ux-widgets.git
 
+<<<<<<< HEAD
 For current release, see [RELEASENOTE.md](RELEASENOTE.md).
+=======
+## Repo structure
+>>>>>>> branch 'feature/UNI-46320-README-and-related-public-docs-for-github' of git@gitlab.com:Uniface/sources/ux-widgets.git
 
+<<<<<<< HEAD
 For history change logs on the older versions, see [CHANGELOG.md](CHANGELOG.md).
+=======
+This repo is the home of UX Widgets project. And it has a [NPM](https://www.npmjs.com/) project structure.
+>>>>>>> branch 'feature/UNI-46320-README-and-related-public-docs-for-github' of git@gitlab.com:Uniface/sources/ux-widgets.git
 
+<<<<<<< HEAD
 For the detail of UX Widgets, see 
 - UX Widgets,  Uniface Library 10.4
   https://docs.rocketsoftware.com/bundle/uniface_104/page/lzi1701171069984.html
@@ -16,6 +31,8 @@ For the detail of UX Widgets, see
 
 This repo is the home of UX Widgets project. And it has a [NPM](https://www.npmjs.com/) project structure.
 
+=======
+>>>>>>> branch 'feature/UNI-46320-README-and-related-public-docs-for-github' of git@gitlab.com:Uniface/sources/ux-widgets.git
 Here is its content:
 
 ```
@@ -46,7 +63,11 @@ ux-widgets/
     tests/
   README.md                 // this file
   CHANGELOG.md              // the change log file [CHANGELOG.md](CHANGELOG.md)
+<<<<<<< HEAD
   RELEASENOTE.md           // the note on current release;
+=======
+  RELEASE_NOTE.md           // the note on current release;
+>>>>>>> branch 'feature/UNI-46320-README-and-related-public-docs-for-github' of git@gitlab.com:Uniface/sources/ux-widgets.git
   eslint.config.js          // ESLint configuration
   package-lock.json         // npm lock file
   package.json              // npm configuration
