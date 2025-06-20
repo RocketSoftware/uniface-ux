@@ -2,6 +2,8 @@
 
 UX Widgets (or Uniface UX) is referred to a set of widgets that are implemented using the UX Widget Interface. This set is provided by Rocket Software, and is a part of its Uniface product, and it can be used to implement the Web UI widgets in DSP components.
 
+Its public repository name is Uniface UX, and is located in Github at https://github.com/RocketSoftware/uniface-ux.
+
 UX Widgets is published under the BSD 3-Clause [License](LICENSE).
 
 For the detail of UX Widgets, see 
@@ -61,28 +63,39 @@ ux-widgets/
 
 ## Installation of UX Widgets project
 
-Users can install UX Widgets into their local development environment by the following step:
+Firstly, users need install npm, the Node.js package manager. See:
+- Downloading and installing Node.js and npm | npm Docs
+  https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
+
+Then, users can install UX Widgets into their local development environment by the following step:
 - Open a command prompt;
 - Go to a directory where you want to locate your local UX Widgets project;
 - Clone the project by the command: ```git clone https://github.com/RocketSoftware/uniface-ux```;
+- Optionally, you can checkout a specific tag of older version from this repo;
+- Run command: ```npm install```,
+  This will install all nessesary npm packages;
 
 ## How to build bundles
 
 - Open a command prompt in your top folder ux-widgets of your local UX Widgets repo;
-- Run command: ```npm install```,
-  This will install all nessesary npm packages;
+- Run command: ```npm run build```,
+  This will build the bundles for production mode in dist folder, including:
+    - unifaceux.min.js, minimized unifaceux JavaScript bundle file
+    - unifaceux.min.css, minimized UnifaceUX CSS bundle file
+    - *.woff, Icon image file
+  
+### Other commands for builds
 - Run command: ```npm run lint```,
   This will run JavaScript lint for several sources;
-- Run command: ```npm run build```,
-  This will build the bundles for production mode in dist folder;
 - Run command: ```npm run build:dev```,
   This will build the bundles for development mode, so with source map;
 - Run command: ```npm run serve:dev```,
-  This will build the bundles for development mode, start a web server and watch for source changes;
+  This will start a web server with a dynamic development bundles;
 - Run command: ```npm run watch```,
   This will build the bundles for development mode and watch for source changes.
 
-## How to start a HTTP server and open the test page
+
+## How to start a HTTP server and open the test page in project
 
 ### Use npm HTTP servers
 - Open a command prompt in top folder ux-widgets;
@@ -92,13 +105,31 @@ Users can install UX Widgets into their local development environment by the fol
   This will start webpack-dev-server;
 - Open a browser with URL: http://localhost:9000/test/index.html
 
-## How to integrate with the Uniface installation
-
-### Configuration with Tomcat
+### Configuration with Tomcat as a standalone web application
 
 - Clone this repository to your web server as a WebApp named ux-widgets
 - Goto inside the WebApp ux-widgets
 - Start your Uniface Tomcat
 - Open a browser with URL: http://localhost:8080/ux-widgets/test/index.html
 
-### TODO: more
+## How to run the automated tests
+
+See [testAutomation/README.md](testAutomation/README.md).
+
+
+## How to integrate with the Uniface installation
+As described above, developers can build the Uniface UX bundles by themself, and the result bundles will be generated in dist sub-directory, including files:
+    - unifaceux.min.js, minimized unifaceux JavaScript bundle file
+    - unifaceux.min.css, minimized UnifaceUX CSS bundle file
+    - *.woff, Icon image file
+
+
+### How to deploy the self-built bundle files into the Uniface installation
+Assume that your Uniface installation is in C:\Program Files\Uniface\Uniface10403
+The default location for the Uniface UX bundles will be C:\Program Files\Uniface\Uniface10403\uniface\webapps\uniface\common\ux.
+
+You can deploy your self-built unifaceux bundles by copying the Uniface UX bundles in unifaceux\dist  to C:\Program Files\Uniface\Uniface10403\uniface\webapps\uniface\common\ux
+overwrite the bundles in \Uniface\Uniface10403\uniface\webapps\uniface\common\ux.
+
+
+
