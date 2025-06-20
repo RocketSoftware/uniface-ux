@@ -1,14 +1,15 @@
 # Change log - UX Widgets
 
-## 10.4.03.018, patch
+Current release is 10.4.03.018, see [RELEASENOTE.md](RELEASENOTE.md).
+## 10.4.03.017, patch
 
-Date: 2025-06-13 10:53:26
+Date: 2025-05-28 11:18:12
   
 ### Change:
- - Do type checking in check job/stage
- - Fix for getLayout
+ - In unit test, add emulation of user interaction for change event
+ - For uxswitch and uxcheckbox add before and after label position;
 
-## 10.4.03.017, patch
+## 10.4.03.016, patch
 
 Date: 2025-05-28 11:18:12
   
