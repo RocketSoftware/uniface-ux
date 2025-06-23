@@ -284,9 +284,7 @@
       });
 
       beforeEach(function () {
-        return asyncRun(function () {
-          tester = new umockup.WidgetTester();
-        });
+        tester = new umockup.WidgetTester();
       });
 
       it(`${widgetName}.processLayout() with empty mock properties`, function () {
