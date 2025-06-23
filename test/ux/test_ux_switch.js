@@ -830,7 +830,6 @@
   describe("Reset all properties", function () {
     it("reset all properties", function () {
       try {
-        tester.createWidget();
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         console.error(e);
