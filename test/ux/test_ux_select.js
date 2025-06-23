@@ -191,6 +191,8 @@
 
   describe("dataUpdate()", function () {
     let element;
+    let selectFieldLabel = "Label";
+
     before(function () {
       tester.createWidget();
       element = tester.element;
@@ -198,7 +200,6 @@
     });
 
     it("show label", function () {
-      let selectFieldLabel = "Label";
       return asyncRun(function () {
         tester.dataUpdate({
           "label-text": selectFieldLabel
@@ -211,46 +212,42 @@
       });
     });
 
-    it("set label position before", function () {
+    it("should position the label before and apply the correct styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "label-position": "before"
+          "label-position": "before",
+          "label-text": selectFieldLabel
         });
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "before");
+        // If u-label-position attribute is added element display is changed.
+        let numberFieldStyle = window.getComputedStyle(element, null);
+        let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
+        assert.equal(displayPropertyValue, "inline-flex");
+        let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
+        let alignPropertyValue = labelStyle.getPropertyValue("align-content");
+        assert.equal(alignPropertyValue, "center");
       });
     });
 
-    it("check label position before styles", function () {
-      // If u-label-position attribute is added element display is changed.
-      let numberFieldStyle = window.getComputedStyle(element, null);
-      let displayPropertyValue = numberFieldStyle.getPropertyValue("display");
-      assert.equal(displayPropertyValue, "inline-flex");
-      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
-      let alignPropertyValue = labelStyle.getPropertyValue("align-content");
-      assert.equal(alignPropertyValue, "center");
-    });
-
-    it("set label position below", function () {
+    it("should position the label below and apply the correct styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
-          "label-position": "below"
+          "label-position": "below",
+          "label-text": selectFieldLabel
         });
       }).then(function () {
         let labelPosition = element.getAttribute("u-label-position");
         assert.equal(labelPosition, "below");
+        // If u-label-position attribute is added element display is changed.
+        let numberFieldStyle = window.getComputedStyle(element, null);
+        let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
+        assert.equal(flexPropertyValue, "column");
+        let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
+        let orderPropertyValue = labelStyle.getPropertyValue("order");
+        assert.equal(orderPropertyValue, 2);
       });
-    });
-
-    it("check label position below styles", function () {
-      // If u-label-position attribute is added element display is changed.
-      let numberFieldStyle = window.getComputedStyle(element, null);
-      let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
-      assert.equal(flexPropertyValue, "column");
-      let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
-      let orderPropertyValue = labelStyle.getPropertyValue("order");
-      assert.equal(orderPropertyValue, 2);
     });
 
     it("reset label and its position", function () {
@@ -452,19 +449,21 @@
 
   describe("Invalid state, user interaction and again set to invalid state", function () {
     let element;
-    before(function () {
+    before(async function () {
       tester.createWidget();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
-    });
 
-    it("set invalid initial value", function () {
-      return asyncRun(function () {
+      await asyncRun(function () {
         tester.dataUpdate({
           "valrep": valRepArray,
           "value": "0"
         });
-      }).then(function () {
+      });
+    });
+
+    it("set invalid initial value", function () {
+      return asyncRun(function () {
         let errorIconTooltip = element.querySelector(".u-error-icon");
         expect(errorIconTooltip.getAttribute("title")).equal(
           "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."
@@ -473,19 +472,9 @@
     });
 
     it("simulate user interaction and select first option", function () {
-      return asyncRun(function () {
-        const selectElement = document.querySelector("fluent-select");
-
+      return asyncRun(async function () {
         // Simulate click event on select widget.
-        selectElement.click();
-
-        // Programmatically select an option and dispatch the change event.
-        const optionToSelect = selectElement.options[0]; // Index of the desired option (Option 1).
-        optionToSelect.selected = true; // Mark the option as selected.
-
-        // Dispatch the change event.
-        const event = new window.Event("change", { "bubbles": true });
-        selectElement.dispatchEvent(event);
+        await tester.asyncUserClick(1);
       }).then(function () {
         let errorIconTooltip = element.querySelector(".u-error-icon");
         expect(errorIconTooltip.getAttribute("title")).equal("");
@@ -517,20 +506,22 @@
 
   describe("Set valrep, display-format to val and set a initial value, user interaction and check values in selected element", function () {
     let element;
-    before(function () {
+    before(async function () {
       tester.createWidget();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
-    });
 
-    it("set valrep and initial value to 1", function () {
-      return asyncRun(function () {
+      await asyncRun(function () {
         tester.dataUpdate({
           "valrep": valRepArray,
           "value": "1",
           "display-format": "val"
         });
-      }).then(function () {
+      });
+    });
+
+    it("set valrep and initial value to 1", function () {
+      return asyncRun(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");
         expect(selectedValue.textContent).equal("1");
         // Find index of expected value and compare against index of selected option.
@@ -540,16 +531,9 @@
     });
 
     it("simulate user interaction and select second option", function () {
-      return asyncRun(function () {
-        const selectElement = document.querySelector("fluent-select");
-        // Simulate click event on select widget.
-        selectElement.click();
-        // Programmatically select an option and dispatch the change event.
-        const optionToSelect = selectElement.options[1]; // Index of the desired option (Option 2).
-        optionToSelect.selected = true; // Mark the option as selected.
-        // Dispatch the change event.
-        const event = new window.Event("change", { "bubbles": true });
-        selectElement.dispatchEvent(event);
+      return asyncRun(async function () {
+        // Simulate user click on the first list item
+        await tester.asyncUserClick(2);
       }).then(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");
         expect(selectedValue.textContent).equal("2");
@@ -562,43 +546,37 @@
 
   describe("Set placeholder and change the value with user interaction", function () {
     let element;
-    before(function () {
+    before(async function () {
       tester.createWidget();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
-    });
-
-    it("set placeholder with no initial value and expect placeholder to be shown", function () {
-      return asyncRun(function () {
+      await asyncRun(function () {
         tester.dataUpdate({
           "valrep": valRepArray,
           "display-format": "val",
           "placeholder-text": "Select",
           "show-placeholder": true
         });
-      }).then(function () {
+      });
+    });
+
+    it("set placeholder with no initial value and expect placeholder to be shown", function () {
+      return asyncRun(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");
         expect(selectedValue.textContent).equal("Select");
       });
     });
 
     it("simulate user interaction and select third option, placeholder slot should be null", function () {
-      return asyncRun(function () {
-        const selectElement = document.querySelector("fluent-select");
+      return asyncRun(async function () {
         // Simulate click event on select widget.
-        selectElement.click();
-        // Programmatically select an option and dispatch the change event.
-        const optionToSelect = selectElement.options[2]; // Index of the desired option (Option 3).
-        optionToSelect.selected = true; // Mark the option as selected.
-        // Dispatch the change event.
-        const event = new window.Event("change", { "bubbles": true });
-        selectElement.dispatchEvent(event);
+        await tester.asyncUserClick(2);
       }).then(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");
-        expect(selectedValue.textContent).equal("3");
+        expect(selectedValue.textContent).equal("2");
         // Find index of expected value and compare against index of selected option.
         const selectOption = element.querySelector("fluent-option.selected");
-        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "3").toString());
+        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
         const placeholderSlot = selectedValue.querySelector(".u-placeholder");
         expect(placeholderSlot).equal(null);
       });
@@ -643,8 +621,8 @@
     let element,widget;
 
     before(function () {
-      element = tester.element;
       widget = tester.createWidget();
+      element = tester.element;
     });
 
     it("check if the 'u-readonly' and 'u-blocked' class is applied when the blockUI() is invoked", function () {
@@ -662,8 +640,8 @@
     let element,widget;
 
     before(function () {
-      element = tester.element;
       widget = tester.createWidget();
+      element = tester.element;
     });
 
     beforeEach(function () {

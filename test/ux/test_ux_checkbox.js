@@ -162,7 +162,8 @@
     const classes = tester.getDefaultClasses();
     let element;
 
-    beforeEach(function () {
+    before(function () {
+      tester.createWidget();
       element = tester.element;
       assert(element, "Widget top element is not defined!");
     });
@@ -329,7 +330,7 @@
       });
     });
 
-    it("set label-position before", function () {
+    it("should position the label before and apply the correct styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-text": "Label Text",
