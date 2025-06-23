@@ -221,7 +221,8 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "icon-position": iconPosition,
-          "value": buttonText
+          "value": buttonText,
+          "icon": "Home"
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
@@ -235,7 +236,8 @@
       let buttonText = "";
       return asyncRun(function () {
         tester.dataUpdate({
-          "value": buttonText
+          "value": buttonText,
+          "icon": "Home"
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
@@ -249,7 +251,8 @@
       let buttonText = "Button";
       return asyncRun(function () {
         tester.dataUpdate({
-          "value": buttonText
+          "value": buttonText,
+          "icon": "Home"
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
@@ -263,7 +266,9 @@
       let buttonText = "Button";
       return asyncRun(function () {
         tester.dataUpdate({
-          "icon-position": "stat"
+          "icon-position": "stat",
+          "value": buttonText,
+          "icon": "Home"
         });
       }).then(function () {
         expect(element.querySelector("span.u-text").innerText).equal(buttonText);
