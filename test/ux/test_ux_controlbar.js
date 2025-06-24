@@ -277,70 +277,59 @@
   });
 
   describe(`${widgetName}.processLayout()`, function () {
-    let element;
-
-    it(`${widgetName}.processLayout() with empty mock properties`, function () {
-      verifyWidgetClass(widgetClass);
-      const tester = new umockup.WidgetTester();
-      return asyncRun(function () {
-        element = tester.processLayout(MOCK_EMPTY_DEFINITION);
-      }).then(function () {
-        expect(element).to.have.tagName(tester.uxTagName);
+    describe("processLayout() with various mock data sets", function () {
+      let element, tester;
+      before(function () {
+        verifyWidgetClass(widgetClass);
       });
-    });
 
-    it(`${widgetName}.processLayout() with just start subwidgets`, function () {
-      verifyWidgetClass(widgetClass);
-      const tester = new umockup.WidgetTester();
-      return asyncRun(function () {
-        element = tester.processLayout(MOCK_START_CONTROLS_ONLY_DEFINITION);
-        tester.onConnect();
-        tester.dataInit();
-      }).then(function () {
-        expect(element);
-        expect(element.querySelector(".u-start-section").children.length).not.to.equal(0);
-        expect(element.querySelector(".u-center-section").children.length).to.equal(0);
-        expect(element.querySelector(".u-end-section").children.length).to.equal(0);
+      beforeEach(function () {
+        tester = new umockup.WidgetTester();
       });
-    });
 
-    it(`${widgetName}.processLayout() with just center subwidgets`, function () {
-      verifyWidgetClass(widgetClass);
-      const tester = new umockup.WidgetTester();
-      return asyncRun(function () {
-        element = tester.processLayout(MOCK_CENTER_CONTROLS_ONLY_DEFINITION);
-        tester.onConnect();
-        tester.dataInit();
-      }).then(function () {
-        expect(element.querySelector(".u-center-section").children.length).not.to.equal(0);
-        expect(element.querySelector(".u-start-section").children.length).to.equal(0);
-        expect(element.querySelector(".u-end-section").children.length).to.equal(0);
+      it(`${widgetName}.processLayout() with empty mock properties`, function () {
+        return asyncRun(function () {
+          element = tester.processLayout(MOCK_EMPTY_DEFINITION);
+        }).then(function () {
+          expect(element).to.have.tagName(tester.uxTagName);
+        });
       });
-    });
 
-    it(`${widgetName}.processLayout() with just end subwidgets`, function () {
-      verifyWidgetClass(widgetClass);
-      const tester = new umockup.WidgetTester();
-      return asyncRun(function () {
-        element = tester.processLayout(MOCK_END_CONTROLS_ONLY_DEFINITION);
-        tester.onConnect();
-        tester.dataInit();
-      }).then(function () {
-        expect(element);
-        expect(element.querySelector(".u-start-section").children.length).to.equal(0);
-        expect(element.querySelector(".u-center-section").children.length).to.equal(0);
-        expect(element.querySelector(".u-end-section").children.length).not.to.equal(0);
+      it(`${widgetName}.processLayout() with just start subwidgets`, function () {
+        return asyncRun(function () {
+          element = tester.processLayout(MOCK_START_CONTROLS_ONLY_DEFINITION);
+        }).then(function () {
+          expect(element);
+          expect(element.querySelector(".u-start-section").children.length).not.to.equal(0);
+          expect(element.querySelector(".u-center-section").children.length).to.equal(0);
+          expect(element.querySelector(".u-end-section").children.length).to.equal(0);
+        });
       });
-    });
 
-    describe("If subwidgets-start is undefined or empty", function () {
+      it(`${widgetName}.processLayout() with just center subwidgets`, function () {
+        return asyncRun(function () {
+          element = tester.processLayout(MOCK_CENTER_CONTROLS_ONLY_DEFINITION);
+        }).then(function () {
+          expect(element.querySelector(".u-center-section").children.length).not.to.equal(0);
+          expect(element.querySelector(".u-start-section").children.length).to.equal(0);
+          expect(element.querySelector(".u-end-section").children.length).to.equal(0);
+        });
+      });
+
+      it(`${widgetName}.processLayout() with just end subwidgets`, function () {
+        return asyncRun(function () {
+          element = tester.processLayout(MOCK_END_CONTROLS_ONLY_DEFINITION);
+        }).then(function () {
+          expect(element);
+          expect(element.querySelector(".u-start-section").children.length).to.equal(0);
+          expect(element.querySelector(".u-center-section").children.length).to.equal(0);
+          expect(element.querySelector(".u-end-section").children.length).not.to.equal(0);
+        });
+      });
+
       it("should not contain start subwidgets if subwidgets-start is empty and widget-class not defined for other subwidget section", function () {
         return asyncRun(function () {
-          const tester = new umockup.WidgetTester();
-          verifyWidgetClass(widgetClass);
           element = tester.processLayout(MOCK_EMPTY_START_CONTROLS_DEFINITION);
-          tester.onConnect();
-          tester.dataInit();
         }).then(function () {
           expect(element.querySelector(".u-start-section").children.length).to.equal(0);
           expect(element.querySelector(".u-center-section").children.length).to.equal(0);
@@ -349,12 +338,8 @@
       });
 
       it("should not contain start subwidgets if subwidgets-start is undefined", function () {
-        verifyWidgetClass(widgetClass);
-        const tester = new umockup.WidgetTester();
         return asyncRun(function () {
           element = tester.processLayout(MOCK_UNDEFINED_START_CONTROLS_DEFINITION);
-          tester.onConnect();
-          tester.dataInit();
         }).then(function () {
           expect(element);
           expect(element.querySelector(".u-start-section").children.length).to.equal(0);
@@ -362,15 +347,10 @@
           expect(element.querySelector(".u-end-section").children.length).to.equal(1);
         });
       });
-    });
 
-    describe("If subwidgets-center is undefined or empty", function () {
       it("should not contain center subwidgets if subwidgets-center is empty", function () {
-        verifyWidgetClass(widgetClass);
         return asyncRun(function () {
           element = tester.processLayout(MOCK_EMPTY_CENTER_CONTROLS_DEFINITION);
-          tester.onConnect();
-          tester.dataInit();
         }).then(function () {
           expect(element.querySelector(".u-start-section").children.length).to.equal(1);
           expect(element.querySelector(".u-end-section").children.length).to.equal(1);
@@ -379,27 +359,18 @@
       });
 
       it("should not contain center subwidgets if subwidgets-center is undefined", function () {
-        verifyWidgetClass(widgetClass);
         return asyncRun(function () {
           element = tester.processLayout(MOCK_UNDEFINED_CENTER_CONTROLS_DEFINITION);
-          tester.onConnect();
-          tester.dataInit();
         }).then(function () {
           expect(element.querySelector(".u-start-section").children.length).to.equal(1);
           expect(element.querySelector(".u-end-section").children.length).to.equal(1);
           expect(element.querySelector(".u-center-section").children.length).to.equal(0);
         });
       });
-    });
 
-    describe("If subwidgets-end is undefined or empty", function () {
       it("should not contain end subwidgets if subwidgets-end is empty", function () {
         return asyncRun(function () {
-          verifyWidgetClass(widgetClass);
-          const tester = new umockup.WidgetTester();
           element = tester.processLayout(MOCK_EMPTY_END_CONTROLS_DEFINITION);
-          tester.onConnect();
-          tester.dataInit();
         }).then(function () {
           expect(element.querySelector(".u-center-section").children.length).to.equal(1);
           expect(element.querySelector(".u-start-section").children.length).to.equal(1);
@@ -409,43 +380,28 @@
 
       it("should not contain end subwidgets if subwidgets-end is undefined", function () {
         return asyncRun(function () {
-          verifyWidgetClass(widgetClass);
-          const tester = new umockup.WidgetTester();
           element = tester.processLayout(MOCK_UNDEFINED_END_CONTROLS_DEFINITION);
-          tester.onConnect();
-          tester.dataInit();
         }).then(function () {
           expect(element.querySelector(".u-center-section").children.length).to.equal(1);
           expect(element.querySelector(".u-start-section").children.length).to.equal(1);
           expect(element.querySelector(".u-end-section").children.length).to.equal(0);
         });
       });
-    });
 
-    describe("When the definition.properties does not contain subwidgets id's defined", function () {
-      it("should not contain start, center and end subwidgets", function () {
-        const tester = new umockup.WidgetTester();
+      it("should not contain start, center and end subwidgets if definition does not contain subwidgets id's", function () {
         return asyncRun(function () {
           element = tester.processLayout(MOCK_EMPTY_START_CENTER_END_CONTROLS_DEFINITION);
-          tester.onConnect();
-          tester.dataInit();
         }).then(function () {
           expect(element.querySelector(".u-start-section").children.length).to.equal(0);
           expect(element.querySelector(".u-center-section").children.length).to.equal(0);
           expect(element.querySelector(".u-end-section").children.length).to.equal(0);
         });
       });
-    });
 
-    describe("If subwidgets-start, subwidgets-center and subwidgets-end are defined", function () {
-      it("should contain start, center and end subwidgets", function () {
+      it("should contain start, center and end subwidgets if subwidgets-start, subwidgets-center and subwidgets-end are defined", function () {
         return asyncRun(function () {
-          const tester = new umockup.WidgetTester();
           element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
-          tester.onConnect();
-          tester.dataInit();
         }).then(function () {
-          verifyWidgetClass(widgetClass);
           expect(element.querySelector(".u-start-section").children.length).to.equal(2);
           expect(element.querySelector(".u-center-section").children.length).to.equal(1);
           expect(element.querySelector(".u-end-section").children.length).to.equal(2);
@@ -454,15 +410,10 @@
           expect(element.querySelector(".u-end-section").children.length).not.to.equal(0);
         });
       });
-    });
 
-    describe("When the definition.properties does not contain subwidgets-start, subwidgets-center and subwidgets-end defined", function () {
-      it("should not contain start, center and end subwidgets", function () {
-        const tester = new umockup.WidgetTester();
+      it("should not contain start, center and end subwidgets if subwidgets-start, subwidgets-center and subwidgets-end are not defined", function () {
         return asyncRun(function () {
           element = tester.processLayout(MOCK_UNDEFINED_START_CENTER_END_CONTROLS_DEFINITION);
-          tester.onConnect();
-          tester.dataInit();
         }).then(function () {
           expect(element.querySelector(".u-start-section").children.length).to.be.equal(0);
           expect(element.querySelector(".u-center-section").children.length).to.be.equal(0);
@@ -471,9 +422,10 @@
       });
     });
 
-    describe(`${widgetName} Checks`, function () {
+    describe("Checks", function () {
+      let element, tester;
       before(function () {
-        verifyWidgetClass(widgetClass);
+        tester = new umockup.WidgetTester();
         element = tester.processLayout(MOCK_START_CONTROLS_ONLY_DEFINITION);
       });
 
@@ -505,10 +457,13 @@
   });
 
   describe(`${widgetName}.onConnect()`, function () {
-    const tester = new umockup.WidgetTester();
-    const element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
-    const widget = tester.onConnect();
-    tester.dataInit();
+    let element, tester, widget;
+    before(function () {
+      tester = new umockup.WidgetTester();
+      element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
+      widget = tester.onConnect();
+      tester.dataInit();
+    });
 
     it("check element created and connected", function () {
       assert(element, "Target element is not defined!");
@@ -575,11 +530,12 @@
   describe(`${widgetName}.dataUpdate()`, function () {
 
     describe("When there is change in the controlbar properties", function () {
-      let element;
-      const tester = new umockup.WidgetTester();
+      let element, tester;
+      beforeEach(function () {
+        tester = new umockup.WidgetTester();
+      });
 
       it("if there is change in any controlbar properties, should be reflected on the widgetElement", function () {
-        const tester = new umockup.WidgetTester();
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
         return asyncRun(function () {
           tester.onConnect(element);
@@ -595,7 +551,6 @@
       });
 
       it("if there is change in any controlbar properties, should be reflected on the widgetElement", function () {
-        const tester = new umockup.WidgetTester();
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
         return asyncRun(function () {
           tester.onConnect(element);
@@ -705,6 +660,7 @@
         element = tester.processLayout(MOCK_START_CENTER_END_CONTROLS_DEFINITION);
         return asyncRun(function () {
           tester.onConnect(element);
+          tester.dataInit();
           tester.dataUpdate(MOCK_HIDDEN_PROPERTY);
         }).then(function () {
           expect(element.hasAttribute("hidden")).to.equal(true);
@@ -1250,6 +1206,10 @@
   describe("Reset all properties to default", function () {
     it("reset all property", function () {
       try {
+        const tester = new umockup.WidgetTester();
+        tester.processLayout(MOCK_EMPTY_DEFINITION);
+        tester.onConnect();
+        tester.dataInit();
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
         assert(false, `Failed to reset the properties, exception ${e}.`);
