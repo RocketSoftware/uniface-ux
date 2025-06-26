@@ -1,8 +1,9 @@
-# UX Widgets
+# Uniface UX
 
-UX Widgets (or Uniface UX) is referred to a set of widgets that are implemented using the UX Widget Interface. This set is provided by Rocket Software, and is a part of its Uniface product, and it can be used to implement the Web UI widgets in DSP components.
+Uniface UX (for more specific, also called UX Widgets) is referred to a repository and a project for a set of widgets that are implemented using the UX Widget Interface. This set is provided by Rocket Software, and is a part of its Uniface product, and it can be used to 
+implement the Web UI widgets in DSP components.
 
-Its public repository name is Uniface UX, and is located in Github at https://github.com/RocketSoftware/uniface-ux.
+Its public repository is located in Github at https://github.com/RocketSoftware/uniface-ux.
 
 UX Widgets is published under the BSD 3-Clause [License](LICENSE).
 
