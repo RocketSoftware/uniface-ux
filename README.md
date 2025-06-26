@@ -1,8 +1,9 @@
-# UX Widgets
+# Uniface UX
 
-UX Widgets (or Uniface UX) is referred to a set of widgets that are implemented using the UX Widget Interface. This set is provided by Rocket Software, and is a part of its Uniface product, and it can be used to implement the Web UI widgets in DSP components.
+Uniface UX (for more specific, also called UX Widgets) is referred to a repository and a project for a set of widgets that are implemented using the UX Widget Interface. This set is provided by Rocket Software, and is a part of its Uniface product, and it can be used to 
+implement the Web UI widgets in DSP components.
 
-Its public repository name is Uniface UX, and is located in Github at https://github.com/RocketSoftware/uniface-ux.
+Its public repository is located in Github at https://github.com/RocketSoftware/uniface-ux.
 
 UX Widgets is published under the BSD 3-Clause [License](LICENSE).
 
@@ -123,13 +124,15 @@ As described above, developers can build the Uniface UX bundles by themself, and
     - unifaceux.min.css, minimized UnifaceUX CSS bundle file
     - *.woff, Icon image file
 
+Users can use these Uniface UX bundle files to update or replace the bundle files in their Uniface installation.
+
+Users should take care of the release versions of Uniface UX and their Uniface installation. Basically, these two versions should be always same; otherwise, users need carefully check or consult with specialists if they are compatible. When they are not compatible, the result could cause unknown error behaviors.
 
 ### How to deploy the self-built bundle files into the Uniface installation
-Assume that your Uniface installation is in C:\Program Files\Uniface\Uniface10403
-The default location for the Uniface UX bundles will be C:\Program Files\Uniface\Uniface10403\uniface\webapps\uniface\common\ux.
 
-You can deploy your self-built unifaceux bundles by copying the Uniface UX bundles in unifaceux\dist  to C:\Program Files\Uniface\Uniface10403\uniface\webapps\uniface\common\ux
-overwrite the bundles in \Uniface\Uniface10403\uniface\webapps\uniface\common\ux.
+Assume that your Uniface installation is in ${UNIFACE_INSTALLATION_DIR}, for example, which could be "C:\Program Files\Uniface\Uniface10403". The default location for the Uniface UX bundles will be ${UNIFACE_INSTALLATION_DIR}\uniface\webapps\uniface\common\ux.
 
+You can deploy your self-built unifaceux bundles by copying the Uniface UX bundles in unifaceux\dist to ${UNIFACE_INSTALLATION_DIR}\uniface\webapps\uniface\common\ux
+and overwrite there.
 
 
