@@ -33,6 +33,8 @@ ux-widgets/
     fluentui/
     ux/                     // UX widgets
       framework/            // UX framework sources
+        workers/            // UX framework workers sources
+          [worker A]        // UX framework worker A source
       [widget A]/           // UX widget A sources
       loader.js             // load UX widgets and register them to Uniface
       loader.css            // load all the CSS files related to the Uniface UX widgets
