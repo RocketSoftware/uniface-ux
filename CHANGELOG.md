@@ -4,7 +4,6 @@ Current release is 10.4.03.018, see [RELEASENOTE.md](RELEASENOTE.md).
 
 ## 10.4.03.017, patch
 
-Date: 2025-05-28
   
 ### Change:
  - In unit test, add emulation of user interaction for change event
@@ -12,7 +11,6 @@ Date: 2025-05-28
 
 ## 10.4.03.0xx, patch, sample of log record
 
-Date: 2025-mm-dd
   
 ### Change:
  - Item 1;
