@@ -32,7 +32,7 @@ For full UX widget interface specifications, refer to the official Uniface docum
   Defines the widget base class and is shared by all widgets. It implements all UX Interface life cycle methods and acts as the clue between Uniface and the workers.
 
 - [**`workers`**](./workers/) 
-  Contains individual JavaScript files, each defining a specific Worker class used for handling widget behaviors and attributes - such as Element, SlottedElement, SlottedError and SlottedSubWidget
+  Each worker (Element, SlottedElement, SlottedError and SlottedSubWidget, etc.) has its own subfolder within the workers directory, containing a JavaScript file with a specific Worker class that manages specific widget behaviors and attributes.
 
 
 ## UX Interface to Workers mapping
