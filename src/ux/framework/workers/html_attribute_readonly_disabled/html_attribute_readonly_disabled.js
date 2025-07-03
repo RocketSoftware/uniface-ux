@@ -26,7 +26,7 @@ export class HtmlAttributeReadonlyDisabled extends Worker {
    * @param {string} uiblockedPropId
    * @param {boolean} readonlyDefaultValue
    * @param {boolean} disabledDefaultValue
-   * @param {string} uiblockedDefaultValue
+   * @param {boolean} uiblockedDefaultValue
    */
   constructor(widgetClass, readonlyPropId, disabledPropId, uiblockedPropId, readonlyDefaultValue, disabledDefaultValue, uiblockedDefaultValue) {
     super(widgetClass);
