@@ -3,7 +3,7 @@
 /**
  * @typedef {import("../../widget.js").Widget} Widget
  */
-import { Worker } from "../workers.js";
+import { Worker } from "../worker/worker.js";
 
 /**
  * HtmlAttributeReadonlyDisabled is a specialized worker that updates the `readonly` and `disabled`

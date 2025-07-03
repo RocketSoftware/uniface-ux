@@ -3,7 +3,7 @@
 /**
  * @typedef {import("../../widget.js").Widget} Widget
  */
-import { Worker } from "../workers.js";
+import { Worker } from "../worker/worker.js";
 
 /**
  * UIBlock worker applies UI blocking behavior based on the `uiblocked` property.

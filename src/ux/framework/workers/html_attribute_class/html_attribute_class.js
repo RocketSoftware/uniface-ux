@@ -3,7 +3,7 @@
 /**
  * @typedef {import("../../widget.js").Widget} Widget
  */
-import { Worker } from "../workers.js";
+import { Worker } from "../worker/worker.js";
 
 /**
  * HtmlAttributeClass is a specialized worker that extends BaseHtmlAttribute.

@@ -10,7 +10,7 @@ import { SlottedError } from "../framework/workers/slotted_error/slotted_error.j
 import { StyleClass } from "../framework/workers/style_class/style_class.js";
 import { Trigger } from "../framework/workers/trigger/trigger.js";
 import { UIBlock } from "../framework/workers/ui_block/ui_block.js";
-import { Worker } from "../framework/workers/workers.js";
+import { Worker } from "../framework/workers/worker/worker.js";
 import { Element } from "../framework/workers/element/element.js";
 // The import of Fluent UI web-components is done in loader.js.
 

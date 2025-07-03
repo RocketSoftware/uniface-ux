@@ -3,7 +3,7 @@
 /**
  * @typedef {import("../../widget.js").Widget} Widget
  */
-import { Worker } from "../workers.js";
+import { Worker } from "../worker/worker.js";
 
 /**
  * Trigger is a worker that maps a trigger action to the corresponding widget.

@@ -3,7 +3,7 @@
 /**
  * @typedef {import("../../widget.js").Widget} Widget
  */
-import { Worker } from "../workers.js";
+import { Worker } from "../worker/worker.js";
 
 /**
  * StyleClass is a worker responsible for updating the CSS class of a widget

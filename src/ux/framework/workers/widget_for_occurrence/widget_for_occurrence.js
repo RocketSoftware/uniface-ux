@@ -1,5 +1,5 @@
 // @ts-check
-import { Worker } from "../workers.js";
+import { Worker } from "../worker/worker.js";
 
 /**
  * WidgetForOccurrence worker creates a placeholder element for an object as specified by the provided bindingId.

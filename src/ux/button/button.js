@@ -9,7 +9,7 @@ import { IgnoreProperty } from "../framework/workers/ignore_property/ignore_prop
 import { StyleClass } from "../framework/workers/style_class/style_class.js";
 import { Trigger } from "../framework/workers/trigger/trigger.js";
 import { UIBlock } from "../framework/workers/ui_block/ui_block.js";
-import { Worker } from "../framework/workers/workers.js";
+import { Worker } from "../framework/workers/worker/worker.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentButton, provideFluentDesignSystem } from "@fluentui/web-components";

@@ -1,5 +1,5 @@
 // @ts-check
-import { Worker } from "../workers.js";
+import { Worker } from "../worker/worker.js";
 
 /**
  * WidgetsByFields worker creates a placeholder element for every child object of type field in objectDefinition.

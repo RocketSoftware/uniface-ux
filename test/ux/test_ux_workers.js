@@ -17,7 +17,7 @@ import { StyleClass } from "../../src/ux/framework/workers/style_class/style_cla
 import { SubWidgetsByProperty } from "../../src/ux/framework/workers/sub_widgets_by_property/sub_widgets_by_property.js";
 import { Trigger } from "../../src/ux/framework/workers/trigger/trigger.js";
 import { UIBlock } from "../../src/ux/framework/workers/ui_block/ui_block.js";
-import { Worker } from "../../src/ux/framework/workers/workers.js";
+import { Worker } from "../../src/ux/framework/workers/worker/worker.js";
 
 (function () {
   "use strict";

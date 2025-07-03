@@ -1,9 +1,9 @@
 // @ts-check
 
 /**
- * @typedef {import("../widget.js").Widget} Widget
+ * @typedef {import("../../widget.js").Widget} Widget
  */
-import { Base } from "../base.js";
+import { Base } from "../../base.js";
 
 /**
  * Worker base class.
@@ -18,7 +18,7 @@ export class Worker extends Base {
 
   /**
    * Creates an instance of Worker.
-   * @param {typeof import("../widget.js").Widget} widgetClass
+   * @param {typeof import("../../widget.js").Widget} widgetClass
    */
   constructor(widgetClass) {
     super();

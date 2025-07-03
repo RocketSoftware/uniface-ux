@@ -1,6 +1,6 @@
 // @ts-check
 import { Widget } from "../framework/widget.js";
-import { Worker } from "../framework/workers/workers.js";
+import { Worker } from "../framework/workers/worker/worker.js";
 import { Element } from "../framework/workers/element/element.js";
 import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
 import { HtmlAttributeBoolean } from "../framework/workers/html_attribute_boolean/html_attribute_boolean.js";
