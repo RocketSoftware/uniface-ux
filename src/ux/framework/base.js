@@ -2,7 +2,7 @@
 
 /**
  * @typedef {import("./widget.js").Widget} Widget
- * @typedef {import("./workers.js").Worker} Worker
+ * @typedef {import("./workers/workers.js").Worker} Worker
  */
 
 /**
@@ -14,7 +14,7 @@ export class Base {
 
   static formatErrorMessage = "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.";
 
-  constructor() {}
+  constructor() { }
 
   /**
    * This method registers the worker that Uniface calls to update the widget caused by a property change.

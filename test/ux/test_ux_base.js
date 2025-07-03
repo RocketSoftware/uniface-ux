@@ -1,5 +1,5 @@
 import { Base } from "../../src/ux/framework/base.js";
-import { Worker } from "../../src/ux/framework/workers.js";
+import { Worker } from "../../src/ux/framework/workers/workers.js";
 import { Widget } from "../../src/ux/framework/widget.js";
 import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
 

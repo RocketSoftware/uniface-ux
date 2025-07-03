@@ -1,22 +1,19 @@
 // @ts-check
 import { registerWidgetClass } from "../framework/dsp_connector.js";
 import { Widget } from "../framework/widget.js";
-import {
-  Trigger,
-  Element,
-  SlottedElement,
-  SlottedError,
-  SlottedSubWidget,
-  HtmlAttribute,
-  HtmlAttributeNumber,
-  HtmlAttributeChoice,
-  HtmlAttributeBoolean,
-  HtmlAttributeMinMax,
-  StyleClass,
-  IgnoreProperty,
-  UIBlock
-} from "../framework/workers.js";
-
+import { Element } from "../framework/workers/element/element.js";
+import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
+import { HtmlAttributeBoolean } from "../framework/workers/html_attribute_boolean/html_attribute_boolean.js";
+import { HtmlAttributeChoice } from "../framework/workers/html_attribute_choice/html_attribute_choice.js";
+import { HtmlAttributeMinMax } from "../framework/workers/html_attribute_min_max/html_attribute_min_max.js";
+import { HtmlAttributeNumber } from "../framework/workers/html_attribute_number/html_attribute_number.js";
+import { IgnoreProperty } from "../framework/workers/ignore_property/ignore_property.js";
+import { SlottedElement } from "../framework/workers/slotted_element/slotted_element.js";
+import { SlottedError } from "../framework/workers/slotted_error/slotted_error.js";
+import { SlottedSubWidget } from "../framework/workers/slotted_subwidget/slotted_subwidget.js";
+import { StyleClass } from "../framework/workers/style_class/style_class.js";
+import { Trigger } from "../framework/workers/trigger/trigger.js";
+import { UIBlock } from "../framework/workers/ui_block/ui_block.js";
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentNumberField, provideFluentDesignSystem } from "@fluentui/web-components";
 provideFluentDesignSystem().register(fluentNumberField());

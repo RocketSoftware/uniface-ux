@@ -1,19 +1,17 @@
 // @ts-check
 import { Widget } from "../framework/widget.js";
-import {
-  Element,
-  StyleClass,
-  Trigger,
-  SlottedElement,
-  SlottedElementsByValRep,
-  HtmlAttribute,
-  HtmlAttributeNumber,
-  HtmlAttributeBoolean,
-  IgnoreProperty,
-  SlottedError,
-  Worker,
-  UIBlock
-} from "../framework/workers.js";
+import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
+import { HtmlAttributeBoolean } from "../framework/workers/html_attribute_boolean/html_attribute_boolean.js";
+import { HtmlAttributeNumber } from "../framework/workers/html_attribute_number/html_attribute_number.js";
+import { IgnoreProperty } from "../framework/workers/ignore_property/ignore_property.js";
+import { SlottedElement } from "../framework/workers/slotted_element/slotted_element.js";
+import { SlottedElementsByValRep } from "../framework/workers/slotted_element_by_valrep/slotted_element_by_valrep.js";
+import { SlottedError } from "../framework/workers/slotted_error/slotted_error.js";
+import { StyleClass } from "../framework/workers/style_class/style_class.js";
+import { Trigger } from "../framework/workers/trigger/trigger.js";
+import { UIBlock } from "../framework/workers/ui_block/ui_block.js";
+import { Worker } from "../framework/workers/workers.js";
+import { Element } from "../framework/workers/element/element.js";
 // The import of Fluent UI web-components is done in loader.js.
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
@@ -170,7 +168,7 @@ export class Listbox extends Widget {
       const slotElement = element.shadowRoot?.querySelector("slot:not([name])");
       size = parseInt(size);
 
-      if(size > 0) {
+      if (size > 0) {
         // Set the u-size attribute to the element.
         element.setAttribute("u-size", size);
 
