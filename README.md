@@ -1,27 +1,27 @@
 # Uniface UX
 
-Uniface UX (for more specific, also called UX Widgets) is referred to a repository and a project for a set of widgets that are implemented using the UX Widget Interface. This set is provided by Rocket Software, and is a part of its Uniface product, and it can be used to 
+Uniface UX (for more specific, also called UX Widgets) is referred to a repository and a project for a set of widgets that are implemented using the UX Widget Interface. This set is provided by Rocket Software, as part of its Uniface product, and can be used to 
 implement the Web UI widgets in DSP components.
 
-Its public repository is located in Github at https://github.com/RocketSoftware/uniface-ux.
+Its public repository is available on GitHub at the following URL: https://github.com/RocketSoftware/uniface-ux.
 
 UX Widgets is published under the BSD 3-Clause [License](LICENSE).
 
 For the detail of UX Widgets, see 
-- UX Widgets,  Uniface Library 10.4
+- UX Widgets, Uniface Library 10.4
   https://docs.rocketsoftware.com/bundle/uniface_104/page/lzi1701171069984.html
 
 For current release, see [RELEASENOTE.md](RELEASENOTE.md).
 
-For history change logs on the older versions, see [CHANGELOG.md](CHANGELOG.md).
+For a record of changes in earlier versions, please refer to the CHANGELOG.md file, see [CHANGELOG.md](CHANGELOG.md).
 
 For the detail of UX Widgets, see 
-- UX Widgets,  Uniface Library 10.4
+- UX Widgets, Uniface Library 10.4
   https://docs.rocketsoftware.com/bundle/uniface_104/page/lzi1701171069984.html
 
 ## Repo structure
 
-This repo is the home of UX Widgets project. And it has a [NPM](https://www.npmjs.com/) project structure.
+This repo is the home of UX Widgets project and has a [NPM](https://www.npmjs.com/) project structure.
 
 Here is its content:
 
@@ -66,13 +66,13 @@ ux-widgets/
 
 ## Installation of UX Widgets project
 
-Firstly, users need install npm, the Node.js package manager. See:
+First, users need install npm, the Node.js package manager. For installation instructions See:
 - Downloading and installing Node.js and npm | npm Docs
   https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
 
-Then, users can install UX Widgets into their local development environment by the following step:
+Next, users can install UX Widgets into their local development environment by the following these steps:
 - Open a command prompt;
-- Go to a directory where you want to locate your local UX Widgets project;
+- Navigate to the directory where you want to set up your local UX Widgets project;
 - Clone the project by the command: ```git clone https://github.com/RocketSoftware/uniface-ux```;
 - Optionally, you can checkout a specific tag of older version from this repo;
 - Run command: ```npm install```,
@@ -91,7 +91,7 @@ Then, users can install UX Widgets into their local development environment by t
 - Run command: ```npm run lint```,
   This will run JavaScript lint for several sources;
 - Run command: ```npm run build:dev```,
-  This will build the bundles for development mode, so with source map;
+  This will build the bundles for development mode, including source map for easier debugging;
 - Run command: ```npm run serve:dev```,
   This will start a web server with a dynamic development bundles;
 - Run command: ```npm run watch```,
@@ -121,20 +121,18 @@ See [testAutomation/README.md](testAutomation/README.md).
 
 
 ## How to integrate with the Uniface installation
-As described above, developers can build the Uniface UX bundles by themself, and the result bundles will be generated in dist sub-directory, including files:
+As outlined above, developers can build the Uniface UX bundles themselves. The resulting bundles will be generated in the dist subdirectory and include the following files:
     - unifaceux.min.js, minimized unifaceux JavaScript bundle file
     - unifaceux.min.css, minimized UnifaceUX CSS bundle file
     - *.woff, Icon image file
 
-Users can use these Uniface UX bundle files to update or replace the bundle files in their Uniface installation.
+Users can use these Uniface UX bundle files to update or replace the existing bundles in their Uniface installation.
 
-Users should take care of the release versions of Uniface UX and their Uniface installation. Basically, these two versions should be always same; otherwise, users need carefully check or consult with specialists if they are compatible. When they are not compatible, the result could cause unknown error behaviors.
+Users should ensure that the UX Widget Interface Version (web.ini) of Uniface UX matches the version in their Uniface installation. Both versions should be identical. If they differ, users are strongly adviced to verify compatibility. Using mismatched versions may lead to unexpected errors or unstable behaviors.
 
 ### How to deploy the self-built bundle files into the Uniface installation
 
-Assume that your Uniface installation is in ${UNIFACE_INSTALLATION_DIR}, for example, which could be "C:\Program Files\Uniface\Uniface10403". The default location for the Uniface UX bundles will be ${UNIFACE_INSTALLATION_DIR}\uniface\webapps\uniface\common\ux.
+Suppose your Uniface installation is located in ${UNIFACE_INSTALLATION_DIR} - for example "C:\Program Files\Uniface\Uniface10403". By default, the Uniface UX bundles are located in ${UNIFACE_INSTALLATION_DIR}\uniface\webapps\uniface\common\ux.
 
-You can deploy your self-built unifaceux bundles by copying the Uniface UX bundles in unifaceux\dist to ${UNIFACE_INSTALLATION_DIR}\uniface\webapps\uniface\common\ux
-and overwrite there.
-
+To deploy your self-built unifaceux bundles, copy the content of unifaceux\dist to ${UNIFACE_INSTALLATION_DIR}\uniface\webapps\uniface\common\ux, replacing the existing files.
 

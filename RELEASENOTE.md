@@ -2,8 +2,8 @@
 
 ## Current release
 - Current release: 10.4.03
-- Current patch: 10.4.03.018
-- git tag: 10.4.03.018
+- Current patch: 10.4.03.019
+- git tag: 10.4.03.019
 
 ## What's new?
  - Do type checking in check job/stage
