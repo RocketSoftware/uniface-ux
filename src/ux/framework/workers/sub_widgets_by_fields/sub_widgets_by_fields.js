@@ -8,12 +8,12 @@ import { Worker } from "../worker/worker.js";
 import { getWidgetClass } from "../../dsp_connector.js";
 
 /**
- * WidgetsByProperty worker creates a sub-widget for every child object of type field in objectDefinition.
+ * SubWidgetsByFields worker creates a sub-widget for every child object of type field in objectDefinition.
  * The widget definition is established during processLayout() and cannot be changed afterwards.
  * An exclude property, of which the id is specified by propId, allows exclusion of fields to this process.
  * This property can be set as part of field properties in the IDE. If it evaluates to true, the field is excluded.
  * @export
- * @class WidgetsByProperty
+ * @class SubWidgetsByFields
  * @extends {Worker}
  */
 export class SubWidgetsByFields extends Worker {

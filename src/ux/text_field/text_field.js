@@ -9,7 +9,7 @@ import { HtmlAttributeNumber } from "../framework/workers/html_attribute_number/
 import { HtmlAttributeReadonlyDisabled } from "../framework/workers/html_attribute_readonly_disabled/html_attribute_readonly_disabled.js";
 import { SlottedElement } from "../framework/workers/slotted_element/slotted_element.js";
 import { SlottedError } from "../framework/workers/slotted_error/slotted_error.js";
-import { SlottedSubWidget } from "../framework/workers/slotted_subwidget/slotted_subwidget.js";
+import { SlottedSubWidget } from "../framework/workers/slotted_sub_widget/slotted_sub_widget.js";
 import { StyleClass } from "../framework/workers/style_class/style_class.js";
 import { Trigger } from "../framework/workers/trigger/trigger.js";
 import { UIBlock } from "../framework/workers/ui_block/ui_block.js";

@@ -3,7 +3,7 @@ import { Element } from "../element/element.js";
 import { getWidgetClass } from "../../dsp_connector.js";
 
 /**
- * WidgetsByProperty worker generates sub-widgets based on Uniface properties.
+ * SubWidgetsByProperty worker generates sub-widgets based on Uniface properties.
  * This worker adds one or more sub-widgets to the widget based on object definitions.
  * This happens once during processLayout and cannot be changed afterwards.
  * The property, of which the name is specified by propId, holds a Uniface list of subWidgetIds which are be added as sub-widgets:
@@ -14,7 +14,7 @@ import { getWidgetClass } from "../../dsp_connector.js";
  *      if not defined nothing will be delegated to the sub-widget.
  * The sub-widgets receive a style-class, of syntax "u-sw-<subWidgetId>", to allow custom styling of the sub-widgets.
  * @export
- * @class WidgetsByProperty
+ * @class SubWidgetsByProperty
  * @extends {Element}
  */
 export class SubWidgetsByProperty extends Element {

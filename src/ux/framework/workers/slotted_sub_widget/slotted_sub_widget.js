@@ -8,12 +8,12 @@ import { Element } from "../element/element.js";
 import { getWidgetClass } from "../../dsp_connector.js";
 
 /**
- * SlottedWidget adds and maintains a sub-widget to the widget, where:
+ * SlottedSubWidget adds and maintains a sub-widget to the widget, where:
  * - the element is added as a child according the structure.
  * - the element is a UX widget.
  * - the element is being slotted into the web-component (the parent element).
  * @export
- * @class SlottedWidget
+ * @class SlottedSubWidget
  * @extends {Element}
  */
 export class SlottedSubWidget extends Element {

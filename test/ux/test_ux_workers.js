@@ -12,7 +12,7 @@ import { IgnoreProperty } from "../../src/ux/framework/workers/ignore_property/i
 import { SlottedElement } from "../../src/ux/framework/workers/slotted_element/slotted_element.js";
 import { SlottedElementsByValRep } from "../../src/ux/framework/workers/slotted_element_by_valrep/slotted_element_by_valrep.js";
 import { SlottedError } from "../../src/ux/framework/workers/slotted_error/slotted_error.js";
-import { SlottedSubWidget } from "../../src/ux/framework/workers/slotted_subwidget/slotted_subwidget.js";
+import { SlottedSubWidget } from "../../src/ux/framework/workers/slotted_sub_widget/slotted_sub_widget.js";
 import { StyleClass } from "../../src/ux/framework/workers/style_class/style_class.js";
 import { SubWidgetsByProperty } from "../../src/ux/framework/workers/sub_widgets_by_property/sub_widgets_by_property.js";
 import { Trigger } from "../../src/ux/framework/workers/trigger/trigger.js";
