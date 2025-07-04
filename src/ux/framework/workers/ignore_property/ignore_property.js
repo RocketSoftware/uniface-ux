@@ -7,7 +7,7 @@
 import { Worker } from "../worker/worker.js";
 
 /**
- * IgnoreProperty is used to register a property with a default value and a setter
+ * IgnoreProperty worker is used to register a property with a default value and a setter
  * without executing any logic during widget refresh.
  * This is useful for properties that do not affect rendering or behavior dynamically
  * and therefore do not require re-evaluation or DOM updates on refresh.

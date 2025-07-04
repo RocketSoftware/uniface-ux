@@ -7,7 +7,7 @@
 import { Worker } from "../worker/worker.js";
 
 /**
- * HtmlAttributeClass is a specialized worker that extends BaseHtmlAttribute.
+ * HtmlAttributeClass is a specialized worker that extends Worker.
  * Resets the `class` attribute of the element based on the provided property value.
  * @export
  * @class HtmlAttributeClass
