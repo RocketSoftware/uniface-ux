@@ -3,6 +3,7 @@
 /**
  * @typedef {import("../../widget.js").Widget} Widget
  */
+
 import { Worker } from "../worker/worker.js";
 
 /**

@@ -16,7 +16,6 @@ import { Worker } from "../worker/worker.js";
  * @abstract
  * @extends {Worker}
  */
-
 export class BaseHtmlAttribute extends Worker {
 
   /**

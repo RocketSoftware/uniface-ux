@@ -3,6 +3,7 @@
 /**
  * @typedef {import("../../widget.js").Widget} Widget
  */
+
 import { Worker } from "../worker/worker.js";
 
 /**
@@ -16,7 +17,6 @@ import { Worker } from "../worker/worker.js";
  * @extends {Worker}
  */
 export class HtmlAttributeReadonlyDisabled extends Worker {
-
 
   /**
    * Creates an instance of HtmlAttributeReadonlyDisabled.
