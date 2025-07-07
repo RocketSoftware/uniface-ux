@@ -3,13 +3,17 @@
 ## Overview
 
 The **UX Widget Framework** provides reusable functional building blocks, called Workers. Workers allow widget developers to construct widget JS classes in a consistent and productive way. The UX Widget Framework takes care of the lifecycle methods of the UX Interface, allowing developers to focus on functionality.
-Each widget has a unique DOM structure. Accompanied by CSS and events this makes up the look and feel of the widget; the UX or User eXperience. Simple widgets have a simple structure, often just a single HTML element and a single event, whereas complex (entity) widgets have a large complex structure of nested HTML elements with many events, but the concept is the same.
-By using the UX Widget Framework, the DOM structure is defined using Workers. There are Element Workers, Attribute Workers, and Trigger Workers. By nesting Workers into a structure, the Workers describe the widget’s DOM structure logically. Each Worker takes parameters to fine-tune the Worker’s behaviour and how it is bound to Uniface properties, the field value, error handling, and (web) triggers.
+
+Each widget has a unique DOM structure. Accompanied by CSS and events this makes up the look and feel of the widget; the UX or User experience. Simple widgets may have a structure consisting of a single HTML element and a single event, whereas complex (entity) widgets typically contain a large complex structure of nested HTML elements with many events, but the concept is the same.
+
+By using the UX Widget Framework, the DOM structure is defined using Workers. There are Element Workers, Attribute Workers, and Trigger Workers. By nesting Workers into a structure, these Workers are organized hierarchically to build the widget’s structure in a logically. Each Worker can be configured through parameters that control its behavior, including how it binds to Uniface properties, handles field values, manages errors, and responds to (web)triggers.
+
 Uniface takes care of occurrence repetition, so there is no need for entity widgets to provide that functionality. Implementing the collection and occurrence widget JS class is sufficient.
-The UX Widget Framework comes with an extensive library of pre-cooked Workers, each defined as a JS Class in their own JS file, and provide functionality like:
+
+The UX Widget Framework comes with an extensive library of pre-built Workers, each defined as a JS Class in their own JS file, and provide functionality such as:
 
 - Element creation
-- Element attribute manipulation including hidden, disabled, and read-only
+- Element attribute manipulation including **hidden**, **disabled**, and **readonly**
 - Field value binding including value-changed handling
 - Validation and Format Error visualization
 - UI Blocking to avoid race conditions – see doc on scope-endscope
@@ -25,21 +29,19 @@ For full UX widget interface specifications, refer to the official Uniface docum
 
 ## Folder Structure
 
-- **[`base.js`](./base.js)**  
-  Defines the foundational logic for the UX Widget Framework and is shared by all widgets and workers.
+**[`base.js`](./base.js)**  
+  Defines the foundational logic of the UX Widget Framework and is shared by all UX widgets and workers.
   
-- **[`widget.js`](./widget.js)**  
-  Defines the widget base class and is shared by all widgets. It implements all UX Interface life cycle methods and acts as the clue between Uniface and the workers.
+**[`widget.js`](./widget.js)**  
+  Defines the widget base class and is shared by all UX widgets. It implements all UX Interface life cycle methods and acts as the clue between Uniface and the workers.
 
-- [**`workers`**](./workers/) 
-  Each worker (Element, SlottedElement, SlottedError and SlottedSubWidget, etc.) has its own subfolder within the workers directory, containing a JavaScript file with a specific Worker class that manages specific widget behaviors and attributes.
+[**`workers`**](./workers/) 
+  Each worker (Element, SlottedElement, SlottedError and SlottedSubWidget, etc.) has its own subfolder within the **workers** directory, containing a JavaScript file with a specific Worker class that manages specific widget behaviors and attributes.
 
 
 ## UX Interface to Workers mapping
 
-For Workers to execute functionality as part of a specific UX Interface lifecycle method, Workers need to implement the Worker API as provided by the Worker base class. On top of that, Workers build an administration that allows them to access info during the execution of the various UX Interface life cycle methods. The following explains what Worker method during each lifecycle methods.
-need to be called to execute bits and pieces can provide
-The following table shows how the Uniface UX lifecycle methods interact with the Workers:
+To participate in specific UX Interface lifecycle methods, a Worker must implement the Worker API, which is provided by the Worker base class. As part of their execution, Workers also construct an internal administration that stores relevant information. This context allows them to access info during different stages of the UX Interface lifecycle. The table below outlines which Worker methods correspond to each UX lifecycle method and how they are used to execute the required functionality at the appropriate stage.
 
 | **UX Interface method** | **Description**
 | ----------------------- | --------------------------- |
@@ -62,23 +64,23 @@ The following table shows how the Uniface UX lifecycle methods interact with the
 Widgets can be enhanced with sub-widgets. Sub-widgets are regular JS widget classes that are not directly bound to a Uniface data object (component, collection, occurrence or field) but instead ‘plugged’ into a parent widget so is functionality can be reused.
 Sub-widgets are defined statically or dynamically.
 
-- `Static` defined sub-widgets are defined as part of the static widget structure of the parent widget. There are several workers that provide the definition of a static sub-widget. Static defined sub-widgets are resolved during the loading (parsing) of the static widget class. All objects using this widget will get the same set of sub-widgets.
+* `Static` sub-widgets are defined as part of the static widget structure of the parent widget. There are several workers that provide the definition of a static sub-widget. They are resolved during the loading (parsing) of the static widget class. All objects using this widget will get the same set of sub-widgets.
 
-- `Dynamical` defined sub-widgets are defined from object definitions (properties and/or the component structure). There are several workers available that read object definitions in a certain way and create sub-widgets accordingly. This happens as part the processLayout() and onConnect() lifecycle methods. Every object has its own set of sub-widgets as defined in their object definition.
+* `Dynamic` sub-widgets are defined from object definitions (properties and/or the component structure). There are several workers available that read object definitions in a specific way and create sub-widgets accordingly. This happens as part the `processLayout()` and `onConnect()` lifecycle methods. Every objects has its own set of sub-widgets as defined in their object definition.
 
-Both static and dynamic sub-widgets feed the sub-widget definition of the widget instance. After the `onConnect()` method, all sub-widgets, static and dynamic, are treated by the UX Widget Framework in the same way.
+Both static and dynamic sub-widgets feed the sub-widget definition of the widget instance. After the `onConnect()` method, both static and dynamic sub-widgets are treated by the UX Widget Framework in the same way.
 Sub-widgets bring:
 
 - Reuse of existing widgets within other widgets
 - Automatic delegation of properties to sub-widgets.
 - Automatic delegation of triggers of sub-widgets.
 
-To make use of the implicit property and trigger delegation, properties and trigger names need to be prefixed by the sub-widget ID. For static sub-widgets, the sub-widget ID is defined as part of the worker that defines the sub-widget. For dynamic sub-widgets, the sub-widget ID is provided by the object definition. The Worker that creates the sub-widgets controls this, and the exact behavior may vary. Check out the Worker’s documentation.
+To make use of implicit property and trigger delegation, properties and trigger names need to be prefixed by the sub-widget ID. For static sub-widgets, the sub-widget ID is defined as part of the worker that defines the sub-widget. For dynamic sub-widgets, the sub-widget ID is provided by the object definition. It is the Worker that creates the sub-widgets that controls this and typically varies. Check out the Worker’s documentation.
 
 - Property names of sub-widgets need to be of the following syntax: subWidgetId:propName
 - Trigger names of sub-widgets need to be of the following syntax: trigger subWidgetId_propName
 
-Sub-widget Ids need to be unique within the context of its parent widget.
+Sub-widget IDs need to be unique within the context of its parent widget.
 
 ## Formatted Value Support
 
@@ -98,13 +100,13 @@ Often, widgets are accessed by other widgets to provide a limited service to tha
 
 ## Extending the UX Widget Framework
 
-The UX Widget Framework is maintained by Uniface but can be extended and/or modified. It is not advised to directly change the sources as provide by Uniface. Instead, create your own widget base class by extending the Uniface one. This allows upgrading to newer versions in the future easier.
+The UX Widget Framework is maintained by Rocket Uniface, but can be extended and/or modified. We do not advise  directly changing the provided source files. Instead, create your own widget base class by extended the Uniface one. This will make upgrading to newer versions easier.
 
 
 ## Extending Workers
 
-Uniface provides a library of pre-cooked Worker classes. These Worker classes are maintained by Uniface but can be extended and/or modified. It is not advised to directly change the sources as provide by Uniface. Instead, create your own worker classes by extended the base Worker class or any other Worker class. This allows upgrading to newer versions in the future easier.
+Uniface provides a library of pre-built Worker classes. These Worker classes are maintained by Uniface but can be extended and/or modified. It is not advised to directly change the sources as provide by Uniface. Instead, create your own worker classes by extended the base Worker class or any other Worker class. This allows upgrading to newer versions in the future easier.
 
 ## UX Widget Framework Versioning
 
-The UX Widget Framework has an API version number indicating compatibility. This API is used between the widget bass class (the actual framework) and its workers. All workers need to be compatible with the UX Widget Framework version. The UX Widget Framework version is defined as a static member in the widget base class (widget.js). The worker base class checks this version; it is wise to always implement workers by extending the Worker base class.
+The UX Widget Framework has an API version number indicating compatibility, which is by the widget bass class (the actual framework) and its workers. All workers need to be compatible with the UX Widget Framework version. The UX Widget Framework version is defined as a static member in the widget base class (widget.js). The worker base class checks this version; it is wise to always implement workers by extending the Worker base class.
