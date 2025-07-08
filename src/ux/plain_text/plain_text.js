@@ -2,10 +2,10 @@
 import { Widget } from "../framework/widget.js";
 import { Element } from "../framework/workers/element/element.js";
 import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute_boolean/html_attribute_boolean.js";
+import { HtmlAttributeBoolean } from "../framework/workers/html_attribute/html_attribute_boolean.js";
 import { IgnoreProperty } from "../framework/workers/ignore_property/ignore_property.js";
-import { SlottedElement } from "../framework/workers/slotted_element/slotted_element.js";
-import { SlottedError } from "../framework/workers/slotted_error/slotted_error.js";
+import { SlottedElement } from "../framework/workers/slotted/slotted_element.js";
+import { SlottedError } from "../framework/workers/slotted/slotted_error.js";
 import { StyleClass } from "../framework/workers/style_class/style_class.js";
 
 /**

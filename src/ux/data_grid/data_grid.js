@@ -3,15 +3,15 @@ import { Widget } from "../framework/widget.js";
 import { Element } from "../framework/workers/element/element.js";
 import { getWidgetClass, registerWidgetClass } from "../framework/dsp_connector.js";
 import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
-import { HtmlAttributeChoice } from "../framework/workers/html_attribute_choice/html_attribute_choice.js";
-import { HtmlAttributeClass } from "../framework/workers/html_attribute_class/html_attribute_class.js";
-import { SlottedElement } from "../framework/workers/slotted_element/slotted_element.js";
+import { HtmlAttributeChoice } from "../framework/workers/html_attribute/html_attribute_choice.js";
+import { HtmlAttributeClass } from "../framework/workers/html_attribute/html_attribute_class.js";
+import { SlottedElement } from "../framework/workers/slotted/slotted_element.js";
 import { StyleClass } from "../framework/workers/style_class/style_class.js";
-import { SubWidgetsByFields } from "../framework/workers/sub_widgets_by_fields/sub_widgets_by_fields.js";
+import { SubWidgetsByFields } from "../framework/workers/sub_widgets/sub_widgets_by_fields.js";
 import { Trigger } from "../framework/workers/trigger/trigger.js";
 import { WidgetForOccurrence } from "../framework/workers/widget_for_occurrence/widget_for_occurrence.js";
-import { HtmlAttributeFormattedValue } from "../framework/workers/html_attribute_formatted_value/html_attribute_formatted_value.js";
-import { HtmlAttributeNumber } from "../framework/workers/html_attribute_number/html_attribute_number.js";
+import { HtmlAttributeFormattedValue } from "../framework/workers/html_attribute/html_attribute_formatted_value.js";
+import { HtmlAttributeNumber } from "../framework/workers/html_attribute/html_attribute_number.js";
 import { WidgetsByFields } from "../framework/workers/widgets_by_fields/widgets_by_fields.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components

@@ -2,9 +2,9 @@
 import { Widget } from "../framework/widget.js";
 import { Element } from "../framework/workers/element/element.js";
 import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute_boolean/html_attribute_boolean.js";
-import { HtmlAttributeChoice } from "../framework/workers/html_attribute_choice/html_attribute_choice.js";
-import { HtmlAttributeNumber } from "../framework/workers/html_attribute_number/html_attribute_number.js";
+import { HtmlAttributeBoolean } from "../framework/workers/html_attribute/html_attribute_boolean.js";
+import { HtmlAttributeChoice } from "../framework/workers/html_attribute/html_attribute_choice.js";
+import { HtmlAttributeNumber } from "../framework/workers/html_attribute/html_attribute_number.js";
 import { IgnoreProperty } from "../framework/workers/ignore_property/ignore_property.js";
 import { StyleClass } from "../framework/workers/style_class/style_class.js";
 import { Trigger } from "../framework/workers/trigger/trigger.js";

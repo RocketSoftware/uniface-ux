@@ -4,7 +4,7 @@
  * @typedef {import("../../widget.js").Widget} Widget
  */
 
-import { BaseHtmlAttribute } from "../base_html_attribute/base_html_attribute.js";
+import { BaseHtmlAttribute } from "./base_html_attribute.js";
 
 /**
  * HtmlValueAttributeBoolean is a specialized worker that updates boolean HTML attributes

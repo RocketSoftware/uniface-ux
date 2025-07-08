@@ -4,7 +4,7 @@
  * @typedef {import("../../widget.js").Widget} Widget
  */
 
-import { BaseHtmlAttribute } from "../base_html_attribute/base_html_attribute.js";
+import { BaseHtmlAttribute } from "./base_html_attribute.js";
 
 /**
  * HtmlAttributeNumber is a specialized worker that updates number-based attributes
