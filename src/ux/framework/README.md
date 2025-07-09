@@ -33,7 +33,7 @@ For full UX widget interface specifications, refer to the official Uniface docum
   Defines the foundational logic of the UX Widget Framework and is shared by all UX widgets and workers.
   
 **[`widget.js`](./widget.js)**  
-  Defines the widget base class and is shared by all UX widgets. It implements all UX Interface life cycle methods and acts as the clue between Uniface and the workers.
+  Defines the widget base class and is shared by all UX widgets. It implements all UX Interface life cycle methods and acts as the glue between Uniface and the workers.
 
 [**`workers`**](./workers/) 
 The **workers** directory is organized into subfolders based on categories such as element, html_attribute, slotted, subwidgets, etc. Each of these subfolders contains JavaScript files that define specific Worker classes. For example, the slotted folder includes Workers like SlottedError, SlottedSubWidget, each responsible for handling specific widget behavior.
@@ -45,7 +45,7 @@ To participate in specific UX Interface lifecycle methods, a Worker can implemen
 
 | **UX Interface method** | **Description**
 | ----------------------- | --------------------------- |
-| **Widget load**         | During widget load, the static widget definition gets extended with information taken from the static structure. This includes:<br> - `defaultValues` – Used to reset widget for reuse<br> - `setters` – Used to map property updates to workers<br> - `getters` – Used to map a value change to Uniface<br> - `triggers` – Used to map triggers to events<br> - `uiBlocking` – Used to map UI-blocking to workers<br> - `subWidgets` – Used to manage sub-widgets statically defined<br> - `subWidgetWorkers` – Used to manage sub-widgets dynamically added |
+| **Widget load**         | During widget load, the static widget definition gets extended with information taken from the static structure(the pre-defined configuration of the widget that does not change at runtime). This includes:<br> - `defaultValues` – Used to reset widget for reuse<br> - `setters` – Used to map property updates to workers<br> - `getters` – Used to map a value change to Uniface<br> - `triggers` – Used to map triggers to events<br> - `uiBlocking` – Used to map UI-blocking to workers<br> - `subWidgets` – Used to manage sub-widgets statically defined<br> - `subWidgetWorkers` – Used to manage sub-widgets dynamically added |
 | `processLayout()`       | Creates the widget’s static DOM structure and applies query attributes for both widget and its sub-widgets.|
 | `onConnect()`           | Connects both the widget instance and any sub-widget instances to their respective DOM elements.<br>Returns value update event handlers to Uniface.|
 | `mapTrigger()`          | Maps Uniface (web) triggers to (sub)widget events.|
@@ -109,4 +109,4 @@ Uniface provides a library of pre-built Worker classes. These Worker classes are
 
 ## UX Widget Framework Versioning
 
-The UX Widget Framework has an API version number indicating compatibility, which is by the widget bass class (the actual framework) and its workers. All workers need to be compatible with the UX Widget Framework version. The UX Widget Framework version is defined as a static member in the widget base class (widget.js). The worker base class checks this version; it is wise to always implement workers by extending the Worker base class.
+The UX Widget Framework has an API version number indicating compatibility, which is by the widget base class (the actual framework) and its workers. All workers need to be compatible with the UX Widget Framework version. The UX Widget Framework version is defined as a static member in the widget base class (widget.js). The worker base class checks this version; it is wise to always implement workers by extending the Worker base class.
