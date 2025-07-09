@@ -1,14 +1,15 @@
-# RELEASE NOTE -  - Uniface UX (UX Widgets)
+# RELEASE NOTE - Uniface UX
 
-## Current release
-- Current release: 10.4.03
-- Current patch: 10.4.03.019
-- git tag: 10.4.03.019
+## Release 1.0.2
+- Uniface release: 10.4.03.019
+- UX Interface Version: 2
 
-## What's new?
+### What's new?
  - Do type checking in check job/stage
+ 
+
+### Fixes
  - Fix for getLayout
 
-For older releases, and history change logs, see [CHANGELOG.md](CHANGELOG.md).
+For older releases, see [CHANGELOG.md](CHANGELOG.md).
 
-Back to [README.md](README.md).
