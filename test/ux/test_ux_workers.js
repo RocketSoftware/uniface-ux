@@ -1,10 +1,23 @@
-import { Widget } from "../../src/ux/framework/widget.js";
-import {
-  StyleClass, Element, SlottedElement, Trigger, SlottedError, SlottedSubWidget,
-  SubWidgetsByProperty, BaseHtmlAttribute, HtmlAttribute, HtmlAttributeChoice, HtmlAttributeNumber, HtmlAttributeBoolean,
-  HtmlValueAttributeBoolean, HtmlAttributeMinMaxLength, Worker, IgnoreProperty, SlottedElementsByValRep ,UIBlock
-} from "../../src/ux/framework/workers.js";
 import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
+import { Widget } from "../../src/ux/framework/widget.js";
+import { BaseHtmlAttribute } from "../../src/ux/framework/workers/html_attribute/base_html_attribute.js";
+import { Element } from "../../src/ux/framework/workers/element/element.js";
+import { HtmlAttribute } from "../../src/ux/framework/workers/html_attribute/html_attribute.js";
+import { HtmlAttributeBoolean } from "../../src/ux/framework/workers/html_attribute/html_attribute_boolean.js";
+import { HtmlAttributeChoice } from "../../src/ux/framework/workers/html_attribute/html_attribute_choice.js";
+import { HtmlAttributeMinMaxLength } from "../../src/ux/framework/workers/html_attribute/html_attribute_min_max_length.js";
+import { HtmlAttributeNumber } from "../../src/ux/framework/workers/html_attribute/html_attribute_number.js";
+import { HtmlValueAttributeBoolean } from "../../src/ux/framework/workers/html_attribute/html_value_attribute_boolean.js";
+import { IgnoreProperty } from "../../src/ux/framework/workers/ignore_property/ignore_property.js";
+import { SlottedElement } from "../../src/ux/framework/workers/slotted/slotted_element.js";
+import { SlottedElementsByValRep } from "../../src/ux/framework/workers/slotted/slotted_element_by_valrep.js";
+import { SlottedError } from "../../src/ux/framework/workers/slotted/slotted_error.js";
+import { SlottedSubWidget } from "../../src/ux/framework/workers/slotted/slotted_sub_widget.js";
+import { StyleClass } from "../../src/ux/framework/workers/style_class/style_class.js";
+import { SubWidgetsByProperty } from "../../src/ux/framework/workers/sub_widgets/sub_widgets_by_property.js";
+import { Trigger } from "../../src/ux/framework/workers/trigger/trigger.js";
+import { UIBlock } from "../../src/ux/framework/workers/ui_block/ui_block.js";
+import { Worker } from "../../src/ux/framework/workers/worker/worker.js";
 
 (function () {
   "use strict";
@@ -89,7 +102,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
           "class:class1": true,
           "class:class2": false,
           "class1:class3": true,
-          "class2:class4":true
+          "class2:class4": true
         },
         "getTraceDescription": sinon.stub().returns("description")
       };
@@ -473,7 +486,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       worker.refresh({});
     });
 
-    it("check getValue() for BaseHtmlAttribute class" , function () {
+    it("check getValue() for BaseHtmlAttribute class", function () {
       const widgetInstance = {
         "elements": {
           "widget": document.createElement("div")
@@ -1034,7 +1047,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       "select_overflow-behavior": "none",
       "select:value": "1",
       "select_usefield": true,
-      "select_delegated-properties":"html:disabled"
+      "select_delegated-properties": "html:disabled"
     };
     const dataObjIncorrectProperty = {
       "subwidgets-starts": "select",
@@ -1045,7 +1058,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       "select_overflow-behavior": "none",
       "select:value": "1",
       "select_usefield": true,
-      "select_delegated-properties":"html:disabled"
+      "select_delegated-properties": "html:disabled"
     };
     const dataObjSubwidgetNotFoundInClassRegistry = {
       "subwidgets-start": "select",
@@ -1056,7 +1069,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       "select_overflow-behavior": "none",
       "select:value": "1",
       "select_usefield": true,
-      "select_delegated-properties":"html:disabled"
+      "select_delegated-properties": "html:disabled"
     };
     const dataObjPropertyNameNotDefined = {
       "subwidgets-start": "select1",
@@ -1067,7 +1080,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       "select_overflow-behavior": "none",
       "select:value": "1",
       "select_usefield": true,
-      "select_delegated-properties":"html:disabled"
+      "select_delegated-properties": "html:disabled"
     };
     const dataObjWithTwoSubWidgets = {
       "subwidgets-start": "selectbutton",
@@ -1078,12 +1091,12 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       "select_overflow-behavior": "none",
       "select:value": "1",
       "select_usefield": true,
-      "select_delegated-properties":"html:disabled",
+      "select_delegated-properties": "html:disabled",
       "button_widget-class": "UX.Button",
       "button:value": "Me Button",
       "button_usefield": true,
       "button_overflow-behavior": "move",
-      "button_delegated-properties":"html:readonly"
+      "button_delegated-properties": "html:readonly"
     };
 
     before(function () {
@@ -1105,7 +1118,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
 
     it("getLayout() method should generate and return layout for this setter for SubWidgetsByProperty worker", function () {
       // eslint-disable-next-line no-undef
-      let returnedLayoutElement  = element.getLayout(_uf.createUxDefinitions(dataObjReturnLayout, true));
+      let returnedLayoutElement = element.getLayout(_uf.createUxDefinitions(dataObjReturnLayout, true));
       expect(returnedLayoutElement[0].getAttribute("class")).to.equal("u-sw-select u-controlbar-item");
       expect(returnedLayoutElement[0].getAttribute("sub-widget-id")).to.equal("select");
     });
@@ -1144,7 +1157,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
         }
       };
       // eslint-disable-next-line no-undef
-      let returnedElementSubWidgetDefinition  = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjReturnLayout, true));
+      let returnedElementSubWidgetDefinition = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjReturnLayout, true));
       expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
     });
 
@@ -1152,7 +1165,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
       let subWidgetDefinitionToCompare = {
       };
       // eslint-disable-next-line no-undef
-      let returnedElementSubWidgetDefinition  = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjPropertyNameNotDefined, true));
+      let returnedElementSubWidgetDefinition = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjPropertyNameNotDefined, true));
       expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
     });
 
@@ -1170,7 +1183,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
         }
       };
       // eslint-disable-next-line no-undef
-      let returnedElementSubWidgetDefinition  = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjWithTwoSubWidgets, true));
+      let returnedElementSubWidgetDefinition = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjWithTwoSubWidgets, true));
       expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
     });
   });
@@ -1178,7 +1191,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
   // == Testing UIBlock class ==========================================================================
   // ===================================================================================================================
   describe("Test UIBlock class", function () {
-    let widgetClass,element;
+    let widgetClass, element;
 
     beforeEach(function () {
       Widget.structure = {};
@@ -1204,9 +1217,9 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
     });
 
     it("should refresh correctly", function () {
-      const classListStub= {
-        "add" : sinon.spy(),
-        "remove" : sinon.spy()
+      const classListStub = {
+        "add": sinon.spy(),
+        "remove": sinon.spy()
       };
 
       const widgetInstance = {
@@ -1215,16 +1228,16 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
         },
         "elements": {
           "widget": {
-            "classList" : classListStub,
-            "disabled" : false,
-            "readOnly" : false
+            "classList": classListStub,
+            "disabled": false,
+            "readOnly": false
           }
         },
         "getTraceDescription": function () {
           return "description";
         },
         "error": sinon.spy(),
-        "toBoolean" :function(val){
+        "toBoolean": function (val) {
           return Boolean(val);
         }
       };
@@ -1271,9 +1284,9 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
     });
 
     it("should refresh correctly", function () {
-      const classListStub= {
-        "add" : sinon.spy(),
-        "remove" : sinon.spy()
+      const classListStub = {
+        "add": sinon.spy(),
+        "remove": sinon.spy()
       };
       const widgetInstance = {
         "data": {
@@ -1281,9 +1294,9 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
         },
         "elements": {
           "widget": {
-            "classList" : classListStub,
-            "disabled" : false,
-            "readOnly" : false
+            "classList": classListStub,
+            "disabled": false,
+            "readOnly": false
           }
         },
         "getTraceDescription": function () {

@@ -1,7 +1,18 @@
 // @ts-check
 import { Widget } from "../framework/widget.js";
-import * as Worker from "../framework/workers.js";
+import { Element } from "../framework/workers/element/element.js";
 import { getWidgetClass, registerWidgetClass } from "../framework/dsp_connector.js";
+import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
+import { HtmlAttributeChoice } from "../framework/workers/html_attribute/html_attribute_choice.js";
+import { HtmlAttributeClass } from "../framework/workers/html_attribute/html_attribute_class.js";
+import { SlottedElement } from "../framework/workers/slotted/slotted_element.js";
+import { StyleClass } from "../framework/workers/style_class/style_class.js";
+import { SubWidgetsByFields } from "../framework/workers/sub_widgets/sub_widgets_by_fields.js";
+import { Trigger } from "../framework/workers/trigger/trigger.js";
+import { WidgetForOccurrence } from "../framework/workers/widget_for_occurrence/widget_for_occurrence.js";
+import { HtmlAttributeFormattedValue } from "../framework/workers/html_attribute/html_attribute_formatted_value.js";
+import { HtmlAttributeNumber } from "../framework/workers/html_attribute/html_attribute_number.js";
+import { WidgetsByFields } from "../framework/workers/widgets_by_fields/widgets_by_fields.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import {
@@ -12,7 +23,7 @@ import {
   provideFluentDesignSystem
 } from "@fluentui/web-components";
 
-provideFluentDesignSystem().register(fluentDesignSystemProvider(),fluentDataGrid(),fluentDataGridCell(),fluentDataGridRow());
+provideFluentDesignSystem().register(fluentDesignSystemProvider(), fluentDataGrid(), fluentDataGridCell(), fluentDataGridRow());
 
 /**
  * This file describes all widget classes needed to construct the DataGrid entity widget.
@@ -43,27 +54,27 @@ export class DataGridCollection extends Widget {
    * @static
    */
   // prettier-ignore
-  static structure = new Worker.Element(this, "fluent-design-system-provider", "", "", [
-    new Worker.StyleClass(this, ["u-datagrid-container"]),
-    new Worker.HtmlAttribute(this, "html:title", "title", undefined),
-    new Worker.HtmlAttribute(this, "html:base-layer-luminance", "baseLayerLuminance", undefined, false),
-    new Worker.HtmlAttributeChoice(this, "responsive-type", "u-responsive-type", ["horizontal-scroll", "wrap"], "horizontal-scroll", true),
-    new Worker.HtmlAttributeClass(this, "html:hidden", "u-hidden", false),
-    new Worker.SlottedElement(this, "span", "u-datagrid-labeltext", ".u-datagrid-labeltext", "", "label-text", ""),
-    new Worker.Element(this, "fluent-data-grid", "u-datagrid", ".u-datagrid", [
-      new Worker.HtmlAttribute(this, undefined, "role", "grid", false),
-      new Worker.HtmlAttribute(this, undefined, "tabIndex", "0", false),
-      new Worker.HtmlAttribute(this, undefined, "generate-header", "default", false),
-      new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", true),
-      new Worker.Element(this, "fluent-data-grid-row", "u-datagrid-header-row", ".u-datagrid-header-row", [
-        new Worker.HtmlAttribute(this, undefined, "row-type", "header", false),
-        new Worker.HtmlAttribute(this, undefined, "role", "row", false),
-        new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", false),
-        new Worker.SubWidgetsByFields(this, "exclude", "UX.DataGridColumnHeader")
+  static structure = new Element(this, "fluent-design-system-provider", "", "", [
+    new StyleClass(this, ["u-datagrid-container"]),
+    new HtmlAttribute(this, "html:title", "title", undefined),
+    new HtmlAttribute(this, "html:base-layer-luminance", "baseLayerLuminance", undefined, false),
+    new HtmlAttributeChoice(this, "responsive-type", "u-responsive-type", ["horizontal-scroll", "wrap"], "horizontal-scroll", true),
+    new HtmlAttributeClass(this, "html:hidden", "u-hidden", false),
+    new SlottedElement(this, "span", "u-datagrid-labeltext", ".u-datagrid-labeltext", "", "label-text", ""),
+    new Element(this, "fluent-data-grid", "u-datagrid", ".u-datagrid", [
+      new HtmlAttribute(this, undefined, "role", "grid", false),
+      new HtmlAttribute(this, undefined, "tabIndex", "0", false),
+      new HtmlAttribute(this, undefined, "generate-header", "default", false),
+      new HtmlAttribute(this, undefined, "grid-template-columns", "none", true),
+      new Element(this, "fluent-data-grid-row", "u-datagrid-header-row", ".u-datagrid-header-row", [
+        new HtmlAttribute(this, undefined, "row-type", "header", false),
+        new HtmlAttribute(this, undefined, "role", "row", false),
+        new HtmlAttribute(this, undefined, "grid-template-columns", "none", false),
+        new SubWidgetsByFields(this, "exclude", "UX.DataGridColumnHeader")
       ]),
-      new Worker.WidgetForOccurrence(this, "span", "uocc:{{getName()}}")
+      new WidgetForOccurrence(this, "span", "uocc:{{getName()}}")
     ]),
-    new Worker.Trigger(this, "detail", "click", true)
+    new Trigger(this, "detail", "click", true)
   ]);
 }
 
@@ -93,13 +104,13 @@ export class DataGridColumnHeader extends Widget {
    * @static
    */
   // prettier-ignore
-  static structure = new Worker.Element(this, "fluent-data-grid-cell", "", "", [
-    new Worker.StyleClass(this, ["u-datagrid-header-cell"]),
-    new Worker.HtmlAttribute(this, undefined, "grid-column", "auto", true),
-    new Worker.HtmlAttribute(this, undefined, "cell-type", "columnheader", true),
-    new Worker.HtmlAttribute(this, "column-title", "title", undefined, true),
-    new Worker.HtmlAttributeNumber(this, undefined, "tabIndex", -1, undefined, -1, true),
-    new Worker.SlottedElement(this, "span", "control-bar", ".control-bar", "", "label-text", "")
+  static structure = new Element(this, "fluent-data-grid-cell", "", "", [
+    new StyleClass(this, ["u-datagrid-header-cell"]),
+    new HtmlAttribute(this, undefined, "grid-column", "auto", true),
+    new HtmlAttribute(this, undefined, "cell-type", "columnheader", true),
+    new HtmlAttribute(this, "column-title", "title", undefined, true),
+    new HtmlAttributeNumber(this, undefined, "tabIndex", -1, undefined, -1, true),
+    new SlottedElement(this, "span", "control-bar", ".control-bar", "", "label-text", "")
   ]);
 }
 
@@ -128,12 +139,12 @@ export class DataGridOccurrence extends Widget {
    * @static
    */
   // prettier-ignore
-  static structure = new Worker.Element(this, "fluent-data-grid-row", "", "", [
-    new Worker.StyleClass(this, ["u-datagrid-content-row"]),
-    new Worker.HtmlAttribute(this, undefined, "row-type", "default", true),
-    new Worker.HtmlAttribute(this, undefined, "role", "row", false),
-    new Worker.HtmlAttribute(this, undefined, "grid-template-columns", "none", false),
-    new Worker.WidgetsByFields(this, "span","exclude", "ufld:{{getName()}}")
+  static structure = new Element(this, "fluent-data-grid-row", "", "", [
+    new StyleClass(this, ["u-datagrid-content-row"]),
+    new HtmlAttribute(this, undefined, "row-type", "default", true),
+    new HtmlAttribute(this, undefined, "role", "row", false),
+    new HtmlAttribute(this, undefined, "grid-template-columns", "none", false),
+    new WidgetsByFields(this, "span", "exclude", "ufld:{{getName()}}")
   ]);
 }
 
@@ -169,11 +180,11 @@ export class DataGridField extends Widget {
    * @static
    */
   // prettier-ignore
-  static structure = new Worker.Element(this, "fluent-data-grid-cell", "", "", [
-    new Worker.StyleClass(this, ["u-datagrid-content-cell"]),
-    new Worker.HtmlAttribute(this, undefined, "grid-column", "auto", true),
-    new Worker.HtmlAttribute(this, undefined, "cell-type", "default", false),
-    new Worker.HtmlAttributeFormattedValue(this, "org-widget-class")
+  static structure = new Element(this, "fluent-data-grid-cell", "", "", [
+    new StyleClass(this, ["u-datagrid-content-cell"]),
+    new HtmlAttribute(this, undefined, "grid-column", "auto", true),
+    new HtmlAttribute(this, undefined, "cell-type", "default", false),
+    new HtmlAttributeFormattedValue(this, "org-widget-class")
   ]);
 
   /**

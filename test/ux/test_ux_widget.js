@@ -1,5 +1,11 @@
 import { Widget } from "../../src/ux/framework/widget.js";
-import { Trigger, HtmlAttribute, HtmlValueAttributeBoolean, StyleClass, SlottedSubWidget, Element, UIBlock } from "../../src/ux/framework/workers.js";
+import { Element } from "../../src/ux/framework/workers/element/element.js";
+import { HtmlAttribute } from "../../src/ux/framework/workers/html_attribute/html_attribute.js";
+import { HtmlValueAttributeBoolean } from "../../src/ux/framework/workers/html_attribute/html_value_attribute_boolean.js";
+import { SlottedSubWidget } from "../../src/ux/framework/workers/slotted/slotted_sub_widget.js";
+import { StyleClass } from "../../src/ux/framework/workers/style_class/style_class.js";
+import { Trigger } from "../../src/ux/framework/workers/trigger/trigger.js";
+import { UIBlock } from "../../src/ux/framework/workers/ui_block/ui_block.js";
 
 // Simple widget that has both subwidgets and triggers for easier testing and doens't mess with other widgets.
 export class TestWidget extends Widget {

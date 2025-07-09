@@ -1,16 +1,13 @@
 // @ts-check
 import { Widget } from "../framework/widget.js";
-import {
-  Element,
-  Worker,
-  StyleClass,
-  SubWidgetsByProperty,
-  HtmlAttributeChoice,
-  HtmlAttributeBoolean,
-  HtmlAttribute,
-  IgnoreProperty
-} from "../framework/workers.js";
-
+import { Worker } from "../framework/workers/worker/worker.js";
+import { Element } from "../framework/workers/element/element.js";
+import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
+import { HtmlAttributeBoolean } from "../framework/workers/html_attribute/html_attribute_boolean.js";
+import { HtmlAttributeChoice } from "../framework/workers/html_attribute/html_attribute_choice.js";
+import { IgnoreProperty } from "../framework/workers/ignore_property/ignore_property.js";
+import { StyleClass } from "../framework/workers/style_class/style_class.js";
+import { SubWidgetsByProperty } from "../framework/workers/sub_widgets/sub_widgets_by_property.js";
 
 /**
  * Controlbar Widget
@@ -290,8 +287,8 @@ export class Controlbar extends Widget {
   setProperties(data) {
     const subWidgetIds = this.getSubWidgetIds();
     const overflowProperties = subWidgetIds.flatMap((subWidget) => [`${subWidget}_${"overflow-behavior"}`, `${subWidget}_${"priority"}`]);
-    const subWidgetProperties = subWidgetIds.flatMap((subWidget) => [`${subWidget}_${"widget-class"}`,`${subWidget}_${"delegated-properties"}`]);
-    subWidgetProperties.push("subwidgets-start","subwidgets-center","subwidgets-end");
+    const subWidgetProperties = subWidgetIds.flatMap((subWidget) => [`${subWidget}_${"widget-class"}`, `${subWidget}_${"delegated-properties"}`]);
+    subWidgetProperties.push("subwidgets-start", "subwidgets-center", "subwidgets-end");
     const setter = Controlbar.setters["widget-resize"][0];
     let invokeRefresh = false;
     for (const property in data) {
