@@ -106,7 +106,3 @@ The UX Widget Framework is maintained by Rocket Uniface, but can be extended and
 ## Extending Workers
 
 Uniface provides a library of pre-built Worker classes. These Worker classes are maintained by Uniface but can be extended and/or modified. It is not advised to directly change the sources as provide by Uniface. Instead, create your own worker classes by extended the base Worker class or any other Worker class. This allows upgrading to newer versions in the future easier.
-
-## UX Widget Framework Versioning
-
-The UX Widget Framework has an API version number indicating compatibility, which is by the widget base class (the actual framework) and its workers. All workers need to be compatible with the UX Widget Framework version. The UX Widget Framework version is defined as a static member in the widget base class (widget.js). The worker base class checks this version; it is wise to always implement workers by extending the Worker base class.
