@@ -19,7 +19,7 @@
 /* @import "https://res-1.cdn.office.net/files/fabric-cdn-prod_20230815.002/office-ui-fabric-core/11.1.0/css/fabric.min.css"; */
 
 /* The CSS files related to the UX widgets */
-@import "./framework/base.css";
+@import "./framework/common/base.css";
 @import "./button/button.css";
 @import "./checkbox/checkbox.css";
 @import "./controlbar/controlbar.css";

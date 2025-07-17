@@ -1,13 +1,13 @@
 // @ts-check
-import { Widget } from "../framework/widget.js";
-import { Worker } from "../framework/workers/worker/worker.js";
-import { Element } from "../framework/workers/element/element.js";
-import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute/html_attribute_boolean.js";
-import { HtmlAttributeChoice } from "../framework/workers/html_attribute/html_attribute_choice.js";
-import { IgnoreProperty } from "../framework/workers/ignore_property/ignore_property.js";
-import { StyleClass } from "../framework/workers/style_class/style_class.js";
-import { SubWidgetsByProperty } from "../framework/workers/sub_widgets/sub_widgets_by_property.js";
+import { Widget } from "../framework/common/widget.js";
+import { Worker } from "../framework/common/worker.js";
+import { Element } from "../framework/workers/element.js";
+import { HtmlAttribute } from "../framework/workers/html_attribute.js";
+import { HtmlAttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
+import { HtmlAttributeChoice } from "../framework/workers/html_attribute_choice.js";
+import { IgnoreProperty } from "../framework/workers/ignore_property.js";
+import { StyleClass } from "../framework/workers/style_class.js";
+import { SubWidgetsByProperty } from "../framework/workers/sub_widgets_by_property.js";
 
 /**
  * Controlbar Widget

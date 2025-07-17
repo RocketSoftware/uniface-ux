@@ -2,7 +2,7 @@
 
 // registerWidgetClass is used to register UX Widgets to Uniface.
 // The same name needs to be used in the web.ini configuration.
-import { registerWidgetClass } from "./framework/dsp_connector.js";
+import { registerWidgetClass } from "./framework/common/dsp_connector.js";
 
 
 // The UX field level widgets to include

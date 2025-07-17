@@ -1,19 +1,19 @@
 // @ts-check
-import { registerWidgetClass } from "../framework/dsp_connector.js";
-import { Widget } from "../framework/widget.js";
-import { Element } from "../framework/workers/element/element.js";
-import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute/html_attribute_boolean.js";
-import { HtmlAttributeChoice } from "../framework/workers/html_attribute/html_attribute_choice.js";
-import { HtmlAttributeMinMax } from "../framework/workers/html_attribute/html_attribute_min_max.js";
-import { HtmlAttributeNumber } from "../framework/workers/html_attribute/html_attribute_number.js";
-import { IgnoreProperty } from "../framework/workers/ignore_property/ignore_property.js";
-import { SlottedElement } from "../framework/workers/slotted/slotted_element.js";
-import { SlottedError } from "../framework/workers/slotted/slotted_error.js";
-import { SlottedSubWidget } from "../framework/workers/slotted/slotted_sub_widget.js";
-import { StyleClass } from "../framework/workers/style_class/style_class.js";
-import { Trigger } from "../framework/workers/trigger/trigger.js";
-import { UIBlock } from "../framework/workers/ui_block/ui_block.js";
+import { registerWidgetClass } from "../framework/common/dsp_connector.js";
+import { Widget } from "../framework/common/widget.js";
+import { Element } from "../framework/workers/element.js";
+import { HtmlAttribute } from "../framework/workers/html_attribute.js";
+import { HtmlAttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
+import { HtmlAttributeChoice } from "../framework/workers/html_attribute_choice.js";
+import { HtmlAttributeMinMax } from "../framework/workers/html_attribute_min_max.js";
+import { HtmlAttributeNumber } from "../framework/workers/html_attribute_number.js";
+import { IgnoreProperty } from "../framework/workers/ignore_property.js";
+import { SlottedElement } from "../framework/workers/slotted_element.js";
+import { SlottedError } from "../framework/workers/slotted_error.js";
+import { SlottedSubWidget } from "../framework/workers/slotted_sub_widget.js";
+import { StyleClass } from "../framework/workers/style_class.js";
+import { Trigger } from "../framework/workers/trigger.js";
+import { UIBlock } from "../framework/workers/ui_block.js";
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentNumberField, provideFluentDesignSystem } from "@fluentui/web-components";
 provideFluentDesignSystem().register(fluentNumberField());

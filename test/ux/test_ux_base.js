@@ -1,8 +1,7 @@
-import { Base } from "../../src/ux/framework/base.js";
-import { Worker } from "../../src/ux/framework/workers/worker/worker.js";
-import { Widget } from "../../src/ux/framework/widget.js";
-import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
-
+import { Base } from "../../src/ux/framework/common/base.js";
+import { Worker } from "../../src/ux/framework/common/worker.js";
+import { Widget } from "../../src/ux/framework/common/widget.js";
+import { getWidgetClass } from "../../src/ux/framework/common/dsp_connector.js";
 (function () {
   "use strict";
 

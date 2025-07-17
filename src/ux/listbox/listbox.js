@@ -1,17 +1,17 @@
 // @ts-check
-import { Widget } from "../framework/widget.js";
-import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute/html_attribute_boolean.js";
-import { HtmlAttributeNumber } from "../framework/workers/html_attribute/html_attribute_number.js";
-import { IgnoreProperty } from "../framework/workers/ignore_property/ignore_property.js";
-import { SlottedElement } from "../framework/workers/slotted/slotted_element.js";
-import { SlottedElementsByValRep } from "../framework/workers/slotted/slotted_element_by_valrep.js";
-import { SlottedError } from "../framework/workers/slotted/slotted_error.js";
-import { StyleClass } from "../framework/workers/style_class/style_class.js";
-import { Trigger } from "../framework/workers/trigger/trigger.js";
-import { UIBlock } from "../framework/workers/ui_block/ui_block.js";
-import { Worker } from "../framework/workers/worker/worker.js";
-import { Element } from "../framework/workers/element/element.js";
+import { Widget } from "../framework/common/widget.js";
+import { HtmlAttribute } from "../framework/workers/html_attribute.js";
+import { HtmlAttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
+import { HtmlAttributeNumber } from "../framework/workers/html_attribute_number.js";
+import { IgnoreProperty } from "../framework/workers/ignore_property.js";
+import { SlottedElement } from "../framework/workers/slotted_element.js";
+import { SlottedElementsByValRep } from "../framework/workers/slotted_element_by_valrep.js";
+import { SlottedError } from "../framework/workers/slotted_error.js";
+import { StyleClass } from "../framework/workers/style_class.js";
+import { Trigger } from "../framework/workers/trigger.js";
+import { UIBlock } from "../framework/workers/ui_block.js";
+import { Worker } from "../framework/common/worker.js";
+import { Element } from "../framework/workers/element.js";
 // The import of Fluent UI web-components is done in loader.js.
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
