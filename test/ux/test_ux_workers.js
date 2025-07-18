@@ -1,6 +1,6 @@
 import { getWidgetClass } from "../../src/ux/framework/common/dsp_connector.js";
 import { Widget } from "../../src/ux/framework/common/widget.js";
-import { BaseHtmlAttribute } from "../../src/ux/framework/workers/base_html_attribute.js";
+import { BaseHtmlAttribute } from "../../src/ux/framework/common/base_html_attribute.js";
 import { Element } from "../../src/ux/framework/workers/element.js";
 import { HtmlAttribute } from "../../src/ux/framework/workers/html_attribute.js";
 import { HtmlAttributeBoolean } from "../../src/ux/framework/workers/html_attribute_boolean.js";
