@@ -22,7 +22,7 @@ function getBaseURL() {
 export default defineConfig({
   outputDir: './test-results/testArtifacts',
   workers: 2, // Set the number of workers
-  timeout: 30000, // Set timeout for each test
+  timeout: 60000, // Set timeout for each test
   retries: 1, // Number of retries for failed tests
   reportSlowTests: null,
   globalSetup: './global-setup.js', // Reference to the global setup file

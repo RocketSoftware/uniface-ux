@@ -19,15 +19,17 @@
 /* @import "https://res-1.cdn.office.net/files/fabric-cdn-prod_20230815.002/office-ui-fabric-core/11.1.0/css/fabric.min.css"; */
 
 /* The CSS files related to the UX widgets */
-@import "./base.css";
-@import "./button.css";
-@import "./checkbox.css";
-@import "./number_field.css";
-@import "./plain_text.css";
-@import "./radio_group.css";
-@import "./select.css";
-@import "./switch.css";
-@import "./text_area.css";
-@import "./text_field.css";
+@import "./framework/base.css";
+@import "./button/button.css";
+@import "./checkbox/checkbox.css";
+@import "./controlbar/controlbar.css";
+@import "./listbox/listbox.css";
+@import "./number_field/number_field.css";
+@import "./plain_text/plain_text.css";
+@import "./radio_group/radio_group.css";
+@import "./select/select.css";
+@import "./switch/switch.css";
+@import "./text_area/text_area.css";
+@import "./text_field/text_field.css";
 
-@import "./data_grid.css";
+@import "./data_grid/data_grid.css";
