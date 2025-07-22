@@ -1,11 +1,11 @@
 import { Widget } from "../../src/ux/framework/common/widget.js";
 import { Element } from "../../src/ux/framework/workers/element.js";
-import { AttributeString } from "../../src/ux/framework/workers/html_attribute.js";
-import { AttributeBooleanValue } from "../../src/ux/framework/workers/html_value_attribute_boolean.js";
-import { SubWidget } from "../../src/ux/framework/workers/slotted_sub_widget.js";
-import { StyleClassManager } from "../../src/ux/framework/workers/style_class.js";
-import { EventTrigger } from "../../src/ux/framework/workers/trigger.js";
-import { AttributeUIBlocking } from "../../src/ux/framework/workers/ui_block.js";
+import { AttributeString } from "../../src/ux/framework/workers/attribute_string.js";
+import { AttributeBooleanValue } from "../../src/ux/framework/workers/attribute_boolean_value.js";
+import { SubWidget } from "../../src/ux/framework/workers/sub_widget.js";
+import { StyleClassManager } from "../../src/ux/framework/workers/style_class_manager.js";
+import { EventTrigger } from "../../src/ux/framework/workers/event_trigger.js";
+import { AttributeUIBlocking } from "../../src/ux/framework/workers/attribute_ui_blocking.js";
 
 // Simple widget that has both subwidgets and triggers for easier testing and doens't mess with other widgets.
 export class TestWidget extends Widget {

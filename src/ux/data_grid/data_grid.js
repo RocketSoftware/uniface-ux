@@ -1,16 +1,16 @@
 // @ts-check
 import { Widget } from "../framework/common/widget.js";
-import { WorkerBase } from "../framework/common/worker.js";
+import { WorkerBase } from "../framework/common/worker_base.js";
 import { Element } from "../framework/workers/element.js";
 import { getWidgetClass, registerWidgetClass } from "../framework/common/dsp_connector.js";
-import { AttributeString } from "../framework/workers/html_attribute.js";
-import { AttributeChoice } from "../framework/workers/html_attribute_choice.js";
-import { StyleClassToggle } from "../framework/workers/html_attribute_class.js";
-import { ElementIconText } from "../framework/workers/slotted_element.js";
-import { StyleClassManager } from "../framework/workers/style_class.js";
-import { EventTrigger } from "../framework/workers/trigger.js";
-import { AttributeFormattedValue } from "../framework/workers/html_attribute_formatted_value.js";
-import { AttributeNumber } from "../framework/workers/html_attribute_number.js";
+import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeChoice } from "../framework/workers/attribute_choice.js";
+import { StyleClassToggle } from "../framework/workers/style_class_toggle.js";
+import { ElementIconText } from "../framework/workers/element_icon_text.js";
+import { StyleClassManager } from "../framework/workers/style_class_manager.js";
+import { EventTrigger } from "../framework/workers/event_trigger.js";
+import { AttributeFormattedValue } from "../framework/workers/attribute_formatted_value.js";
+import { AttributeNumber } from "../framework/workers/attribute_number.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import {

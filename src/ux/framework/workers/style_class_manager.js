@@ -4,7 +4,7 @@
  * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { WorkerBase } from "../common/worker.js";
+import { WorkerBase } from "../common/worker_base.js";
 
 /**
  * StyleClassManager is a worker responsible for updating the CSS class of a widget

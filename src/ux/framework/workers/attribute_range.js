@@ -4,7 +4,7 @@
  * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { WorkerBase } from "../common/worker.js";
+import { WorkerBase } from "../common/worker_base.js";
 
 /**
  * AttributeRange sets and manages `min` and `max` properties for an element.

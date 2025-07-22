@@ -4,7 +4,7 @@
  * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { WorkerBase } from "../common/worker.js";
+import { WorkerBase } from "../common/worker_base.js";
 
 /**
  * PropertyFilter worker is used to register a property with a default value and a setter

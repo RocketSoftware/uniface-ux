@@ -2,7 +2,7 @@
 
 /**
  * @typedef {import("./widget").Widget} Widget
- * @typedef {import("./worker").WorkerBase} WorkerBase
+ * @typedef {import("./worker_base").WorkerBase} WorkerBase
  */
 
 /**

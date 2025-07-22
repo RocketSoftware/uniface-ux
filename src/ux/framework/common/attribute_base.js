@@ -4,7 +4,7 @@
  * @typedef {import("./widget.js").Widget} Widget
  */
 
-import { WorkerBase } from "./worker.js";
+import { WorkerBase } from "./worker_base.js";
 
 /**
  * AttributeBase worker is an abstract Html-attribute base worker.

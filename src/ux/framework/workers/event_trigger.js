@@ -4,7 +4,7 @@
  * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { WorkerBase } from "../common/worker.js";
+import { WorkerBase } from "../common/worker_base.js";
 
 /**
  * EventTrigger is a worker that maps a trigger action to the corresponding widget.

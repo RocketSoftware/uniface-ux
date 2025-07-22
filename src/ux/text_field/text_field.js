@@ -1,19 +1,19 @@
 // @ts-check
 import { Widget } from "../framework/common/widget.js";
-import { WorkerBase } from "../framework/common/worker.js";
+import { WorkerBase } from "../framework/common/worker_base.js";
 import { Element } from "../framework/workers/element.js";
-import { AttributeString } from "../framework/workers/html_attribute.js";
-import { AttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
-import { AttributeChoice } from "../framework/workers/html_attribute_choice.js";
-import { AttributeLength } from "../framework/workers/html_attribute_min_max_length.js";
-import { AttributeNumber } from "../framework/workers/html_attribute_number.js";
+import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
+import { AttributeChoice } from "../framework/workers/attribute_choice.js";
+import { AttributeLength } from "../framework/workers/attribute_length.js";
+import { AttributeNumber } from "../framework/workers/attribute_number.js";
 // import { AttributeUIBlocking } from "../framework/workers/html_attribute_readonly_disabled.js";
-import { ElementIconText } from "../framework/workers/slotted_element.js";
-import { ElementError } from "../framework/workers/slotted_error.js";
-import { SubWidget } from "../framework/workers/slotted_sub_widget.js";
-import { StyleClassManager } from "../framework/workers/style_class.js";
-import { EventTrigger } from "../framework/workers/trigger.js";
-import { AttributeUIBlocking } from "../framework/workers/ui_block.js";
+import { ElementIconText } from "../framework/workers/element_icon_text.js";
+import { ElementError } from "../framework/workers/element_error.js";
+import { SubWidget } from "../framework/workers/sub_widget.js";
+import { StyleClassManager } from "../framework/workers/style_class_manager.js";
+import { EventTrigger } from "../framework/workers/event_trigger.js";
+import { AttributeUIBlocking } from "../framework/workers/attribute_ui_blocking.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentTextField, provideFluentDesignSystem } from "@fluentui/web-components";

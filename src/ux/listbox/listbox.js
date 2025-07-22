@@ -1,16 +1,16 @@
 // @ts-check
 import { Widget } from "../framework/common/widget.js";
-import { AttributeString } from "../framework/workers/html_attribute.js";
-import { AttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
-import { AttributeNumber } from "../framework/workers/html_attribute_number.js";
-import { PropertyFilter } from "../framework/workers/ignore_property.js";
-import { ElementIconText } from "../framework/workers/slotted_element.js";
-import { ElementsValrep } from "../framework/workers/slotted_element_by_valrep.js";
-import { ElementError } from "../framework/workers/slotted_error.js";
-import { StyleClassManager } from "../framework/workers/style_class.js";
-import { EventTrigger } from "../framework/workers/trigger.js";
-import { AttributeUIBlocking } from "../framework/workers/ui_block.js";
-import { WorkerBase } from "../framework/common/worker.js";
+import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
+import { AttributeNumber } from "../framework/workers/attribute_number.js";
+import { PropertyFilter } from "../framework/workers/property_filter.js";
+import { ElementIconText } from "../framework/workers/element_icon_text.js";
+import { ElementsValrep } from "../framework/workers/elements_valrep.js";
+import { ElementError } from "../framework/workers/element_error.js";
+import { StyleClassManager } from "../framework/workers/style_class_manager.js";
+import { EventTrigger } from "../framework/workers/event_trigger.js";
+import { AttributeUIBlocking } from "../framework/workers/attribute_ui_blocking.js";
+import { WorkerBase } from "../framework/common/worker_base.js";
 import { Element } from "../framework/workers/element.js";
 // The import of Fluent UI web-components is done in loader.js.
 
