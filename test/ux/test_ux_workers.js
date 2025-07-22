@@ -14,7 +14,7 @@ import { ElementsValrep } from "../../src/ux/framework/workers/slotted_element_b
 import { ElementError } from "../../src/ux/framework/workers/slotted_error.js";
 import { SubWidget } from "../../src/ux/framework/workers/slotted_sub_widget.js";
 import { StyleClassManager } from "../../src/ux/framework/workers/style_class.js";
-import { SubWidgetsProperty } from "../../src/ux/framework/workers/sub_widgets_by_property.js";
+import { Controlbar } from "../../src/ux/controlbar/controlbar.js";
 import { EventTrigger } from "../../src/ux/framework/workers/trigger.js";
 import { AttributeUIBlocking } from "../../src/ux/framework/workers/ui_block.js";
 import { WorkerBase } from "../../src/ux/framework/common/worker.js";
@@ -415,7 +415,7 @@ import { WorkerBase } from "../../src/ux/framework/common/worker.js";
       Widget.triggers = {};
 
       widgetClass = Widget;
-      element = new SubWidgetsProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
+      element = new Controlbar.SubWidgetsProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
     });
 
     it("should initialize with correct properties", function () {
@@ -1029,9 +1029,9 @@ import { WorkerBase } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing SubWidgetsProperty class ==========================================================================
+  // == Testing Controlbar.SubWidgetsProperty class ==========================================================================
   // ===================================================================================================================
-  describe("Test SubWidgetsProperty Class", function () {
+  describe("Test Controlbar.SubWidgetsProperty Class", function () {
     let widgetClass;
     let tagName;
     let styleClass;
@@ -1105,7 +1105,7 @@ import { WorkerBase } from "../../src/ux/framework/common/worker.js";
       styleClass = "u-controlbar-item";
       elementQuerySelector = "";
       propId = "subwidgets-start";
-      element = new SubWidgetsProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
+      element = new Controlbar.SubWidgetsProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
     });
 
     it("should initialize with correct properties for SubWidgetsProperty worker", function () {
