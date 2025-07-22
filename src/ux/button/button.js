@@ -1,15 +1,15 @@
 // @ts-check
 import { Widget } from "../framework/common/widget.js";
 import { Element } from "../framework/workers/element.js";
-import { HtmlAttribute } from "../framework/workers/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
-import { HtmlAttributeChoice } from "../framework/workers/html_attribute_choice.js";
-import { HtmlAttributeNumber } from "../framework/workers/html_attribute_number.js";
-import { IgnoreProperty } from "../framework/workers/ignore_property.js";
-import { StyleClass } from "../framework/workers/style_class.js";
-import { Trigger } from "../framework/workers/trigger.js";
-import { UIBlock } from "../framework/workers/ui_block.js";
-import { Worker } from "../framework/common/worker.js";
+import { AttributeString } from "../framework/workers/html_attribute.js";
+import { AttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
+import { AttributeChoice } from "../framework/workers/html_attribute_choice.js";
+import { AttributeNumber } from "../framework/workers/html_attribute_number.js";
+import { PropertyFilter } from "../framework/workers/ignore_property.js";
+import { StyleClassManager } from "../framework/workers/style_class.js";
+import { EventTrigger } from "../framework/workers/trigger.js";
+import { AttributeUIBlocking } from "../framework/workers/ui_block.js";
+import { WorkerBase } from "../framework/common/worker.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentButton, provideFluentDesignSystem } from "@fluentui/web-components";
@@ -38,13 +38,13 @@ export class Button extends Widget {
   /**
    * Private Worker: Slotted Button Text
    * Adds and maintains a slotted element for the button text.
-   * @class SlottedButtonText
-   * @extends {Worker}
+   * @class ElementText
+   * @extends {WorkerBase}
    */
-  static SlottedButtonText = class extends Worker {
+  static ElementText = class extends WorkerBase {
 
     /**
-     * Creates an instance of SlottedButtonText.
+     * Creates an instance of ElementText.
      * @constructor
      * @param {typeof Widget} widgetClass
      * @param {string} styleClass
@@ -105,13 +105,13 @@ export class Button extends Widget {
   /**
    * Private Worker: Slotted Button Icon
    * Adds and maintains a slotted element for the button icon.
-   * @class SlottedButtonIcon
-   * @extends {Worker}
+   * @class ElementIcon
+   * @extends {WorkerBase}
    */
-  static SlottedButtonIcon = class extends Worker {
+  static ElementIcon = class extends WorkerBase {
 
     /**
-     * Creates an instance of SlottedButtonIcon.
+     * Creates an instance of ElementIcon.
      * @constructor
      * @param {typeof Widget} widgetClass
      * @param {string} styleClass
@@ -119,7 +119,7 @@ export class Button extends Widget {
      */
     constructor(widgetClass, styleClass, elementQuerySelector) {
       super(widgetClass);
-      // A setter is necessary for the value in SlottedButtonIcon because the class should respond to any changes in the value.
+      // A setter is necessary for the value in ElementIcon because the class should respond to any changes in the value.
       this.registerSetter(widgetClass, "value", this);
       this.registerSetter(widgetClass, "icon", this);
       this.registerSetter(widgetClass, "icon-position", this);
@@ -174,20 +174,20 @@ export class Button extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-button", "", "", [
-    new HtmlAttribute(this, undefined, "currentValue", ""),
-    new HtmlAttribute(this, "html:title", "title", undefined),
-    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeChoice(this, "html:appearance", "appearance", ["neutral", "accent", "outline", "lightweight", "stealth"], "neutral"),
-    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
-    new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength"),
-    new IgnoreProperty(this, "html:readonly"),
-    new UIBlock(this, "disabled"),
-    new StyleClass(this, ["u-button", "neutral"]),
-    new this.SlottedButtonIcon(this, "u-icon", ".u-icon"),
-    new this.SlottedButtonText(this, "u-text", ".u-text"),
-    new Trigger(this, "detail", "click", true)
+    new AttributeString(this, undefined, "currentValue", ""),
+    new AttributeString(this, "html:title", "title", undefined),
+    new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new AttributeChoice(this, "html:appearance", "appearance", ["neutral", "accent", "outline", "lightweight", "stealth"], "neutral"),
+    new AttributeBoolean(this, "html:hidden", "hidden", false),
+    new AttributeBoolean(this, "html:disabled", "disabled", false),
+    new PropertyFilter(this, "html:minlength"),
+    new PropertyFilter(this, "html:maxlength"),
+    new PropertyFilter(this, "html:readonly"),
+    new AttributeUIBlocking(this, "disabled"),
+    new StyleClassManager(this, ["u-button", "neutral"]),
+    new this.ElementIcon(this, "u-icon", ".u-icon"),
+    new this.ElementText(this, "u-text", ".u-text"),
+    new EventTrigger(this, "detail", "click", true)
   ]);
 
   /**

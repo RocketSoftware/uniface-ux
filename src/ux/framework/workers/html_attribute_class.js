@@ -4,19 +4,19 @@
  * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { Worker } from "../common/worker.js";
+import { WorkerBase } from "../common/worker.js";
 
 /**
- * HtmlAttributeClass is a specialized worker that extends Worker.
+ * StyleClassToggle is a specialized worker that extends WorkerBase.
  * Resets the `class` attribute of the element based on the provided property value.
  * @export
- * @class HtmlAttributeClass
- * @extends {Worker}
+ * @class StyleClassToggle
+ * @extends {WorkerBase}
  */
-export class HtmlAttributeClass extends Worker {
+export class StyleClassToggle extends WorkerBase {
 
   /**
-   * Creates an instance of HtmlAttributeClass.
+   * Creates an instance of StyleClassToggle.
    * @param {typeof import("../common/widget.js").Widget} widgetClass
    * @param {UPropName} propId
    * @param {string} styleClassName

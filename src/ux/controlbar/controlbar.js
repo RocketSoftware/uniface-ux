@@ -1,13 +1,13 @@
 // @ts-check
 import { Widget } from "../framework/common/widget.js";
-import { Worker } from "../framework/common/worker.js";
+import { WorkerBase } from "../framework/common/worker.js";
 import { Element } from "../framework/workers/element.js";
-import { HtmlAttribute } from "../framework/workers/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
-import { HtmlAttributeChoice } from "../framework/workers/html_attribute_choice.js";
-import { IgnoreProperty } from "../framework/workers/ignore_property.js";
-import { StyleClass } from "../framework/workers/style_class.js";
-import { SubWidgetsByProperty } from "../framework/workers/sub_widgets_by_property.js";
+import { AttributeString } from "../framework/workers/html_attribute.js";
+import { AttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
+import { AttributeChoice } from "../framework/workers/html_attribute_choice.js";
+import { PropertyFilter } from "../framework/workers/ignore_property.js";
+import { StyleClassManager } from "../framework/workers/style_class.js";
+import { SubWidgetsProperty } from "../framework/workers/sub_widgets_by_property.js";
 
 /**
  * Controlbar Widget
@@ -29,15 +29,15 @@ export class Controlbar extends Widget {
   static triggers = {};
 
   /**
-   * Private Worker: HandleOverFlowPropertyWorker.
+   * Private Worker: OverFlow.
    * Handles the horizontal responsiveness of the controlbar based on overflow-behavior and priority.
-   * @class HandleOverFlowPropertyWorker
-   * @extends {Worker}
+   * @class OverFlow
+   * @extends {WorkerBase}
    */
-  static HandleOverFlowPropertyWorker = class extends Worker {
+  static OverFlow = class extends WorkerBase {
 
     /**
-     * Creates an instance of HandleOverFlowPropertyWorker.
+     * Creates an instance of OverFlow.
      * @param {typeof Widget} widgetClass
      * @param {string} propId
      * @param {UPropValue} defaultValue
@@ -182,26 +182,26 @@ export class Controlbar extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "div", "", "", [
-    new HtmlAttributeChoice(this, "orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
-    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new StyleClass(this, ["u-controlbar"]),
-    new this.HandleOverFlowPropertyWorker(this, "widget-resize", false),
-    new HtmlAttribute(this, "value", "value", ""),
-    new HtmlAttribute(this, undefined, "role", "toolbar"),
-    new IgnoreProperty(this, "error", "false"),
-    new IgnoreProperty(this, "error-message", ""),
-    new IgnoreProperty(this, "html:disabled", "false"),
-    new IgnoreProperty(this, "html:readonly", "false"),
-    new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength"),
+    new AttributeChoice(this, "orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
+    new AttributeBoolean(this, "html:hidden", "hidden", false),
+    new StyleClassManager(this, ["u-controlbar"]),
+    new this.OverFlow(this, "widget-resize", false),
+    new AttributeString(this, "value", "value", ""),
+    new AttributeString(this, undefined, "role", "toolbar"),
+    new PropertyFilter(this, "error", "false"),
+    new PropertyFilter(this, "error-message", ""),
+    new PropertyFilter(this, "html:disabled", "false"),
+    new PropertyFilter(this, "html:readonly", "false"),
+    new PropertyFilter(this, "html:minlength"),
+    new PropertyFilter(this, "html:maxlength"),
     new Element(this, "div", "u-start-section", ".u-start-section", [
-      new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-start")
+      new SubWidgetsProperty(this, "span", "u-controlbar-item", "", "subwidgets-start")
     ]),
     new Element(this, "div", "u-center-section", ".u-center-section", [
-      new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-center")
+      new SubWidgetsProperty(this, "span", "u-controlbar-item", "", "subwidgets-center")
     ]),
     new Element(this, "div", "u-end-section", ".u-end-section", [
-      new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-end")
+      new SubWidgetsProperty(this, "span", "u-controlbar-item", "", "subwidgets-end")
     ])
   ]);
 

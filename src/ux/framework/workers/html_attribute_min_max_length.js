@@ -4,21 +4,21 @@
  * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { Worker } from "../common/worker.js";
+import { WorkerBase } from "../common/worker.js";
 
 /**
- * HtmlAttributeMinMaxLength is a specialized worker that sets and manages
+ * AttributeLength is a specialized worker that sets and manages
  * the `minlength` and `maxlength` attributes of an HTML element.
  * It applies the constraints to the element and validates that any current value
  * falls within the defined range.
  * @export
- * @class HtmlAttributeMinMaxLength
- * @extends {Worker}
+ * @class AttributeLength
+ * @extends {WorkerBase}
  */
-export class HtmlAttributeMinMaxLength extends Worker {
+export class AttributeLength extends WorkerBase {
 
   /**
-   * Creates an instance of HtmlAttributeMinMaxLength.
+   * Creates an instance of AttributeLength.
    * @param {typeof import("../common/widget.js").Widget} widgetClass
    * @param {string} propMin
    * @param {string} propMax

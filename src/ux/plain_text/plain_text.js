@@ -1,12 +1,12 @@
 // @ts-check
 import { Widget } from "../framework/common/widget.js";
 import { Element } from "../framework/workers/element.js";
-import { HtmlAttribute } from "../framework/workers/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
-import { IgnoreProperty } from "../framework/workers/ignore_property.js";
-import { SlottedElement } from "../framework/workers/slotted_element.js";
-import { SlottedError } from "../framework/workers/slotted_error.js";
-import { StyleClass } from "../framework/workers/style_class.js";
+import { AttributeString } from "../framework/workers/html_attribute.js";
+import { AttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
+import { PropertyFilter } from "../framework/workers/ignore_property.js";
+import { ElementIconText } from "../framework/workers/slotted_element.js";
+import { ElementError } from "../framework/workers/slotted_error.js";
+import { StyleClassManager } from "../framework/workers/style_class.js";
 
 /**
  * PlaintText Widget
@@ -207,19 +207,19 @@ export class PlainText extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "span", "", "", [
-    new StyleClass(this, ["u-plain-text"]),
-    new HtmlAttribute(this, "html:title", "title", undefined),
-    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new HtmlAttribute(this, "html:slot", "slot", ""),
-    new IgnoreProperty(this, "html:maxlength"),
-    new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:readonly"),
-    new IgnoreProperty(this, "uiblocked"),
-    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
-    new SlottedElement(this, "span", "u-prefix", ".u-prefix", "", "prefix-text", "", "prefix-icon", ""),
+    new StyleClassManager(this, ["u-plain-text"]),
+    new AttributeString(this, "html:title", "title", undefined),
+    new AttributeBoolean(this, "html:hidden", "hidden", false),
+    new AttributeString(this, "html:slot", "slot", ""),
+    new PropertyFilter(this, "html:maxlength"),
+    new PropertyFilter(this, "html:minlength"),
+    new PropertyFilter(this, "html:readonly"),
+    new PropertyFilter(this, "uiblocked"),
+    new ElementIconText(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
+    new ElementIconText(this, "span", "u-prefix", ".u-prefix", "", "prefix-text", "", "prefix-icon", ""),
     new this.SlottedPlainTextFormat(this, "span", "u-control", ".u-control"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", ""),
-    new SlottedElement(this, "span", "u-suffix", ".u-suffix", "", "suffix-text", "", "suffix-icon", "")
+    new ElementError(this, "span", "u-error-icon", ".u-error-icon", ""),
+    new ElementIconText(this, "span", "u-suffix", ".u-suffix", "", "suffix-text", "", "suffix-icon", "")
   ]);
 
   /**

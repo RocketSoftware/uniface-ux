@@ -4,18 +4,18 @@
  * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { BaseHtmlAttribute } from "../common/base_html_attribute.js";
+import { AttributeBase } from "../common/base_html_attribute.js";
 
 /**
- * HtmlAttributeNumber is a specialized worker that updates number-based attributes
+ * AttributeNumber is a specialized worker that updates number-based attributes
  * on an HTML element, such as `min`, `max` properties.
  * It ensures that the assigned values are valid numbers and applies them correctly
  * to the element to support numeric input constraints and behaviors.
  * @export
- * @class HtmlAttributeNumber
- * @extends {BaseHtmlAttribute}
+ * @class AttributeNumber
+ * @extends {AttributeBase}
  */
-export class HtmlAttributeNumber extends BaseHtmlAttribute {
+export class AttributeNumber extends AttributeBase {
   constructor(widgetClass, propId, attrName, min, max, defaultValue, setAsAttribute) {
     super(widgetClass, propId, attrName, defaultValue, setAsAttribute);
     this.min = min;

@@ -1,18 +1,18 @@
 // @ts-check
-import { Worker } from "../common/worker.js";
+import { WorkerBase } from "../common/worker.js";
 
 /**
- * WidgetForOccurrence worker creates a placeholder element for an object as specified by the provided bindingId.
+ * WidgetOccurrence worker creates a placeholder element for an object as specified by the provided bindingId.
  * The placeholder element will be directly bound to that object after which Uniface fully maintains the widgets.
  * The widget-class is provided by Uniface (usys.ini and web.ini).
  * @export
- * @class WidgetForOccurrence
- * @extends {Worker}
+ * @class WidgetOccurrence
+ * @extends {WorkerBase}
  */
-export class WidgetForOccurrence extends Worker {
+export class WidgetOccurrence extends WorkerBase {
 
   /**
-   * Creates an instance of WidgetForOccurrence.
+   * Creates an instance of WidgetOccurrence.
    * @param {typeof import("../common/widget.js").Widget} widgetClass - Specifies the widget class definition the worker is created for.
    * @param {string} tagName - Specifies the sub-widget's element tag-name in the skeleton layout.
    * @param {string} bindingId - Specifies the binding id.

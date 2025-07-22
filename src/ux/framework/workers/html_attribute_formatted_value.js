@@ -4,21 +4,21 @@
  * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { BaseHtmlAttribute } from "../common/base_html_attribute.js";
+import { AttributeBase } from "../common/base_html_attribute.js";
 import { getWidgetClass } from "../common/dsp_connector.js";
 
 /**
- * HtmlAttributeFormattedValue is a specialized worker that extends BaseHtmlAttribute.
+ * AttributeFormattedValue is a specialized worker that extends AttributeBase.
  * It updates the widget-value as formatted HTML elements.
  * Formatting information is provided by the object's original widget and used to construct the formatting HTML.
  * @export
- * @class HtmlAttributeFormattedValue
- * @extends {BaseHtmlAttribute}
+ * @class AttributeFormattedValue
+ * @extends {AttributeBase}
  */
-export class HtmlAttributeFormattedValue extends BaseHtmlAttribute {
+export class AttributeFormattedValue extends AttributeBase {
 
   /**
-   * Creates an instance of HtmlAttributeFormattedValue.
+   * Creates an instance of AttributeFormattedValue.
    * @param {typeof import("../common/widget.js").Widget} widgetClass - Specifies the widget class definition the setter is created for.
    * @param {UPropName} propId - Specifies the id of the property that holds the object's original widget-class name.
    */

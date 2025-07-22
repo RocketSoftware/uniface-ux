@@ -4,19 +4,19 @@
  * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { Worker } from "../common/worker.js";
+import { WorkerBase } from "../common/worker.js";
 import { getWidgetClass } from "../common/dsp_connector.js";
 
 /**
- * SubWidgetsByFields worker creates a sub-widget for every child object of type field in objectDefinition.
+ * SubWidgetsFields worker creates a sub-widget for every child object of type field in objectDefinition.
  * The widget definition is established during processLayout() and cannot be changed afterwards.
  * An exclude property, of which the id is specified by propId, allows exclusion of fields to this process.
  * This property can be set as part of field properties in the IDE. If it evaluates to true, the field is excluded.
  * @export
- * @class SubWidgetsByFields
- * @extends {Worker}
+ * @class SubWidgetsFields
+ * @extends {WorkerBase}
  */
-export class SubWidgetsByFields extends Worker {
+export class SubWidgetsFields extends WorkerBase {
 
   /**
    * Creates an instance of WidgetsByProperty.

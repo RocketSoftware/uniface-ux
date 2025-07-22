@@ -322,14 +322,14 @@
     it("no test required", function () { });
   });
 
-  describe("Test SlottedButtonText class", function () {
+  describe("Test ElementText class", function () {
     verifyWidgetClass(widgetClass);
     let styleClass = "u-text";
     let elementQuerySelector = ".u-text";
     let instance;
 
     beforeEach(function () {
-      instance = new widgetClass.SlottedButtonText(widgetClass, styleClass, elementQuerySelector);
+      instance = new widgetClass.ElementText(widgetClass, styleClass, elementQuerySelector);
     });
 
     it("should initialize with the correct properties", function () {
@@ -368,14 +368,14 @@
     });
   });
 
-  describe("Test SlottedButtonIcon class", function () {
+  describe("Test ElementIcon class", function () {
     verifyWidgetClass(widgetClass);
     let styleClass = "u-icon";
     let elementQuerySelector = ".u-icon";
     let instance;
 
     beforeEach(function () {
-      instance = new widgetClass.SlottedButtonIcon(widgetClass, styleClass, elementQuerySelector);
+      instance = new widgetClass.ElementIcon(widgetClass, styleClass, elementQuerySelector);
     });
 
     it("should initialize with the correct properties", function () {

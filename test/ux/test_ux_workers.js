@@ -1,23 +1,23 @@
 import { getWidgetClass } from "../../src/ux/framework/common/dsp_connector.js";
 import { Widget } from "../../src/ux/framework/common/widget.js";
-import { BaseHtmlAttribute } from "../../src/ux/framework/common/base_html_attribute.js";
+import { AttributeBase } from "../../src/ux/framework/common/base_html_attribute.js";
 import { Element } from "../../src/ux/framework/workers/element.js";
-import { HtmlAttribute } from "../../src/ux/framework/workers/html_attribute.js";
-import { HtmlAttributeBoolean } from "../../src/ux/framework/workers/html_attribute_boolean.js";
-import { HtmlAttributeChoice } from "../../src/ux/framework/workers/html_attribute_choice.js";
-import { HtmlAttributeMinMaxLength } from "../../src/ux/framework/workers/html_attribute_min_max_length.js";
-import { HtmlAttributeNumber } from "../../src/ux/framework/workers/html_attribute_number.js";
-import { HtmlValueAttributeBoolean } from "../../src/ux/framework/workers/html_value_attribute_boolean.js";
-import { IgnoreProperty } from "../../src/ux/framework/workers/ignore_property.js";
-import { SlottedElement } from "../../src/ux/framework/workers/slotted_element.js";
-import { SlottedElementsByValRep } from "../../src/ux/framework/workers/slotted_element_by_valrep.js";
-import { SlottedError } from "../../src/ux/framework/workers/slotted_error.js";
-import { SlottedSubWidget } from "../../src/ux/framework/workers/slotted_sub_widget.js";
-import { StyleClass } from "../../src/ux/framework/workers/style_class.js";
-import { SubWidgetsByProperty } from "../../src/ux/framework/workers/sub_widgets_by_property.js";
-import { Trigger } from "../../src/ux/framework/workers/trigger.js";
-import { UIBlock } from "../../src/ux/framework/workers/ui_block.js";
-import { Worker } from "../../src/ux/framework/common/worker.js";
+import { AttributeString } from "../../src/ux/framework/workers/html_attribute.js";
+import { AttributeBoolean } from "../../src/ux/framework/workers/html_attribute_boolean.js";
+import { AttributeChoice } from "../../src/ux/framework/workers/html_attribute_choice.js";
+import { AttributeLength } from "../../src/ux/framework/workers/html_attribute_min_max_length.js";
+import { AttributeNumber } from "../../src/ux/framework/workers/html_attribute_number.js";
+import { AttributeBooleanValue } from "../../src/ux/framework/workers/html_value_attribute_boolean.js";
+import { PropertyFilter } from "../../src/ux/framework/workers/ignore_property.js";
+import { ElementIconText } from "../../src/ux/framework/workers/slotted_element.js";
+import { ElementsValrep } from "../../src/ux/framework/workers/slotted_element_by_valrep.js";
+import { ElementError } from "../../src/ux/framework/workers/slotted_error.js";
+import { SubWidget } from "../../src/ux/framework/workers/slotted_sub_widget.js";
+import { StyleClassManager } from "../../src/ux/framework/workers/style_class.js";
+import { SubWidgetsProperty } from "../../src/ux/framework/workers/sub_widgets_by_property.js";
+import { EventTrigger } from "../../src/ux/framework/workers/trigger.js";
+import { AttributeUIBlocking } from "../../src/ux/framework/workers/ui_block.js";
+import { WorkerBase } from "../../src/ux/framework/common/worker.js";
 
 (function () {
   "use strict";
@@ -36,7 +36,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
 
     beforeEach(function () {
       widgetClass = {};
-      worker = new Worker(widgetClass);
+      worker = new WorkerBase(widgetClass);
     });
 
     it("should initialize with the correct properties", function () {
@@ -83,7 +83,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
 
       widgetClass = Widget;
       defaultClassList = ["class1", "class2"];
-      instance = new StyleClass(widgetClass, defaultClassList);
+      instance = new StyleClassManager(widgetClass, defaultClassList);
     });
 
     it("should initialize with the correct properties for ClassStyle class", function () {
@@ -143,7 +143,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       tagName = "DIV";
       elementQuerySelector = "div";
       styleClass = "styleClass";
-      childWorkers = [new StyleClass(widgetClass, ["u-switch"]), new HtmlAttribute(widgetClass, "html:role", "role", "switch"), new SlottedElement(widgetClass, "span", "u-label-text", ".u-label-text", "", "label-text"), new SlottedElement(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"), new Trigger(widgetClass, "onchange", "change", true)];
+      childWorkers = [new StyleClassManager(widgetClass, ["u-switch"]), new AttributeString(widgetClass, "html:role", "role", "switch"), new ElementIconText(widgetClass, "span", "u-label-text", ".u-label-text", "", "label-text"), new ElementIconText(widgetClass, "span", "u-checked-message", ".u-checked-message", "checked-message", "checked-message"), new EventTrigger(widgetClass, "onchange", "change", true)];
       expectedQuerySelectors = ["div", "div", ".u-label-text", ".u-checked-message", "div"];
       element = new Element(widgetClass, tagName, styleClass, elementQuerySelector, childWorkers);
     });
@@ -174,9 +174,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing SlottedElement class =================================================================================
+  // == Testing ElementIconText class =================================================================================
   // ===================================================================================================================
-  describe("Test SlottedElement class", function () {
+  describe("Test ElementIconText class", function () {
 
     let widgetClass;
     let propText;
@@ -214,10 +214,10 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       propIcon = "icon";
       defaultText = "defaultText";
       defaultIcon = "default.png";
-      slottedElement = new SlottedElement(widgetClass, "", "", "", "", propText, defaultText, propIcon, defaultIcon);
+      slottedElement = new ElementIconText(widgetClass, "", "", "", "", propText, defaultText, propIcon, defaultIcon);
     });
 
-    it("should initialize with correct properties for SlottedElement class", function () {
+    it("should initialize with correct properties for ElementIconText class", function () {
       expect(slottedElement.widgetClass).to.equal(widgetClass);
       expect(slottedElement.textPropId).to.equal(propText);
       expect(slottedElement.textDefaultValue).to.equal(defaultText);
@@ -225,12 +225,12 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       expect(slottedElement.iconDefaultValue).to.equal(defaultIcon);
     });
 
-    it("check getters/setters changed for propIcon, propText for SlottedElement class", function () {
+    it("check getters/setters changed for propIcon, propText for ElementIconText class", function () {
       expect(slottedElement.widgetClass.defaultValues.icon).to.equal(defaultIcon);
       expect(slottedElement.widgetClass.defaultValues.text).to.equal(defaultText);
     });
 
-    it("should refresh correctly for SlottedElement class", function () {
+    it("should refresh correctly for ElementIconText class", function () {
       slottedElement.refresh(widgetInstance);
       let mockIconClasses = ["ms-Icon", "ms-Icon--testicon.png"];
       expect(widgetInstance.elements.widget.hidden).to.equal(false);
@@ -244,9 +244,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing SlottedError class =====================================================================================
+  // == Testing ElementError class =====================================================================================
   // ===================================================================================================================
-  describe("Test SlottedError class", function () {
+  describe("Test ElementError class", function () {
 
     let widgetClass;
     let slottedError;
@@ -261,14 +261,14 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       Widget.triggers = {};
 
       widgetClass = Widget;
-      slottedError = new SlottedError(widgetClass, "", "", "", "");
+      slottedError = new ElementError(widgetClass, "", "", "", "");
     });
 
-    it("should initialize with correct properties for SlottedError class", function () {
+    it("should initialize with correct properties for ElementError class", function () {
       expect(slottedError.widgetClass).to.equal(widgetClass);
     });
 
-    it("check setters were added for SlottedError class", function () {
+    it("check setters were added for ElementError class", function () {
       let setters = Object.keys(slottedError.widgetClass.setters);
       let errorArray = [
         "error",
@@ -283,7 +283,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       expect(setters).to.include(errorArray[3]);
     });
 
-    it("should refresh correctly for SlottedError class", function () {
+    it("should refresh correctly for ElementError class", function () {
       const widgetInstance = {
         "data": {
           "error": true,
@@ -321,9 +321,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing SlottedSubWidget class =====================================================================================
+  // == Testing SubWidget class =====================================================================================
   // ====================================================================================================================
-  describe("Test SlottedSubWidget class", function () {
+  describe("Test SubWidget class", function () {
     let widgetClass;
     let subWidgetId;
     let subWidgetName;
@@ -346,10 +346,10 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       assert(subWidgetClass, `Widget class '${subWidgetName}' is not loaded!`);
       tagName = "DIV";
       subWidgetId = "undefined";
-      slottedWidget = new SlottedSubWidget(widgetClass, tagName, "styleClass", "", "", subWidgetId, subWidgetName, {}, "");
+      slottedWidget = new SubWidget(widgetClass, tagName, "styleClass", "", "", subWidgetId, subWidgetName, {}, "");
     });
 
-    it("should initialize with correct properties for SlottedSubWidget class", function () {
+    it("should initialize with correct properties for SubWidget class", function () {
       expect(slottedWidget.widgetClass).to.equal(widgetClass);
     });
 
@@ -359,7 +359,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       expect(slottedWidget.propId).to.equal("undefined");
     });
 
-    it("check generate layout for SlottedSubWidget class", function () {
+    it("check generate layout for SubWidget class", function () {
       let layoutElement = slottedWidget.getLayout();
 
       expect(layoutElement).to.have.class("u-sw-undefined");
@@ -367,7 +367,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       expect(layoutElement).to.have.tagName("FLUENT-BUTTON");
     });
 
-    it("should refresh correctly for SlottedSubWidget class", function () {
+    it("should refresh correctly for SubWidget class", function () {
       const widgetInstance = {
         "data": {
           "undefined": true
@@ -394,9 +394,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing SubWidgetsByProperty class ================================================================================
+  // == Testing SubWidgetsProperty class ================================================================================
   // ===================================================================================================================
-  describe("Test SubWidgetsByProperty class", function () {
+  describe("Test SubWidgetsProperty class", function () {
 
     let widgetClass;
     let tagName;
@@ -415,7 +415,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       Widget.triggers = {};
 
       widgetClass = Widget;
-      element = new SubWidgetsByProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
+      element = new SubWidgetsProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
     });
 
     it("should initialize with correct properties", function () {
@@ -428,9 +428,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing BaseHtmlAttribute class ================================================================================
+  // == Testing AttributeBase class ================================================================================
   // ===================================================================================================================
-  describe("Test BaseHtmlAttribute class", function () {
+  describe("Test AttributeBase class", function () {
 
     let widgetClass;
     let propId;
@@ -453,10 +453,10 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       propId = "value";
       attrName = "contentEditable";
       defaultValue = "1";
-      worker = new BaseHtmlAttribute(widgetClass, propId, attrName, defaultValue);
+      worker = new AttributeBase(widgetClass, propId, attrName, defaultValue);
     });
 
-    it("should initialize with correct properties for BaseHtmlAttribute class", function () {
+    it("should initialize with correct properties for AttributeBase class", function () {
       expect(worker.widgetClass).to.equal(widgetClass);
       expect(worker.propId).to.equal(propId);
       expect(worker.attrName).to.equal(attrName);
@@ -464,14 +464,14 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
 
     });
 
-    it("check getters/setters for BaseHtmlAttribute class", function () {
+    it("check getters/setters for AttributeBase class", function () {
       let length = worker.widgetClass.setters.value.length;
 
       expect(worker.widgetClass.getters.value.propId).to.equal(propId);
       expect(worker.widgetClass.setters.value[length - 1].propId).to.equal(propId);
     });
 
-    it("check setHtmlAttribute for BaseHtmlAttribute class", function () {
+    it("check setHtmlAttribute for AttributeBase class", function () {
       element = {
         "elements": {
           "widget": document.createElement("div")
@@ -482,11 +482,11 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
     });
 
     // refresh() doesn't do anything.
-    it("check refresh() for BaseHtmlAttribute class", function () {
+    it("check refresh() for AttributeBase class", function () {
       worker.refresh({});
     });
 
-    it("check getValue() for BaseHtmlAttribute class", function () {
+    it("check getValue() for AttributeBase class", function () {
       const widgetInstance = {
         "elements": {
           "widget": document.createElement("div")
@@ -500,7 +500,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
     });
 
     // getValueUpdaters() doesn't do anything.
-    it("check getValueUpdaters() for BaseHtmlAttribute class", function () {
+    it("check getValueUpdaters() for AttributeBase class", function () {
       const widgetInstance = {
         "elements": {
           "widget": [document.createElement("div"), document.createElement("span")]
@@ -514,9 +514,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing HtmlAttribute class ====================================================================================
+  // == Testing AttributeString class ====================================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttribute class", function () {
+  describe("Test AttributeString class", function () {
 
     let widgetClass;
     let propId;
@@ -537,10 +537,10 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       propId = "icon-position";
       attrName = "button";
       defaultValue = "1";
-      element = new HtmlAttribute(widgetClass, propId, attrName, defaultValue);
+      element = new AttributeString(widgetClass, propId, attrName, defaultValue);
     });
 
-    it("should initialize with correct properties for HtmlAttribute class", function () {
+    it("should initialize with correct properties for AttributeString class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
     });
 
@@ -563,9 +563,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing HtmlAttributeChoice class ==============================================================================
+  // == Testing AttributeChoice class ==============================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeChoice class", function () {
+  describe("Test AttributeChoice class", function () {
 
     let widgetClass;
     let propId;
@@ -588,10 +588,10 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       attrName = "button";
       defaultValue = "1";
       choices = ["all", "start-end", "none"];
-      element = new HtmlAttributeChoice(widgetClass, propId, attrName, choices, defaultValue);
+      element = new AttributeChoice(widgetClass, propId, attrName, choices, defaultValue);
     });
 
-    it("should initialize with correct properties for HtmlAttributeChoice class", function () {
+    it("should initialize with correct properties for AttributeChoice class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.choices).to.equal(choices);
     });
@@ -615,9 +615,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing HtmlAttributeNumber class ==============================================================================
+  // == Testing AttributeNumber class ==============================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeNumber class", function () {
+  describe("Test AttributeNumber class", function () {
 
     let widgetClass;
     let propId;
@@ -642,10 +642,10 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       defaultValue = "1";
       min = 1;
       max = 500;
-      element = new HtmlAttributeNumber(widgetClass, propId, attrName, min, max, defaultValue);
+      element = new AttributeNumber(widgetClass, propId, attrName, min, max, defaultValue);
     });
 
-    it("should initialize with correct properties for HtmlAttributeNumber class", function () {
+    it("should initialize with correct properties for AttributeNumber class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.min).to.equal(min);
       expect(element.max).to.equal(max);
@@ -670,9 +670,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing HtmlAttributeBoolean class =============================================================================
+  // == Testing AttributeBoolean class =============================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeBoolean class", function () {
+  describe("Test AttributeBoolean class", function () {
 
     let widgetClass;
     let propId;
@@ -693,10 +693,10 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       propId = "icon-position";
       attrName = "button";
       defaultValue = "1";
-      element = new HtmlAttributeBoolean(widgetClass, propId, attrName, defaultValue);
+      element = new AttributeBoolean(widgetClass, propId, attrName, defaultValue);
     });
 
-    it("should initialize with correct properties for HtmlAttributeBoolean class", function () {
+    it("should initialize with correct properties for AttributeBoolean class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
     });
 
@@ -722,9 +722,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing HtmlValueAttributeBoolean class ========================================================================
+  // == Testing AttributeBooleanValue class ========================================================================
   // ===================================================================================================================
-  describe("Test HtmlValueAttributeBoolean class", function () {
+  describe("Test AttributeBooleanValue class", function () {
 
     let widgetClass;
     let propId;
@@ -748,18 +748,18 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       propId = "icon-position";
       attrName = "ariaValueMax";
       defaultValue = "1";
-      element = new HtmlValueAttributeBoolean(widgetClass, propId, attrName, defaultValue);
+      element = new AttributeBooleanValue(widgetClass, propId, attrName, defaultValue);
       buttonWidgetClass = getWidgetClass("UX.Button");
       assert(buttonWidgetClass, "Widget class UX.Button is not loaded!");
       buttonWidget = new buttonWidgetClass;
       returnedProcess = buttonWidgetClass.processLayout(buttonWidget, "");
     });
 
-    it("should initialize with correct properties for HtmlValueAttributeBoolean class", function () {
+    it("should initialize with correct properties for AttributeBooleanValue class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
     });
 
-    it("should refresh correctly for HtmlValueAttributeBoolean class", function () {
+    it("should refresh correctly for AttributeBooleanValue class", function () {
       const widgetInstance = {
         "data": {
           "icon-position": "1-start-end"
@@ -783,9 +783,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing HtmlAttributeMinMaxLength class ========================================================================
+  // == Testing AttributeLength class ========================================================================
   // ===================================================================================================================
-  describe("Test HtmlAttributeMinMaxLength class", function () {
+  describe("Test AttributeLength class", function () {
 
     let widgetClass;
     let propMin;
@@ -809,10 +809,10 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       propMax = "max";
       defaultMin = 0;
       defaultMax = 10;
-      element = new HtmlAttributeMinMaxLength(widgetClass, propMin, propMax, defaultMin, defaultMax);
+      element = new AttributeLength(widgetClass, propMin, propMax, defaultMin, defaultMax);
     });
 
-    it("should initialize with correct properties for HtmlAttributeMinMaxLength class", function () {
+    it("should initialize with correct properties for AttributeLength class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.propMin).to.equal(propMin);
       expect(element.propMax).to.equal(propMax);
@@ -820,7 +820,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       expect(element.defaultMax).to.equal(defaultMax);
     });
 
-    it("check setters for HtmlAttributeMinMaxLength class", function () {
+    it("check setters for AttributeLength class", function () {
       let setterKeys = Object.keys(element.widgetClass.setters);
 
       expect(setterKeys[setterKeys.length - 2]).to.equal("min");
@@ -858,9 +858,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing Trigger class ==========================================================================================
+  // == Testing EventTrigger class ==========================================================================================
   // ===================================================================================================================
-  describe("Test Trigger class", function () {
+  describe("Test EventTrigger class", function () {
 
     let widgetClass;
     let triggerName;
@@ -881,10 +881,10 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       triggerName = "NameofTrigger";
       eventName = "EventName";
       validate = "Validated";
-      element = new Trigger(widgetClass, triggerName, eventName, validate);
+      element = new EventTrigger(widgetClass, triggerName, eventName, validate);
     });
 
-    it("should initialize with correct properties for Trigger class", function () {
+    it("should initialize with correct properties for EventTrigger class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.triggerName).to.equal(triggerName);
     });
@@ -911,9 +911,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing IgnoreProperty class ===================================================================================
+  // == Testing PropertyFilter class ===================================================================================
   // ===================================================================================================================
-  describe("Test IgnoreProperty class", function () {
+  describe("Test PropertyFilter class", function () {
     let widgetClass;
     let propId;
     let defaultValue;
@@ -931,15 +931,15 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       widgetClass = Widget;
       propId = "tri-state";
       defaultValue = false;
-      element = new IgnoreProperty(widgetClass, propId, defaultValue);
+      element = new PropertyFilter(widgetClass, propId, defaultValue);
     });
 
-    it("should initialize with correct properties for IgnoreProperty worker", function () {
+    it("should initialize with correct properties for PropertyFilter worker", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.propId).to.equal(propId);
     });
 
-    it("check setters and default values for IgnoreProperty worker", function () {
+    it("check setters and default values for PropertyFilter worker", function () {
       let setterKeys = Object.keys(element.widgetClass.setters);
       expect(setterKeys[setterKeys.length - 1]).to.equal("tri-state");
       expect(element.defaultValue).to.equal(defaultValue);
@@ -947,9 +947,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing SlottedElementsByValRep class ==========================================================================
+  // == Testing ElementsValrep class ==========================================================================
   // ===================================================================================================================
-  describe("Test SlottedElementsByValRep class", function () {
+  describe("Test ElementsValrep class", function () {
     let widgetClass;
     let tagName;
     let styleClass;
@@ -969,17 +969,17 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       tagName = "fluent-option";
       styleClass = "";
       elementQuerySelector = "";
-      element = new SlottedElementsByValRep(widgetClass, tagName, styleClass, elementQuerySelector);
+      element = new ElementsValrep(widgetClass, tagName, styleClass, elementQuerySelector);
     });
 
-    it("should initialize with correct properties for SlottedElementsByValRep worker", function () {
+    it("should initialize with correct properties for ElementsValrep worker", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.tagName).to.equal(tagName);
       expect(element.styleClass).to.equal(styleClass);
       expect(element.elementQuerySelector).to.equal(elementQuerySelector);
     });
 
-    it("check setters and default values for SlottedElementsByValRep worker", function () {
+    it("check setters and default values for ElementsValrep worker", function () {
       let setterKeys = Object.keys(element.widgetClass.setters);
       let defaultValues = element.widgetClass.defaultValues;
       let setterKeysForUniface = Object.keys(element.widgetClass.setters);
@@ -991,7 +991,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       expect(defaultValues["valrep"].length).to.equal(0);
     });
 
-    it("should refresh correctly for SlottedElementsByValRep worker", function () {
+    it("should refresh correctly for ElementsValrep worker", function () {
       const valRepArray = [
         {
           "value": "1",
@@ -1029,9 +1029,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
   });
 
   // ===================================================================================================================
-  // == Testing SubWidgetsByProperty class ==========================================================================
+  // == Testing SubWidgetsProperty class ==========================================================================
   // ===================================================================================================================
-  describe("Test SubWidgetsByProperty Class", function () {
+  describe("Test SubWidgetsProperty Class", function () {
     let widgetClass;
     let tagName;
     let styleClass;
@@ -1105,10 +1105,10 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       styleClass = "u-controlbar-item";
       elementQuerySelector = "";
       propId = "subwidgets-start";
-      element = new SubWidgetsByProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
+      element = new SubWidgetsProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
     });
 
-    it("should initialize with correct properties for SubWidgetsByProperty worker", function () {
+    it("should initialize with correct properties for SubWidgetsProperty worker", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.tagName).to.equal(tagName);
       expect(element.styleClass).to.equal(styleClass);
@@ -1116,39 +1116,39 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       expect(element.propId).to.equal(propId);
     });
 
-    it("getLayout() method should generate and return layout for this setter for SubWidgetsByProperty worker", function () {
+    it("getLayout() method should generate and return layout for this setter for SubWidgetsProperty worker", function () {
       // eslint-disable-next-line no-undef
       let returnedLayoutElement = element.getLayout(_uf.createUxDefinitions(dataObjReturnLayout, true));
       expect(returnedLayoutElement[0].getAttribute("class")).to.equal("u-sw-select u-controlbar-item");
       expect(returnedLayoutElement[0].getAttribute("sub-widget-id")).to.equal("select");
     });
 
-    it("getLayout() method should generate correct warning for incorrect property/not defined for object in the browser's console for SubWidgetsByProperty worker", function () {
+    it("getLayout() method should generate correct warning for incorrect property/not defined for object in the browser's console for SubWidgetsProperty worker", function () {
       const warnSpy = sinon.spy(console, "warn");
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjIncorrectProperty, true));
-      expect(warnSpy.calledWith("SubWidgetsByProperty.getLayout: Property 'subwidgets-start' not defined for object. - Creation of sub-widgets skipped.")).to.be.true;
+      expect(warnSpy.calledWith("SubWidgetsProperty.getLayout: Property 'subwidgets-start' not defined for object. - Creation of sub-widgets skipped.")).to.be.true;
       warnSpy.restore(); // Restore the original console.warn.
     });
 
-    it("getLayout() method should generate correct warning for Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry with incorrect widget definition in the browser's console for SubWidgetsByProperty worker", function () {
+    it("getLayout() method should generate correct warning for Widget definition with name '${subWidgetClassName}' not found in UNIFACE.classRegistry with incorrect widget definition in the browser's console for SubWidgetsProperty worker", function () {
       const warnSpy = sinon.spy(console, "warn");
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(dataObjSubwidgetNotFoundInClassRegistry, true));
-      expect(warnSpy.calledWith("SubWidgetsByProperty.getLayout: Widget definition with name 'UX.Select123' is not registered. - Creation of sub-widget 'select'skipped.")).to.be.true;
+      expect(warnSpy.calledWith("SubWidgetsProperty.getLayout: Widget definition with name 'UX.Select123' is not registered. - Creation of sub-widget 'select'skipped.")).to.be.true;
       warnSpy.restore(); // Restore the original console.warn.
     });
 
-    it("getLayout() method should generate correct warning for property name not defined for object creation of sub-widget '${subWidgetId}' skipped in the browser console for SubWidgetsByProperty worker", function () {
+    it("getLayout() method should generate correct warning for property name not defined for object creation of sub-widget '${subWidgetId}' skipped in the browser console for SubWidgetsProperty worker", function () {
       let data = Object.assign({}, dataObjPropertyNameNotDefined);
       const warnSpy = sinon.spy(console, "warn");
       // eslint-disable-next-line no-undef
       element.getLayout(_uf.createUxDefinitions(data, true));
-      expect(warnSpy.calledWith("SubWidgetsByProperty.getLayout: Property 'select1_widget-class' not defined for object. - Creation of sub-widget 'select1' skipped.")).to.be.true;
+      expect(warnSpy.calledWith("SubWidgetsProperty.getLayout: Property 'select1_widget-class' not defined for object. - Creation of sub-widget 'select1' skipped.")).to.be.true;
       warnSpy.restore(); // Restore the original console.warn.
     });
 
-    it("getSubWidgetDefinitions() method should collects the subWidget definitions based on the properties and returns them correctly for SubWidgetsByProperty worker", function () {
+    it("getSubWidgetDefinitions() method should collects the subWidget definitions based on the properties and returns them correctly for SubWidgetsProperty worker", function () {
       let subWidgetDefinitionToCompare = {
         "select": {
           "styleClass": "u-sw-select",
@@ -1161,7 +1161,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
     });
 
-    it("getSubWidgetDefinitions() method should return styleClass,propPrefix,delegatedProperties,usefield as subWidgetDefinitions, if objectDefinition do not have correct propid for SubWidgetsByProperty worker", function () {
+    it("getSubWidgetDefinitions() method should return styleClass,propPrefix,delegatedProperties,usefield as subWidgetDefinitions, if objectDefinition do not have correct propid for SubWidgetsProperty worker", function () {
       let subWidgetDefinitionToCompare = {
       };
       // eslint-disable-next-line no-undef
@@ -1169,7 +1169,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
     });
 
-    it("getSubWidgetDefinitions() method should return array of object with all subWidget definition,if it have more than 1 subwidgets for SubWidgetsByProperty worker", function () {
+    it("getSubWidgetDefinitions() method should return array of object with all subWidget definition,if it have more than 1 subwidgets for SubWidgetsProperty worker", function () {
       let subWidgetDefinitionToCompare = {
         "select": {
           "styleClass": "u-sw-select",
@@ -1188,9 +1188,9 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
     });
   });
 
-  // == Testing UIBlock class ==========================================================================
+  // == Testing AttributeUIBlocking class ==========================================================================
   // ===================================================================================================================
-  describe("Test UIBlock class", function () {
+  describe("Test AttributeUIBlocking class", function () {
     let widgetClass, element;
 
     beforeEach(function () {
@@ -1203,7 +1203,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       Widget.triggers = {};
 
       widgetClass = Widget;
-      element = new UIBlock(widgetClass, "readonly");
+      element = new AttributeUIBlocking(widgetClass, "readonly");
     });
 
     it("should initialize with correct properties", function () {
@@ -1257,7 +1257,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
 
   });
 
-  describe("Test UIBlock class for invalid uiblocking", function () {
+  describe("Test AttributeUIBlocking class for invalid uiblocking", function () {
     let widgetClass, element;
 
     beforeEach(function () {
@@ -1270,7 +1270,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       Widget.triggers = {};
 
       widgetClass = Widget;
-      element = new UIBlock(widgetClass, "invalid");
+      element = new AttributeUIBlocking(widgetClass, "invalid");
     });
 
     it("should initialize with correct properties", function () {
@@ -1310,7 +1310,7 @@ import { Worker } from "../../src/ux/framework/common/worker.js";
       expect(widgetInstance.elements.widget.classList.add.calledWith("u-blocked")).to.be.true;
 
       expect(widgetInstance.error.calledOnce).to.be.true;
-      expect(widgetInstance.error.calledWith("UIBlock", "Invalid block type", "invalid")).to.be.true;
+      expect(widgetInstance.error.calledWith("AttributeUIBlocking", "Invalid block type", "invalid")).to.be.true;
     });
   });
 })();

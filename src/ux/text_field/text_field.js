@@ -1,18 +1,19 @@
 // @ts-check
 import { Widget } from "../framework/common/widget.js";
+import { WorkerBase } from "../framework/common/worker.js";
 import { Element } from "../framework/workers/element.js";
-import { HtmlAttribute } from "../framework/workers/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
-import { HtmlAttributeChoice } from "../framework/workers/html_attribute_choice.js";
-import { HtmlAttributeMinMaxLength } from "../framework/workers/html_attribute_min_max_length.js";
-import { HtmlAttributeNumber } from "../framework/workers/html_attribute_number.js";
-import { HtmlAttributeReadonlyDisabled } from "../framework/workers/html_attribute_readonly_disabled.js";
-import { SlottedElement } from "../framework/workers/slotted_element.js";
-import { SlottedError } from "../framework/workers/slotted_error.js";
-import { SlottedSubWidget } from "../framework/workers/slotted_sub_widget.js";
-import { StyleClass } from "../framework/workers/style_class.js";
-import { Trigger } from "../framework/workers/trigger.js";
-import { UIBlock } from "../framework/workers/ui_block.js";
+import { AttributeString } from "../framework/workers/html_attribute.js";
+import { AttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
+import { AttributeChoice } from "../framework/workers/html_attribute_choice.js";
+import { AttributeLength } from "../framework/workers/html_attribute_min_max_length.js";
+import { AttributeNumber } from "../framework/workers/html_attribute_number.js";
+// import { AttributeUIBlocking } from "../framework/workers/html_attribute_readonly_disabled.js";
+import { ElementIconText } from "../framework/workers/slotted_element.js";
+import { ElementError } from "../framework/workers/slotted_error.js";
+import { SubWidget } from "../framework/workers/slotted_sub_widget.js";
+import { StyleClassManager } from "../framework/workers/style_class.js";
+import { EventTrigger } from "../framework/workers/trigger.js";
+import { AttributeUIBlocking } from "../framework/workers/ui_block.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentTextField, provideFluentDesignSystem } from "@fluentui/web-components";
@@ -43,31 +44,103 @@ export class TextField extends Widget {
   static triggers = {};
 
   /**
+   * Private Worker: This is a specialized worker that updates the `readonly` and `disabled`
+   * attributes on an HTML element.
+   * In addition to setting these attributes, it performs a validity check during the UI blocked phase
+   * and updates the element state accordingly. This ensures that the control's interactivity aligns
+   * with the current application state and validation logic.
+   * @export
+   * @class AttributeUIBlocking
+   * @extends {WorkerBase}
+   */
+  static AttributeUIBlocking = class extends WorkerBase {
+
+    /**
+     * Creates an instance of AttributeUIBlocking.
+     * @param {typeof Widget} widgetClass
+     * @param {string} readonlyPropId
+     * @param {string} disabledPropId
+     * @param {string} uiblockedPropId
+     * @param {boolean} readonlyDefaultValue
+     * @param {boolean} disabledDefaultValue
+     * @param {boolean} uiblockedDefaultValue
+     */
+    constructor(widgetClass, readonlyPropId, disabledPropId, uiblockedPropId, readonlyDefaultValue, disabledDefaultValue, uiblockedDefaultValue) {
+      super(widgetClass);
+      this.propReadonly = readonlyPropId;
+      this.propDisabled = disabledPropId;
+      this.propUiblocked = uiblockedPropId;
+      this.registerSetter(widgetClass, readonlyPropId, this);
+      this.registerSetter(widgetClass, disabledPropId, this);
+      this.registerSetter(widgetClass, uiblockedPropId, this);
+      this.registerDefaultValue(widgetClass, readonlyPropId, readonlyDefaultValue);
+      this.registerDefaultValue(widgetClass, disabledPropId, disabledDefaultValue);
+      this.registerDefaultValue(widgetClass, uiblockedPropId, uiblockedDefaultValue);
+    }
+
+    /**
+     * Refreshes the widget based on properties.
+     * @param {Widget} widgetInstance
+     */
+    refresh(widgetInstance) {
+      this.log("refresh", {
+        "widgetInstance": widgetInstance.getTraceDescription()
+      });
+
+      let element = this.getElement(widgetInstance);
+      let readonly = this.getNode(widgetInstance.data, this.propReadonly);
+      let disabled = this.getNode(widgetInstance.data, this.propDisabled);
+      let uiblocked = this.getNode(widgetInstance.data, this.propUiblocked);
+
+      // Ensure widget and control is not disabled before checking validity since html always returns true on checkValidity for disabled field.
+      element["disabled"] = false;
+      element["control"].disabled = false;
+      // During uiblocked phase, set element to readonly or disabled based on validity.
+      if (uiblocked) {
+        if (!element["control"].checkValidity()) {
+          element["disabled"] = true;
+        } else {
+          element["readOnly"] = true;
+          element["disabled"] = this.toBoolean(disabled);
+        }
+      } else {
+        // Reset properties based on initial values when not uiblocked.
+        if (!element["control"].checkValidity()) {
+          element["disabled"] = this.toBoolean(disabled);
+        } else {
+          element["readOnly"] = this.toBoolean(readonly);
+          element["disabled"] = this.toBoolean(disabled);
+        }
+      }
+    }
+  };
+
+  /**
    * Widget Definition.
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-text-field", "", "", [
-    new HtmlAttribute(this, undefined, "currentValue", ""),
-    new HtmlAttribute(this, "value", "value", "", false, "change"),
-    new HtmlAttribute(this, "html:title", "title", undefined),
-    new HtmlAttribute(this, "html:size", "size", "20", true),
-    new HtmlAttribute(this, "html:pattern", "pattern", undefined),
-    new HtmlAttribute(this, "html:placeholder", "placeholder", undefined),
-    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
-    new HtmlAttributeChoice(this, "html:type", "type", ["text", "email", "password", "tel", "url", "date"], "text"),
-    new HtmlAttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
-    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new HtmlAttributeReadonlyDisabled(this, "html:readonly", "html:disabled", "uiblocked", false, false, false),
-    new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
-    new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
-    new UIBlock(this, "readonly"),
-    new StyleClass(this, ["u-text-field", "outline"]),
-    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
-    new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
-    new SlottedElement(this, "span", "u-suffix", ".u-suffix", "end", "suffix-text", "", "suffix-icon", ""),
-    new SlottedSubWidget(this, "span", "", "", "end", "changebutton", "UX.Button", {
+    new AttributeString(this, undefined, "currentValue", ""),
+    new AttributeString(this, "value", "value", "", false, "change"),
+    new AttributeString(this, "html:title", "title", undefined),
+    new AttributeString(this, "html:size", "size", "20", true),
+    new AttributeString(this, "html:pattern", "pattern", undefined),
+    new AttributeString(this, "html:placeholder", "placeholder", undefined),
+    new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new AttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
+    new AttributeChoice(this, "html:type", "type", ["text", "email", "password", "tel", "url", "date"], "text"),
+    new AttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
+    new AttributeBoolean(this, "html:hidden", "hidden", false),
+    new this.AttributeUIBlocking(this, "html:readonly", "html:disabled", "uiblocked", false, false, false),
+    new AttributeBoolean(this, "html:spellcheck", "spellcheck", false),
+    new AttributeLength(this, "html:minlength", "html:maxlength", undefined, undefined),
+    new AttributeUIBlocking(this, "readonly"),
+    new StyleClassManager(this, ["u-text-field", "outline"]),
+    new ElementIconText(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
+    new ElementIconText(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
+    new ElementError(this, "span", "u-error-icon", ".u-error-icon", "end"),
+    new ElementIconText(this, "span", "u-suffix", ".u-suffix", "end", "suffix-text", "", "suffix-icon", ""),
+    new SubWidget(this, "span", "", "", "end", "changebutton", "UX.Button", {
       "icon-position": "end",
       "html:tabindex": "-1",
       "html:appearance": "stealth"
@@ -76,7 +149,7 @@ export class TextField extends Widget {
     ], [
       "html:disabled"
     ]),
-    new Trigger(this, "onchange", "change", true)
+    new EventTrigger(this, "onchange", "change", true)
   ]);
 
   /**

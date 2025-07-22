@@ -4,7 +4,7 @@
  * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { Worker } from "../common/worker.js";
+import { WorkerBase } from "../common/worker.js";
 
 /**
  * HtmlAttributeReadonlyDisabled is a specialized worker that updates the `readonly` and `disabled`
@@ -14,9 +14,9 @@ import { Worker } from "../common/worker.js";
  * with the current application state and validation logic.
  * @export
  * @class HtmlAttributeReadonlyDisabled
- * @extends {Worker}
+ * @extends {WorkerBase}
  */
-export class HtmlAttributeReadonlyDisabled extends Worker {
+export class HtmlAttributeReadonlyDisabled extends WorkerBase {
 
   /**
    * Creates an instance of HtmlAttributeReadonlyDisabled.

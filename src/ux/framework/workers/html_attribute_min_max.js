@@ -4,21 +4,21 @@
  * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { Worker } from "../common/worker.js";
+import { WorkerBase } from "../common/worker.js";
 
 /**
- * HtmlAttributeMinMax sets and manages `min` and `max` properties for an element.
+ * AttributeRange sets and manages `min` and `max` properties for an element.
  * This worker ensures that the assigned minimum and maximum values are valid.
  * It applies the constraints to the element and validates that any current value
  * falls within the defined range.
  * @export
- * @class HtmlAttributeMinMax
- * @extends {Worker}
+ * @class AttributeRange
+ * @extends {WorkerBase}
  */
-export class HtmlAttributeMinMax extends Worker {
+export class AttributeRange extends WorkerBase {
 
   /**
-   * Creates an instance of HtmlAttributeMinMax.
+   * Creates an instance of AttributeRange.
    * @param {typeof import("../common/widget.js").Widget} widgetClass
    * @param {string} propMin
    * @param {string} propMax

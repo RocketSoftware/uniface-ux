@@ -7,7 +7,7 @@
 import { Element } from "./element.js";
 
 /**
- * SlottedElementsByValRep is a worker that adds elements based on a defined valrep (value representation),
+ * ElementsValrep is a worker that adds elements based on a defined valrep (value representation),
  * formatting them appropriately before insertion.
  * This is typically used to render dynamic content (e.g., options, labels) by mapping values
  * through a valrep and inserting the resulting elements into the component's slot structure.
@@ -15,13 +15,13 @@ import { Element } from "./element.js";
  * - the element is added as a child according the structure.
  * - the element is being slotted into the web-component (the parent element).
  * @export
- * @class SlottedElementsByValRep
+ * @class ElementsValrep
  * @extends {Element}
  */
-export class SlottedElementsByValRep extends Element {
+export class ElementsValrep extends Element {
 
   /**
-   * Creates an instance of SlottedElementsByValRep.
+   * Creates an instance of ElementsValrep.
    * @param {typeof import("../common/widget.js").Widget} widgetClass
    * @param {string} tagName
    * @param {string} styleClass

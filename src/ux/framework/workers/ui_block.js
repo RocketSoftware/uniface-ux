@@ -4,21 +4,21 @@
  * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { Worker } from "../common/worker.js";
+import { WorkerBase } from "../common/worker.js";
 
 /**
- * UIBlock worker applies UI blocking behavior based on the `uiblocked` property.
+ * AttributeUIBlocking worker applies UI blocking behavior based on the `uiblocked` property.
  * This worker updates your widget’s DOM element by:
  * - Toggling a CSS class (e.g. `u-blocked`) to reflect the blocked state visually.
  * - Applying or restoring the `disabled` or `readonly` properties based on the `uiBlocking` configuration of the widget.
  * @export
- * @class UIBlock
- * @extends {Worker}
+ * @class AttributeUIBlocking
+ * @extends {WorkerBase}
  */
-export class UIBlock extends Worker {
+export class AttributeUIBlocking extends WorkerBase {
 
   /**
-   * Creates an instance of UIBlock.
+   * Creates an instance of AttributeUIBlocking.
    * @param {typeof import("../common/widget.js").Widget} widgetClass - Specifies the widget class definition the worker is created for.
    * @param {string} uiblocking - Specifies the type of UI blocking behavior to apply. Supported values are "disabled" and "readonly".
    */
@@ -46,7 +46,7 @@ export class UIBlock extends Worker {
       } else if (this.uiblocking === "readonly") {
         element.readOnly = true;
       } else {
-        widgetInstance.error("UIBlock", "Invalid block type", this.uiblocking);
+        widgetInstance.error("AttributeUIBlocking", "Invalid block type", this.uiblocking);
       }
     } else {
       element.classList.remove("u-blocked");

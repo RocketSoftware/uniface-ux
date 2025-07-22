@@ -1,17 +1,17 @@
 // @ts-check
 import { Widget } from "../framework/common/widget.js";
 import { Element } from "../framework/workers/element.js";
-import { HtmlAttribute } from "../framework/workers/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
-import { HtmlAttributeChoice } from "../framework/workers/html_attribute_choice.js";
-import { HtmlAttributeNumber } from "../framework/workers/html_attribute_number.js";
-import { IgnoreProperty } from "../framework/workers/ignore_property.js";
-import { SlottedElement } from "../framework/workers/slotted_element.js";
-import { SlottedElementsByValRep } from "../framework/workers/slotted_element_by_valrep.js";
-import { SlottedError } from "../framework/workers/slotted_error.js";
-import { StyleClass } from "../framework/workers/style_class.js";
-import { Trigger } from "../framework/workers/trigger.js";
-import { UIBlock } from "../framework/workers/ui_block.js";
+import { AttributeString } from "../framework/workers/html_attribute.js";
+import { AttributeBoolean } from "../framework/workers/html_attribute_boolean.js";
+import { AttributeChoice } from "../framework/workers/html_attribute_choice.js";
+import { AttributeNumber } from "../framework/workers/html_attribute_number.js";
+import { PropertyFilter } from "../framework/workers/ignore_property.js";
+import { ElementIconText } from "../framework/workers/slotted_element.js";
+import { ElementsValrep } from "../framework/workers/slotted_element_by_valrep.js";
+import { ElementError } from "../framework/workers/slotted_error.js";
+import { StyleClassManager } from "../framework/workers/style_class.js";
+import { EventTrigger } from "../framework/workers/trigger.js";
+import { AttributeUIBlocking } from "../framework/workers/ui_block.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentRadio, fluentRadioGroup, provideFluentDesignSystem } from "@fluentui/web-components";
@@ -38,15 +38,15 @@ export class RadioGroup extends Widget {
   static triggers = {};
 
   /**
-   * Private Worker: RadioGroupSelectedValue
-   * @class RadioGroupSelectedValue
-   * @extends {HtmlAttribute}
+   * Private Worker: SelectedValue
+   * @class SelectedValue
+   * @extends {AttributeString}
    */
 
-  static RadioGroupSelectedValue = class extends HtmlAttribute {
+  static SelectedValue = class extends AttributeString {
 
     /**
-     * Creates an instance of RadioGroupSelectedValue.
+     * Creates an instance of SelectedValue.
      * @param {typeof Widget} widgetClass
      * @param {UPropName} [propId]
      * @param {string} [attrName]
@@ -117,15 +117,15 @@ export class RadioGroup extends Widget {
   };
 
   /**
-   * Private Worker: RadioGroupValRep
+   * Private Worker: ElementsValrep
    * This is specialized worker to accommodate tooltip changes to valrep element.
-   * @class RadioGroupValRep
-   * @extends {SlottedElementsByValRep}
+   * @class ElementsValrep
+   * @extends {ElementsValrep}
    */
-  static RadioGroupValRep = class extends SlottedElementsByValRep {
+  static ElementsValrep = class extends ElementsValrep {
 
     /**
-     * Creates an instance of RadioGroupValRep.
+     * Creates an instance of ElementsValrep.
      * @param {typeof Widget} widgetClass
      * @param {string} tagName
      * @param {string} styleClass
@@ -173,23 +173,23 @@ export class RadioGroup extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-radio-group", "", "", [
-    new StyleClass(this, ["u-radio-group"]),
-    new HtmlAttribute(this, "html:title", "title", undefined),
-    new HtmlAttributeBoolean(this, undefined, "ariaDisabled", false),
-    new HtmlAttributeBoolean(this, undefined, "ariaReadOnly", false),
-    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
-    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
-    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeChoice(this, "layout", "orientation", ["vertical", "horizontal"], "vertical", true),
-    new this.RadioGroupSelectedValue(this, "value", "value", ""),
-    new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength"),
-    new UIBlock(this, "readonly"),
-    new this.RadioGroupValRep(this, "fluent-radio", "u-radio", ""),
-    new SlottedElement(this, "label", "u-label-text", ".u-label-text", "label", "label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "label"),
-    new Trigger(this, "onchange", "change", true)
+    new StyleClassManager(this, ["u-radio-group"]),
+    new AttributeString(this, "html:title", "title", undefined),
+    new AttributeBoolean(this, undefined, "ariaDisabled", false),
+    new AttributeBoolean(this, undefined, "ariaReadOnly", false),
+    new AttributeBoolean(this, "html:disabled", "disabled", false),
+    new AttributeBoolean(this, "html:hidden", "hidden", false),
+    new AttributeBoolean(this, "html:readonly", "readOnly", false),
+    new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new AttributeChoice(this, "layout", "orientation", ["vertical", "horizontal"], "vertical", true),
+    new this.SelectedValue(this, "value", "value", ""),
+    new PropertyFilter(this, "html:minlength"),
+    new PropertyFilter(this, "html:maxlength"),
+    new AttributeUIBlocking(this, "readonly"),
+    new this.ElementsValrep(this, "fluent-radio", "u-radio", ""),
+    new ElementIconText(this, "label", "u-label-text", ".u-label-text", "label", "label-text"),
+    new ElementError(this, "span", "u-error-icon", ".u-error-icon", "label"),
+    new EventTrigger(this, "onchange", "change", true)
   ]);
 
   /**
