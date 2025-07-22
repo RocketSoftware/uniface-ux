@@ -253,7 +253,7 @@ export class Controlbar extends Widget {
       objectDefinition.setProperty(this.propId, validSubWidgetIds.join(""));
       return elements;
     }
-  
+
     /**
      * Collects the subWidget definitions based on the properties and returns them.
      * @param {UObjectDefinition} objectDefinition
