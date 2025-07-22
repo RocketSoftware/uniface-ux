@@ -6,15 +6,9 @@ Information regarding Fluent can be found [here](https://developer.microsoft.com
 
 Uniface UX is using Fluent UI web components.
 
+Fluent UI Web Components are used via [NPM](https://www.npmjs.com/package/@fluentui/web-components).
+
 To build Fluent experiences on the web using Web Components, please see [the documentation](https://learn.microsoft.com/en-us/fluent-ui/web-components/)
-
-## Downloaded JavaScript files
-
-Uniface UX is using version 2.6.1.
-
-The next Fluent UI Web Components JavaScript files have been downloaded:
-- [full web-components.js](https://unpkg.com/@fluentui/web-components@2.6.1/dist/web-components.js)
-- [minified web-components.min.js](https://unpkg.com/@fluentui/web-components@2.6.1/dist/web-components.min.js)
 
 ## Downloaded Office UI fabric
 

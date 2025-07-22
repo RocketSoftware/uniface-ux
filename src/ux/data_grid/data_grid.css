@@ -1,0 +1,189 @@
+/**
+ Styling data-grid container
+ Default u-responsive-type is "horizontal-scroll".
+ */
+.u-datagrid-container {
+  outline: calc(var(--stroke-width) * 1px) solid var(--neutral-stroke-divider-rest);
+  display: flex;
+  flex-direction: column;
+  width: -webkit-fill-available;
+  min-height: 10em;
+}
+
+.u-datagrid-container.u-hidden {
+  display: none;
+}
+
+/**
+ Styling data-grid header toolbar
+ */
+.u-datagrid-container .u-datagrid-labeltext {
+  font-size: var(--type-ramp-plus-2-font-size);
+  font-family: var(--body-font);
+  line-height: var(--type-ramp-plus-2-line-height);
+  font-variation-settings: var(--type-ramp-plus-2-font-variations);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-labeltext {
+  white-space: normal;
+  word-wrap: break-word;
+  height: auto;
+}
+
+/**
+ Styling data-grid itself.
+ */
+.u-datagrid-container .u-datagrid {
+  overflow-y: auto;
+  flex-shrink: 1;
+  flex-grow: 1;
+}
+
+.u-datagrid-container .u-datagrid-header-row,
+.u-datagrid-container .u-datagrid-content-row,
+.u-datagrid-container .u-datagrid-no_content-row {
+  grid-auto-flow: column;
+  min-width: fit-content;
+  grid-auto-columns: minmax(7em, 1fr);
+  padding: unset;
+}
+
+.u-datagrid-container .u-datagrid-header-cell,
+.u-datagrid-container .u-datagrid-content-cell{
+  border-radius: unset;
+}
+
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-header-row,
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-content-row,
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-no_content-row {
+  grid-auto-columns: minmax(5em, 1fr);
+}
+
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-header-cell,
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-content-cell {
+  white-space: normal;
+  word-wrap: break-word;
+  align-items: baseline;
+  height: auto;
+}
+
+/**
+ Styling column headers
+ */
+.u-datagrid-container .u-datagrid-header-row {
+  position: sticky;
+  top: 0px;
+}
+
+.u-datagrid-container .u-datagrid-header-cell {
+  background-color: var(--neutral-layer-2);
+  text-overflow: ellipsis;
+}
+
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="true"],
+.u-datagrid-container .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-enabled] {
+  cursor: pointer;
+}
+
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="false"] .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="true"]:not([u-sort-direction]) .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-enabled]:not([u-sort-direction]) .u-datagrid-sort-icon {
+  display: none;
+}
+
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="true"]:not([u-sort-direction]):hover .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-enabled]:not([u-sort-direction]):hover .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="true"]:not([u-sort-direction]):focus-within .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-enabled]:not([u-sort-direction]):focus-within .u-datagrid-sort-icon {
+  display: inline-block;
+  color: var(--neutral-base-color);
+}
+
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="true"][u-sort-direction="descending"] .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell[u-sort-enabled="true"][u-sort-direction="desc"] .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-direction="descending"] .u-datagrid-sort-icon,
+.u-datagrid-container .u-datagrid-header-cell:not([u-sort-enabled="false"])[u-sort-direction="desc"] .u-datagrid-sort-icon {
+  transform: rotate(180deg);
+}
+
+/**
+ * Styling data-grid cell content
+*/
+.u-datagrid-container .u-datagrid-content-cell {
+  display: flex;
+  min-width: 0;
+  flex-direction: row;
+  align-items: center;
+}
+
+.u-datagrid-container .u-datagrid-content-cell .u-value {
+  display: inline-flex;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.u-datagrid-container .u-datagrid-content-cell .u-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.u-datagrid-container[u-responsive-type="wrap"] .u-datagrid-content-cell .u-text {
+  white-space: normal;
+  text-overflow: normal;
+}
+
+.u-datagrid-container .u-datagrid-content-cell .u-secondary-text {
+  margin-inline-start: .5em;
+}
+
+.u-datagrid-container .u-datagrid-content-cell .u-secondary-text::before {
+  content: "(";
+}
+
+.u-datagrid-container .u-datagrid-content-cell .u-secondary-text::after {
+  content: ")";
+}
+
+.u-datagrid-container .u-datagrid-content-cell .u-error-icon {
+  margin-inline-start: 0.3em;
+}
+
+.u-datagrid-container .u-datagrid-content-cell .u-prefix-text,
+.u-datagrid-container .u-datagrid-content-cell .u-prefix-icon {
+  overflow: hidden;
+  white-space: nowrap;
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin-inline-end: 0.3em;
+}
+
+.u-datagrid-container .u-datagrid-content-cell .u-suffix-text,
+.u-datagrid-container .u-datagrid-content-cell .u-suffix-icon {
+  overflow: hidden;
+  white-space: nowrap;
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin-inline-start: 0.3em;
+}
+
+.u-datagrid-container .u-datagrid-content-cell.u-disabled > * {
+  opacity: var(--disabled-opacity);
+}
+
+.u-datagrid-container .u-datagrid-content-cell.u-hidden > * {
+  display: none;
+}
+
+/**
+ Styling the error icon
+ */
+.u-datagrid-container .u-datagrid-content-cell.u-invalid .u-value,
+.u-datagrid-container .u-datagrid-content-cell.u-format-invalid .u-value,
+.u-datagrid-container .u-datagrid-content-cell.u-invalid .u-error-icon,
+.u-datagrid-container .u-datagrid-content-cell.u-format-invalid .u-error-icon {
+  color: #d13438;
+}
