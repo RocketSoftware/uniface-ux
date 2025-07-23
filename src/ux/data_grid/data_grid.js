@@ -48,13 +48,13 @@ export class DataGridCollection extends Widget {
   static uiBlocking = "";
 
   /**
- * Private Worker: This worker creates a placeholder element for an object as specified by the provided bindingId.
- * The placeholder element will be directly bound to that object after which Uniface fully maintains the widgets.
- * The widget-class is provided by Uniface (usys.ini and web.ini).
- * @export
- * @class WidgetOccurrence
- * @extends {WorkerBase}
- */
+   * Private Worker: This worker creates a placeholder element for an object as specified by the provided bindingId.
+   * The placeholder element will be directly bound to that object after which Uniface fully maintains the widgets.
+   * The widget-class is provided by Uniface (usys.ini and web.ini).
+   * @export
+   * @class WidgetOccurrence
+   * @extends {WorkerBase}
+   */
   static WidgetOccurrence = class extends WorkerBase {
 
     /**

@@ -38,8 +38,8 @@ export class Select extends Widget {
   static triggers = {};
 
   /**
-   * Private Worker: AttributeBoolean ReadOnly Attribute.
-   * Readonly is not supported by fluent select thus explicitly making it readonly.
+   * Private Worker: This is a specialized worker used to explicitly make the select widget readonly.
+   * This is required as the readonly attribute is not supported by fluent-select.
    * @class AttributeBooleanReadOnly
    * @extends {AttributeBoolean}
    */
