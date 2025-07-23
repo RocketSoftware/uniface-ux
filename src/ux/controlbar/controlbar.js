@@ -1,13 +1,13 @@
 // @ts-check
-import { Widget } from "../framework/widget.js";
-import { Worker } from "../framework/workers/worker/worker.js";
-import { Element } from "../framework/workers/element/element.js";
-import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute/html_attribute_boolean.js";
-import { HtmlAttributeChoice } from "../framework/workers/html_attribute/html_attribute_choice.js";
-import { IgnoreProperty } from "../framework/workers/ignore_property/ignore_property.js";
-import { StyleClass } from "../framework/workers/style_class/style_class.js";
-import { SubWidgetsByProperty } from "../framework/workers/sub_widgets/sub_widgets_by_property.js";
+import { Widget } from "../framework/common/widget.js";
+import { WorkerBase } from "../framework/common/worker_base.js";
+import { Element } from "../framework/workers/element.js";
+import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
+import { AttributeChoice } from "../framework/workers/attribute_choice.js";
+import { PropertyFilter } from "../framework/workers/property_filter.js";
+import { StyleClassManager } from "../framework/workers/style_class_manager.js";
+import { getWidgetClass } from "../framework/common/dsp_connector.js";
 
 /**
  * Controlbar Widget
@@ -29,15 +29,15 @@ export class Controlbar extends Widget {
   static triggers = {};
 
   /**
-   * Private Worker: HandleOverFlowPropertyWorker.
+   * Private Worker: EventOverFlow.
    * Handles the horizontal responsiveness of the controlbar based on overflow-behavior and priority.
-   * @class HandleOverFlowPropertyWorker
-   * @extends {Worker}
+   * @class EventOverFlow
+   * @extends {WorkerBase}
    */
-  static HandleOverFlowPropertyWorker = class extends Worker {
+  static EventOverFlow = class extends WorkerBase {
 
     /**
-     * Creates an instance of HandleOverFlowPropertyWorker.
+     * Creates an instance of EventOverFlow.
      * @param {typeof Widget} widgetClass
      * @param {string} propId
      * @param {UPropValue} defaultValue
@@ -178,30 +178,136 @@ export class Controlbar extends Widget {
   };
 
   /**
+   * Private Worker: This worker generates sub-widgets based on Uniface properties.
+   * This worker adds one or more sub-widgets to the widget based on object definitions.
+   * This happens once during processLayout and cannot be changed afterwards.
+   * The property, of which the name is specified by propId, holds a Uniface list of subWidgetIds which are be added as sub-widgets:
+   *   "sub-widget1;sub-widget2;sub-widget3;sub-widget4"
+   * For each sub-widget, additional properties need to be available:
+   *   - "<subWidgetId>_widget-class" - defines the sub-widget's widget-class as registered with UNIFACE.classRegistry
+   *   - "<subWidgetId>_delegated-properties" - defines a list of properties that need to be delegated to the sub-widget;
+   *      if not defined nothing will be delegated to the sub-widget.
+   * The sub-widgets receive a style-class, of syntax "u-sw-<subWidgetId>", to allow custom styling of the sub-widgets.
+   * @export
+   * @class SubWidgetsProperty
+   * @extends {Element}
+   */
+  static SubWidgetsProperty = class extends Element {
+
+    /**
+     * Creates an instance of SubWidgetsProperty.
+     * @param {typeof Widget} widgetClass - Specifies the widget class definition the setter is created for.
+     * @param {string} tagName - Specifies the wub-widget's element tag-name.
+     * @param {string} styleClass - Specifies the style class for custom styling of the sub-widget.
+     * @param {string} elementQuerySelector - Specifies the querySelector to find the sub-widget back.
+     * @param {UPropName} propId - specifies the property used to get the ids of the to be added sub-widgets.
+     */
+    constructor(widgetClass, tagName, styleClass, elementQuerySelector, propId) {
+      super(widgetClass, tagName, styleClass, elementQuerySelector);
+      this.styleClass = styleClass;
+      this.propId = propId;
+      this.registerSubWidgetWorker(widgetClass, this);
+    }
+
+    /**
+     * Generate and return layout for this setter.
+     * @param {UObjectDefinition} objectDefinition
+     * @returns {Array<HTMLElement>}
+     */
+    getLayout(objectDefinition) {
+      let elements = [];
+      let validSubWidgetIds = [];
+      let subWidgetIds = objectDefinition.getProperty(this.propId);
+      if (subWidgetIds) {
+        subWidgetIds.split("")?.forEach((subWidgetId) => {
+          let propName = `${subWidgetId}_widget-class`;
+          let subWidgetClassName = objectDefinition.getProperty(propName);
+          if (subWidgetClassName) {
+            let subWidgetClass = getWidgetClass(subWidgetClassName);
+            if (subWidgetClass) {
+              validSubWidgetIds.push(subWidgetId);
+              let element = document.createElement(this.tagName);
+              element = subWidgetClass.processLayout(element, objectDefinition);
+              let subWidgetStyleClass = `u-sw-${subWidgetId}`;
+              element.classList.add(subWidgetStyleClass);
+              if (this.styleClass) {
+                element.classList.add(this.styleClass);
+              }
+              element.setAttribute("sub-widget-id", subWidgetId);
+              elements.push(element);
+            } else {
+              this.warn(
+                "getLayout",
+                `Widget definition with name '${subWidgetClassName}' is not registered.`,
+                `Creation of sub-widget '${subWidgetId}'skipped`
+              );
+            }
+          } else {
+            this.warn("getLayout", `Property '${propName}' not defined for object.`, `Creation of sub-widget '${subWidgetId}' skipped`);
+          }
+        });
+      } else {
+        this.warn("getLayout", `Property '${this.propId}' not defined for object.`, "Creation of sub-widgets skipped");
+      }
+      // Some sub-widgets might not get created -> update the property.
+      objectDefinition.setProperty(this.propId, validSubWidgetIds.join(""));
+      return elements;
+    }
+
+    /**
+     * Collects the subWidget definitions based on the properties and returns them.
+     * @param {UObjectDefinition} objectDefinition
+     * @returns {object}
+     */
+    getSubWidgetDefinitions(objectDefinition) {
+      let subWidgetDefinitions = {};
+      let subWidgetIds = objectDefinition.getProperty(this.propId);
+      if (subWidgetIds) {
+        subWidgetIds.split("")?.forEach((subWidgetId) => {
+          const classNamePropId = `${subWidgetId}_widget-class`;
+          const delegatedPropertiesPropId = `${subWidgetId}_delegated-properties`;
+          const className = objectDefinition.getProperty(classNamePropId);
+          const subWidgetClass = getWidgetClass(className);
+          if (subWidgetClass) {
+            const delegatedProperties = objectDefinition.getProperty(delegatedPropertiesPropId);
+            let subWidgetDefinition = {};
+            subWidgetDefinition.class = subWidgetClass;
+            subWidgetDefinition.styleClass = `u-sw-${subWidgetId}`;
+            subWidgetDefinition.propPrefix = subWidgetId;
+            subWidgetDefinition.delegatedProperties = delegatedProperties ? delegatedProperties.split("") : [];
+            subWidgetDefinitions[subWidgetId] = subWidgetDefinition;
+          }
+        });
+      }
+      return subWidgetDefinitions;
+    }
+  };
+
+  /**
    * Widget definition.
    */
   // prettier-ignore
   static structure = new Element(this, "div", "", "", [
-    new HtmlAttributeChoice(this, "orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
-    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new StyleClass(this, ["u-controlbar"]),
-    new this.HandleOverFlowPropertyWorker(this, "widget-resize", false),
-    new HtmlAttribute(this, "value", "value", ""),
-    new HtmlAttribute(this, undefined, "role", "toolbar"),
-    new IgnoreProperty(this, "error", "false"),
-    new IgnoreProperty(this, "error-message", ""),
-    new IgnoreProperty(this, "html:disabled", "false"),
-    new IgnoreProperty(this, "html:readonly", "false"),
-    new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength"),
+    new AttributeChoice(this, "orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
+    new AttributeBoolean(this, "html:hidden", "hidden", false),
+    new StyleClassManager(this, ["u-controlbar"]),
+    new this.EventOverFlow(this, "widget-resize", false),
+    new AttributeString(this, "value", "value", ""),
+    new AttributeString(this, undefined, "role", "toolbar"),
+    new PropertyFilter(this, "error", "false"),
+    new PropertyFilter(this, "error-message", ""),
+    new PropertyFilter(this, "html:disabled", "false"),
+    new PropertyFilter(this, "html:readonly", "false"),
+    new PropertyFilter(this, "html:minlength"),
+    new PropertyFilter(this, "html:maxlength"),
     new Element(this, "div", "u-start-section", ".u-start-section", [
-      new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-start")
+      new this.SubWidgetsProperty(this, "span", "u-controlbar-item", "", "subwidgets-start")
     ]),
     new Element(this, "div", "u-center-section", ".u-center-section", [
-      new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-center")
+      new this.SubWidgetsProperty(this, "span", "u-controlbar-item", "", "subwidgets-center")
     ]),
     new Element(this, "div", "u-end-section", ".u-end-section", [
-      new SubWidgetsByProperty(this, "span", "u-controlbar-item", "", "subwidgets-end")
+      new this.SubWidgetsProperty(this, "span", "u-controlbar-item", "", "subwidgets-end")
     ])
   ]);
 

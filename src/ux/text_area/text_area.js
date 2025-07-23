@@ -1,16 +1,16 @@
 // @ts-check
-import { Widget } from "../framework/widget.js";
-import { Element } from "../framework/workers/element/element.js";
-import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute/html_attribute_boolean.js";
-import { HtmlAttributeChoice } from "../framework/workers/html_attribute/html_attribute_choice.js";
-import { HtmlAttributeMinMaxLength } from "../framework/workers/html_attribute/html_attribute_min_max_length.js";
-import { HtmlAttributeNumber } from "../framework/workers/html_attribute/html_attribute_number.js";
-import { SlottedElement } from "../framework/workers/slotted/slotted_element.js";
-import { SlottedError } from "../framework/workers/slotted/slotted_error.js";
-import { StyleClass } from "../framework/workers/style_class/style_class.js";
-import { Trigger } from "../framework/workers/trigger/trigger.js";
-import { UIBlock } from "../framework/workers/ui_block/ui_block.js";
+import { Widget } from "../framework/common/widget.js";
+import { Element } from "../framework/workers/element.js";
+import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
+import { AttributeChoice } from "../framework/workers/attribute_choice.js";
+import { AttributeLength } from "../framework/workers/attribute_length.js";
+import { AttributeNumber } from "../framework/workers/attribute_number.js";
+import { ElementIconText } from "../framework/workers/element_icon_text.js";
+import { ElementError } from "../framework/workers/element_error.js";
+import { StyleClassManager } from "../framework/workers/style_class_manager.js";
+import { EventTrigger } from "../framework/workers/event_trigger.js";
+import { AttributeUIBlocking } from "../framework/workers/attribute_ui_blocking.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentTextArea, provideFluentDesignSystem } from "@fluentui/web-components";
@@ -41,26 +41,26 @@ export class TextArea extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-text-area", "", "", [
-    new HtmlAttribute(this, undefined, "currentValue", ""),
-    new HtmlAttribute(this, "value", "value", "", false, "change"),
-    new HtmlAttribute(this, "html:title", "title", undefined),
-    new HtmlAttribute(this, "html:cols", "cols", "20"),
-    new HtmlAttribute(this, "html:rows", "rows", "", true),
-    new HtmlAttribute(this, "html:placeholder", "placeholder", undefined),
-    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
-    new HtmlAttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
-    new HtmlAttributeChoice(this, "html:resize", "resize", ["none", "both", "horizontal", "vertical"], "both"),
-    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
-    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
-    new HtmlAttributeBoolean(this, "html:spellcheck", "spellcheck", false),
-    new HtmlAttributeMinMaxLength(this, "html:minlength", "html:maxlength", undefined, undefined),
-    new UIBlock(this, "readonly"),
-    new StyleClass(this, ["u-text-area", "outline"]),
-    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
-    new Trigger(this, "onchange", "change", true)
+    new StyleClassManager(this, ["u-text-area", "outline"]),
+    new AttributeString(this, undefined, "currentValue", ""),
+    new AttributeString(this, "value", "value", "", false, "change"),
+    new AttributeString(this, "html:title", "title", undefined),
+    new AttributeString(this, "html:cols", "cols", "20"),
+    new AttributeString(this, "html:rows", "rows", "", true),
+    new AttributeString(this, "html:placeholder", "placeholder", undefined),
+    new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new AttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
+    new AttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
+    new AttributeChoice(this, "html:resize", "resize", ["none", "both", "horizontal", "vertical"], "both"),
+    new AttributeBoolean(this, "html:hidden", "hidden", false),
+    new AttributeBoolean(this, "html:disabled", "disabled", false),
+    new AttributeBoolean(this, "html:readonly", "readOnly", false),
+    new AttributeBoolean(this, "html:spellcheck", "spellcheck", false),
+    new AttributeLength(this, "html:minlength", "html:maxlength", undefined, undefined),
+    new AttributeUIBlocking(this, "readonly"),
+    new ElementIconText(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
+    new ElementError(this, "span", "u-error-icon", ".u-error-icon", "end"),
+    new EventTrigger(this, "onchange", "change", true)
   ]);
 
   /**

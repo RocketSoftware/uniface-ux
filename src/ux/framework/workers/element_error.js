@@ -1,26 +1,26 @@
 // @ts-check
 
 /**
- * @typedef {import("../../widget.js").Widget} Widget
+ * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { Element } from "../element/element.js";
+import { Element } from "./element.js";
 
 /**
- * SlottedError is a specialized worker responsible for updating the error element within a widget.
+ * ElementError is a specialized worker responsible for updating the error element within a widget.
  * This setter adds an element to your widget, where:
  * - the element is added as a child according the structure,
  * - the element is being slotted into the web-component (the parent element),
  * - the element provides the data-validation error visualization of the widget.
  * @export
- * @class SlottedError
+ * @class ElementError
  * @extends {Element}
  */
-export class SlottedError extends Element {
+export class ElementError extends Element {
 
   /**
-   * Creates an instance of SlottedError.
-   * @param {typeof import("../../widget.js").Widget} widgetClass
+   * Creates an instance of ElementError.
+   * @param {typeof import("../common/widget.js").Widget} widgetClass
    * @param {string} tagName
    * @param {string} styleClass
    * @param {string} elementQuerySelector

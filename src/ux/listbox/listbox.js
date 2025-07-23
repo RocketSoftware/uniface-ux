@@ -1,17 +1,17 @@
 // @ts-check
-import { Widget } from "../framework/widget.js";
-import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute/html_attribute_boolean.js";
-import { HtmlAttributeNumber } from "../framework/workers/html_attribute/html_attribute_number.js";
-import { IgnoreProperty } from "../framework/workers/ignore_property/ignore_property.js";
-import { SlottedElement } from "../framework/workers/slotted/slotted_element.js";
-import { SlottedElementsByValRep } from "../framework/workers/slotted/slotted_element_by_valrep.js";
-import { SlottedError } from "../framework/workers/slotted/slotted_error.js";
-import { StyleClass } from "../framework/workers/style_class/style_class.js";
-import { Trigger } from "../framework/workers/trigger/trigger.js";
-import { UIBlock } from "../framework/workers/ui_block/ui_block.js";
-import { Worker } from "../framework/workers/worker/worker.js";
-import { Element } from "../framework/workers/element/element.js";
+import { Widget } from "../framework/common/widget.js";
+import { WorkerBase } from "../framework/common/worker_base.js";
+import { Element } from "../framework/workers/element.js";
+import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
+import { AttributeNumber } from "../framework/workers/attribute_number.js";
+import { PropertyFilter } from "../framework/workers/property_filter.js";
+import { ElementIconText } from "../framework/workers/element_icon_text.js";
+import { ElementsValrep } from "../framework/workers/elements_valrep.js";
+import { ElementError } from "../framework/workers/element_error.js";
+import { StyleClassManager } from "../framework/workers/style_class_manager.js";
+import { EventTrigger } from "../framework/workers/event_trigger.js";
+import { AttributeUIBlocking } from "../framework/workers/attribute_ui_blocking.js";
 // The import of Fluent UI web-components is done in loader.js.
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
@@ -39,13 +39,13 @@ export class Listbox extends Widget {
 
   /**
    * Private Worker: Used to handle changes in value and valrep.
-   * @class ListboxSelectedValue
-   * @extends {Worker}
+   * @class AttributeSelectedIndex
+   * @extends {WorkerBase}
    */
-  static ListboxSelectedValue = class extends Worker {
+  static AttributeSelectedIndex = class extends WorkerBase {
 
     /**
-     * Creates an instance of ListboxSelectedValue.
+     * Creates an instance of AttributeSelectedIndex.
      * @param {typeof Widget} widgetClass
      * @param {string} propId
      * @param {string} defaultValue
@@ -116,13 +116,13 @@ export class Listbox extends Widget {
 
   /**
    * Private Worker: Used to handle size and overflow.
-   * @class SizeAttribute
-   * @extends {Worker}
+   * @class AttributeSize
+   * @extends {WorkerBase}
    */
-  static SizeAttribute = class extends Worker {
+  static AttributeSize = class extends WorkerBase {
 
     /**
-     * Creates an instance of SizeAttribute.
+     * Creates an instance of AttributeSize.
      * @param {typeof Widget} widgetClass
      * @param {string} propId
      * @param {string | undefined} defaultValue
@@ -207,10 +207,10 @@ export class Listbox extends Widget {
 
   /**
   * Private Worker: This is specialized worker to accommodate Listbox with no valrep defined.
-  * @class ListBoxValRep
-  * @extends {SlottedElementsByValRep}
+  * @class ElementsValrep
+  * @extends {ElementsValrep}
   */
-  static ListBoxValRep = class extends SlottedElementsByValRep {
+  static ElementsValrep = class extends ElementsValrep {
     refresh(widgetInstance) {
       const valrep = this.getNode(widgetInstance.data, "valrep");
       if (valrep.length > 0) {
@@ -227,10 +227,10 @@ export class Listbox extends Widget {
 
   /**
   * Private Worker: Specialized worker to explicitly add readonly as an attribute because it is not supported as a property.
-  * @class ListboxUIBlock
-  * @extends {UIBlock}
+  * @class AttributeUIBlocking
+  * @extends {AttributeUIBlocking}
   */
-  static ListboxUIBlock = class extends UIBlock {
+  static AttributeUIBlocking = class extends AttributeUIBlocking {
     refresh(widgetInstance) {
       this.log("refresh", {
         "widgetInstance": widgetInstance.getTraceDescription()
@@ -252,7 +252,7 @@ export class Listbox extends Widget {
           }
         }
       } else {
-        widgetInstance.error("UIBlock", "Invalid block type", this.uiblocking);
+        widgetInstance.error("AttributeUIBlocking", "Invalid block type", this.uiblocking);
       }
     }
   };
@@ -262,27 +262,27 @@ export class Listbox extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-listbox", "", "", [
-    new StyleClass(this, ["u-listbox"]),
-    new HtmlAttribute(this, "html:title", "title", undefined),
-    new HtmlAttribute(this, undefined, "role", "listbox"),
-    new HtmlAttribute(this, undefined, "ariaActiveDescendant", ""),
-    new HtmlAttribute(this, undefined, "ariaControls", ""),
-    new HtmlAttributeBoolean(this, undefined, "ariaExpanded", false),
-    new HtmlAttributeBoolean(this, "html:disabled", "ariaDisabled", false),
-    new HtmlAttributeBoolean(this, "html:readonly", "ariaReadOnly", false),
-    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
-    new HtmlAttributeBoolean(this, "html:readonly", "readonly", false, true),
-    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new this.ListBoxValRep(this, "fluent-option", "u-option", ""),
-    new this.ListboxSelectedValue(this, "value", ""),
-    new this.SizeAttribute(this, "size", undefined),
-    new this.ListboxUIBlock(this, "readonly"),
-    new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength"),
-    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "error"),
-    new Trigger(this, "onchange", "change", true)
+    new StyleClassManager(this, ["u-listbox"]),
+    new AttributeString(this, "html:title", "title", undefined),
+    new AttributeString(this, undefined, "role", "listbox"),
+    new AttributeString(this, undefined, "ariaActiveDescendant", ""),
+    new AttributeString(this, undefined, "ariaControls", ""),
+    new AttributeBoolean(this, undefined, "ariaExpanded", false),
+    new AttributeBoolean(this, "html:disabled", "ariaDisabled", false),
+    new AttributeBoolean(this, "html:readonly", "ariaReadOnly", false),
+    new AttributeBoolean(this, "html:disabled", "disabled", false),
+    new AttributeBoolean(this, "html:readonly", "readonly", false, true),
+    new AttributeBoolean(this, "html:hidden", "hidden", false),
+    new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new this.ElementsValrep(this, "fluent-option", "u-option", ""),
+    new this.AttributeSelectedIndex(this, "value", ""),
+    new this.AttributeSize(this, "size", undefined),
+    new this.AttributeUIBlocking(this, "readonly"),
+    new PropertyFilter(this, "html:minlength"),
+    new PropertyFilter(this, "html:maxlength"),
+    new ElementIconText(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
+    new ElementError(this, "span", "u-error-icon", ".u-error-icon", "error"),
+    new EventTrigger(this, "onchange", "change", true)
   ]);
 
   /**

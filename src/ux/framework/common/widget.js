@@ -1,6 +1,6 @@
 // @ts-check
 import "./typedef.js";
-import "./workers/worker/worker.js";
+import "./worker_base.js";
 import { Base } from "./base.js";
 
 /**

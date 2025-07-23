@@ -1,26 +1,26 @@
 // @ts-check
 
 /**
- * @typedef {import("../../widget.js").Widget} Widget
+ * @typedef {import("./widget.js").Widget} Widget
  */
 
-import { Worker } from "../worker/worker.js";
+import { WorkerBase } from "./worker_base.js";
 
 /**
- * BaseHtmlAttribute worker is an abstract Html-attribute base worker.
+ * AttributeBase worker is an abstract Html-attribute base worker.
  * This worker is the abstract base class for all workers that maintain an attribute of an element.
  * This class provides a common foundation for attribute workers and includes utility methods,
  * to update the attribute value of the associated DOM element.
  * @export
- * @class BaseHtmlAttribute
+ * @class AttributeBase
  * @abstract
- * @extends {Worker}
+ * @extends {WorkerBase}
  */
-export class BaseHtmlAttribute extends Worker {
+export class AttributeBase extends WorkerBase {
 
   /**
-   * Creates an instance of BaseHtmlAttribute.
-   * @param {typeof import("../../widget.js").Widget} widgetClass
+   * Creates an instance of AttributeBase.
+   * @param {typeof import("./widget.js").Widget} widgetClass
    * @param {UPropName} [propId]
    * @param {string} [attrName]
    * @param {UPropValue} [defaultValue]

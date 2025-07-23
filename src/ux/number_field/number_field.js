@@ -1,19 +1,19 @@
 // @ts-check
-import { registerWidgetClass } from "../framework/dsp_connector.js";
-import { Widget } from "../framework/widget.js";
-import { Element } from "../framework/workers/element/element.js";
-import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute/html_attribute_boolean.js";
-import { HtmlAttributeChoice } from "../framework/workers/html_attribute/html_attribute_choice.js";
-import { HtmlAttributeMinMax } from "../framework/workers/html_attribute/html_attribute_min_max.js";
-import { HtmlAttributeNumber } from "../framework/workers/html_attribute/html_attribute_number.js";
-import { IgnoreProperty } from "../framework/workers/ignore_property/ignore_property.js";
-import { SlottedElement } from "../framework/workers/slotted/slotted_element.js";
-import { SlottedError } from "../framework/workers/slotted/slotted_error.js";
-import { SlottedSubWidget } from "../framework/workers/slotted/slotted_sub_widget.js";
-import { StyleClass } from "../framework/workers/style_class/style_class.js";
-import { Trigger } from "../framework/workers/trigger/trigger.js";
-import { UIBlock } from "../framework/workers/ui_block/ui_block.js";
+import { registerWidgetClass } from "../framework/common/dsp_connector.js";
+import { Widget } from "../framework/common/widget.js";
+import { Element } from "../framework/workers/element.js";
+import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
+import { AttributeChoice } from "../framework/workers/attribute_choice.js";
+import { AttributeRange } from "../framework/workers/attribute_range.js";
+import { AttributeNumber } from "../framework/workers/attribute_number.js";
+import { PropertyFilter } from "../framework/workers/property_filter.js";
+import { ElementIconText } from "../framework/workers/element_icon_text.js";
+import { ElementError } from "../framework/workers/element_error.js";
+import { SubWidget } from "../framework/workers/sub_widget.js";
+import { StyleClassManager } from "../framework/workers/style_class_manager.js";
+import { EventTrigger } from "../framework/workers/event_trigger.js";
+import { AttributeUIBlocking } from "../framework/workers/attribute_ui_blocking.js";
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentNumberField, provideFluentDesignSystem } from "@fluentui/web-components";
 provideFluentDesignSystem().register(fluentNumberField());
@@ -46,29 +46,29 @@ export class NumberField extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-number-field", "", "", [
-    new HtmlAttribute(this, undefined, "currentValue", ""),
-    new HtmlAttribute(this, "value", "value", "", false, "change"),
-    new HtmlAttribute(this, "html:size", "size", "", true),
-    new HtmlAttribute(this, "html:step", "step", 1),
-    new HtmlAttribute(this, "html:placeholder", "placeholder", undefined),
-    new HtmlAttribute(this, "html:title", "title", undefined),
-    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline", false),
-    new HtmlAttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
-    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new HtmlAttributeBoolean(this, "html:hide-step", "hideStep", false),
-    new HtmlAttributeBoolean(this, "html:disabled", "disabled", false),
-    new HtmlAttributeBoolean(this, "html:readonly", "readOnly", false),
-    new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength"),
-    new HtmlAttributeMinMax(this, "html:min", "html:max", undefined, undefined),
-    new UIBlock(this, "readonly"),
-    new StyleClass(this, ["u-number-field", "outline"]),
-    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
-    new SlottedElement(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
-    new SlottedElement(this, "span", "u-suffix", ".u-suffix", "end", "suffix-text", "", "suffix-icon", ""),
-    new SlottedSubWidget(this, "span", "", "", "end", "changebutton", "UX.Button", {
+    new StyleClassManager(this, ["u-number-field", "outline"]),
+    new AttributeString(this, undefined, "currentValue", ""),
+    new AttributeString(this, "value", "value", "", false, "change"),
+    new AttributeString(this, "html:size", "size", "", true),
+    new AttributeString(this, "html:step", "step", 1),
+    new AttributeString(this, "html:placeholder", "placeholder", undefined),
+    new AttributeString(this, "html:title", "title", undefined),
+    new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new AttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline", false),
+    new AttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
+    new AttributeBoolean(this, "html:hidden", "hidden", false),
+    new AttributeBoolean(this, "html:hide-step", "hideStep", false),
+    new AttributeBoolean(this, "html:disabled", "disabled", false),
+    new AttributeBoolean(this, "html:readonly", "readOnly", false),
+    new PropertyFilter(this, "html:minlength"),
+    new PropertyFilter(this, "html:maxlength"),
+    new AttributeRange(this, "html:min", "html:max", undefined, undefined),
+    new AttributeUIBlocking(this, "readonly"),
+    new ElementIconText(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
+    new ElementIconText(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
+    new ElementError(this, "span", "u-error-icon", ".u-error-icon", "end"),
+    new ElementIconText(this, "span", "u-suffix", ".u-suffix", "end", "suffix-text", "", "suffix-icon", ""),
+    new SubWidget(this, "span", "", "", "end", "changebutton", "UX.Button", {
       "icon-position": "end",
       "html:tabindex": "-1",
       "html:appearance": "stealth"
@@ -77,7 +77,7 @@ export class NumberField extends Widget {
     ], [
       "html:disabled"
     ]),
-    new Trigger(this, "onchange", "change", true)
+    new EventTrigger(this, "onchange", "change", true)
   ]);
 
   /**

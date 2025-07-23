@@ -1,18 +1,18 @@
 // @ts-check
-import { Widget } from "../framework/widget.js";
-import { Element } from "../framework/workers/element/element.js";
-import { Worker } from "../framework/workers/worker/worker.js";
-import { HtmlAttribute } from "../framework/workers/html_attribute/html_attribute.js";
-import { HtmlAttributeBoolean } from "../framework/workers/html_attribute/html_attribute_boolean.js";
-import { HtmlAttributeChoice } from "../framework/workers/html_attribute/html_attribute_choice.js";
-import { HtmlAttributeNumber } from "../framework/workers/html_attribute/html_attribute_number.js";
-import { IgnoreProperty } from "../framework/workers/ignore_property/ignore_property.js";
-import { SlottedElement } from "../framework/workers/slotted/slotted_element.js";
-import { SlottedElementsByValRep } from "../framework/workers/slotted/slotted_element_by_valrep.js";
-import { SlottedError } from "../framework/workers/slotted/slotted_error.js";
-import { StyleClass } from "../framework/workers/style_class/style_class.js";
-import { Trigger } from "../framework/workers/trigger/trigger.js";
-import { UIBlock } from "../framework/workers/ui_block/ui_block.js";
+import { Widget } from "../framework/common/widget.js";
+import { Element } from "../framework/workers/element.js";
+import { WorkerBase } from "../framework/common/worker_base.js";
+import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
+import { AttributeChoice } from "../framework/workers/attribute_choice.js";
+import { AttributeNumber } from "../framework/workers/attribute_number.js";
+import { PropertyFilter } from "../framework/workers/property_filter.js";
+import { ElementIconText } from "../framework/workers/element_icon_text.js";
+import { ElementsValrep } from "../framework/workers/elements_valrep.js";
+import { ElementError } from "../framework/workers/element_error.js";
+import { StyleClassManager } from "../framework/workers/style_class_manager.js";
+import { EventTrigger } from "../framework/workers/event_trigger.js";
+import { AttributeUIBlocking } from "../framework/workers/attribute_ui_blocking.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentOption, fluentSelect, provideFluentDesignSystem } from "@fluentui/web-components";
@@ -38,12 +38,12 @@ export class Select extends Widget {
   static triggers = {};
 
   /**
-   * Private Worker: HtmlAttributeBoolean ReadOnly Attribute.
-   * Readonly is not supported by fluent select thus explicitly making it readonly.
-   * @class HtmlAttributeBooleanReadOnly
-   * @extends {HtmlAttributeBoolean}
+   * Private Worker: This is a specialized worker used to explicitly make the select widget readonly.
+   * This is required as the readonly attribute is not supported by fluent-select.
+   * @class AttributeBooleanReadOnly
+   * @extends {AttributeBoolean}
    */
-  static HtmlAttributeBooleanReadOnly = class extends HtmlAttributeBoolean {
+  static AttributeBooleanReadOnly = class extends AttributeBoolean {
     refresh(widgetInstance) {
       const element = this.getElement(widgetInstance);
       const readonly = this.toBoolean(this.getNode(widgetInstance.data, "html:readonly"));
@@ -58,13 +58,13 @@ export class Select extends Widget {
   /**
    * Private Worker: Selected Value/Placeholder Element.
    * Adds and maintains a slotted element for the placeholder/selected value text.
-   * @class SlottedSelectedValueWithPlaceholder
-   * @extends {Worker}
+   * @class ElementSelectedValueWithPlaceholder
+   * @extends {WorkerBase}
    */
-  static SlottedSelectedValueWithPlaceholder = class extends Worker {
+  static ElementSelectedValueWithPlaceholder = class extends WorkerBase {
 
     /**
-     * Creates an instance of SlottedSelectedValueWithPlaceholder.
+     * Creates an instance of ElementSelectedValueWithPlaceholder.
      * @param {typeof Widget} widgetClass
      * @param {string} styleClass
      * @param {string} elementQuerySelector
@@ -247,9 +247,9 @@ export class Select extends Widget {
    * A special check is needed for the tabindex during the disabled state,
    * as Fluent automatically sets it to null when disabled and to 0 once the component is no longer disabled.
    * @class
-   * @extends {HtmlAttributeBoolean}
+   * @extends {AttributeBoolean}
    */
-  static HtmlAttributeDisabled = class extends HtmlAttributeBoolean {
+  static AttributeDisabled = class extends AttributeBoolean {
     refresh(widgetInstance) {
       super.refresh(widgetInstance);
       const element = this.getElement(widgetInstance);
@@ -264,10 +264,10 @@ export class Select extends Widget {
   * Private Worker: This is specialized worker to handle blockUI and unblockUI methods.
   * Select should be in readonly during block state and this property is not defined by fluent.
   * For this we explicitly need to add u-readonly class to the widget element.
-  * @class SelectUIBlock
-  * @extends {UIBlock}
+  * @class AttributeUIBlocking
+  * @extends {AttributeUIBlocking}
   */
-  static SelectUIBlock = class extends UIBlock {
+  static AttributeUIBlocking = class extends AttributeUIBlocking {
     refresh(widgetInstance) {
       this.log("refresh", {
         "widgetInstance": widgetInstance.getTraceDescription()
@@ -285,7 +285,7 @@ export class Select extends Widget {
           element.classList.remove("u-readonly");
         }
       } else {
-        widgetInstance.error("UIBlock", "Invalid block type", this.uiblocking);
+        widgetInstance.error("AttributeUIBlocking", "Invalid block type", this.uiblocking);
       }
     }
   };
@@ -295,30 +295,30 @@ export class Select extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-select", "", "", [
-    new StyleClass(this, ["u-select", "collapsible", "outline"]),
-    new HtmlAttribute(this, "html:title", "title", undefined),
-    new HtmlAttribute(this, undefined, "role", "combobox"),
-    new HtmlAttribute(this, undefined, "currentValue", ""),
-    new HtmlAttribute(this, undefined, "ariaActivedescendant", ""),
-    new HtmlAttribute(this, undefined, "ariaControls", ""),
-    new HtmlAttribute(this, undefined, "ariaHaspopup", "listbox"),
-    new HtmlAttributeBoolean(this, undefined, "ariaDisabled", false),
-    new HtmlAttributeBoolean(this, undefined, "ariaReadOnly", false),
-    new HtmlAttributeBoolean(this, undefined, "ariaExpanded", false),
-    new this.HtmlAttributeDisabled(this, "html:disabled", "disabled", false),
-    new this.HtmlAttributeBooleanReadOnly(this, "html:readonly", "readOnly", false),
-    new HtmlAttributeBoolean(this, "html:hidden", "hidden", false),
-    new HtmlAttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
-    new HtmlAttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
-    new HtmlAttributeChoice(this, "popup-position", "u-position", ["above", "below"], "below", true),
-    new this.SelectUIBlock(this, "readonly"),
-    new this.SlottedSelectedValueWithPlaceholder(this, "u-placeholder", ""),
-    new IgnoreProperty(this, "html:minlength"),
-    new IgnoreProperty(this, "html:maxlength"),
-    new SlottedElement(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
-    new SlottedError(this, "span", "u-error-icon", ".u-error-icon", "end"),
-    new SlottedElementsByValRep(this, "fluent-option", "", ""),
-    new Trigger(this, "onchange", "change", true)
+    new StyleClassManager(this, ["u-select", "collapsible", "outline"]),
+    new AttributeString(this, "html:title", "title", undefined),
+    new AttributeString(this, undefined, "role", "combobox"),
+    new AttributeString(this, undefined, "currentValue", ""),
+    new AttributeString(this, undefined, "ariaActivedescendant", ""),
+    new AttributeString(this, undefined, "ariaControls", ""),
+    new AttributeString(this, undefined, "ariaHaspopup", "listbox"),
+    new AttributeBoolean(this, undefined, "ariaDisabled", false),
+    new AttributeBoolean(this, undefined, "ariaReadOnly", false),
+    new AttributeBoolean(this, undefined, "ariaExpanded", false),
+    new this.AttributeDisabled(this, "html:disabled", "disabled", false),
+    new this.AttributeBooleanReadOnly(this, "html:readonly", "readOnly", false),
+    new AttributeBoolean(this, "html:hidden", "hidden", false),
+    new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
+    new AttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
+    new AttributeChoice(this, "popup-position", "u-position", ["above", "below"], "below", true),
+    new this.AttributeUIBlocking(this, "readonly"),
+    new this.ElementSelectedValueWithPlaceholder(this, "u-placeholder", ""),
+    new PropertyFilter(this, "html:minlength"),
+    new PropertyFilter(this, "html:maxlength"),
+    new ElementIconText(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),
+    new ElementError(this, "span", "u-error-icon", ".u-error-icon", "end"),
+    new ElementsValrep(this, "fluent-option", "", ""),
+    new EventTrigger(this, "onchange", "change", true)
   ]);
 
   /**

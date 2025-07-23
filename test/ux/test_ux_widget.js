@@ -1,11 +1,11 @@
-import { Widget } from "../../src/ux/framework/widget.js";
-import { Element } from "../../src/ux/framework/workers/element/element.js";
-import { HtmlAttribute } from "../../src/ux/framework/workers/html_attribute/html_attribute.js";
-import { HtmlValueAttributeBoolean } from "../../src/ux/framework/workers/html_attribute/html_value_attribute_boolean.js";
-import { SlottedSubWidget } from "../../src/ux/framework/workers/slotted/slotted_sub_widget.js";
-import { StyleClass } from "../../src/ux/framework/workers/style_class/style_class.js";
-import { Trigger } from "../../src/ux/framework/workers/trigger/trigger.js";
-import { UIBlock } from "../../src/ux/framework/workers/ui_block/ui_block.js";
+import { Widget } from "../../src/ux/framework/common/widget.js";
+import { Element } from "../../src/ux/framework/workers/element.js";
+import { AttributeString } from "../../src/ux/framework/workers/attribute_string.js";
+import { AttributeBooleanValue } from "../../src/ux/framework/workers/attribute_boolean_value.js";
+import { SubWidget } from "../../src/ux/framework/workers/sub_widget.js";
+import { StyleClassManager } from "../../src/ux/framework/workers/style_class_manager.js";
+import { EventTrigger } from "../../src/ux/framework/workers/event_trigger.js";
+import { AttributeUIBlocking } from "../../src/ux/framework/workers/attribute_ui_blocking.js";
 
 // Simple widget that has both subwidgets and triggers for easier testing and doens't mess with other widgets.
 export class TestWidget extends Widget {
@@ -17,11 +17,11 @@ export class TestWidget extends Widget {
   static triggers = {};
 
   static structure = new Element(this, "fluent-text-field", "", "", [
-    new StyleClass(this, ["u-test-field", "u-test-field-2"]),
-    new HtmlAttribute(this, "html:current-value", "current-value", ""),
-    new HtmlValueAttributeBoolean(this, "value", "checked", false),
-    new UIBlock(this, "readonly"),
-    new SlottedSubWidget(this, "span", "u-change-button", ".u-change-button", "end", "change-button", "UX.Button", {
+    new StyleClassManager(this, ["u-test-field", "u-test-field-2"]),
+    new AttributeString(this, "html:current-value", "current-value", ""),
+    new AttributeBooleanValue(this, "value", "checked", false),
+    new AttributeUIBlocking(this, "readonly"),
+    new SubWidget(this, "span", "u-change-button", ".u-change-button", "end", "change-button", "UX.Button", {
       "icon": "",
       "icon-position": "end",
       "value": "Change",
@@ -29,8 +29,8 @@ export class TestWidget extends Widget {
       "html:title": "",
       "html:appearance": ""
     }, false, ["detail"]),
-    new Trigger(this, "onchange", "change", true),
-    new Trigger(this, "detail", "click", true)
+    new EventTrigger(this, "onchange", "change", true),
+    new EventTrigger(this, "detail", "click", true)
   ]);
 
 }

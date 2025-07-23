@@ -1,22 +1,22 @@
 // @ts-check
 
 /**
- * @typedef {import("../../widget.js").Widget} Widget
+ * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { Worker } from "../worker/worker.js";
+import { WorkerBase } from "../common/worker_base.js";
 
 /**
- * Trigger is a worker that maps a trigger action to the corresponding widget.
+ * EventTrigger is a worker that maps a trigger action to the corresponding widget.
  * @export
- * @class Trigger
- * @extends {Worker}
+ * @class EventTrigger
+ * @extends {WorkerBase}
  */
-export class Trigger extends Worker {
+export class EventTrigger extends WorkerBase {
 
   /**
-   * Creates an instance of Trigger.
-   * @param {typeof import("../../widget.js").Widget} widgetClass
+   * Creates an instance of EventTrigger.
+   * @param {typeof import("../common/widget.js").Widget} widgetClass
    * @param {string} triggerName
    * @param {string} eventName
    * @param {boolean} validate

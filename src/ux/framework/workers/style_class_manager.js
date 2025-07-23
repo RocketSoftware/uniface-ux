@@ -1,19 +1,19 @@
 // @ts-check
 
 /**
- * @typedef {import("../../widget.js").Widget} Widget
+ * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { Worker } from "../worker/worker.js";
+import { WorkerBase } from "../common/worker_base.js";
 
 /**
- * StyleClass is a worker responsible for updating the CSS class of a widget
+ * StyleClassManager is a worker responsible for updating the CSS class of a widget
  * based on the provided value.
  * @export
- * @class StyleClass
- * @extends {Worker}
+ * @class StyleClassManager
+ * @extends {WorkerBase}
  */
-export class StyleClass extends Worker {
+export class StyleClassManager extends WorkerBase {
   constructor(widgetClass, defaultClassList) {
     super(widgetClass);
     this.registerSetter(widgetClass, "class", this);

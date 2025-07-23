@@ -1,27 +1,27 @@
 // @ts-check
 
 /**
- * @typedef {import("../../widget.js").Widget} Widget
+ * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { Element } from "../element/element.js";
+import { Element } from "./element.js";
 
 /**
- * SlottedElement is a worker for adding slotted content—such as icons or inner text—
+ * ElementIconText is a worker for adding slotted content such as icons or inner text
  * to a widget's structure.
  * This setter adds an element to your widget, where:
  * - the element is added as a child according the structure,
  * - the element is being slotted into the web-component (the parent element),
  * - the element has innerText and Icon capabilities.
  * @export
- * @class SlottedElement
+ * @class ElementIconText
  * @extends {Element}
  */
-export class SlottedElement extends Element {
+export class ElementIconText extends Element {
 
   /**
-   * Creates an instance of SlottedElement.
-   * @param {typeof import("../../widget.js").Widget} widgetClass
+   * Creates an instance of ElementIconText.
+   * @param {typeof import("../common/widget.js").Widget} widgetClass
    * @param {string} tagName
    * @param {string} styleClass
    * @param {string} elementQuerySelector

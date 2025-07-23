@@ -1,26 +1,26 @@
 // @ts-check
 
 /**
- * @typedef {import("../../widget.js").Widget} Widget
+ * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { Element } from "../element/element.js";
-import { getWidgetClass } from "../../dsp_connector.js";
+import { Element } from "./element.js";
+import { getWidgetClass } from "../common/dsp_connector.js";
 
 /**
- * SlottedSubWidget adds and maintains a sub-widget to the widget, where:
+ * SubWidget adds and maintains a sub-widget to the widget, where:
  * - the element is added as a child according the structure.
  * - the element is a UX widget.
  * - the element is being slotted into the web-component (the parent element).
  * @export
- * @class SlottedSubWidget
+ * @class SubWidget
  * @extends {Element}
  */
-export class SlottedSubWidget extends Element {
+export class SubWidget extends Element {
 
   /**
-   * Creates an instance of SlottedWidget.
-   * @param {typeof import("../../widget.js").Widget} widgetClass
+   * Creates an instance of SubWidget.
+   * @param {typeof import("../common/widget.js").Widget} widgetClass
    * @param {string} tagName
    * @param {string} subWidgetStyleClass
    * @param {string} elementQuerySelector

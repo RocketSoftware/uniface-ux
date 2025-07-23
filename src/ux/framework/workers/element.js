@@ -1,10 +1,10 @@
 // @ts-check
 
 /**
- * @typedef {import("../../widget.js").Widget} Widget
+ * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { Worker } from "../worker/worker.js";
+import { WorkerBase } from "../common/worker_base.js";
 
 /**
  * Element worker is responsible for adding and maintaining a DOM element as a child within the widget structure.
@@ -12,17 +12,17 @@ import { Worker } from "../worker/worker.js";
  * the widget's hierarchical structure and configuration.
  * @export
  * @class Element
- * @extends {Worker}
+ * @extends {WorkerBase}
  */
-export class Element extends Worker {
+export class Element extends WorkerBase {
 
   /**
    * Creates an instance of Element.
-   * @param {typeof import("../../widget.js").Widget} widgetClass
+   * @param {typeof import("../common/widget.js").Widget} widgetClass
    * @param {string} tagName
    * @param {string} styleClass
    * @param {string} elementQuerySelector
-   * @param {Array<Worker>} [childWorkers]
+   * @param {Array<WorkerBase>} [childWorkers]
    */
   constructor(widgetClass, tagName, styleClass, elementQuerySelector, childWorkers) {
     super(widgetClass);

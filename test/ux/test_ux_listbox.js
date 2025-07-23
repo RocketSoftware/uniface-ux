@@ -799,7 +799,7 @@
         expect(!element.hasAttribute("u-size"));
         let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector("slot:not([name])"),null).getPropertyValue("max-height");
         expect(maxHeightSlotInPixel).equal("none");
-        expect(warnSpy.calledWith(`SizeAttribute.refresh(): Size property cannot be set to '${size}' - Ignored.`)).to.be.true;
+        expect(warnSpy.calledWith(`AttributeSize.refresh(): Size property cannot be set to '${size}' - Ignored.`)).to.be.true;
         warnSpy.restore(); // Restore the original console.warn.
       });
     });
@@ -818,7 +818,7 @@
         expect(!element.hasAttribute("u-size"));
         let maxHeightSlotInPixel = window.getComputedStyle(element.shadowRoot.querySelector("slot:not([name])"),null).getPropertyValue("max-height");
         expect(maxHeightSlotInPixel).equal("none");
-        expect(warnSpy.calledWith(`SizeAttribute.refresh(): Size property cannot be set to '${size}' - Ignored.`)).to.be.true;
+        expect(warnSpy.calledWith(`AttributeSize.refresh(): Size property cannot be set to '${size}' - Ignored.`)).to.be.true;
         warnSpy.restore(); // Restore the original console.warn.
       });
     });

@@ -1,19 +1,19 @@
 // @ts-check
 
 /**
- * @typedef {import("../../widget.js").Widget} Widget
+ * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { BaseHtmlAttribute } from "./base_html_attribute.js";
+import { AttributeBase } from "../common/attribute_base.js";
 
 /**
- * HtmlAttributeBoolean is a specialized worker that extends BaseHtmlAttribute.
+ * AttributeBoolean is a specialized worker that extends AttributeBase.
  * It is designed to handle and update boolean-based attribute values on HTML elements.
  * @export
- * @class HtmlAttributeBoolean
- * @extends {BaseHtmlAttribute}
+ * @class AttributeBoolean
+ * @extends {AttributeBase}
  */
-export class HtmlAttributeBoolean extends BaseHtmlAttribute {
+export class AttributeBoolean extends AttributeBase {
 
   /**
    * Refreshes the widget based on properties.

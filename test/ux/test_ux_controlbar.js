@@ -1216,4 +1216,163 @@
       }
     });
   });
+
+  describe("Test for Private Worker Classes", function () {
+
+    describe("Test SubWidgetsProperty Class", function () {
+      let tagName, styleClass, elementQuerySelector, propId, element;
+
+      const dataObjReturnLayout = {
+        "subwidgets-start": "select",
+        "subwidgets-center": "",
+        "subwidgets-end": "",
+        "select_widget-class": "UX.Select",
+        "select:valrep": "1=a10=1025=2550=50100=100",
+        "select_overflow-behavior": "none",
+        "select:value": "1",
+        "select_usefield": true,
+        "select_delegated-properties": "html:disabled"
+      };
+
+      const dataObjIncorrectProperty = {
+        "subwidgets-starts": "select",
+        "subwidgets-center": "",
+        "subwidgets-end": "",
+        "select_widget-class": "UX.Select",
+        "select:valrep": "1=a10=1025=2550=50100=100",
+        "select_overflow-behavior": "none",
+        "select:value": "1",
+        "select_usefield": true,
+        "select_delegated-properties": "html:disabled"
+      };
+
+      const dataObjSubwidgetNotFoundInClassRegistry = {
+        "subwidgets-start": "select",
+        "subwidgets-center": "",
+        "subwidgets-end": "",
+        "select_widget-class": "UX.Select123",
+        "select:valrep": "1=a10=1025=2550=50100=100",
+        "select_overflow-behavior": "none",
+        "select:value": "1",
+        "select_usefield": true,
+        "select_delegated-properties": "html:disabled"
+      };
+
+      const dataObjPropertyNameNotDefined = {
+        "subwidgets-start": "select1",
+        "subwidgets-center": "",
+        "subwidgets-end": "",
+        "select_widget-class": "UX.Select",
+        "select:valrep": "1=a10=1025=2550=50100=100",
+        "select_overflow-behavior": "none",
+        "select:value": "1",
+        "select_usefield": true,
+        "select_delegated-properties": "html:disabled"
+      };
+
+      const dataObjWithTwoSubWidgets = {
+        "subwidgets-start": "selectbutton",
+        "subwidgets-center": "",
+        "subwidgets-end": "",
+        "select_widget-class": "UX.Select",
+        "select:valrep": "1=a10=1025=2550=50100=100",
+        "select_overflow-behavior": "none",
+        "select:value": "1",
+        "select_usefield": true,
+        "select_delegated-properties": "html:disabled",
+        "button_widget-class": "UX.Button",
+        "button:value": "Me Button",
+        "button_usefield": true,
+        "button_overflow-behavior": "move",
+        "button_delegated-properties": "html:readonly"
+      };
+
+      before(function () {
+        tagName = "span";
+        styleClass = "u-controlbar-item";
+        elementQuerySelector = "";
+        propId = "subwidgets-start";
+
+        element = new widgetClass.SubWidgetsProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
+      });
+
+      it("should initialize with correct properties", function () {
+        expect(element.widgetClass).to.equal(widgetClass);
+        expect(element.tagName).to.equal(tagName);
+        expect(element.styleClass).to.equal(styleClass);
+        expect(element.elementQuerySelector).to.equal(elementQuerySelector);
+        expect(element.propId).to.equal(propId);
+      });
+
+      it("getLayout() method should generate and return layout for this setter", function () {
+        // eslint-disable-next-line no-undef
+        let returnedLayoutElement = element.getLayout(_uf.createUxDefinitions(dataObjReturnLayout, true));
+        expect(returnedLayoutElement[0].getAttribute("class")).to.equal("u-sw-select u-controlbar-item");
+        expect(returnedLayoutElement[0].getAttribute("sub-widget-id")).to.equal("select");
+      });
+
+      it("getLayout() method should generate correct warning for incorrect property/not defined for object in the browser's console", function () {
+        const warnSpy = sinon.spy(console, "warn");
+        // eslint-disable-next-line no-undef
+        element.getLayout(_uf.createUxDefinitions(dataObjIncorrectProperty, true));
+        expect(warnSpy.calledWith("SubWidgetsProperty.getLayout: Property 'subwidgets-start' not defined for object. - Creation of sub-widgets skipped.")).to.be.true;
+        warnSpy.restore(); // Restore the original console.warn.
+      });
+
+      it("getLayout() method should generate correct warning for widgets with incorrect widget definition in the browser's console", function () {
+        const warnSpy = sinon.spy(console, "warn");
+        // eslint-disable-next-line no-undef
+        element.getLayout(_uf.createUxDefinitions(dataObjSubwidgetNotFoundInClassRegistry, true));
+        expect(warnSpy.calledWith("SubWidgetsProperty.getLayout: Widget definition with name 'UX.Select123' is not registered. - Creation of sub-widget 'select'skipped.")).to.be.true;
+        warnSpy.restore(); // Restore the original console.warn.
+      });
+
+      it("getLayout() method should generate correct warning for property name not defined for object creation of sub-widget in the browser console", function () {
+        let data = Object.assign({}, dataObjPropertyNameNotDefined);
+        const warnSpy = sinon.spy(console, "warn");
+        // eslint-disable-next-line no-undef
+        element.getLayout(_uf.createUxDefinitions(data, true));
+        expect(warnSpy.calledWith("SubWidgetsProperty.getLayout: Property 'select1_widget-class' not defined for object. - Creation of sub-widget 'select1' skipped.")).to.be.true;
+        warnSpy.restore(); // Restore the original console.warn.
+      });
+
+      it("getSubWidgetDefinitions() method should collects the subWidget definitions based on the properties and returns them correctly", function () {
+        let subWidgetDefinitionToCompare = {
+          "select": {
+            "styleClass": "u-sw-select",
+            "propPrefix": "select",
+            "delegatedProperties": ["html:disabled"]
+          }
+        };
+        // eslint-disable-next-line no-undef
+        let returnedElementSubWidgetDefinition = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjReturnLayout, true));
+        expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
+      });
+
+      it("getSubWidgetDefinitions() method should return styleClass, propPrefix, delegatedProperties as subWidgetDefinitions, if objectDefinition do not have correct propid", function () {
+        let subWidgetDefinitionToCompare = {};
+        // eslint-disable-next-line no-undef
+        let returnedElementSubWidgetDefinition = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjPropertyNameNotDefined, true));
+        expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
+      });
+
+      it("getSubWidgetDefinitions() method should return array of object with all subWidget definition, if it has more than 1 subwidgets", function () {
+        let subWidgetDefinitionToCompare = {
+          "select": {
+            "styleClass": "u-sw-select",
+            "propPrefix": "select",
+            "delegatedProperties": ["html:disabled"]
+          },
+          "button": {
+            "styleClass": "u-sw-button",
+            "propPrefix": "button",
+            "delegatedProperties": ["html:readonly"]
+          }
+        };
+        // eslint-disable-next-line no-undef
+        let returnedElementSubWidgetDefinition = element.getSubWidgetDefinitions(_uf.createUxDefinitions(dataObjWithTwoSubWidgets, true));
+        expect(JSON.stringify(returnedElementSubWidgetDefinition)).to.equal(JSON.stringify(subWidgetDefinitionToCompare));
+      });
+    });
+  });
 })();

@@ -1,22 +1,22 @@
 // @ts-check
 
 /**
- * @typedef {import("../../widget.js").Widget} Widget
+ * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { BaseHtmlAttribute } from "./base_html_attribute.js";
+import { AttributeBase } from "../common/attribute_base.js";
 
 /**
- * HtmlValueAttributeBoolean is a specialized worker that updates boolean HTML attributes
+ * AttributeBooleanValue is a specialized worker that updates boolean HTML attributes
  * which are mapped to the element's `value` property.
  * It ensures that only valid boolean values are applied. If an invalid
  * or incorrectly formatted value is provided, the worker triggers a format error warning
  * to aid in debugging and maintaining data consistency.
  * @export
- * @class HtmlValueAttributeBoolean
- * @extends {BaseHtmlAttribute}
+ * @class AttributeBooleanValue
+ * @extends {AttributeBase}
  */
-export class HtmlValueAttributeBoolean extends BaseHtmlAttribute {
+export class AttributeBooleanValue extends AttributeBase {
 
   /**
    * Adds an event handler to the specified event type on the element.

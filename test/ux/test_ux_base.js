@@ -1,8 +1,7 @@
-import { Base } from "../../src/ux/framework/base.js";
-import { Worker } from "../../src/ux/framework/workers/worker/worker.js";
-import { Widget } from "../../src/ux/framework/widget.js";
-import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
-
+import { Base } from "../../src/ux/framework/common/base.js";
+import { WorkerBase } from "../../src/ux/framework/common/worker_base.js";
+import { Widget } from "../../src/ux/framework/common/widget.js";
+import { getWidgetClass } from "../../src/ux/framework/common/dsp_connector.js";
 (function () {
   "use strict";
 
@@ -31,24 +30,24 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
     });
 
     it("registerSetter()", function () {
-      worker = new Worker(widgetClass);
+      worker = new WorkerBase(widgetClass);
       propId = "html:disabled";
 
       base.registerSetter(widgetClass, propId, worker);
 
       expect(String(Object.keys(widgetClass.setters))).to.equal("html:disabled");
-      expect(widgetClass.setters["html:disabled"][0].constructor.name).to.equal("Worker");
+      expect(widgetClass.setters["html:disabled"][0].constructor.name).to.equal("WorkerBase");
 
     });
 
     it("registerGetter()", function () {
       propId = "html:disabled";
-      worker = new Worker(widgetClass);
+      worker = new WorkerBase(widgetClass);
 
       base.registerGetter(widgetClass, propId, worker);
 
       expect(String(Object.keys(widgetClass.getters))).to.equal("html:disabled");
-      expect(widgetClass.getters["html:disabled"].constructor.name).to.equal("Worker");
+      expect(widgetClass.getters["html:disabled"].constructor.name).to.equal("WorkerBase");
     });
 
 
@@ -65,7 +64,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
 
     it("registerTrigger()", function () {
       triggerName = "newTrigger";
-      worker = new Worker(widgetClass);
+      worker = new WorkerBase(widgetClass);
 
       base.registerTrigger(widgetClass, triggerName, worker);
 
@@ -91,7 +90,7 @@ import { getWidgetClass } from "../../src/ux/framework/dsp_connector.js";
     });
 
     it("registerSubWidgetWorker()", function () {
-      worker = new Worker(widgetClass);
+      worker = new WorkerBase(widgetClass);
 
       base.registerSubWidgetWorker(widgetClass, worker);
 

@@ -1,19 +1,19 @@
 // @ts-check
 
 /**
- * @typedef {import("../../widget.js").Widget} Widget
+ * @typedef {import("../common/widget.js").Widget} Widget
  */
 
-import { BaseHtmlAttribute } from "./base_html_attribute.js";
+import { AttributeBase } from "../common/attribute_base.js";
 
 /**
- * HtmlAttribute is a specialized worker that extends BaseHtmlAttribute.
+ * AttributeString is a specialized worker that extends AttributeBase.
  * It is designed to handle and update string-based attribute values on HTML elements.
  * @exports
- * @class HtmlAttribute
- * @extends BaseHtmlAttribute
+ * @class AttributeString
+ * @extends AttributeBase
  */
-export class HtmlAttribute extends BaseHtmlAttribute {
+export class AttributeString extends AttributeBase {
 
   /**
    * Refreshes the widget based on properties.

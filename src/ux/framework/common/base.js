@@ -2,7 +2,7 @@
 
 /**
  * @typedef {import("./widget.js").Widget} Widget
- * @typedef {import("./workers/worker/worker.js").Worker} Worker
+ * @typedef {import("./worker_base.js").WorkerBase} WorkerBase
  */
 
 /**
@@ -22,7 +22,7 @@ export class Base {
    * dataInit() and dataUpdate() call this worker (via setProperties()) to make the widget react to the property change.
    * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
-   * @param {Worker} worker - Specifies the worker.
+   * @param {WorkerBase} worker - Specifies the worker.
    */
   registerSetter(widgetClass, propId, worker) {
     widgetClass.setters[propId] = widgetClass.setters[propId] ?? [];
@@ -36,7 +36,7 @@ export class Base {
    * getValue() calls this worker to get the value of the 'field' property.
    * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
-   * @param {Worker} worker - Specifies the worker.
+   * @param {WorkerBase} worker - Specifies the worker.
    */
   registerGetter(widgetClass, propId, worker) {
     widgetClass.getters[propId] = worker;
@@ -60,7 +60,7 @@ export class Base {
    * mapTrigger() calls this worker to get the trigger-mapping.
    * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {string} triggerName - Specifies the trigger-name for which the worker will be registered.
-   * @param {Worker} worker - Specifies the worker.
+   * @param {WorkerBase} worker - Specifies the worker.
    */
   registerTrigger(widgetClass, triggerName, worker) {
     widgetClass.triggers[triggerName] = worker;
@@ -96,7 +96,7 @@ export class Base {
    * The UXWF deals with sub-widgets transparently, like generate their layouts, instantiate them, invoke their onConnect
    * get their value, map their triggers, update their properties, etc.
    * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
-   * @param {Worker} worker - Specifies the worker.
+   * @param {WorkerBase} worker - Specifies the worker.
    */
   registerSubWidgetWorker(widgetClass, worker) {
     widgetClass.subWidgetWorkers.push(worker);
