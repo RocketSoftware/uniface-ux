@@ -95,7 +95,7 @@ export class DataGridCollection extends Widget {
   static SubWidgetsFields = class extends WorkerBase {
 
     /**
-     * Creates an instance of WidgetsByProperty.
+     * Creates an instance of SubWidgetsFields.
      * @param {typeof Widget} widgetClass - Specifies the widget class definition the setter is created for.
      * @param {UPropName} propId - Specifies the id of a Boolean property that, if true, excludes the field from the process.
      * @param {string} subWidgetClassName - Specifies the name of the sub-widget to be included for every field.

@@ -195,7 +195,7 @@ export class Controlbar extends Widget {
   static SubWidgetsProperty = class extends Element {
 
     /**
-     * Creates an instance of WidgetsByProperty.
+     * Creates an instance of SubWidgetsProperty.
      * @param {typeof Widget} widgetClass - Specifies the widget class definition the setter is created for.
      * @param {string} tagName - Specifies the wub-widget's element tag-name.
      * @param {string} styleClass - Specifies the style class for custom styling of the sub-widget.

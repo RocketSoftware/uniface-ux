@@ -7,7 +7,7 @@
 import { Element } from "./element.js";
 
 /**
- * ElementIconText is a worker for adding slotted content—such as icons or inner text—
+ * ElementIconText is a worker for adding slotted content such as icons or inner text
  * to a widget's structure.
  * This setter adds an element to your widget, where:
  * - the element is added as a child according the structure,
