@@ -1,8 +1,8 @@
 // @ts-check
 
 /**
- * @typedef {import("./widget").Widget} Widget
- * @typedef {import("./worker_base").WorkerBase} WorkerBase
+ * @typedef {import("./widget.js").Widget} Widget
+ * @typedef {import("./worker_base.js").WorkerBase} WorkerBase
  */
 
 /**
@@ -74,7 +74,7 @@ export class Base {
    * get their value, map their triggers, update their properties, etc.
    * @param {typeof import("./widget.js").Widget} widgetClass
    * @param {string} subWidgetId
-   * @param {typeof import("./widget").Widget} subWidgetClass
+   * @param {typeof import("./widget.js").Widget} subWidgetClass
    * @param {string} subWidgetStyleClass
    * @param {Array<string>} subWidgetTriggers
    * @param {Array<string>} subWidgetDelegatedProperties
@@ -413,7 +413,7 @@ export class Base {
 
   /**
    * Sets error related properties.
-   * @param {import("./widget").Widget} widgetInstance
+   * @param {import("./widget.js").Widget} widgetInstance
    * @param {string} errorType
    * @param {string} errorMessage
    */
