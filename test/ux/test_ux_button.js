@@ -322,141 +322,6 @@
     it("no test required", function () { });
   });
 
-  describe("Test ElementText class", function () {
-    verifyWidgetClass(widgetClass);
-    let styleClass = "u-text";
-    let elementQuerySelector = ".u-text";
-    let instance;
-
-    beforeEach(function () {
-      instance = new widgetClass.ElementText(widgetClass, styleClass, elementQuerySelector);
-    });
-
-    it("should initialize with the correct properties", function () {
-      expect(instance.widgetClass).to.equal(widgetClass);
-    });
-
-    it("should register default value", function () {
-      expect(instance.widgetClass.defaultValues.value).equal("");
-    });
-
-    it("should generate and return layout correctly", function () {
-      const layout = instance.getLayout();
-      expect(layout).to.be.an.instanceof(HTMLElement);
-      expect(layout.tagName.toLowerCase()).to.equal("span");
-      expect(layout.classList.contains(styleClass)).to.be.true;
-    });
-
-    it("should refresh correctly and modify the element text and the icon if an icon is added to the button", function () {
-      const widgetInstance = {
-        ...widgetClass,
-        "data": {
-          "icon": "",
-          "icon-position": "start",
-          "value": ""
-        },
-        "elements": tester.construct().elements,
-        "getTraceDescription": function () {
-          return "description";
-        }
-      };
-
-      instance.refresh(widgetInstance);
-      const element = widgetInstance.elements.widget;
-      expect(element.querySelector("span.u-text").hasAttribute("hidden")).to.be.true;
-      expect(element.querySelector("span.u-text").innerText).equal("");
-    });
-  });
-
-  describe("Test ElementIcon class", function () {
-    verifyWidgetClass(widgetClass);
-    let styleClass = "u-icon";
-    let elementQuerySelector = ".u-icon";
-    let instance;
-
-    beforeEach(function () {
-      instance = new widgetClass.ElementIcon(widgetClass, styleClass, elementQuerySelector);
-    });
-
-    it("should initialize with the correct properties", function () {
-      expect(instance.widgetClass).to.equal(widgetClass);
-    });
-
-    it("should register default values for icon properties", function () {
-      expect(instance.widgetClass.defaultValues.icon).equal("");
-      expect(instance.widgetClass.defaultValues["icon-position"]).equal("start");
-    });
-
-    it("should generate and return layout correctly", function () {
-      const layout = instance.getLayout();
-      expect(layout).to.be.an.instanceof(HTMLElement);
-      expect(layout.tagName.toLowerCase()).to.equal("span");
-      expect(layout.classList.contains(styleClass)).to.be.true;
-    });
-
-    it("should refresh correctly and modify the element text and the icon if an icon is added to the button", function () {
-      const widgetInstance = {
-        ...widgetClass,
-        "data": {
-          "icon": "",
-          "icon-position": "start",
-          "value": ""
-        },
-        "elements": tester.construct().elements,
-        "getTraceDescription": function () {
-          return "description";
-        }
-      };
-
-      instance.refresh(widgetInstance);
-      const element = widgetInstance.elements.widget;
-      expect(element.querySelector("span.u-icon").hasAttribute("hidden")).to.be.true;
-      expect(element.querySelector("span.u-icon").getAttribute("slot")).equal("");
-    });
-
-    it("test add icon class functionality in slotted icon element", function () {
-      const widgetInstance = {
-        ...widgetClass,
-        "data": {
-          "icon": "Home",
-          "value": ""
-        },
-
-        "elements": tester.construct().elements,
-        "getTraceDescription": function () {
-          return "description";
-        }
-      };
-
-      instance.refresh(widgetInstance);
-      const element = widgetInstance.elements.widget;
-      const mockIconClasses = ["ms-Icon", "ms-Icon--Home"];
-      expect(element.querySelector("span.u-icon").hasAttribute("hidden")).to.be.false;
-      expect(element.querySelector("span.u-icon").getAttribute("slot")).equal("");
-      expect([...element.querySelector("span.u-icon").classList].includes(...mockIconClasses)).to.equal(true);
-    });
-
-    it("test delete icon class functionality in slotted icon element", function () {
-      const widgetInstance = {
-        ...widgetClass,
-        "data": {
-          "icon": "",
-          "value": ""
-        },
-        "elements": tester.construct().elements,
-        "getTraceDescription": function () {
-          return "description";
-        }
-      };
-
-      instance.refresh(widgetInstance);
-      const element = widgetInstance.elements.widget;
-      expect(element.querySelector("span.u-icon").hasAttribute("hidden")).to.be.true;
-      expect(element.querySelector("span.u-icon").getAttribute("slot")).equal("");
-      expect(element.querySelector("span.u-icon").classList.contains("ms-Icon")).to.be.false;
-    });
-  });
-
   describe(`${widgetName} getValueFormatted() function test`, function () {
     it("getValueFormatted() should return correct formatted values with icon-position start", function () {
       let formattedData;
@@ -574,4 +439,141 @@
     });
   });
 
+  describe("Test for Private Worker Classes", function() {
+
+    describe("Test ElementText class", function () {
+      verifyWidgetClass(widgetClass);
+      let styleClass = "u-text";
+      let elementQuerySelector = ".u-text";
+      let instance;
+
+      before(function () {
+        instance = new widgetClass.ElementText(widgetClass, styleClass, elementQuerySelector);
+      });
+
+      it("should initialize with the correct properties", function () {
+        expect(instance.widgetClass).to.equal(widgetClass);
+      });
+
+      it("should register default value", function () {
+        expect(instance.widgetClass.defaultValues.value).equal("");
+      });
+
+      it("should generate and return layout correctly", function () {
+        const layout = instance.getLayout();
+        expect(layout).to.be.an.instanceof(HTMLElement);
+        expect(layout.tagName.toLowerCase()).to.equal("span");
+        expect(layout.classList.contains(styleClass)).to.be.true;
+      });
+
+      it("should refresh correctly and modify the element text and the icon if an icon is added to the button", function () {
+        const widgetInstance = {
+          ...widgetClass,
+          "data": {
+            "icon": "",
+            "icon-position": "start",
+            "value": ""
+          },
+          "elements": tester.construct().elements,
+          "getTraceDescription": function () {
+            return "description";
+          }
+        };
+
+        instance.refresh(widgetInstance);
+        const element = widgetInstance.elements.widget;
+        expect(element.querySelector("span.u-text").hasAttribute("hidden")).to.be.true;
+        expect(element.querySelector("span.u-text").innerText).equal("");
+      });
+    });
+
+    describe("Test ElementIcon class", function () {
+      verifyWidgetClass(widgetClass);
+      let styleClass = "u-icon";
+      let elementQuerySelector = ".u-icon";
+      let instance;
+
+      before(function () {
+        instance = new widgetClass.ElementIcon(widgetClass, styleClass, elementQuerySelector);
+      });
+
+      it("should initialize with the correct properties", function () {
+        expect(instance.widgetClass).to.equal(widgetClass);
+      });
+
+      it("should register default values for icon properties", function () {
+        expect(instance.widgetClass.defaultValues.icon).equal("");
+        expect(instance.widgetClass.defaultValues["icon-position"]).equal("start");
+      });
+
+      it("should generate and return layout correctly", function () {
+        const layout = instance.getLayout();
+        expect(layout).to.be.an.instanceof(HTMLElement);
+        expect(layout.tagName.toLowerCase()).to.equal("span");
+        expect(layout.classList.contains(styleClass)).to.be.true;
+      });
+
+      it("should refresh correctly and modify the element text and the icon if an icon is added to the button", function () {
+        const widgetInstance = {
+          ...widgetClass,
+          "data": {
+            "icon": "",
+            "icon-position": "start",
+            "value": ""
+          },
+          "elements": tester.construct().elements,
+          "getTraceDescription": function () {
+            return "description";
+          }
+        };
+
+        instance.refresh(widgetInstance);
+        const element = widgetInstance.elements.widget;
+        expect(element.querySelector("span.u-icon").hasAttribute("hidden")).to.be.true;
+        expect(element.querySelector("span.u-icon").getAttribute("slot")).equal("");
+      });
+
+      it("test add icon class functionality in slotted icon element", function () {
+        const widgetInstance = {
+          ...widgetClass,
+          "data": {
+            "icon": "Home",
+            "value": ""
+          },
+
+          "elements": tester.construct().elements,
+          "getTraceDescription": function () {
+            return "description";
+          }
+        };
+
+        instance.refresh(widgetInstance);
+        const element = widgetInstance.elements.widget;
+        const mockIconClasses = ["ms-Icon", "ms-Icon--Home"];
+        expect(element.querySelector("span.u-icon").hasAttribute("hidden")).to.be.false;
+        expect(element.querySelector("span.u-icon").getAttribute("slot")).equal("");
+        expect([...element.querySelector("span.u-icon").classList].includes(...mockIconClasses)).to.equal(true);
+      });
+
+      it("test delete icon class functionality in slotted icon element", function () {
+        const widgetInstance = {
+          ...widgetClass,
+          "data": {
+            "icon": "",
+            "value": ""
+          },
+          "elements": tester.construct().elements,
+          "getTraceDescription": function () {
+            return "description";
+          }
+        };
+
+        instance.refresh(widgetInstance);
+        const element = widgetInstance.elements.widget;
+        expect(element.querySelector("span.u-icon").hasAttribute("hidden")).to.be.true;
+        expect(element.querySelector("span.u-icon").getAttribute("slot")).equal("");
+        expect(element.querySelector("span.u-icon").classList.contains("ms-Icon")).to.be.false;
+      });
+    });
+  });
 })();

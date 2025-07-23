@@ -19,7 +19,7 @@ import { getWidgetClass } from "../common/dsp_connector.js";
 export class SubWidget extends Element {
 
   /**
-   * Creates an instance of SlottedWidget.
+   * Creates an instance of SubWidget.
    * @param {typeof import("../common/widget.js").Widget} widgetClass
    * @param {string} tagName
    * @param {string} subWidgetStyleClass

@@ -36,8 +36,7 @@ export class Button extends Widget {
   static triggers = {};
 
   /**
-   * Private Worker: Slotted Button Text
-   * Adds and maintains a slotted element for the button text.
+   * Private Worker: This is a specialized worker that adds and maintains a slotted element for the button text.
    * @class ElementText
    * @extends {WorkerBase}
    */
@@ -103,8 +102,7 @@ export class Button extends Widget {
   };
 
   /**
-   * Private Worker: Slotted Button Icon
-   * Adds and maintains a slotted element for the button icon.
+   * Private Worker: This is a specialized worker that adds and maintains a slotted element for the button icon.
    * @class ElementIcon
    * @extends {WorkerBase}
    */

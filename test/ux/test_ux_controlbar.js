@@ -739,27 +739,6 @@
     });
   });
 
-  describe("Test SubWidgetsProperty Class", function () {
-    let tagName, styleClass, elementQuerySelector, propId, element;
-
-    before(function () {
-      tagName = "span";
-      styleClass = "u-controlbar-item";
-      elementQuerySelector = ".u-start-section";
-      propId = "subwidgets-start";
-
-      element = new widgetClass.SubWidgetsProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
-    });
-
-    it("should initialize with correct properties", function () {
-      expect(element.widgetClass).to.equal(widgetClass);
-      expect(element.tagName).to.equal(tagName);
-      expect(element.styleClass).to.equal(styleClass);
-      expect(element.elementQuerySelector).to.equal(elementQuerySelector);
-      expect(element.propId).to.equal(propId);
-    });
-  });
-
   describe(`${widgetName} OverFlow tests`, function () {
     let element, tester, data, widget, node, warnSpy;
 
@@ -1235,6 +1214,30 @@
       } catch (e) {
         assert(false, `Failed to reset the properties, exception ${e}.`);
       }
+    });
+  });
+
+  describe("Test for Private Worker Classes", function () {
+
+    describe("Test SubWidgetsProperty Class", function () {
+      let tagName, styleClass, elementQuerySelector, propId, element;
+
+      before(function () {
+        tagName = "span";
+        styleClass = "u-controlbar-item";
+        elementQuerySelector = ".u-start-section";
+        propId = "subwidgets-start";
+
+        element = new widgetClass.SubWidgetsProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
+      });
+
+      it("should initialize with correct properties", function () {
+        expect(element.widgetClass).to.equal(widgetClass);
+        expect(element.tagName).to.equal(tagName);
+        expect(element.styleClass).to.equal(styleClass);
+        expect(element.elementQuerySelector).to.equal(elementQuerySelector);
+        expect(element.propId).to.equal(propId);
+      });
     });
   });
 })();
