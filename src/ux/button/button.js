@@ -174,6 +174,7 @@ export class Button extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-button", "", "", [
+    new StyleClassManager(this, ["u-button", "neutral"]),
     new AttributeString(this, undefined, "currentValue", ""),
     new AttributeString(this, "html:title", "title", undefined),
     new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
@@ -184,7 +185,6 @@ export class Button extends Widget {
     new PropertyFilter(this, "html:maxlength"),
     new PropertyFilter(this, "html:readonly"),
     new AttributeUIBlocking(this, "disabled"),
-    new StyleClassManager(this, ["u-button", "neutral"]),
     new this.ElementIcon(this, "u-icon", ".u-icon"),
     new this.ElementText(this, "u-text", ".u-text"),
     new EventTrigger(this, "detail", "click", true)

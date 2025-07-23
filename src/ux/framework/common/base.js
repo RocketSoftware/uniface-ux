@@ -20,7 +20,7 @@ export class Base {
    * This method registers the worker that Uniface calls to update the widget caused by a property change.
    * Per property, one worker needs to be registered.
    * dataInit() and dataUpdate() call this worker (via setProperties()) to make the widget react to the property change.
-   * @param {typeof import("./widget").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
    * @param {WorkerBase} worker - Specifies the worker.
    */
@@ -34,7 +34,7 @@ export class Base {
    * Per property, one worker needs to be registered. Currently, only the 'value' property can be registered.
    * onConnect() calls the worker to get the updater information, which describes the events fired when the value has been changed.
    * getValue() calls this worker to get the value of the 'field' property.
-   * @param {typeof import("./widget").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the worker will be registered.
    * @param {WorkerBase} worker - Specifies the worker.
    */
@@ -46,7 +46,7 @@ export class Base {
    * This method registers a default value for a property.
    * Per property, one default value needs to be registered.
    * dataInit() uses the set of default values to reinitialize the widget for reuse.
-   * @param {typeof import("./widget").Widget} widgetClass - Specifies the widget-class for which the default value will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the default value will be registered.
    * @param {UPropName} propId - Specifies the property-id for which the default value will be registered.
    * @param {UPropValue} defaultValue - Specifies the default value.
    */
@@ -58,7 +58,7 @@ export class Base {
    * This method registers the worker that Uniface calls to get a trigger-mapping.
    * Per trigger-mapping, one worker needs to be registered.
    * mapTrigger() calls this worker to get the trigger-mapping.
-   * @param {typeof import("./widget").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {string} triggerName - Specifies the trigger-name for which the worker will be registered.
    * @param {WorkerBase} worker - Specifies the worker.
    */
@@ -72,7 +72,7 @@ export class Base {
    * Static sub-widgets are added to the widget instance at runtime.
    * The UXWF deals with sub-widgets transparently, like generate their layouts, instantiate them, invoke their onConnect
    * get their value, map their triggers, update their properties, etc.
-   * @param {typeof import("./widget").Widget} widgetClass
+   * @param {typeof import("./widget.js").Widget} widgetClass
    * @param {string} subWidgetId
    * @param {typeof import("./widget").Widget} subWidgetClass
    * @param {string} subWidgetStyleClass
@@ -95,7 +95,7 @@ export class Base {
    * Uniface iterates through all registered workers and adds their sub-widgets to the widget object at runtime.
    * The UXWF deals with sub-widgets transparently, like generate their layouts, instantiate them, invoke their onConnect
    * get their value, map their triggers, update their properties, etc.
-   * @param {typeof import("./widget").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
+   * @param {typeof import("./widget.js").Widget} widgetClass - Specifies the widget-class for which the worker will be registered.
    * @param {WorkerBase} worker - Specifies the worker.
    */
   registerSubWidgetWorker(widgetClass, worker) {

@@ -6,7 +6,7 @@
 import { Base } from "./base.js";
 
 /**
- * WorkerBase base class.
+ * Worker base class.
  * This worker is the abstract base class for all workers used by widget class definitions.
  * All worker classes need to extend this class.
  * @export

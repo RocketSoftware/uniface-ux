@@ -41,6 +41,7 @@ export class TextArea extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-text-area", "", "", [
+    new StyleClassManager(this, ["u-text-area", "outline"]),
     new AttributeString(this, undefined, "currentValue", ""),
     new AttributeString(this, "value", "value", "", false, "change"),
     new AttributeString(this, "html:title", "title", undefined),
@@ -57,7 +58,6 @@ export class TextArea extends Widget {
     new AttributeBoolean(this, "html:spellcheck", "spellcheck", false),
     new AttributeLength(this, "html:minlength", "html:maxlength", undefined, undefined),
     new AttributeUIBlocking(this, "readonly"),
-    new StyleClassManager(this, ["u-text-area", "outline"]),
     new ElementIconText(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new ElementError(this, "span", "u-error-icon", ".u-error-icon", "end"),
     new EventTrigger(this, "onchange", "change", true)

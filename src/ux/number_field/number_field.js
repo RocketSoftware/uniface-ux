@@ -46,6 +46,7 @@ export class NumberField extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-number-field", "", "", [
+    new StyleClassManager(this, ["u-number-field", "outline"]),
     new AttributeString(this, undefined, "currentValue", ""),
     new AttributeString(this, "value", "value", "", false, "change"),
     new AttributeString(this, "html:size", "size", "", true),
@@ -63,7 +64,6 @@ export class NumberField extends Widget {
     new PropertyFilter(this, "html:maxlength"),
     new AttributeRange(this, "html:min", "html:max", undefined, undefined),
     new AttributeUIBlocking(this, "readonly"),
-    new StyleClassManager(this, ["u-number-field", "outline"]),
     new ElementIconText(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new ElementIconText(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
     new ElementError(this, "span", "u-error-icon", ".u-error-icon", "end"),

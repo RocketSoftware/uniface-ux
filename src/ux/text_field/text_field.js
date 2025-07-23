@@ -7,7 +7,6 @@ import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
 import { AttributeChoice } from "../framework/workers/attribute_choice.js";
 import { AttributeLength } from "../framework/workers/attribute_length.js";
 import { AttributeNumber } from "../framework/workers/attribute_number.js";
-// import { AttributeUIBlocking } from "../framework/workers/html_attribute_readonly_disabled.js";
 import { ElementIconText } from "../framework/workers/element_icon_text.js";
 import { ElementError } from "../framework/workers/element_error.js";
 import { SubWidget } from "../framework/workers/sub_widget.js";
@@ -120,6 +119,7 @@ export class TextField extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-text-field", "", "", [
+    new StyleClassManager(this, ["u-text-field", "outline"]),
     new AttributeString(this, undefined, "currentValue", ""),
     new AttributeString(this, "value", "value", "", false, "change"),
     new AttributeString(this, "html:title", "title", undefined),
@@ -135,7 +135,6 @@ export class TextField extends Widget {
     new AttributeBoolean(this, "html:spellcheck", "spellcheck", false),
     new AttributeLength(this, "html:minlength", "html:maxlength", undefined, undefined),
     new AttributeUIBlocking(this, "readonly"),
-    new StyleClassManager(this, ["u-text-field", "outline"]),
     new ElementIconText(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new ElementIconText(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
     new ElementError(this, "span", "u-error-icon", ".u-error-icon", "end"),

@@ -39,13 +39,13 @@ export class Checkbox extends Widget {
   /**
    * Extends AttributeBooleanValue worker and adds tri-state functionality to it.
    * @export
-   * @class AttributeValueTristate
+   * @class AttributeTristateValue
    * @extends {AttributeBooleanValue}
    */
-  static AttributeValueTristate = class extends AttributeBooleanValue {
+  static AttributeTristateValue = class extends AttributeBooleanValue {
 
     /**
-     * Creates an instance of AttributeValueTristate.
+     * Creates an instance of AttributeTristateValue.
      * @param {typeof Widget} widgetClass
      * @param {UPropName} propId
      * @param {string} attrName
@@ -219,7 +219,7 @@ export class Checkbox extends Widget {
     new PropertyFilter(this, "tri-state", false),
     new PropertyFilter(this, "html:minlength"),
     new PropertyFilter(this, "html:maxlength"),
-    new this.AttributeValueTristate(this, "value", "checked", null),
+    new this.AttributeTristateValue(this, "value", "checked", null),
     new AttributeBoolean(this, undefined, "ariaChecked", false),
     new AttributeBoolean(this, undefined, "ariaRequired", false),
     new AttributeBoolean(this, undefined, "ariaDisabled", false),
