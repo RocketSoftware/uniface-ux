@@ -1,5 +1,7 @@
 // @ts-check
 import { Widget } from "../framework/common/widget.js";
+import { WorkerBase } from "../framework/common/worker_base.js";
+import { Element } from "../framework/workers/element.js";
 import { AttributeString } from "../framework/workers/attribute_string.js";
 import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
 import { AttributeNumber } from "../framework/workers/attribute_number.js";
@@ -10,8 +12,6 @@ import { ElementError } from "../framework/workers/element_error.js";
 import { StyleClassManager } from "../framework/workers/style_class_manager.js";
 import { EventTrigger } from "../framework/workers/event_trigger.js";
 import { AttributeUIBlocking } from "../framework/workers/attribute_ui_blocking.js";
-import { WorkerBase } from "../framework/common/worker_base.js";
-import { Element } from "../framework/workers/element.js";
 // The import of Fluent UI web-components is done in loader.js.
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
@@ -39,13 +39,13 @@ export class Listbox extends Widget {
 
   /**
    * Private Worker: Used to handle changes in value and valrep.
-   * @class SelectedValue
+   * @class AttributeSelectedIndex
    * @extends {WorkerBase}
    */
-  static SelectedValue = class extends WorkerBase {
+  static AttributeSelectedIndex = class extends WorkerBase {
 
     /**
-     * Creates an instance of SelectedValue.
+     * Creates an instance of AttributeSelectedIndex.
      * @param {typeof Widget} widgetClass
      * @param {string} propId
      * @param {string} defaultValue
@@ -275,7 +275,7 @@ export class Listbox extends Widget {
     new AttributeBoolean(this, "html:hidden", "hidden", false),
     new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new this.ElementsValrep(this, "fluent-option", "u-option", ""),
-    new this.SelectedValue(this, "value", ""),
+    new this.AttributeSelectedIndex(this, "value", ""),
     new this.AttributeSize(this, "size", undefined),
     new this.AttributeUIBlocking(this, "readonly"),
     new PropertyFilter(this, "html:minlength"),

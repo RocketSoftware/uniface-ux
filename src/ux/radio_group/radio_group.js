@@ -38,15 +38,15 @@ export class RadioGroup extends Widget {
   static triggers = {};
 
   /**
-   * Private Worker: SelectedValue
-   * @class SelectedValue
+   * Private Worker: AttributeSelectedValue
+   * @class AttributeSelectedValue
    * @extends {AttributeString}
    */
 
-  static SelectedValue = class extends AttributeString {
+  static AttributeSelectedValue = class extends AttributeString {
 
     /**
-     * Creates an instance of SelectedValue.
+     * Creates an instance of AttributeSelectedValue.
      * @param {typeof Widget} widgetClass
      * @param {UPropName} [propId]
      * @param {string} [attrName]
@@ -182,7 +182,7 @@ export class RadioGroup extends Widget {
     new AttributeBoolean(this, "html:readonly", "readOnly", false),
     new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new AttributeChoice(this, "layout", "orientation", ["vertical", "horizontal"], "vertical", true),
-    new this.SelectedValue(this, "value", "value", ""),
+    new this.AttributeSelectedValue(this, "value", "value", ""),
     new PropertyFilter(this, "html:minlength"),
     new PropertyFilter(this, "html:maxlength"),
     new AttributeUIBlocking(this, "readonly"),

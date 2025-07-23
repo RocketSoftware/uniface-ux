@@ -29,14 +29,14 @@ For full UX widget interface specifications, refer to the official Uniface docum
 
 ## Folder Structure
 
-**[`base.js`](./base.js)**  
+**[`base.js`](./common/base.js)**  
   Defines the foundational logic of the UX Widget Framework and is shared by all UX widgets and workers.
-  
-**[`widget.js`](./widget.js)**  
+ 
+**[`widget.js`](./common/widget.js)**  
   Defines the widget base class and is shared by all UX widgets. It implements all UX Interface life cycle methods and acts as the glue between Uniface and the workers.
-
-[**`workers`**](./workers/) 
-The **workers** directory is organized into subfolders based on categories such as element, html_attribute, slotted, subwidgets, etc. Each of these subfolders contains JavaScript files that define specific Worker classes. For example, the slotted folder includes Workers like SlottedError, SlottedSubWidget, each responsible for handling specific widget behavior.
+ 
+[**`workers`**](./workers/)
+The **workers** directory contains JavaScript files that define specific Worker classes. For example, Element, ElementError, SubWidget, each responsible for handling specific widget behavior.
 
 
 ## UX Interface to Workers mapping

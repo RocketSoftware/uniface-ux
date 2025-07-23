@@ -58,13 +58,13 @@ export class Select extends Widget {
   /**
    * Private Worker: Selected Value/Placeholder Element.
    * Adds and maintains a slotted element for the placeholder/selected value text.
-   * @class SelectedValueWithPlaceholder
+   * @class ElementSelectedValueWithPlaceholder
    * @extends {WorkerBase}
    */
-  static SelectedValueWithPlaceholder = class extends WorkerBase {
+  static ElementSelectedValueWithPlaceholder = class extends WorkerBase {
 
     /**
-     * Creates an instance of SelectedValueWithPlaceholder.
+     * Creates an instance of ElementSelectedValueWithPlaceholder.
      * @param {typeof Widget} widgetClass
      * @param {string} styleClass
      * @param {string} elementQuerySelector
@@ -312,7 +312,7 @@ export class Select extends Widget {
     new AttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new AttributeChoice(this, "popup-position", "u-position", ["above", "below"], "below", true),
     new this.AttributeUIBlocking(this, "readonly"),
-    new this.SelectedValueWithPlaceholder(this, "u-placeholder", ""),
+    new this.ElementSelectedValueWithPlaceholder(this, "u-placeholder", ""),
     new PropertyFilter(this, "html:minlength"),
     new PropertyFilter(this, "html:maxlength"),
     new ElementIconText(this, "span", "u-label-text", ".u-label-text", "label", "label-text"),

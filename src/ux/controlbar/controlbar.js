@@ -29,15 +29,15 @@ export class Controlbar extends Widget {
   static triggers = {};
 
   /**
-   * Private Worker: OverFlow.
+   * Private Worker: EventOverFlow.
    * Handles the horizontal responsiveness of the controlbar based on overflow-behavior and priority.
-   * @class OverFlow
+   * @class EventOverFlow
    * @extends {WorkerBase}
    */
-  static OverFlow = class extends WorkerBase {
+  static EventOverFlow = class extends WorkerBase {
 
     /**
-     * Creates an instance of OverFlow.
+     * Creates an instance of EventOverFlow.
      * @param {typeof Widget} widgetClass
      * @param {string} propId
      * @param {UPropValue} defaultValue
@@ -291,7 +291,7 @@ export class Controlbar extends Widget {
     new AttributeChoice(this, "orientation", "u-orientation", ["horizontal", "vertical"], "horizontal", true),
     new AttributeBoolean(this, "html:hidden", "hidden", false),
     new StyleClassManager(this, ["u-controlbar"]),
-    new this.OverFlow(this, "widget-resize", false),
+    new this.EventOverFlow(this, "widget-resize", false),
     new AttributeString(this, "value", "value", ""),
     new AttributeString(this, undefined, "role", "toolbar"),
     new PropertyFilter(this, "error", "false"),

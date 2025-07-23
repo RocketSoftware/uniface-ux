@@ -354,7 +354,6 @@ import { WorkerBase } from "../../src/ux/framework/common/worker_base.js";
     });
 
     it("check getters/setters changed and subWidget added", function () {
-      // debugger;
       expect(slottedWidget.subWidgetClass).to.equal(subWidgetClass);
       expect(slottedWidget.propId).to.equal("undefined");
     });
@@ -390,40 +389,6 @@ import { WorkerBase } from "../../src/ux/framework/common/worker_base.js";
       slottedWidget.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.hidden).to.equal(true);
       expect(widgetInstance.elements.widget.classList).to.have.lengthOf(0);
-    });
-  });
-
-  // ===================================================================================================================
-  // == Testing SubWidgetsProperty class ================================================================================
-  // ===================================================================================================================
-  describe("Test SubWidgetsProperty class", function () {
-
-    let widgetClass;
-    let tagName;
-    let styleClass;
-    let elementQuerySelector;
-    let propId;
-    let element;
-
-    beforeEach(function () {
-      Widget.structure = {};
-      Widget.subWidgets = {};
-      Widget.subWidgetWorkers = [];
-      Widget.defaultValues = {};
-      Widget.setters = {};
-      Widget.getters = {};
-      Widget.triggers = {};
-
-      widgetClass = Widget;
-      element = new Controlbar.SubWidgetsProperty(widgetClass, tagName, styleClass, elementQuerySelector, propId);
-    });
-
-    it("should initialize with correct properties", function () {
-      expect(element.widgetClass).to.equal(widgetClass);
-      expect(element.tagName).to.equal(tagName);
-      expect(element.styleClass).to.equal(styleClass);
-      expect(element.elementQuerySelector).to.equal(elementQuerySelector);
-      expect(element.propId).to.equal(propId);
     });
   });
 
