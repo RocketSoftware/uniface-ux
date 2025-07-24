@@ -1,55 +1,46 @@
 // @ts-check
 
-/**
- * Load fluentUI web components centrally in this JS file.
- *
- * Uncomment one of the following locations to import FluentUI from.
- * During the bundling process a local JS file needs to be used.
- */
-
-// next line for local or bundling process
-import "../fluentui/js/web-components.min.js";
-// next line when using CDN location (latest version)
-// import "https://unpkg.com/@fluentui/web-components";
-// next line when using CDN location (fixed to version 2.6.1)
-// import "https://unpkg.com/@fluentui/web-components@2.6.1/dist/web-components.min.js";
-
-
 // registerWidgetClass is used to register UX Widgets to Uniface.
 // The same name needs to be used in the web.ini configuration.
-import { registerWidgetClass } from "./dsp_connector.js";
+import { registerWidgetClass } from "./framework/common/dsp_connector.js";
 
 
 // The UX field level widgets to include
-import {Button} from "./button.js";
+import {Button} from "./button/button.js";
 registerWidgetClass("UX.Button", Button);
 
-import {Checkbox} from "./checkbox.js";
+import {Checkbox} from "./checkbox/checkbox.js";
 registerWidgetClass("UX.Checkbox", Checkbox);
 
-import {NumberField} from "./number_field.js";
+import {Controlbar} from "./controlbar/controlbar.js";
+registerWidgetClass("UX.Controlbar", Controlbar);
+
+import {Listbox} from "./listbox/listbox.js";
+registerWidgetClass("UX.Listbox", Listbox);
+
+import {NumberField} from "./number_field/number_field.js";
 registerWidgetClass("UX.NumberField", NumberField);
 
-import {PlainText} from "./plain_text.js";
+import {PlainText} from "./plain_text/plain_text.js";
 registerWidgetClass("UX.PlainText", PlainText);
 
-import {RadioGroup} from "./radio_group.js";
+import {RadioGroup} from "./radio_group/radio_group.js";
 registerWidgetClass("UX.RadioGroup", RadioGroup);
 
-import {Select} from "./select.js";
+import {Select} from "./select/select.js";
 registerWidgetClass("UX.Select", Select);
 
-import {Switch} from "./switch.js";
+import {Switch} from "./switch/switch.js";
 registerWidgetClass("UX.Switch", Switch);
 
-import {TextArea} from "./text_area.js";
+import {TextArea} from "./text_area/text_area.js";
 registerWidgetClass("UX.TextArea", TextArea);
 
-import {TextField} from "./text_field.js";
+import {TextField} from "./text_field/text_field.js";
 registerWidgetClass("UX.TextField", TextField);
 
 
 // The UX entity level widgets to include
-import {DataGridCollection, DataGridOccurrence} from "./data_grid.js";
+import {DataGridCollection, DataGridOccurrence} from "./data_grid/data_grid.js";
 registerWidgetClass("UX.DataGridCollection", DataGridCollection);
 registerWidgetClass("UX.DataGridOccurrence", DataGridOccurrence);
