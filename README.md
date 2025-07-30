@@ -114,3 +114,35 @@ Users should ensure that the UX Widget Interface Version (web.ini) of Uniface UX
 Assume your Uniface installation is located in <UNIFACE_INSTALLATION_DIR> - for example "C:\Program Files\Uniface\Uniface 10 10.4.03". By default, the Uniface UX bundles are located in <UNIFACE_INSTALLATION_DIR>\uniface\webapps\uniface\common\ux.
 
 To deploy your self-built unifaceux bundles, copy the content of unifaceux\dist to <UNIFACE_INSTALLATION_DIR>\uniface\webapps\uniface\common\ux, replacing the existing files.
+
+
+## The DSP framework, UX Interface Version, Uniface versions/patches
+
+<u>DSP framework</u>
+
+The JavaScript framework processes the DSP page layout. The Uniface DSP framework processes the static HTML, when the browser has loaded the DSP page and processes HTML elements bound to entities, occurrences and fields. For each HTML element bound to a Uniface field with a UX widget, the framework passes this HTML element to the static processLayout() of the UX widget class. The HTML element is replaced with the element returned by processLayout(). The UX widget class determines the initial HTML layout, and this is determined only once during the DSP's lifetime.
+   
+
+<u>ux Interface Version</u>
+
+With UX Widget Interface Version, each UX widget receives the setting: uxInterfaceVersion in the physical widget definition section of the web.ini file. This setting specifies the version of the UX interface used to implement the widget. To create a custom widget using Interface Version 2, add the uxInterfaceVersion=2 setting to the physical widget definition section of the web.ini file. All UX Widgets need to have the same uxInterfaceVersion. UX Interface Version = 2 is - for now - the default UX Widget Interface version.
+
+To sensure seamless integration of UX Widgets in the existing DSP framework the uxInterfaceVersion of all widgets must be consistently aligned. A widget without this setting, or one created using the previous UX Interface version, results in a runtime error.
+
+When the UX Widget Interface is updated, the new version number is mentioned in the Uniface release note.
+  
+ 
+
+<u>Uniface Version</u>
+
+The uxInterfaceVersion setting is introduced in Uniface 10.4.03 and has evolved over time. The UX Interface Version depends on the Uniface patch installed on your environment.
+This overview represents the minimum Uniface patch/version required to maintain compatibility between UX Interface versions and Uniface versions.
+
+| UX Interface Version  | Uniface Version | Patch Version  |
+| :---: | :---: | :--- |
+| 1 | 10.4.03  | 1 to 14 |
+| 2 | 10.4.03  | 15 and following  |
+
+When installing a patch that introduces a new uxInterfaceVersion, you need to update all existing UX-widgets to use the new uxInterfaceVersion number in the physical widget definition section of the web.ini file
+
+To ease the transition, a compatibility utility is available that allows you to make custom widgets, which were created with the previous Interface version, compatible with Interface Version 2. For more information, see UX Widget Interface Version 2 and Compatibility Utility.
