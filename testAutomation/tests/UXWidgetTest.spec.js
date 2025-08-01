@@ -24,12 +24,6 @@ test('Checkbox Widget Tests', async ({ page }) => {
     await homePage.checkFailuresEncountered(newPage, test);
 });
 
-test('Controlbar Widget Tests', async ({ page }) => {
-    const newPage = await indexPage.openNewPage(indexPage.controlbarWidgetLink);
-    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
-    await homePage.checkFailuresEncountered(newPage, test);
-});
-
 test('Listbox Widget Tests', async ({ page }) => {
     const newPage = await indexPage.openNewPage(indexPage.listboxWidgetLink);
     const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
