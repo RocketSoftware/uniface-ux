@@ -22,7 +22,6 @@
 @import "./framework/common/base.css";
 @import "./button/button.css";
 @import "./checkbox/checkbox.css";
-@import "./controlbar/controlbar.css";
 @import "./listbox/listbox.css";
 @import "./number_field/number_field.css";
 @import "./plain_text/plain_text.css";
