@@ -93,4 +93,21 @@ export class TextArea extends Widget {
     }
     return updaters;
   }
+
+  /**
+   * Private Uniface API method - validate.
+   * This method is used to ensure that all validation errors are caught, as Fluent doesn't detect some validation errors.
+   */
+  validate() {
+    this.log("validate");
+
+    const controlElement = this.elements.widget.control;
+
+    if (!controlElement.checkValidity()) {
+      // Return any HTML5 validation errors.
+      return controlElement.validationMessage;
+    }
+
+    return;
+  }
 }
