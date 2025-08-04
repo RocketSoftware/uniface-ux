@@ -102,12 +102,16 @@ export class TextArea extends Widget {
     this.log("validate");
 
     const controlElement = this.elements.widget.control;
+    const minlength = controlElement.getAttribute("minlength");
+    const currentValueLength = this.elements.widget.value.length;
+    let html5ValidationMessage = "";
 
     if (!controlElement.checkValidity()) {
-      // Return any HTML5 validation errors.
-      return controlElement.validationMessage;
+      html5ValidationMessage = controlElement.validationMessage;
+    } else if (currentValueLength < minlength) {
+      html5ValidationMessage = `Please lengthen this text to ${minlength} characters or more (you are currently using ${currentValueLength} characters).`;
     }
 
-    return;
+    return html5ValidationMessage;
   }
 }
