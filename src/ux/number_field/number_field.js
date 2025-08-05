@@ -86,47 +86,46 @@ export class NumberField extends Widget {
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
-    const inputElement = this.elements.widget;
 
     // Track last valid value to compare later
     let previousValue = this.getNode(this.data, "value");
-    inputElement.enterKeyPressed = false;
+    widgetElement.enterKeyPressed = false;
+
+    const isReadonly = () => this.getNode(widgetElement, "readOnly");
+
+    const changeBtn = widgetElement.querySelector(".u-sw-changebutton");
 
     // Prevent arrow key increment/decrement in readonly mode
-    inputElement.addEventListener("keydown", (event) => {
-      const isReadonly = this.getNode(inputElement, "readOnly");
-
-      if (isReadonly && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
+    widgetElement.addEventListener("keydown", (event) => {
+      if (isReadonly() && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
         event.preventDefault();
         event.stopImmediatePropagation();
-        inputElement.value = previousValue; // reset to original value
+        widgetElement.value = previousValue; // reset to original value
         return;
       }
 
       // Track Enter key press if change button is visible
-      const changeBtn = inputElement.querySelector(".u-sw-changebutton");
-      if (changeBtn.hidden && event.key === "Enter") {
-        inputElement.enterKeyPressed = true;
+      if (changeBtn && !changeBtn.hidden && event.key === "Enter") {
+        widgetElement.enterKeyPressed = true;
       }
     });
 
     // Listen to native change event
-    inputElement.addEventListener("change", (event) => {
-      const isReadonly = this.getNode(inputElement, "readOnly");
-      const currentValue = inputElement.value;
+    widgetElement.addEventListener("change", (event) => {
+      const currentValue = widgetElement.value;
 
-      if (isReadonly) {
+      if (isReadonly()) {
         // Reset and cancel change
-        inputElement.value = previousValue;
+        widgetElement.value = previousValue;
         event.preventDefault();
         event.stopImmediatePropagation();
         return;
       }
 
       // Stop event bubbling if Enter triggered the change
-      if (inputElement.enterKeyPressed) {
+      if (widgetElement.enterKeyPressed) {
         event.stopPropagation();
-        inputElement.enterKeyPressed = false;
+        widgetElement.enterKeyPressed = false;
       }
 
       // Only treat as valid change if value actually changed
@@ -139,16 +138,16 @@ export class NumberField extends Widget {
     });
 
     // Handle manual change via button click
-    const changeButton = inputElement.querySelector(".u-sw-changebutton");
-    if (changeButton) {
-      changeButton.addEventListener("click", () => {
+    if (changeBtn) {
+      changeBtn.addEventListener("click", () => {
         const syntheticChange = new window.Event("change", { "bubbles": false });
-        inputElement.dispatchEvent(syntheticChange);
+        widgetElement.dispatchEvent(syntheticChange);
       });
     }
 
     return valueUpdaters;
   }
+
 
   /**
    * Returns an array of property ids that affect the formatted value for text-based widgets
