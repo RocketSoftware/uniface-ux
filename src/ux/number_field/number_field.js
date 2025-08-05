@@ -86,24 +86,67 @@ export class NumberField extends Widget {
    */
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
-    this.elements.widget.enterKeyPressed = false;
+    const inputElement = this.elements.widget;
 
-    // Stop propagating change event to parent nodes on pressing enter key if change button is enabled.
-    this.elements.widget.addEventListener("keydown", (event) => {
-      if (!this.elements.widget.querySelector(".u-sw-changebutton").hidden && event.key === "Enter") {
-        this.elements.widget.enterKeyPressed = true;
+    // Track last valid value to compare later
+    let previousValue = this.getNode(this.data, "value");
+    inputElement.enterKeyPressed = false;
+
+    // Prevent arrow key increment/decrement in readonly mode
+    inputElement.addEventListener("keydown", (event) => {
+      const isReadonly = this.getNode(inputElement, "readOnly");
+
+      if (isReadonly && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        inputElement.value = previousValue; // reset to original value
+        return;
+      }
+
+      // Track Enter key press if change button is visible
+      const changeBtn = inputElement.querySelector(".u-sw-changebutton");
+      if (changeBtn.hidden && event.key === "Enter") {
+        inputElement.enterKeyPressed = true;
       }
     });
-    this.elements.widget.addEventListener("change", (event) => {
-      if (this.elements.widget.enterKeyPressed) {
+
+    // Listen to native change event
+    inputElement.addEventListener("change", (event) => {
+      const isReadonly = this.getNode(inputElement, "readOnly");
+      const currentValue = inputElement.value;
+
+      if (isReadonly) {
+        // Reset and cancel change
+        inputElement.value = previousValue;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+
+      // Stop event bubbling if Enter triggered the change
+      if (inputElement.enterKeyPressed) {
         event.stopPropagation();
-        this.elements.widget.enterKeyPressed = false;
+        inputElement.enterKeyPressed = false;
+      }
+
+      // Only treat as valid change if value actually changed
+      if (currentValue !== previousValue) {
+        previousValue = currentValue;
+      } else {
+        // Prevent unnecessary downstream updates
+        event.stopImmediatePropagation();
       }
     });
-    // Dispatch change event when clicked on change button.
-    this.elements.widget.querySelector(".u-sw-changebutton").addEventListener("click", () => {
-      this.elements.widget.dispatchEvent(new window.Event("change", { "bubbles": false }));
-    });
+
+    // Handle manual change via button click
+    const changeButton = inputElement.querySelector(".u-sw-changebutton");
+    if (changeButton) {
+      changeButton.addEventListener("click", () => {
+        const syntheticChange = new window.Event("change", { "bubbles": false });
+        inputElement.dispatchEvent(syntheticChange);
+      });
+    }
+
     return valueUpdaters;
   }
 
