@@ -103,6 +103,7 @@ export class TextArea extends Widget {
 
     const controlElement = this.elements.widget.control;
     const minlength = controlElement.getAttribute("minlength");
+    const maxlength = controlElement.getAttribute("maxlength");
     const currentValueLength = this.elements.widget.value.length;
     let html5ValidationMessage = "";
 
@@ -110,6 +111,8 @@ export class TextArea extends Widget {
       html5ValidationMessage = controlElement.validationMessage;
     } else if (currentValueLength < minlength) {
       html5ValidationMessage = `Please lengthen this text to ${minlength} characters or more (you are currently using ${currentValueLength} characters).`;
+    } else if (maxlength !== 0 && currentValueLength > maxlength) { // In Uniface, 0 means no maximum length, so should not be validated.
+      html5ValidationMessage = `Please shorten this text to ${maxlength} characters or less (you are currently using ${currentValueLength} characters).`;
     }
 
     return html5ValidationMessage;
