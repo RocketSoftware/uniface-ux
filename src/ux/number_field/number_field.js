@@ -87,6 +87,7 @@ export class NumberField extends Widget {
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
     this.elements.widget.enterKeyPressed = false;
+    let previousValue = this.getNode(this.data, "value");
 
     // Stop propagating change event to parent nodes on pressing enter key if change button is enabled.
     this.elements.widget.addEventListener("keydown", (event) => {
@@ -94,14 +95,22 @@ export class NumberField extends Widget {
         this.elements.widget.enterKeyPressed = true;
       }
     });
-
     this.elements.widget.addEventListener("change", (event) => {
       const isReadonly = () => this.getNode(widgetElement, "readOnly");
+      const currentValue = widgetElement.value;
       if (isReadonly()) {
-        widgetElement.value = this.getNode(this.data, "value");
+        // Reset and cancel change
+        widgetElement.value = previousValue;
         event.preventDefault();
         event.stopImmediatePropagation();
         return;
+      }
+      // Only treat as valid change if value actually changed
+      if (currentValue !== previousValue) {
+        previousValue = currentValue;
+      } else {
+        // Prevent unnecessary downstream updates
+        event.stopImmediatePropagation();
       }
       if (this.elements.widget.enterKeyPressed) {
         event.stopPropagation();
@@ -114,6 +123,8 @@ export class NumberField extends Widget {
     });
     return valueUpdaters;
   }
+
+
 
   /**
    * Returns an array of property ids that affect the formatted value for text-based widgets
