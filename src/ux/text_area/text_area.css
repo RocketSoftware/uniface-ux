@@ -1,0 +1,37 @@
+.u-text-area::part(root) {
+  position: relative;
+}
+
+.u-text-area::part(control) {
+  vertical-align: bottom;
+}
+
+.u-text-area.u-invalid::part(control) {
+  padding-inline-end: calc((var(--design-unit) * 6px) + 2px);
+}
+
+.u-text-area:not([disabled]):focus-within::part(root):after {
+  left: 0;
+  width: 100%;
+}
+
+.u-text-area:not([disabled]):active::part(root)::after,
+.u-text-area:not([disabled]):focus-within:not(:active)::part(root)::after {
+  bottom: 0;
+}
+
+.u-text-area.u-invalid::part(end) {
+  position: absolute;
+  inset-block-start: calc((var(--design-unit) * 1px) + 2px);
+  inset-inline-end: calc((var(--design-unit) * 2px) + 3px);
+}
+
+/* Styling the border color (according to the fluent design system) when the widget is in an invalid state and has no focus. */
+.u-text-area.u-invalid:not(:focus)::part(control) {
+  border-color: #d13438;
+}
+
+/* Styling the error icon color (according to the fluent design system) when the widget is in an invalid state. */
+.u-text-area.u-invalid .u-error-icon {
+  color: #d13438;
+}
