@@ -109,9 +109,9 @@ export class TextArea extends Widget {
 
     if (!controlElement.checkValidity()) {
       html5ValidationMessage = controlElement.validationMessage;
-    } else if (currentValueLength < minlength) {
+    } else if (minlength && currentValueLength < minlength) {
       html5ValidationMessage = `Please lengthen this text to ${minlength} characters or more (you are currently using ${currentValueLength} characters).`;
-    } else if (maxlength !== 0 && currentValueLength > maxlength) { // In Uniface, 0 means no maximum length, so should not be validated.
+    } else if (maxlength && currentValueLength > maxlength) {
       html5ValidationMessage = `Please shorten this text to ${maxlength} characters or less (you are currently using ${currentValueLength} characters).`;
     }
 
