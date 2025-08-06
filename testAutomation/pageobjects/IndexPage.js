@@ -6,6 +6,7 @@ class IndexPage extends BasePage {
     super(page);
     this.buttonWidgetLink = '#button';
     this.checkboxWidgetLink = '#checkbox';
+    this.listboxWidgetLink = '#listbox';
     this.numberFieldWidgetLink = '#number-field';
     this.plainTextWidgetLink = '#plain-text';
     this.radioGroupWidgetLink = '#radio-group';
