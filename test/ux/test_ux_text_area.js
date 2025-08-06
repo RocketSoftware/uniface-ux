@@ -530,6 +530,22 @@
       });
     });
 
+    it("set minlength and maxlength and check if warning is shown when minlength is greater than maxlength", function () {
+      const minlength = 15;
+      const maxlength = 5;
+      const warnSpy = sinon.spy(console, "warn");
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:minlength": minlength,
+          "html:maxlength": maxlength
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Invalid combination of 'html:minlength' (html:minlength) and 'html:maxlength' (html:maxlength) - Ignored."))).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
     it("set minlength and maxlength and check if validation passes when the value is within the limits", function () {
       const minlength = 5;
       const maxlength = 15;
