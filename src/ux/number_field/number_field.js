@@ -96,9 +96,10 @@ export class NumberField extends Widget {
       }
     });
     this.elements.widget.addEventListener("change", (event) => {
-      const isReadonly = () => this.getNode(widgetElement, "readOnly");
+      const readOnly = this.getNode(widgetElement, "readOnly");
       const currentValue = widgetElement.value;
-      if (isReadonly()) {
+
+      if (readOnly) {
         // Reset and cancel change
         widgetElement.value = previousValue;
         event.preventDefault();
@@ -108,9 +109,6 @@ export class NumberField extends Widget {
       // Only treat as valid change if value actually changed
       if (currentValue !== previousValue) {
         previousValue = currentValue;
-      } else {
-        // Prevent unnecessary downstream updates
-        event.stopImmediatePropagation();
       }
       if (this.elements.widget.enterKeyPressed) {
         event.stopPropagation();
