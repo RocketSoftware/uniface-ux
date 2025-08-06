@@ -120,7 +120,7 @@ export class PlainText extends Widget {
           this.createTextElement(matchedValrepObj.value, element);
           break;
         case "multi-line":
-          this.createTextElement(value, element);
+          this.createMultiLineElement(value, element) ;
           break;
         case "multi-paragraphs":
           this.createMultiParagraphsElement(value, element);
@@ -183,6 +183,24 @@ export class PlainText extends Widget {
         paragraph.className = "u-paragraph";
         paragraph.textContent = line;
         element.appendChild(paragraph);
+      });
+    }
+
+    /**
+     * Create a DOM structure for multi-line.
+     * @param {string} value
+     * @param {HTMLElement} element
+     */
+    createMultiLineElement(value, element) {
+      const lines = (value ?? "").split(/\r?\n/);
+      // Clear existing content
+      element.textContent = "";
+
+      lines.forEach((line, idx) => {
+        element.appendChild(document.createTextNode(line));
+        if (idx !== lines.length - 1) {
+          element.appendChild(document.createElement("br"));
+        }
       });
     }
 
