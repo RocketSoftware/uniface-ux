@@ -4,6 +4,7 @@ module.exports = [
   { // Declare ignores
     // This object is only for ignore. do not add any other properties
     "ignores": [
+      ".vscode/",
       "dist/",
       "node_modules/",
       "src/fluentui/",
@@ -130,9 +131,6 @@ module.exports = [
         // for umockup
         "umockup": "readonly"
       }
-    },
-    "rules": {
-      "quote-props": "off"
     }
   }
 ];
