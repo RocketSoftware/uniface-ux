@@ -1,7 +1,7 @@
 # RELEASE NOTE - Uniface UX
 
-## Release 1.0.2
-- Uniface release: 10.4.03.019
+## Release 10.4.03-022
+- Uniface release: 10.4.03.022
 - UX Interface Version: 2
 
 ### What's new?
