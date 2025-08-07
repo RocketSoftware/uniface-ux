@@ -205,6 +205,82 @@
       expect(tester.widget.getValue()).to.equal("" + (initialValue - 1), "Widget value");
     });
 
+    it("Test uxNumberField when widget is in readonly mode and verify not able to change the value of widget using up arrow key", async function () {
+      expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
+      // Apply readonly property to widget
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": true
+        });
+      }).then(async function () {
+
+        // Simulate a change event by clicking the spin-up button.
+        await tester.asyncUserClick(+1);
+
+        // Assert that the onchange trigger handler was not called.
+        expect(tester.calledOnce(trigger)).to.be.false;
+        // Expected the widget value is the inputValue.
+        expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value");
+      });
+    });
+
+    it("Test uxNumberField when widget is in readonly mode and verify not able to change the value of widget using up arrow key", async function () {
+      expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
+      // Apply readonly property to widget
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": true
+        });
+      }).then(async function () {
+
+        // Simulate a change event by clicking the spin-down button.
+        await tester.asyncUserClick(-1);
+
+        // Assert that the onchange trigger handler was not called.
+        expect(tester.calledOnce(trigger)).to.be.false;
+        // Expected the widget value is the inputValue.
+        expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value");
+      });
+    });
+
+    it("Test uxNumberField when widget is in disabled mode and verify not able to change the value of widget using up arrow key", async function () {
+      expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
+      // Apply disabled property to widget
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:disabled": true
+        });
+      }).then(async function () {
+
+        // Simulate a change event by clicking the spin-up button.
+        await tester.asyncUserClick(+1);
+
+        // Assert that the onchange trigger handler was not called.
+        expect(tester.calledOnce(trigger)).to.be.false;
+        // Expected the widget value is the inputValue.
+        expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value");
+      });
+    });
+
+    it("Test uxNumberField when widget is in disabled mode and verify not able to change the value of widget using down arrow key", async function () {
+      expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
+      // Apply disabled property to widget
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:disabled": true
+        });
+      }).then(async function () {
+
+        // Simulate a change event by clicking the spin-up button.
+        await tester.asyncUserClick(-1);
+
+        // Assert that the onchange trigger handler was not called.
+        expect(tester.calledOnce(trigger)).to.be.false;
+        // Expected the widget value is the inputValue.
+        expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value");
+      });
+    });
+
   });
 
   describe("dataInit()", function () {
