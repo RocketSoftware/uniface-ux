@@ -98,8 +98,8 @@ export class NumberField extends Widget {
     this.elements.widget.addEventListener("change", (event) => {
       const readOnly = this.getNode(widgetElement, "readOnly");
       const currentValue = widgetElement.value;
-
-      if (readOnly) {
+      // Skip readOnly block if element has 'u-blocked' class
+      if (readOnly && !widgetElement.classList.contains("u-blocked")) {
         // Reset and cancel change
         widgetElement.value = previousValue;
         event.preventDefault();
