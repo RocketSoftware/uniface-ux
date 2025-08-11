@@ -549,7 +549,7 @@
     it("set minlength and maxlength and check if validation passes when the value is within the limits", function () {
       const minlength = 5;
       const maxlength = 15;
-      const inputValue = "Hello";
+      const inputValue = "Hello World";
       const expectedValidationMessage = "";
 
       return asyncRun(function () {
@@ -565,10 +565,44 @@
       });
     });
 
+    it("set minlength and check if validation passes when the value has same number of characters as minlength", function () {
+      const minlength = 5;
+      const inputValue = "Hello";
+      const expectedValidationMessage = "";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:minlength": minlength
+        });
+        tester.userInput(inputValue);
+      }).then(function () {
+        expect(tester.widget.getValue()).to.equal(inputValue);
+        const validationMessage = tester.widget.validate();
+        assert.equal(validationMessage, expectedValidationMessage);
+      });
+    });
+
+    it("set maxlength and check if validation passes when the value has same number of characters as maxlength", function () {
+      const maxlength = 5;
+      const inputValue = "Hello";
+      const expectedValidationMessage = "";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:maxlength": maxlength
+        });
+        tester.userInput(inputValue);
+      }).then(function () {
+        expect(tester.widget.getValue()).to.equal(inputValue);
+        const validationMessage = tester.widget.validate();
+        assert.equal(validationMessage, expectedValidationMessage);
+      });
+    });
+
     it("set minlength and check if proper validation message is generated when value has lesser number of characters than minlength", function () {
       const minlength = 5;
-      const inputValue = "abc";
-      const expectedValidationMessage = "Please lengthen this text to 5 characters or more (you are currently using 3 characters).";
+      const inputValue = "abcd";
+      const expectedValidationMessage = "Please lengthen this text to 5 characters or more (you are currently using 4 characters).";
 
       return asyncRun(function () {
         tester.dataUpdate({
