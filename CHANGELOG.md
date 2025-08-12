@@ -3,16 +3,10 @@
 Current release see [RELEASENOTE.md](RELEASENOTE.md).
 
 
-## Release 1.0.1
+
+## Release 10.4.03.022
   
 ### What's new?:
- - In unit test, add emulation of user interaction for change event
- - For UX.Switch and UX.Checkbox add before and after label position;
-
-
-## Release 1.0.0
-  
-### What's new?:
- - Initial version
+ - Initial version: this release contains the source files of Uniface UX as distributed in Uniface 10.4.03.022.
  
 
