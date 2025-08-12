@@ -95,6 +95,12 @@ export class NumberField extends Widget {
         this.elements.widget.enterKeyPressed = true;
       }
     });
+
+    // During a server round-trip, the widget is in a readonly and blocked state,
+    // and the user presses the arrow keys, the value will change. This occurs because
+    // the widget is temporarily in a readonly and blocked state during the round-trip,
+    // allowing the value change to persist even though it shouldn't.
+    // This is considered a minor bug that we are currently opting to live with.
     this.elements.widget.addEventListener("change", (event) => {
       const readOnly = this.getNode(widgetElement, "readOnly");
       const currentValue = widgetElement.value;
@@ -121,8 +127,6 @@ export class NumberField extends Widget {
     });
     return valueUpdaters;
   }
-
-
 
   /**
    * Returns an array of property ids that affect the formatted value for text-based widgets
