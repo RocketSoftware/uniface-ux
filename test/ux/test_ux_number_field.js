@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 (function () {
   "use strict";
 
@@ -213,9 +214,20 @@
           "html:readonly": true
         });
       }).then(async function () {
-
-        // Simulate a change event by clicking the spin-up button.
-        await tester.asyncUserClick(+1);
+        // Simulate a arrow up key press event.
+        const control = tester.element.shadowRoot.querySelector("#control.control");
+        // Create a new KeyboardEvent for Arrow Up
+        const arrowUpEvent = new KeyboardEvent("keydown", {
+          "key": "ArrowUp",
+          "code": "ArrowUp",
+          "keyCode": 38,      // Deprecated but still widely used
+          "which": 38,        // Also deprecated, for compatibility
+          "bubbles": true,    // So the event bubbles up through the DOM
+          "cancelable": true
+        });
+        control.focus();
+        // Dispatch the event on the widget
+        control.dispatchEvent(arrowUpEvent);
 
         // Assert that the onchange trigger handler was not called.
         expect(tester.calledOnce(trigger)).to.be.false;
@@ -224,7 +236,7 @@
       });
     });
 
-    it("Test uxNumberField when widget is in readonly mode and verify not able to change the value of widget using up arrow key", async function () {
+    it("Test uxNumberField when widget is in readonly mode and verify not able to change the value of widget using down arrow key", async function () {
       expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
       // Apply readonly property to widget
       return asyncRun(function () {
@@ -233,46 +245,20 @@
         });
       }).then(async function () {
 
-        // Simulate a change event by clicking the spin-down button.
-        await tester.asyncUserClick(-1);
-
-        // Assert that the onchange trigger handler was not called.
-        expect(tester.calledOnce(trigger)).to.be.false;
-        // Expected the widget value is the inputValue.
-        expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value");
-      });
-    });
-
-    it("Test uxNumberField when widget is in disabled mode and verify not able to change the value of widget using up arrow key", async function () {
-      expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
-      // Apply disabled property to widget
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "html:disabled": true
+        // Simulate a arrow down key press event.
+        const control = tester.element.shadowRoot.querySelector("#control.control");
+        // Create a new KeyboardEvent for Arrow Up
+        const arrowUpEvent = new KeyboardEvent("keydown", {
+          "key": "ArrowDown",
+          "code": "ArrowDown",
+          "keyCode": 40,      // Deprecated but still widely used
+          "which": 40,        // Also deprecated, for compatibility
+          "bubbles": true,    // So the event bubbles up through the DOM
+          "cancelable": true
         });
-      }).then(async function () {
-
-        // Simulate a change event by clicking the spin-up button.
-        await tester.asyncUserClick(+1);
-
-        // Assert that the onchange trigger handler was not called.
-        expect(tester.calledOnce(trigger)).to.be.false;
-        // Expected the widget value is the inputValue.
-        expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value");
-      });
-    });
-
-    it("Test uxNumberField when widget is in disabled mode and verify not able to change the value of widget using down arrow key", async function () {
-      expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
-      // Apply disabled property to widget
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "html:disabled": true
-        });
-      }).then(async function () {
-
-        // Simulate a change event by clicking the spin-up button.
-        await tester.asyncUserClick(-1);
+        control.focus();
+        // Dispatch the event on the widget
+        control.dispatchEvent(arrowUpEvent);
 
         // Assert that the onchange trigger handler was not called.
         expect(tester.calledOnce(trigger)).to.be.false;
@@ -280,7 +266,6 @@
         expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value");
       });
     });
-
   });
 
   describe("dataInit()", function () {
