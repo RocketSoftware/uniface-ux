@@ -398,6 +398,33 @@
         expect(selectOption.value).equal(valRepArrayWithEmpty.findIndex((item) => item.value === "").toString());
       });
     });
+
+    it("set a valid value again after an invalid value was selected", function () {
+      return asyncRun(function () {
+        // First, update with an invalid value
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "value": "invalid",  // invalid value
+          "display-format": "rep"
+        });
+      }).then(function () {
+        // Then, update with a valid value
+        return asyncRun(function () {
+          tester.dataUpdate({
+            "valrep": valRepArray,
+            "value": "2",  // valid value
+            "display-format": "rep"
+          });
+        });
+      }).then(function () {
+        const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
+        expect(selectedValue.textContent).equal("option two");
+
+        const selectOption = element.querySelector("fluent-option.selected");
+        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
+        expect(tester.widget.getValue()).to.equal("2");
+      });
+    });
   });
 
   describe("showError()", function () {

@@ -175,7 +175,7 @@ export class Select extends Widget {
       const valrep = this.getNode(widgetInstance.data, "valrep");
       // When the user event triggers,
       // the getValue function is called first, so the value should be read directly from the element instead of the data properties.
-      const value = valrep[element["value"]]?.value;
+      const value = valrep[element["value"]] ? valrep[element["value"]].value : widgetInstance.data.value;
       return value;
     }
 
