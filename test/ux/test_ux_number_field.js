@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 (function () {
   "use strict";
 
@@ -206,7 +205,7 @@
       expect(tester.widget.getValue()).to.equal("" + (initialValue - 1), "Widget value");
     });
 
-    it("Test uxNumberField when widget is in readonly mode and verify not able to change the value of widget using up arrow key", async function () {
+    it("Test number field widget in readonly mode and verify not able to change the value of widget using up arrow key", async function () {
       expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
       // Apply readonly property to widget
       return asyncRun(function () {
@@ -217,6 +216,7 @@
         // Simulate a arrow up key press event.
         const control = tester.element.shadowRoot.querySelector("#control.control");
         // Create a new KeyboardEvent for Arrow Up
+        // eslint-disable-next-line no-undef
         const arrowUpEvent = new KeyboardEvent("keydown", {
           "key": "ArrowUp",
           "code": "ArrowUp",
@@ -236,7 +236,7 @@
       });
     });
 
-    it("Test uxNumberField when widget is in readonly mode and verify not able to change the value of widget using down arrow key", async function () {
+    it("Test number field widget in readonly mode and verify not able to change the value of widget using down arrow key", async function () {
       expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
       // Apply readonly property to widget
       return asyncRun(function () {
@@ -248,6 +248,7 @@
         // Simulate a arrow down key press event.
         const control = tester.element.shadowRoot.querySelector("#control.control");
         // Create a new KeyboardEvent for Arrow Up
+        // eslint-disable-next-line no-undef
         const arrowUpEvent = new KeyboardEvent("keydown", {
           "key": "ArrowDown",
           "code": "ArrowDown",
