@@ -414,6 +414,7 @@
         assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'.");
         assert.equal(element.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
         expect(tester.widget.getValue()).to.equal("invalid");
+      }).then(function () {
         return asyncRun(function () {
           tester.dataUpdate({
             "valrep": valRepArray,
