@@ -401,18 +401,23 @@
 
     it("set a valid value again after an invalid value was selected", function () {
       return asyncRun(function () {
-        // First, update with an invalid value
         tester.dataUpdate({
           "valrep": valRepArray,
-          "value": "invalid",  // invalid value
+          "value": "invalid",
           "display-format": "rep"
         });
       }).then(function () {
-        // Then, update with a valid value
+        const selectedValue = element.querySelector("fluent-option.selected");
+        expect(selectedValue).equal(null);
+        expect(element).to.have.class("u-format-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'.");
+        assert.equal(element.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(tester.widget.getValue()).to.equal("invalid");
         return asyncRun(function () {
           tester.dataUpdate({
             "valrep": valRepArray,
-            "value": "2",  // valid value
+            "value": "2",
             "display-format": "rep"
           });
         });
