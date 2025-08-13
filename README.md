@@ -64,7 +64,7 @@ First, users need to install npm, the Node.js package manager. For installation 
 Next, users can install UX Widgets into their local development environment by the following these steps:
 - Open a command prompt;
 - Navigate to the directory where you want to set up your local Uniface UX project;
-- Clone the project by the command: ```git clone https://github.com/RocketSoftware/uniface-ux```;
+- Clone the project by the command: ```git clone git@github.com:RocketSoftware/uniface-ux.git```;
 - Optionally, you can checkout a specific tag of older version from this repository;
 - Run the command: ```npm install```, this will install all nessesary npm packages;
 
