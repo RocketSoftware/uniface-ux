@@ -546,6 +546,34 @@
       });
     });
 
+    it("set maxlength to an invalid value and check if warning is generated", function () {
+      const maxlength = -1;
+      const warnSpy = sinon.spy(console, "warn");
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:maxlength": maxlength
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'html:maxlength' is not a positive number - Ignored."))).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("set minlength to an invalid value and check if warning is generated", function () {
+      const minlength = -1;
+      const warnSpy = sinon.spy(console, "warn");
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:minlength": minlength
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'html:minlength' is not a positive number - Ignored."))).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
     it("set minlength and maxlength and check if validation passes when the value is within the limits", function () {
       const minlength = 5;
       const maxlength = 15;
@@ -647,6 +675,24 @@
         expect(tester.widget.getValue()).to.equal(inputValue);
         const validationMessage = tester.widget.validate();
         assert.equal(validationMessage, expectedValidationMessage);
+      });
+    });
+
+    it("set minlength and maxlength when value is not empty and check if warning is generated", function () {
+      const minlength = 5;
+      const maxlength = 15;
+      const inputValue = "Hello World";
+      const warnSpy = sinon.spy(console, "warn");
+      tester.userInput(inputValue);
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:minlength": minlength,
+          "html:maxlength": maxlength
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'html:minlength' or 'html:maxlength' cannot be set if control-value is not \"\" - Ignored."))).to.be.true;
+        warnSpy.restore();
       });
     });
   });
