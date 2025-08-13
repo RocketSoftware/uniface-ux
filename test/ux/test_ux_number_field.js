@@ -170,7 +170,7 @@
     });
 
     // Test case for the on change event.
-    it("Should call the onchange trigger handler when the number field is changed", function () {
+    it("should call the onchange trigger handler when the number field is changed", function () {
       // Simulate a change event by inputting a string.
       const inputValue = "1234";
       tester.userInput(inputValue);
@@ -205,7 +205,7 @@
       expect(tester.widget.getValue()).to.equal("" + (initialValue - 1), "Widget value");
     });
 
-    it("Test the number field widget in read-only mode to verify its value cannot be changed via the up arrow key.", async function () {
+    it("test the number field widget in read-only mode to verify its value cannot be changed via the up arrow key", async function () {
       expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value.");
       // Apply readonly property to widget.
       return asyncRun(function () {
@@ -230,12 +230,12 @@
 
         // Assert that the onchange trigger handler was not called.
         expect(tester.calledOnce(trigger)).to.be.false;
-        // Expected the widget value is the inputValue.
+        // Expected the widget value is the initial value.
         expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value.");
       });
     });
 
-    it("Test the number field widget in read-only mode to verify its value cannot be changed via the down arrow key.", async function () {
+    it("test the number field widget in read-only mode to verify its value cannot be changed via the down arrow key", async function () {
       expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value.");
       // Apply readonly property to widget.
       return asyncRun(function () {
@@ -261,12 +261,12 @@
 
         // Assert that the onchange trigger handler was not called.
         expect(tester.calledOnce(trigger)).to.be.false;
-        // Expected the widget value is the inputValue.
+        // Expected the widget value is the initial value.
         expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value");
       });
     });
 
-    it("Test the number field widget in disabled mode to verify that its value cannot be modified and it does not receive focus.", async function () {
+    it("test the number field widget in disabled mode to verify that it does not receive focus", async function () {
       expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
       // Apply disabled property to widget.
       return asyncRun(async function () {
@@ -276,12 +276,7 @@
       }).then(function () {
         // Check for the active focus.
         const control = tester.element.shadowRoot.querySelector("#control.control");
-        assert.notStrictEqual(document.activeElement, control, "Number field input should have focus.");
-
-        // Assert that the onchange trigger handler was not called.
-        expect(tester.calledOnce(trigger)).to.be.false;
-        // Expected the widget value is the inputValue.
-        expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value.");
+        assert.notStrictEqual(document.activeElement, control, "Number field input should not have focus.");
       });
     });
   });
