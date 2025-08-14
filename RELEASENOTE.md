@@ -1,15 +1,11 @@
 # RELEASE NOTE - Uniface UX
 
-## Release 10.4.03-022
+## Release 10.4.03.022
 - Uniface release: 10.4.03.022
 - UX Interface Version: 2
 
-### What's new?
- - Do type checking in check job/stage
- 
+### What's new?:
+- Initial version: this release contains the source files of Uniface UX as distributed in Uniface 10.4.03.022.
 
-### Fixes
- - Fix for getLayout
 
-For older releases, see [CHANGELOG.md](CHANGELOG.md).
-
+For older releases, see [CHANGELOG.md](CHANGELOG.md)
