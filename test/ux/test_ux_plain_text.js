@@ -275,23 +275,27 @@
 
     it("plaintext-format property when set to multi-line", function () {
       let plainTextFormat = "multi-line";
-      let val = `Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles
-                      Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
-      let p1Text = "Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles";
-
+      let val = `First Line Once you have all the widgets ready, the rest was mostly about setting the css styles. First Line Once you have all the widgets ready, the rest was mostly about setting the css styles.First Line Once you have all the widgets ready, the rest was mostly about setting the css styles
+                      Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
+      let p1Text = "First Line Once you have all the widgets ready, the rest was mostly about setting the css styles. First Line Once you have all the widgets ready, the rest was mostly about setting the css styles.First Line Once you have all the widgets ready, the rest was mostly about setting the css styles";
+      let p2Text = "Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles";
       // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
       return asyncRun(function () {
         tester.dataUpdate({
           "value": val,
-          "plaintext-format": plainTextFormat
+          "plaintext-format": plainTextFormat,
+          "prefix-icon": "Accounts",
+          "suffix-icon": "Home"
         });
       }).then(function () {
         const span = element.querySelector("span.u-control");
         const children = span.childNodes;
-        assert.equal(element.querySelector("span.u-control").className,"u-control" ,"u-control class name is not present.");
-        assert(children[0].textContent,p1Text,"first line content mismatch");
-        assert(children[1].nodeName,"BR","second node should be <br>");
-        assert(children[2].textContent,p1Text,"second line content mismatch");
+        assert.equal(element.querySelector("span.u-control").className,"u-control" , "u-control class name is not present.");
+        assert(children[0].textContent, p1Text, "First line content mismatch.");
+        assert(children[1].nodeName, "BR", "Second node should be <br>.");
+        assert(children[2].textContent, p2Text, "Second line content mismatch.");
+        assert.equal(element.childNodes[1].className, "u-prefix ms-Icon ms-Icon--Accounts", "Widget element doesn't have class u-prefix ms-Icon ms-Icon--Accounts.");
+        assert.equal(element.childNodes[4].className, "u-suffix ms-Icon ms-Icon--Home", "Widget element doesn't have class u-suffix ms-Icon ms-Icon--Home.");
       });
     });
 
