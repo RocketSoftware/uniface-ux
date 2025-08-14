@@ -1,0 +1,157 @@
+/**
+ * Styling the pseudo element of uxTextField, uxNumberField and uxTextArea
+ * to position it relative to the root element for active and focus interactions.
+ */
+.u-text-field:not([disabled]):active::after,
+.u-text-field:not([disabled]):focus-within:not(:active)::after,
+.u-number-field:not([disabled]):active::after,
+.u-number-field:not([disabled]):focus-within:not(:active)::after,
+.u-text-area:not([disabled]):active::after,
+.u-text-area:not([disabled]):focus-within:not(:active)::after {
+  display: none;
+}
+
+.u-text-field:not([disabled]):active::part(root)::after,
+.u-number-field:not([disabled]):active::part(root)::after,
+.u-text-area:not([disabled]):active::part(root)::after {
+  left: 50%;
+  width: 40%;
+  transform: translateX(-50%);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.u-text-field:not([disabled]):focus-within::part(root):after,
+.u-number-field:not([disabled]):focus-within::part(root):after,
+.u-text-area:not([disabled]):focus-within::part(root):after {
+  left: calc(var(--stroke-width) * -1px);
+  width: calc(100% + var(--stroke-width) * 2px);
+  transform: none;
+}
+
+.u-text-field:not([disabled]):active::part(root)::after,
+.u-text-field:not([disabled]):focus-within:not(:active)::part(root)::after,
+.u-number-field:not([disabled]):active::part(root)::after,
+.u-number-field:not([disabled]):focus-within:not(:active)::part(root)::after,
+.u-text-area:not([disabled]):active::part(root)::after,
+.u-text-area:not([disabled]):focus-within:not(:active)::part(root)::after {
+  content: '';
+  position: absolute;
+  height: calc(var(--focus-stroke-width) * 1px);
+  bottom: calc(var(--stroke-width) * -1px);
+  border-bottom: calc(var(--focus-stroke-width) * 1px) solid var(--accent-fill-rest);
+  border-bottom-left-radius: calc(var(--control-corner-radius) * 1px);
+  border-bottom-right-radius: calc(var(--control-corner-radius) * 1px);
+  z-index: 2;
+  transition: all 300ms cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+.u-number-field::part(root),
+.u-text-field::part(root),
+.u-text-area::part(root) {
+  width: 100%;
+}
+
+/**
+ * Set contentVisibility and contain styles for all fluent-card ancestors of the select widget
+ * to visible and initial respectively.
+ * This is done to enable the correct positioning of the select's dropdown popup and to not "cut" the popup
+ * when it overflows the fluent-card's bounding box.
+ */
+fluent-card {
+  content-visibility: initial;
+  contain: initial;
+}
+
+/* Styling the label with respect to its added attribute u-label-position */
+.u-number-field[u-label-position],
+.u-select[u-label-position],
+.u-text-field[u-label-position],
+.u-text-area[u-label-position] {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  order: unset;
+}
+
+.u-number-field[u-label-position][hidden],
+.u-select[u-label-position][hidden],
+.u-text-field[u-label-position][hidden],
+.u-text-area[u-label-position][hidden] {
+  display: none;
+}
+
+.u-number-field[u-label-position="before"]::part(label),
+.u-select[u-label-position="before"]::part(label),
+.u-text-field[u-label-position="before"]::part(label),
+.u-text-area[u-label-position="before"]::part(label) {
+  margin-bottom: unset;
+  margin-inline-end: 4px;
+  align-self: normal;
+  align-content: center;
+  padding-inline-end: 3px;
+}
+
+.u-number-field[u-label-position="after"]::part(label),
+.u-select[u-label-position="after"]::part(label),
+.u-text-field[u-label-position="after"]::part(label),
+.u-text-area[u-label-position="after"]::part(label) {
+  margin-bottom: unset;
+  margin-inline-start: 4px;
+  order: 2;
+  align-self: normal;
+  align-content: center;
+  padding-inline-start: 3px;
+}
+
+.u-number-field[u-label-position="below"],
+.u-number-field[u-label-position="above"],
+.u-select[u-label-position="below"],
+.u-select[u-label-position="above"],
+.u-text-field[u-label-position="below"],
+.u-text-field[u-label-position="above"],
+.u-text-area[u-label-position="below"],
+.u-text-area[u-label-position="above"] {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.u-number-field[u-label-position="below"]::part(label),
+.u-select[u-label-position="below"]::part(label),
+.u-text-field[u-label-position="below"]::part(label),
+.u-text-area[u-label-position="below"]::part(label) {
+  order: 2;
+  margin-top: 4px;
+  margin-bottom: unset;
+  width: 100%;
+}
+
+.u-number-field[u-label-position="above"]::part(label),
+.u-select[u-label-position="above"]::part(label),
+.u-text-field[u-label-position="above"]::part(label),
+.u-text-area[u-label-position="above"]::part(label) {
+  width: 100%;
+}
+
+/* To ensure no margin-bottom is applied if the label is empty */
+.u-number-field::part(label),
+.u-select::part(label),
+.u-text-field::part(label),
+.u-text-area::part(label) {
+  margin-bottom: 0;
+}
+
+.u-number-field[u-label-position="above"] .u-label-text:not([hidden]),
+.u-select[u-label-position="above"] .u-label-text:not([hidden]),
+.u-text-field[u-label-position="above"] .u-label-text:not([hidden]),
+.u-text-area[u-label-position="above"] .u-label-text:not([hidden]) {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.u-number-field[u-label-position="below"] .u-label-text:not([hidden]),
+.u-select[u-label-position="below"] .u-label-text:not([hidden]),
+.u-text-field[u-label-position="below"] .u-label-text:not([hidden]),
+.u-text-area[u-label-position="below"] .u-label-text:not([hidden]) {
+  display: block;
+}

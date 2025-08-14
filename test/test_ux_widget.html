@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>UX Widget Test</title>
+    <link rel="icon" href="data:," />
+
+    <script type="text/javascript" src="helper/umockup.js"></script>
+
+    <!-- Load all related JS files to import FluentUI & UX widgets from bundle -->
+    <script type="module" src="../dist/unifaceux.min.js"></script>
+
+    <!-- Load all related CSS files from bundle -->
+    <link type="text/css" rel="stylesheet" href="../dist/unifaceux.min.css" />
+
+    <!-- Mocha related -->
+    <link type="text/css" rel="stylesheet" href="modules/mocha/mocha.css" />
+    <script type="text/javascript" src="modules/mocha/mocha.js"></script>
+    <script type="text/javascript" src="modules/chai/chai.js"></script>
+    <script type="text/javascript" src="modules/chai-dom/chai-dom.js"></script>
+    <script type="text/javascript" src="modules/sinon/pkg/sinon.js"></script>
+
+    <script class="mocha-init">
+      mocha.setup('bdd');
+      mocha.checkLeaks();
+    </script>
+  </head>
+
+  <body style="margin: 2em;">
+    <h2>UX-Widget: <span id="widget-name"></span></h2>
+
+    <div id="widget-container">
+      <span id="ux-widget">Widget container</span>
+    </div>
+
+    <hr/>
+    <!-- To load test script -->
+    <script id="test-script" type="module"></script>
+
+    <h2>Widget Test: <span id="test-script-name"></span></h2>
+    <span id="test-error"></span>
+
+    <div id="mocha"></div>
+
+    
+    <script class="mocha-exec" type="module">
+      // Handle uncaught errors globally
+      window.onerror = function (message, source, lineno, colno, error) {
+        console.error("Error captured: ", message);
+        const filename = source ? source.split('/').pop() : 'unknown';
+        document.getElementById("test-error").innerHTML += `
+          Uncaught error: ${message}<br>
+          at: ${filename}:${lineno}:${colno} <br>
+        `;
+        return true;  // Prevent the default browser error handling
+      };
+
+      // update document
+      const widgetName = umockup.getWidgetName();
+      const scriptName = umockup.getTestJsName();
+
+      const paramsString = window.location.search;
+      const params = new URLSearchParams(paramsString);
+      const debug = params.get("debug");
+      umockup.setTestDebug(debug);
+    
+      document.title = "Widget test - " + widgetName + " - " + scriptName;
+      let el = document.getElementById("widget-name");
+      el.innerHTML = widgetName;
+
+      el = document.getElementById("test-script-name");
+      el.innerHTML = scriptName;
+
+      // dynamically load test script
+      el = document.getElementById("test-script");
+      if (scriptName) {
+        el.src = "ux/" + scriptName;
+
+        // this block of code ensures that the end of file is reached and add an element to assert the number of test cases
+        el.onload = function () {
+          mocha.run().on('end', function () {
+            if (this.stats.passes === 0 && this.stats.failures === 0) {
+              throw new Error('Test could not run, please check for errors in JavaScript');
+            }
+            
+            var line;
+            line = "Results Passed : " + this.stats.passes + " || Failed : " + this.stats.failures;
+
+            var resultDiv = document.createElement("div");
+            var resultHr = document.createElement("hr");
+            var resultInnerDiv = document.createElement("div");
+
+            resultDiv.id = "test-ended";
+            resultInnerDiv.id = "test-result";
+
+            var resultContent = document.createTextNode(line);
+            resultDiv.appendChild(resultHr);
+            resultDiv.appendChild(resultInnerDiv);
+            resultInnerDiv.appendChild(resultContent);
+
+            document.body.appendChild(resultDiv);
+          });
+        };
+
+        el.onerror = function () {
+          console.log("Failed to load test script " + scriptName);
+          document.getElementById("test-error").innerHTML += "Failed to load the script! Please check script name or verify that file <u><i>"+scriptName+"</i></u> is available in folder!";
+        };
+      } else {
+        document.getElementById("test-error").innerHTML += "The script name \"\" entered is empty. Please enter a widget name!!";
+      }
+    </script>
+
+  </body>
+</html>

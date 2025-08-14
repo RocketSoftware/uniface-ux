@@ -1,0 +1,134 @@
+## Automation for UX-Widget Tests
+- by Sparsh Gupta
+- 2024-06-27
+
+## Introduction
+
+This repository contains a suite of automated tests for automation of uniface ux-widgets tests using Playwright, a Node.js library to automate Chromium, Firefox, and WebKit with a single API. Playwright is designed to enable reliable end-to-end testing and is useful for automating web interactions.
+
+## Table of Contents
+
+- [Features](##Features)
+- [Prerequisites](##Prerequisites)
+- [Installation](##Installation)
+- [Running Tests](##Running-Tests)
+- [Reporting](##Reporting)
+
+## Features
+
+- Cross-browser testing with Chromium, Firefox, and WebKit
+- Parallel test execution
+- Screenshot capture on test failure
+- Customizable test runners
+- CI/CD integration
+- Allure report support
+
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- Node.js (version 18 or later): If you don't have Node.js installed, download and install it from [Node.js official website](https://nodejs.org/)
+- Playwright: Install Playwright using npm.
+
+## Installation
+
+To set up the project locally, follow these steps:
+
+1. Navigate to this directory:
+
+    ```cd testAutomation```
+
+1. Install the dependencies:
+
+    ```npm install```
+
+1. Install Playwright browsers:
+
+    ```npx playwright install```
+
+1. Start a HTTP server
+
+    1. Use the default configured http-server
+
+        You need do nothing, and later in step 5, the default server will be started automatically before test.
+
+        This default server use the baseURL http://localhost:9000/test/ .
+
+    1. Optionally, you also can use your Tomcat server
+
+        This can be customized locally by environment variable:
+ 
+        ```set UX_WIDGETS_BASE_URL=<the_baseURL_of_index.html>```
+
+        For example: ```set UX_WIDGETS_BASE_URL=http://localhost:8080/ux-widgets/test/```
+
+        This will open test index page http://localhost:8080/ux-widgets/test/index.html
+
+1. Running Tests
+
+    To run the Playwright tests, use the following command:
+
+    ```npx playwright test```
+
+
+## Running-Tests
+
+* Running All Tests
+
+  To run all tests, execute:
+  ```npx playwright test```
+
+* Running a Specific Test
+
+  To run a specific test file, execute:
+  ```npx playwright test path/to/UXWidgetUnitTest.spec.js```
+
+* Running Tests in Headless Mode
+
+  By default, Playwright runs tests in headless mode. To run tests in headed mode, use the --headed option:
+  ```npx playwright test --headed```
+
+* Run tests with a specific tag (assuming you use test annotations):
+  ```npx playwright test --grep @tagname```
+
+
+## Reporting
+
+### Generate a HTML report:
+
+1. Run the tests normally using ```npx playwright test```
+1. View report using ```npx playwright show-report```
+
+### Generate a Allure report:
+
+To generate an Allure report in Playwright, you'll need to integrate Allure with your Playwright tests.
+
+Here are the steps to do this:
+
+1. Install Allure and related packages:
+
+    You'll need to install allure-playwright, allure-commandline, and @playwright/test if you haven't already.
+
+    ```npm install @playwright/test allure-playwright allure-commandline --save-dev```
+
+1. Configure Playwright to use Allure:
+
+    Add Allure as a reporter in your Playwright configuration file (playwright.config.js)
+
+1. Run your tests:
+
+    Run your tests as usual. Allure results will be generated in the allure-results folder.
+
+    ```npx playwright test```
+
+1. Generate the Allure report:
+
+    Use the Allure command line tool to generate the report.
+
+    ```npx allure generate allure-results --clean -o allure-report```
+
+1. Open the Allure report:
+
+    Open the generated report in your browser.
+
+    ```npx allure open allure-report```
