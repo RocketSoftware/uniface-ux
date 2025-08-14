@@ -1,0 +1,87 @@
+.u-radio-group {
+  display: inline-flex;
+  vertical-align: bottom;
+}
+
+.u-radio-group .u-radio {
+  margin: calc(var(--design-unit) * .5px) 0;
+  align-items: flex-start;
+}
+
+.u-radio-group[hidden] {
+  display: none;
+}
+
+.u-radio-group::part(label) {
+  display: inline-flex;
+  align-items: center;
+}
+
+.u-radio-group .u-label-text {
+  display: block;
+  color: var(--neutral-foreground-rest);
+  cursor: pointer;
+  font-family: var(--body-font);
+  font-size: var(--type-ramp-base-font-size);
+  line-height: var(--type-ramp-base-line-height);
+  font-weight: initial;
+  font-variation-settings: var(--type-ramp-base-font-variations);
+  padding-inline-end: calc((var(--design-unit) * .5px));
+}
+
+.u-radio-group .u-label-text:not([hidden]),
+.u-radio-group .u-error-icon:not([hidden]) {
+  margin-bottom: 4px;
+}
+
+.u-radio-group .u-error-icon::before {
+  color: #d13438;
+  padding-inline-start: calc((var(--design-unit) * .5px));
+}
+
+/* Styles the ellipsis */
+.u-radio-group[orientation="horizontal"] fluent-radio::part(label) {
+  display: flex;
+  align-items: center;
+}
+
+/* Add ellipsis to horizontal layout */
+.u-radio-group[orientation="horizontal"] .u-radio .u-valrep-value,
+.u-radio-group[orientation="horizontal"] .u-radio .u-valrep-representation {
+  max-width: 25ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.u-radio-group .u-radio .u-valrep-representation {
+  margin-inline-end: calc((var(--design-unit) * 1px));
+}
+
+.u-radio-group .u-radio .u-value {
+  color: var(--neutral-base-color);
+  font-style: italic;
+}
+
+/* Styling the valrep value to enclose it within parentheses. */
+.u-radio-group .u-radio .u-value::before {
+  content: "(";
+}
+
+.u-radio-group .u-radio .u-value::after {
+  content: ")";
+}
+
+.u-radio-group[disabled]::part(label) {
+  cursor: not-allowed;
+  opacity: var(--disabled-opacity);
+}
+
+.u-radio-group[readonly]::part(label) {
+  cursor: not-allowed;
+}
+
+.u-radio-group[disabled] .u-label-text,
+.u-radio-group[readonly] .u-label-text {
+  cursor: not-allowed;
+}
