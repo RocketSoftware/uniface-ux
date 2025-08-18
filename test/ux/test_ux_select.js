@@ -403,8 +403,7 @@
       return asyncRun(function () {
         tester.dataUpdate({
           "valrep": valRepArray,
-          "value": "invalid",
-          "display-format": "rep"
+          "value": "invalid"
         });
       }).then(function () {
         const selectedValue = element.querySelector("fluent-option.selected");
@@ -418,8 +417,7 @@
         return asyncRun(function () {
           tester.dataUpdate({
             "valrep": valRepArray,
-            "value": "2",
-            "display-format": "rep"
+            "value": "2"
           });
         });
       }).then(function () {

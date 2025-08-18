@@ -176,7 +176,7 @@ export class Select extends Widget {
       const selectedOption = valrep[element["value"]];
       // When the user event triggers,
       // the getValue function is called first, so the value should be read directly from the element instead of the data properties.
-      // Validate the value, and assign null in case of an invalid input.
+      // But for programmatical updates, if the value is invalid, it is read from the data properties.
       const value = selectedOption ? selectedOption.value : widgetInstance.data.value;
       return value;
     }
