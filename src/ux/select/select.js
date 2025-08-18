@@ -173,9 +173,11 @@ export class Select extends Widget {
       this.log("getValue", { "widgetInstance": widgetInstance.getTraceDescription() });
       const element = this.getElement(widgetInstance);
       const valrep = this.getNode(widgetInstance.data, "valrep");
+      const selectedOption = valrep[element["value"]];
       // When the user event triggers,
       // the getValue function is called first, so the value should be read directly from the element instead of the data properties.
-      const value = valrep[element["value"]] ? valrep[element["value"]].value : widgetInstance.data.value;
+      // Validate the value, and assign null in case of an invalid input.
+      const value = selectedOption ? selectedOption.value : widgetInstance.data.value;
       return value;
     }
 
