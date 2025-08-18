@@ -198,7 +198,7 @@ export class PlainText extends Widget {
 
       lines.forEach((line, index) => {
         element.appendChild(document.createTextNode(line));
-        if (index !== lines.length - 1) {
+        if (index < lines.length - 1) {
           element.appendChild(document.createElement("br"));
         }
       });
