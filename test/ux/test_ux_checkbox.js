@@ -390,7 +390,7 @@
       });
     });
 
-    it("Need fix: set invalid value when checkbox checked state is false", function () {
+    it("set invalid value and check if the widget goes into error state", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "value": 123
@@ -401,8 +401,6 @@
         expect(element.querySelector("span.u-error-icon").getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
         assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid.");
         assert.equal(element.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator."); // Check for visibility.
-      }).catch(function (e) {
-        console.log("Need fix: " + e.message);
       });
     });
 
