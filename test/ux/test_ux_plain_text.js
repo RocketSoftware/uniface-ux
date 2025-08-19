@@ -221,11 +221,11 @@
 
     });
 
-    it("plaintext-format property when set to multi-line with prefix & suffix text", function () {
+    it("plaintext-format property when set to multi-line with prefix & suffix text with label", function () {
 
       let plainTextFormat = "multi-line";
-      let prefixTextData1 = "prefixTextData1";
-      let suffixTextData1 = "suffixTextData1";
+      let prefixTextData = "prefixTextData";
+      let suffixTextData = "suffixTextData";
       let val1 = `First1 Line Once you have all the widgets ready, the rest was mostly about setting the css styles. First Line Once you have all the widgets ready, the rest was mostly about setting the css styles.First Line Once you have all the widgets ready, the rest was mostly about setting the css styles
                       Second1 Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
       let p1Text = "First1 Line Once you have all the widgets ready, the rest was mostly about setting the css styles. First Line Once you have all the widgets ready, the rest was mostly about setting the css styles.First Line Once you have all the widgets ready, the rest was mostly about setting the css styles";
@@ -235,19 +235,21 @@
         tester.dataUpdate({
           "value": val1,
           "plaintext-format": plainTextFormat,
-          "prefix-text": prefixTextData1,
-          "suffix-text": suffixTextData1,
-          "label-text": "Test Label2"
+          "prefix-text": prefixTextData,
+          "suffix-text": suffixTextData,
+          "label-text": "Test Label"
         });
       }).then(function () {
         const span = element.querySelector("span.u-control");
         const children = span.childNodes;
+        let labelText = element.querySelector("span.u-label-text").innerText;
+        assert.equal(labelText, "Test Label");
         assert.equal(element.querySelector("span.u-control").className,"u-control" , "The class name u-control is not present.");
         assert(children[0].textContent, p1Text, "First line content mismatch.");
         assert(children[1].nodeName, "BR", "Second node should be <br>.");
         assert(children[2].textContent, p2Text, "Second line content mismatch.");
-        assert.equal(element.querySelector("span.u-prefix").innerText, prefixTextData1, "Prefix text does not match.");
-        assert.equal(element.querySelector("span.u-suffix").innerText, suffixTextData1, "Suffix text does not match.");
+        assert.equal(element.querySelector("span.u-prefix").innerText, prefixTextData, "Prefix text does not match.");
+        assert.equal(element.querySelector("span.u-suffix").innerText, suffixTextData, "Suffix text does not match.");
       });
     });
 
@@ -272,8 +274,6 @@
         assert.equal(element.childNodes[4].className, "u-suffix ms-Icon ms-Icon--Accounts", "Widget element doesn't have class u-suffix ms-Icon ms-Icon--Accounts.");
       });
     });
-
-
 
     it("plaintext-format property when set to first-line", function () {
       let plainTextFormat = "first-line";
@@ -305,7 +305,7 @@
       });
     });
 
-    it("plaintext-format property when set to multi-line with prefix & suffix icon", function () {
+    it("plaintext-format property when set to multi-line with prefix & suffix icon with label", function () {
       let plainTextFormat = "multi-line";
       let val = `First Line Once you have all the widgets ready, the rest was mostly about setting the css styles. First Line Once you have all the widgets ready, the rest was mostly about setting the css styles.First Line Once you have all the widgets ready, the rest was mostly about setting the css styles
                       Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
@@ -317,11 +317,14 @@
           "value": val,
           "plaintext-format": plainTextFormat,
           "prefix-icon": "Accounts",
-          "suffix-icon": "Home"
+          "suffix-icon": "Home",
+          "label-text": "Test Label"
         });
       }).then(function () {
         const span = element.querySelector("span.u-control");
         const children = span.childNodes;
+        let labelText = element.querySelector("span.u-label-text").innerText;
+        assert.equal(labelText, "Test Label");
         assert.equal(element.querySelector("span.u-control").className,"u-control" , "The class name u-control class is not present.");
         assert(children[0].textContent, p1Text, "First line content mismatch.");
         assert(children[1].nodeName, "BR", "Second node should be <br>.");
