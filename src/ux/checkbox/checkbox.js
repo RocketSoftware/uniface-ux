@@ -128,8 +128,8 @@ export class Checkbox extends Widget {
      */
     handleChange(event, widgetInstance) {
       if (!widgetInstance.data.ignoreChangeEvent) {
-        this.clearErrors(widgetInstance);
         event.preventDefault();
+        this.clearErrors(widgetInstance);
         let newValue;
         const isTriState = widgetInstance.toBoolean(widgetInstance.data["tri-state"]);
         switch (widgetInstance.data.currentValue) {
