@@ -203,7 +203,7 @@
           "prefix-text": prefixTextData
         });
       }).then(function () {
-        assert.equal(element.innerText, prefixTextData, "Prefix data does not match."); // Check for visibility.
+        assert.equal(element.querySelector("span.u-prefix").innerText, prefixTextData, "Prefix text does not match.");
       });
 
     });
