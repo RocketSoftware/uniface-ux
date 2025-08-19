@@ -69,7 +69,7 @@ export class Listbox extends Widget {
     getValue(widgetInstance) {
       const element = this.getElement(widgetInstance);
       const valrep = this.getNode(widgetInstance.data, "valrep");
-      const selectedOption = valrep[element["value"]];
+      const selectedOption = valrep[element["selectedIndex"]];
       const value = selectedOption ? selectedOption.value : widgetInstance.data.value;
       return value;
     }
