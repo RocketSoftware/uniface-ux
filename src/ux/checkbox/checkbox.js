@@ -128,6 +128,7 @@ export class Checkbox extends Widget {
      */
     handleChange(event, widgetInstance) {
       if (!widgetInstance.data.ignoreChangeEvent) {
+        this.clearErrors(widgetInstance);
         event.preventDefault();
         let newValue;
         const isTriState = widgetInstance.toBoolean(widgetInstance.data["tri-state"]);
@@ -166,7 +167,6 @@ export class Checkbox extends Widget {
         "element": element,
         "event_name": "change",
         "handler": (event) => {
-          this.clearErrors(widgetInstance);
           this.handleChange(event, widgetInstance);
         }
       });
