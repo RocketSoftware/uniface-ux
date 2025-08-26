@@ -12,7 +12,6 @@ import { ElementError } from "../framework/workers/element_error.js";
 import { SubWidget } from "../framework/workers/sub_widget.js";
 import { StyleClassManager } from "../framework/workers/style_class_manager.js";
 import { EventTrigger } from "../framework/workers/event_trigger.js";
-import { AttributeUIBlocking } from "../framework/workers/attribute_ui_blocking.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import { fluentTextField, provideFluentDesignSystem } from "@fluentui/web-components";
@@ -134,7 +133,6 @@ export class TextField extends Widget {
     new this.AttributeUIBlocking(this, "html:readonly", "html:disabled", "uiblocked", false, false, false),
     new AttributeBoolean(this, "html:spellcheck", "spellcheck", false),
     new AttributeLength(this, "html:minlength", "html:maxlength", undefined, undefined),
-    new AttributeUIBlocking(this, "readonly"),
     new ElementIconText(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new ElementIconText(this, "span", "u-prefix", ".u-prefix", "start", "prefix-text", "", "prefix-icon", ""),
     new ElementError(this, "span", "u-error-icon", ".u-error-icon", "end"),
