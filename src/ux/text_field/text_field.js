@@ -95,6 +95,7 @@ export class TextField extends Widget {
       element["control"].disabled = false;
       // During uiblocked phase, set element to readonly or disabled based on validity.
       if (uiblocked) {
+        element.classList.add("u-blocked");
         if (!element["control"].checkValidity()) {
           element["disabled"] = true;
         } else {
@@ -102,6 +103,7 @@ export class TextField extends Widget {
           element["disabled"] = this.toBoolean(disabled);
         }
       } else {
+        element.classList.remove("u-blocked");
         // Reset properties based on initial values when not uiblocked.
         if (!element["control"].checkValidity()) {
           element["disabled"] = this.toBoolean(disabled);
