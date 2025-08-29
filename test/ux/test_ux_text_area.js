@@ -514,9 +514,9 @@
       });
     });
 
-    it("setting minlength and maxlength", function () {
-      let minlength = 2;
-      let maxlength = 5;
+    it("set minlength and maxlength and check if the attributes have been applied properly", function () {
+      const minlength = 2;
+      const maxlength = 5;
       return asyncRun(function () {
         tester.dataUpdate({
           "html:minlength": minlength,
@@ -527,6 +527,172 @@
         expect(element.hasAttribute("minlength"), "Failed to show the minlength attribute.");
         assert.equal(element.getAttribute("minlength"), minlength, `Min is not same ${minlength}.`);
         assert.equal(element.getAttribute("maxlength"), maxlength, `Max is not same ${maxlength}.`);
+      });
+    });
+
+    it("set minlength and maxlength and check if warning is shown when minlength is greater than maxlength", function () {
+      const minlength = 15;
+      const maxlength = 5;
+      const warnSpy = sinon.spy(console, "warn");
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:minlength": minlength,
+          "html:maxlength": maxlength
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Invalid combination of 'html:minlength' (html:minlength) and 'html:maxlength' (html:maxlength) - Ignored."))).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("set maxlength to an invalid value and check if warning is generated", function () {
+      const maxlength = -1;
+      const warnSpy = sinon.spy(console, "warn");
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:maxlength": maxlength
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'html:maxlength' is not a positive number - Ignored."))).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("set minlength to an invalid value and check if warning is generated", function () {
+      const minlength = -1;
+      const warnSpy = sinon.spy(console, "warn");
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:minlength": minlength
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'html:minlength' is not a positive number - Ignored."))).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("set minlength and maxlength and check if validation passes when the value is within the limits", function () {
+      const minlength = 5;
+      const maxlength = 15;
+      const inputValue = "Hello World";
+      const expectedValidationMessage = "";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:minlength": minlength,
+          "html:maxlength": maxlength
+        });
+        tester.userInput(inputValue);
+      }).then(function () {
+        expect(tester.widget.getValue()).to.equal(inputValue);
+        const validationMessage = tester.widget.validate();
+        assert.equal(validationMessage, expectedValidationMessage);
+      });
+    });
+
+    it("set minlength and check if validation passes when the value has same number of characters as minlength", function () {
+      const minlength = 5;
+      const inputValue = "Hello";
+      const expectedValidationMessage = "";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:minlength": minlength
+        });
+        tester.userInput(inputValue);
+      }).then(function () {
+        expect(tester.widget.getValue()).to.equal(inputValue);
+        const validationMessage = tester.widget.validate();
+        assert.equal(validationMessage, expectedValidationMessage);
+      });
+    });
+
+    it("set maxlength and check if validation passes when the value has same number of characters as maxlength", function () {
+      const maxlength = 5;
+      const inputValue = "Hello";
+      const expectedValidationMessage = "";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:maxlength": maxlength
+        });
+        tester.userInput(inputValue);
+      }).then(function () {
+        expect(tester.widget.getValue()).to.equal(inputValue);
+        const validationMessage = tester.widget.validate();
+        assert.equal(validationMessage, expectedValidationMessage);
+      });
+    });
+
+    it("set minlength and check if proper validation message is generated when value has lesser number of characters than minlength", function () {
+      const minlength = 5;
+      const inputValue = "abcd";
+      const expectedValidationMessage = "Please lengthen this text to 5 characters or more (you are currently using 4 characters).";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:minlength": minlength
+        });
+        tester.userInput(inputValue);
+      }).then(function () {
+        expect(tester.widget.getValue()).to.equal(inputValue);
+        const validationMessage = tester.widget.validate();
+        assert.equal(validationMessage, expectedValidationMessage);
+      });
+    });
+
+    it("set minlength > 0 and check if validation message is generated when value is empty", function () {
+      const minlength = 5;
+      const inputValue = "";
+      const expectedValidationMessage = "Please lengthen this text to 5 characters or more (you are currently using 0 characters).";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:minlength": minlength
+        });
+        tester.userInput(inputValue);
+      }).then(function () {
+        expect(tester.widget.getValue()).to.equal(inputValue);
+        const validationMessage = tester.widget.validate();
+        assert.equal(validationMessage, expectedValidationMessage);
+      });
+    });
+
+    it("set maxlength and check if proper validation message is generated when value has more number of characters than maxlength", function () {
+      const maxlength = 5;
+      const inputValue = "abcdef";
+      const expectedValidationMessage = "Please shorten this text to 5 characters or less (you are currently using 6 characters).";
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:maxlength": maxlength
+        });
+        tester.userInput(inputValue);
+      }).then(function () {
+        expect(tester.widget.getValue()).to.equal(inputValue);
+        const validationMessage = tester.widget.validate();
+        assert.equal(validationMessage, expectedValidationMessage);
+      });
+    });
+
+    it("set minlength and maxlength when value is not empty and check if warning is generated", function () {
+      const minlength = 5;
+      const maxlength = 15;
+      const inputValue = "Hello World";
+      const warnSpy = sinon.spy(console, "warn");
+      tester.userInput(inputValue);
+
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:minlength": minlength,
+          "html:maxlength": maxlength
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'html:minlength' or 'html:maxlength' cannot be set if control-value is not \"\" - Ignored."))).to.be.true;
+        warnSpy.restore();
       });
     });
   });

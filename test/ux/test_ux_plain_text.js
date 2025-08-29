@@ -203,9 +203,54 @@
           "prefix-text": prefixTextData
         });
       }).then(function () {
-        assert.equal(element.innerText, prefixTextData, "Prefix data does not match."); // Check for visibility.
+        assert.equal(element.querySelector("span.u-prefix").innerText, prefixTextData, "Prefix text does not match.");
       });
 
+    });
+
+    it("suffix-text property", function () {
+      let suffixTextData = "suffixTextData";
+      // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "suffix-text": suffixTextData
+        });
+      }).then(function () {
+        assert.equal(element.querySelector("span.u-suffix").innerText, suffixTextData, "Suffix text does not match.");
+      });
+
+    });
+
+    it("plaintext-format property when set to multi-line with prefix & suffix text with label", function () {
+
+      let plainTextFormat = "multi-line";
+      let prefixTextData = "prefixTextData";
+      let suffixTextData = "suffixTextData";
+      let val1 = `First1 Line Once you have all the widgets ready, the rest was mostly about setting the css styles. First Line Once you have all the widgets ready, the rest was mostly about setting the css styles.First Line Once you have all the widgets ready, the rest was mostly about setting the css styles
+                      Second1 Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
+      let p1Text = "First1 Line Once you have all the widgets ready, the rest was mostly about setting the css styles. First Line Once you have all the widgets ready, the rest was mostly about setting the css styles.First Line Once you have all the widgets ready, the rest was mostly about setting the css styles";
+      let p2Text = "Second1 Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles";
+      // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "value": val1,
+          "plaintext-format": plainTextFormat,
+          "prefix-text": prefixTextData,
+          "suffix-text": suffixTextData,
+          "label-text": "Test Label"
+        });
+      }).then(function () {
+        const span = element.querySelector("span.u-control");
+        const children = span.childNodes;
+        let labelText = element.querySelector("span.u-label-text").innerText;
+        assert.equal(labelText, "Test Label");
+        assert.equal(element.querySelector("span.u-control").className,"u-control" , "The class name u-control is not present.");
+        assert(children[0].textContent, p1Text, "First line content mismatch.");
+        assert(children[1].nodeName, "BR", "Second node should be <br>.");
+        assert(children[2].textContent, p2Text, "Second line content mismatch.");
+        assert.equal(element.querySelector("span.u-prefix").innerText, prefixTextData, "Prefix text does not match.");
+        assert.equal(element.querySelector("span.u-suffix").innerText, suffixTextData, "Suffix text does not match.");
+      });
     });
 
     it("prefix-icon property", function () {
@@ -217,19 +262,6 @@
       }).then(function () {
         assert.equal(element.childNodes[1].className, "u-prefix ms-Icon ms-Icon--Accounts", "Widget element doesn't have class u-prefix ms-Icon ms-Icon--Accounts.");
       });
-    });
-
-    it("suffix-text property", function () {
-      let suffixTextData = "suffixTextData";
-      // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "suffix-text": suffixTextData
-        });
-      }).then(function () {
-        assert.equal(element.innerText, suffixTextData, "Suffix data does not match."); // Check for visibility.
-      });
-
     });
 
     it("suffix-icon property", function () {
@@ -273,21 +305,32 @@
       });
     });
 
-    it("plaintext-format property when set to multi-line", function () {
+    it("plaintext-format property when set to multi-line with prefix & suffix icon with label", function () {
       let plainTextFormat = "multi-line";
-      let val = `Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles
-                      Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
-      let innerHtml = `Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles
-                      Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Multi Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
+      let val = `First Line Once you have all the widgets ready, the rest was mostly about setting the css styles. First Line Once you have all the widgets ready, the rest was mostly about setting the css styles.First Line Once you have all the widgets ready, the rest was mostly about setting the css styles
+                      Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles`;
+      let p1Text = "First Line Once you have all the widgets ready, the rest was mostly about setting the css styles. First Line Once you have all the widgets ready, the rest was mostly about setting the css styles.First Line Once you have all the widgets ready, the rest was mostly about setting the css styles";
+      let p2Text = "Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles. Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles.Second Line Once you have all the widgets ready, the rest was mostly about setting the css styles";
       // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
       return asyncRun(function () {
         tester.dataUpdate({
           "value": val,
-          "plaintext-format": plainTextFormat
+          "plaintext-format": plainTextFormat,
+          "prefix-icon": "Accounts",
+          "suffix-icon": "Home",
+          "label-text": "Test Label"
         });
       }).then(function () {
-        assert.equal(element.querySelector("span.u-control").className,"u-control" ,"u-control class name is not present.");
-        assert.equal(innerHtml, element.childNodes[2].innerHTML,"The plain text formatting for the multi-line data does not match."); // Check for visibility.
+        const span = element.querySelector("span.u-control");
+        const children = span.childNodes;
+        let labelText = element.querySelector("span.u-label-text").innerText;
+        assert.equal(labelText, "Test Label");
+        assert.equal(element.querySelector("span.u-control").className,"u-control" , "The class name u-control class is not present.");
+        assert(children[0].textContent, p1Text, "First line content mismatch.");
+        assert(children[1].nodeName, "BR", "Second node should be <br>.");
+        assert(children[2].textContent, p2Text, "Second line content mismatch.");
+        assert.equal(element.childNodes[1].className, "u-prefix ms-Icon ms-Icon--Accounts", "Widget element doesn't have class u-prefix ms-Icon ms-Icon--Accounts.");
+        assert.equal(element.childNodes[4].className, "u-suffix ms-Icon ms-Icon--Home", "Widget element doesn't have class u-suffix ms-Icon ms-Icon--Home.");
       });
     });
 
