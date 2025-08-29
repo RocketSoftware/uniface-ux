@@ -87,6 +87,7 @@ export class NumberField extends Widget {
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
     this.elements.widget.enterKeyPressed = false;
+    let previousValue = this.getNode(this.data, "value");
 
     // Stop propagating change event to parent nodes on pressing enter key if change button is enabled.
     this.elements.widget.addEventListener("keydown", (event) => {
@@ -94,7 +95,27 @@ export class NumberField extends Widget {
         this.elements.widget.enterKeyPressed = true;
       }
     });
+
+    // During a server round-trip, the widget is in a readonly and blocked state,
+    // and the user presses the arrow keys, the value will change. This occurs because
+    // the widget is temporarily in a readonly and blocked state during the round-trip,
+    // allowing the value change to persist even though it shouldn't.
+    // This is considered a minor bug that we are currently opting to live with.
     this.elements.widget.addEventListener("change", (event) => {
+      const readOnly = this.getNode(widgetElement, "readOnly");
+      const currentValue = widgetElement.value;
+      // Skip readOnly block if element has 'u-blocked' class.
+      if (readOnly && !widgetElement.classList.contains("u-blocked")) {
+        // Reset and cancel change.
+        widgetElement.value = previousValue;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+      // Only treat as valid change if value actually changed.
+      if (currentValue !== previousValue) {
+        previousValue = currentValue;
+      }
       if (this.elements.widget.enterKeyPressed) {
         event.stopPropagation();
         this.elements.widget.enterKeyPressed = false;

@@ -558,6 +558,36 @@
         expect(element.childNodes[1].classList.contains("ms-Icon--AlertSolid")).to.be.false;
       });
     });
+
+    it("set a valid value again after an invalid value was selected", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "value": "invalid"
+        });
+      }).then(function () {
+        const selectedValue = element.querySelector("fluent-option.selected");
+        expect(selectedValue).equal(null);
+        expect(element).to.have.class("u-format-invalid");
+        assert(!element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the error icon.");
+        assert.equal(element.querySelector("span.u-error-icon").className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class 'u-error-icon ms-Icon ms-Icon--AlertSolid'.");
+        assert.equal(element.querySelector("span.u-error-icon").getAttribute("title"), "ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
+        expect(tester.widget.getValue()).to.equal("invalid");
+      }).then(function () {
+        return asyncRun(function () {
+          tester.dataUpdate({
+            "valrep": valRepArray,
+            "value": "2"
+          });
+        });
+      }).then(function () {
+        const selectedOption = element.querySelector(".u-option.selected");
+        const selectedIndex = valRepArray.findIndex((item) => item.value === "2");
+        expect(selectedOption?.value).equal(selectedIndex?.toString());
+        expect(selectedOption?.textContent).equal(valRepArray[selectedIndex]?.representation);
+        expect(tester.widget.getValue()).to.equal("2");
+      });
+    });
   });
 
   describe("Update selection through user interaction", function () {
