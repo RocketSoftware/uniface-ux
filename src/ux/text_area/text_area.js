@@ -93,4 +93,28 @@ export class TextArea extends Widget {
     }
     return updaters;
   }
+
+  /**
+   * Private Uniface API method - validate.
+   * This method is used to ensure that all validation errors are caught, as Fluent doesn't detect some validation errors.
+   */
+  validate() {
+    this.log("validate");
+
+    const controlElement = this.elements.widget.control;
+    const minlength = controlElement.getAttribute("minlength");
+    const maxlength = controlElement.getAttribute("maxlength");
+    const currentValueLength = this.elements.widget.value.length;
+    let html5ValidationMessage = "";
+
+    if (!controlElement.checkValidity()) {
+      html5ValidationMessage = controlElement.validationMessage;
+    } else if (minlength && currentValueLength < minlength) {
+      html5ValidationMessage = `Please lengthen this text to ${minlength} characters or more (you are currently using ${currentValueLength} characters).`;
+    } else if (maxlength && currentValueLength > maxlength) {
+      html5ValidationMessage = `Please shorten this text to ${maxlength} characters or less (you are currently using ${currentValueLength} characters).`;
+    }
+
+    return html5ValidationMessage;
+  }
 }
