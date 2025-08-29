@@ -170,7 +170,7 @@
     });
 
     // Test case for the on change event.
-    it("Should call the onchange trigger handler when the number field is changed", function () {
+    it("should call the onchange trigger handler when the number field is changed", function () {
       // Simulate a change event by inputting a string.
       const inputValue = "1234";
       tester.userInput(inputValue);
@@ -205,6 +205,80 @@
       expect(tester.widget.getValue()).to.equal("" + (initialValue - 1), "Widget value");
     });
 
+    it("test the number field widget in read-only mode to verify its value cannot be changed via the up arrow key", async function () {
+      expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value.");
+      // Apply readonly property to widget.
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": true
+        });
+      }).then(async function () {
+        // Simulate a arrow up key press event.
+        const control = tester.element.shadowRoot.querySelector("#control.control");
+        // Create a new KeyboardEvent for Arrow Up.
+        const arrowUpEvent = new window.KeyboardEvent("keydown", {
+          "key": "ArrowUp",
+          "code": "ArrowUp",
+          "keyCode": 38,      // Deprecated but still widely used.
+          "which": 38,        // Also deprecated, for compatibility.
+          "bubbles": true,    // So the event bubbles up through the DOM.
+          "cancelable": true
+        });
+        control.focus();
+        // Dispatch the event on the widget.
+        control.dispatchEvent(arrowUpEvent);
+
+        // Assert that the onchange trigger handler was not called.
+        expect(tester.calledOnce(trigger)).to.be.false;
+        // Expected the widget value is the initial value.
+        expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value.");
+      });
+    });
+
+    it("test the number field widget in read-only mode to verify its value cannot be changed via the down arrow key", async function () {
+      expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value.");
+      // Apply readonly property to widget.
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": true
+        });
+      }).then(async function () {
+
+        // Simulate a arrow down key press event.
+        const control = tester.element.shadowRoot.querySelector("#control.control");
+        // Create a new KeyboardEvent for Arrow Up.
+        const arrowUpEvent = new window.KeyboardEvent("keydown", {
+          "key": "ArrowDown",
+          "code": "ArrowDown",
+          "keyCode": 40,      // Deprecated but still widely used.
+          "which": 40,        // Also deprecated, for compatibility.
+          "bubbles": true,    // So the event bubbles up through the DOM.
+          "cancelable": true
+        });
+        control.focus();
+        // Dispatch the event on the widget.
+        control.dispatchEvent(arrowUpEvent);
+
+        // Assert that the onchange trigger handler was not called.
+        expect(tester.calledOnce(trigger)).to.be.false;
+        // Expected the widget value is the initial value.
+        expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value");
+      });
+    });
+
+    it("test the number field widget in disabled mode to verify that it does not receive focus", async function () {
+      expect(tester.widget.getValue()).to.equal("" + initialValue, "Widget value");
+      // Apply disabled property to widget.
+      return asyncRun(async function () {
+        tester.dataUpdate({
+          "html:disabled": true
+        });
+      }).then(function () {
+        // Check for the active focus.
+        const control = tester.element.shadowRoot.querySelector("#control.control");
+        assert.notStrictEqual(document.activeElement, control, "Number field input should not have focus.");
+      });
+    });
   });
 
   describe("dataInit()", function () {
