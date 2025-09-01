@@ -91,9 +91,9 @@ export class TextArea extends Widget {
       errorSpan.appendChild(errorSlot);
       root.appendChild(errorSpan);
     }
-    
+
     // ResizeObserver to update the label's maxWidth when the widget is resized.
-    const resizeObserver = new ResizeObserver(() => {
+    const resizeObserver = new window.ResizeObserver(() => {
       let labelSpan = widgetElement.querySelector(".u-label-text");
       labelSpan.style.maxWidth = `${control.offsetWidth}px`;
     });
