@@ -548,7 +548,8 @@
         });
       }).then(function () {
         // When html validation error is present, the widget should not be set in readonly mode.
-        assert(!element.readOnly, "The widget has been set in readonly mode.");
+        assert(!element.readOnly, "The widget should not be set in readonly mode.");
+
         // Note: The actual error message is not checked as part of the test case as the html validation error message is browser dependent.
         expect(warnSpy.calledWith(sinon.match("Unable to set the widget in readonly mode as invalid value present"))).to.be.true;
         warnSpy.restore();
@@ -898,7 +899,7 @@
 
         let buttonElement = element.querySelector("fluent-button.u-sw-changebutton");
         expect(buttonElement).to.have.class("u-blocked");
-        assert(buttonElement.disabled, "Failed to disable the subwidget changebutton.");
+        assert(buttonElement.disabled, "Failed to set the subwidget changebutton in disabled mode.");
         // Clear the ui-blocking for future test cases.
         widget.unblockUI();
       });
@@ -918,12 +919,12 @@
         expect(element, "Class u-blocked is not applied.").to.have.class("u-blocked");
         expect(widget.data.uiblocked).equal(true);
         // When html validation error is present, widget should be set in disabled instead of readonly mode for ui-blocking.
-        assert(!element.readOnly, "The widget has been set in readonly mode.");
+        assert(!element.readOnly, "The widget should not be set in readonly mode.");
         assert(element.disabled, "Failed to set the widget in disabled mode.");
 
         let buttonElement = element.querySelector("fluent-button.u-sw-changebutton");
         expect(buttonElement).to.have.class("u-blocked");
-        assert(buttonElement.disabled, "Failed to disable the subwidget changebutton.");
+        assert(buttonElement.disabled, "Failed to set the subwidget changebutton in disabled mode.");
 
         // Verify no errors are present.
         sinon.assert.notCalled(errorSpy);
