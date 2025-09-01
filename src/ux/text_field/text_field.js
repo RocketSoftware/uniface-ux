@@ -107,6 +107,10 @@ export class TextField extends Widget {
         // Reset properties based on initial values when not uiblocked.
         if (!element["control"].checkValidity()) {
           element["disabled"] = this.toBoolean(disabled);
+          if (readonly) {
+            const html5ValidationMessage = element["control"].validationMessage;
+            this.warn("refresh", `Unable to set the widget in readonly mode as invalid value present - ${html5ValidationMessage}`, "Ignored");
+          }
         } else {
           element["readOnly"] = this.toBoolean(readonly);
           element["disabled"] = this.toBoolean(disabled);
