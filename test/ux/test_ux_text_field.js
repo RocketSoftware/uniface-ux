@@ -900,6 +900,7 @@
         let buttonElement = element.querySelector("fluent-button.u-sw-changebutton");
         expect(buttonElement).to.have.class("u-blocked");
         assert(buttonElement.disabled, "Failed to set the subwidget changebutton in disabled mode.");
+
         // Clear the ui-blocking for future test cases.
         widget.unblockUI();
       });
@@ -918,6 +919,7 @@
       }).then(function () {
         expect(element, "Class u-blocked is not applied.").to.have.class("u-blocked");
         expect(widget.data.uiblocked).equal(true);
+
         // When html validation error is present, widget should be set in disabled instead of readonly mode for ui-blocking.
         assert(!element.readOnly, "The widget should not be set in readonly mode.");
         assert(element.disabled, "Failed to set the widget in disabled mode.");
@@ -929,6 +931,7 @@
         // Verify no errors are present.
         sinon.assert.notCalled(errorSpy);
         errorSpy.restore();
+
         // Clear the user input and ui-blocking for future test cases.
         tester.userInput("");
         widget.unblockUI();
