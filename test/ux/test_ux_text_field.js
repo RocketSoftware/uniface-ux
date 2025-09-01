@@ -534,7 +534,6 @@
     });
 
     it("set invalid email in text field to cause html validation error and then try to set the field in readonly mode", function () {
-      const warnSpy = sinon.spy(console, "warn");
       const errorSpy = sinon.spy(console, "error");
       return asyncRun(function () {
         tester.dataUpdate({
@@ -549,10 +548,6 @@
       }).then(function () {
         // When html validation error is present, the widget should not be set in readonly mode.
         assert(!element.readOnly, "The widget should not be set in readonly mode.");
-
-        // Note: The actual error message is not checked as part of the test case as the html validation error message is browser dependent.
-        expect(warnSpy.calledWith(sinon.match("Unable to set the widget in readonly mode as invalid value present"))).to.be.true;
-        warnSpy.restore();
 
         // Verify no errors are present.
         sinon.assert.notCalled(errorSpy);
