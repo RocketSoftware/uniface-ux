@@ -1046,6 +1046,11 @@
         assert(element.disabled, "Failed to retain the widget in disabled mode after unblockUI().");
       });
     });
+
+    after(function () {
+      // Clear the user input for future test cases.
+      tester.userInput("");
+    });
   });
 
   describe("Reset all properties", function () {
