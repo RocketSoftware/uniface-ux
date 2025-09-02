@@ -971,7 +971,7 @@
   });
 
   describe("unblockUI()", function () {
-    let element,widget;
+    let element, widget;
 
     before(async function () {
       widget = tester.createWidget();
@@ -1006,7 +1006,7 @@
   });
 
   describe("unblockUI() with validation error present", function () {
-    let element,widget;
+    let element, widget;
 
     before(async function () {
       widget = tester.createWidget();
