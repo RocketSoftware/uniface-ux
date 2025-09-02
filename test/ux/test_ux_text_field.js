@@ -558,7 +558,7 @@
       });
     });
 
-    it("set invalid email in text field to cause html validation error and then try to set the field in disabled mode", function () {
+    it("set invalid email in text field to cause html validation error and then try to set the field in readonly and disabled modes", function () {
       const errorSpy = sinon.spy(console, "error");
       return asyncRun(function () {
         tester.dataUpdate({
@@ -568,10 +568,13 @@
       }).then(function () {
         expect(element.checkValidity()).to.be.false;
         tester.dataUpdate({
-          "html:disabled": true
+          "html:disabled": true,
+          "html:readonly": true
         });
       }).then(function () {
-        // The widget should be in disabled mode.
+        // When html validation error is present, the widget should not be set in readonly mode.
+        assert(!element.readOnly, "The widget should not be set in readonly mode.");
+        // But it should be possible to set the widget in disabled mode.
         assert(element.disabled, "The widget should be set in disabled mode.");
 
         // Verify no errors are present.
@@ -993,7 +996,7 @@
       });
     });
 
-    it("check if the readonly mode is retained when the unblockUI() is called", function () {
+    it("check if the readonly mode is retained after unblockUI() is called", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "html:readonly": true
@@ -1036,7 +1039,7 @@
       });
     });
 
-    it("check if the readonly mode is retained when the unblockUI() is called", function () {
+    it("check if the disabled mode is retained after unblockUI() is called", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "html:disabled": true
