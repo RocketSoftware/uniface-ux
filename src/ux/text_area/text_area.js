@@ -99,7 +99,7 @@ export class TextArea extends Widget {
         labelSpan.style.width = `${control.offsetWidth}px`;
       }
     });
-    resizeObserver.observe(widgetElement);
+    resizeObserver.observe(control);
 
     return updaters;
   }
