@@ -237,7 +237,7 @@
       }).then(function () {
         // Wait for ResizeObserver and layout to settle
         return new Promise(function (resolve) {
-          setTimeout(resolve, 200);
+          globalThis.setTimeout(resolve, 200);
         });
       }).then(function () {
         const label = element.querySelector("span.u-label-text");
@@ -262,7 +262,7 @@
       }).then(function () {
         // Wait for ResizeObserver and layout to settle
         return new Promise(function (resolve) {
-          setTimeout(resolve, 100);
+          globalThis.setTimeout(resolve, 100);
         });
       }).then(function () {
         const label = element.querySelector("span.u-label-text");
