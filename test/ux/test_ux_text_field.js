@@ -533,6 +533,70 @@
       });
     });
 
+    it("set invalid email in text field to cause html validation error and then try to set the field in readonly mode", function () {
+      const errorSpy = sinon.spy(console, "error");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "email"
+        });
+        tester.userInput("invalid");
+      }).then(function () {
+        expect(element.checkValidity()).to.be.false;
+        tester.dataUpdate({
+          "html:readonly": true
+        });
+      }).then(function () {
+        // When html validation error is present, the widget should not be set in readonly mode.
+        assert(!element.readOnly, "The widget should not be set in readonly mode.");
+
+        // Verify no errors are present.
+        sinon.assert.notCalled(errorSpy);
+        errorSpy.restore();
+
+        // Clear the user input for future test cases.
+        tester.userInput("");
+      });
+    });
+
+    it("set invalid email in text field to cause html validation error and then try to set the field in readonly and disabled modes", function () {
+      const errorSpy = sinon.spy(console, "error");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "email"
+        });
+        tester.userInput("invalid");
+      }).then(function () {
+        expect(element.checkValidity()).to.be.false;
+        tester.dataUpdate({
+          "html:disabled": true,
+          "html:readonly": true
+        });
+      }).then(function () {
+        // When html validation error is present, the widget should not be set in readonly mode.
+        assert(!element.readOnly, "The widget should not be set in readonly mode.");
+        // But it should be possible to set the widget in disabled mode.
+        assert(element.disabled, "The widget should be set in disabled mode.");
+
+        // Verify no errors are present.
+        sinon.assert.notCalled(errorSpy);
+        errorSpy.restore();
+      }).then(function () {
+        tester.dataUpdate({
+          "html:disabled": false
+        });
+      }).then(function () {
+        // The widget should be removed from the disabled mode.
+        assert(!element.disabled, "The widget should be removed from the disabled mode.");
+
+        // Verify no errors are present.
+        sinon.assert.notCalled(errorSpy);
+        errorSpy.restore();
+
+        // Clear the user input for future test cases.
+        tester.userInput("");
+      });
+    });
+
     it("set type as password in text field", function () {
       let placeHolderText = "Input Password";
       // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
@@ -852,7 +916,7 @@
   });
 
   describe("blockUI()", function () {
-    let element,widget;
+    let element, widget;
 
     before(function () {
       widget = tester.createWidget();
@@ -865,16 +929,52 @@
       }).then(function () {
         expect(element, "Class u-blocked is not applied.").to.have.class("u-blocked");
         expect(widget.data.uiblocked).equal(true);
-        expect(element.readOnly).equal(true);
+        assert(element.readOnly, "Failed to set the widget in readonly mode.");
+
         let buttonElement = element.querySelector("fluent-button.u-sw-changebutton");
         expect(buttonElement).to.have.class("u-blocked");
-        assert(buttonElement.hasAttribute("disabled"), "Failed to disable the subwidget attribute for button.");
+        assert(buttonElement.disabled, "Failed to set the subwidget changebutton in disabled mode.");
+
+        // Clear the ui-blocking for future test cases.
+        widget.unblockUI();
+      });
+    });
+
+    it("set invalid email in text field to cause html validation error and then call blockUI()", function () {
+      const errorSpy = sinon.spy(console, "error");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "email"
+        });
+        tester.userInput("invalid");
+      }).then(function () {
+        expect(element.checkValidity()).to.be.false;
+        widget.blockUI();
+      }).then(function () {
+        expect(element, "Class u-blocked is not applied.").to.have.class("u-blocked");
+        expect(widget.data.uiblocked).equal(true);
+
+        // When html validation error is present, widget should be set in disabled instead of readonly mode for ui-blocking.
+        assert(!element.readOnly, "The widget should not be set in readonly mode.");
+        assert(element.disabled, "Failed to set the widget in disabled mode.");
+
+        let buttonElement = element.querySelector("fluent-button.u-sw-changebutton");
+        expect(buttonElement).to.have.class("u-blocked");
+        assert(buttonElement.disabled, "Failed to set the subwidget changebutton in disabled mode.");
+
+        // Verify no errors are present.
+        sinon.assert.notCalled(errorSpy);
+        errorSpy.restore();
+
+        // Clear the user input and ui-blocking for future test cases.
+        tester.userInput("");
+        widget.unblockUI();
       });
     });
   });
 
   describe("unblockUI()", function () {
-    let element,widget;
+    let element, widget;
 
     before(async function () {
       widget = tester.createWidget();
@@ -882,28 +982,77 @@
       widget.blockUI();
     });
 
-    it("check if the 'u-blocked' class is removed and ensure the widget is not readonly when the unblockUI() is invoked", function () {
+    it("check if the 'u-blocked' class is removed and ensure that the widget is not readonly after unblockUI() is invoked", function () {
       return asyncRun(function () {
         widget.unblockUI();
       }).then(function () {
-        expect(element, "Class u-blocked is applied.").not.to.have.class("u-blocked");
+        expect(element, "Class u-blocked is not removed.").not.to.have.class("u-blocked");
         expect(widget.data.uiblocked).equal(false);
-        expect(element.readOnly).equal(false);
+        assert(!element.readOnly, "Failed to remove the widget from readonly mode.");
+
         let buttonElement = element.querySelector("fluent-button.u-sw-changebutton");
         expect(buttonElement).not.to.have.class("u-blocked");
-        expect(buttonElement.hasAttribute("disabled")).to.be.false;
+        assert(!buttonElement.disabled, "Failed to remove the subwidget changebutton from disabled mode.");
       });
     });
 
-    it("check if the readonly mode is retained when the unblockUI() is called", function () {
+    it("check if the readonly mode is retained after unblockUI() is called", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "html:readonly": true
         });
         widget.unblockUI();
       }).then(function () {
-        expect(element.hasAttribute("readonly")).to.be.true;
+        assert(element.readOnly, "Failed to retain the widget in readonly mode after unblockUI().");
       });
+    });
+  });
+
+  describe("unblockUI() with validation error present", function () {
+    let element, widget;
+
+    before(async function () {
+      widget = tester.createWidget();
+      element = tester.element;
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "email"
+        });
+        tester.userInput("invalid");
+      }).then(function () {
+        expect(element.checkValidity()).to.be.false;
+        widget.blockUI();
+      });
+    });
+
+    it("check if the 'u-blocked' class is removed and ensure that the widget is not disabled after unblockUI() is invoked", function () {
+      return asyncRun(function () {
+        widget.unblockUI();
+      }).then(function () {
+        expect(element, "Class u-blocked is not removed.").not.to.have.class("u-blocked");
+        expect(widget.data.uiblocked).equal(false);
+        assert(!element.disabled, "Failed to remove the widget from disabled mode.");
+
+        let buttonElement = element.querySelector("fluent-button.u-sw-changebutton");
+        expect(buttonElement).not.to.have.class("u-blocked");
+        assert(!buttonElement.disabled, "Failed to remove the subwidget changebutton from disabled mode.");
+      });
+    });
+
+    it("check if the disabled mode is retained after unblockUI() is called", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:disabled": true
+        });
+        widget.unblockUI();
+      }).then(function () {
+        assert(element.disabled, "Failed to retain the widget in disabled mode after unblockUI().");
+      });
+    });
+
+    after(function () {
+      // Clear the user input for future test cases.
+      tester.userInput("");
     });
   });
 
