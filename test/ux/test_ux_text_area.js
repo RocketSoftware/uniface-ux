@@ -235,6 +235,11 @@
         // Shrink textarea to trigger resize logic.
         textarea.style.width = "100px";
       }).then(function () {
+        // Wait for ResizeObserver and layout to settle
+        return new Promise(function (resolve) {
+          setTimeout(resolve, 200);
+        });
+      }).then(function () {
         const label = element.querySelector("span.u-label-text");
         const labelWidth = Math.round(label.getBoundingClientRect().width);
         const textareaWidth = Math.round(textarea.getBoundingClientRect().width);
@@ -242,7 +247,7 @@
       });
     });
 
-    it("should wrap label text when textarea is resized and label position is below", function () {
+    it("should wrap label text when textarea is resized and label position is above", function () {
       const labelText = "This is a very long label of widget and the question is, should it wrap or not:";
       const textarea = element.shadowRoot.querySelector("textarea");
 
@@ -252,8 +257,13 @@
           "label-position": "below"
         });
 
-        // Expand textarea to trigger resize logic.
+        // Shrink textarea to trigger resize logic.
         textarea.style.width = "200px";
+      }).then(function () {
+        // Wait for ResizeObserver and layout to settle
+        return new Promise(function (resolve) {
+          setTimeout(resolve, 100);
+        });
       }).then(function () {
         const label = element.querySelector("span.u-label-text");
         const labelWidth = Math.round(label.getBoundingClientRect().width);
