@@ -1,11 +1,11 @@
 # RELEASE NOTE - Uniface UX
 
-## Release 10.4.03.024
-- Uniface release: 10.4.03.024
+## Release 10.4.03.025
+- Uniface release: 10.4.03.025
 - UX Interface Version: 2
 
 ## Bug Fixes
-- uxTextField: An exception was triggered when the uxTextField widget was set to read-only mode while it had an active validation error.
+- uxTextArea: When resizing the widget, associated label text does not wrap to fit the new dimensions.
 
 
 For older releases, see [CHANGELOG.md](CHANGELOG.md)
