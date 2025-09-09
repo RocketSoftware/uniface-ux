@@ -242,7 +242,7 @@ export class Select extends Widget {
       window.queueMicrotask(() => {
         element["value"] = valueToSet.toString();
         // Also update 'previousValue' on programmatical value update.
-        this.previousValue = valueToSet;
+        widgetInstance.previousValue = valueToSet;
       });
     }
   };
