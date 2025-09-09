@@ -663,7 +663,7 @@
           "html:type": "abc"
         });
       }).then(function () {
-        expect(warnSpy.calledWith(sinon.match("AttributeChoice.refresh: Property 'html:type' invalid value (abc) - Ignored."))).to.be.true;
+        expect(warnSpy.calledWith(sinon.match("Property 'html:type' invalid value (abc) - Ignored."))).to.be.true;
       });
     });
 
