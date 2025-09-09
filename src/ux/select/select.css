@@ -31,9 +31,11 @@
     border-box var(--neutral-stroke-control-rest);
 }
 
-.u-select.u-readonly:focus-visible,
-.u-select.u-readonly:focus-within,
-.u-select.u-readonly:focus {
+.u-select.u-readonly::part(listbox) {
+  cursor: not-allowed;
+}
+
+.u-select.u-readonly fluent-option {
   pointer-events: none;
 }
 
