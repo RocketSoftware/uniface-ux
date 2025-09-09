@@ -656,6 +656,17 @@
       });
     });
 
+    it("set invalid type as abc in text field", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "abc"
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("AttributeChoice.refresh: Property 'html:type' invalid value (abc) - Ignored."))).to.be.true;
+      });
+    });
+
     it("set button as subwidget in text field", function () {
       // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
       return asyncRun(function () {
