@@ -559,17 +559,18 @@ export class Select extends Widget {
     });
 
     widgetElement.addEventListener("change", (event) => {
-      const newValue = event.target.value;
+      const currentValue = widgetElement.value;
       const isReadOnly = this.toBoolean(this.getNode(this.data, "html:readonly"));
+      const previousValue = this.previousValue.toString();
 
       // If widget is in readonly mode and the value has been updated, reset the value to the old value.
-      if (isReadOnly && newValue !== this.previousValue.toString()) {
+      if (isReadOnly) {
         event.preventDefault();
         event.stopImmediatePropagation();
-        widgetElement["value"] = this.previousValue.toString();
-      } else {
+        widgetElement.value = previousValue;
+      } else if (currentValue !== previousValue) {
         // Else update 'previousValue' to the new value.
-        this.previousValue = newValue;
+        this.previousValue = currentValue;
       }
     });
 
