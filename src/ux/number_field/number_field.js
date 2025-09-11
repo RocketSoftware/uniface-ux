@@ -87,7 +87,6 @@ export class NumberField extends Widget {
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
     this.elements.widget.enterKeyPressed = false;
-    let previousValue = this.getNode(this.data, "value");
 
     // Stop propagating change event to parent nodes on pressing enter key if change button is enabled.
     this.elements.widget.addEventListener("keydown", (event) => {
@@ -102,6 +101,7 @@ export class NumberField extends Widget {
     // allowing the value change to persist even though it shouldn't.
     // This is considered a minor bug that we are currently opting to live with.
     this.elements.widget.addEventListener("change", (event) => {
+      let previousValue = this.getNode(this.data, "value");
       const readOnly = this.getNode(widgetElement, "readOnly");
       const currentValue = widgetElement.value;
 
@@ -109,8 +109,7 @@ export class NumberField extends Widget {
       // cancel the change. The 'u-blocked' class acts as an exception, allowing edits
       // even when the element is otherwise read-only.
       if (readOnly && !widgetElement.classList.contains("u-blocked")) {
-        // Revert the widget's value back to its previous state or the default data value, effectively canceling the change.
-        widgetElement.value = previousValue !== undefined ? previousValue : this.getNode(this.data, "value");
+        widgetElement.value = previousValue;
         event.preventDefault();
         event.stopImmediatePropagation();
         return;
