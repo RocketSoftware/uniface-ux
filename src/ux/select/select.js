@@ -564,8 +564,9 @@ export class Select extends Widget {
 
       // If widget is in readonly mode and the value has been updated, reset the value to the old value.
       if (isReadOnly && newValue !== this.previousValue.toString()) {
-        widgetElement["value"] = this.previousValue.toString();
+        event.preventDefault();
         event.stopImmediatePropagation();
+        widgetElement["value"] = this.previousValue.toString();
       } else {
         // Else update 'previousValue' to the new value.
         this.previousValue = newValue;
