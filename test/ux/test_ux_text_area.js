@@ -224,7 +224,7 @@
 
     it("should wrap label text when textarea size in decreased and label position is above", function () {
       const labelText = "This is a very long label of widget and the question is, should it wrap or not";
-      const textarea = element.shadowRoot.querySelector("textarea");
+      const textAreaControl = element.shadowRoot.querySelector("textarea.control");
       return asyncRun(function() {
         tester.dataUpdate({
           "label-text": labelText,
@@ -232,19 +232,22 @@
         });
 
         // Shrink textarea to trigger resize logic.
-        textarea.style.width = "100px";
+        textAreaControl.style.width = "100px";
       }, 1).then(function() {
         const label = element.querySelector("span.u-label-text");
         const labelWidth = Math.round(label.getBoundingClientRect().width);
-        const textareaWidth = Math.round(textarea.getBoundingClientRect().width);
-        assert.isAtMost(labelWidth, textareaWidth, "Label should not exceed textarea width.");
+        const textAreaControlWidth = Math.round(textAreaControl.getBoundingClientRect().width);
+        assert.isAtMost(labelWidth, textAreaControlWidth, "Label should not exceed textarea width.");
+        const textAreaElement = document.querySelector("fluent-text-area");
+        const fluentTextAreaWidth = Math.round(textAreaElement.getBoundingClientRect().width);
+        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should not exceed textarea control width.");
       });
 
     });
 
     it("should unwrap label text when textarea size in increased and label position is above", function () {
       const labelText = "This is a very long label of widget and the question is, should it unwrap or not";
-      const textarea = element.shadowRoot.querySelector("textarea");
+      const textAreaControl = element.shadowRoot.querySelector("textarea.control");
       return asyncRun(function() {
         tester.dataUpdate({
           "label-text": labelText,
@@ -252,18 +255,21 @@
         });
 
         // Expand textarea to trigger resize logic.
-        textarea.style.width = "500px";
+        textAreaControl.style.width = "500px";
       }, 1).then(function() {
         const label = element.querySelector("span.u-label-text");
         const labelWidth = Math.round(label.getBoundingClientRect().width);
-        const textareaWidth = Math.round(textarea.getBoundingClientRect().width);
-        assert.equal(labelWidth, textareaWidth, "Label should not exceed textarea width.");
+        const textAreaControlWidth = Math.round(textAreaControl.getBoundingClientRect().width);
+        assert.equal(labelWidth, textAreaControlWidth, "Label should not exceed textarea width.");
+        const textAreaElement = document.querySelector("fluent-text-area");
+        const fluentTextAreaWidth = Math.round(textAreaElement.getBoundingClientRect().width);
+        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should not exceed textarea control width.");
       });
     });
 
     it("should wrap label text when textarea is resized horizontally and label position is above", function () {
       const labelText = "This is a very long label of widget and the question is, should it wrap or not";
-      const textarea = element.shadowRoot.querySelector("textarea");
+      const textAreaControl = element.shadowRoot.querySelector("textarea.control");
       return asyncRun(function() {
         tester.dataUpdate({
           "label-text": labelText,
@@ -272,18 +278,21 @@
         });
 
         // Shrink textarea to trigger resize logic.
-        textarea.style.width = "50px";
+        textAreaControl.style.width = "50px";
       }, 1).then(function() {
         const label = element.querySelector("span.u-label-text");
         const labelWidth = Math.round(label.getBoundingClientRect().width);
-        const textareaWidth = Math.round(textarea.getBoundingClientRect().width);
-        assert.isAtMost(labelWidth, textareaWidth, "Label should not exceed textarea width.");
+        const textAreaControlWidth = Math.round(textAreaControl.getBoundingClientRect().width);
+        assert.isAtMost(labelWidth, textAreaControlWidth, "Label should not exceed textarea width.");
+        const textAreaElement = document.querySelector("fluent-text-area");
+        const fluentTextAreaWidth = Math.round(textAreaElement.getBoundingClientRect().width);
+        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should not exceed textarea control width.");
       });
     });
 
     it("should wrap label text when textarea size is decreased and label position is below", function () {
       const labelText = "This is a very long label of widget and the question is, should it wrap or not";
-      const textarea = element.shadowRoot.querySelector("textarea");
+      const textAreaControl = element.shadowRoot.querySelector("textarea.control");
       return asyncRun(function () {
         tester.dataUpdate({
           "label-text": labelText,
@@ -291,18 +300,21 @@
         });
 
         // Shrink textarea to trigger resize logic.
-        textarea.style.width = "100px";
+        textAreaControl.style.width = "100px";
       }, 1).then(function() {
         const label = element.querySelector("span.u-label-text");
         const labelWidth = Math.round(label.getBoundingClientRect().width);
-        const textareaWidth = Math.round(textarea.getBoundingClientRect().width);
-        assert.isAtMost(labelWidth, textareaWidth, "Label should not exceed textarea width.");
+        const textAreaControlWidth = Math.round(textAreaControl.getBoundingClientRect().width);
+        assert.isAtMost(labelWidth, textAreaControlWidth, "Label should not exceed textarea width.");
+        const textAreaElement = document.querySelector("fluent-text-area");
+        const fluentTextAreaWidth = Math.round(textAreaElement.getBoundingClientRect().width);
+        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should not exceed textarea control width.");
       });
     });
 
     it("should unwrap label text when textarea size in increased and label position is below", function () {
       const labelText = "This is a very long label of widget and the question is, should it unwrap or not";
-      const textarea = element.shadowRoot.querySelector("textarea");
+      const textAreaControl = element.shadowRoot.querySelector("textarea.control");
       return asyncRun(function() {
         tester.dataUpdate({
           "label-text": labelText,
@@ -310,18 +322,21 @@
         });
 
         // Expand textarea to trigger resize logic.
-        textarea.style.width = "500px";
+        textAreaControl.style.width = "500px";
       }, 1).then(function() {
         const label = element.querySelector("span.u-label-text");
         const labelWidth = Math.round(label.getBoundingClientRect().width);
-        const textareaWidth = Math.round(textarea.getBoundingClientRect().width);
-        assert.equal(labelWidth, textareaWidth, "Label should not exceed textarea width.");
+        const textAreaControlWidth = Math.round(textAreaControl.getBoundingClientRect().width);
+        assert.equal(labelWidth, textAreaControlWidth, "Label should not exceed textarea width.");
+        const textAreaElement = document.querySelector("fluent-text-area");
+        const fluentTextAreaWidth = Math.round(textAreaElement.getBoundingClientRect().width);
+        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should not exceed textarea control width.");
       });
     });
 
     it("should wrap label text when textarea is resized horizontally and label position is below", function () {
       const labelText = "This is a very long label of widget and the question is, should it wrap or not";
-      const textarea = element.shadowRoot.querySelector("textarea");
+      const textAreaControl = element.shadowRoot.querySelector("textarea.control");
       return asyncRun(function() {
         tester.dataUpdate({
           "label-text": labelText,
@@ -330,12 +345,15 @@
         });
 
         // Shrink textarea to trigger resize logic.
-        textarea.style.width = "50px";
+        textAreaControl.style.width = "50px";
       }, 1).then(function() {
         const label = element.querySelector("span.u-label-text");
         const labelWidth = Math.round(label.getBoundingClientRect().width);
-        const textareaWidth = Math.round(textarea.getBoundingClientRect().width);
-        assert.isAtMost(labelWidth, textareaWidth, "Label should not exceed textarea width.");
+        const textAreaControlWidth = Math.round(textAreaControl.getBoundingClientRect().width);
+        assert.isAtMost(labelWidth, textAreaControlWidth, "Label should not exceed textarea width.");
+        const textAreaElement = document.querySelector("fluent-text-area");
+        const fluentTextAreaWidth = Math.round(textAreaElement.getBoundingClientRect().width);
+        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should not exceed textarea control width.");
       });
     });
 
