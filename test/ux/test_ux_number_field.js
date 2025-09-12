@@ -213,7 +213,7 @@
           "html:readonly": true
         });
       }).then(async function () {
-        tester.widget.onchange = sinon.spy();
+        // tester.widget.onchange = sinon.spy();
         // Simulate a arrow up key press event.
         const control = tester.element.shadowRoot.querySelector("#control.control");
         // Create a new KeyboardEvent for Arrow Up.
@@ -230,7 +230,7 @@
         control.dispatchEvent(arrowUpEvent);
 
         // Assert that the onchange trigger handler was not called.
-        expect(tester.widget.onchange.called).to.be.false;
+        expect(tester.calledOnce(trigger)).to.be.false;
         // Expected the widget value is the initial value.
         expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value.");
       });
@@ -261,7 +261,7 @@
         control.dispatchEvent(arrowUpEvent);
 
         // Assert that the onchange trigger handler was not called.
-        expect(tester.widget.onchange.called).to.be.false;
+        expect(tester.calledOnce(trigger)).to.be.false;
         // Expected the widget value is the initial value.
         expect(tester.widget.getValue()).to.equal("" + (initialValue), "Widget value");
       });

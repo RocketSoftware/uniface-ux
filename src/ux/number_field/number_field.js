@@ -88,6 +88,8 @@ export class NumberField extends Widget {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
     this.elements.widget.enterKeyPressed = false;
 
+    let previousValue = this.getNode(this.data, "value"); // Set once when initializing
+
     // Stop propagating change event to parent nodes on pressing enter key if change button is enabled.
     this.elements.widget.addEventListener("keydown", (event) => {
       if (!this.elements.widget.querySelector(".u-sw-changebutton").hidden && event.key === "Enter") {
@@ -95,26 +97,38 @@ export class NumberField extends Widget {
       }
     });
 
+    let isProgrammaticChange = false;
+
     // During a server round-trip, the widget is in a readonly and blocked state,
     // and the user presses the arrow keys, the value will change. This occurs because
     // the widget is temporarily in a readonly and blocked state during the round-trip,
     // allowing the value change to persist even though it shouldn't.
     // This is considered a minor bug that we are currently opting to live with.
     this.elements.widget.addEventListener("change", (event) => {
-      let previousValue = this.getNode(this.data, "value");
-      const readOnly = this.getNode(widgetElement, "readOnly");
-      const currentValue = widgetElement.value;
-
-      // If the widget is marked as readOnly and does NOT have the 'u-blocked' class,
-      // cancel the change. The 'u-blocked' class acts as an exception, allowing edits
-      // even when the element is otherwise read-only.
-      if (readOnly && !widgetElement.classList.contains("u-blocked")) {
-        widgetElement.value = previousValue;
+      if (isProgrammaticChange) {
+        // Ignore programmatic changes to prevent recursion
         event.preventDefault();
         event.stopImmediatePropagation();
         return;
       }
-      // Only treat as valid change if value actually changed.
+      let readOnly = this.getNode(widgetElement, "readOnly");
+      let currentValue = widgetElement.value;
+
+      // Check if the widget is in read-only mode AND not explicitly overridden by a class
+      // If true, revert the change and block further processing
+      // The 'u-blocked' class is used to allow editing even when 'readOnly' is true (a controlled override)
+      if (readOnly && !widgetElement.classList.contains("u-blocked")) {
+        isProgrammaticChange = true;
+        // Revert the value to previous valid value (if available), or fallback to initial value from data
+        widgetElement.value = previousValue !== undefined ? previousValue : this.getNode(this.data, "value");
+        isProgrammaticChange = false;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+      // If the current value has changed from the last known good value, update previousValue
+      // This stores the most recent valid value to revert to later if needed
       if (currentValue !== previousValue) {
         previousValue = currentValue;
       }
