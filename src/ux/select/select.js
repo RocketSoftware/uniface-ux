@@ -560,7 +560,7 @@ export class Select extends Widget {
 
     widgetElement.addEventListener("change", (event) => {
       const currentValue = widgetElement.value;
-      const isReadOnly = this.toBoolean(this.getNode(this.data, "html:readonly"));
+      const isReadOnly = widgetElement.classList.contains("u-readonly");
       const previousValue = this.previousValue.toString();
 
       // If widget is in readonly mode and the value has been updated, reset the value to the old value.
