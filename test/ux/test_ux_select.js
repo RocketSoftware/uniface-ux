@@ -279,8 +279,96 @@
           "html:readonly": true
         });
       }).then(function () {
-        // ux-select is using disabled attribute instead.
-        expect(element.getAttribute("disabled"));
+        expect(element.classList.contains("u-readonly")).to.be.true;
+      });
+    });
+
+    it("set html property readonly to true and try to select an option using mouse", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": true,
+          "valrep": valRepArray,
+          "value": "1"
+        });
+      }).then(function () {
+        expect(element.classList.contains("u-readonly")).to.be.true;
+        // Try to open the popup by clicking on the select widget.
+        element.click();
+      }).then(function () {
+        // Verify that the popup is opened.
+        expect(element.open).to.be.true;
+        // Click on the second option.
+        let options = element.querySelectorAll("fluent-option");
+        const secondOption = options[1];
+        secondOption.click();
+      }).then(function () {
+        assert.equal(tester.widget.getValue(), "1", "Value has been updated on click.");
+      });
+    });
+
+    it("set html property readonly to true and try to select an option using keyboard", function () {
+      // Create a simulated Enter keydown event.
+      const enterKeyPressEvent = new window.KeyboardEvent("keydown", {
+        "key": "Enter",
+        "code": "Enter",
+        "which": 13,
+        "keyCode": 13,
+        "bubbles": true
+      });
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": true,
+          "valrep": valRepArray,
+          "value": "1"
+        });
+      }).then(function () {
+        expect(element.classList.contains("u-readonly")).to.be.true;
+        // Focus the element.
+        element.focus();
+        // Dispatch an Enter keydown event on the select widget.
+        element.dispatchEvent(enterKeyPressEvent);
+      }).then(function () {
+        expect(element.open).to.be.true;
+        // Try to select the second option using down arrow key.
+        const downArrowKeyPressEvent = new window.KeyboardEvent("keydown", {
+          "key": "ArrowDown",
+          "code": "ArrowDown",
+          "which": 40,
+          "keyCode": 40,
+          "bubbles": true,
+          "cancelable": true
+        });
+        element.dispatchEvent(downArrowKeyPressEvent);
+        // Dispatch the Enter keydown event again.
+        element.dispatchEvent(enterKeyPressEvent);
+      }).then(function () {
+        assert.equal(tester.widget.getValue(), "1", "Value has been updated on key press.");
+      });
+    });
+
+    it("set html property readonly to true and try to select an option using keyboard without opening the popup", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": true,
+          "valrep": valRepArray,
+          "value": "1"
+        });
+      }).then(function () {
+        expect(element.classList.contains("u-readonly")).to.be.true;
+        // Focus the element.
+        element.focus();
+        // Try to select the second option using down arrow key.
+        const downArrowKeyPressEvent = new window.KeyboardEvent("keydown", {
+          "key": "ArrowDown",
+          "code": "ArrowDown",
+          "which": 40,
+          "keyCode": 40,
+          "bubbles": true,
+          "cancelable": true
+        });
+        element.dispatchEvent(downArrowKeyPressEvent);
+      }).then(function () {
+        assert.equal(tester.widget.getValue(), "1", "Value has been updated on key press.");
       });
     });
 
@@ -290,7 +378,7 @@
           "html:disabled": true
         });
       }).then(function () {
-        expect(element.getAttribute("disabled"));
+        expect(element.hasAttribute("disabled")).to.be.true;
         expect(element.getAttribute("aria-disabled")).equal("true");
       });
     });
