@@ -308,13 +308,14 @@
 
     it("set html property readonly to true and try to select an option using keyboard", function () {
       // Create a simulated Enter keydown event.
-      const enterKeyPressEvent = new window.KeyboardEvent("keydown", {
+      const enterKeyEvent = new window.KeyboardEvent("keydown", {
         "key": "Enter",
         "code": "Enter",
         "which": 13,
         "keyCode": 13,
         "bubbles": true
       });
+
       return asyncRun(function () {
         tester.dataUpdate({
           "html:readonly": true,
@@ -326,11 +327,11 @@
         // Focus the element.
         element.focus();
         // Dispatch an Enter keydown event on the select widget.
-        element.dispatchEvent(enterKeyPressEvent);
+        element.dispatchEvent(enterKeyEvent);
       }).then(function () {
         expect(element.open).to.be.true;
         // Try to select the second option using down arrow key.
-        const downArrowKeyPressEvent = new window.KeyboardEvent("keydown", {
+        const downArrowKeyEvent = new window.KeyboardEvent("keydown", {
           "key": "ArrowDown",
           "code": "ArrowDown",
           "which": 40,
@@ -338,9 +339,9 @@
           "bubbles": true,
           "cancelable": true
         });
-        element.dispatchEvent(downArrowKeyPressEvent);
+        element.dispatchEvent(downArrowKeyEvent);
         // Dispatch the Enter keydown event again.
-        element.dispatchEvent(enterKeyPressEvent);
+        element.dispatchEvent(enterKeyEvent);
       }).then(function () {
         assert.equal(tester.widget.getValue(), "1", "Value has been updated on key press.");
       });
@@ -358,7 +359,7 @@
         // Focus the element.
         element.focus();
         // Try to select the second option using down arrow key.
-        const downArrowKeyPressEvent = new window.KeyboardEvent("keydown", {
+        const downArrowKeyEvent = new window.KeyboardEvent("keydown", {
           "key": "ArrowDown",
           "code": "ArrowDown",
           "which": 40,
@@ -366,7 +367,7 @@
           "bubbles": true,
           "cancelable": true
         });
-        element.dispatchEvent(downArrowKeyPressEvent);
+        element.dispatchEvent(downArrowKeyEvent);
       }).then(function () {
         assert.equal(tester.widget.getValue(), "1", "Value has been updated on key press.");
       });
