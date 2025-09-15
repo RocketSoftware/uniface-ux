@@ -656,7 +656,7 @@
       });
     });
 
-    it("set invalid type as abc in text field", function () {
+    it("should log a console warning for an unsupported html:type", function () {
       const warnSpy = sinon.spy(console, "warn");
       return asyncRun(function () {
         tester.dataUpdate({
