@@ -664,6 +664,7 @@
         });
       }).then(function () {
         expect(warnSpy.calledWith(sinon.match("Property 'html:type' invalid value (abc) - Ignored."))).to.be.true;
+        warnSpy.restore();
       });
     });
 
