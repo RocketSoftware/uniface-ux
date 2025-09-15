@@ -5,7 +5,7 @@
 - UX Interface Version: 2
 
 ## Bug Fixes
-- uxTextField: Previously, the Property Inspector displayed unsupported or incorrect values for the html:type property of the uxTextField widget.
+- uxTextField: The Property Inspector displays unsupported or incorrect values for the html:type property.
 
 
 For older releases, see [CHANGELOG.md](CHANGELOG.md)
