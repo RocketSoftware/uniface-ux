@@ -105,7 +105,7 @@ export class NumberField extends Widget {
     // This is considered a minor bug that we are currently opting to live with.
     this.elements.widget.addEventListener("change", (event) => {
       if (isProgrammaticChange) {
-        // Ignore programmatic changes to prevent recursion
+        // Handle invalid initial value to prevent recursion.
         event.preventDefault();
         event.stopImmediatePropagation();
         return;
@@ -113,20 +113,20 @@ export class NumberField extends Widget {
       let readOnly = this.getNode(widgetElement, "readOnly");
       let currentValue = widgetElement.value;
 
-      // Check if the widget is in read-only mode AND not explicitly overridden by a class
-      // If true, revert the change and block further processing
-      // The 'u-blocked' class is used to allow editing even when 'readOnly' is true (a controlled override)
+      // Check if the widget is in read-only mode AND not explicitly overridden by a class.
+      // If true, revert the change and block further processing.
+      // The 'u-blocked' class is used to allow editing even when 'readOnly' is true (a controlled override).
       if (readOnly && !widgetElement.classList.contains("u-blocked")) {
         isProgrammaticChange = true;
-        // Revert the value to previous valid value (if available), or fallback to initial value from data
+        // Revert the value to previous valid value (if available), or fallback to initial value from data.
         widgetElement.value = previousValue !== undefined ? previousValue : this.getNode(this.data, "value");
         isProgrammaticChange = false;
         event.preventDefault();
         event.stopImmediatePropagation();
         return;
       }
-      // If the current value has changed from the last known good value, update previousValue
-      // This stores the most recent valid value to revert to later if needed
+      // If the current value has changed from the last known good value, update previousValue.
+      // This stores the most recent valid value to revert to later if needed.
       if (currentValue !== previousValue) {
         previousValue = currentValue;
       }
