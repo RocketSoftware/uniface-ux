@@ -213,7 +213,6 @@
           "html:readonly": true
         });
       }).then(async function () {
-        // tester.widget.onchange = sinon.spy();
         // Simulate a arrow up key press event.
         const control = tester.element.shadowRoot.querySelector("#control.control");
         // Create a new KeyboardEvent for Arrow Up.

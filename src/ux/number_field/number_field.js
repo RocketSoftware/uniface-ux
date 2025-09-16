@@ -87,8 +87,7 @@ export class NumberField extends Widget {
   onConnect(widgetElement, objectDefinition) {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
     this.elements.widget.enterKeyPressed = false;
-
-    let previousValue = this.getNode(this.data, "value"); // Set once when initializing
+    let previousValue = this.getNode(this.data, "value");
 
     // Stop propagating change event to parent nodes on pressing enter key if change button is enabled.
     this.elements.widget.addEventListener("keydown", (event) => {
@@ -122,7 +121,6 @@ export class NumberField extends Widget {
         // Revert the value to previous valid value (if available), or fallback to initial value from data
         widgetElement.value = previousValue !== undefined ? previousValue : this.getNode(this.data, "value");
         isProgrammaticChange = false;
-
         event.preventDefault();
         event.stopImmediatePropagation();
         return;
