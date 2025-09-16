@@ -283,7 +283,7 @@
       });
     });
 
-    it("set html property readonly to true and try to select an option using mouse", function () {
+    it("should not update the value when trying to select an option using mouse in readonly mode", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "html:readonly": true,
@@ -306,7 +306,7 @@
       });
     });
 
-    it("set html property readonly to true and try to select an option using keyboard", function () {
+    it("should not update the value when trying to select an option using keyboard in readonly mode", function () {
       // Create a simulated Enter keydown event.
       const enterKeyEvent = new window.KeyboardEvent("keydown", {
         "key": "Enter",
@@ -347,7 +347,7 @@
       });
     });
 
-    it("set html property readonly to true and try to select an option using keyboard without opening the popup", function () {
+    it("should not update the value when trying to select an option using keyboard without opening the popup in readonly mode", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "html:readonly": true,
