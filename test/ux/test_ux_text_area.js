@@ -240,7 +240,7 @@
         assert.isAtMost(labelWidth, textAreaControlWidth, "Label should not exceed textarea width.");
         const textAreaElement = document.querySelector("fluent-text-area");
         const fluentTextAreaWidth = Math.round(textAreaElement.getBoundingClientRect().width);
-        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should not exceed textarea control width.");
+        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should be equal to textarea control width.");
       });
 
     });
@@ -263,7 +263,7 @@
         assert.equal(labelWidth, textAreaControlWidth, "Label should not exceed textarea width.");
         const textAreaElement = document.querySelector("fluent-text-area");
         const fluentTextAreaWidth = Math.round(textAreaElement.getBoundingClientRect().width);
-        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should not exceed textarea control width.");
+        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should be equal to textarea control width.");
       });
     });
 
@@ -286,7 +286,7 @@
         assert.isAtMost(labelWidth, textAreaControlWidth, "Label should not exceed textarea width.");
         const textAreaElement = document.querySelector("fluent-text-area");
         const fluentTextAreaWidth = Math.round(textAreaElement.getBoundingClientRect().width);
-        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should not exceed textarea control width.");
+        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should be equal to textarea control width.");
       });
     });
 
@@ -308,7 +308,7 @@
         assert.isAtMost(labelWidth, textAreaControlWidth, "Label should not exceed textarea width.");
         const textAreaElement = document.querySelector("fluent-text-area");
         const fluentTextAreaWidth = Math.round(textAreaElement.getBoundingClientRect().width);
-        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should not exceed textarea control width.");
+        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should be equal to textarea control width.");
       });
     });
 
@@ -330,7 +330,7 @@
         assert.equal(labelWidth, textAreaControlWidth, "Label should not exceed textarea width.");
         const textAreaElement = document.querySelector("fluent-text-area");
         const fluentTextAreaWidth = Math.round(textAreaElement.getBoundingClientRect().width);
-        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should not exceed textarea control width.");
+        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should be equal to textarea control width.");
       });
     });
 
@@ -353,7 +353,7 @@
         assert.isAtMost(labelWidth, textAreaControlWidth, "Label should not exceed textarea width.");
         const textAreaElement = document.querySelector("fluent-text-area");
         const fluentTextAreaWidth = Math.round(textAreaElement.getBoundingClientRect().width);
-        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should not exceed textarea control width.");
+        assert.equal(fluentTextAreaWidth, textAreaControlWidth, "Fluent text-area width should be equal to textarea control width.");
       });
     });
 
