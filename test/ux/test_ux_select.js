@@ -284,6 +284,7 @@
     });
 
     it("should not update the value when trying to select an option using mouse in readonly mode", function () {
+      const trigger = "onchange";
       return asyncRun(function () {
         tester.dataUpdate({
           "html:readonly": true,
@@ -303,10 +304,13 @@
         secondOption.click();
       }).then(function () {
         assert.equal(tester.widget.getValue(), "1", "Value has been updated on click.");
+        assert.equal(tester.countOfTriggerCalled(trigger), 0, "The onchange trigger has been called.");
+        tester.resetTriggerCalled(trigger);
       });
     });
 
     it("should not update the value when trying to select an option using keyboard in readonly mode", function () {
+      const trigger = "onchange";
       // Create a simulated Enter keydown event.
       const enterKeyEvent = new window.KeyboardEvent("keydown", {
         "key": "Enter",
@@ -344,10 +348,13 @@
         element.dispatchEvent(enterKeyEvent);
       }).then(function () {
         assert.equal(tester.widget.getValue(), "1", "Value has been updated on key press.");
+        assert.equal(tester.countOfTriggerCalled(trigger), 0, "The onchange trigger has been called.");
+        tester.resetTriggerCalled(trigger);
       });
     });
 
     it("should not update the value when trying to select an option using keyboard without opening the popup in readonly mode", function () {
+      const trigger = "onchange";
       return asyncRun(function () {
         tester.dataUpdate({
           "html:readonly": true,
@@ -370,6 +377,8 @@
         element.dispatchEvent(downArrowKeyEvent);
       }).then(function () {
         assert.equal(tester.widget.getValue(), "1", "Value has been updated on key press.");
+        assert.equal(tester.countOfTriggerCalled(trigger), 0, "The onchange trigger has been called.");
+        tester.resetTriggerCalled(trigger);
       });
     });
 
