@@ -7,6 +7,6 @@
 
 ## Bug Fixes
 
-- uxSelect: When the widget was in readonly mode, it was not possible to open the dropdown to view the available options using mouse or Enter key.
+- uxSelect: When the widget was in readonly mode, opening the dropdown to view available options via mouse clicks or the Enter key was not possible.
 
 For older releases, see [CHANGELOG.md](CHANGELOG.md)
