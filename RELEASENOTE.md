@@ -7,5 +7,6 @@
 ## Bug Fixes
 - uxTextArea: When resizing the widget, associated label text does not wrap to fit the new dimensions. This issue occurs only when the label position is set to above or below the widget.
 
+- uxSelect: When the widget was in readonly mode, opening the dropdown to view available options via mouse clicks or the Enter key was not possible.
 
 For older releases, see [CHANGELOG.md](CHANGELOG.md)
