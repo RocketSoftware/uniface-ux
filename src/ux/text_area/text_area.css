@@ -6,6 +6,10 @@
   vertical-align: bottom;
 }
 
+.u-text-area::part(label) {
+  word-break: break-all;
+}
+
 .u-text-area.u-invalid::part(control) {
   padding-inline-end: calc((var(--design-unit) * 6px) + 2px);
 }
