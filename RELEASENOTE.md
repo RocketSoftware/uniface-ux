@@ -1,11 +1,12 @@
 # RELEASE NOTE - Uniface UX
 
-## Release 10.4.03.024
-- Uniface release: 10.4.03.024
+## Release 10.4.03.025
+
+- Uniface release: 10.4.03.025
 - UX Interface Version: 2
 
 ## Bug Fixes
-- uxTextField: An exception was triggered when the uxTextField widget was set to read-only mode while it had an active validation error.
 
+- uxSelect: When the widget was in readonly mode, opening the dropdown to view available options via mouse clicks or the Enter key was not possible.
 
 For older releases, see [CHANGELOG.md](CHANGELOG.md)
