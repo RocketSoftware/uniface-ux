@@ -124,7 +124,7 @@ export class NumberField extends Widget {
         event.stopImmediatePropagation();
         return;
       }
-      // If the current value has changed from the last known good value, update previousValue.
+      // If the current value has changed from the last known value, update previousValue.
       // This stores the most recent value to revert to later if needed.
       if (currentValue !== previousValue) {
         previousValue = currentValue;
