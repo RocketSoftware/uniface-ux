@@ -8,5 +8,6 @@
 ## Bug Fixes
 
 - uxSelect: When the widget was in readonly mode, opening the dropdown to view available options via mouse clicks or the Enter key was not possible.
+- uxNumberField: When the widget’s initial state is set to read-only and an initial value is provided, the value does not display, preventing correct rendering of the initial value.
 
 For older releases, see [CHANGELOG.md](CHANGELOG.md)
