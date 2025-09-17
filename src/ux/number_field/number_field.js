@@ -113,12 +113,11 @@ export class NumberField extends Widget {
       let readOnly = this.getNode(widgetElement, "readOnly");
       let currentValue = widgetElement.value;
 
-      // Check if the widget is in read-only mode AND not explicitly overridden by a class.
-      // If true, revert the change and block further processing.
-      // The 'u-blocked' class is used to allow editing even when 'readOnly' is true (a controlled override).
+      // If the widget is readonly and not marked as 'u-blocked' (a temporary blocked state),
+      // prevent value changes triggered by keyup/keydown events (e.g., arrow keys).
       if (readOnly && !widgetElement.classList.contains("u-blocked")) {
         isProgrammaticChange = true;
-        // Revert the value to previous valid value (if available), or fallback to initial value from data.
+        // Revert the value to previous value (if available), or fallback to initial value from data.
         widgetElement.value = previousValue !== undefined ? previousValue : this.getNode(this.data, "value");
         isProgrammaticChange = false;
         event.preventDefault();
@@ -126,7 +125,7 @@ export class NumberField extends Widget {
         return;
       }
       // If the current value has changed from the last known good value, update previousValue.
-      // This stores the most recent valid value to revert to later if needed.
+      // This stores the most recent value to revert to later if needed.
       if (currentValue !== previousValue) {
         previousValue = currentValue;
       }
