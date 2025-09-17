@@ -1,10 +1,12 @@
 # Change log - Uniface UX
 
 ## Release 10.4.03.024
+
 - Uniface release: 10.4.03.024
 - UX Interface Version: 2
 
 ### Bug Fixes
+
 - uxTextField: An exception was triggered when the uxTextField widget was set to read-only mode while it had an active validation error.
 
 ## Release 10.4.03.023
