@@ -96,23 +96,36 @@ export class NumberField extends Widget {
       }
     });
 
+    let isProgrammaticChange = false;
+
     // During a server round-trip, the widget is in a readonly and blocked state,
     // and the user presses the arrow keys, the value will change. This occurs because
     // the widget is temporarily in a readonly and blocked state during the round-trip,
     // allowing the value change to persist even though it shouldn't.
     // This is considered a minor bug that we are currently opting to live with.
     this.elements.widget.addEventListener("change", (event) => {
-      const readOnly = this.getNode(widgetElement, "readOnly");
-      const currentValue = widgetElement.value;
-      // Skip readOnly block if element has 'u-blocked' class.
-      if (readOnly && !widgetElement.classList.contains("u-blocked")) {
-        // Reset and cancel change.
-        widgetElement.value = previousValue;
+      if (isProgrammaticChange) {
+        // Handle invalid initial value to prevent recursion.
         event.preventDefault();
         event.stopImmediatePropagation();
         return;
       }
-      // Only treat as valid change if value actually changed.
+      let readOnly = this.getNode(widgetElement, "readOnly");
+      let currentValue = widgetElement.value;
+
+      // If the widget is readonly and not marked as 'u-blocked' (a temporary blocked state),
+      // prevent value changes triggered by keyup/keydown events (e.g., arrow keys).
+      if (readOnly && !widgetElement.classList.contains("u-blocked")) {
+        isProgrammaticChange = true;
+        // Revert the value to previous value (if available), or fallback to initial value from data.
+        widgetElement.value = previousValue !== undefined ? previousValue : this.getNode(this.data, "value");
+        isProgrammaticChange = false;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+      // If the current value has changed from the last known value, update previousValue.
+      // This stores the most recent value to revert to later if needed.
       if (currentValue !== previousValue) {
         previousValue = currentValue;
       }
