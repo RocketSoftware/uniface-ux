@@ -91,15 +91,6 @@ export class TextArea extends Widget {
       errorSpan.appendChild(errorSlot);
       root.appendChild(errorSpan);
     }
-
-    // ResizeObserver to update the widget's width, which also affects the label's width when the control is resized, for the label-position above and below.
-    const resizeObserver = new window.ResizeObserver(() => {
-      if (this.data["label-position"] === "above" || this.data["label-position"] === "below") {
-        widgetElement.style.width = `${control.offsetWidth}px`;
-      }
-    });
-    resizeObserver.observe(control);
-
     return updaters;
   }
 
