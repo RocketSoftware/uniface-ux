@@ -241,8 +241,6 @@ export class Select extends Widget {
       // precise than setTimeout().
       window.queueMicrotask(() => {
         element["value"] = valueToSet.toString();
-        // Also update 'previousValue' on programmatical value update.
-        widgetInstance.previousValue = valueToSet;
       });
     }
   };
@@ -534,8 +532,6 @@ export class Select extends Widget {
     const labelElement = widgetElement?.shadowRoot?.querySelector(".label");
     const controlElement = widgetElement.shadowRoot.querySelector(".control");
     const popup = widgetElement.shadowRoot.querySelector(".listbox");
-    this.previousValue = -1;
-
     if (!labelElement) {
       this.createElement();
       this.styleLabel();
@@ -552,28 +548,16 @@ export class Select extends Widget {
 
     widgetElement.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
+        const isReadOnly = this.toBoolean(this.data["html:readonly"]);
+        if (isReadOnly) {
+          widgetElement.open = false;
+          return;
+        }
         this.popupPreCalc(".listbox", widgetElement);
         const rect = this.popupGetRect(controlElement, popup, this.getNode(this.data, "popup-position"));
         this.popupPostCalc(".listbox", rect);
       }
     });
-
-    widgetElement.addEventListener("change", (event) => {
-      const currentValue = widgetElement.value;
-      const isReadOnly = widgetElement.classList.contains("u-readonly");
-      const previousValue = this.previousValue.toString();
-
-      // If widget is in readonly mode and the value has been updated, reset the value to the old value.
-      if (isReadOnly) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        widgetElement.value = previousValue;
-      } else if (currentValue !== previousValue) {
-        // Else update 'previousValue' to the new value.
-        this.previousValue = currentValue;
-      }
-    });
-
     return valueUpdaters;
   }
 
