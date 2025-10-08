@@ -37,7 +37,9 @@ export class Checkbox extends Widget {
   static triggers = {};
 
   /**
-   * Extends AttributeBooleanValue worker and adds tri-state functionality to it.
+   * Private Worker: A specialized worker that extends AttributeBooleanValue worker to support tri-state behavior in the checkbox.
+   * Enables toggling between checked, unchecked, and indeterminate states based on the tri-state property.
+   * It ensures that the checkbox reflects the correct visual and logical state, and dispatches appropriate change events.
    * @export
    * @class AttributeTristateValue
    * @extends {AttributeBooleanValue}
@@ -57,7 +59,8 @@ export class Checkbox extends Widget {
     }
 
     /**
-     * Updates the value of the widget, sets the indeterminate state based on the new value and dispatches a new change event.
+     * Updates the checkbox state and dispatches a valuechange event.
+     * Sets the widget in indeterminate state if the value is null.
      * @param {object} widgetInstance
      * @param {any} newValue
      * @param {boolean} isError
@@ -82,7 +85,8 @@ export class Checkbox extends Widget {
     }
 
     /**
-     * Converts the input value to a Boolean or null value or throws an error in case of an invalid value.
+     * Converts various input types to a tri-state-compatible value: true, false, or null.
+     * Throws an error if the value is invalid.
      * @param {any} value
      * @returns {boolean | null}
      */
@@ -121,8 +125,8 @@ export class Checkbox extends Widget {
     }
 
     /**
-     * Used to decide the next value of the checkbox when the user clicks on it.
-     * Takes into account the current value of the checkbox and whether the tri-state is set or not.
+     * Handles user interaction with the checkbox.
+     * Decides on the next value of the checkbox based on the current value and the tri-state setting.
      * @param {Event} event
      * @param {object} widgetInstance
      */
@@ -151,11 +155,21 @@ export class Checkbox extends Widget {
       }
     }
 
+    /**
+     * Clears any format-related errors on the widget.
+     * @param {Widget} widgetInstance
+     */
     clearErrors(widgetInstance) {
       this.setErrorProperties(widgetInstance);
       this.setErrorProperties(widgetInstance, "format-error");
     }
 
+    /**
+     * Private Uniface API method - getValueUpdaters.
+     * Specialized getValueUpdaters method to add an event handler to the change event that will taking into account the tri-state settings while dealing with user interaction.
+     * @param {Widget} widgetInstance
+     * @returns {Array<object>}
+     */
     getValueUpdaters(widgetInstance) {
       this.log("getValueUpdaters", {
         "widgetInstance": widgetInstance.getTraceDescription(),
@@ -173,6 +187,12 @@ export class Checkbox extends Widget {
       return updaters;
     }
 
+    /**
+     * Private Uniface API method - getValue.
+     * Specialized getValue method to take into account the indeterminate state of the checkbox while returning the field value back to Uniface.
+     * @param {Widget} widgetInstance
+     * @returns {boolean | string}
+     */
     getValue(widgetInstance) {
       this.log("getValue", {
         "widgetInstance": widgetInstance.getTraceDescription(),
@@ -182,6 +202,11 @@ export class Checkbox extends Widget {
       return value;
     }
 
+    /**
+     * Refreshes the checkbox state based on the current data value.
+     * Validates and normalizes the value before applying it.
+     * @param {Widget} widgetInstance
+     */
     refresh(widgetInstance) {
       this.log("refresh", {
         "widgetInstance": widgetInstance.getTraceDescription(),

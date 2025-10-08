@@ -28,7 +28,8 @@ export class PlainText extends Widget {
   static triggers = {};
 
   /**
-   * Private Worker: SlottedPlainTextFormat
+   * Private Worker: It renders the widget value as formatted plain text or HTML inside a slotted element.
+   * Supports multiple formats including valrep, first-line, multi-line, single-line, and paragraph modes.
    * @export
    * @class SlottedPlainTextFormat
    * @extends {Element}
