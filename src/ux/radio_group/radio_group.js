@@ -38,7 +38,10 @@ export class RadioGroup extends Widget {
   static triggers = {};
 
   /**
-   * Private Worker: AttributeSelectedValue
+   * Private Worker: A worker that manages the selected value by mapping the actual value
+   * to the index within the `valrep` array and syncing it with the DOM element.
+   * It ensures the correct item is selected and updates the widget's `value` property accordingly
+   * when the user interacts with the radio group.
    * @class AttributeSelectedValue
    * @extends {AttributeString}
    */
@@ -117,8 +120,10 @@ export class RadioGroup extends Widget {
   };
 
   /**
-   * Private Worker: ElementsValrep
-   * This is specialized worker to accommodate tooltip changes to valrep element.
+   * Private Worker: A specialized worker to manage the rendering of `valrep` entries as radio button elements in a radio group.
+   * It also enhances the UX by adding tooltips to each radio button label when the layout is horizontal.
+   * This worker ensures the `valrep` is rendered correctly and that each option's label
+   * is accessible via a tooltip when appropriate.
    * @class ElementsValrep
    * @extends {ElementsValrep}
    */

@@ -56,8 +56,7 @@ export class Select extends Widget {
   };
 
   /**
-   * Private Worker: Selected Value/Placeholder Element.
-   * Adds and maintains a slotted element for the placeholder/selected value text.
+   * Private Worker: Adds and maintains a slotted element for the placeholder/selected value text.
    * @class ElementSelectedValueWithPlaceholder
    * @extends {WorkerBase}
    */
@@ -248,7 +247,7 @@ export class Select extends Widget {
   };
 
   /**
-   * A special check is needed for the tabindex during the disabled state,
+   * Private Worker: A special check is needed for the tabindex during the disabled state,
    * as Fluent automatically sets it to null when disabled and to 0 once the component is no longer disabled.
    * @class
    * @extends {AttributeBoolean}
@@ -529,6 +528,12 @@ export class Select extends Widget {
     return rect;
   }
 
+  /**
+   * Private Uniface API method - onConnect.
+   * This method manually handles popup positioning due to limitations in Fluent's design.
+   * It ensures the label is present and styled, and calculates the position of the popup
+   * on both click and Enter key interactions.
+   */
   onConnect(widgetElement, objectDefinition) {
     const valueUpdaters = super.onConnect(widgetElement, objectDefinition);
     const labelElement = widgetElement?.shadowRoot?.querySelector(".label");
