@@ -36,8 +36,7 @@ export class Button extends Widget {
   static triggers = {};
 
   /**
-   * Private Worker: This worker creates and manages a `<span>` element styled with a provided CSS class and handles getting and setting the "value" property of the associated widget.
-   * The text content of the span reflects the "value" property of the widget's data.
+   * Private Worker: This is a specialized worker that adds and maintains a slotted element for the button text.
    * @class ElementText
    * @extends {WorkerBase}
    */
@@ -103,8 +102,7 @@ export class Button extends Widget {
   };
 
   /**
-   * Private Worker: This speacialized worker adds and maintains a slotted `<span>` element representing an icon within a button.
-   * Manages the icon name, position, and updates the DOM element accordingly.
+   * Private Worker: This is a specialized worker that adds and maintains a slotted element for the button icon.
    * @class ElementIcon
    * @extends {WorkerBase}
    */

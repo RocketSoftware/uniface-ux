@@ -38,10 +38,7 @@ export class Listbox extends Widget {
   static triggers = {};
 
   /**
-   * Private Worker: A worker that manages the selected value by mapping the selected index
-   * of the native element to its corresponding value within the `valrep` array.
-   * It ensures the correct item is selected and updates the widget's `value` property accordingly
-   * when the user interacts with the listbox widget.
+   * Private Worker: Used to handle changes in value and valrep.
    * @class AttributeSelectedIndex
    * @extends {WorkerBase}
    */
@@ -119,9 +116,7 @@ export class Listbox extends Widget {
   };
 
   /**
-   * Private Worker: Dynamically controls the maximum visible options (height) of a widget
-   * based on a `size` property. Calculates height using rendered Fluent option styles,
-   * and applies it via adopted shadow DOM styles for proper scrolling behavior.
+   * Private Worker: Used to handle size and overflow.
    * @class AttributeSize
    * @extends {WorkerBase}
    */
@@ -212,11 +207,10 @@ export class Listbox extends Widget {
   };
 
   /**
-   * Private Worker: Renders a disabled fallback option if no `valrep` is defined, ensuring
-   * the DOM structure remains valid and preventing UI glitches in empty states.
-   * @class ElementsValrep
-   * @extends {ElementsValrep}
-   */
+  * Private Worker: This is specialized worker to accommodate Listbox with no valrep defined.
+  * @class ElementsValrep
+  * @extends {ElementsValrep}
+  */
   static ElementsValrep = class extends ElementsValrep {
     refresh(widgetInstance) {
       const valrep = this.getNode(widgetInstance.data, "valrep");
@@ -233,12 +227,10 @@ export class Listbox extends Widget {
   };
 
   /**
-   * Private Worker: Explicitly applies the `readonly` attribute to the element when UI blocking is enabled,
-   * as `readonly` is not supported as a property.
-   * Also manages the `aria-readonly` and a visual blocking class for accessibility and styling.
-   * @class AttributeUIBlocking
-   * @extends {AttributeUIBlocking}
-   */
+  * Private Worker: Specialized worker to explicitly add readonly as an attribute because it is not supported as a property.
+  * @class AttributeUIBlocking
+  * @extends {AttributeUIBlocking}
+  */
   static AttributeUIBlocking = class extends AttributeUIBlocking {
     refresh(widgetInstance) {
       this.log("refresh", {
