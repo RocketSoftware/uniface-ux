@@ -24,6 +24,7 @@
       "representation": "option three"
     }
   ];
+  const emptyValRepArray = [];
 
   /**
     * Function to determine whether the widget class has been loaded.
@@ -520,7 +521,126 @@
       // Expected the value is the 2nd item of valRepArray.
       expect(tester.widget.getValue()).to.equal("2", "Widget value");
     });
+  });
 
+  describe("onchange trigger when empty valrep is defined", function(){
+    const triggerMap = {
+      "onchange" : function () {
+        const value = tester.widget.getValue();
+        console.log(`Onchange trigger has been called at ${new Date().toLocaleTimeString()}, new value: "${value}".`);
+      }
+    };
+    const trigger = "onchange";
+
+    beforeEach(async function () {
+      await asyncRun(function () {
+        tester.createWidget(triggerMap);
+      });
+      tester.resetTriggerCalled(trigger);
+    });
+
+    it("should not call the onchange trigger when the radiobox is clicked and valrep is empty", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep" : emptyValRepArray
+        });
+      }).then(function () {
+        // Simulate a click event.
+        tester.userClick();
+        // Assert that the onchange trigger handler was not called.
+        expect(tester.calledOnce(trigger)).to.be.false;
+      });
+    });
+
+    it("should not call the onchange trigger when the radiobox is clicked, valrep is empty and disabled is true", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep" : emptyValRepArray,
+          "html:disabled" : true
+        });
+      }).then(function () {
+        // Simulate a click event.
+        tester.userClick();
+        // Assert that the onchange trigger handler was not called.
+        expect(tester.calledOnce(trigger)).to.be.false;
+      }).then(function () {
+        tester.dataUpdate({
+          "html:disabled" : false
+        });
+      }).then(function () {
+        // Simulate a click event.
+        tester.userClick();
+        // Assert that the onchange trigger handler was not called.
+        expect(tester.calledOnce(trigger)).to.be.false;
+      });
+    });
+
+    it("should not fire onchange after multiple clicks when valrep is still undefined", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({ "value": "" });
+      }).then(function () {
+        // Perform multiple user interactions.
+        tester.userClick();
+        tester.userClick();
+        tester.userClick();
+      }).then(function () {
+        // Assert trigger never fired.
+        expect(tester.calledOnce(trigger)).to.be.false;
+        // Assert widget value remains undefined.
+        expect(tester.widget.getValue()).to.equal(undefined, "Widget value should remain undefined when no valrep is defined.");
+        // Assert radio remains unchecked (aria-checked false) or no current-checked true element.
+        const checked = tester.element.querySelector("fluent-radio[current-checked=true]");
+        expect(checked).to.equal(null, "No radio should be marked checked without valrep.");
+      });
+    });
+  });
+
+  describe("UX Radio Group widget layout properties (vertical and horizontal)", function(){
+    let element;
+    beforeEach(async function () {
+      await asyncRun(function () {
+        tester.createWidget();
+      });
+      element = tester.element;
+    });
+
+    it("should apply vertical layout and render radio buttons with correct text and inline-flex display", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "display-format": "rep",
+          "layout": "vertical"
+        });
+      }).then(function () {
+        expect(element.getAttribute("orientation")).equal("vertical");
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        expect(radioButtonArray.length).equal(valRepArray.length);
+        radioButtonArray.forEach(function (node, index) {
+          let expectedText = valRepArray[index].representation;
+          expect(node.textContent).equal(expectedText);
+          expect(window.getComputedStyle(element).display).equal("inline-flex");
+        });
+      });
+    });
+
+    it("should apply horizontal layout and render radio buttons with correct text and inline-flex display", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "display-format": "rep",
+          "layout": "horizontal"
+        });
+      }).then(function () {
+        expect(element.getAttribute("orientation")).equal("horizontal");
+        let radioButtonArray = element.querySelectorAll("fluent-radio");
+        expect(radioButtonArray.length).equal(valRepArray.length);
+        radioButtonArray.forEach(function (node, index) {
+          let expectedText = valRepArray[index].representation;
+          expect(node.textContent).equal(expectedText);
+          expect(window.getComputedStyle(element).display).equal("inline-flex");
+        });
+      });
+    });
   });
 
   describe("showError()", function () {

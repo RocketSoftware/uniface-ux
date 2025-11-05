@@ -140,6 +140,7 @@ export class RadioGroup extends Widget {
       super(widgetClass, tagName, styleClass, elementQuerySelector);
       this.registerSetter(widgetClass, "layout", this);
       this.registerSetter(widgetClass, "valrep", this);
+      this.registerSetter(widgetClass, "html:disabled", this);
     }
 
     addTooltipToValrepElement(widgetInstance) {
@@ -158,7 +159,9 @@ export class RadioGroup extends Widget {
     refresh(widgetInstance) {
       const valrep = this.getNode(widgetInstance.data, "valrep");
       const value = this.getNode(widgetInstance.data, "value");
+      const radioGroupElement = this.getElement(widgetInstance);
       let matchedValrepObj = valrep ? valrep.find((valrepObj) => valrepObj.value === value) : undefined;
+
       if (valrep.length > 0) {
         if (matchedValrepObj) {
           widgetInstance.elements.widget.valrepUpdated = true;
@@ -166,9 +169,20 @@ export class RadioGroup extends Widget {
         super.refresh(widgetInstance);
         this.addTooltipToValrepElement(widgetInstance);
       } else {
-        const radioGroupElement = this.getElement(widgetInstance);
-        this.removeValRepElements(widgetInstance);
-        radioGroupElement.appendChild(document.createElement(this.tagName));
+        // Empty valrep case.
+        const existingOption = radioGroupElement.querySelector(".empty-valrep-option");
+
+        if (existingOption) {
+          // If placeholder option already exists, just update disabled state.
+          existingOption["disabled"] = true;
+        } else {
+          // Create placeholder option only if it doesn't exist.
+          this.removeValRepElements(widgetInstance);
+          const option = document.createElement(this.tagName);
+          option.classList.add("empty-valrep-option");
+          option["disabled"] = true;
+          radioGroupElement.appendChild(option);
+        }
       }
     }
   };
