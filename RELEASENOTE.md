@@ -1,12 +1,12 @@
 # RELEASE NOTE - Uniface UX
 
-## Release 10.4.03.028
+## Release 10.4.03.027
 
-- Uniface release: 10.4.03.028
+- Uniface release: 10.4.03.027
 - UX Interface Version: 2
 
-## Bug Fix
+## Features
 
-- uxRadioGroup:  If valrep is empty, users can still interact with the radio group and select a placeholder option, which fires the onChange trigger. 
+- Added `README.md` file for all workers.
 
 For older releases, see [CHANGELOG.md](CHANGELOG.md)
