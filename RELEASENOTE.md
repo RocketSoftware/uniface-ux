@@ -1,12 +1,16 @@
 # RELEASE NOTE - Uniface UX
 
-## Release 10.4.03.028
+## Release 10.4.03.029
 
-- Uniface release: 10.4.03.028
+- Uniface release: 10.4.03.029
 - UX Interface Version: 2
 
 ## Bug Fix
 
-- uxRadioGroup:  If valrep is empty, users can still interact with the radio group and select a placeholder option, which fires the onChange trigger. 
+- uxSelect: The widget now includes supports for the aria-readonly attribute when rendered in read-only mode, enhancing accessibility compliance.
+
+## Currency
+
+- NPM: Development packages have been upgraded to the latest available versions.
 
 For older releases, see [CHANGELOG.md](CHANGELOG.md)
