@@ -49,8 +49,10 @@ export class Select extends Widget {
       const readonly = this.toBoolean(this.getNode(widgetInstance.data, "html:readonly"));
       if (readonly) {
         element.classList.add("u-readonly");
+        element.setAttribute("aria-readonly", "true");
       } else {
         element.classList.remove("u-readonly");
+        element.setAttribute("aria-readonly", "false");
       }
     }
   };
@@ -283,9 +285,11 @@ export class Select extends Widget {
         if (isBlocked) {
           element.classList.add("u-blocked");
           element.classList.add("u-readonly");
+          element.setAttribute("aria-readonly", "true");
         } else if (!htmlReadonly) {
           element.classList.remove("u-blocked");
           element.classList.remove("u-readonly");
+          element.setAttribute("aria-readonly", "false");
         }
       } else {
         widgetInstance.error("AttributeUIBlocking", "Invalid block type", this.uiblocking);

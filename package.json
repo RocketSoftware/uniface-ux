@@ -19,16 +19,16 @@
     "@fluentui/web-components": "^2.6.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.55.0",
+    "@playwright/test": "^1.56.1",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.2",
-    "eslint": "^9.35.0",
+    "eslint": "^9.39.1",
     "http-server": "^14.1.1",
     "mini-css-extract-plugin": "^2.9.4",
     "terser-webpack-plugin": "^5.3.14",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-middleware": "^7.4.3",
+    "webpack-dev-middleware": "^7.4.5",
     "webpack-dev-server": "^5.2.2",
     "webpack-merge": "^6.0.1"
   }

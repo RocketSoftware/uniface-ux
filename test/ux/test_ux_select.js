@@ -212,7 +212,7 @@
       });
     });
 
-    it("should position the label before and apply the correct styles", function () {
+    it("should set label-position to 'before' and apply the correct styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": "before",
@@ -231,7 +231,45 @@
       });
     });
 
-    it("should position the label below and apply the correct styles", function () {
+    it("should set label-position to 'after' and apply the correct styles", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "after",
+          "label-text": selectFieldLabel
+        });
+      }).then(function () {
+        let labelPosition = element.getAttribute("u-label-position");
+        assert.equal(labelPosition, "after");
+        // If u-label-position attribute is added element display is changed.
+        let selectFieldStyle = window.getComputedStyle(element, null);
+        let displayPropertyValue = selectFieldStyle.getPropertyValue("display");
+        assert.equal(displayPropertyValue, "inline-flex");
+        let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
+        let alignPropertyValue = labelStyle.getPropertyValue("align-content");
+        assert.equal(alignPropertyValue, "center");
+      });
+    });
+
+    it("should set label-position to 'above' and apply the correct styles", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "above",
+          "label-text": selectFieldLabel
+        });
+      }).then(function () {
+        let labelPosition = element.getAttribute("u-label-position");
+        assert.equal(labelPosition, "above");
+        // If u-label-position attribute is added element display is changed.
+        let selectFieldStyle = window.getComputedStyle(element, null);
+        let flexPropertyValue = selectFieldStyle.getPropertyValue("flex-direction");
+        assert.equal(flexPropertyValue, "column");
+        let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
+        let orderPropertyValue = labelStyle.getPropertyValue("order");
+        assert.equal(orderPropertyValue, 0);
+      });
+    });
+
+    it("should set label-position to 'below' and apply the correct styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": "below",
@@ -247,6 +285,41 @@
         let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
         let orderPropertyValue = labelStyle.getPropertyValue("order");
         assert.equal(orderPropertyValue, 2);
+      });
+    });
+
+    it("should set label-position to 'above' and apply the correct styles when label-text is undefined", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "above",
+          "label-text": "undefined"
+        });
+      }).then(function () {
+        let labelPosition = element.getAttribute("u-label-position");
+        assert.equal(labelPosition, "above");
+        // If u-label-position attribute is added element display is changed.
+        let selectFieldStyle = window.getComputedStyle(element, null);
+        let flexPropertyValue = selectFieldStyle.getPropertyValue("flex-direction");
+        assert.equal(flexPropertyValue, "column");
+        let labelStyle = window.getComputedStyle(element.shadowRoot.querySelector(".label"), null);
+        let orderPropertyValue = labelStyle.getPropertyValue("order");
+        assert.equal(orderPropertyValue, 0);
+        let labelElement = element.querySelector("span.u-label-text");
+        let labelText = labelElement.innerText;
+        expect("undefined").equal(labelText);
+      });
+    });
+
+    it("should position the label top and show warning in console for invalid top", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "top",
+          "label-text": selectFieldLabel
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'label-position' invalid value (top) - Ignored."))).to.be.true;
+        warnSpy.restore();
       });
     });
 
@@ -280,6 +353,29 @@
         });
       }).then(function () {
         expect(element.classList.contains("u-readonly")).to.be.true;
+        expect(element.getAttribute("aria-readonly")).equal("true");
+      });
+    });
+
+    it("set html property readonly to false", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": false
+        });
+      }).then(function () {
+        expect(element.classList.contains("u-readonly")).to.be.false;
+        expect(element.getAttribute("aria-readonly")).equal("false");
+      });
+    });
+
+    it("set html property readonly to xxxx", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": "xxxxx"
+        });
+      }).then(function () {
+        expect(element.classList.contains("u-readonly")).to.be.false;
+        expect(element.getAttribute("aria-readonly")).equal("false");
       });
     });
 
@@ -293,6 +389,8 @@
         });
       }).then(function () {
         expect(element.classList.contains("u-readonly")).to.be.true;
+        expect(element.getAttribute("aria-readonly")).equal("true");
+
         // Try to open the popup by clicking on the select widget.
         element.click();
       }).then(function () {
@@ -328,6 +426,8 @@
         });
       }).then(function () {
         expect(element.classList.contains("u-readonly")).to.be.true;
+        expect(element.getAttribute("aria-readonly")).equal("true");
+
         // Focus the element.
         element.focus();
         // Dispatch an Enter keydown event on the select widget.
@@ -363,6 +463,8 @@
         });
       }).then(function () {
         expect(element.classList.contains("u-readonly")).to.be.true;
+        expect(element.getAttribute("aria-readonly")).equal("true");
+
         // Focus the element.
         element.focus();
         // Try to select the second option using down arrow key.
@@ -390,6 +492,139 @@
       }).then(function () {
         expect(element.hasAttribute("disabled")).to.be.true;
         expect(element.getAttribute("aria-disabled")).equal("true");
+      });
+    });
+
+    it("set html property disabled to false", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:disabled": false
+        });
+      }).then(function () {
+        expect(element.hasAttribute("disabled")).to.be.false;
+        expect(element.getAttribute("aria-disabled")).equal("false");
+      });
+    });
+
+    it("set html property disabled to xxxxx", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:disabled": "abcde"
+        });
+      }).then(function () {
+        expect(element.hasAttribute("disabled")).to.be.false;
+        expect(element.getAttribute("aria-disabled")).equal("false");
+      });
+    });
+
+    it("should apply html:hidden=true and ensure both the element and its label-position node are hidden", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:hidden": true
+        });
+      }).then(function () {
+        expect(element.hasAttribute("hidden")).to.be.true;
+        expect(element.getAttribute("aria-disabled")).equal("false");
+        // Check that .u-select[u-label-position] is hidden (display: none)
+        let labelPosNode = element.shadowRoot ? element.shadowRoot.querySelector(".u-select[u-label-position][hidden]") : null;
+        if (!labelPosNode) {
+          labelPosNode = document.querySelector(".u-select[u-label-position][hidden]");
+        }
+        assert(labelPosNode, "Expected '.u-select[u-label-position]' to be present and have the 'hidden' attribute.");
+      });
+    });
+
+    it("should apply html:hidden=false and ensure both the element and its label-position node are not hidden", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:hidden": false
+        });
+      }).then(function () {
+        expect(element.hasAttribute("hidden")).to.be.false;
+        // Ensure the u-label-position node is present and not hidden
+        let labelPosNode = element.shadowRoot ? element.shadowRoot.querySelector(".u-select[u-label-position]:not([hidden])") : null;
+        if (!labelPosNode) {
+          labelPosNode = document.querySelector(".u-select[u-label-position]:not([hidden])");
+        }
+        assert(labelPosNode, "Expected '.u-select[u-label-position]' to be present and not have the 'hidden' attribute.");
+      });
+    });
+
+    it("should apply html:tabindex when set to 1", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:tabindex": 1
+        });
+      }).then(function () {
+        expect(element.getAttribute("tabindex")).equal("1");
+      });
+    });
+
+    it("should apply html:tabindex when set to -1", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:tabindex": -1
+        });
+      }).then(function () {
+        expect(element.getAttribute("tabindex")).equal("-1");
+      });
+    });
+
+    it("should apply html:title", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:title": "Test Title"
+        });
+      }).then(function () {
+        // Simulate hover events to trigger any tooltip logic.
+        const mouseMove = new window.MouseEvent("mousemove", { "bubbles": true,
+                                                               "cancelable": true });
+        const mouseOver = new window.MouseEvent("mouseover", { "bubbles": true,
+                                                               "cancelable": true });
+        const mouseEnter = new window.MouseEvent("mouseenter", { "bubbles": true,
+                                                                 "cancelable": true });
+        element.dispatchEvent(mouseMove);
+        element.dispatchEvent(mouseOver);
+        element.dispatchEvent(mouseEnter);
+        // Note: native browser tooltips are not exposed to the DOM; verifying the title attribute is enough.
+        expect(element.getAttribute("title")).equal("Test Title");
+      });
+    });
+
+    it("should apply html:title as empty", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:title": ""
+        });
+      }).then(function () {
+        // Simulate hover events to trigger any tooltip logic.
+        const mouseMove = new window.MouseEvent("mousemove", { "bubbles": true,
+                                                               "cancelable": true });
+        const mouseOver = new window.MouseEvent("mouseover", { "bubbles": true,
+                                                               "cancelable": true });
+        const mouseEnter = new window.MouseEvent("mouseenter", { "bubbles": true,
+                                                                 "cancelable": true });
+        element.dispatchEvent(mouseMove);
+        element.dispatchEvent(mouseOver);
+        element.dispatchEvent(mouseEnter);
+        // Note: native browser tooltips are not exposed to the DOM; verifying the title attribute is enough.
+        expect(element.getAttribute("title")).equal("");
+      });
+    });
+
+    it("should apply initial value when display-format is xxxxx", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "value": "2",
+          "display-format": "xxxx"
+        });
+      }).then(function () {
+        const selectedValue = element.shadowRoot.querySelector("slot[name=selected-value]");
+        expect(selectedValue.textContent).equal("option two");
+        // Find index of expected value and compare against index of selected option.
+        const selectOption = element.querySelector("fluent-option.selected");
+        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
       });
     });
 
@@ -683,7 +918,6 @@
         tester.dataUpdate({
           "valrep": valRepArray,
           "display-format": "val",
-          "placeholder-text": "Select",
           "show-placeholder": true
         });
       });
@@ -691,6 +925,10 @@
 
     it("set placeholder with no initial value and expect placeholder to be shown", function () {
       return asyncRun(function () {
+        tester.dataUpdate({
+          "placeholder-text": "Select"
+        });
+      }).then(function () {
         const selectedValue = element.querySelector("div[slot=selected-value]");
         expect(selectedValue.textContent).equal("Select");
       });
@@ -708,6 +946,116 @@
         expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
         const placeholderSlot = selectedValue.querySelector(".u-placeholder");
         expect(placeholderSlot).equal(null);
+      });
+    });
+
+    it("set placeholder with valid initial value and expect placeholder not to be shown with display-format as default(rep)", function () {
+      const valRepArrayWithEmptyVal = [
+        ...valRepArray,
+        {
+          "value": "",
+          "representation": "XXX"
+        }
+      ];
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "value": "2",
+          "display-format": "rep",
+          "valrep": valRepArrayWithEmptyVal,
+          "placeholder-text": "Select",
+          "show-placeholder": true
+        });
+      }).then(function () {
+        const selectedValue = element.querySelector("div[slot=selected-value]");
+        // Find index of expected value and compare against index of selected option.
+        const selectOption = element.querySelector("fluent-option.selected");
+        expect(selectOption.value).equal(valRepArray.findIndex((item) => item.value === "2").toString());
+        const placeholderSlot = selectedValue.querySelector(".u-placeholder");
+        expect(placeholderSlot).equal(null);
+      });
+    });
+  });
+
+  describe("Different valrep combinations and its behavior", function(){
+    let element;
+    before(async function () {
+      tester.createWidget();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+      await asyncRun(function () {
+        tester.dataUpdate({
+          "valrep": valRepArray,
+          "display-format": "val"
+        });
+      });
+    });
+
+    it("set placeholder with valid initial value not specified and expect placeholder to be shown as Selected Item with display-format as default(rep)", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "display-format": "rep",
+          "show-placeholder": true
+        });
+      }).then(function () {
+        const selectedValue = element.querySelector("div[slot=selected-value]");
+        expect(selectedValue.textContent).equal("Selected item");
+        const placeholderSpan = selectedValue ? selectedValue.querySelector("span.u-placeholder") : null;
+        expect(placeholderSpan).to.not.equal("null");
+      });
+    });
+
+    it("set placeholder with valid initial value not specified with different valrep combinations and expect placeholder not to be shown with display-format as default(rep)", function () {
+      const valRepArrayWithEmptyVal = [
+        {
+          "value": "",
+          "representation": "XXX"
+        },
+        {
+          "value": "",
+          "representation": ""
+        },
+        {
+          "value": "6",
+          "representation": "ABC"
+        },
+        ...valRepArray
+      ];
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "display-format": "rep",
+          "valrep": valRepArrayWithEmptyVal,
+          "placeholder-text": "Select",
+          "show-placeholder": true
+        });
+      }).then(function () {
+        const selectedValue = element.querySelector("div[slot=selected-value]");
+        expect(selectedValue.textContent).equal("XXX");
+        const placeholderSpan = selectedValue ? selectedValue.querySelector("span.u-placeholder") : null;
+        expect(placeholderSpan).to.not.equal("null");
+      });
+    });
+
+    it("should not display placeholder text when an initial value is provided and display-format is set to default(rep)", function () {
+      const valRepArrayWithEmptyVal = [
+        {
+          "value": "",
+          "representation": "XXX"
+        },
+        ...valRepArray
+      ];
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "value": "9",
+          "display-format": "rep",
+          "valrep": valRepArrayWithEmptyVal,
+          "placeholder-text": "Select",
+          "show-placeholder": true
+        });
+      }).then(function () {
+        const selectedValue = element.querySelector("div[slot=selected-value]");
+        expect(selectedValue.textContent).equal("");
+        let errorIconTooltip = element.querySelector(".u-error-icon");
+        expect(errorIconTooltip.getAttribute("title")).equal("ERROR: Internal value cannot be represented by control. Either correct value or contact your system administrator.");
       });
     });
   });
@@ -760,6 +1108,7 @@
       }).then(function () {
         expect(element, "Class u-readonly is not applied").to.have.class("u-readonly");
         expect(element, "Class u-blocked is not applied.").to.have.class("u-blocked");
+        expect(element.getAttribute("aria-readonly")).equal("true");
         expect(widget.data.uiblocked).equal(true);
       });
     });
@@ -784,6 +1133,7 @@
         expect(element, "Class u-readonly is not applied").not.to.have.class("u-readonly");
         expect(element, "Class u-blocked is applied.").not.to.have.class("u-blocked");
         expect(widget.data.uiblocked).equal(false);
+        expect(element.getAttribute("aria-readonly")).equal("false");
       });
     });
 
@@ -795,6 +1145,7 @@
         widget.unblockUI();
       }).then(function () {
         expect(element, "Class u-readonly is not applied").to.have.class("u-readonly");
+        expect(element.getAttribute("aria-readonly")).equal("true");
       });
     });
   });
