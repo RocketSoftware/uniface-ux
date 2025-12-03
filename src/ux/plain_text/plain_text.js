@@ -86,6 +86,7 @@ export class PlainText extends Widget {
       const plainTextFormat = this.getNode(widgetInstance.data, "plaintext-format");
       const element = this.getElement(widgetInstance);
       element.innerHTML = "";
+
       // Convert value to string if it's not a string already.
       value = typeof value !== "string" ? value?.toString() : value;
 
@@ -94,19 +95,33 @@ export class PlainText extends Widget {
       if (!value) {
         value = "";
       }
+
       // Handle format errors.
       if (valrep && !matchedValrepObj) {
         const text = this.getFormatErrorText(widgetInstance);
         if (text) {
           this.setErrorProperties(widgetInstance, "format-error", text);
-          element.textContent = value;
+          // Render invalid value based on format.
+          this.renderInvalidPlainTextFormat(plainTextFormat, value, element);
           return;
         }
       }
 
+      // Clear any previous format errors.
       this.setErrorProperties(widgetInstance, "format-error");
 
-      // Create elements dynamically for different plain text formats.
+      // Render valid value based on format.
+      this.renderValidPlainTextFormat(plainTextFormat, matchedValrepObj, value, element);
+    }
+
+    /**
+     * Renders the control element for valid values based on plaintext format.
+     * @param {string} plainTextFormat - The format type.
+     * @param {object|null} matchedValrepObj - The matched valrep object.
+     * @param {string} value - The value to display.
+     * @param {HTMLElement} element - The control element.
+     */
+    renderValidPlainTextFormat(plainTextFormat, matchedValrepObj, value, element) {
       switch (plainTextFormat) {
         case "valrep-html":
           this.createValrepHtmlElement(matchedValrepObj, value, element);
@@ -129,8 +144,31 @@ export class PlainText extends Widget {
         case "single-line":
           this.createTextElement(value.replaceAll(/\n/g, " ") || value, element);
           break;
-        default: // "first-line" or any other case
+        default: // "first-line" or any other case.
           this.createTextElement(value.split?.("\n", 2)[0] + (value.includes("\n") ? "..." : ""), element);
+          break;
+      }
+    }
+
+    /**
+     * Renders the control element for invalid values (format errors) based on plaintext format.
+     * @param {string} plainTextFormat - The format type.
+     * @param {string} value - The invalid value to display.
+     * @param {HTMLElement} element - The control element.
+     */
+    renderInvalidPlainTextFormat(plainTextFormat, value, element) {
+      switch (plainTextFormat) {
+        case "representation-only":
+          this.createTextElement("", element);
+          break;
+        case "valrep-text":
+          this.createTextElement(`(${value})`, element);
+          break;
+        case "valrep-html":
+          this.createValueSpan(value, element);
+          break;
+        default:
+          this.createTextElement(value, element);
           break;
       }
     }
@@ -142,12 +180,9 @@ export class PlainText extends Widget {
      * @param {HTMLElement} element
      */
     createValrepHtmlElement(matchedValrepObj, value, element) {
-      const valueSpan = document.createElement("span");
-      valueSpan.className = "u-valrep-value";
-      valueSpan.textContent = value;
       this.createRepElement(matchedValrepObj, element);
-      element.appendChild(document.createTextNode(" ")); // Add space between the spans
-      element.appendChild(valueSpan);
+      element.appendChild(document.createTextNode(" ")); // Add space between the spans.
+      this.createValueSpan(value, element);
     }
 
     /**
@@ -157,9 +192,22 @@ export class PlainText extends Widget {
      */
     createRepElement(matchedValrepObj, element) {
       const repSpan = document.createElement("span");
-      repSpan.className = "u-valrep-rep";
+      repSpan.className = "u-valrep-representation";
       repSpan.innerHTML = matchedValrepObj.representation;
       element.appendChild(repSpan);
+    }
+
+    /**
+     * Create span HTML element for value.
+     * @param {string} value
+     * @param {HTMLElement} element
+     */
+    createValueSpan(value, element) {
+      const valueSpan = document.createElement("span");
+      // The 'u-value' class applies italic styling and wraps the value in parentheses.
+      valueSpan.className = "u-valrep-value u-value";
+      valueSpan.textContent = value;
+      element.appendChild(valueSpan);
     }
 
     /**

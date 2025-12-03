@@ -38,3 +38,22 @@
 .u-plain-text .u-label-text:after {
     content: " ";
 }
+
+/* Styling the valrep value to enclose it within parentheses. */
+.u-plain-text .u-value {
+  color: var(--neutral-base-color);
+  font-style: italic;
+}
+
+.u-plain-text .u-value::before {
+  content: "(";
+}
+
+.u-plain-text .u-value::after {
+  content: ")";
+}
+
+/* Remove padding from error icon when control is empty (representation-only format with invalid value). */
+.u-plain-text .u-control:empty ~ .u-error-icon {
+    padding-inline-start: 0;
+}

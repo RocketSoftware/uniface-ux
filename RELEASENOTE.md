@@ -1,16 +1,12 @@
 # RELEASE NOTE - Uniface UX
 
-## Release 10.4.03.029
+## Release 10.4.03.030
 
-- Uniface release: 10.4.03.029
+- Uniface release: 10.4.03.030
 - UX Interface Version: 2
 
-## Bug Fix
+## Bug Fixes
 
-- uxSelect: The widget now includes supports for the aria-readonly attribute when rendered in read-only mode, enhancing accessibility compliance.
-
-## Currency
-
-- NPM: Development packages have been upgraded to the latest available versions.
+- uxPlainText: Standardized value formatting across plaintext formats (representation-only, valrep-text, valrep-html) to ensure consistent styling with other widgets.
 
 For older releases, see [CHANGELOG.md](CHANGELOG.md)
