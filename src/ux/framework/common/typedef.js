@@ -21,6 +21,7 @@
  *  @property {function(UWidgetClassName): void} setWidgetClass - Sets the widget class.
  *  @property {function(UWidgetClassName): void} setCollectionWidgetClass - Sets the collection widget class of an entity.
  *  @property {function(UWidgetClassName): void} setOccurrenceWidgetClass - Sets the occurrence widget class of an entity.
+ *  @property {function(object): void} setOccurrenceProperties - Sets occurrence properties.
  *  @property {function(): Array<UObjectDefinition>} getChildDefinitions - Returns array of child object definitions.
  *
  * @typedef {object} Updater

@@ -2,6 +2,7 @@
 import "./typedef.js";
 import "./worker_base.js";
 import { Base } from "./base.js";
+import { getWidgetClass } from "./dsp_connector.js";
 
 /**
  * Base ux-widget class - Implements all Uniface UX Widget Interface methods.
@@ -107,6 +108,27 @@ export class Widget extends Base {
       });
     }
 
+    // Handle occurrence widget properties.
+    if (objectDefinition && objectDefinition.getType?.() === "entity" && elementId.startsWith("uent:")) {
+      const occurrenceWidgetClassName = objectDefinition.getOccurrenceWidgetClass();
+      const properties = occurrenceWidgetClassName ? getWidgetClass(occurrenceWidgetClassName)?.getPropertyIds() ?? [] : [];
+      if (properties.length > 0) {
+        const propertyNamesSet = new Set(objectDefinition.getPropertyNames());
+        const occurrenceProperties = {};
+        // Filter and collect matching properties for the occurrence widget.
+        for (let i = 0; i < properties.length; i++) {
+          const prop = properties[i];
+          if (propertyNamesSet.has(prop)) {
+            occurrenceProperties[prop] = objectDefinition.getProperty(prop);
+          }
+        }
+        // Only set occurrence properties if we have at least one matching property.
+        if (Object.keys(occurrenceProperties).length > 0) {
+          objectDefinition.setOccurrenceProperties(occurrenceProperties);
+        }
+      }
+    }
+
     return widgetElement;
   }
 
@@ -121,6 +143,16 @@ export class Widget extends Base {
       "error",
       "error-message"
     ];
+  }
+
+  /**
+   * Returns an array of property ids that are supported by the widget.
+   * Excludes the "class" property.
+   * @static
+   * @returns {string[]} Array of supported property IDs (excluding "class")
+   */
+  static getPropertyIds() {
+    return Object.keys(this.setters).filter(key => key !== "class");
   }
 
   /**

@@ -111,12 +111,16 @@ module.exports = [
       "quotes": "off"
     }
   },
-  { // Rules for test/ux
-    "files": ["test/ux/*.js"],
+  {
+    // Rules for test/ux, test/web_components
+    "files": ["test/ux/*.js", "test/web_components/*.js"],
     "languageOptions": {
       "globals": {
         "Element": "readonly",
         "uniface": "readonly",
+        "Node": "readonly",
+        "requestAnimationFrame": "readonly",
+        "setTimeout": "readonly",
         // mocha
         "after": "readonly",
         "afterEach": "readonly",

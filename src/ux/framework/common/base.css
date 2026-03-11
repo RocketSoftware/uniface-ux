@@ -155,3 +155,151 @@ fluent-card {
 .u-text-area[u-label-position="below"] .u-label-text:not([hidden]) {
   display: block;
 }
+
+/* ============================================
+   Vertical parent + auto child: align-items (horizontal-align).
+   ============================================ */
+:is(.u-wc[layout-type="vertical-scroll"],
+  .u-wc[layout-type="vertical-wrap"]) .u-wc[layout-type="auto"][horizontal-align="start"]::part(root) {
+  --u-layout-align-items: start;
+  align-items: var(--u-layout-align-items);
+}
+
+:is(.u-wc[layout-type="vertical-scroll"],
+  .u-wc[layout-type="vertical-wrap"]) .u-wc[layout-type="auto"][horizontal-align="center"]::part(root) {
+  --u-layout-align-items: safe center;
+  align-items: var(--u-layout-align-items);
+}
+
+:is(.u-wc[layout-type="vertical-scroll"],
+  .u-wc[layout-type="vertical-wrap"]) .u-wc[layout-type="auto"][horizontal-align="end"]::part(root) {
+  --u-layout-align-items: safe end;
+  align-items: var(--u-layout-align-items);
+}
+
+:is(.u-wc[layout-type="vertical-scroll"],
+  .u-wc[layout-type="vertical-wrap"]) .u-wc[layout-type="auto"][horizontal-align="stretch"]::part(root) {
+  --u-layout-align-items: stretch;
+  align-items: var(--u-layout-align-items);
+}
+
+:is(.u-wc[layout-type="vertical-scroll"],
+  .u-wc[layout-type="vertical-wrap"]) .u-wc[layout-type="auto"]:is([horizontal-align="space-between"],
+  [horizontal-align="space-around"],
+  [horizontal-align="space-evenly"])::part(root) {
+  --u-layout-align-items: start;
+  align-items: var(--u-layout-align-items);
+}
+
+/* ============================================
+   Vertical parent + auto child: justify-content (vertical-align).
+   ============================================ */
+:is(.u-wc[layout-type="vertical-scroll"],
+  .u-wc[layout-type="vertical-wrap"]) .u-wc[layout-type="auto"][vertical-align="start"]::part(root) {
+  --u-layout-justify-content: start;
+  justify-content: var(--u-layout-justify-content);
+}
+
+:is(.u-wc[layout-type="vertical-scroll"],
+  .u-wc[layout-type="vertical-wrap"]) .u-wc[layout-type="auto"][vertical-align="center"]::part(root) {
+  --u-layout-justify-content: safe center;
+  justify-content: var(--u-layout-justify-content);
+}
+
+:is(.u-wc[layout-type="vertical-scroll"],
+  .u-wc[layout-type="vertical-wrap"]) .u-wc[layout-type="auto"][vertical-align="end"]::part(root) {
+  --u-layout-justify-content: safe end;
+  justify-content: var(--u-layout-justify-content);
+}
+
+:is(.u-wc[layout-type="vertical-scroll"],
+  .u-wc[layout-type="vertical-wrap"]) .u-wc[layout-type="auto"][vertical-align="space-between"]::part(root) {
+  --u-layout-justify-content: space-between;
+  justify-content: var(--u-layout-justify-content);
+}
+
+:is(.u-wc[layout-type="vertical-scroll"],
+  .u-wc[layout-type="vertical-wrap"]) .u-wc[layout-type="auto"][vertical-align="space-around"]::part(root) {
+  --u-layout-justify-content: space-around;
+  justify-content: var(--u-layout-justify-content);
+}
+
+:is(.u-wc[layout-type="vertical-scroll"],
+  .u-wc[layout-type="vertical-wrap"]) .u-wc[layout-type="auto"][vertical-align="space-evenly"]::part(root) {
+  --u-layout-justify-content: space-evenly;
+  justify-content: var(--u-layout-justify-content);
+}
+
+/* ============================================
+   Horizontal parent + auto child: align-items (vertical-align).
+   ============================================ */
+:is(.u-wc[layout-type="horizontal-scroll"],
+  .u-wc[layout-type="horizontal-wrap"]) .u-wc[layout-type="auto"][vertical-align="start"]::part(root) {
+  --u-layout-align-items: start;
+  align-items: var(--u-layout-align-items);
+}
+
+:is(.u-wc[layout-type="horizontal-scroll"],
+  .u-wc[layout-type="horizontal-wrap"]) .u-wc[layout-type="auto"][vertical-align="center"]::part(root) {
+  --u-layout-align-items: safe center;
+  align-items: var(--u-layout-align-items);
+}
+
+:is(.u-wc[layout-type="horizontal-scroll"],
+  .u-wc[layout-type="horizontal-wrap"]) .u-wc[layout-type="auto"][vertical-align="end"]::part(root) {
+  --u-layout-align-items: safe end;
+  align-items: var(--u-layout-align-items);
+}
+
+:is(.u-wc[layout-type="horizontal-scroll"],
+  .u-wc[layout-type="horizontal-wrap"]) .u-wc[layout-type="auto"][vertical-align="stretch"]::part(root) {
+  --u-layout-align-items: stretch;
+  align-items: var(--u-layout-align-items);
+}
+
+:is(.u-wc[layout-type="horizontal-scroll"],
+  .u-wc[layout-type="horizontal-wrap"]) .u-wc[layout-type="auto"]:is([vertical-align="space-between"],
+  [vertical-align="space-around"],
+  [vertical-align="space-evenly"])::part(root) {
+  --u-layout-align-items: start;
+  align-items: var(--u-layout-align-items);
+}
+
+/* ============================================
+   Horizontal parent + auto child: justify-content (horizontal-align).
+   ============================================ */
+:is(.u-wc[layout-type="horizontal-scroll"],
+  .u-wc[layout-type="horizontal-wrap"]) .u-wc[layout-type="auto"][horizontal-align="start"]::part(root) {
+  --u-layout-justify-content: start;
+  justify-content: var(--u-layout-justify-content);
+}
+
+:is(.u-wc[layout-type="horizontal-scroll"],
+  .u-wc[layout-type="horizontal-wrap"]) .u-wc[layout-type="auto"][horizontal-align="center"]::part(root) {
+  --u-layout-justify-content: safe center;
+  justify-content: var(--u-layout-justify-content);
+}
+
+:is(.u-wc[layout-type="horizontal-scroll"],
+  .u-wc[layout-type="horizontal-wrap"]) .u-wc[layout-type="auto"][horizontal-align="end"]::part(root) {
+  --u-layout-justify-content: safe end;
+  justify-content: var(--u-layout-justify-content);
+}
+
+:is(.u-wc[layout-type="horizontal-scroll"],
+  .u-wc[layout-type="horizontal-wrap"]) .u-wc[layout-type="auto"][horizontal-align="space-between"]::part(root) {
+  --u-layout-justify-content: space-between;
+  justify-content: var(--u-layout-justify-content);
+}
+
+:is(.u-wc[layout-type="horizontal-scroll"],
+  .u-wc[layout-type="horizontal-wrap"]) .u-wc[layout-type="auto"][horizontal-align="space-around"]::part(root) {
+  --u-layout-justify-content: space-around;
+  justify-content: var(--u-layout-justify-content);
+}
+
+:is(.u-wc[layout-type="horizontal-scroll"],
+  .u-wc[layout-type="horizontal-wrap"]) .u-wc[layout-type="auto"][horizontal-align="space-evenly"]::part(root) {
+  --u-layout-justify-content: space-evenly;
+  justify-content: var(--u-layout-justify-content);
+}
