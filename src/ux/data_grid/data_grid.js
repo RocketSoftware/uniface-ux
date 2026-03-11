@@ -11,6 +11,7 @@ import { StyleClassManager } from "../framework/workers/style_class_manager.js";
 import { EventTrigger } from "../framework/workers/event_trigger.js";
 import { AttributeFormattedValue } from "../framework/workers/attribute_formatted_value.js";
 import { AttributeNumber } from "../framework/workers/attribute_number.js";
+import { WidgetOccurrence } from "../framework/workers/widget_occurrence.js";
 
 // Optimized way to reduce the size of bundle, only import necessary fluent-ui components
 import {
@@ -46,42 +47,6 @@ export class DataGridCollection extends Widget {
   static getters = {};
   static triggers = {};
   static uiBlocking = "";
-
-  /**
-   * Private Worker: This worker creates a placeholder element for an object as specified by the provided bindingId.
-   * The placeholder element will be directly bound to that object after which Uniface fully maintains the widgets.
-   * The widget-class is provided by Uniface (usys.ini and web.ini).
-   * @export
-   * @class WidgetOccurrence
-   * @extends {WorkerBase}
-   */
-  static WidgetOccurrence = class extends WorkerBase {
-
-    /**
-     * Creates an instance of WidgetOccurrence.
-     * @param {typeof Widget} widgetClass - Specifies the widget class definition the worker is created for.
-     * @param {string} tagName - Specifies the sub-widget's element tag-name in the skeleton layout.
-     * @param {string} bindingId - Specifies the binding id.
-     */
-    constructor(widgetClass, tagName, bindingId) {
-      super(widgetClass);
-      this.tagName = tagName;
-      this.bindingId = bindingId;
-    }
-
-    /**
-     * Generate and return layout for this setter.
-     * @param {UObjectDefinition} objectDefinition
-     * @returns {Array<HTMLElement>}
-     */
-    getLayout(objectDefinition) {
-      let elements = [];
-      let element = document.createElement(this.tagName);
-      element.id = this.substituteInstructions(objectDefinition, this.bindingId);
-      elements.push(element);
-      return elements;
-    }
-  };
 
   /**
    * Private Worker: This worker creates a sub-widget for every child object of type field in objectDefinition.
@@ -241,8 +206,9 @@ export class DataGridCollection extends Widget {
         new AttributeString(this, undefined, "grid-template-columns", "none", false),
         new this.SubWidgetsFields(this, "exclude", "UX.DataGridColumnHeader")
       ]),
-      new this.WidgetOccurrence(this, "span", "uocc:{{getName()}}")
+      new WidgetOccurrence(this, "span", "uocc:{{getName()}}")
     ]),
+    new AttributeChoice(this, "area-slot", "area-slot", ["main", "header", "footer"], "main", true),
     new EventTrigger(this, "detail", "click", true)
   ]);
 }

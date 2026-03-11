@@ -1,0 +1,56 @@
+body {
+  margin: 0;
+}
+
+.u-header-footer {
+  position: relative;
+}
+
+.u-header-footer .u-header:empty,
+.u-header-footer .u-footer:empty,
+.u-header-footer .u-header[placement="hidden"],
+.u-header-footer .u-footer[placement="hidden"] {
+  display: none;
+}
+
+/* Sticky placement for header. */
+.u-header-footer .u-header[placement="sticky"] {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.u-header-footer .u-footer[placement="sticky"][data-behavior="fixed"] {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.u-header-footer .u-footer[placement="sticky"][data-behavior="sticky"] {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.u-header-footer .u-header,
+.u-header-footer .u-footer {
+  padding: var(--u-spacing) calc((var(--u-spacing)) * 1.5);
+  background: var(--fill-color);
+}
+
+.u-header-footer .u-main {
+  padding: var(--u-spacing) calc((var(--u-spacing)) * 1.5);
+}
+
+.u-header-footer .u-header::part(root),
+.u-header-footer .u-footer::part(root) {
+  gap: calc((var(--u-spacing)) * 0.5);
+}
+
+.u-header-footer .u-main::part(root) {
+  gap: var(--u-spacing);
+}

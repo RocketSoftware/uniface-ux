@@ -23,13 +23,16 @@ uniface-ux/
   (dist/)                   // working folder for bundle build, ignored
   (node_modules/)           // working folder for npm packages, ignored
   src/                      // source folder
-    fluentui/
+    fluentui/               // Fluent UI components
     ux/                     // UX widgets
       framework/            // UX framework
         README.md           // framework documentation
       [widget A]/           // UX widget A sources
       loader.js             // load UX widgets and register them to Uniface
       loader.css            // load all the CSS files related to the Uniface UX widgets
+    web_components/         // UX web components
+      [web component]/      // UX web component sources
+      index.js              // web components entry point
   test/                     // test folder
     helper/
       umockup.js            // test mockup and helper module
@@ -38,10 +41,14 @@ uniface-ux/
       chai-dom/
       mocha/
       sinon/
-    ux/                     // including the test modules for individual widgets
+    unit-tests/             // unit test modules
+    ux/                     // test modules for individual UX widgets
       test_ux_*.js
+    web_components/         // test modules for web components
     index.html              // index page of tests
-    test_ux_widgets.html    // test page for ux widget
+    test_ux_widget.html     // test page for ux widgets
+    test_web_component.html // test page for web components
+    test_unit_test.html     // test page for unit tests
   testAutomation/           // Prototype of test automation by playwright
     pageobjects/
     tests/
