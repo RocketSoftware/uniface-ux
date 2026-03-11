@@ -129,6 +129,32 @@
             propertyNames.sort();
           }
           return propertyNames;
+        },
+        "getName" : function () {
+          var name = defs.type === "component" ? defs["componentName"] : defs.nm;
+          return name;
+        },
+        "getType" : function () {
+          return defs ? defs.type : undefined;
+        },
+        "getOccurrenceWidgetClass" : function () {
+          return defs ? defs.occurrenceWidgetClass : undefined;
+        },
+        "setOccurrenceProperties" : function (properties) {
+          if (!defs) {
+            return;
+          }
+          if (!defs.occs) {
+            defs.occs = {};
+          }
+          if (!defs.occs.properties) {
+            defs.occs.properties = properties;
+          } else {
+            Object.assign(defs.occs.properties, properties);
+          }
+        },
+        "getChildDefinitions" : function () {
+          return [];
         }
       };
       if (isUpdatable) {

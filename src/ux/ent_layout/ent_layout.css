@@ -1,0 +1,39 @@
+/* Sets the gap between child elements in entity containers. */
+.u-coll-layout::part(root),
+.u-occ-layout::part(root) {
+  gap: calc((var(--u-spacing) * 0.5));
+}
+
+/* Collection should be 100% width when any parent has vertical scroll */
+[layout-type*="vertical-scroll"] > .u-coll-layout,
+[layout-type*="vertical-wrap"] > .u-coll-layout {
+  width: 100%;
+}
+
+.u-coll-layout:only-child,
+.u-coll-layout .u-occ-layout:only-child,
+.u-occ-layout:only-of-type {
+  width: 100%;
+}
+
+.u-coll-layout:only-of-type:has(~ .u-label-text),
+.u-coll-layout:only-of-type:is(.u-label-text ~ *) {
+  height: 100%;
+  width: 100%;
+}
+
+/* Occurrence as only meaningful child (ignoring hidden spans) */
+.u-occ-layout:only-child:not(:has(~ .u-label-text:not([hidden]))),
+.u-occ-layout:has(~ .u-label-text[hidden]):first-child:last-of-type {
+  width: 100%;
+}
+
+.u-occ-layout:only-of-type:is(.u-label-text ~ *) {
+  height: 100%;
+  width: 100%;
+}
+
+/* Apply flex-shrink to all occurrence children that are not collections, at any nesting level */
+.u-occ-layout > *:not(.u-coll-layout) {
+  flex-shrink: 0;
+}
