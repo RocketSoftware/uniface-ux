@@ -1,0 +1,9 @@
+/* Sets the gap between child elements in the component layout widget. */
+.u-comp-layout::part(root) {
+  gap: var(--u-spacing);
+}
+ 
+/* Sets the padding around the component layout widget when it is used as the main DSP. */
+:not(span.udsp_default) > .u-comp-layout {
+  padding: var(--u-spacing) calc(var(--u-spacing) * 1.5);
+}

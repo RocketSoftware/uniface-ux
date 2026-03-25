@@ -4,8 +4,14 @@ class IndexPage extends BasePage {
     constructor(page)
 {
     super(page);
+    this.childWidgetsWorkerUnitTestLink = '#child-widgets-worker-unit-tests';
+    this.layoutWebComponentUnitTestLink = '#layout-web-component-unit-tests';
+    this.layoutWebComponentLink = '#layout';
     this.buttonWidgetLink = '#button';
     this.checkboxWidgetLink = '#checkbox';
+    this.entLayoutWidgetLink = '#ent-layout';
+    this.compLayoutWidgetLink = '#comp-layout';
+    this.headerFooterWidgetLink = '#header-footer';
     this.listboxWidgetLink = '#listbox';
     this.numberFieldWidgetLink = '#number-field';
     this.plainTextWidgetLink = '#plain-text';

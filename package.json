@@ -1,6 +1,6 @@
 {
   "name": "uniface-ux",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Uniface UX out of the box user experience",
   "author": "Rocket Software, Inc.",
   "license": "BSD-3-Clause",
@@ -16,7 +16,10 @@
     "test": "cd testAutomation && npx playwright test"
   },
   "dependencies": {
-    "@fluentui/web-components": "^2.6.1"
+    "@fluentui/web-components": "^2.6.1",
+    "@microsoft/fast-components": "^2.30.6",
+    "@microsoft/fast-colors": "^5.3.1",
+    "@microsoft/fast-element": "^1.13.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",

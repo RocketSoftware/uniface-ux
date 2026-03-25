@@ -5,35 +5,95 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>UX widget tests overview</title>
+    <title>UX Widgets and Web Components Tests Overview</title>
     <link rel="icon" href="data:," />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        
+        .test-sections {
+            display: flex;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .test-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .test-section h4 {
+            margin-top: 0;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .test-section ol {
+            padding-left: 20px;
+        }
+
+        .test-section li {
+            margin-bottom: 8px;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Overview of the tests for UX widgets</h1>
+    <h1>Overview of the Tests for UX Widgets and Web Components</h1>
 
-    <h3>Click the link of the UX widget you want to test. A new tab page will open and automatically run all UX widget related test cases.</h3>
+    <h3>Click a link below to test a widget or web component. A new tab will open and automatically run all related test cases.</h3>
 
-    <h4>UX widgets</h4>
-    <ol>
-        <!-- field widgets -->
-        <li><a id="button" href="test_ux_widget.html?widget_name=UX.Button" target="_blank">Button</a></li>
-        <li><a id="checkbox" href="test_ux_widget.html?widget_name=UX.Checkbox" target="_blank">Checkbox</a></li>
-        <li><a id="listbox" href="test_ux_widget.html?widget_name=UX.Listbox" target="_blank">Listbox</a></li>
-        <li><a id="number-field" href="test_ux_widget.html?widget_name=UX.NumberField" target="_blank">Number Field</a></li>
-        <li><a id="plain-text" href="test_ux_widget.html?widget_name=UX.PlainText" target="_blank">Plain Text</a></li>
-        <li><a id="radio-group" href="test_ux_widget.html?widget_name=UX.RadioGroup"  target="_blank">Radio Group</a></li>
-        <li><a id="select" href="test_ux_widget.html?widget_name=UX.Select" target="_blank">Select</a></li>
-        <li><a id="switch" href="test_ux_widget.html?widget_name=UX.Switch" target="_blank">Switch</a></li>
-        <li><a id="text-area" href="test_ux_widget.html?widget_name=UX.TextArea" target="_blank">Text Area</a></li>
-        <li><a id="text-field" href="test_ux_widget.html?widget_name=UX.TextField" target="_blank">Text Field</a></li>
+    <div class="test-sections">
 
-        <!-- helper classes -->
-        <li><a id="base" href="test_ux_widget.html?widget_name=UX.Base&test_script=test_ux_base.js" target="_blank">Base class</a></li>
-        <li><a id="widget" href="test_ux_widget.html?widget_name=UX.Widget&test_script=test_ux_widget.js" target="_blank">Widget class</a></li>
-        <li><a id="workers" href="test_ux_widget.html?widget_name=UX.Workers&test_script=test_ux_workers.js" target="_blank">Workers class</a></li>
+        <div class="test-section">
+            <h4>Unit Tests</h4>
+            <ol>
+                <li><a id="child-widgets-worker-unit-tests" href="test_unit_test.html?test_name=ChildWidgetsWorker&test_script=test_child_widgets_worker.js" target="_blank">ChildWidgets Worker</a></li>
+                <li><a id="layout-web-component-unit-tests" href="test_unit_test.html?test_name=LayoutWebComponent&test_script=test_layout_web_component.js" target="_blank">Layout Web Component</a></li>
+            </ol>
+        </div>
 
-    </ol>
+        <div class="test-section">
+            <h4>Web Components</h4>
+            <ol>
+                <li><a id="layout" href="test_web_component.html?component_name=Layout&test_script=test_layout.js" target="_blank">Layout</a></li>
+                <li><a id="shell" href="test_web_component.html?component_name=Shell&test_script=test_shell.js" target="_blank">Shell</a></li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h4>UX widgets</h4>
+            <ol>
+                <!-- field widgets -->
+                <li><a id="button" href="test_ux_widget.html?widget_name=UX.Button" target="_blank">Button</a></li>
+                <li><a id="checkbox" href="test_ux_widget.html?widget_name=UX.Checkbox" target="_blank">Checkbox</a></li>
+                <li><a id="listbox" href="test_ux_widget.html?widget_name=UX.Listbox" target="_blank">Listbox</a></li>
+                <li><a id="number-field" href="test_ux_widget.html?widget_name=UX.NumberField" target="_blank">Number Field</a></li>
+                <li><a id="plain-text" href="test_ux_widget.html?widget_name=UX.PlainText" target="_blank">Plain Text</a></li>
+                <li><a id="radio-group" href="test_ux_widget.html?widget_name=UX.RadioGroup" target="_blank">Radio Group</a></li>
+                <li><a id="select" href="test_ux_widget.html?widget_name=UX.Select" target="_blank">Select</a></li>
+                <li><a id="switch" href="test_ux_widget.html?widget_name=UX.Switch" target="_blank">Switch</a></li>
+                <li><a id="text-area" href="test_ux_widget.html?widget_name=UX.TextArea" target="_blank">Text Area</a></li>
+                <li><a id="text-field" href="test_ux_widget.html?widget_name=UX.TextField" target="_blank">Text Field</a></li>
+                
+                <!-- entity widgets -->
+                <li><a id="ent-layout" href="test_ux_widget.html?widget_name=UX.CollectionLayout&test_script=test_ux_ent_layout.js" target="_blank">Entity Layout</a></li>
+                
+                <!-- component widgets -->
+                <li><a id="comp-layout" href="test_ux_widget.html?widget_name=UX.CompLayout" target="_blank">Component Layout</a></li>
+                <li><a id="header-footer" href="test_ux_widget.html?widget_name=UX.HeaderFooter" target="_blank">HeaderFooter</a></li>
+
+                <!-- helper classes -->
+                <li><a id="base" href="test_ux_widget.html?widget_name=UX.Base&test_script=test_ux_base.js" target="_blank">Base class</a></li>
+                <li><a id="widget" href="test_ux_widget.html?widget_name=UX.Widget&test_script=test_ux_widget.js" target="_blank">Widget class</a></li>
+                <li><a id="workers" href="test_ux_widget.html?widget_name=UX.Workers&test_script=test_ux_workers.js" target="_blank">Workers class</a></li>
+            </ol>
+        </div>
+
+        
+    </div>
 
 </body>
 
