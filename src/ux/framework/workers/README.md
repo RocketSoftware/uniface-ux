@@ -39,6 +39,7 @@ A worker is a functional service module that performs a specific task, such as f
 | [AttributeRange](#attributerange)                   | [attribute_range.js](./attribute_range.js)                     |
 | [AttributeString](#attributestring)                 | [attribute_string.js](./attribute_string.js)                   |
 | [AttributeUIBlocking](#attributeuiblocking)         | [attribute_ui_blocking.js](./attribute_ui_blocking.js)         |
+| [ChildWidgets](#childwidgets)                       | [child_widgets.js](./child_widgets.js)                         |
 | [Element](#element)                                 | [element.js](./element.js)                                     |
 | [ElementIconText](#elementicontext)                 | [element_icon_text.js](./element_icon_text.js)                 |
 | [ElementError](#elementerror)                       | [element_error.js](./element_error.js)                         |
@@ -48,6 +49,7 @@ A worker is a functional service module that performs a specific task, such as f
 | [StyleClassManager](#styleclassmanager)             | [style_class_manager.js](./style_class_manager.js)             |
 | [StyleClassToggle](#styleclasstoggle)               | [style_class_toggle.js](./style_class_toggle.js)               |
 | [SubWidget](#subwidget)                             | [sub_widget.js](./sub_widget.js)                               |
+| [WidgetOccurrence](#widgetoccurrence)               | [widget_occurrence.js](./widget_occurrence.js)                 |
 
 ## Worker Descriptions
 
@@ -105,6 +107,12 @@ AttributeUIBlocking controls UI blocking behavior (disabled/readonly states). It
 
 ---
 
+### ChildWidgets
+
+ChildWidgets processes child widgets and distributes them into optional slots within a parent widget. It automatically detects and applies the appropriate distribution strategy: property-based assignment (using a configurable property like `area-slot`) or index-based assignment (based on child order and predefined rules). The worker validates slot assignments, creates HTML elements with proper binding IDs (`uent:` for entities, `ufld:` for fields), caches distribution results for performance, and ensures child widgets are correctly positioned within their parent's structure to enable flexible nested layouts.
+
+---
+
 ### Element
 
 Element manages the creation and placement of DOM elements within a widget’s structure. It ensures each element is correctly inserted and maintained according to the widget’s hierarchy and configuration rules.
@@ -155,5 +163,10 @@ StyleClassToggle toggles the desired CSS class on a widget’s DOM element based
 
 ### SubWidget
 
-Subwidget creates and manages a static UX widget that is slotted into the parent element of the worker.
+SubWidget creates and manages a static UX widget that is slotted into the parent element of the worker.
 
+---
+
+### WidgetOccurrence
+
+WidgetOccurrence creates a placeholder element for an object as specified by the provided binding ID.

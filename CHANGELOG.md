@@ -1,15 +1,24 @@
 # Change log - Uniface UX
 
+## Release 10.4.03.030
+
+- Uniface release: 10.4.03.030
+- UX Interface Version: 2
+
+### Bug Fixes
+
+- uxPlainText: Standardized value formatting across plaintext formats (representation-only, valrep-text, valrep-html) to ensure consistent styling with other widgets.
+
 ## Release 10.4.03.029
 
 - Uniface release: 10.4.03.029
 - UX Interface Version: 2
 
-## Bug Fixes
+### Bug Fixes
 
 - uxSelect: The widget now includes support for the aria-readonly attribute when rendered in read-only mode, enhancing accessibility compliance.
 
-## Currency
+### Currency
 
 - NPM: Development packages have been upgraded to the latest available versions.
 
@@ -18,7 +27,7 @@
 - Uniface release: 10.4.03.028
 - UX Interface Version: 2
 
-## Bug Fixes
+### Bug Fixes
 
 - uxRadioGroup:  If valrep is empty, users can still interact with the radio group and select a placeholder option, which fires the onChange trigger. 
 
@@ -27,7 +36,7 @@
 - Uniface release: 10.4.03.027
 - UX Interface Version: 2
 
-## Features
+### Features
 
 - Added `README.md` file for all workers.
 
@@ -36,7 +45,7 @@
 - Uniface release: 10.4.03.026
 - UX Interface Version: 2
 
-## Features
+### Features
 
 - Added `README.md` files for all `UX-Widgets`.
 
@@ -45,13 +54,13 @@
 - Uniface release: 10.4.03.025
 - UX Interface Version: 2
 
-## Bug Fixes
+### Bug Fixes
 
 - uxTextArea: When resizing the widget, associated label text does not wrap to fit the new dimensions. This issue occurs only when the label position is set to above or below the widget.
 - uxSelect: When the widget was in readonly mode, opening the dropdown to view available options via mouse clicks or the Enter key was not possible.
 - uxNumberField: When the widget’s initial state is set to read-only and an initial value is provided, the value does not display, preventing correct rendering of the initial value.
 
-## Currency
+### Currency
 
 - NPM: Development packages have been upgraded to the latest available versions.
 

@@ -129,6 +129,32 @@
             propertyNames.sort();
           }
           return propertyNames;
+        },
+        "getName" : function () {
+          var name = defs.type === "component" ? defs["componentName"] : defs.nm;
+          return name;
+        },
+        "getType" : function () {
+          return defs ? defs.type : undefined;
+        },
+        "getOccurrenceWidgetClass" : function () {
+          return defs ? defs.occurrenceWidgetClass : undefined;
+        },
+        "setOccurrenceProperties" : function (properties) {
+          if (!defs) {
+            return;
+          }
+          if (!defs.occs) {
+            defs.occs = {};
+          }
+          if (!defs.occs.properties) {
+            defs.occs.properties = properties;
+          } else {
+            Object.assign(defs.occs.properties, properties);
+          }
+        },
+        "getChildDefinitions" : function () {
+          return [];
         }
       };
       if (isUpdatable) {
@@ -646,6 +672,72 @@
   }
 
   /**
+   * Generic mock implementation of an entity/object definition for use in widget tests.
+   * Models the interface that Uniface passes to widget lifecycle methods (processLayout,
+   * onConnect, etc.).  Can be subclassed to add call-tracking behaviour (e.g. spying on
+   * setOccurrenceProperties).
+   */
+  class MockEntityDefinition {
+    constructor(name, widgetClassName, type = "entity", properties = {}, children = []) {
+      this.name = name;
+      this.widgetClassName = widgetClassName;
+      this.type = type;
+      this.properties = properties;
+      this.children = children;
+    }
+
+    getName() {
+      return this.name;
+    }
+
+    getType() {
+      return this.type;
+    }
+
+    getProperty(propertyName) {
+      return this.properties[propertyName] || null;
+    }
+
+    getPropertyNames() {
+      return Object.keys(this.properties);
+    }
+
+    getShortName() {
+      return this.name.substring(0, 4).toUpperCase();
+    }
+
+    getWidgetClass() {
+      return UNIFACE.ClassRegistry.get(this.widgetClassName);
+    }
+
+    getChildDefinitions() {
+      return this.children;
+    }
+
+    /** Default stub: no occurrence widget class. */
+    getOccurrenceWidgetClass() {
+      return null;
+    }
+
+    /** Default no-op stub for setOccurrenceProperties. */
+    setOccurrenceProperties(_properties) {
+      // no-op by default
+    }
+  }
+
+  /**
+   * Creates a plain <div> skeleton element with the given id.
+   * Convenience helper shared across entity/widget tests.
+   * @param {string} id  The element id to assign.
+   * @returns {HTMLDivElement}
+   */
+  function createSkeleton(id) {
+    const skeleton = document.createElement("div");
+    skeleton.id = id;
+    return skeleton;
+  }
+
+  /**
    * Utility functions of mockup
    */
   global.umockup = {
@@ -674,6 +766,10 @@
     },
 
     "asyncRun" : asyncRun,
+
+    "MockEntityDefinition" : MockEntityDefinition,
+
+    "createSkeleton" : createSkeleton,
 
     "WidgetTester" : WidgetTester
 

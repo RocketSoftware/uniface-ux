@@ -2,7 +2,10 @@
 
 // registerWidgetClass is used to register UX Widgets to Uniface.
 // The same name needs to be used in the web.ini configuration.
-import { registerWidgetClass } from "./framework/common/dsp_connector.js";
+import {registerWidgetClass} from "./framework/common/dsp_connector.js";
+
+// Import web components
+import "../web_components/index.js";
 
 
 // The UX field level widgets to include
@@ -41,3 +44,14 @@ registerWidgetClass("UX.TextField", TextField);
 import {DataGridCollection, DataGridOccurrence} from "./data_grid/data_grid.js";
 registerWidgetClass("UX.DataGridCollection", DataGridCollection);
 registerWidgetClass("UX.DataGridOccurrence", DataGridOccurrence);
+
+import {CollectionLayout, OccurrenceLayout} from "./ent_layout/ent_layout.js";
+registerWidgetClass("UX.CollectionLayout", CollectionLayout);
+registerWidgetClass("UX.OccurrenceLayout", OccurrenceLayout);
+
+// The UX component level widgets to include
+import {CompLayout} from "./comp_layout/comp_layout.js";
+registerWidgetClass("UX.CompLayout", CompLayout);
+import {HeaderFooter} from "./header_footer/header_footer.js";
+registerWidgetClass("UX.HeaderFooter", HeaderFooter);
+

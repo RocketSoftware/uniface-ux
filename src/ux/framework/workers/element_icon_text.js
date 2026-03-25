@@ -13,6 +13,7 @@ import { Element } from "./element.js";
  * - the element is added as a child according the structure,
  * - the element is being slotted into the web-component (the parent element),
  * - the element has innerText and Icon capabilities.
+ * - can dynamically change heading levels (h1, h2, h3) based on label-size property when used as a label.
  * @export
  * @class ElementIconText
  * @extends {Element}
@@ -30,8 +31,9 @@ export class ElementIconText extends Element {
    * @param {UPropValue} [textDefaultValue]
    * @param {UPropName} [iconPropId]
    * @param {UPropValue} [iconDefaultValue]
+   * @param {boolean} [isDynamicLabel=false] - Whether this element should dynamically change tag based on label-size
    */
-  constructor(widgetClass, tagName, styleClass, elementQuerySelector, slot, textPropId, textDefaultValue, iconPropId, iconDefaultValue) {
+  constructor(widgetClass, tagName, styleClass, elementQuerySelector, slot, textPropId, textDefaultValue, iconPropId, iconDefaultValue, isDynamicLabel = false) {
     super(widgetClass, tagName, styleClass, elementQuerySelector);
     this.hidden = true;
     this.slot = slot;
@@ -39,6 +41,9 @@ export class ElementIconText extends Element {
     this.textDefaultValue = textDefaultValue;
     this.iconPropId = iconPropId;
     this.iconDefaultValue = iconDefaultValue;
+    this.isDynamicLabel = isDynamicLabel;
+    this.currentLabelSize = null;
+
     if (this.iconPropId) {
       this.registerSetter(widgetClass, this.iconPropId, this);
       this.registerDefaultValue(widgetClass, this.iconPropId, iconDefaultValue);
@@ -46,6 +51,27 @@ export class ElementIconText extends Element {
     if (this.textPropId) {
       this.registerSetter(widgetClass, this.textPropId, this);
       this.registerDefaultValue(widgetClass, this.textPropId, textDefaultValue);
+    }
+    if (this.isDynamicLabel) {
+      this.registerSetter(widgetClass, "label-size", this);
+    }
+  }
+
+  /**
+   * Get the appropriate tag name based on label-size.
+   * @param {string} labelSize
+   * @returns {string}
+   */
+  getTagNameForLabelSize(labelSize) {
+    switch (labelSize) {
+      case "small":
+        return "h3";
+      case "medium":
+        return "h2";
+      case "large":
+        return "h1";
+      default:
+        return this.tagName;
     }
   }
 
@@ -56,7 +82,15 @@ export class ElementIconText extends Element {
    */
   getLayout(_objectDefinition) {
     this.log("getLayout", null);
-    let element = document.createElement(this.tagName);
+    let tagName = this.tagName;
+
+    if (this.isDynamicLabel) {
+      const labelSize = _objectDefinition.getProperty("label-size");
+      this.currentLabelSize = labelSize;
+      tagName = this.getTagNameForLabelSize(labelSize);
+    }
+
+    let element = document.createElement(tagName);
     element.hidden = this.hidden;
     if (this.styleClass) {
       element.classList.add(this.styleClass);
@@ -71,6 +105,13 @@ export class ElementIconText extends Element {
   refresh(widgetInstance) {
     super.refresh(widgetInstance);
     let element = this.getElement(widgetInstance);
+
+    // Handle dynamic label-size changes
+    if (this.isDynamicLabel) {
+      const labelSize = this.getNode(widgetInstance.data, "label-size");
+      element = this.handleLabelSizeChange(element, labelSize);
+    }
+
     let icon = this.getNode(widgetInstance.data, this.iconPropId);
     let text = this.getNode(widgetInstance.data, this.textPropId);
     this.setIconOrText(element, this.slot, icon, text);
@@ -101,5 +142,39 @@ export class ElementIconText extends Element {
       element.slot = "";
       element.innerText = "";
     }
+  }
+
+  /**
+   * Handles label-size property changes by recreating the element with the appropriate tag.
+   * @param {HTMLElement} element
+   * @param {string} labelSize
+   * @returns {HTMLElement} The element (new if tag changed, or original if unchanged)
+   */
+  handleLabelSizeChange(element, labelSize) {
+    if (labelSize !== this.currentLabelSize) {
+      this.currentLabelSize = labelSize;
+      const newTagName = this.getTagNameForLabelSize(labelSize);
+
+      if (element && element.tagName.toLowerCase() !== newTagName.toLowerCase()) {
+        const newElement = document.createElement(newTagName);
+        newElement.slot = this.slot;
+
+        if (this.styleClass) {
+          newElement.classList.add(this.styleClass);
+        }
+
+        // Copy existing attributes and content
+        newElement.hidden = element.hidden;
+        newElement.innerText = element.innerText;
+        newElement.className = element.className;
+
+        const parent = element.parentElement;
+        if (parent) {
+          parent.replaceChild(newElement, element);
+        }
+        return newElement;
+      }
+    }
+    return element;
   }
 }
