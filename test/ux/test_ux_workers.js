@@ -17,11 +17,13 @@ import { StyleClassManager } from "../../src/ux/framework/workers/style_class_ma
 import { EventTrigger } from "../../src/ux/framework/workers/event_trigger.js";
 import { AttributeUIBlocking } from "../../src/ux/framework/workers/attribute_ui_blocking.js";
 import { WorkerBase } from "../../src/ux/framework/common/worker_base.js";
+import { ChildWidgets } from "../../src/ux/framework/workers/child_widgets.js";
+import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurrence.js";
 
 (function () {
   "use strict";
 
-  // This test depends on Button, see calls to getWidgetClass
+  // This test depends on Button, see calls to getWidgetClass.
 
   const assert = chai.assert;
   const expect = chai.expect;
@@ -183,6 +185,7 @@ import { WorkerBase } from "../../src/ux/framework/common/worker_base.js";
     let propIcon;
     let defaultIcon;
     let slottedElement;
+    let dynamicLabelElement;
 
     const widgetInstance = {
       "data": {
@@ -214,6 +217,7 @@ import { WorkerBase } from "../../src/ux/framework/common/worker_base.js";
       defaultText = "defaultText";
       defaultIcon = "default.png";
       slottedElement = new ElementIconText(widgetClass, "", "", "", "", propText, defaultText, propIcon, defaultIcon);
+      dynamicLabelElement = new ElementIconText(widgetClass, "span", "label-class", "", "label-slot", propText, defaultText, null, null, true);
     });
 
     it("should initialize with correct properties for ElementIconText class", function () {
@@ -222,11 +226,21 @@ import { WorkerBase } from "../../src/ux/framework/common/worker_base.js";
       expect(slottedElement.textDefaultValue).to.equal(defaultText);
       expect(slottedElement.iconPropId).to.equal(propIcon);
       expect(slottedElement.iconDefaultValue).to.equal(defaultIcon);
+      expect(slottedElement.isDynamicLabel).to.be.false;
+      expect(slottedElement.currentLabelSize).to.be.null;
+
+      // Test isDynamicLabel initialization
+      expect(dynamicLabelElement.isDynamicLabel).to.be.true;
+      expect(dynamicLabelElement.currentLabelSize).to.be.null;
     });
 
     it("check getters/setters changed for propIcon, propText for ElementIconText class", function () {
       expect(slottedElement.widgetClass.defaultValues.icon).to.equal(defaultIcon);
       expect(slottedElement.widgetClass.defaultValues.text).to.equal(defaultText);
+
+      // Test label-size setter registration for dynamic labels
+      expect(widgetClass.setters["label-size"]).to.exist;
+      expect(widgetClass.setters["label-size"]).to.include(dynamicLabelElement);
     });
 
     it("should refresh correctly for ElementIconText class", function () {
@@ -239,6 +253,57 @@ import { WorkerBase } from "../../src/ux/framework/common/worker_base.js";
       slottedElement.refresh(widgetInstance);
       expect(widgetInstance.elements.widget.innerText).to.equal("defaultText");
       expect([...widgetInstance.elements.widget.classList].includes(...mockIconClasses)).to.equal(false);
+    });
+
+    it("should return correct tag name for different label sizes", function () {
+      expect(dynamicLabelElement.getTagNameForLabelSize("small")).to.equal("h3");
+      expect(dynamicLabelElement.getTagNameForLabelSize("medium")).to.equal("h2");
+      expect(dynamicLabelElement.getTagNameForLabelSize("large")).to.equal("h1");
+      expect(dynamicLabelElement.getTagNameForLabelSize("unknown")).to.equal("span");
+      expect(dynamicLabelElement.getTagNameForLabelSize(null)).to.equal("span");
+    });
+
+    it("should create element with correct tag based on label-size in getLayout", function () {
+      const objectDefinition = {
+        "getProperty": sinon.stub()
+      };
+
+      objectDefinition.getProperty.withArgs("label-size").returns("medium");
+      let element = dynamicLabelElement.getLayout(objectDefinition);
+      expect(element.tagName.toLowerCase()).to.equal("h2");
+      expect(element.classList.contains("label-class")).to.be.true;
+      expect(dynamicLabelElement.currentLabelSize).to.equal("medium");
+    });
+
+    it("should replace element with new tag when label-size changes", function () {
+      const parentElement = document.createElement("div");
+      const oldElement = document.createElement("h2");
+      oldElement.innerText = "Test Label";
+      oldElement.slot = "label-slot";
+      oldElement.classList.add("label-class", "extra-class");
+      oldElement.hidden = false;
+      parentElement.appendChild(oldElement);
+
+      dynamicLabelElement.currentLabelSize = "medium";
+      const newElement = dynamicLabelElement.handleLabelSizeChange(oldElement, "large");
+
+      expect(newElement.tagName.toLowerCase()).to.equal("h1");
+      expect(newElement.innerText).to.equal("Test Label");
+      expect(newElement.slot).to.equal("label-slot");
+      expect(newElement.classList.contains("label-class")).to.be.true;
+      expect(newElement.classList.contains("extra-class")).to.be.true;
+      expect(newElement.hidden).to.be.false;
+      expect(dynamicLabelElement.currentLabelSize).to.equal("large");
+    });
+
+    it("should not replace element when label-size remains the same", function () {
+      const oldElement = document.createElement("h2");
+      dynamicLabelElement.currentLabelSize = "medium";
+
+      const result = dynamicLabelElement.handleLabelSizeChange(oldElement, "medium");
+
+      expect(result).to.equal(oldElement);
+      expect(result.tagName.toLowerCase()).to.equal("h2");
     });
   });
 
@@ -1115,6 +1180,566 @@ import { WorkerBase } from "../../src/ux/framework/common/worker_base.js";
 
       expect(widgetInstance.error.calledOnce).to.be.true;
       expect(widgetInstance.error.calledWith("AttributeUIBlocking", "Invalid block type", "invalid")).to.be.true;
+    });
+  });
+
+  // ===================================================================================================================
+  // == Testing ChildWidgets class =================================================================================
+  // ===================================================================================================================
+  describe("Test ChildWidgets class", function () {
+    let widgetClass;
+    let widgetInstance;
+    let mockObjectDefinition;
+
+    // Mock ObjectDefinition class for testing.
+    class MockObjectDefinition {
+      constructor(name, properties = {}, type = "entity") {
+        this.name = name;
+        this.properties = properties;
+        this.type = type;
+        this.children = [];
+      }
+
+      getName() {
+        return this.name;
+      }
+
+      getProperty(name) {
+        return this.properties[name];
+      }
+
+      getType() {
+        return this.type;
+      }
+
+      getChildDefinitions() {
+        return this.children;
+      }
+
+      getPropertyNames() {
+        return Object.keys(this.properties);
+      }
+
+      addChild(child) {
+        this.children.push(child);
+      }
+    }
+
+    beforeEach(function () {
+      widgetClass = getWidgetClass("button");
+
+      // Create a mock widget instance.
+      widgetInstance = {
+        "data": {},
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": function () {
+          return "description";
+        }
+      };
+
+      // Create mock object definition.
+      mockObjectDefinition = new MockObjectDefinition("parent", {});
+    });
+
+    afterEach(function () {
+      if (widgetInstance.elements.widget.parentNode) {
+        widgetInstance.elements.widget.parentNode.removeChild(widgetInstance.elements.widget);
+      }
+    });
+
+    describe("Element Creation (DOM)", function () {
+      it("should create HTMLElements for entity children", function () {
+        const worker = new ChildWidgets(widgetClass, "span", null, null);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("entity1", {}, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("entity2", {}, "entity"));
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(layout).to.have.lengthOf(2);
+        expect(layout[0]).to.be.instanceof(HTMLElement);
+        expect(layout[0].tagName.toLowerCase()).to.equal("span");
+        expect(layout[0].id).to.equal("uent:entity1");
+        expect(layout[1].id).to.equal("uent:entity2");
+      });
+
+      it("should create correct element tagNames", function () {
+        const worker = new ChildWidgets(widgetClass, "div", null, null);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("entity1", {}, "entity"));
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(layout[0].tagName.toLowerCase()).to.equal("div");
+      });
+
+      it("should handle both entity and field bindings", function () {
+        const worker = new ChildWidgets(widgetClass, "span", null, null);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("entity1", {}, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("field1", {}, "field"));
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(layout).to.have.lengthOf(2);
+        expect(layout[0].id).to.equal("uent:entity1");
+        expect(layout[1].id).to.equal("ufld:field1");
+      });
+
+      it("should skip children without binding template", function () {
+        const worker = new ChildWidgets(widgetClass, "span", null, null);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("entity1", {}, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("other1", {}, "other"));
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(layout).to.have.lengthOf(1);
+        expect(layout[0].id).to.equal("uent:entity1");
+      });
+
+      it("should render elements to DOM correctly", function () {
+        const worker = new ChildWidgets(widgetClass, "span", null, null);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("entity1", {}, "entity"));
+
+        const layout = worker.getLayout(mockObjectDefinition);
+        widgetInstance.elements.widget.appendChild(layout[0]);
+
+        expect(widgetInstance.elements.widget.children).to.have.lengthOf(1);
+        expect(widgetInstance.elements.widget.children[0].id).to.equal("uent:entity1");
+      });
+    });
+
+    describe("Slot Distribution (DOM)", function () {
+      it("should return all children when slotId is null", function () {
+        const worker = new ChildWidgets(widgetClass, "div", null, null);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("child1", { "area-slot": "header" }, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("child2", { "area-slot": "main" }, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("child3", { "area-slot": "footer" }, "entity"));
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(layout).to.have.lengthOf(3);
+        expect(layout[0]).to.be.instanceof(HTMLElement);
+        expect(layout[0].id).to.equal("uent:child1");
+      });
+
+      it("should filter children by slot", function () {
+        const slotConfig = {
+          "propertyName": "area-slot",
+          "defaultSlot": "main",
+          "validSlots": ["header", "main", "footer"]
+        };
+        const worker = new ChildWidgets(widgetClass, "div", "header", slotConfig);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("child1", { "area-slot": "header" }, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("child2", { "area-slot": "main" }, "entity"));
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(layout).to.have.lengthOf(1);
+        expect(layout[0]).to.be.instanceof(HTMLElement);
+        expect(layout[0].id).to.equal("uent:child1");
+      });
+
+      it("should cache distribution results", function () {
+        const slotConfig = {
+          "propertyName": "area-slot",
+          "defaultSlot": "main",
+          "validSlots": ["header", "main", "footer"]
+        };
+        const worker = new ChildWidgets(widgetClass, "div", "main", slotConfig);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("child1", { "area-slot": "main" }, "entity"));
+
+        const layout1 = worker.getLayout(mockObjectDefinition);
+        const layout2 = worker.getLayout(mockObjectDefinition);
+
+        expect(mockObjectDefinition._slottedGroups).to.exist;
+        expect(layout1.length).to.equal(layout2.length);
+      });
+
+      it("should use property-based assignment when children have slot property", function () {
+        const slotConfig = {
+          "propertyName": "area-slot",
+          "defaultSlot": "main",
+          "validSlots": ["header", "main", "footer"]
+        };
+        const workerMain = new ChildWidgets(widgetClass, "div", "main", slotConfig);
+        const workerHeader = new ChildWidgets(widgetClass, "div", "header", slotConfig);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("child1", { "area-slot": "header" }, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("child2", { "area-slot": "main" }, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("child3", { "area-slot": "main" }, "entity"));
+
+        const mainLayout = workerMain.getLayout(mockObjectDefinition);
+        const headerLayout = workerHeader.getLayout(mockObjectDefinition);
+
+        expect(headerLayout).to.have.lengthOf(1);
+        expect(headerLayout[0]).to.be.instanceof(HTMLElement);
+        expect(headerLayout[0].id).to.equal("uent:child1");
+        expect(mainLayout).to.have.lengthOf(2);
+        expect(mainLayout[0].id).to.equal("uent:child2");
+        expect(mainLayout[1].id).to.equal("uent:child3");
+      });
+
+      it("should use index-based assignment when children lack slot property", function () {
+        const slotConfig = {
+          "propertyName": "area-slot",
+          "defaultSlot": "main",
+          "indexRules": {
+            "2": {
+              "header": [0],
+              "main": [1]
+            }
+          }
+        };
+        const workerMain = new ChildWidgets(widgetClass, "div", "main", slotConfig);
+        const workerHeader = new ChildWidgets(widgetClass, "div", "header", slotConfig);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("child1", {}, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("child2", {}, "entity"));
+
+        const mainLayout = workerMain.getLayout(mockObjectDefinition);
+        const headerLayout = workerHeader.getLayout(mockObjectDefinition);
+
+        expect(headerLayout).to.have.lengthOf(1);
+        expect(headerLayout[0]).to.be.instanceof(HTMLElement);
+        expect(headerLayout[0].id).to.equal("uent:child1");
+        expect(mainLayout).to.have.lengthOf(1);
+        expect(mainLayout[0]).to.be.instanceof(HTMLElement);
+        expect(mainLayout[0].id).to.equal("uent:child2");
+      });
+
+      it("should use defaultSlot for invalid slot values", function () {
+        const slotConfig = {
+          "propertyName": "area-slot",
+          "defaultSlot": "main",
+          "validSlots": ["header", "main", "footer"]
+        };
+        const worker = new ChildWidgets(widgetClass, "div", null, "main", slotConfig);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("child1", { "area-slot": "invalid" }));
+        mockObjectDefinition.addChild(new MockObjectDefinition("child2", { "area-slot": "main" }));
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(layout).to.have.lengthOf(2);
+      });
+
+      it("should exclude children when defaultSlot is null and no valid slot", function () {
+        const slotConfig = {
+          "propertyName": "area-slot",
+          "defaultSlot": null,
+          "validSlots": ["header", "main", "footer"]
+        };
+        const worker = new ChildWidgets(widgetClass, "div", "main", slotConfig);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("child1", {}, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("child2", { "area-slot": "main" }, "entity"));
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(layout).to.have.lengthOf(1);
+        expect(layout[0]).to.be.instanceof(HTMLElement);
+        expect(layout[0].id).to.equal("uent:child2");
+      });
+    });
+
+    describe("Multiple Slots Integration", function () {
+      it("should distribute children across multiple slots", function () {
+        const slotConfig = {
+          "propertyName": "area-slot",
+          "defaultSlot": "main",
+          "validSlots": ["header", "main", "footer"]
+        };
+
+        const headerWorker = new ChildWidgets(widgetClass, "div", "header", slotConfig);
+        const mainWorker = new ChildWidgets(widgetClass, "div", "main", slotConfig);
+        const footerWorker = new ChildWidgets(widgetClass, "div", "footer", slotConfig);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("child1", { "area-slot": "header" }, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("child2", { "area-slot": "main" }, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("child3", { "area-slot": "footer" }, "entity"));
+
+        const headerLayout = headerWorker.getLayout(mockObjectDefinition);
+        const mainLayout = mainWorker.getLayout(mockObjectDefinition);
+        const footerLayout = footerWorker.getLayout(mockObjectDefinition);
+
+        expect(headerLayout).to.have.lengthOf(1);
+        expect(mainLayout).to.have.lengthOf(1);
+        expect(footerLayout).to.have.lengthOf(1);
+        expect(headerLayout[0]).to.be.instanceof(HTMLElement);
+        expect(headerLayout[0].id).to.equal("uent:child1");
+        expect(mainLayout[0].id).to.equal("uent:child2");
+        expect(footerLayout[0].id).to.equal("uent:child3");
+      });
+
+      it("should share cached distribution across multiple workers", function () {
+        const slotConfig = {
+          "propertyName": "area-slot",
+          "defaultSlot": "main",
+          "validSlots": ["header", "main", "footer"]
+        };
+
+        const worker1 = new ChildWidgets(widgetClass, "div", "header", slotConfig);
+        const worker2 = new ChildWidgets(widgetClass, "div", "main", slotConfig);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("child1", { "area-slot": "header" }, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("child2", { "area-slot": "main" }, "entity"));
+
+        worker1.getLayout(mockObjectDefinition);
+        worker2.getLayout(mockObjectDefinition);
+
+        expect(mockObjectDefinition._slottedGroups).to.exist;
+        expect(mockObjectDefinition._slottedGroups.header).to.have.lengthOf(1);
+        expect(mockObjectDefinition._slottedGroups.main).to.have.lengthOf(1);
+      });
+    });
+
+    describe("Edge Cases and Error Conditions (DOM)", function () {
+      it("should handle empty children gracefully", function () {
+        const worker = new ChildWidgets(widgetClass, "div", null, null);
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(layout).to.have.lengthOf(0);
+      });
+
+      it("should handle null children array", function () {
+        const worker = new ChildWidgets(widgetClass, "div", null, null);
+        mockObjectDefinition.children = null;
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(layout).to.have.lengthOf(0);
+      });
+
+      it("should handle slot with no matching children", function () {
+        const slotConfig = {
+          "propertyName": "area-slot",
+          "defaultSlot": "main",
+          "validSlots": ["header", "main", "footer"]
+        };
+        const worker = new ChildWidgets(widgetClass, "div", "sidebar", slotConfig);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("child1", { "area-slot": "main" }, "entity"));
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(layout).to.have.lengthOf(0);
+      });
+
+      it("should handle mixed child types", function () {
+        const worker = new ChildWidgets(widgetClass, "span", null, null);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("entity1", {}, "entity"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("field1", {}, "field"));
+        mockObjectDefinition.addChild(new MockObjectDefinition("other1", {}, "other"));
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(layout).to.have.lengthOf(2);
+        expect(layout[0]).to.be.instanceof(HTMLElement);
+        expect(layout[0].id).to.equal("uent:entity1");
+        expect(layout[1].id).to.equal("ufld:field1");
+      });
+
+      it("should handle large number of children", function () {
+        const worker = new ChildWidgets(widgetClass, "div", null, null);
+
+        for (let i = 0; i < 100; i++) {
+          mockObjectDefinition.addChild(new MockObjectDefinition(`child${i}`, {}, "entity"));
+        }
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(layout).to.have.lengthOf(100);
+        expect(layout[0]).to.be.instanceof(HTMLElement);
+      });
+    });
+
+    describe("Integration with Element Worker", function () {
+      it("should work as child worker in element structure", function () {
+        const slotConfig = {
+          "propertyName": "area-slot",
+          "defaultSlot": "main"
+        };
+
+        const childWidgetsWorker = new ChildWidgets(widgetClass, "div", "main", slotConfig);
+
+        expect(childWidgetsWorker).to.be.instanceof(WorkerBase);
+        expect(childWidgetsWorker).to.respondTo("getLayout");
+      });
+
+      it("should generate layout compatible with Element worker", function () {
+        const worker = new ChildWidgets(widgetClass, "span", null, null);
+
+        mockObjectDefinition.addChild(new MockObjectDefinition("entity1", {}, "entity"));
+
+        const layout = worker.getLayout(mockObjectDefinition);
+
+        expect(Array.isArray(layout)).to.equal(true);
+        expect(layout.every(item => item instanceof HTMLElement)).to.equal(true);
+      });
+    });
+  });
+
+  // ===================================================================================================================
+  // == Testing WidgetOccurrence class ============================================================================
+  // ===================================================================================================================
+  describe("Test WidgetOccurrence class", function () {
+    let widgetClass;
+    let tagName;
+    let bindingId;
+    let worker;
+    let objectDefinition;
+
+    beforeEach(function () {
+      Widget.structure = {};
+      Widget.subWidgets = {};
+      Widget.subWidgetWorkers = [];
+      Widget.defaultValues = {};
+      Widget.setters = {};
+      Widget.getters = {};
+      Widget.triggers = {};
+
+      widgetClass = Widget;
+      tagName = "span";
+      bindingId = "uocc:test-occurrence";
+      worker = new WidgetOccurrence(widgetClass, tagName, bindingId);
+
+      // Mock objectDefinition with some supported functions.
+      objectDefinition = {
+        "getName": sinon.stub().returns("CUSTOMER"),
+        "getShortName": sinon.stub().returns("CUST")
+      };
+    });
+
+    it("should initialize with correct properties for WidgetOccurrence class", function () {
+      expect(worker.widgetClass).to.equal(widgetClass);
+      expect(worker.tagName).to.equal(tagName);
+      expect(worker.bindingId).to.equal(bindingId);
+    });
+
+    it("should create element with specified tag name", function () {
+      let elements = worker.getLayout(objectDefinition);
+
+      expect(elements).to.be.an("array");
+      expect(elements).to.have.lengthOf(1);
+      expect(elements[0]).to.have.tagName(tagName.toUpperCase());
+    });
+
+    it("should set element id with simple bindingId (no substitutions)", function () {
+      let elements = worker.getLayout(objectDefinition);
+
+      expect(elements[0].id).to.equal(bindingId);
+    });
+
+    it("should substitute {{getName()}} in bindingId", function () {
+      worker.bindingId = "uocc:{{getName()}}";
+      let elements = worker.getLayout(objectDefinition);
+
+      expect(elements[0].id).to.equal("uocc:CUSTOMER");
+      expect(objectDefinition.getName.calledOnce).to.be.true;
+    });
+
+    it("should substitute {{getShortName()}} in bindingId", function () {
+      worker.bindingId = "uocc:{{getShortName()}}";
+      let elements = worker.getLayout(objectDefinition);
+
+      expect(elements[0].id).to.equal("uocc:CUST");
+      expect(objectDefinition.getShortName.calledOnce).to.be.true;
+    });
+
+    it("should handle case-sensitive function names and return error for incorrect case", function () {
+      worker.bindingId = "uocc:{{GetName()}}";
+      let elements = worker.getLayout(objectDefinition);
+
+      // Function names are case-sensitive, so GetName() should fail.
+      expect(elements[0].id).to.include("Unknown function detected");
+      expect(elements[0].id).to.include("GetName");
+    });
+
+    it("should work with different tag names", function () {
+      worker.tagName = "div";
+      let elements = worker.getLayout(objectDefinition);
+
+      expect(elements[0]).to.have.tagName("DIV");
+      expect(elements).to.have.lengthOf(1);
+    });
+
+    it("should handle empty bindingId", function () {
+      worker.bindingId = "";
+      let elements = worker.getLayout(objectDefinition);
+
+      expect(elements[0].id).to.equal("");
+      expect(elements).to.have.lengthOf(1);
+    });
+
+    it("should handle bindingId with only text (no substitutions)", function () {
+      worker.bindingId = "plain-text-id";
+      let elements = worker.getLayout(objectDefinition);
+
+      expect(elements[0].id).to.equal("plain-text-id");
+    });
+
+    it("should handle invalid function call gracefully", function () {
+      worker.bindingId = "uocc:{{invalidFunction()}}";
+      let elements = worker.getLayout(objectDefinition);
+
+      // Should return error message as the id.
+      expect(elements[0].id).to.include("Unknown function detected");
+      expect(elements[0].id).to.include("invalidFunction");
+    });
+
+    it("should handle malformed instruction gracefully", function () {
+      worker.bindingId = "uocc:{{getName}}"; // Missing parentheses.
+      let elements = worker.getLayout(objectDefinition);
+
+      // Should return error message as the id.
+      expect(elements[0].id).to.include("Invalid instruction detected");
+    });
+
+    it("should handle nested curly braces", function () {
+      worker.bindingId = "uocc:{{getName()}}";
+      let elements = worker.getLayout(objectDefinition);
+
+      expect(elements[0].id).to.equal("uocc:CUSTOMER");
+    });
+
+    it("should preserve special characters in bindingId", function () {
+      worker.bindingId = "uocc:test-id_with-special.chars:{{getName()}}";
+      let elements = worker.getLayout(objectDefinition);
+
+      expect(elements[0].id).to.equal("uocc:test-id_with-special.chars:CUSTOMER");
+    });
+
+    it("should work with custom tag names like web components", function () {
+      worker.tagName = "fluent-data-grid-row";
+      let elements = worker.getLayout(objectDefinition);
+
+      expect(elements[0]).to.have.tagName("FLUENT-DATA-GRID-ROW");
+      expect(elements).to.have.lengthOf(1);
+    });
+
+    it("should return array even for single element", function () {
+      let elements = worker.getLayout(objectDefinition);
+
+      expect(Array.isArray(elements)).to.be.true;
+      expect(elements).to.have.lengthOf(1);
+    });
+
+    it("should create fresh element on each getLayout() call", function () {
+      let elements1 = worker.getLayout(objectDefinition);
+      let elements2 = worker.getLayout(objectDefinition);
+
+      expect(elements1[0]).to.not.equal(elements2[0]);
+      expect(elements1[0].id).to.equal(elements2[0].id);
     });
   });
 })();

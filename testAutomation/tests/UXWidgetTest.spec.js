@@ -12,6 +12,24 @@ test.beforeEach(async ({ page }) => {
     await basePage.open();
 });
 
+test('ChildWidgets Worker Unit Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.childWidgetsWorkerUnitTestLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
+test('Layout Web Component Unit Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.layoutWebComponentUnitTestLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
+test('Layout Web Component Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.layoutWebComponentLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
 test('Button Widget Tests', async ({ page }) => {
     const newPage = await indexPage.openNewPage(indexPage.buttonWidgetLink);
     const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
@@ -20,6 +38,24 @@ test('Button Widget Tests', async ({ page }) => {
 
 test('Checkbox Widget Tests', async ({ page }) => {
     const newPage = await indexPage.openNewPage(indexPage.checkboxWidgetLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
+test('Entity Layout Widget Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.entLayoutWidgetLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
+test('Component Layout Widget Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.compLayoutWidgetLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
+test('HeaderFooter Widget Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.headerFooterWidgetLink);
     const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
     await homePage.checkFailuresEncountered(newPage, test);
 });
