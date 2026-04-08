@@ -41,7 +41,7 @@ export class TextArea extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-text-area", "", "", [
-    new StyleClassManager(this, ["u-text-area", "outline"]),
+    new StyleClassManager(this, ["u-text-area", "outline", "u-stretchable"]),
     new AttributeString(this, undefined, "currentValue", ""),
     new AttributeString(this, "value", "value", "", false, "change"),
     new AttributeString(this, "html:title", "title", undefined),

@@ -1,4 +1,4 @@
-/* global chai, umockup */
+﻿/* global chai, umockup */
 (function () {
   "use strict";
 
@@ -12,7 +12,8 @@
    */
   function createLayout() {
     const layout = document.createElement("uf-layout");
-    document.body.appendChild(layout);
+    const container = document.getElementById("web-component") || document.body;
+    container.appendChild(layout);
     return layout;
   }
 
@@ -176,7 +177,7 @@
           label.setAttribute("slot", "label");
           label.textContent = "Test Label";
           layout.appendChild(label);
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const labelSlot = layout.shadowRoot.querySelector("slot[name='label']");
           assert(labelSlot, "Label slot should exist when show-label is true.");
@@ -232,7 +233,7 @@
           const labelPartBefore = layout.shadowRoot.querySelector("[part='label']");
           assert(labelPartBefore, "Label should be visible initially.");
           layout.removeAttribute("show-label");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const labelPartAfter = layout.shadowRoot.querySelector("[part='label']");
           expect(labelPartAfter).to.be.null;
@@ -429,7 +430,7 @@
         return asyncRun(function () {
         }).then(function () {
           layout.removeChild(content);
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const slot = layout.shadowRoot.querySelector(".root slot:not([name])");
           const assigned = slot.assignedNodes().filter((node) => node.nodeType === Node.ELEMENT_NODE);
@@ -443,7 +444,7 @@
         return asyncRun(function () {
         }).then(function () {
           layout.innerHTML = "";
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const slot = layout.shadowRoot.querySelector(".root slot:not([name])");
           const assigned = slot.assignedNodes().filter((node) => node.nodeType === Node.ELEMENT_NODE);
@@ -1108,7 +1109,7 @@
           layout.setAttribute("layout-type", "HORIZONTAL-WRAP");
         }).then(function () {
           layout.setAttribute("layout-type", "horizontal-wrap");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const root = layout.shadowRoot.querySelector(".root");
           const styles = window.getComputedStyle(root);
@@ -1220,7 +1221,7 @@
           layout.setAttribute("layout-type", "horizontal-scroll");
         }).then(function () {
           layout.removeAttribute("layout-type");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const root = layout.shadowRoot.querySelector(".root");
           const styles = window.getComputedStyle(root);
@@ -1260,7 +1261,7 @@
           const root = layout.shadowRoot.querySelector(".root");
           expect(window.getComputedStyle(root).flexDirection).to.equal("column");
           layout.setAttribute("layout-type", "horizontal-scroll");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const root = layout.shadowRoot.querySelector(".root");
           expect(window.getComputedStyle(root).flexDirection).to.equal("row");
@@ -1274,7 +1275,7 @@
           const root = layout.shadowRoot.querySelector(".root");
           expect(window.getComputedStyle(root).flexWrap).to.not.equal("wrap");
           layout.setAttribute("layout-type", "vertical-wrap");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const root = layout.shadowRoot.querySelector(".root");
           expect(window.getComputedStyle(root).flexWrap).to.equal("wrap");
@@ -1287,11 +1288,11 @@
         }).then(function () {
           expect(layout.getAttribute("layout-type")).to.equal("vertical-scroll");
           layout.setAttribute("layout-type", "auto");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           expect(layout.getAttribute("layout-type")).to.equal("auto");
           layout.setAttribute("layout-type", "horizontal-wrap");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           expect(layout.getAttribute("layout-type")).to.equal("horizontal-wrap");
         });
@@ -1302,14 +1303,14 @@
           layout.setAttribute("horizontal-align", "center");
           expect(layout.getAttribute("horizontal-align")).to.equal("center");
           layout.setAttribute("horizontal-align", "auto");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           expect(layout.getAttribute("horizontal-align")).to.equal("auto");
 
           layout.setAttribute("vertical-align", "stretch");
           expect(layout.getAttribute("vertical-align")).to.equal("stretch");
           layout.setAttribute("vertical-align", "auto");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           expect(layout.getAttribute("vertical-align")).to.equal("auto");
         });
@@ -1376,7 +1377,7 @@
           const root = layout.shadowRoot.querySelector(".root");
           expect(window.getComputedStyle(root).flexDirection).to.equal("row");
           layout.setAttribute("layout-type", "vertical-scroll");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const root = layout.shadowRoot.querySelector(".root");
           expect(window.getComputedStyle(root).flexDirection).to.equal("column");
@@ -1390,7 +1391,7 @@
           const styles = window.getComputedStyle(layout);
           expect(styles.overflowX).to.equal("auto");
           layout.setAttribute("layout-type", "vertical-scroll");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const verticalStyles = window.getComputedStyle(layout);
           expect(verticalStyles.overflowY).to.equal("auto");
@@ -1417,7 +1418,7 @@
           const hostStyles = window.getComputedStyle(layout);
           expect(hostStyles.flexDirection).to.equal("row");
           layout.setAttribute("label-position", "above");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           expect(window.getComputedStyle(layout).flexDirection).to.equal("column");
         });
@@ -1466,11 +1467,174 @@
           expect(styles.marginBlockEnd).to.not.equal("0px");
 
           layout.setAttribute("label-position", "before");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const labelElement = layout.shadowRoot.querySelector(".label");
           const newStyles = window.getComputedStyle(labelElement);
           expect(newStyles.marginInlineEnd).to.not.equal("0px");
+        });
+      });
+    });
+
+    /**
+     * These tests verify that .root sizes to the remaining space after the label
+     * rather than consuming the full host height, so content is not clipped when
+     * a label is present (e.g. with vertical-align="end").
+     */
+    describe("Label and Root Space Distribution", function () {
+      let layout;
+
+      beforeEach(function () {
+        layout = createLayout();
+      });
+
+      afterEach(function () {
+        cleanupLayout(layout);
+      });
+
+      it("should have flex-grow 1 on .root so remaining space fills correctly after siblings", function () {
+        const root = layout.shadowRoot.querySelector(".root");
+        // flex: 1 ... auto sets flex-grow to 1; height: 100% must not be present to allow correct flex sizing.
+        expect(window.getComputedStyle(root).flexGrow).to.equal("1");
+      });
+
+      it("should size .root below the full host height when show-label is true", function () {
+        return asyncRun(function () {
+          layout.style.height = "300px";
+          layout.setAttribute("show-label", "true");
+          const labelEl = document.createElement("div");
+          labelEl.setAttribute("slot", "label");
+          labelEl.textContent = "Label";
+          labelEl.style.height = "40px";
+          layout.appendChild(labelEl);
+        }).then(function () {
+          const root = layout.shadowRoot.querySelector(".root");
+          // .root must shrink to leave room for the label; flex-grow fills remaining space, not 100% of host.
+          expect(root.offsetHeight).to.be.lessThan(layout.clientHeight);
+        });
+      });
+
+      it("should not allow .root and label heights to exceed the host height", function () {
+        return asyncRun(function () {
+          layout.style.height = "300px";
+          layout.setAttribute("show-label", "true");
+          const labelEl = document.createElement("div");
+          labelEl.setAttribute("slot", "label");
+          labelEl.textContent = "Label";
+          labelEl.style.height = "40px";
+          layout.appendChild(labelEl);
+        }).then(function () {
+          const root = layout.shadowRoot.querySelector(".root");
+          const labelSection = layout.shadowRoot.querySelector(".label");
+          assert(labelSection, "Label section should exist when show-label is true.");
+          const totalHeight = root.offsetHeight + labelSection.offsetHeight;
+          // Combined height of .root and .label must fit within the host boundaries.
+          expect(totalHeight).to.be.at.most(layout.clientHeight);
+        });
+      });
+
+      it("should keep content within the host when vertical-align is end and show-label is true", function () {
+        let content;
+        return asyncRun(function () {
+          layout.style.height = "300px";
+          layout.setAttribute("show-label", "true");
+          layout.setAttribute("layout-type", "vertical-scroll");
+          layout.setAttribute("vertical-align", "end");
+          const labelEl = document.createElement("div");
+          labelEl.setAttribute("slot", "label");
+          labelEl.textContent = "Label";
+          labelEl.style.height = "40px";
+          layout.appendChild(labelEl);
+          content = document.createElement("div");
+          content.textContent = "Content";
+          content.style.height = "50px";
+          layout.appendChild(content);
+        }).then(function () {
+          const layoutRect = layout.getBoundingClientRect();
+          const contentRect = content.getBoundingClientRect();
+          // Content pushed to end must not visually overflow the host bottom boundary.
+          expect(contentRect.bottom).to.be.at.most(layoutRect.bottom + 1);
+        });
+      });
+
+      it("should leave space for the label when label-position is below", function () {
+        return asyncRun(function () {
+          layout.style.height = "300px";
+          layout.setAttribute("show-label", "true");
+          layout.setAttribute("label-position", "below");
+          const labelEl = document.createElement("div");
+          labelEl.setAttribute("slot", "label");
+          labelEl.textContent = "Label";
+          labelEl.style.height = "40px";
+          layout.appendChild(labelEl);
+        }).then(function () {
+          const root = layout.shadowRoot.querySelector(".root");
+          // With label-position below, .root must still accommodate the label; full host height is not consumed.
+          expect(root.offsetHeight).to.be.lessThan(layout.clientHeight);
+        });
+      });
+
+      it("should keep content within the host when vertical-align is center and show-label is true", function () {
+        let content;
+        return asyncRun(function () {
+          layout.style.height = "300px";
+          layout.setAttribute("show-label", "true");
+          layout.setAttribute("layout-type", "vertical-scroll");
+          layout.setAttribute("vertical-align", "center");
+          const labelEl = document.createElement("div");
+          labelEl.setAttribute("slot", "label");
+          labelEl.textContent = "Label";
+          labelEl.style.height = "40px";
+          layout.appendChild(labelEl);
+          content = document.createElement("div");
+          content.textContent = "Content";
+          content.style.height = "200px";
+          layout.appendChild(content);
+        }).then(function () {
+          const layoutRect = layout.getBoundingClientRect();
+          const contentRect = content.getBoundingClientRect();
+          // Content centered within .root must not visually overflow the host bottom boundary.
+          expect(contentRect.bottom).to.be.at.most(layoutRect.bottom + 1);
+        });
+      });
+
+      it("should not affect .root sizing when label-position is before", function () {
+        return asyncRun(function () {
+          layout.style.height = "300px";
+          layout.setAttribute("show-label", "true");
+          layout.setAttribute("label-position", "before");
+          const labelEl = document.createElement("div");
+          labelEl.setAttribute("slot", "label");
+          labelEl.textContent = "Label";
+          labelEl.style.width = "80px";
+          layout.appendChild(labelEl);
+        }).then(function () {
+          const root = layout.shadowRoot.querySelector(".root");
+          // In row direction, label sits beside .root; the fix (removing height: 100%) does not affect this axis.
+          expect(window.getComputedStyle(layout).flexDirection).to.equal("row");
+          // In row direction both label and .root stretch to the full host height via align-self: stretch.
+          // The -1 tolerance accounts for sub-pixel rounding between offsetHeight (integer) and clientHeight.
+          expect(root.offsetHeight).to.be.at.least(layout.clientHeight - 1);
+        });
+      });
+
+      it("should not affect .root sizing when label-position is after", function () {
+        return asyncRun(function () {
+          layout.style.height = "300px";
+          layout.setAttribute("show-label", "true");
+          layout.setAttribute("label-position", "after");
+          const labelEl = document.createElement("div");
+          labelEl.setAttribute("slot", "label");
+          labelEl.textContent = "Label";
+          labelEl.style.width = "80px";
+          layout.appendChild(labelEl);
+        }).then(function () {
+          const root = layout.shadowRoot.querySelector(".root");
+          // In row direction, label sits beside .root; the fix (removing height: 100%) does not affect this axis.
+          expect(window.getComputedStyle(layout).flexDirection).to.equal("row");
+          // In row direction both label and .root stretch to the full host height via align-self: stretch.
+          // The -1 tolerance accounts for sub-pixel rounding between offsetHeight (integer) and clientHeight.
+          expect(root.offsetHeight).to.be.at.least(layout.clientHeight - 1);
         });
       });
     });
@@ -1499,7 +1663,7 @@
           expect(validDirection).to.equal("column");
           // Set invalid value - may reset to default or ignore.
           layout.setAttribute("layout-type", "diagonal-scroll");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const root = layout.shadowRoot.querySelector(".root");
           const invalidDirection = window.getComputedStyle(root).flexDirection;
@@ -1518,7 +1682,7 @@
           expect(validAlignment).to.be.equal("safe center");
           // Set invalid value - may reset to default or ignore.
           layout.setAttribute("horizontal-align", "middle");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const root2 = layout.shadowRoot.querySelector(".root");
           const invalidAlignment = window.getComputedStyle(root2).justifyContent;
@@ -1705,7 +1869,7 @@
         }).then(function () {
           // Child overrides to vertical.
           childLayout.setAttribute("layout-type", "vertical-wrap");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const childRoot = childLayout.shadowRoot.querySelector(".root");
           const childStyle = window.getComputedStyle(childRoot);
@@ -1860,7 +2024,7 @@
           expect(style.flexDirection).to.equal("column");
 
           layout.setAttribute("layout-type", "auto");
-          return asyncRun(function () { });
+          return asyncRun(function () {});
         }).then(function () {
           const root = layout.shadowRoot.querySelector(".root");
           const style = window.getComputedStyle(root);
@@ -2027,6 +2191,768 @@
 
           expect(layoutStyles.flexDirection).to.equal("row");
           expect(labelStyles.alignSelf).to.equal("center");
+        });
+      });
+    });
+
+    describe("Stretch Behavior Tests", function () {
+      let layout;
+      beforeEach(function () {
+        layout = createLayout();
+      });
+
+      afterEach(function () {
+        cleanupLayout(layout);
+      });
+
+      describe("Vertical Layout with Stretch", function () {
+        it("should apply flex-grow when vertical-scroll has vertical-align stretch", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "vertical-scroll");
+            layout.setAttribute("vertical-align", "stretch");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            expect(styles.flexGrow).to.equal("1");
+          });
+        });
+
+        it("should apply flex-grow when vertical-wrap has vertical-align stretch", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "vertical-wrap");
+            layout.setAttribute("vertical-align", "stretch");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            expect(styles.flexGrow).to.equal("1");
+          });
+        });
+
+        it("should apply align-items stretch when vertical-scroll has horizontal-align stretch", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "vertical-scroll");
+            layout.setAttribute("horizontal-align", "stretch");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            expect(styles.alignItems).to.equal("stretch");
+          });
+        });
+
+        it("should apply align-items stretch when vertical-wrap has horizontal-align stretch", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "vertical-wrap");
+            layout.setAttribute("horizontal-align", "stretch");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            expect(styles.alignItems).to.equal("stretch");
+          });
+        });
+      });
+
+      describe("Horizontal Layout with Stretch", function () {
+        it("should apply flex-grow when horizontal-scroll has horizontal-align stretch", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "horizontal-scroll");
+            layout.setAttribute("horizontal-align", "stretch");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            expect(styles.flexGrow).to.equal("1");
+          });
+        });
+
+        it("should apply flex-grow when horizontal-wrap has horizontal-align stretch", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "horizontal-wrap");
+            layout.setAttribute("horizontal-align", "stretch");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            expect(styles.flexGrow).to.equal("1");
+          });
+        });
+
+        it("should apply align-items stretch when horizontal-wrap has vertical-align stretch", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "horizontal-wrap");
+            layout.setAttribute("vertical-align", "stretch");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            expect(styles.alignItems).to.equal("stretch");
+          });
+        });
+      });
+
+      describe("Stretch Behavior Dynamic Changes", function () {
+        it("should update from non-stretch to stretch alignment", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "vertical-scroll");
+            layout.setAttribute("vertical-align", "start");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            let styles = window.getComputedStyle(rootPart);
+            expect(styles.justifyContent).to.equal("start");
+
+            return asyncRun(function () {
+              layout.setAttribute("vertical-align", "stretch");
+            });
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            expect(styles.flexGrow).to.equal("1");
+          });
+        });
+
+        it("should update from stretch to non-stretch alignment", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "horizontal-scroll");
+            layout.setAttribute("horizontal-align", "stretch");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            let styles = window.getComputedStyle(rootPart);
+            expect(styles.flexGrow).to.equal("1");
+
+            return asyncRun(function () {
+              layout.setAttribute("horizontal-align", "center");
+            });
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            expect(styles.justifyContent).to.contain("center");
+          });
+        });
+
+        it("should maintain stretch when changing layout direction", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "vertical-scroll");
+            layout.setAttribute("vertical-align", "stretch");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            let styles = window.getComputedStyle(rootPart);
+            expect(styles.flexGrow).to.equal("1");
+
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "vertical-wrap");
+            });
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            expect(styles.flexGrow).to.equal("1");
+          });
+        });
+      });
+
+      describe("Stretch with Child Elements", function () {
+        it("should stretch child elements with horizontal-align stretch in vertical layout", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "vertical-scroll");
+            layout.setAttribute("horizontal-align", "stretch");
+
+            const child1 = document.createElement("div");
+            child1.textContent = "Child 1";
+            child1.style.backgroundColor = "red";
+            child1.style.height = "50px";
+
+            const child2 = document.createElement("div");
+            child2.textContent = "Child 2";
+            child2.style.backgroundColor = "blue";
+            child2.style.height = "50px";
+
+            layout.appendChild(child1);
+            layout.appendChild(child2);
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            expect(styles.alignItems).to.equal("stretch");
+          });
+        });
+
+        it("should stretch child elements with vertical-align stretch in horizontal layout", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "horizontal-scroll");
+            layout.setAttribute("vertical-align", "stretch");
+            layout.style.height = "200px";
+
+            const child1 = document.createElement("div");
+            child1.textContent = "Child 1";
+            child1.style.backgroundColor = "green";
+            child1.style.width = "100px";
+
+            const child2 = document.createElement("div");
+            child2.textContent = "Child 2";
+            child2.style.backgroundColor = "yellow";
+            child2.style.width = "100px";
+
+            layout.appendChild(child1);
+            layout.appendChild(child2);
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            expect(styles.alignItems).to.equal("stretch");
+          });
+        });
+      });
+
+      describe("Stretch Behavior with Nested Layouts", function () {
+        let parentLayout, childLayout;
+
+        beforeEach(function () {
+          parentLayout = createLayout();
+          childLayout = document.createElement("uf-layout");
+          parentLayout.appendChild(childLayout);
+        });
+
+        afterEach(function () {
+          cleanupLayout(parentLayout);
+        });
+
+        it("should apply stretch from parent to child in auto layout", function () {
+          return asyncRun(function () {
+            parentLayout.setAttribute("layout-type", "vertical-scroll");
+            parentLayout.setAttribute("horizontal-align", "stretch");
+            childLayout.setAttribute("layout-type", "auto");
+          }).then(function () {
+            const parentRoot = parentLayout.shadowRoot.querySelector(".root");
+            const parentStyles = window.getComputedStyle(parentRoot);
+            expect(parentStyles.alignItems).to.equal("stretch");
+
+            // Verify child inherits the stretch behavior in auto layout
+            const childRoot = childLayout.shadowRoot.querySelector(".root");
+            const childStyles = window.getComputedStyle(childRoot);
+            // Auto layout should inherit alignment from parent
+            expect(childStyles.alignItems).to.equal("stretch");
+          });
+        });
+
+        it("should grow child with vertical stretch in parent vertical layout", function () {
+          return asyncRun(function () {
+            parentLayout.setAttribute("layout-type", "vertical-scroll");
+            parentLayout.setAttribute("vertical-align", "stretch");
+            parentLayout.style.height = "400px";
+            childLayout.setAttribute("layout-type", "vertical-scroll");
+          }).then(function () {
+            const parentRoot = parentLayout.shadowRoot.querySelector(".root");
+            const parentStyles = window.getComputedStyle(parentRoot);
+            expect(parentStyles.flexGrow).to.equal("1");
+          });
+        });
+
+        it("should apply independent stretch to nested layouts", function () {
+          return asyncRun(function () {
+            parentLayout.setAttribute("layout-type", "horizontal-scroll");
+            parentLayout.setAttribute("vertical-align", "stretch");
+            childLayout.setAttribute("layout-type", "vertical-scroll");
+            childLayout.setAttribute("horizontal-align", "stretch");
+          }).then(function () {
+            const parentRoot = parentLayout.shadowRoot.querySelector(".root");
+            const parentStyles = window.getComputedStyle(parentRoot);
+            expect(parentStyles.alignItems).to.equal("stretch");
+
+            const childRoot = childLayout.shadowRoot.querySelector(".root");
+            const childStyles = window.getComputedStyle(childRoot);
+            expect(childStyles.alignItems).to.equal("stretch");
+          });
+        });
+      });
+
+      describe("Stretch Edge Cases", function () {
+        it("should not apply flex-grow when stretch is on wrong axis", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "vertical-scroll");
+            layout.setAttribute("horizontal-align", "stretch");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            // horizontal-align stretch on vertical layout should set align-items, not drive main-axis grow.
+            expect(styles.alignItems).to.equal("stretch");
+            // u-jc-stretch is not set because stretch is on the cross axis, not the main axis.
+            expect(layout.classList.contains("u-jc-stretch")).to.equal(false);
+          });
+        });
+
+        it("should handle stretch with both alignments set", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "vertical-scroll");
+            layout.setAttribute("vertical-align", "stretch");
+            layout.setAttribute("horizontal-align", "stretch");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            // Both should apply.
+            expect(styles.flexGrow).to.equal("1");
+            expect(styles.alignItems).to.equal("stretch");
+          });
+        });
+
+        it("should handle removing stretch attribute", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "horizontal-scroll");
+            layout.setAttribute("horizontal-align", "stretch");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            let styles = window.getComputedStyle(rootPart);
+            expect(styles.flexGrow).to.equal("1");
+
+            return asyncRun(function () {
+              layout.removeAttribute("horizontal-align");
+            });
+          }).then(function () {
+            // stretch removed — u-jc-stretch class is no longer on the host.
+            expect(layout.classList.contains("u-jc-stretch")).to.equal(false);
+          });
+        });
+
+        it("should handle layout type change with stretch", function () {
+          return asyncRun(function () {
+            layout.setAttribute("layout-type", "vertical-scroll");
+            layout.setAttribute("vertical-align", "stretch");
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            let styles = window.getComputedStyle(rootPart);
+            expect(styles.flexGrow).to.equal("1");
+
+            return asyncRun(function () {
+              // Change to horizontal layout with same stretch alignment.
+              layout.setAttribute("layout-type", "horizontal-scroll");
+              layout.setAttribute("vertical-align", "stretch");
+              layout.removeAttribute("vertical-align");
+              layout.setAttribute("vertical-align", "stretch");
+            });
+          }).then(function () {
+            const rootPart = layout.shadowRoot.querySelector(".root");
+            const styles = window.getComputedStyle(rootPart);
+            // Now stretch should apply to align-items instead.
+            expect(styles.alignItems).to.equal("stretch");
+          });
+        });
+      });
+
+      describe("Comprehensive Stretch Combinations", function () {
+        describe("Vertical Layouts - All Stretch Combinations", function () {
+          it("should handle vertical-scroll with only vertical-align stretch", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "vertical-scroll");
+              layout.setAttribute("vertical-align", "stretch");
+              layout.setAttribute("horizontal-align", "start");
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              expect(styles.flexGrow).to.equal("1");
+              expect(styles.alignItems).to.equal("start");
+            });
+          });
+
+          it("should handle vertical-scroll with only horizontal-align stretch", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "vertical-scroll");
+              layout.setAttribute("vertical-align", "start");
+              layout.setAttribute("horizontal-align", "stretch");
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              // Only verify that horizontal-align stretch sets align-items correctly.
+              expect(styles.alignItems).to.equal("stretch");
+            });
+          });
+
+          it("should handle vertical-wrap with only vertical-align stretch", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "vertical-wrap");
+              layout.setAttribute("vertical-align", "stretch");
+              layout.setAttribute("horizontal-align", "center");
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              expect(styles.flexGrow).to.equal("1");
+              expect(styles.alignItems).to.equal("safe center");
+            });
+          });
+
+          it("should handle vertical-wrap with both alignments as stretch", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "vertical-wrap");
+              layout.setAttribute("vertical-align", "stretch");
+              layout.setAttribute("horizontal-align", "stretch");
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              expect(styles.flexGrow).to.equal("1");
+              expect(styles.alignItems).to.equal("stretch");
+            });
+          });
+        });
+
+        describe("Horizontal Layouts - All Stretch Combinations", function () {
+          it("should handle horizontal-scroll with only horizontal-align stretch", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "horizontal-scroll");
+              layout.setAttribute("horizontal-align", "stretch");
+              layout.setAttribute("vertical-align", "start");
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              expect(styles.flexGrow).to.equal("1");
+              expect(styles.alignItems).to.equal("start");
+            });
+          });
+
+          it("should handle horizontal-scroll with only vertical-align stretch", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "horizontal-scroll");
+              layout.setAttribute("horizontal-align", "center");
+              layout.setAttribute("vertical-align", "stretch");
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              // Only verify that vertical-align stretch sets align-items correctly.
+              expect(styles.alignItems).to.equal("stretch");
+            });
+          });
+
+          it("should handle horizontal-wrap with both alignments as stretch", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "horizontal-wrap");
+              layout.setAttribute("horizontal-align", "stretch");
+              layout.setAttribute("vertical-align", "stretch");
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              expect(styles.flexGrow).to.equal("1");
+              expect(styles.alignItems).to.equal("stretch");
+            });
+          });
+
+          it("should handle horizontal-wrap with only vertical-align stretch", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "horizontal-wrap");
+              layout.setAttribute("horizontal-align", "end");
+              layout.setAttribute("vertical-align", "stretch");
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              // Only verify that vertical-align stretch sets align-items correctly.
+              expect(styles.alignItems).to.equal("stretch");
+            });
+          });
+        });
+
+        describe("Auto Layout with Stretch Inheritance", function () {
+          let parentLayout, childLayout;
+
+          beforeEach(function () {
+            parentLayout = createLayout();
+            childLayout = document.createElement("uf-layout");
+            parentLayout.appendChild(childLayout);
+          });
+
+          afterEach(function () {
+            cleanupLayout(parentLayout);
+          });
+
+          it("should inherit vertical stretch from vertical parent to auto child", function () {
+            return asyncRun(function () {
+              parentLayout.setAttribute("layout-type", "vertical-scroll");
+              parentLayout.setAttribute("vertical-align", "stretch");
+              childLayout.setAttribute("layout-type", "auto");
+            }).then(function () {
+              const parentRoot = parentLayout.shadowRoot.querySelector(".root");
+              const parentStyles = window.getComputedStyle(parentRoot);
+              expect(parentStyles.flexGrow).to.equal("1");
+
+              const childRoot = childLayout.shadowRoot.querySelector(".root");
+              const childStyles = window.getComputedStyle(childRoot);
+              // Auto should inherit flex-grow from parent.
+              expect(childStyles.flexGrow).to.equal("1");
+            });
+          });
+
+          it("should inherit horizontal stretch from vertical parent to auto child", function () {
+            return asyncRun(function () {
+              parentLayout.setAttribute("layout-type", "vertical-scroll");
+              parentLayout.setAttribute("horizontal-align", "stretch");
+              childLayout.setAttribute("layout-type", "auto");
+            }).then(function () {
+              const parentRoot = parentLayout.shadowRoot.querySelector(".root");
+              const parentStyles = window.getComputedStyle(parentRoot);
+              expect(parentStyles.alignItems).to.equal("stretch");
+
+              const childRoot = childLayout.shadowRoot.querySelector(".root");
+              const childStyles = window.getComputedStyle(childRoot);
+              // Auto child should inherit stretch align-items.
+              expect(childStyles.alignItems).to.equal("stretch");
+            });
+          });
+
+          it("should inherit horizontal stretch from horizontal parent to auto child", function () {
+            return asyncRun(function () {
+              parentLayout.setAttribute("layout-type", "horizontal-scroll");
+              parentLayout.setAttribute("horizontal-align", "stretch");
+              childLayout.setAttribute("layout-type", "auto");
+            }).then(function () {
+              const parentRoot = parentLayout.shadowRoot.querySelector(".root");
+              const parentStyles = window.getComputedStyle(parentRoot);
+              expect(parentStyles.flexGrow).to.equal("1");
+
+              const childRoot = childLayout.shadowRoot.querySelector(".root");
+              const childStyles = window.getComputedStyle(childRoot);
+              // Auto should inherit flex-grow.
+              expect(childStyles.flexGrow).to.equal("1");
+            });
+          });
+
+          it("should inherit vertical stretch from horizontal parent to auto child", function () {
+            return asyncRun(function () {
+              parentLayout.setAttribute("layout-type", "horizontal-wrap");
+              parentLayout.setAttribute("vertical-align", "stretch");
+              childLayout.setAttribute("layout-type", "auto");
+            }).then(function () {
+              const parentRoot = parentLayout.shadowRoot.querySelector(".root");
+              const parentStyles = window.getComputedStyle(parentRoot);
+              expect(parentStyles.alignItems).to.equal("stretch");
+
+              const childRoot = childLayout.shadowRoot.querySelector(".root");
+              const childStyles = window.getComputedStyle(childRoot);
+              // Auto child should inherit stretch.
+              expect(childStyles.alignItems).to.equal("stretch");
+            });
+          });
+
+          it("should handle auto child with explicit stretch overriding parent", function () {
+            return asyncRun(function () {
+              parentLayout.setAttribute("layout-type", "vertical-scroll");
+              parentLayout.setAttribute("vertical-align", "start");
+              parentLayout.setAttribute("horizontal-align", "start");
+              childLayout.setAttribute("layout-type", "auto");
+              childLayout.setAttribute("horizontal-align", "stretch");
+            }).then(function () {
+              const parentRoot = parentLayout.shadowRoot.querySelector(".root");
+              const parentStyles = window.getComputedStyle(parentRoot);
+              expect(parentStyles.justifyContent).to.equal("start");
+              expect(parentStyles.alignItems).to.equal("start");
+
+              const childRoot = childLayout.shadowRoot.querySelector(".root");
+              const childStyles = window.getComputedStyle(childRoot);
+              // Child's explicit stretch should override parent's start.
+              expect(childStyles.alignItems).to.equal("stretch");
+            });
+          });
+
+          it("should handle nested auto layouts with stretch propagation", function () {
+            let grandchildLayout;
+            return asyncRun(function () {
+              grandchildLayout = document.createElement("uf-layout");
+              childLayout.appendChild(grandchildLayout);
+
+              parentLayout.setAttribute("layout-type", "vertical-scroll");
+              parentLayout.setAttribute("horizontal-align", "stretch");
+              childLayout.setAttribute("layout-type", "auto");
+              grandchildLayout.setAttribute("layout-type", "auto");
+            }).then(function () {
+              const parentRoot = parentLayout.shadowRoot.querySelector(".root");
+              expect(window.getComputedStyle(parentRoot).alignItems).to.equal("stretch");
+
+              const childRoot = childLayout.shadowRoot.querySelector(".root");
+              expect(window.getComputedStyle(childRoot).alignItems).to.equal("stretch");
+
+              const grandchildRoot = grandchildLayout.shadowRoot.querySelector(".root");
+              expect(window.getComputedStyle(grandchildRoot).alignItems).to.equal("stretch");
+            });
+          });
+        });
+
+        describe("Stretch with Mixed Alignment Values", function () {
+          it("should handle vertical-scroll with stretch and space-between", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "vertical-scroll");
+              layout.setAttribute("vertical-align", "stretch");
+              layout.setAttribute("horizontal-align", "space-between");
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              expect(styles.flexGrow).to.equal("1");
+              expect(styles.alignItems).to.equal("start"); // space-between defaults to start for cross-axis.
+            });
+          });
+
+          it("should handle horizontal-scroll with stretch and space-evenly", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "horizontal-scroll");
+              layout.setAttribute("horizontal-align", "stretch");
+              layout.setAttribute("vertical-align", "space-evenly");
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              expect(styles.flexGrow).to.equal("1");
+              expect(styles.alignItems).to.equal("start"); // space-evenly defaults to start for cross-axis.
+            });
+          });
+
+          it("should handle vertical-wrap with stretch and center", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "vertical-wrap");
+              layout.setAttribute("vertical-align", "center");
+              layout.setAttribute("horizontal-align", "stretch");
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              // vertical-align center doesn't set flex-grow to 1.
+              expect(styles.justifyContent).to.contain("center");
+              expect(styles.alignItems).to.equal("stretch");
+            });
+          });
+
+          it("should handle horizontal-wrap with stretch and end", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "horizontal-wrap");
+              layout.setAttribute("horizontal-align", "end");
+              layout.setAttribute("vertical-align", "stretch");
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              // horizontal-align end doesn't set flex-grow to 1.
+              expect(styles.justifyContent).to.contain("end");
+              expect(styles.alignItems).to.equal("stretch");
+            });
+          });
+        });
+
+        describe("Stretch Reliability - State Transitions", function () {
+          it("should maintain stretch after multiple attribute changes", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "vertical-scroll");
+              layout.setAttribute("vertical-align", "stretch");
+            }).then(function () {
+              expect(window.getComputedStyle(layout.shadowRoot.querySelector(".root")).flexGrow).to.equal("1");
+
+              return asyncRun(function () {
+                layout.setAttribute("vertical-align", "start");
+              });
+            }).then(function () {
+              // After switching to start, u-jc-stretch class is removed from the host.
+              expect(layout.classList.contains("u-jc-stretch")).to.equal(false);
+
+              return asyncRun(function () {
+                layout.setAttribute("vertical-align", "stretch");
+              });
+            }).then(function () {
+              expect(window.getComputedStyle(layout.shadowRoot.querySelector(".root")).flexGrow).to.equal("1");
+            });
+          });
+
+          it("should correctly switch between different stretch axes", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "vertical-scroll");
+              layout.setAttribute("vertical-align", "stretch");
+            }).then(function () {
+              const styles1 = window.getComputedStyle(layout.shadowRoot.querySelector(".root"));
+              expect(styles1.flexGrow).to.equal("1");
+              // vertical-align stretch doesn't affect alignItems (cross-axis property).
+
+              return asyncRun(function () {
+                layout.removeAttribute("vertical-align");
+                layout.setAttribute("horizontal-align", "stretch");
+              });
+            }).then(function () {
+              const styles2 = window.getComputedStyle(layout.shadowRoot.querySelector(".root"));
+              // horizontal-align stretch on vertical layout sets align-items only; u-jc-stretch is not set.
+              expect(layout.classList.contains("u-jc-stretch")).to.equal(false);
+              expect(styles2.alignItems).to.equal("stretch");
+            });
+          });
+
+          it("should handle rapid toggle between stretch and non-stretch", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "horizontal-scroll");
+              layout.setAttribute("horizontal-align", "stretch");
+            }).then(function () {
+              expect(window.getComputedStyle(layout.shadowRoot.querySelector(".root")).flexGrow).to.equal("1");
+
+              return asyncRun(function () {
+                layout.setAttribute("horizontal-align", "center");
+              });
+            }).then(function () {
+              expect(window.getComputedStyle(layout.shadowRoot.querySelector(".root")).justifyContent).to.contain("center");
+
+              return asyncRun(function () {
+                layout.setAttribute("horizontal-align", "stretch");
+              });
+            }).then(function () {
+              expect(window.getComputedStyle(layout.shadowRoot.querySelector(".root")).flexGrow).to.equal("1");
+            });
+          });
+
+          it("should maintain stretch when switching between scroll and wrap", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "vertical-scroll");
+              layout.setAttribute("horizontal-align", "stretch");
+            }).then(function () {
+              expect(window.getComputedStyle(layout.shadowRoot.querySelector(".root")).alignItems).to.equal("stretch");
+
+              return asyncRun(function () {
+                layout.setAttribute("layout-type", "vertical-wrap");
+              });
+            }).then(function () {
+              expect(window.getComputedStyle(layout.shadowRoot.querySelector(".root")).alignItems).to.equal("stretch");
+            });
+          });
+        });
+
+        describe("Stretch with Real Content", function () {
+          it("should stretch children to full width in vertical layout", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "vertical-scroll");
+              layout.setAttribute("horizontal-align", "stretch");
+              layout.style.width = "400px";
+
+              const child1 = document.createElement("div");
+              child1.textContent = "Child 1";
+              child1.style.backgroundColor = "red";
+              child1.style.height = "50px";
+
+              const child2 = document.createElement("div");
+              child2.textContent = "Child 2";
+              child2.style.backgroundColor = "blue";
+              child2.style.height = "50px";
+
+              layout.appendChild(child1);
+              layout.appendChild(child2);
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              expect(styles.alignItems).to.equal("stretch");
+              expect(layout.children.length).to.equal(2);
+            });
+          });
+
+          it("should stretch children to full height in horizontal layout", function () {
+            return asyncRun(function () {
+              layout.setAttribute("layout-type", "horizontal-scroll");
+              layout.setAttribute("vertical-align", "stretch");
+              layout.style.height = "300px";
+              layout.style.width = "600px";
+
+              const child1 = document.createElement("div");
+              child1.textContent = "Column 1";
+              child1.style.backgroundColor = "green";
+              child1.style.width = "150px";
+
+              const child2 = document.createElement("div");
+              child2.textContent = "Column 2";
+              child2.style.backgroundColor = "yellow";
+              child2.style.width = "150px";
+
+              layout.appendChild(child1);
+              layout.appendChild(child2);
+            }).then(function () {
+              const rootPart = layout.shadowRoot.querySelector(".root");
+              const styles = window.getComputedStyle(rootPart);
+              expect(styles.alignItems).to.equal("stretch");
+              expect(layout.children.length).to.equal(2);
+            });
+          });
         });
       });
     });

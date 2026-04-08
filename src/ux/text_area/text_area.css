@@ -1,3 +1,8 @@
+.u-text-area.u-stretchable {
+  /* TextArea grows in both directions */
+  flex-grow: var(--u-layout-grow, 0);
+}
+
 .u-text-area::part(root) {
   position: relative;
 }

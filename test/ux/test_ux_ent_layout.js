@@ -426,7 +426,7 @@
         assert.strictEqual(collectionTester.defaultValues["horizontal-align-occurrences"], "auto", "Default value of 'horizontal-align-occurrences' should be 'auto'.");
         assert.strictEqual(collectionTester.defaultValues["vertical-align-occurrences"], "auto", "Default value of 'vertical-align-occurrences' should be 'auto'.");
         assert.strictEqual(collectionTester.defaultValues["label-size"], "normal", "Default value of 'label-size' should be 'normal'.");
-        assert.strictEqual(collectionTester.defaultValues["label-align"], "start", "Default value of 'label-alignment' should be 'start'.");
+        assert.strictEqual(collectionTester.defaultValues["label-align"], "start", "Default value of 'label-align' should be 'start'.");
         assert.strictEqual(collectionTester.defaultValues["label-position"], "above", "Default value of 'label-position' should be 'above'.");
         assert.strictEqual(collectionTester.defaultValues["area-slot"], "main", "Default value of 'area-slot' should be 'main'.");
       });
@@ -531,7 +531,7 @@
         });
 
         ["start", "center", "end"].forEach(function (alignment) {
-          it(`update label-alignment to ${alignment}`, function () {
+          it(`update label-align to ${alignment}`, function () {
             const data = {
               "label-align": alignment
             };
@@ -818,6 +818,174 @@
             expect(occElement.getAttribute("horizontal-align")).to.equal("end");
           });
         });
+      });
+    });
+  });
+
+  /**
+   * CollectionLayout always renders with show-label="true" and a label section
+   * above the content area. These tests verify that .root sizes to the remaining
+   * space after the label, rather than consuming the full host height.
+   */
+  describe("Label and Root Space Distribution", function () {
+    let element;
+
+    before(function () {
+      return asyncRun(function () {
+        collectionTester.createWidget();
+        element = collectionTester.element;
+      }).then(function () {
+        assert(element, "Widget top element is not defined.");
+      });
+    });
+
+    afterEach(function () {
+      element.style.height = "";
+    });
+
+    it("should have flex-grow 1 on .root so remaining space fills correctly after siblings", function () {
+      // Wait for a render frame so computed styles reflect the current layout.
+      return asyncRun(function () {}).then(function () {
+        const shadowRoot = element.shadowRoot;
+        assert(shadowRoot, "Shadow root should exist.");
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        assert(rootPart, "Root part should exist.");
+        // flex: 1 ... auto sets flex-grow to 1; height: 100% must not be present to allow correct flex sizing.
+        expect(window.getComputedStyle(rootPart).flexGrow).to.equal("1");
+      });
+    });
+
+    it("should size .root below the full host height when a label is present", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        collectionTester.dataUpdate({
+          "label-text": "Test Label"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        const labelPart = shadowRoot.querySelector("[part='label']");
+        assert(rootPart, "Root part should exist.");
+        // .root must leave room for the label section; it must not consume the full host height.
+        if (labelPart && labelPart.offsetHeight > 0) {
+          expect(rootPart.offsetHeight).to.be.lessThan(element.clientHeight);
+        }
+      });
+    });
+
+    it("should not allow .root and label heights to exceed the host height", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        collectionTester.dataUpdate({
+          "label-text": "Test Label"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        const labelPart = shadowRoot.querySelector("[part='label']");
+        assert(rootPart, "Root part should exist.");
+        assert(labelPart, "Label part should exist when label-text is set.");
+        const totalHeight = rootPart.offsetHeight + labelPart.offsetHeight;
+        // Combined height of .root and .label must fit within the host boundaries.
+        expect(totalHeight).to.be.at.most(element.clientHeight);
+      });
+    });
+
+    it("should leave space for the label when label-position is below", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        collectionTester.dataUpdate({
+          "label-text": "Test Label",
+          "label-position": "below"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        const labelPart = shadowRoot.querySelector("[part='label']");
+        assert(rootPart, "Root part should exist.");
+        // With label-position below, .root must still accommodate the label; full host height is not consumed.
+        if (labelPart && labelPart.offsetHeight > 0) {
+          expect(rootPart.offsetHeight).to.be.lessThan(element.clientHeight);
+        }
+      });
+    });
+
+    it("should size .root below the full host height when vertical-align is end and label is present", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        collectionTester.dataUpdate({
+          "label-text": "Test Label",
+          "label-position": "above",
+          "layout-type": "vertical-scroll",
+          "vertical-align": "end"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        const labelPart = shadowRoot.querySelector("[part='label']");
+        assert(rootPart, "Root part should exist.");
+        // With vertical-align=end, .root must not overflow the host; flex-grow fills remaining space correctly.
+        if (labelPart && labelPart.offsetHeight > 0) {
+          expect(rootPart.offsetHeight).to.be.lessThan(element.clientHeight);
+        }
+      });
+    });
+
+    it("should size .root below the full host height when vertical-align is center and label is present", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        collectionTester.dataUpdate({
+          "label-text": "Test Label",
+          "label-position": "above",
+          "vertical-align": "center"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        const labelPart = shadowRoot.querySelector("[part='label']");
+        assert(rootPart, "Root part should exist.");
+        // .root must leave room for the label regardless of vertical-align value.
+        if (labelPart && labelPart.offsetHeight > 0) {
+          expect(rootPart.offsetHeight).to.be.lessThan(element.clientHeight);
+        }
+      });
+    });
+
+    it("should not affect .root sizing when label-position is before", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        collectionTester.dataUpdate({
+          "label-text": "Test Label",
+          "label-position": "before"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        assert(rootPart, "Root part should exist.");
+        // In row direction, label sits beside .root; the fix (removing height: 100%) does not affect this axis.
+        expect(window.getComputedStyle(element).flexDirection).to.equal("row");
+        // In row direction both label and .root stretch to the full host height via align-self: stretch.
+        // The -1 tolerance accounts for sub-pixel rounding between offsetHeight (integer) and clientHeight.
+        expect(rootPart.offsetHeight).to.be.at.least(element.clientHeight - 1);
+      });
+    });
+
+    it("should not affect .root sizing when label-position is after", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        collectionTester.dataUpdate({
+          "label-text": "Test Label",
+          "label-position": "after"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        assert(rootPart, "Root part should exist.");
+        // In row direction, label sits beside .root; the fix (removing height: 100%) does not affect this axis.
+        expect(window.getComputedStyle(element).flexDirection).to.equal("row");
+        // In row direction both label and .root stretch to the full host height via align-self: stretch.
+        // The -1 tolerance accounts for sub-pixel rounding between offsetHeight (integer) and clientHeight.
+        expect(rootPart.offsetHeight).to.be.at.least(element.clientHeight - 1);
       });
     });
   });
@@ -1470,6 +1638,484 @@
     });
   });
 
+  describe("Entity Layout CSS Tests", function () {
+    // Tests for ent_layout.css: flex-grow guards per control type,
+    // --u-vertical-layout-grow variable, and width/height rules for collection/occurrence layouts.
+
+    describe("Collection and Occurrence Layout Width Rules", function () {
+      it("should set width 100% on u-coll-layout that is the only child", function () {
+        // u-coll-layout:only-child rule sets width: 100%.
+        const occLayout = document.createElement("u-occ-layout");
+        occLayout.classList.add("u-occ-layout");
+        const collLayout = document.createElement("u-coll-layout");
+        collLayout.classList.add("u-coll-layout");
+        occLayout.appendChild(collLayout);
+        document.body.appendChild(occLayout);
+
+        return asyncRun(function () {
+        }).then(function () {
+          const collWidth = collLayout.getBoundingClientRect().width;
+          const parentWidth = occLayout.getBoundingClientRect().width;
+          expect(collWidth).to.equal(parentWidth);
+        }).finally(function () {
+          occLayout.remove();
+        });
+      });
+
+      it("should set width 100% on u-occ-layout that is the only child", function () {
+        // u-occ-layout:only-child rule sets width: 100%.
+        const collLayout = document.createElement("u-coll-layout");
+        collLayout.classList.add("u-coll-layout");
+        const occLayout = document.createElement("u-occ-layout");
+        occLayout.classList.add("u-occ-layout");
+        collLayout.appendChild(occLayout);
+        document.body.appendChild(collLayout);
+
+        return asyncRun(function () {
+        }).then(function () {
+          const occWidth = occLayout.getBoundingClientRect().width;
+          const parentWidth = collLayout.getBoundingClientRect().width;
+          expect(occWidth).to.equal(parentWidth);
+        }).finally(function () {
+          collLayout.remove();
+        });
+      });
+
+      it("should set width 100% on u-coll-layout inside a vertical-scroll parent", function () {
+        // [layout-type*="vertical-scroll"] > .u-coll-layout rule sets width: 100%.
+        const parent = document.createElement("uf-layout");
+        parent.setAttribute("layout-type", "vertical-scroll");
+        const collLayout = document.createElement("u-coll-layout");
+        collLayout.classList.add("u-coll-layout");
+        parent.appendChild(collLayout);
+        document.body.appendChild(parent);
+
+        return asyncRun(function () {
+        }).then(function () {
+          const collWidth = collLayout.getBoundingClientRect().width;
+          const parentWidth = parent.getBoundingClientRect().width;
+          expect(collWidth).to.equal(parentWidth);
+        }).finally(function () {
+          parent.remove();
+        });
+      });
+
+      it("should set width 100% on u-coll-layout inside a vertical-wrap parent", function () {
+        // [layout-type*="vertical-wrap"] > .u-coll-layout rule sets width: 100%.
+        const parent = document.createElement("uf-layout");
+        parent.setAttribute("layout-type", "vertical-wrap");
+        const collLayout = document.createElement("u-coll-layout");
+        collLayout.classList.add("u-coll-layout");
+        parent.appendChild(collLayout);
+        document.body.appendChild(parent);
+
+        return asyncRun(function () {
+        }).then(function () {
+          const collWidth = collLayout.getBoundingClientRect().width;
+          const parentWidth = parent.getBoundingClientRect().width;
+          expect(collWidth).to.equal(parentWidth);
+        }).finally(function () {
+          parent.remove();
+        });
+      });
+    });
+
+    describe("Stretchable direct children flex-grow in uf-layout", function () {
+      it("should apply flex-grow to u-stretchable direct child of uf-layout", function () {
+        // uf-layout > .u-stretchable sets flex-grow via --u-vertical-layout-grow / --u-layout-grow.
+        const layout = document.createElement("uf-layout");
+        layout.style.setProperty("--u-layout-grow", "1");
+        const child = document.createElement("div");
+        child.classList.add("u-stretchable");
+        layout.appendChild(child);
+        document.body.appendChild(layout);
+
+        return asyncRun(function () {
+        }).then(function () {
+          const styles = window.getComputedStyle(child);
+          expect(styles.flexGrow).to.equal("1");
+        }).finally(function () {
+          layout.remove();
+        });
+      });
+
+      it("should not apply flex-grow to non-stretchable direct child of uf-layout", function () {
+        // Without .u-stretchable class, no flex-grow rule applies.
+        const layout = document.createElement("uf-layout");
+        layout.style.setProperty("--u-layout-grow", "1");
+        const child = document.createElement("div");
+        layout.appendChild(child);
+        document.body.appendChild(layout);
+
+        return asyncRun(function () {
+        }).then(function () {
+          const styles = window.getComputedStyle(child);
+          expect(styles.flexGrow).to.equal("0");
+        }).finally(function () {
+          layout.remove();
+        });
+      });
+
+      it("should not apply flex-grow to nested uf-layout child without u-stretchable", function () {
+        // A nested uf-layout does not have .u-stretchable; it has its own container rules.
+        const layout = document.createElement("uf-layout");
+        layout.style.setProperty("--u-layout-grow", "1");
+        const nestedLayout = document.createElement("uf-layout");
+        layout.appendChild(nestedLayout);
+        document.body.appendChild(layout);
+
+        return asyncRun(function () {
+        }).then(function () {
+          const childStyles = window.getComputedStyle(nestedLayout);
+          expect(childStyles.flexGrow).to.equal("0");
+        }).finally(function () {
+          layout.remove();
+        });
+      });
+    });
+
+    describe("switch, checkbox, radio-group, plain-text: no flex-grow as direct children", function () {
+      ["u-switch", "u-checkbox", "u-radio-group", "u-plain-text", "u-listbox"].forEach(function (tag) {
+        it("should not apply flex-grow to " + tag + " as direct child of uf-layout", function () {
+          // These controls do not carry the u-stretchable class, so uf-layout > .u-stretchable does not match.
+          const layout = document.createElement("uf-layout");
+          layout.style.setProperty("--u-layout-grow", "1");
+          const control = document.createElement(tag);
+          control.classList.add(tag);
+          layout.appendChild(control);
+          document.body.appendChild(layout);
+
+          return asyncRun(function () {
+          }).then(function () {
+            const styles = window.getComputedStyle(control);
+            expect(styles.flexGrow).to.equal("0");
+          }).finally(function () {
+            layout.remove();
+          });
+        });
+      });
+
+      ["u-switch", "u-checkbox", "u-radio-group", "u-plain-text", "u-listbox"].forEach(function (tag) {
+        it("should set flex-grow 0 on parent uf-layout whose only direct child is " + tag, function () {
+          // Without u-stretchable, the uf-layout:has(> .u-stretchable) rule does not match.
+          const layout = document.createElement("uf-layout");
+          layout.style.setProperty("--u-layout-grow", "1");
+          const control = document.createElement(tag);
+          control.classList.add(tag);
+          layout.appendChild(control);
+          document.body.appendChild(layout);
+
+          return asyncRun(function () {
+          }).then(function () {
+            const layoutStyles = window.getComputedStyle(layout);
+            expect(layoutStyles.flexGrow).to.equal("0");
+          }).finally(function () {
+            layout.remove();
+          });
+        });
+      });
+
+      ["u-switch", "u-checkbox", "u-radio-group", "u-plain-text", "u-listbox"].forEach(function (tag) {
+        it("should set flex-grow 0 on grandparent uf-layout when nested layout has only " + tag, function () {
+          // Without u-stretchable, uf-layout:has(> uf-layout > .u-stretchable) does not match.
+          const outerLayout = document.createElement("uf-layout");
+          outerLayout.style.setProperty("--u-layout-grow", "1");
+          const innerLayout = document.createElement("uf-layout");
+          const control = document.createElement(tag);
+          control.classList.add(tag);
+          innerLayout.appendChild(control);
+          outerLayout.appendChild(innerLayout);
+          document.body.appendChild(outerLayout);
+
+          return asyncRun(function () {
+          }).then(function () {
+            const outerStyles = window.getComputedStyle(outerLayout);
+            expect(outerStyles.flexGrow).to.equal("0");
+          }).finally(function () {
+            outerLayout.remove();
+          });
+        });
+      });
+    });
+
+    describe("text-field, number-field, button: flex-grow respects --u-vertical-layout-grow guard", function () {
+      // --u-vertical-layout-grow is set by the uf-layout web component (layout_styles.js).
+      // These tests verify that uf-layout > .u-stretchable correctly reads the variable:
+      //   - when set to 0 (vertical layout), stretchable controls must not grow
+      //   - when unset / initial (horizontal layout), stretchable controls grow via --u-layout-grow
+
+      ["u-text-field", "u-number-field", "u-button"].forEach(function (tag) {
+        it("should not grow " + tag + " inside uf-layout when --u-vertical-layout-grow is 0", function () {
+          // Simulates vertical layout: web component sets --u-vertical-layout-grow: 0 on the host.
+          const layout = document.createElement("uf-layout");
+          layout.style.setProperty("--u-vertical-layout-grow", "0");
+          layout.style.setProperty("--u-layout-grow", "1");
+          const control = document.createElement(tag);
+          control.classList.add(tag, "u-stretchable");
+          layout.appendChild(control);
+          document.body.appendChild(layout);
+
+          return asyncRun(function () {
+          }).then(function () {
+            const styles = window.getComputedStyle(control);
+            expect(styles.flexGrow).to.equal("0");
+          }).finally(function () {
+            layout.remove();
+          });
+        });
+
+        it("should allow " + tag + " to grow inside uf-layout when --u-vertical-layout-grow is not constrained", function () {
+          // Simulates horizontal layout: --u-vertical-layout-grow is unset so flex-grow falls back to --u-layout-grow.
+          const layout = document.createElement("uf-layout");
+          layout.style.setProperty("--u-layout-grow", "1");
+          const control = document.createElement(tag);
+          control.classList.add(tag, "u-stretchable");
+          layout.appendChild(control);
+          document.body.appendChild(layout);
+
+          return asyncRun(function () {
+          }).then(function () {
+            const styles = window.getComputedStyle(control);
+            expect(styles.flexGrow).to.equal("1");
+          }).finally(function () {
+            layout.remove();
+          });
+        });
+      });
+
+      ["u-text-field", "u-number-field", "u-button"].forEach(function (tag) {
+        it("should not grow the parent uf-layout container with only " + tag + " when --u-vertical-layout-grow is 0", function () {
+          // uf-layout:has(> uf-layout > .u-stretchable) reads --u-vertical-layout-grow.
+          // Simulates vertical layout: web component sets --u-vertical-layout-grow: 0 on the host.
+          const outerLayout = document.createElement("uf-layout");
+          outerLayout.style.setProperty("--u-vertical-layout-grow", "0");
+          outerLayout.style.setProperty("--u-layout-grow", "1");
+          const innerLayout = document.createElement("uf-layout");
+          const control = document.createElement(tag);
+          control.classList.add(tag, "u-stretchable");
+          innerLayout.appendChild(control);
+          outerLayout.appendChild(innerLayout);
+          document.body.appendChild(outerLayout);
+
+          return asyncRun(function () {
+          }).then(function () {
+            const styles = window.getComputedStyle(outerLayout);
+            expect(styles.flexGrow).to.equal("0");
+          }).finally(function () {
+            outerLayout.remove();
+          });
+        });
+
+        it("should allow the parent uf-layout container with only " + tag + " to grow when --u-vertical-layout-grow is not constrained", function () {
+          // Simulates horizontal layout: --u-vertical-layout-grow is unset so flex-grow falls back to --u-layout-grow.
+          const outerLayout = document.createElement("uf-layout");
+          outerLayout.style.setProperty("--u-layout-grow", "1");
+          const innerLayout = document.createElement("uf-layout");
+          const control = document.createElement(tag);
+          control.classList.add(tag, "u-stretchable");
+          innerLayout.appendChild(control);
+          outerLayout.appendChild(innerLayout);
+          document.body.appendChild(outerLayout);
+
+          return asyncRun(function () {
+          }).then(function () {
+            const styles = window.getComputedStyle(outerLayout);
+            expect(styles.flexGrow).to.equal("1");
+          }).finally(function () {
+            outerLayout.remove();
+          });
+        });
+      });
+    });
+  });
+
+  // ===========================================================================================================
+  // == Stretchable CSS :has() behaviour tests =================================================================
+  // ===========================================================================================================
+  describe("Stretchable container growth via CSS :has()", function () {
+
+    /**
+     * Helper: creates a DOM tree
+     *   <uf-layout>       (outer)
+     *     <uf-layout>     (inner)
+     *       ...childElements
+     *     </uf-layout>
+     *   </uf-layout>
+     * and appends it to the document for computed style resolution.
+     */
+    function buildEntityDOM(childElements) {
+      const coll = document.createElement("uf-layout");
+      const occ = document.createElement("uf-layout");
+      childElements.forEach(function (child) {
+        occ.appendChild(child);
+      });
+      coll.appendChild(occ);
+      document.body.appendChild(coll);
+      return { "coll": coll,
+               "occ": occ };
+    }
+
+    function createStretchableWidget() {
+      const el = document.createElement("fluent-text-field");
+      el.classList.add("u-text-field", "u-stretchable");
+      return el;
+    }
+
+    function createCompactWidget() {
+      const el = document.createElement("fluent-switch");
+      el.classList.add("u-switch");
+      return el;
+    }
+
+    afterEach(function () {
+      // Clean up any appended entity DOM trees.
+      document.querySelectorAll("body > uf-layout").forEach(function (el) {
+        el.remove();
+      });
+    });
+
+    describe("uf-layout detects stretchable direct children", function () {
+
+      it("should detect a single stretchable widget as direct child", function () {
+        const widget = createStretchableWidget();
+        const dom = buildEntityDOM([widget]);
+        expect(dom.occ.querySelector(":scope > .u-stretchable"), "uf-layout should have a direct stretchable child").to.exist;
+      });
+
+      it("should not detect stretchable when all children are compact", function () {
+        const widget = createCompactWidget();
+        const dom = buildEntityDOM([widget]);
+        expect(dom.occ.querySelector(":scope > .u-stretchable"), "uf-layout should have no stretchable direct child").to.be.null;
+      });
+
+      it("should detect stretchable in a mix of stretchable and compact children", function () {
+        const stretchable = createStretchableWidget();
+        const compact = createCompactWidget();
+        const dom = buildEntityDOM([stretchable, compact]);
+        expect(dom.occ.querySelector(":scope > .u-stretchable"), "uf-layout should detect the stretchable child among mixed children").to.exist;
+      });
+
+      it("should not detect stretchable when uf-layout is empty", function () {
+        const dom = buildEntityDOM([]);
+        expect(dom.occ.querySelector(":scope > .u-stretchable"), "Empty uf-layout should not match").to.be.null;
+      });
+    });
+
+    describe("outer uf-layout detects stretchable through inner uf-layout", function () {
+
+      it("should detect stretchable grandchild via outer > inner > widget path", function () {
+        const widget = createStretchableWidget();
+        const dom = buildEntityDOM([widget]);
+        const match = dom.coll.querySelector(":scope > uf-layout > .u-stretchable");
+        expect(match, "outer uf-layout should detect stretchable grandchild through inner uf-layout").to.exist;
+      });
+
+      it("should not detect stretchable when inner layout contains only compact children", function () {
+        const widget = createCompactWidget();
+        const dom = buildEntityDOM([widget]);
+        const match = dom.coll.querySelector(":scope > uf-layout > .u-stretchable");
+        expect(match, "outer uf-layout should not detect stretchable when only compact children exist").to.be.null;
+      });
+
+      it("should not detect stretchable when inner uf-layout is empty", function () {
+        const dom = buildEntityDOM([]);
+        const match = dom.coll.querySelector(":scope > uf-layout > .u-stretchable");
+        expect(match, "Empty outer uf-layout should not match").to.be.null;
+      });
+    });
+
+    describe("Sub-widget inside a widget is excluded by direct child selector", function () {
+
+      it("should only count the top-level widget, not a nested sub-widget button", function () {
+        const textField = createStretchableWidget();
+        const subButton = document.createElement("fluent-button");
+        subButton.classList.add("u-button", "u-stretchable");
+        textField.appendChild(subButton);
+
+        const dom = buildEntityDOM([textField]);
+
+        const directChildren = dom.occ.querySelectorAll(":scope > .u-stretchable");
+        expect(directChildren.length, "Only one direct stretchable child should exist").to.equal(1);
+        expect(directChildren[0].tagName.toLowerCase(), "Direct stretchable child should be the text-field, not the sub-widget button").to.equal("fluent-text-field");
+      });
+
+      it("should not match when a compact widget contains a stretchable sub-widget", function () {
+        const switchEl = createCompactWidget();
+        const subButton = document.createElement("fluent-button");
+        subButton.classList.add("u-button", "u-stretchable");
+        switchEl.appendChild(subButton);
+
+        const dom = buildEntityDOM([switchEl]);
+
+        const directStretchable = dom.occ.querySelector(":scope > .u-stretchable");
+        expect(directStretchable, "occ-layout should not match when only nested sub-widgets are stretchable").to.be.null;
+      });
+
+      it("outer uf-layout should not match when stretchable exists only inside a nested sub-widget", function () {
+        const switchEl = createCompactWidget();
+        const subButton = document.createElement("fluent-button");
+        subButton.classList.add("u-button", "u-stretchable");
+        switchEl.appendChild(subButton);
+
+        const dom = buildEntityDOM([switchEl]);
+
+        const match = dom.coll.querySelector(":scope > uf-layout > .u-stretchable");
+        expect(match, "outer uf-layout should not match when stretchable is only nested inside a compact widget").to.be.null;
+      });
+    });
+
+    describe("Dynamic addition and removal of u-stretchable class", function () {
+
+      it("should lose the match after removing u-stretchable from the only widget", function () {
+        const widget = createStretchableWidget();
+        const dom = buildEntityDOM([widget]);
+
+        expect(dom.occ.querySelector(":scope > .u-stretchable"), "Before removal: should match").to.exist;
+
+        widget.classList.remove("u-stretchable");
+
+        expect(dom.occ.querySelector(":scope > .u-stretchable"), "After removal: should no longer match").to.be.null;
+      });
+
+      it("should gain the match after adding u-stretchable to a widget", function () {
+        const widget = document.createElement("fluent-text-field");
+        widget.classList.add("u-text-field");
+        const dom = buildEntityDOM([widget]);
+
+        expect(dom.occ.querySelector(":scope > .u-stretchable"), "Before addition: should not match").to.be.null;
+
+        widget.classList.add("u-stretchable");
+
+        expect(dom.occ.querySelector(":scope > .u-stretchable"), "After addition: should match").to.exist;
+      });
+
+      it("should still match after removing u-stretchable from one sibling when another remains", function () {
+        const widget1 = createStretchableWidget();
+        const widget2 = document.createElement("fluent-number-field");
+        widget2.classList.add("u-number-field", "u-stretchable");
+        const dom = buildEntityDOM([widget1, widget2]);
+
+        widget1.classList.remove("u-stretchable");
+
+        expect(dom.occ.querySelector(":scope > .u-stretchable"), "Should still match because widget2 is stretchable").to.exist;
+      });
+
+      it("should lose match on both occ and coll after removing u-stretchable from all children", function () {
+        const widget1 = createStretchableWidget();
+        const widget2 = document.createElement("fluent-number-field");
+        widget2.classList.add("u-number-field", "u-stretchable");
+        const dom = buildEntityDOM([widget1, widget2]);
+
+        widget1.classList.remove("u-stretchable");
+        widget2.classList.remove("u-stretchable");
+
+        expect(dom.occ.querySelector(":scope > .u-stretchable"), "uf-layout should not match after all stretchable removed").to.be.null;
+        expect(dom.coll.querySelector(":scope > uf-layout > .u-stretchable"), "outer uf-layout should not match after all stretchable removed").to.be.null;
+      });
+    });
+
+  });
+
   describe("Alignment property independence", function () {
     it("setting horizontal-align alone does not override vertical-align on CollectionLayout", async function () {
       const collectionObjDef = new MockEntityDefinition("align_indep_coll_1", "UX.CollectionLayout", "entity", {}, []);
@@ -1707,3 +2353,4 @@
     });
   });
 })();
+

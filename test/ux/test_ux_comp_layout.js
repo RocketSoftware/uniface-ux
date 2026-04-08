@@ -133,7 +133,7 @@
 
     it("check default properties values", function () {
       assert.strictEqual(tester.defaultValues["label-size"], "normal", "Default value of 'label-size' should be 'normal'.");
-      assert.strictEqual(tester.defaultValues["label-align"], "start", "Default value of 'label-alignment' should be 'start'.");
+      assert.strictEqual(tester.defaultValues["label-align"], "start", "Default value of 'label-align' should be 'start'.");
       assert.strictEqual(tester.defaultValues["label-position"], "above", "Default value of 'label-position' should be 'above'.");
       assert.strictEqual(tester.defaultValues["layout-type"], "vertical-scroll", "Default value of 'layout-type' should be 'vertical-scroll'.");
       assert.strictEqual(tester.defaultValues["horizontal-align"], "start", "Default value of 'horizontal-align' should be 'start'.");
@@ -155,10 +155,6 @@
     });
   });
 
-  describe("mapTrigger()", function () {
-    it("no test required", function () { });
-  });
-
   describe("dataUpdate()", function () {
     let element;
 
@@ -171,7 +167,7 @@
       });
     });
 
-    describe("update label-text, label-size, label-alignment, label-position", function () {
+    describe("update label-text, label-size, label-align, label-position", function () {
       it("update label-text and render as span by default", function () {
         const data = {
           "label-text": "Updated Layout"
@@ -217,7 +213,7 @@
       });
 
       ["start", "center", "end"].forEach(function (alignment) {
-        it(`update label-alignment to ${alignment}`, function () {
+        it(`update label-align to ${alignment}`, function () {
           const data = {
             "label-align": alignment
           };
@@ -296,6 +292,175 @@
         }).then(function () {
           expect(element.getAttribute("vertical-align")).to.equal("auto");
         });
+      });
+    });
+  });
+
+  /**
+   * CompLayout renders with a label section when label-text is set.
+   * These tests verify that .root sizes to the remaining space after the label,
+   * rather than consuming the full host height.
+   */
+  describe("Label and Root Space Distribution", function () {
+    let element;
+
+    before(function () {
+      return asyncRun(function () {
+        tester.createWidget();
+        element = tester.element;
+        assert(element, "Widget top element is not defined.");
+      });
+    });
+
+    afterEach(function () {
+      element.style.height = "";
+    });
+
+    it("should have flex-grow 1 on .root so remaining space fills correctly after siblings", function () {
+      // Wait for a render frame so computed styles reflect the current layout.
+      return asyncRun(function () {}).then(function () {
+        const shadowRoot = element.shadowRoot;
+        assert(shadowRoot, "Shadow root should exist.");
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        assert(rootPart, "Root part should exist.");
+        // flex: 1 ... auto sets flex-grow to 1; height: 100% must not be present to allow correct flex sizing.
+        expect(window.getComputedStyle(rootPart).flexGrow).to.equal("1");
+      });
+    });
+
+    it("should size .root below the full host height when a label is present", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        tester.dataUpdate({
+          "label-text": "Test Label"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        const labelPart = shadowRoot.querySelector("[part='label']");
+        assert(rootPart, "Root part should exist.");
+        // .root must leave room for the label section; it must not consume the full host height.
+        if (labelPart && labelPart.offsetHeight > 0) {
+          expect(rootPart.offsetHeight).to.be.lessThan(element.clientHeight);
+        }
+      });
+    });
+
+    it("should not allow .root and label heights to exceed the host height", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        tester.dataUpdate({
+          "label-text": "Test Label"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        const labelPart = shadowRoot.querySelector("[part='label']");
+        assert(rootPart, "Root part should exist.");
+        assert(labelPart, "Label part should exist when label-text is set.");
+        const totalHeight = rootPart.offsetHeight + labelPart.offsetHeight;
+        // Combined height of .root and .label must fit within the host boundaries.
+        expect(totalHeight).to.be.at.most(element.clientHeight);
+      });
+    });
+
+    it("should leave space for the label when label-position is below", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        tester.dataUpdate({
+          "label-text": "Test Label",
+          "label-position": "below"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        const labelPart = shadowRoot.querySelector("[part='label']");
+        assert(rootPart, "Root part should exist.");
+        // With label-position below, .root must still accommodate the label; full host height is not consumed.
+        if (labelPart && labelPart.offsetHeight > 0) {
+          expect(rootPart.offsetHeight).to.be.lessThan(element.clientHeight);
+        }
+      });
+    });
+
+    it("should size .root below the full host height when vertical-align is end and label is present", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        tester.dataUpdate({
+          "label-text": "Test Label",
+          "layout-type": "vertical-scroll",
+          "vertical-align": "end"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        const labelPart = shadowRoot.querySelector("[part='label']");
+        assert(rootPart, "Root part should exist.");
+        // With vertical-align=end, .root must not overflow the host; flex-grow fills remaining space correctly.
+        if (labelPart && labelPart.offsetHeight > 0) {
+          expect(rootPart.offsetHeight).to.be.lessThan(element.clientHeight);
+        }
+      });
+    });
+
+    it("should size .root below the full host height when vertical-align is center and label is present", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        tester.dataUpdate({
+          "label-text": "Test Label",
+          "vertical-align": "center"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        const labelPart = shadowRoot.querySelector("[part='label']");
+        assert(rootPart, "Root part should exist.");
+        // .root must leave room for the label regardless of vertical-align value.
+        if (labelPart && labelPart.offsetHeight > 0) {
+          expect(rootPart.offsetHeight).to.be.lessThan(element.clientHeight);
+        }
+      });
+    });
+
+    it("should not affect .root sizing when label-position is before", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        tester.dataUpdate({
+          "label-text": "Test Label",
+          "label-position": "before"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        assert(rootPart, "Root part should exist.");
+        // In row direction, label sits beside .root; the fix (removing height: 100%) does not affect this axis.
+        expect(window.getComputedStyle(element).flexDirection).to.equal("row");
+        // In row direction .root stretches to fill the content area (host height minus top/bottom padding).
+        // The -1 tolerance accounts for sub-pixel rounding between offsetHeight (integer) and clientHeight.
+        const hostStyles = window.getComputedStyle(element);
+        const verticalPadding = parseFloat(hostStyles.paddingTop) + parseFloat(hostStyles.paddingBottom);
+        expect(rootPart.offsetHeight).to.be.at.least(element.clientHeight - verticalPadding - 1);
+      });
+    });
+
+    it("should not affect .root sizing when label-position is after", function () {
+      return asyncRun(function () {
+        element.style.height = "300px";
+        tester.dataUpdate({
+          "label-text": "Test Label",
+          "label-position": "after"
+        });
+      }).then(function () {
+        const shadowRoot = element.shadowRoot;
+        const rootPart = shadowRoot.querySelector("[part='root']");
+        assert(rootPart, "Root part should exist.");
+        // In row direction, label sits beside .root; the fix (removing height: 100%) does not affect this axis.
+        expect(window.getComputedStyle(element).flexDirection).to.equal("row");
+        // In row direction .root stretches to fill the content area (host height minus top/bottom padding).
+        // The -1 tolerance accounts for sub-pixel rounding between offsetHeight (integer) and clientHeight.
+        const hostStyles = window.getComputedStyle(element);
+        const verticalPadding = parseFloat(hostStyles.paddingTop) + parseFloat(hostStyles.paddingBottom);
+        expect(rootPart.offsetHeight).to.be.at.least(element.clientHeight - verticalPadding - 1);
       });
     });
   });

@@ -1,6 +1,7 @@
 .u-radio-group {
   display: inline-flex;
   vertical-align: bottom;
+  flex-grow: 0;
 }
 
 .u-radio-group .u-radio {

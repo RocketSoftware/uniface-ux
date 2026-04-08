@@ -174,7 +174,7 @@ export class Button extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-button", "", "", [
-    new StyleClassManager(this, ["u-button", "neutral"]),
+    new StyleClassManager(this, ["u-button", "neutral", "u-stretchable"]),
     new AttributeString(this, undefined, "currentValue", ""),
     new AttributeString(this, "html:title", "title", undefined),
     new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),

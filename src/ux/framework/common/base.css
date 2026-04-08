@@ -155,3 +155,26 @@ fluent-card {
 .u-text-area[u-label-position="below"] .u-label-text:not([hidden]) {
   display: block;
 }
+
+/* Stretchable growth: each uf-layout applies flex-grow when it contains a
+   stretchable widget or a nested entity layout with stretch alignment.
+   - .u-stretchable widgets are matched via direct-child (>) to exclude
+     sub-widgets (e.g. Button inside TextField).
+   - Nested uf-layout elements with .u-ai-stretch or .u-jc-stretch are treated
+     as "stretchable" at the entity boundary — this lets growth chain through
+     arbitrarily deep coll/occ nesting but stops at any intermediate layout
+     that does NOT have stretch alignment.
+   - --u-vertical-layout-grow is set to 0 in vertical layouts, suppressing
+     main-axis growth for widgets that only stretch horizontally. */
+uf-layout:has(> .u-stretchable, > uf-layout:is(.u-ai-stretch, .u-jc-stretch)),
+uf-layout:has(> uf-layout > .u-stretchable, > uf-layout > uf-layout:is(.u-ai-stretch, .u-jc-stretch)),
+uf-layout > .u-stretchable {
+  flex-grow: var(--u-vertical-layout-grow, var(--u-layout-grow, 0));
+}
+
+/* Allow containers to shrink below content size to prevent overflow. */
+uf-layout:has(> .u-stretchable, > uf-layout:is(.u-ai-stretch, .u-jc-stretch)),
+uf-layout:has(> uf-layout > .u-stretchable, > uf-layout > uf-layout:is(.u-ai-stretch, .u-jc-stretch)) {
+  min-height: 0;
+  min-width: 0;
+}

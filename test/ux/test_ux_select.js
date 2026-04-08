@@ -116,6 +116,7 @@
         assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
         assert(widgetClass.defaultValues["class:u-select"], "Class is not defined!");
+        assert(widgetClass.defaultValues["class:u-stretchable"], "class:u-stretchable should be registered as default value");
       } catch (e) {
         assert(false, `Failed to construct new widget, exception ${e}.`);
       }

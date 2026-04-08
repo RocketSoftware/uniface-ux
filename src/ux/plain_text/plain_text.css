@@ -1,3 +1,7 @@
+.u-plain-text {
+  flex-grow: 0;
+}
+
 .u-plain-text .u-control,
 .u-plain-text .u-paragraph {
     background-color: inherit;

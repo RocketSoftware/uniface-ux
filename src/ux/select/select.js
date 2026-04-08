@@ -302,7 +302,7 @@ export class Select extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-select", "", "", [
-    new StyleClassManager(this, ["u-select", "collapsible", "outline"]),
+    new StyleClassManager(this, ["u-select", "collapsible", "outline", "u-stretchable"]),
     new AttributeString(this, "html:title", "title", undefined),
     new AttributeString(this, undefined, "role", "combobox"),
     new AttributeString(this, undefined, "currentValue", ""),
