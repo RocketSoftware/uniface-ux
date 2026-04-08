@@ -680,7 +680,7 @@
       }).then(function () {
         const event = new window.Event("hover");
         element.dispatchEvent(event);
-        assert.equal(element.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth", "Subwidget class name does not match.");
+        assert.equal(element.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button u-stretchable stealth", "Subwidget class name does not match.");
         assert.equal(element.childNodes[4].childNodes[0].getAttribute("slot"), "start", "Failed to show the slot attribute and value does not match.");
         assert(element.childNodes[4].childNodes[0].hasAttribute("slot"), "Failed to show the placeHolderText attribute and value does not match.");
         assert.equal(element.childNodes[4].childNodes[0].getAttribute("class"), "u-icon ms-Icon ms-Icon--PublicEmail", "Subwidget icon class name does not match.");
@@ -699,7 +699,7 @@
       }).then(function () {
         const event = new window.Event("hover");
         element.dispatchEvent(event);
-        assert.equal(element.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth", "Subwidget class name does not match.");
+        assert.equal(element.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button u-stretchable stealth", "Subwidget class name does not match.");
         assert.equal(element.childNodes[4].childNodes[0].getAttribute("slot"), "start", "Failed to show the slot attribute and value does not match.");
         assert(element.childNodes[4].childNodes[0].hasAttribute("slot"), "Failed to show the placeHolderText attribute and value does not match.");
         assert.equal(element.childNodes[4].childNodes[0].getAttribute("class"), "u-icon ms-Icon ms-Icon--PublicEmail", "Subwidget icon class name does not match.");
@@ -714,7 +714,7 @@
           "changebutton:icon": "PublicEmail"
         });
       }).then(function () {
-        assert.equal(element.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth", "Subwidget class name does not match.");
+        assert.equal(element.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button u-stretchable stealth", "Subwidget class name does not match.");
         assert(element.childNodes[4].childNodes[0].hasAttribute("slot"), "Failed to show the placeHolderText attribute and value does not match.");
       });
     });
@@ -731,7 +731,7 @@
       }).then(function () {
         assert(element.className, "outline u-text-field disabled", "Disabled class is not applied.");
         assert(element.hasAttribute("disabled"), "Failed to show the disabled attribute.");
-        assert.equal(element.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth disabled", "Subwidget class name does not match.");
+        assert.equal(element.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button u-stretchable stealth disabled", "Subwidget class name does not match.");
         assert(element.childNodes[4].hasAttribute("disabled"), "Failed to show the disabled attribute.");
       });
     });
@@ -748,7 +748,7 @@
       }).then(function () {
         assert(element.className, "outline u-text-field", "Disabled class is applied.");
         assert(!element.hasAttribute("disabled"), "Failed to hide the disabled attribute.");
-        assert.equal(element.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button stealth", "Subwidget class name does not match.");
+        assert.equal(element.childNodes[4].getAttribute("class"), "u-sw-changebutton u-button u-stretchable stealth", "Subwidget class name does not match.");
         assert(!element.childNodes[4].hasAttribute("disabled"), "Failed to hide the disabled attribute.");
       });
     });

@@ -46,7 +46,7 @@ export class NumberField extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-number-field", "", "", [
-    new StyleClassManager(this, ["u-number-field", "outline"]),
+    new StyleClassManager(this, ["u-number-field", "outline", "u-stretchable"]),
     new AttributeString(this, undefined, "currentValue", ""),
     new AttributeString(this, "value", "value", "", false, "change"),
     new AttributeString(this, "html:size", "size", "", true),

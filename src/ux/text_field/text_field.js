@@ -120,7 +120,7 @@ export class TextField extends Widget {
    */
   // prettier-ignore
   static structure = new Element(this, "fluent-text-field", "", "", [
-    new StyleClassManager(this, ["u-text-field", "outline"]),
+    new StyleClassManager(this, ["u-text-field", "outline", "u-stretchable"]),
     new AttributeString(this, undefined, "currentValue", ""),
     new AttributeString(this, "value", "value", "", false, "change"),
     new AttributeString(this, "html:title", "title", undefined),

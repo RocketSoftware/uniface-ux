@@ -92,6 +92,7 @@
         assert(widget, "Widget is not defined!");
         verifyWidgetClass(widgetClass);
         assert(widgetClass.defaultValues["class:u-checkbox"], "Class is not defined!");
+        expect(widgetClass.defaultValues["class:u-stretchable"], "Checkbox should not have class:u-stretchable as a default value").to.not.be.ok;
       } catch (e) {
         assert(false, `Failed to construct new widget, exception ${e}.`);
       }

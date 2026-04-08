@@ -1,5 +1,6 @@
 .u-checkbox {
   align-items: flex-start;
+  flex-grow: 0;
 }
 
 .u-checkbox::part(control) {

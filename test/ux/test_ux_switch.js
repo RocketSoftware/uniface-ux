@@ -89,6 +89,7 @@
         assert(widget, "Widget is not defined!");
         const widgetClass = tester.getWidgetClass();
         assert(widgetClass.defaultValues["class:u-switch"], "Class is not defined!");
+        expect(widgetClass.defaultValues["class:u-stretchable"], "Switch should not have class:u-stretchable as a default value").to.not.be.ok;
       } catch (e) {
         assert(false, `Failed to construct new widget, exception ${e}.`);
       }

@@ -44,7 +44,6 @@ export const layoutStyles = css`
     flex-wrap: var(--u-layout-flex-wrap, nowrap);
     justify-content: var(--u-layout-justify-content, normal);
     align-items: var(--u-layout-align-items, normal);
-    height: 100%;
     flex: 1 var(--u-layout-shrink, 1) auto;
   }
 
@@ -118,46 +117,56 @@ export const layoutStyles = css`
      ============================================ */
   :host(.u-jc-start) {
     --u-layout-justify-content: start;
+    --u-layout-grow: 0;
   }
 
   :host(.u-jc-center) {
     --u-layout-justify-content: safe center;
+    --u-layout-grow: 0;
   }
 
   :host(.u-jc-end) {
     --u-layout-justify-content: safe end;
-  }
-
-  :host(.u-jc-stretch) {
-    --u-layout-justify-content: stretch;
+    --u-layout-grow: 0;
   }
 
   :host(.u-jc-space-between) {
     --u-layout-justify-content: space-between;
+    --u-layout-grow: 0;
   }
 
   :host(.u-jc-space-around) {
     --u-layout-justify-content: space-around;
+    --u-layout-grow: 0;
   }
 
   :host(.u-jc-space-evenly) {
     --u-layout-justify-content: space-evenly;
+    --u-layout-grow: 0;
   }
 
   :host(.u-ai-start) {
     --u-layout-align-items: start;
+    --u-layout-grow: 0;
   }
 
   :host(.u-ai-center) {
     --u-layout-align-items: safe center;
+    --u-layout-grow: 0;
   }
 
   :host(.u-ai-end) {
     --u-layout-align-items: safe end;
+    --u-layout-grow: 0;
   }
 
   :host(.u-ai-stretch) {
     --u-layout-align-items: stretch;
+  }
+
+  :host(.u-jc-stretch) {
+    --u-layout-justify-content: start;
+    --u-layout-grow: 1;
   }
 
   /* ============================================
@@ -185,6 +194,10 @@ export const layoutStyles = css`
   :host(.u-layout-type-hw) {
     --u-layout-flex-direction: row;
   }
+  :host(.u-layout-type-hs),
+  :host(.u-layout-type-hw) {
+    --u-vertical-layout-grow: initial;
+  }
 
   :host(.u-layout-type-hs) {
     --u-layout-flex-wrap: nowrap;
@@ -196,5 +209,32 @@ export const layoutStyles = css`
   :host(.u-layout-type-hw) {
     --u-layout-flex-wrap: wrap;
     --u-layout-shrink: 1;
+  }
+    
+  :host(.u-layout-type-vs.u-jc-stretch) .root,
+  :host(.u-layout-type-vw.u-jc-stretch) .root,
+  :host:has(.u-layout-type-vs.u-jc-stretch:not(.u-ai-stretch)) {
+    --u-vertical-layout-grow: 0;
+  }
+
+  :host(.u-layout-type-vs.u-ai-stretch),
+  :host(.u-layout-type-vw.u-ai-stretch) {
+    --u-layout-grow: 1;
+  }
+  
+  :host(.u-layout-type-hw.u-jc-stretch),
+  :host(.u-layout-type-hs.u-jc-stretch) {
+    --u-layout-grow: 1;
+  }
+
+  :host(.u-layout-type-hw:not(.u-jc-stretch)),
+  :host(.u-layout-type-hs:not(.u-jc-stretch)) {
+    --u-layout-grow: 0;
+  }
+
+  :host(.u-layout-type-vs.u-ai-stretch:not(.u-jc-stretch)) .root,
+  :host(.u-layout-type-vw.u-ai-stretch:not(.u-jc-stretch)) .root {
+    --u-vertical-layout-grow: 0;
+    --u-layout-grow: 0;
   }
 `;
