@@ -4,6 +4,7 @@ class IndexPage extends BasePage {
     constructor(page)
 {
     super(page);
+    this.buttonUnitTestLink = '#button-unit-tests';
     this.childWidgetsWorkerUnitTestLink = '#child-widgets-worker-unit-tests';
     this.layoutWebComponentUnitTestLink = '#layout-web-component-unit-tests';
     this.layoutWebComponentLink = '#layout';

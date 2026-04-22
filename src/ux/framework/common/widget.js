@@ -471,9 +471,13 @@ export class Widget extends Base {
   blockUI() {
     this.log("blockUI");
 
-    this.setProperties({
-      "uiblocked": true
-    });
+    /** @type {object} */
+    let widgetClass = this.constructor;
+    if (widgetClass.setters["uiblocked"]) {
+      this.setProperties({
+        "uiblocked": true
+      });
+    }
 
     // Call blockUI() for each sub-widget.
     Object.keys(this.subWidgets).forEach((key) => {
@@ -487,9 +491,13 @@ export class Widget extends Base {
   unblockUI() {
     this.log("unblockUI");
 
-    this.setProperties({
-      "uiblocked": false
-    });
+    /** @type {object} */
+    let widgetClass = this.constructor;
+    if (widgetClass.setters["uiblocked"]) {
+      this.setProperties({
+        "uiblocked": false
+      });
+    }
 
     // Call unblockUI() for each sub-widget.
     Object.keys(this.subWidgets).forEach((key) => {

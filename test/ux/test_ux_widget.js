@@ -38,6 +38,7 @@ export class TestWidget extends Widget {
 (function () {
   "use strict";
 
+  const assert = chai.assert;
   const expect = chai.expect;
   const sandbox = sinon.createSandbox();
 
@@ -155,26 +156,6 @@ export class TestWidget extends Widget {
       expect(testWidget.data["html:current-value"]).to.equal("");
     });
 
-
-    describe("dataCleanup()", function () {
-      const mockData = {
-        "class:class-test-1": "true",
-        "class:class-test-2": "true"
-      };
-      const mockPropertNames = new Set(["class:class-test-1", "class:class-test-2"]);
-
-      it("clean all class properties of the widget that are received as parameters in the dataCleanup() function", function () {
-        testWidget.dataUpdate(mockData);
-        expect(testWidget.elements.widget, "Widget top element is not defined!");
-
-        testWidget.dataCleanup(mockPropertNames);
-        mockPropertNames.forEach((propertyName) => {
-          const className = propertyName.split(":")[1];
-          expect(testWidget.elements.widget.classList.contains(className)).to.equal(false);
-        });
-      });
-    });
-
     it("getValue()", function () {
       const value = testWidget.getValue();
       expect(value).to.equal(false);
@@ -226,6 +207,68 @@ export class TestWidget extends Widget {
 
       testWidget.unblockUI();
       expect(testWidget.elements.widget.readOnly).to.equal(false);
+    });
+
+    describe("blockUI()/unblockUI() without AttributeUIBlocking", function () {
+      // Widget without AttributeUIBlocking — simulates DataGrid, Layout, etc.
+      class TestWidgetNoUIBlocking extends Widget {
+        static subWidgets = {};
+        static defaultValues = {};
+        static setters = {};
+        static getters = {};
+        static triggers = {};
+        static structure = new Element(this, "fluent-text-field", "", "", [
+          new StyleClassManager(this, ["u-test-no-blocking"]),
+          new AttributeString(this, undefined, "current-value", "")
+        ]);
+      }
+
+      let widget, returnedProcess, consoleWarnSpy, definitions;
+      definitions = {
+        "widget_class": "Widget"
+      };
+
+      beforeEach(function () {
+        widget = new TestWidgetNoUIBlocking;
+        returnedProcess = TestWidgetNoUIBlocking.processLayout(widget, definitions);
+        widget.onConnect(returnedProcess);
+        widget.dataInit();
+      });
+
+      it("blockUI() does not warn or set uiblocked when no setter is registered", function () {
+        consoleWarnSpy = sandbox.spy(console, "warn");
+        widget.blockUI();
+        assert(!consoleWarnSpy.called, "Console warning should not be triggered.");
+        assert(!widget.data.hasOwnProperty("uiblocked"), "Property uiblocked should not exist.");
+        sandbox.restore();
+      });
+
+      it("unblockUI() does not warn or set uiblocked when no setter is registered", function () {
+        consoleWarnSpy = sandbox.spy(console, "warn");
+        widget.unblockUI();
+        assert(!consoleWarnSpy.called, "Console warning should not be triggered.");
+        assert(!widget.data.hasOwnProperty("uiblocked"), "Property uiblocked should not exist.");
+        sandbox.restore();
+      });
+    });
+
+    describe("dataCleanup()", function () {
+      const mockData = {
+        "class:class-test-1": "true",
+        "class:class-test-2": "true"
+      };
+      const mockPropertNames = new Set(["class:class-test-1", "class:class-test-2"]);
+
+      it("clean all class properties of the widget that are received as parameters in the dataCleanup() function", function () {
+        testWidget.dataUpdate(mockData);
+        expect(testWidget.elements.widget, "Widget top element is not defined!");
+
+        testWidget.dataCleanup(mockPropertNames);
+        mockPropertNames.forEach((propertyName) => {
+          const className = propertyName.split(":")[1];
+          expect(testWidget.elements.widget.classList.contains(className)).to.equal(false);
+        });
+      });
     });
   });
 })();
