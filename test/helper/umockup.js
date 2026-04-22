@@ -552,9 +552,7 @@
 
     /**
      * Emulate the user click on the item with the given itemIndex as its index (start from 1);
-     *
-     * @param {Number} itemIndex the index of the item to click on. Optional, default means
-     *                 the top item or element, or the first item.
+     * @param {Number} itemIndex the index of the item to click on. Optional, default means the top item or element, or the first item.
      */
     userClick(itemIndex) {
       let control;
@@ -585,10 +583,117 @@
     }
 
     /**
+     * Internal helper that builds and dispatches a KeyboardEvent of the given type.
+     * @param {string} eventType the event type ("keydown" or "keypress").
+     * @param {string} key the key value (e.g. "Enter", " ", "ArrowDown", "ArrowUp").
+     * @param {HTMLElement} [target] optional target element; defaults to the widget element.
+     */
+    _dispatchKeyboardEvent(eventType, key, target) {
+      const keyMap = {
+        "Enter": {
+          "code": "Enter",
+          "which": 13,
+          "keyCode": 13
+        },
+        " ": {
+          "code": "Space",
+          "which": 32,
+          "keyCode": 32
+        },
+        "ArrowUp": {
+          "code": "ArrowUp",
+          "which": 38,
+          "keyCode": 38
+        },
+        "ArrowDown": {
+          "code": "ArrowDown",
+          "which": 40,
+          "keyCode": 40
+        },
+        "ArrowLeft": {
+          "code": "ArrowLeft",
+          "which": 37,
+          "keyCode": 37
+        },
+        "ArrowRight": {
+          "code": "ArrowRight",
+          "which": 39,
+          "keyCode": 39
+        },
+        "Escape": {
+          "code": "Escape",
+          "which": 27,
+          "keyCode": 27
+        },
+        "Tab": {
+          "code": "Tab",
+          "which": 9,
+          "keyCode": 9
+        }
+      };
+      const mapped = keyMap[key] || {
+        "code": key,
+        "which": 0,
+        "keyCode": 0
+      };
+      const event = new window.KeyboardEvent(eventType, {
+        "key": key,
+        "code": mapped.code,
+        "which": mapped.which,
+        "keyCode": mapped.keyCode,
+        "bubbles": true,
+        "cancelable": true
+      });
+      (target || this.element).dispatchEvent(event);
+    }
+
+    /**
+     * Emulate a keyboard keydown event on the widget element or a given target.
+     * @param {string} key the key value (e.g. "Enter", " ", "ArrowDown", "ArrowUp").
+     * @param {HTMLElement} [target] optional target element; defaults to the widget element.
+     */
+    userKeyDown(key, target) {
+      this._dispatchKeyboardEvent("keydown", key, target);
+    }
+
+    /**
+     * Asynchronous version of userKeyDown();
+     * @param {string} key the key value (e.g. "Enter", " ", "ArrowDown").
+     * @param {HTMLElement} [target] optional target element; defaults to the widget element.
+     * @returns a promise.
+     */
+    asyncUserKeyDown(key, target) {
+      const _this = this;
+      return asyncRun(function() {
+        _this.userKeyDown(key, target);
+      });
+    }
+
+    /**
+     * Emulate a keyboard keypress event on the widget element or a given target.
+     * @param {string} key the key value (e.g. "Enter", " ", "ArrowDown", "ArrowUp").
+     * @param {HTMLElement} [target] optional target element; defaults to the widget element.
+     */
+    userKeyPress(key, target) {
+      this._dispatchKeyboardEvent("keypress", key, target);
+    }
+
+    /**
+     * Asynchronous version of userKeyPress();
+     * @param {string} key the key value (e.g. "Enter", " ", "ArrowDown").
+     * @param {HTMLElement} [target] optional target element; defaults to the widget element.
+     * @returns a promise.
+     */
+    asyncUserKeyPress(key, target) {
+      const _this = this;
+      return asyncRun(function() {
+        _this.userKeyPress(key, target);
+      });
+    }
+
+    /**
      * Asynchronous version of userClick();
-     *
-     * @param {Number} itemIndex the index of the item to click on. Optional, default means
-     *                 the top item or element, or the first item.
+     * @param {Number} itemIndex the index of the item to click on. Optional, default means the top item or element, or the first item.
      * @returns a promise.
      */
     asyncUserClick(itemIndex) {
@@ -600,7 +705,6 @@
 
     /**
      * Emulate the user input on an editable widget.
-     *
      * @param {String} value the new input value;
      */
     userInput(value) {
@@ -621,7 +725,6 @@
 
     /**
      * Asynchronous version of userInput();
-     *
      * @param {String} value the new input value;
      * @returns a promise.
      */
@@ -667,6 +770,20 @@
         });
       });
       this.widget.dataUpdate(data);
+    }
+
+    /**
+     * Cleans up widget state for the given property names.
+     * When called with no arguments, derives the property list from all properties
+     * previously passed to dataUpdate().
+     * Mirrors the Uniface widget lifecycle.
+     * @param {string[]} [propertyNames] - Optional array of property name strings.
+     */
+    dataCleanup(propertyNames) {
+      if (!propertyNames) {
+        propertyNames = Object.keys(this.widgetProperties);
+      }
+      this.widget.dataCleanup(propertyNames);
     }
 
   }
