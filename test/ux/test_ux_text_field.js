@@ -656,6 +656,64 @@
       });
     });
 
+    it("set type as datetime-local in text field", function () {
+      // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "datetime-local"
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("type"), "datetime-local", "Failed to set the type as datetime-local.");
+      });
+    });
+
+    it("set type as datetime-local and set a valid datetime value", function () {
+      let dateTimeValue = "2026-04-23T14:30";
+      // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "datetime-local",
+          "value": dateTimeValue
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("type"), "datetime-local", "Failed to set the type as datetime-local.");
+        assert.equal(tester.widget.getValue(), dateTimeValue, "Failed to set the datetime-local value.");
+        // Clear the value for subsequent tests.
+        tester.dataUpdate({
+          "value":""
+        });
+      });
+    });
+
+    it("set type as time in text field", function () {
+      // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "time"
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("type"), "time", "Failed to set the type as time.");
+      });
+    });
+
+    it("set type as time and set a valid time value", function () {
+      let timeValue = "14:30";
+      // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "time",
+          "value": timeValue
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("type"), "time", "Failed to set the type as time.");
+        assert.equal(tester.widget.getValue(), timeValue, "Failed to set the time value.");
+        // Clear the value for subsequent tests.
+        tester.dataUpdate({
+          "value": ""
+        });
+      });
+    });
+
     it("should log a console warning for an unsupported html:type", function () {
       const warnSpy = sinon.spy(console, "warn");
       return asyncRun(function () {

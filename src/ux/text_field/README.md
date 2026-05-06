@@ -38,10 +38,12 @@ In a default installation, configuration files are located in the `<uniface_inst
 ```ini
 [webwidgets]
 ux-DatePicker=uxTextField(html:type=date)
+ux-DateTimePicker=uxTextField(html:type=datetime-local)
 ux-EmailField=uxTextField(html:type=email)
 ux-PasswordField=uxTextField(html:type=password)
 ux-TelField=uxTextField(html:type=tel)
 ux-TextField=uxTextField(html:type=text)
+ux-TimePicker=uxTextField(html:type=time)
 ux-UrlField=uxTextField(html:type=url)
 ```
 

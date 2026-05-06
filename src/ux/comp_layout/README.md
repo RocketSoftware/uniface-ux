@@ -12,6 +12,7 @@ provides dynamic label support, including configurable label positioning, sizing
 - **Dynamic Labels**: Optional labels with customizable size, position, and alignment.
 - **Alignment Control**: Fine-grained control over horizontal and vertical alignment.
 - **Responsive Design**: Built on CSS Flexbox for responsive layouts.
+- **Appearance Variants**: Built-in visual styles (transparent, outline, card, panel, section) for common surface patterns.
 
 ### Comprehensive Layout Controls
 
@@ -32,6 +33,10 @@ These properties allow control over how content is arranged and displayed within
   The options are start, center, and end.
 - **Label Position**: Specifies the position of the label with respect to its element.
   The options are above, below, before, and after.
+
+### Appearance
+
+The `appearance` property applies a visual style to the layout widget. The options are transparent, outline, card, panel and section.
 
 ### ChildWidgets Framework Integration
 

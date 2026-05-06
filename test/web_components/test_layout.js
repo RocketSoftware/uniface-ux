@@ -1893,8 +1893,13 @@
           const childRoot = childLayout.shadowRoot.querySelector(".root");
           const childStyle = window.getComputedStyle(childRoot);
 
-          // Child inherits parent's CSS variable (safe center), explicit horizontal-align on auto layout does not override.
-          expect(childStyle.justifyContent).to.equal("safe center");
+          // childLayout is inserted into parentLayout's shadow .root (not its light DOM).
+          // Neither closest("[horizontal-align]") nor closest(DIR_SELECTOR) can cross the
+          // shadow boundary, so the child cannot resolve direction or inherit the parent's
+          // "center" alignment. It falls back to the default "start" for justifyContent.
+          // The child's own horizontal-align="end" maps to the cross axis (align-items)
+          // because direction is unknown (treated as non-horizontal) → u-ai-end.
+          expect(childStyle.alignItems).to.equal("safe end");
         });
       });
 
@@ -3182,6 +3187,272 @@
             const root = l2.shadowRoot.querySelector(".root");
             // l2's justifyContent remains safe end — own value shadows parent's new "center".
             expect(window.getComputedStyle(root).justifyContent).to.equal("safe end");
+          });
+        });
+      });
+    });
+
+    // =========================================================================
+    // TextArea resize="auto" — CSS rules driven by uf-layout stretch classes
+    //
+    // The text_area.css defines four rules that target:
+    //   fluent-text-area.u-text-area[resize="auto"]::part(control)
+    // using the direct child combinator (>) with uf-layout stretch classes.
+    //
+    // These tests live here because the CSS selector is rooted on uf-layout:
+    //   uf-layout.u-h-align-stretch > fluent-text-area[resize="auto"]…
+    // The widget's own test file cannot exercise this without the uf-layout
+    // context, so we test it here where the full layout+widget DOM is available.
+    // =========================================================================
+    describe("TextArea resize='auto' — CSS driven by uf-layout stretch classes", function () {
+      // Shared helpers ---------------------------------------------------------
+
+      /**
+       * Creates a fluent-text-area with resize="auto" directly, bypassing the
+       * widget framework so the test only covers the CSS selector logic.
+       */
+      function mkTextArea() {
+        const ta = document.createElement("fluent-text-area");
+        ta.classList.add("u-text-area");
+        ta.setAttribute("resize", "auto");
+        return ta;
+      }
+
+      /** Returns the computed resize value of the inner textarea.control. */
+      function getComputedResize(ta) {
+        const inner = ta.shadowRoot && ta.shadowRoot.querySelector("textarea.control");
+        if (!inner) {
+          return null;
+        }
+        return window.getComputedStyle(inner).getPropertyValue("resize");
+      }
+
+      // -----------------------------------------------------------------------
+      // 1. Default — no stretch parent → resize: both
+      // -----------------------------------------------------------------------
+      describe("No stretch parent", function () {
+        let layout, ta;
+
+        beforeEach(function () {
+          layout = createLayout();
+          ta = mkTextArea();
+          layout.appendChild(ta);
+        });
+
+        afterEach(function () {
+          cleanupLayout(layout);
+        });
+
+        it("should apply resize 'both' when resize='auto' and parent uf-layout has no stretch class", function () {
+          return asyncRun(function () {}).then(function () {
+            expect(getComputedResize(ta)).to.equal("both",
+              "Default auto: no stretch class on parent → resize should be 'both'.");
+          });
+        });
+      });
+
+      // -----------------------------------------------------------------------
+      // 2. Horizontal stretch only → resize: vertical
+      // -----------------------------------------------------------------------
+      describe("Parent has u-h-align-stretch", function () {
+        let layout, ta;
+
+        beforeEach(function () {
+          layout = createLayout();
+          layout.classList.add("u-h-align-stretch");
+          ta = mkTextArea();
+          layout.appendChild(ta);
+        });
+
+        afterEach(function () {
+          cleanupLayout(layout);
+        });
+
+        it("should apply resize 'vertical' when resize='auto' and parent has u-h-align-stretch", function () {
+          return asyncRun(function () {}).then(function () {
+            expect(getComputedResize(ta)).to.equal("vertical",
+              "H-stretch parent: horizontal is filled by layout → only vertical resize allowed.");
+          });
+        });
+      });
+
+      // -----------------------------------------------------------------------
+      // 3. Vertical stretch only → resize: horizontal
+      // -----------------------------------------------------------------------
+      describe("Parent has u-v-align-stretch", function () {
+        let layout, ta;
+
+        beforeEach(function () {
+          layout = createLayout();
+          layout.classList.add("u-v-align-stretch");
+          ta = mkTextArea();
+          layout.appendChild(ta);
+        });
+
+        afterEach(function () {
+          cleanupLayout(layout);
+        });
+
+        it("should apply resize 'horizontal' when resize='auto' and parent has u-v-align-stretch", function () {
+          return asyncRun(function () {}).then(function () {
+            expect(getComputedResize(ta)).to.equal("horizontal",
+              "V-stretch parent: vertical is filled by layout → only horizontal resize allowed.");
+          });
+        });
+      });
+
+      // -----------------------------------------------------------------------
+      // 4. Both axes stretched → resize: none
+      // -----------------------------------------------------------------------
+      describe("Parent has both u-h-align-stretch and u-v-align-stretch", function () {
+        let layout, ta;
+
+        beforeEach(function () {
+          layout = createLayout();
+          layout.classList.add("u-h-align-stretch", "u-v-align-stretch");
+          ta = mkTextArea();
+          layout.appendChild(ta);
+        });
+
+        afterEach(function () {
+          cleanupLayout(layout);
+        });
+
+        it("should apply resize 'none' when resize='auto' and parent has both stretch classes", function () {
+          return asyncRun(function () {}).then(function () {
+            expect(getComputedResize(ta)).to.equal("none",
+              "Both axes stretched: widget fills all space → resize handle not needed.");
+          });
+        });
+      });
+
+      // -----------------------------------------------------------------------
+      // 5. Explicit resize values are not affected by stretch classes
+      // -----------------------------------------------------------------------
+      describe("Explicit resize overrides — stretch classes must not interfere", function () {
+        let layout, ta;
+
+        afterEach(function () {
+          cleanupLayout(layout);
+        });
+
+        it("should keep resize 'both' when resize='both' even inside u-h-align-stretch parent", function () {
+          layout = createLayout();
+          layout.classList.add("u-h-align-stretch");
+          ta = document.createElement("fluent-text-area");
+          ta.classList.add("u-text-area");
+          ta.setAttribute("resize", "both");
+          layout.appendChild(ta);
+          return asyncRun(function () {}).then(function () {
+            expect(getComputedResize(ta)).to.equal("both",
+              "Explicit resize='both' must not be overridden by u-h-align-stretch.");
+          });
+        });
+
+        it("should keep resize 'horizontal' when resize='horizontal' even inside u-v-align-stretch parent", function () {
+          layout = createLayout();
+          layout.classList.add("u-v-align-stretch");
+          ta = document.createElement("fluent-text-area");
+          ta.classList.add("u-text-area");
+          ta.setAttribute("resize", "horizontal");
+          layout.appendChild(ta);
+          return asyncRun(function () {}).then(function () {
+            expect(getComputedResize(ta)).to.equal("horizontal",
+              "Explicit resize='horizontal' must not be overridden by u-v-align-stretch.");
+          });
+        });
+      });
+
+      // -----------------------------------------------------------------------
+      // 6. Child combinator (>) — only the DIRECT parent's classes count
+      // -----------------------------------------------------------------------
+      describe("Direct child combinator — grandparent stretch must not affect the widget", function () {
+        let outerWrapper, innerLayout, ta;
+
+        afterEach(function () {
+          cleanupLayout(outerWrapper);
+          cleanupLayout(innerLayout);
+        });
+
+        it("should apply resize 'both' when only the grandparent has u-h-align-stretch", function () {
+          // grandparent (outer) has the stretch class; the direct parent (inner) does not.
+          // CSS rule uses >, so only the direct parent is inspected — result is 'both'.
+          outerWrapper = createLayout();
+          outerWrapper.classList.add("u-h-align-stretch");
+          const inner = document.createElement("uf-layout"); // no stretch class
+          outerWrapper.appendChild(inner);
+          ta = mkTextArea();
+          inner.appendChild(ta);
+          return asyncRun(function () {}).then(function () {
+            expect(getComputedResize(ta)).to.equal("both",
+              "Grandparent stretch class must not propagate through the child combinator.");
+          });
+        });
+
+        it("should apply resize 'vertical' when the direct parent has u-h-align-stretch, regardless of grandparent", function () {
+          // direct parent has the stretch class; grandparent (outer) does not.
+          // Both are top-level children of the container so there is no slotting
+          // complexity — the CSS child combinator resolves cleanly in the flat tree.
+          outerWrapper = createLayout(); // no stretch class — neutral outer context
+          innerLayout = createLayout(); // direct parent of ta — has the stretch class
+          innerLayout.classList.add("u-h-align-stretch");
+          ta = mkTextArea();
+          innerLayout.appendChild(ta);
+          return asyncRun(function () {}).then(function () {
+            expect(getComputedResize(ta)).to.equal("vertical",
+              "Direct parent with u-h-align-stretch should give resize: vertical.");
+          });
+        });
+      });
+
+      // -----------------------------------------------------------------------
+      // 7. Dynamic class changes update computed resize
+      // -----------------------------------------------------------------------
+      describe("Dynamic class changes on parent update computed resize", function () {
+        let layout, ta;
+
+        beforeEach(function () {
+          layout = createLayout();
+          ta = mkTextArea();
+          layout.appendChild(ta);
+        });
+
+        afterEach(function () {
+          cleanupLayout(layout);
+        });
+
+        it("should change from 'both' to 'vertical' when u-h-align-stretch is added to the parent", function () {
+          return asyncRun(function () {}).then(function () {
+            expect(getComputedResize(ta)).to.equal("both", "Before: no stretch → both.");
+            layout.classList.add("u-h-align-stretch");
+            return asyncRun(function () {});
+          }).then(function () {
+            expect(getComputedResize(ta)).to.equal("vertical",
+              "After adding u-h-align-stretch: resize should be vertical.");
+          });
+        });
+
+        it("should change from 'vertical' back to 'both' when u-h-align-stretch is removed from the parent", function () {
+          layout.classList.add("u-h-align-stretch");
+          return asyncRun(function () {}).then(function () {
+            expect(getComputedResize(ta)).to.equal("vertical", "Before: h-stretch → vertical.");
+            layout.classList.remove("u-h-align-stretch");
+            return asyncRun(function () {});
+          }).then(function () {
+            expect(getComputedResize(ta)).to.equal("both",
+              "After removing u-h-align-stretch: resize should revert to both.");
+          });
+        });
+
+        it("should change from 'vertical' to 'none' when u-v-align-stretch is also added", function () {
+          layout.classList.add("u-h-align-stretch");
+          return asyncRun(function () {}).then(function () {
+            expect(getComputedResize(ta)).to.equal("vertical", "Before: h-stretch only → vertical.");
+            layout.classList.add("u-v-align-stretch");
+            return asyncRun(function () {});
+          }).then(function () {
+            expect(getComputedResize(ta)).to.equal("none",
+              "Both stretch classes present: resize should be none.");
           });
         });
       });

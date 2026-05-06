@@ -111,6 +111,23 @@
         assert(widget.elements.widget === element, "Widget is not connected.");
       });
     });
+
+    it("should render without any console errors or warnings", function () {
+      const errorSpy = sinon.spy(console, "error");
+      const warnSpy = sinon.spy(console, "warn");
+      try {
+        tester.createWidget();
+      } finally {
+        const errorCount = errorSpy.callCount;
+        const warnCount = warnSpy.callCount;
+        errorSpy.restore();
+        warnSpy.restore();
+        assert.equal(errorCount, 0,
+          `Expected no console errors during widget render, but got ${errorCount}.`);
+        assert.equal(warnCount, 0,
+          `Expected no console warnings during widget render, but got ${warnCount}.`);
+      }
+    });
   });
 
   describe("mapTrigger()", function () {
@@ -164,6 +181,30 @@
       expect(tester.calledOnce(trigger)).to.be.true;
       // Expected the widget value is the inputValue.
       expect(tester.widget.getValue()).to.equal(inputValue, "Widget value");
+    });
+
+    it("should not call the onchange trigger handler when the text area is disabled", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:disabled": true
+        });
+      }).then(function () {
+        // Verify the widget is in a state where user input cannot fire the trigger.
+        assert(tester.element.disabled, "Element should be disabled, preventing user input.");
+        expect(tester.calledOnce(trigger), "Onchange trigger should not fire when the widget is disabled.").to.be.false;
+      });
+    });
+
+    it("should not call the onchange trigger handler when the text area is readonly", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": true
+        });
+      }).then(function () {
+        // Verify the widget is in a state where user input cannot fire the trigger.
+        assert(tester.element.readOnly, "Element should be readonly, preventing user input.");
+        expect(tester.calledOnce(trigger), "Onchange trigger should not fire when the widget is readonly.").to.be.false;
+      });
     });
 
   });
@@ -220,6 +261,66 @@
         let labelText = element.querySelector("span.u-label-text").innerText;
         assert.equal(labelText, textAreaLabel); // Check for visibility.
         assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Failed to show the label text.");
+      });
+    });
+
+    it("should set the widget value and reflect it via getValue()", function () {
+      const inputValue = "Hello World";
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "value": inputValue
+        });
+      }).then(function () {
+        assert.equal(tester.widget.getValue(), inputValue, "Widget getValue() should return the set value.");
+      });
+    });
+
+    it("should clear the widget value when value is set to empty string", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "value": ""
+        });
+      }).then(function () {
+        assert.equal(tester.widget.getValue(), "", "Widget getValue() should return empty string after clearing.");
+      });
+    });
+
+    it("should warn when an unsupported property is set", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "dummy-property": "some value"
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Widget does not support property 'dummy-property' - Ignored")),
+          "Console should warn about unsupported property 'dummy-property'.").to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("should add a custom CSS class when class:name is set to true", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "class:class-test": true
+        });
+      }).then(function () {
+        assert(element.classList.contains("class-test"), "Element should have custom class 'class-test' applied.");
+      });
+    });
+
+    it("should remove a custom CSS class when class:name is set to false", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "class:class-test": true
+        });
+      }).then(function () {
+        return asyncRun(function () {
+          tester.dataUpdate({
+            "class:class-test": false
+          });
+        });
+      }).then(function () {
+        assert(!element.classList.contains("class-test"), "Element should not have custom class 'class-test' after removal.");
       });
     });
 
@@ -376,6 +477,47 @@
       });
     });
 
+    it("should position the label after and apply the correct styles", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label",
+          "label-position": "after"
+        });
+      }).then(function () {
+        let labelPosition = element.getAttribute("u-label-position");
+        assert.equal(labelPosition, "after", "Label position attribute should be 'after'.");
+        // label-position after uses inline-flex layout.
+        let elementStyle = window.getComputedStyle(element, null);
+        let displayPropertyValue = elementStyle.getPropertyValue("display");
+        assert.equal(displayPropertyValue, "inline-flex", "Element display should be 'inline-flex' when label-position is 'after'.");
+        // Label should be visible.
+        assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label should be visible when label-position is 'after'.");
+        assert.equal(element.querySelector("span.u-label-text").innerText, "Label", "Label text should be 'Label'.");
+      });
+    });
+
+    it("should show the label when label-text is set to the string 'null'", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "null"
+        });
+      }).then(function () {
+        assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label should be visible when label-text is the string 'null'.");
+        assert.equal(element.querySelector("span.u-label-text").innerText, "null", "Label text should be the string 'null'.");
+      });
+    });
+
+    it("should hide the label when label-text is set to JS null", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": null
+        });
+      }).then(function () {
+        assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label should be hidden when label-text is null.");
+        assert.equal(element.querySelector("span.u-label-text").innerText, "", "Label text should be empty when label-text is null.");
+      });
+    });
+
     it("should position the label below and apply the correct styles", function () {
       return asyncRun(function () {
         tester.dataUpdate({
@@ -467,6 +609,107 @@
       });
     });
 
+    it("should apply CSS resize style to inner textarea when html:resize is set to both", function () {
+      // Verifies the resize attribute propagates into the actual computed CSS on the inner textarea.control.
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:resize": "both"
+        });
+      }).then(function () {
+        const innerTextarea = element.shadowRoot.querySelector("textarea.control");
+        const computedResize = window.getComputedStyle(innerTextarea).getPropertyValue("resize");
+        assert.equal(computedResize, "both",
+          "CSS resize on the inner textarea should be 'both' when html:resize is set to 'both'.");
+      });
+    });
+
+    it("should apply CSS resize style to inner textarea when html:resize is set to horizontal", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:resize": "horizontal"
+        });
+      }).then(function () {
+        const innerTextarea = element.shadowRoot.querySelector("textarea.control");
+        const computedResize = window.getComputedStyle(innerTextarea).getPropertyValue("resize");
+        assert.equal(computedResize, "horizontal",
+          "CSS resize on the inner textarea should be 'horizontal' when html:resize is set to 'horizontal'.");
+      });
+    });
+
+    it("should apply CSS resize style to inner textarea when html:resize is set to vertical", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:resize": "vertical"
+        });
+      }).then(function () {
+        const innerTextarea = element.shadowRoot.querySelector("textarea.control");
+        const computedResize = window.getComputedStyle(innerTextarea).getPropertyValue("resize");
+        assert.equal(computedResize, "vertical",
+          "CSS resize on the inner textarea should be 'vertical' when html:resize is set to 'vertical'.");
+      });
+    });
+
+    it("should apply CSS resize none to inner textarea when html:resize is set to none", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:resize": "none"
+        });
+      }).then(function () {
+        const innerTextarea = element.shadowRoot.querySelector("textarea.control");
+        const computedResize = window.getComputedStyle(innerTextarea).getPropertyValue("resize");
+        assert.equal(computedResize, "none",
+          "CSS resize on the inner textarea should be 'none' when html:resize is set to 'none'.");
+      });
+    });
+
+    it("should reflect a simulated horizontal drag as a changed rendered width", function () {
+      // Verifies that setting a px width on the control (simulating a user drag) actually changes
+      // the rendered size — confirming the manual resize mechanism works end-to-end.
+      const textAreaControl = element.shadowRoot.querySelector("textarea.control");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:resize": "both"
+        });
+        textAreaControl.style.width = "300px"; // Start from a known wide width.
+      }, 1).then(function () {
+        const widthBefore = textAreaControl.getBoundingClientRect().width;
+        textAreaControl.style.width = "80px"; // Simulate drag to a narrow width.
+        return asyncRun(function () {}, 1).then(function () {
+          const widthAfter = textAreaControl.getBoundingClientRect().width;
+          assert.isBelow(widthAfter, widthBefore,
+            "Simulated horizontal drag should reduce the rendered width of the textarea control.");
+          assert.equal(widthAfter, 80,
+            "Rendered width should equal the manually set value of 80px.");
+          // Restore so subsequent tests are not affected.
+          textAreaControl.style.width = "100%";
+        });
+      });
+    });
+
+    it("should reflect a simulated vertical drag as a changed rendered height", function () {
+      // Verifies that setting a px height on the control (simulating a user drag) actually changes
+      // the rendered size — confirming vertical manual resize works end-to-end.
+      const textAreaControl = element.shadowRoot.querySelector("textarea.control");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:resize": "both"
+        });
+        textAreaControl.style.height = ""; // Start from default.
+      }, 1).then(function () {
+        const heightBefore = textAreaControl.getBoundingClientRect().height;
+        textAreaControl.style.height = "200px"; // Simulate drag to a taller height.
+        return asyncRun(function () {}, 1).then(function () {
+          const heightAfter = textAreaControl.getBoundingClientRect().height;
+          assert.isAbove(heightAfter, heightBefore,
+            "Simulated vertical drag should increase the rendered height of the textarea control.");
+          assert.equal(heightAfter, 200,
+            "Rendered height should equal the manually set value of 200px.");
+          // Restore so subsequent tests are not affected.
+          textAreaControl.style.height = "";
+        });
+      });
+    });
+
     it("html hidden property when set to true", function () {
       let hiddenProp = true;
       // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
@@ -490,6 +733,47 @@
       }).then(function () {
         let hiddenPropPresent = element.hasAttribute("hidden");
         assert.equal(hiddenPropPresent, hiddenProp); // Check for visibility.
+      });
+    });
+
+    it("should set the title attribute when html:title is set", function () {
+      const titleText = "This is the title text";
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:title": titleText
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("title"), titleText, `Title attribute should be '${titleText}'.`);
+      });
+    });
+
+    it("should clear the title attribute when html:title is set to empty string", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:title": ""
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("title"), "", "Title attribute should be empty.");
+      });
+    });
+
+    it("should set tabindex to a positive value when html:tabindex is positive", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:tabindex": 1
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("tabindex"), "1", "Tabindex attribute should be '1'.");
+      });
+    });
+
+    it("should set tabindex to a negative value when html:tabindex is negative", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:tabindex": -1
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("tabindex"), "-1", "Tabindex attribute should be '-1'.");
       });
     });
 
@@ -531,6 +815,83 @@
         assert.equal(colsText, colsProp); // Check for visibility.
         let rowsText = element.shadowRoot.querySelector("textarea").getAttribute("rows");
         assert.equal(rowsText, 0);
+      });
+    });
+
+    it("should not change rendered width after manual resize when html:cols is updated", function () {
+      // Simulates: user manually drags the textarea smaller, then html:cols is set via property update.
+      // The user-dragged px width must win — cols must not override the rendered size.
+      const textAreaControl = element.shadowRoot.querySelector("textarea.control");
+      const manualWidth = "120px";
+      return asyncRun(function () {
+        // Simulate a user drag by setting a px width on the control directly.
+        textAreaControl.style.width = manualWidth;
+      }, 1).then(function () {
+        const widthBeforeCols = textAreaControl.getBoundingClientRect().width;
+        return asyncRun(function () {
+          tester.dataUpdate({
+            "html:cols": 15
+          });
+        }, 1).then(function () {
+          const widthAfterCols = textAreaControl.getBoundingClientRect().width;
+          assert.equal(
+            Math.round(widthAfterCols),
+            Math.round(widthBeforeCols),
+            "Setting html:cols after a manual resize must not change the rendered width of the textarea."
+          );
+        });
+      });
+    });
+
+    it("should not change rendered height after manual resize when html:rows is updated", function () {
+      // Simulates: user manually drags the textarea smaller, then html:rows is set via property update.
+      // The user-dragged px height must win — rows must not override the rendered size.
+      const textAreaControl = element.shadowRoot.querySelector("textarea.control");
+      const manualHeight = "80px";
+      return asyncRun(function () {
+        // Simulate a user drag by setting a px height on the control directly.
+        textAreaControl.style.height = manualHeight;
+      }, 1).then(function () {
+        const heightBeforeRows = textAreaControl.getBoundingClientRect().height;
+        return asyncRun(function () {
+          tester.dataUpdate({
+            "html:rows": 25
+          });
+        }, 1).then(function () {
+          const heightAfterRows = textAreaControl.getBoundingClientRect().height;
+          assert.equal(
+            Math.round(heightAfterRows),
+            Math.round(heightBeforeRows),
+            "Setting html:rows after a manual resize must not change the rendered height of the textarea."
+          );
+          // Restore height so subsequent tests are not affected.
+          textAreaControl.style.height = "";
+        });
+      });
+    });
+
+    it("should wrap label text according to the manually resized width, not the cols value", function () {
+      // After a user drags the textarea to a narrow width, the label wrapping must follow
+      // the actual rendered width — not the intrinsic width implied by html:cols.
+      const labelText = "This is a very long label of widget and the question is, will it wrap or not?";
+      const textAreaControl = element.shadowRoot.querySelector("textarea.control");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": labelText,
+          "label-position": "above",
+          "html:cols": 15
+        });
+        // Simulate narrow manual resize — narrower than cols=15 would naturally produce.
+        textAreaControl.style.width = "80px";
+      }, 1).then(function () {
+        const label = element.querySelector("span.u-label-text");
+        const labelWidth = Math.round(label.getBoundingClientRect().width);
+        const controlWidth = Math.round(textAreaControl.getBoundingClientRect().width);
+        assert.isAtMost(labelWidth, controlWidth,
+          "Label width must not exceed the manually resized control width, regardless of html:cols.");
+        const fluentTextAreaWidth = Math.round(element.getBoundingClientRect().width);
+        assert.equal(fluentTextAreaWidth, controlWidth,
+          "fluent-text-area host width must equal the manually resized control width.");
       });
     });
 
@@ -590,6 +951,69 @@
       });
     });
 
+    it("should apply both disabled and readonly when both are true, with disabled taking precedence", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:disabled": true,
+          "html:readonly": true
+        });
+      }).then(function () {
+        assert(element.hasAttribute("disabled"), "Element should have the disabled attribute.");
+        assert(element.hasAttribute("readOnly"), "Element should have the readonly attribute.");
+      });
+    });
+
+    it("should reset html:disabled to default when RESET is passed", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:disabled": true
+        });
+      }).then(function () {
+        assert(element.hasAttribute("disabled"), "Element should be disabled before reset.");
+        return asyncRun(function () {
+          tester.dataUpdate({
+            "html:disabled": uniface.RESET
+          });
+        });
+      }).then(function () {
+        assert(!element.hasAttribute("disabled"), "Element should not be disabled after reset.");
+      });
+    });
+
+    it("should reset html:readonly to default when RESET is passed", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": true
+        });
+      }).then(function () {
+        assert(element.hasAttribute("readOnly"), "Element should be readonly before reset.");
+        return asyncRun(function () {
+          tester.dataUpdate({
+            "html:readonly": uniface.RESET
+          });
+        });
+      }).then(function () {
+        assert(!element.hasAttribute("readOnly"), "Element should not be readonly after reset.");
+      });
+    });
+
+    it("should reset html:hidden to default when RESET is passed", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:hidden": true
+        });
+      }).then(function () {
+        assert(element.hasAttribute("hidden"), "Element should be hidden before reset.");
+        return asyncRun(function () {
+          tester.dataUpdate({
+            "html:hidden": uniface.RESET
+          });
+        });
+      }).then(function () {
+        assert(!element.hasAttribute("hidden"), "Element should not be hidden after reset.");
+      });
+    });
+
     it("set html:appearance outline property true for textarea", function () {
       let appearanceStyle = "outline";
       return asyncRun(function () {
@@ -613,6 +1037,73 @@
         assert(element.hasAttribute("appearance"), "Failed to show the appearance filled attribute.");
         let appearanceStylePropertyText = element.getAttribute("appearance");
         assert.equal(appearanceStyle, appearanceStylePropertyText, `Failed to show appearance filled style${appearanceStylePropertyText}.`);
+      });
+    });
+
+    it("should warn and retain previous appearance when html:appearance is set to an invalid value", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:appearance": "filled"
+        });
+      }).then(function () {
+        return asyncRun(function () {
+          tester.dataUpdate({
+            "html:appearance": "invalid-value"
+          });
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'html:appearance' invalid value (invalid-value) - Ignored.")),
+          "Console should warn about invalid html:appearance value.").to.be.true;
+        assert.equal(element.getAttribute("appearance"), "filled", "Appearance should retain previous value after invalid update.");
+        warnSpy.restore();
+      });
+    });
+
+    it("should warn when html:resize is set to an invalid value", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:resize": "diagonal"
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'html:resize' invalid value (diagonal) - Ignored.")),
+          "Console should warn about invalid html:resize value.").to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("should warn when label-position is set to an invalid value", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": "Label",
+          "label-position": "top"
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'label-position' invalid value (top) - Ignored.")),
+          "Console should warn about invalid label-position value.").to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("should set spellcheck to true when html:spellcheck is true", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:spellcheck": true
+        });
+      }).then(function () {
+        assert(element.hasAttribute("spellcheck"), "Spellcheck attribute should be present when html:spellcheck is true.");
+      });
+    });
+
+    it("should set spellcheck to false when html:spellcheck is false", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:spellcheck": false
+        });
+      }).then(function () {
+        assert(!element.hasAttribute("spellcheck"), "Spellcheck attribute should not be present when html:spellcheck is false.");
       });
     });
 
@@ -833,6 +1324,77 @@
     });
   });
 
+  describe("html:resize auto behavior", function () {
+    // These tests verify the CSS-driven auto resize behavior introduced by the stretch fix.
+    // When resize="auto" the correct CSS resize direction is determined by the classes
+    // present on the direct uf-layout parent (u-h-align-stretch / u-v-align-stretch).
+    // Each test builds a minimal DOM tree, runs an assertion, then tears the tree down.
+
+    let element;
+
+    beforeEach(function () {
+      tester.createWidget();
+      element = tester.element;
+    });
+
+    afterEach(function () {
+      // Detach the widget (and any layout wrapper) after each test to avoid
+      // polluting subsequent tests with stale DOM state.
+      const wrapper = element.parentElement;
+      if (wrapper && wrapper !== document.body) {
+        wrapper.remove();
+      } else {
+        element.remove();
+      }
+    });
+
+    // -------------------------------------------------------------------------
+    // 1. The resize attribute is set on the DOM element (setAsAttribute: true)
+    // -------------------------------------------------------------------------
+
+    it("should set resize attribute to 'auto' on the element when html:resize is 'auto'", function () {
+      // Verifies that AttributeChoice uses setAttribute() so [resize="auto"] CSS selectors work.
+      document.body.appendChild(element);
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:resize": "auto"
+        });
+      }).then(function () {
+        assert.equal(
+          element.getAttribute("resize"), "auto",
+          "The resize attribute must be present on the DOM element so CSS selectors can match it."
+        );
+      });
+    });
+
+    // -------------------------------------------------------------------------
+    // 2. CSS auto → resize: both (no stretch parent)
+    // -------------------------------------------------------------------------
+
+    it("should apply CSS resize 'both' to inner textarea when resize='auto' and no stretch parent", function () {
+      // Widget is a direct child of a plain div — no uf-layout stretch classes present.
+      const wrapper = document.createElement("div");
+      wrapper.appendChild(element);
+      document.body.appendChild(wrapper);
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:resize": "auto"
+        });
+      }).then(function () {
+        const innerTextarea = element.shadowRoot.querySelector("textarea.control");
+        const computedResize = window.getComputedStyle(innerTextarea).getPropertyValue("resize");
+        assert.equal(computedResize, "both",
+          "When resize='auto' and no stretch parent, CSS should set resize: both.");
+      });
+    });
+
+    // -------------------------------------------------------------------------
+    // Note: Tests for resize='auto' CSS behavior that depend on uf-layout parent
+    // classes (u-h-align-stretch, u-v-align-stretch) live in test_layout.js —
+    // that file has the full uf-layout + fluent-text-area integration context.
+    // -------------------------------------------------------------------------
+  });
+
   describe("showError()", function () {
     let element;
     before(function () {
@@ -944,4 +1506,47 @@
       }
     });
   });
+
+  describe("Widget reuse", function () {
+    let element;
+
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+      assert(element, "Widget top element is not defined!");
+    });
+
+    it("should reset all field properties and value to defaults when reused", function () {
+      // Step 1: Apply a representative set of non-default properties.
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "value": "Some text",
+          "html:title": "Tooltip text",
+          "label-text": "This is a label",
+          "html:disabled": true,
+          "class:class-test": true
+        });
+      }).then(function () {
+        // Step 2: Verify all properties are applied before reuse.
+        assert.equal(tester.widget.getValue(), "Some text", "Value should be 'Some text' before reuse.");
+        assert.equal(element.getAttribute("title"), "Tooltip text", "Title should be 'Tooltip text' before reuse.");
+        assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label should be visible before reuse.");
+        assert(element.hasAttribute("disabled"), "Element should be disabled before reuse.");
+        assert(element.classList.contains("class-test"), "Element should have class 'class-test' before reuse.");
+        // Step 3: Simulate Uniface widget reuse — clean up the current occurrence, then re-initialize with defaults.
+        tester.dataCleanup();
+        return asyncRun(function () {
+          tester.dataInit();
+        });
+      }).then(function () {
+        // Step 4: Verify all field properties are reset to defaults after reuse.
+        assert.equal(tester.widget.getValue(), "", "Value should be reset to '' after reuse.");
+        assert(!element.hasAttribute("disabled"), "Element should not be disabled after reuse.");
+        assert(!element.hasAttribute("title"), "Title attribute should be removed after reuse.");
+        assert(element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label should be hidden after reuse.");
+        assert(!element.classList.contains("class-test"), "Custom class 'class-test' should be removed after reuse.");
+      });
+    });
+  });
+
 })();
