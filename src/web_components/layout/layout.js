@@ -35,10 +35,10 @@ export class Layout extends FASTElement {
 
   // Descendants with no own direction but at least one explicit align — must re-sync when ancestor direction flips.
   static #SYNC_ON_DIR = `:not(${this.#DIR_SELECTOR}):is([horizontal-align]:not([horizontal-align='auto']), [vertical-align]:not([vertical-align='auto']))`;
-  // Descendants that inherit h-align (no own explicit h-align) and have own direction or explicit v-align.
-  static #SYNC_ON_H_ALIGN = `:not([horizontal-align]:not([horizontal-align='auto'])):is(${this.#DIR_SELECTOR}, [vertical-align]:not([vertical-align='auto']))`;
-  // Descendants that inherit v-align (no own explicit v-align) and have own direction or explicit h-align.
-  static #SYNC_ON_V_ALIGN = `:not([vertical-align]:not([vertical-align='auto'])):is(${this.#DIR_SELECTOR}, [horizontal-align]:not([horizontal-align='auto']))`;
+  // Descendants that inherit h-align (no own explicit h-align) — always re-sync them when ancestor h-align changes.
+  static #SYNC_ON_H_ALIGN = ":not([horizontal-align]:not([horizontal-align='auto']))";
+  // Descendants that inherit v-align (no own explicit v-align) — always re-sync them when ancestor v-align changes.
+  static #SYNC_ON_V_ALIGN = ":not([vertical-align]:not([vertical-align='auto']))";
 
   connectedCallback() {
     super.connectedCallback();
@@ -99,19 +99,34 @@ export class Layout extends FASTElement {
 
   #syncAlignmentClasses() {
     this.classList.remove(...Layout.#JC_CLASSES, ...Layout.#AI_CLASSES);
+    // Remove all alignment indicator classes.
+    this.classList.remove(
+      "u-h-align-start", "u-h-align-center", "u-h-align-end", "u-h-align-stretch",
+      "u-h-align-space-between", "u-h-align-space-around", "u-h-align-space-evenly",
+      "u-v-align-start", "u-v-align-center", "u-v-align-end", "u-v-align-stretch",
+      "u-v-align-space-between", "u-v-align-space-around", "u-v-align-space-evenly"
+    );
 
     const hasOwnDirection = this.matches(Layout.#DIR_SELECTOR);
     const hAttr = this.getAttribute("horizontal-align");
     const vAttr = this.getAttribute("vertical-align");
 
-    /**
-     * Fully auto — no classes are applied and the u-jc-* / u-ai-* CSS variables
-     * from the closest ancestor with explicit alignment are inherited automatically
-     * through the shadow-DOM custom-property cascade.
-     */
+    const hVal = this.closest("[horizontal-align]:not([horizontal-align='auto'])")?.getAttribute("horizontal-align");
+    const vVal = this.closest("[vertical-align]:not([vertical-align='auto'])")?.getAttribute("vertical-align");
+
+    // Indicator classes: only add when there is an actual resolved value.
+    if (hVal) {
+      this.classList.add(`u-h-align-${hVal}`);
+    }
+    if (vVal) {
+      this.classList.add(`u-v-align-${vVal}`);
+    }
+
+    // Early return for fully-auto case (no jc/ai classes needed).
     if (!hasOwnDirection && (!hAttr || hAttr === "auto") && (!vAttr || vAttr === "auto")) {
       return;
     }
+
 
     /**
      * Walk up to the nearest ancestor that carries a layout direction class.
@@ -120,14 +135,13 @@ export class Layout extends FASTElement {
     const dirEl = this.closest(Layout.#DIR_SELECTOR);
 
     const isHorizontal = dirEl?.matches(Layout.#H_DIR_SELECTOR);
-    // Walk up to the nearest ancestor (inclusive) that explicitly sets each alignment attribute, skipping "auto" which means "inherit further up".
-    const hVal = this.closest("[horizontal-align]:not([horizontal-align='auto'])")?.getAttribute("horizontal-align");
-    const vVal = this.closest("[vertical-align]:not([vertical-align='auto'])")?.getAttribute("vertical-align");
 
     // Map the resolved h/v values onto main-axis (justify-content) and cross-axis (align-items) based on the containing layout's direction.
     const mainVal = isHorizontal ? hVal : vVal;
     const crossVal = isHorizontal ? vVal : hVal;
 
+    // Add u-jc-* / u-ai-* classes for the resolved main/cross-axis alignment values.
+    // Skipped entirely for fully-auto elements (handled by the early return above).
     if (mainVal) {
       this.classList.add(`u-jc-${mainVal}`);
     }

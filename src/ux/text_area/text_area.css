@@ -3,6 +3,19 @@
   flex-grow: var(--u-layout-grow, 0);
 }
 
+/* Propagate height through shadow DOM when vertically stretched.
+   root fills remaining host height after the label; control fills root.
+   min-height allows the user to drag the control taller than the stretched size;
+   height:100% would lock it and prevent any manual resize. */
+.u-text-area.u-stretchable::part(root) {
+  flex: 1;
+  min-height: 0;
+}
+
+.u-text-area.u-stretchable::part(control) {
+  min-height: 100%;
+}
+
 .u-text-area::part(root) {
   position: relative;
 }
@@ -43,4 +56,28 @@
 /* Styling the error icon color (according to the fluent design system) when the widget is in an invalid state. */
 .u-text-area.u-invalid .u-error-icon {
   color: #d13438;
+}
+
+/* ============================================
+   Resize: auto behavior
+   ============================================ */
+
+/* Default: resize both */
+fluent-text-area.u-text-area[resize="auto"]::part(control) {
+  resize: both;
+}
+
+/* horizontal-align = stretch → resize: vertical */
+uf-layout.u-h-align-stretch > fluent-text-area.u-text-area[resize="auto"]::part(control) {
+  resize: vertical;
+}
+
+/* vertical-align = stretch → resize: horizontal */
+uf-layout.u-v-align-stretch > fluent-text-area.u-text-area[resize="auto"]::part(control) {
+  resize: horizontal;
+}
+
+/* Both alignments stretched → resize: none (highest specificity) */
+uf-layout.u-h-align-stretch.u-v-align-stretch > fluent-text-area.u-text-area[resize="auto"]::part(control) {
+  resize: none;
 }

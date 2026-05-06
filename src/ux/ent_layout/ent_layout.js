@@ -46,6 +46,7 @@ export class CollectionLayout extends Widget {
     new AttributeChoice(this, "layout-type-occurrences", "layout-type", ["vertical-scroll", "horizontal-scroll", "horizontal-wrap", "vertical-wrap", "auto"], "auto", true),
     new AttributeChoice(this, "horizontal-align-occurrences", "horizontal-align", ["start", "center", "end", "space-between", "space-around", "space-evenly", "stretch", "auto"], "auto", true),
     new AttributeChoice(this, "vertical-align-occurrences", "vertical-align", ["start", "center", "end", "space-between", "space-around", "space-evenly", "stretch", "auto"], "auto", true),
+    new AttributeChoice(this, "appearance", "appearance", ["transparent", "outline", "card", "section", "panel"], "transparent", true),
     new WidgetOccurrence(this, "span", "uocc:{{getName()}}")
   ]);
 }
@@ -82,6 +83,7 @@ export class OccurrenceLayout extends Widget {
     new ChildWidgets(this, "span", null, null),
     new AttributeChoice(this, "layout-type", "layout-type", ["vertical-scroll", "horizontal-scroll", "horizontal-wrap", "vertical-wrap", "auto"], "auto", true),
     new AttributeChoice(this, "horizontal-align", "horizontal-align", ["start", "center", "end", "space-between", "space-around", "space-evenly", "stretch", "auto"], "auto", true),
-    new AttributeChoice(this, "vertical-align", "vertical-align", ["start", "center", "end", "space-between", "space-around", "space-evenly", "stretch", "auto"], "auto", true)
+    new AttributeChoice(this, "vertical-align", "vertical-align", ["start", "center", "end", "space-between", "space-around", "space-evenly", "stretch", "auto"], "auto", true),
+    new AttributeChoice(this, "appearance-occurrences", "appearance", ["transparent", "outline", "card", "section", "panel"], "transparent", true)
   ]);
 }

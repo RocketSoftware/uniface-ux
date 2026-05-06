@@ -138,6 +138,7 @@
       assert.strictEqual(tester.defaultValues["layout-type"], "vertical-scroll", "Default value of 'layout-type' should be 'vertical-scroll'.");
       assert.strictEqual(tester.defaultValues["horizontal-align"], "start", "Default value of 'horizontal-align' should be 'start'.");
       assert.strictEqual(tester.defaultValues["vertical-align"], "start", "Default value of 'vertical-align' should be 'start'.");
+      assert.strictEqual(tester.defaultValues["appearance"], "transparent", "Default value of 'appearance' should be 'transparent'.");
     });
 
     it("check gap property on root part", function () {
@@ -167,7 +168,7 @@
       });
     });
 
-    describe("update label-text, label-size, label-align, label-position", function () {
+    describe("Update label-text, label-size, label-align, label-position", function () {
       it("update label-text and render as span by default", function () {
         const data = {
           "label-text": "Updated Layout"
@@ -239,7 +240,7 @@
       });
     });
 
-    describe("update layout-type, horizontal-align, vertical-align", function () {
+    describe("Update layout-type, horizontal-align, vertical-align", function () {
       const properties = [
         "layout-type",
         "horizontal-align",
@@ -291,6 +292,126 @@
           tester.dataUpdate(data);
         }).then(function () {
           expect(element.getAttribute("vertical-align")).to.equal("auto");
+        });
+      });
+    });
+
+    describe("Update appearance", function () {
+      ["transparent", "outline", "card", "section", "panel"].forEach(function (value) {
+        it(`update appearance to '${value}'`, function () {
+          const data = { "appearance": value };
+          return asyncRun(function () {
+            tester.dataUpdate(data);
+          }).then(function () {
+            expect(element.getAttribute("appearance")).to.equal(value, `appearance attribute should be set to '${value}'.`);
+          });
+        });
+      });
+
+      ["outline", "card", "section", "panel"].forEach(function (appearance) {
+        it(`appearance ${appearance} should have border-radius and padding`, function () {
+          const data = {
+            "appearance": appearance
+          };
+          return asyncRun(function () {
+            tester.dataUpdate(data);
+          }).then(function () {
+            const styles = window.getComputedStyle(element);
+            expect(parseFloat(styles.borderRadius)).to.be.above(0, `appearance '${appearance}' should have a non-zero border-radius.`);
+            expect(parseFloat(styles.padding)).to.be.above(0, `appearance '${appearance}' should have non-zero padding.`);
+          });
+        });
+      });
+
+      ["outline", "card", "panel"].forEach(function (appearance) {
+        it(`appearance ${appearance} should have border`, function () {
+          const data = {
+            "appearance": appearance
+          };
+          return asyncRun(function () {
+            tester.dataUpdate(data);
+          }).then(function () {
+            const styles = window.getComputedStyle(element);
+
+            expect(parseFloat(styles.borderWidth)).to.be.above(0, `appearance '${appearance}' should have a non-zero border width.`);
+            expect(styles.borderStyle).to.equal("solid", `appearance '${appearance}' should have a solid border style.`);
+            expect(styles.borderColor).not.to.equal("transparent", `appearance '${appearance}' should have a non-transparent border color.`);
+          });
+        });
+      });
+
+      ["card", "section", "panel"].forEach(function (appearance) {
+        it(`appearance ${appearance} should have background-color`, function () {
+          const data = {
+            "appearance": appearance
+          };
+          return asyncRun(function () {
+            tester.dataUpdate(data);
+          }).then(function () {
+            const styles = window.getComputedStyle(element);
+            expect(styles.backgroundColor).not.to.equal("rgba(0, 0, 0, 0)", `appearance '${appearance}' should have a non-transparent background color.`);
+          });
+        });
+      });
+
+      it("appearance card should have box-shadow", function () {
+        const data = {
+          "appearance": "card"
+        };
+        return asyncRun(function () {
+          tester.dataUpdate(data);
+        }).then(function () {
+          const styles = window.getComputedStyle(element);
+          expect(styles.boxShadow).not.to.equal("none", "appearance 'card' should have a box-shadow applied.");
+        });
+      });
+
+      ["transparent", "outline", "section", "panel"].forEach(function (appearance) {
+        it(`appearance ${appearance} should not have box-shadow`, function () {
+          const data = {
+            "appearance": appearance
+          };
+          return asyncRun(function () {
+            tester.dataUpdate(data);
+          }).then(function () {
+            const styles = window.getComputedStyle(element);
+            expect(styles.boxShadow).to.equal("none", `appearance '${appearance}' should not have a box-shadow.`);
+          });
+        });
+      });
+
+      it("appearance transparent should not have border or background-color", function () {
+        const data = {
+          "appearance": "transparent"
+        };
+        return asyncRun(function () {
+          tester.dataUpdate(data);
+        }).then(function () {
+          const styles = window.getComputedStyle(element);
+          expect(parseFloat(styles.borderWidth)).to.equal(0, "appearance 'transparent' should have no border.");
+          expect(styles.backgroundColor).to.equal("rgba(0, 0, 0, 0)", "appearance 'transparent' should have a transparent background color.");
+        });
+      });
+
+      it("appearance outline should not have background-color", function () {
+        const data = {
+          "appearance": "outline"
+        };
+        return asyncRun(function () {
+          tester.dataUpdate(data);
+        }).then(function () {
+          const styles = window.getComputedStyle(element);
+          expect(styles.backgroundColor).to.equal("rgba(0, 0, 0, 0)", "appearance 'outline' should have a transparent background color.");
+        });
+      });
+
+      it("appearance section should not have border", function () {
+        const data = { "appearance": "section" };
+        return asyncRun(function () {
+          tester.dataUpdate(data);
+        }).then(function () {
+          const styles = window.getComputedStyle(element);
+          expect(parseFloat(styles.borderWidth)).to.equal(0, "appearance 'section' should have no border.");
         });
       });
     });

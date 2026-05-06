@@ -144,6 +144,8 @@
     });
 
     // ── Fully-auto early-return ──────────────────────────────────────────────
+    // "Fully-auto" means: no own layout-type direction AND no explicit align
+    // attributes. Only in this case are ALL u-jc-* and u-ai-* classes skipped.
     describe("Fully-auto: no direction and no explicit alignment", function () {
       it("produces no u-jc-* or u-ai-* classes with no attributes set", function () {
         expect(alignClasses(layout)).to.be.empty;
@@ -157,6 +159,7 @@
       });
 
       it("produces no u-jc-* or u-ai-* classes when only layout-type is set (no explicit aligns)", function () {
+        // Without explicit alignment values, no u-jc-* / u-ai-* classes are emitted.
         layout.setAttribute("layout-type", "horizontal-scroll");
         expect(alignClasses(layout)).to.be.empty;
       });
@@ -532,6 +535,387 @@
         // Fully-auto child never materialises alignment classes; CSS variable inheritance
         // propagates the parent's resolved values without any JS involvement.
         expect(alignClasses(child)).to.be.empty;
+      });
+    });
+  });
+
+  // ===========================================================================
+  // #syncAlignmentClasses — u-h-align-* / u-v-align-* indicator classes
+  //
+  // These classes are set to the RESOLVED alignment value (after closest() walk)
+  // on every uf-layout element, including fully-auto ones. They allow child
+  // widgets (e.g. fluent-text-area[resize="auto"]) to detect the effective
+  // alignment of their direct parent via CSS child-combinator selectors without
+  // needing any JS involvement.
+  // ===========================================================================
+  describe("Layout#syncAlignmentClasses — u-h-align-* / u-v-align-* indicator classes", function () {
+
+    // ── Own explicit alignment ───────────────────────────────────────────────
+    describe("Own explicit alignment", function () {
+      let layout;
+
+      beforeEach(function () {
+        layout = mkLayout();
+      });
+
+      afterEach(function () {
+        cleanup(layout);
+      });
+
+      it("sets u-h-align-stretch when horizontal-align='stretch'", function () {
+        layout.setAttribute("layout-type", "horizontal-scroll");
+        layout.setAttribute("horizontal-align", "stretch");
+        expect(layout.classList.contains("u-h-align-stretch")).to.be.true;
+      });
+
+      it("sets u-h-align-start when horizontal-align='start'", function () {
+        layout.setAttribute("layout-type", "horizontal-scroll");
+        layout.setAttribute("horizontal-align", "start");
+        expect(layout.classList.contains("u-h-align-start")).to.be.true;
+      });
+
+      it("sets u-h-align-center when horizontal-align='center'", function () {
+        layout.setAttribute("layout-type", "horizontal-scroll");
+        layout.setAttribute("horizontal-align", "center");
+        expect(layout.classList.contains("u-h-align-center")).to.be.true;
+      });
+
+      it("sets u-v-align-stretch when vertical-align='stretch'", function () {
+        layout.setAttribute("layout-type", "vertical-scroll");
+        layout.setAttribute("vertical-align", "stretch");
+        expect(layout.classList.contains("u-v-align-stretch")).to.be.true;
+      });
+
+      it("sets u-v-align-end when vertical-align='end'", function () {
+        layout.setAttribute("layout-type", "vertical-scroll");
+        layout.setAttribute("vertical-align", "end");
+        expect(layout.classList.contains("u-v-align-end")).to.be.true;
+      });
+
+      it("sets both u-h-align-* and u-v-align-* simultaneously", function () {
+        layout.setAttribute("layout-type", "horizontal-scroll");
+        layout.setAttribute("horizontal-align", "stretch");
+        layout.setAttribute("vertical-align", "center");
+        expect(layout.classList.contains("u-h-align-stretch")).to.be.true;
+        expect(layout.classList.contains("u-v-align-center")).to.be.true;
+      });
+
+      it("keeps exactly one u-h-align-* class after horizontal-align changes", function () {
+        layout.setAttribute("layout-type", "horizontal-scroll");
+        // start → stretch: stale start class must be replaced.
+        layout.setAttribute("horizontal-align", "start");
+        layout.setAttribute("horizontal-align", "stretch");
+        let hClasses = [...layout.classList].filter((c) => c.startsWith("u-h-align-"));
+        expect(hClasses).to.have.lengthOf(1);
+        expect(hClasses[0]).to.equal("u-h-align-stretch");
+        // stretch → center: stale stretch class must be replaced.
+        layout.setAttribute("horizontal-align", "center");
+        hClasses = [...layout.classList].filter((c) => c.startsWith("u-h-align-"));
+        expect(hClasses).to.have.lengthOf(1);
+        expect(hClasses[0]).to.equal("u-h-align-center");
+      });
+
+      it("keeps exactly one u-v-align-* class after vertical-align changes", function () {
+        layout.setAttribute("layout-type", "vertical-scroll");
+        // center → stretch: stale center class must be replaced.
+        layout.setAttribute("vertical-align", "center");
+        layout.setAttribute("vertical-align", "stretch");
+        let vClasses = [...layout.classList].filter((c) => c.startsWith("u-v-align-"));
+        expect(vClasses).to.have.lengthOf(1);
+        expect(vClasses[0]).to.equal("u-v-align-stretch");
+        // stretch → center: stale stretch class must be replaced.
+        layout.setAttribute("vertical-align", "center");
+        vClasses = [...layout.classList].filter((c) => c.startsWith("u-v-align-"));
+        expect(vClasses).to.have.lengthOf(1);
+        expect(vClasses[0]).to.equal("u-v-align-center");
+      });
+    });
+
+    // ── Fully-auto element still gets indicator classes ──────────────────────
+    describe("Fully-auto element — indicator classes are still set", function () {
+      let parent, child;
+
+      beforeEach(function () {
+        parent = mkLayout();
+        child  = mkLayout();
+        parent.appendChild(child);
+      });
+
+      afterEach(function () {
+        cleanup(parent);
+      });
+
+      it("sets u-h-align-stretch on a fully-auto child when ancestor has horizontal-align='stretch'", function () {
+        // Fully-auto children (no own direction or align) skip u-jc-*/u-ai-* classes
+        // but still receive the resolved indicator class so CSS selectors can match.
+        parent.setAttribute("layout-type", "horizontal-scroll");
+        parent.setAttribute("horizontal-align", "stretch");
+        // child is fully-auto: no layout-type, no explicit aligns.
+        expect(child.classList.contains("u-h-align-stretch")).to.be.true;
+        // Confirm no u-jc-*/u-ai-* classes materialised (fully-auto early return).
+        expect(alignClasses(child)).to.be.empty;
+      });
+
+      it("sets u-v-align-stretch on a fully-auto child when ancestor has vertical-align='stretch'", function () {
+        parent.setAttribute("layout-type", "vertical-scroll");
+        parent.setAttribute("vertical-align", "stretch");
+        expect(child.classList.contains("u-v-align-stretch")).to.be.true;
+        expect(alignClasses(child)).to.be.empty;
+      });
+
+      it("sets no u-h-align-* indicator class when no ancestor defines horizontal-align", function () {
+        // No explicit h-align anywhere → closest() finds nothing → hResolved is null.
+        // Indicator classes are only added for actual resolved values, so no u-h-align-* class is set.
+        parent.setAttribute("layout-type", "horizontal-scroll");
+        // No horizontal-align set on parent.
+        const hClasses = [...child.classList].filter((c) => c.startsWith("u-h-align-"));
+        expect(hClasses).to.be.empty;
+      });
+    });
+
+    // ── Inheritance — resolved value via closest() walk ──────────────────────
+    describe("Resolved value via closest() walk", function () {
+      let parent, child;
+
+      beforeEach(function () {
+        parent = mkLayout();
+        child  = mkLayout();
+        parent.appendChild(child);
+      });
+
+      afterEach(function () {
+        cleanup(parent);
+      });
+
+      it("inherits u-h-align-stretch from nearest ancestor with horizontal-align='stretch'", function () {
+        parent.setAttribute("layout-type", "horizontal-scroll");
+        parent.setAttribute("horizontal-align", "stretch");
+        child.setAttribute("layout-type", "horizontal-scroll"); // has own direction
+        // child has no own h-align → closest() resolves to parent's "stretch".
+        expect(child.classList.contains("u-h-align-stretch")).to.be.true;
+      });
+
+      it("own explicit horizontal-align shadows ancestor's value", function () {
+        parent.setAttribute("layout-type", "horizontal-scroll");
+        parent.setAttribute("horizontal-align", "stretch");
+        child.setAttribute("layout-type", "horizontal-scroll");
+        child.setAttribute("horizontal-align", "center"); // child shadows parent.
+        expect(child.classList.contains("u-h-align-center")).to.be.true;
+        expect(child.classList.contains("u-h-align-stretch")).to.be.false;
+      });
+
+      it("treats horizontal-align='auto' as absent and continues closest() walk to ancestor", function () {
+        parent.setAttribute("layout-type", "horizontal-scroll");
+        parent.setAttribute("horizontal-align", "stretch");
+        child.setAttribute("layout-type", "horizontal-scroll");
+        child.setAttribute("horizontal-align", "auto"); // auto = skip, keep walking.
+        // closest() skips auto → finds parent's "stretch".
+        expect(child.classList.contains("u-h-align-stretch")).to.be.true;
+      });
+
+      it("updates indicator class on child when parent horizontal-align changes", function () {
+        parent.setAttribute("layout-type", "horizontal-scroll");
+        parent.setAttribute("horizontal-align", "center");
+        child.setAttribute("layout-type", "horizontal-scroll");
+        // Baseline: child inherits "center".
+        expect(child.classList.contains("u-h-align-center")).to.be.true;
+
+        parent.setAttribute("horizontal-align", "stretch");
+        // After parent change child is re-synced → indicator updates to "stretch".
+        expect(child.classList.contains("u-h-align-stretch")).to.be.true;
+        expect(child.classList.contains("u-h-align-center")).to.be.false;
+      });
+
+      it("updates u-v-align-* indicator class on child when parent vertical-align changes", function () {
+        parent.setAttribute("layout-type", "vertical-scroll");
+        parent.setAttribute("vertical-align", "center");
+        child.setAttribute("layout-type", "vertical-scroll");
+        expect(child.classList.contains("u-v-align-center")).to.be.true;
+
+        parent.setAttribute("vertical-align", "stretch");
+        expect(child.classList.contains("u-v-align-stretch")).to.be.true;
+        expect(child.classList.contains("u-v-align-center")).to.be.false;
+      });
+    });
+
+    // ── Nested structure 1: siblings with different alignment ────────────────
+    // DOM (light):
+    //   parent (comp)
+    //     child1 (Entity) – auto
+    //       child1_1 (Occurrence) – auto
+    //       child1_2 (Occurrence) – auto
+    //     child2 (Entity) – stretch
+    //       child2_1 (Occurrence) – auto
+    //       child2_2 (Occurrence) – center
+    describe("Nested structure 1: sibling entities with different alignment", function () {
+      let parent, child1, child1_1, child1_2, child2, child2_1, child2_2;
+
+      beforeEach(function () {
+        parent   = mkLayout();
+        child1   = mkLayout();
+        child1_1 = mkLayout();
+        child1_2 = mkLayout();
+        child2   = mkLayout();
+        child2_1 = mkLayout();
+        child2_2 = mkLayout();
+
+        // Build tree
+        child1.appendChild(child1_1);
+        child1.appendChild(child1_2);
+        child2.appendChild(child2_1);
+        child2.appendChild(child2_2);
+        parent.appendChild(child1);
+        parent.appendChild(child2);
+
+        // Configure
+        parent.setAttribute("layout-type", "horizontal-scroll");
+        parent.setAttribute("horizontal-align", "end");
+
+        // child1 (Entity) – fully auto, inherits parent.
+        // child1_1, child1_2 (Occurrences) – fully auto.
+
+        // child2 (Entity) – explicit stretch, shadows parent.
+        child2.setAttribute("horizontal-align", "stretch");
+
+        // child2_1 (Occurrence) – fully auto, inherits child2's stretch.
+        // child2_2 (Occurrence) – explicit center, shadows child2.
+        child2_2.setAttribute("horizontal-align", "center");
+      });
+
+      afterEach(function () {
+        cleanup(parent);
+      });
+
+      it("child1 (auto) inherits parent horizontal-align='end'", function () {
+        expect(child1.classList.contains("u-h-align-end")).to.be.true;
+      });
+
+      it("child1_1 (auto) inherits resolved 'end' from grandparent via child1", function () {
+        expect(child1_1.classList.contains("u-h-align-end")).to.be.true;
+      });
+
+      it("child1_2 (auto) inherits resolved 'end' from grandparent via child1", function () {
+        expect(child1_2.classList.contains("u-h-align-end")).to.be.true;
+      });
+
+      it("child2 (stretch) uses its own explicit alignment, not parent's 'end'", function () {
+        expect(child2.classList.contains("u-h-align-stretch")).to.be.true;
+        expect(child2.classList.contains("u-h-align-end")).to.be.false;
+      });
+
+      it("child2_1 (auto) inherits 'stretch' from nearest ancestor child2", function () {
+        expect(child2_1.classList.contains("u-h-align-stretch")).to.be.true;
+        expect(child2_1.classList.contains("u-h-align-end")).to.be.false;
+      });
+
+      it("child2_2 (center) uses its own explicit 'center', not child2's 'stretch'", function () {
+        expect(child2_2.classList.contains("u-h-align-center")).to.be.true;
+        expect(child2_2.classList.contains("u-h-align-stretch")).to.be.false;
+      });
+    });
+
+    // ── Nested structure 2: deep multi-level inheritance ─────────────────────
+    // DOM (light):
+    //   parent (comp)
+    //     child1 (Entity)
+    //       child1_1 (Occurrence)
+    //         child1_1_1 (Entity)
+    //           child1_1_1_1 (Occurrence)
+    //         child1_1_2 (Entity)
+    //           child1_1_2_1 (Occurrence)
+    //       child1_2 (Occurrence)
+    //     child2 (Entity)
+    //       child2_1 (Occurrence)
+    //       child2_2 (Occurrence)
+    describe("Nested structure 2: deep multi-level inheritance", function () {
+      let parent, child1, child1_1, child1_1_1, child1_1_1_1, child1_1_2, child1_1_2_1, child1_2, child2, child2_1, child2_2;
+
+      beforeEach(function () {
+        parent        = mkLayout();
+        child1        = mkLayout();
+        child1_1      = mkLayout();
+        child1_1_1    = mkLayout();
+        child1_1_1_1  = mkLayout();
+        child1_1_2    = mkLayout();
+        child1_1_2_1  = mkLayout();
+        child1_2      = mkLayout();
+        child2        = mkLayout();
+        child2_1      = mkLayout();
+        child2_2      = mkLayout();
+
+        // Build tree
+        child1_1_1.appendChild(child1_1_1_1);
+        child1_1_2.appendChild(child1_1_2_1);
+        child1_1.appendChild(child1_1_1);
+        child1_1.appendChild(child1_1_2);
+        child1.appendChild(child1_1);
+        child1.appendChild(child1_2);
+        child2.appendChild(child2_1);
+        child2.appendChild(child2_2);
+        parent.appendChild(child1);
+        parent.appendChild(child2);
+
+        // Configure
+        parent.setAttribute("layout-type", "horizontal-scroll");
+        parent.setAttribute("horizontal-align", "end");
+        parent.setAttribute("vertical-align", "center");
+        // All descendants are fully auto unless overridden below.
+        // child1_1_2 overrides horizontal-align to "stretch" to test shadowing at depth.
+        child1_1_2.setAttribute("horizontal-align", "stretch");
+      });
+
+      afterEach(function () {
+        cleanup(parent);
+      });
+
+      it("child1 inherits 'end' from parent", function () {
+        expect(child1.classList.contains("u-h-align-end")).to.be.true;
+      });
+
+      it("child1_1 (Occurrence, auto) inherits 'end' through child1", function () {
+        expect(child1_1.classList.contains("u-h-align-end")).to.be.true;
+      });
+
+      it("child1_1_1 (Entity, auto) inherits 'end' through child1 and child1_1", function () {
+        expect(child1_1_1.classList.contains("u-h-align-end")).to.be.true;
+      });
+
+      it("child1_1_1_1 (Occurrence, auto) inherits 'end' at deepest level", function () {
+        expect(child1_1_1_1.classList.contains("u-h-align-end")).to.be.true;
+      });
+
+      it("child1_1_2 (Entity) uses its own 'stretch', shadowing parent's 'end'", function () {
+        expect(child1_1_2.classList.contains("u-h-align-stretch")).to.be.true;
+        expect(child1_1_2.classList.contains("u-h-align-end")).to.be.false;
+      });
+
+      it("child1_1_2_1 (Occurrence, auto) resolves to 'stretch' from nearest ancestor child1_1_2", function () {
+        expect(child1_1_2_1.classList.contains("u-h-align-stretch")).to.be.true;
+        expect(child1_1_2_1.classList.contains("u-h-align-end")).to.be.false;
+      });
+
+      it("child1_2 (Occurrence, auto) inherits 'end' from parent via child1", function () {
+        expect(child1_2.classList.contains("u-h-align-end")).to.be.true;
+      });
+
+      it("child2 (Entity, auto) inherits 'end' from parent", function () {
+        expect(child2.classList.contains("u-h-align-end")).to.be.true;
+      });
+
+      it("child2_1 (Occurrence, auto) inherits 'end' through child2", function () {
+        expect(child2_1.classList.contains("u-h-align-end")).to.be.true;
+      });
+
+      it("child2_2 (Occurrence, auto) inherits 'end' through child2", function () {
+        expect(child2_2.classList.contains("u-h-align-end")).to.be.true;
+      });
+
+      it("vertical-align 'center' propagates to all auto descendants", function () {
+        [child1, child1_1, child1_1_1, child1_1_1_1, child1_1_2_1, child1_2, child2, child2_1, child2_2].forEach(function (el) {
+          expect(el.classList.contains("u-v-align-center")).to.be.true;
+        });
+        // child1_1_2 has its own h-align override but no v-align override — still inherits center.
+        expect(child1_1_2.classList.contains("u-v-align-center")).to.be.true;
       });
     });
   });

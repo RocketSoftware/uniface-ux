@@ -178,3 +178,30 @@ uf-layout:has(> uf-layout > .u-stretchable, > uf-layout > uf-layout:is(.u-ai-str
   min-height: 0;
   min-width: 0;
 }
+
+/* Appearance styles for layout widgets: shared base styles (border-radius, padding). */
+uf-layout:is([appearance="outline"], [appearance="card"], [appearance="panel"], [appearance="section"]) {
+  border-radius: calc(var(--layer-corner-radius) * 1px);
+  padding: var(--u-spacing);
+}
+
+/* Outline, Card, Panel: shared border. */
+uf-layout:is([appearance="outline"], [appearance="card"], [appearance="panel"]) {
+  border: calc(var(--stroke-width) * 1px) solid var(--neutral-stroke-rest);
+}
+
+/* Card: elevated surface with fill background and drop shadow. */
+uf-layout[appearance="card"] {
+  background: var(--fill-color);
+  box-shadow: var(--elevation-shadow-card-rest);
+}
+
+/* Panel: recessed surface using layer fill. */
+uf-layout[appearance="panel"] {
+  background: var(--neutral-fill-layer-rest);
+}
+
+/* Section: grouped area using neutral layer background. */
+uf-layout[appearance="section"] {
+  background: var(--neutral-layer-3);
+}

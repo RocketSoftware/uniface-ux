@@ -51,7 +51,7 @@ export class TextArea extends Widget {
     new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new AttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
     new AttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
-    new AttributeChoice(this, "html:resize", "resize", ["none", "both", "horizontal", "vertical"], "both"),
+    new AttributeChoice(this, "html:resize", "resize", ["none", "both", "horizontal", "vertical", "auto"], "auto", true),
     new AttributeBoolean(this, "html:hidden", "hidden", false),
     new AttributeBoolean(this, "html:disabled", "disabled", false),
     new AttributeBoolean(this, "html:readonly", "readOnly", false),
@@ -92,9 +92,14 @@ export class TextArea extends Widget {
       root.appendChild(errorSpan);
     }
 
-    // ResizeObserver to update the widget's width, which also affects the label's width when the control is resized, for the label-position above and below.
+    // Override cols-based intrinsic width so the control fills the host width by default.
+    // The browser's resize handle will overwrite this with a px value when the user drags.
+    control.style.width = "100%";
+
+    // Sync widgetElement width to the control after a user drag (label-position above/below only).
+    // Drag → control.style.width becomes a px value; window resize → stays "100%", so we do nothing.
     const resizeObserver = new window.ResizeObserver(() => {
-      if (this.data["label-position"] === "above" || this.data["label-position"] === "below") {
+      if ((this.data["label-position"] === "above" || this.data["label-position"] === "below") && control.style.width !== "100%") {
         widgetElement.style.width = `${control.offsetWidth}px`;
       }
     });

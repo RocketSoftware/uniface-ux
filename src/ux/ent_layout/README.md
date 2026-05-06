@@ -16,6 +16,7 @@ The widget is implemented using the web component `uf-layout` built on FASTEleme
 - **Dynamic Labels**: Optional labels with customizable size, position, and alignment for collection entity.
 - **Alignment Control**: Fine-grained control over horizontal and vertical alignment.
 - **Responsive Design**: Built on CSS Flexbox for responsive layouts.
+- **Appearance Variants**: Built-in visual styles (transparent, outline, card, panel, section) for common surface patterns, configurable independently for the collection and occurrence layouts.
 
 ### Comprehensive Layout Controls for Collection and Occurrence widget
 
@@ -36,6 +37,10 @@ These properties allow control over how content is arranged and displayed within
   The options are start, center, and end.
 - **Label Position**: Specifies the position of the label with respect to its element.
   The options are above, below, before, and after.
+
+### Appearance for Collection and Occurrence widget
+
+The `appearance` property applies a visual style to the collection and occurrence layout widget. The options are transparent, outline, card, panel and section.
 
 ## Documentation
 

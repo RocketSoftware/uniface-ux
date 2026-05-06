@@ -129,7 +129,7 @@ export class TextField extends Widget {
     new AttributeString(this, "html:placeholder", "placeholder", undefined),
     new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new AttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
-    new AttributeChoice(this, "html:type", "type", ["text", "email", "password", "tel", "url", "date"], "text"),
+    new AttributeChoice(this, "html:type", "type", ["text", "email", "password", "tel", "url", "date", "datetime-local", "time"], "text"),
     new AttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new AttributeBoolean(this, "html:hidden", "hidden", false),
     new this.AttributeUIBlocking(this, "html:readonly", "html:disabled", "uiblocked", false, false, false),

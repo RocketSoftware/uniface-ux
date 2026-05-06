@@ -27,6 +27,33 @@
   const occurrenceWidgetClass = occurrenceMockDef.getWidgetClass();
   const occurrenceWidgetName = occurrenceMockDef.widgetClassName;
 
+  // TextArea widget class — resolved once at file scope, same pattern as collectionWidgetClass.
+  const textAreaWidgetClass = new MockEntityDefinition("_ta_class_resolver", "UX.TextArea", "field", {}).getWidgetClass();
+
+  /**
+   * Helper function to create a text-area element with full widget initialization.
+   * Returns { element, widget } following the same pattern as createOccurrenceWidget.
+   */
+  let _textAreaCounter = 0;
+  function createTextAreaWidget(skeletonId) {
+    const id = skeletonId || ("text_area_widget_" + ++_textAreaCounter);
+    const skeleton = document.createElement("div");
+    skeleton.id = id;
+    const objDef = new MockEntityDefinition(id, "UX.TextArea", "field", {});
+    const element = textAreaWidgetClass.processLayout(skeleton, objDef);
+    // fluent-text-area only creates .control / .root inside its shadow DOM after connecting
+    // to the document. Append first so onConnect (which accesses those shadow elements) succeeds.
+    // The caller can move the element anywhere via appendChild — DOM nodes are moved, not copied.
+    document.body.appendChild(element);
+    const widget = new textAreaWidgetClass();
+    widget.onConnect(element, objDef);
+    widget.dataInit();
+    return {
+      "element": element,
+      "widget": widget
+    };
+  }
+
   /**
    * Helper function to create a collection element with widget initialization.
    */
@@ -429,6 +456,7 @@
         assert.strictEqual(collectionTester.defaultValues["label-align"], "start", "Default value of 'label-align' should be 'start'.");
         assert.strictEqual(collectionTester.defaultValues["label-position"], "above", "Default value of 'label-position' should be 'above'.");
         assert.strictEqual(collectionTester.defaultValues["area-slot"], "main", "Default value of 'area-slot' should be 'main'.");
+        assert.strictEqual(collectionTester.defaultValues["appearance"], "transparent", "Default value of 'appearance' should be 'transparent'.");
       });
 
       it("check u-coll-layout class is added after dataInit", function () {
@@ -465,6 +493,7 @@
           expect(occWidget.defaultValues["layout-type"]).to.equal("auto", "Default value of 'layout-type' should be 'auto'.");
           expect(occWidget.defaultValues["horizontal-align"]).to.equal("auto", "Default value of 'horizontal-align' should be 'auto'.");
           expect(occWidget.defaultValues["vertical-align"]).to.equal("auto", "Default value of 'vertical-align' should be 'auto'.");
+          expect(occWidget.defaultValues["appearance-occurrences"]).to.equal("transparent", "Default value of 'appearance-occurrences' should be 'transparent'.");
 
         }
       });
@@ -577,10 +606,14 @@
 
         it("update label-text to empty string hides the label span", function () {
           return asyncRun(function () {
-            collectionTester.dataUpdate({ "label-text": "Some Label" });
+            collectionTester.dataUpdate({
+              "label-text": "Some Label"
+            });
           }).then(function () {
             return asyncRun(function () {
-              collectionTester.dataUpdate({ "label-text": "" });
+              collectionTester.dataUpdate({
+                "label-text": ""
+              });
             });
           }).then(function () {
             const labelElement = element.querySelector(".u-label-text");
@@ -591,10 +624,14 @@
 
         it("update label-text to null hides the label span", function () {
           return asyncRun(function () {
-            collectionTester.dataUpdate({ "label-text": "Some Label" });
+            collectionTester.dataUpdate({
+              "label-text": "Some Label"
+            });
           }).then(function () {
             return asyncRun(function () {
-              collectionTester.dataUpdate({ "label-text": null });
+              collectionTester.dataUpdate({
+                "label-text": null
+              });
             });
           }).then(function () {
             const labelElement = element.querySelector(".u-label-text");
@@ -605,7 +642,9 @@
 
         it("update label-text to the string 'null' shows the label span with text 'null'", function () {
           return asyncRun(function () {
-            collectionTester.dataUpdate({ "label-text": "null" });
+            collectionTester.dataUpdate({
+              "label-text": "null"
+            });
           }).then(function () {
             const labelElement = element.querySelector(".u-label-text");
             expect(labelElement).to.exist;
@@ -617,7 +656,9 @@
         it("update label-text to a very long text shows the label span with the full text", function () {
           const longText = "This is a very long label of WIDGET and the question is, will it wrap or not?";
           return asyncRun(function () {
-            collectionTester.dataUpdate({ "label-text": longText });
+            collectionTester.dataUpdate({
+              "label-text": longText
+            });
           }).then(function () {
             const labelElement = element.querySelector(".u-label-text");
             expect(labelElement).to.exist;
@@ -680,6 +721,123 @@
             }).then(function () {
               expect(element.getAttribute("vertical-align")).to.equal(alignment);
             });
+          });
+        });
+      });
+
+      describe("Appearance property", function () {
+        ["transparent", "outline", "card", "section", "panel"].forEach(function (appearance) {
+          it(`update appearance to ${appearance}`, function () {
+            const data = {
+              "appearance": appearance
+            };
+            return asyncRun(function () {
+              collectionTester.dataUpdate(data);
+            }).then(function () {
+              expect(element.getAttribute("appearance")).to.equal(appearance, `appearance attribute should be set to '${appearance}'.`);
+            });
+          });
+        });
+
+        ["outline", "card", "section", "panel"].forEach(function (appearance) {
+          it(`appearance ${appearance} should have border-radius and padding`, function () {
+            const data = {
+              "appearance": appearance
+            };
+            return asyncRun(function () {
+              collectionTester.dataUpdate(data);
+            }).then(function () {
+              const styles = window.getComputedStyle(element);
+              expect(parseFloat(styles.borderRadius)).to.be.above(0, `appearance '${appearance}' should have a non-zero border-radius.`);
+              expect(parseFloat(styles.padding)).to.be.above(0, `appearance '${appearance}' should have non-zero padding.`);
+            });
+          });
+        });
+
+        ["outline", "card", "panel"].forEach(function (appearance) {
+          it(`appearance ${appearance} should have border`, function () {
+            const data = {
+              "appearance": appearance
+            };
+            return asyncRun(function () {
+              collectionTester.dataUpdate(data);
+            }).then(function () {
+              const styles = window.getComputedStyle(element);
+
+              expect(parseFloat(styles.borderWidth)).to.be.above(0, `appearance '${appearance}' should have a non-zero border width.`);
+              expect(styles.borderStyle).to.equal("solid", `appearance '${appearance}' should have a solid border style.`);
+              expect(styles.borderColor).not.to.equal("transparent", `appearance '${appearance}' should have a non-transparent border color.`);
+            });
+          });
+        });
+
+        ["card", "section", "panel"].forEach(function (appearance) {
+          it(`appearance ${appearance} should have background-color`, function () {
+            const data = {
+              "appearance": appearance
+            };
+            return asyncRun(function () {
+              collectionTester.dataUpdate(data);
+            }).then(function () {
+              const styles = window.getComputedStyle(element);
+              expect(styles.backgroundColor).not.to.equal("rgba(0, 0, 0, 0)", `Appearance '${appearance}' should have a non-transparent background color.`);
+            });
+          });
+        });
+
+        it("appearance card should have box-shadow", function () {
+          const data = {
+            "appearance": "card"
+          };
+          return asyncRun(function () {
+            collectionTester.dataUpdate(data);
+          }).then(function () {
+            const styles = window.getComputedStyle(element);
+            expect(styles.boxShadow).not.to.equal("none", "appearance 'card' should have a box-shadow applied.");
+          });
+        });
+
+        ["transparent", "outline", "section", "panel"].forEach(function (appearance) {
+          it(`appearance ${appearance} should not have box-shadow`, function () {
+            const data = { "appearance": appearance };
+            return asyncRun(function () {
+              collectionTester.dataUpdate(data);
+            }).then(function () {
+              const styles = window.getComputedStyle(element);
+              expect(styles.boxShadow).to.equal("none", `appearance '${appearance}' should not have a box-shadow.`);
+            });
+          });
+        });
+
+        it("appearance transparent should not have border, padding or background-color", function () {
+          const data = { "appearance": "transparent" };
+          return asyncRun(function () {
+            collectionTester.dataUpdate(data);
+          }).then(function () {
+            const styles = window.getComputedStyle(element);
+            expect(parseFloat(styles.borderWidth)).to.equal(0, "appearance 'transparent' should have no border.");
+            expect(styles.backgroundColor).to.equal("rgba(0, 0, 0, 0)", "appearance 'transparent' should have a transparent background color.");
+            expect(parseFloat(styles.padding)).to.equal(0, "appearance 'transparent' should have no padding.");
+          });
+        });
+
+        it("appearance outline should not have background-color", function () {
+          const data = { "appearance": "outline" };
+          return asyncRun(function () {
+            collectionTester.dataUpdate(data);
+          }).then(function () {
+            const styles = window.getComputedStyle(element);
+            expect(styles.backgroundColor).to.equal("rgba(0, 0, 0, 0)", "appearance 'outline' should have a transparent background color.");
+          });
+        });
+
+        it("appearance section should not have border", function () {
+          const data = { "appearance": "section" };
+          return asyncRun(function () {
+            collectionTester.dataUpdate(data);
+          }).then(function () {
+            const styles = window.getComputedStyle(element);
+            expect(parseFloat(styles.borderWidth)).to.equal(0, "appearance 'section' should have no border.");
           });
         });
       });
@@ -779,6 +937,21 @@
               occWidget.dataUpdate(data);
             }).then(function () {
               expect(occElement.getAttribute("vertical-align")).to.equal(alignment);
+            });
+          });
+        });
+      });
+
+      describe("Appearance property", function () {
+        ["transparent", "outline", "card", "section", "panel"].forEach(function (appearance) {
+          it(`update appearance-occurrences to ${appearance}`, function () {
+            const data = {
+              "appearance-occurrences": appearance
+            };
+            return asyncRun(function () {
+              occWidget.dataUpdate(data);
+            }).then(function () {
+              expect(occElement.getAttribute("appearance")).to.equal(appearance, `appearance attribute should be set to '${appearance}'.`);
             });
           });
         });
@@ -1564,8 +1737,12 @@
         const occWidget = occResult.widget;
 
         await asyncRun(function () {
-          collectionWidget.dataUpdate({ "vertical-align-occurrences": "stretch" });
-          occWidget.dataUpdate({ "vertical-align": "center" });
+          collectionWidget.dataUpdate({
+            "vertical-align-occurrences": "stretch"
+          });
+          occWidget.dataUpdate({
+            "vertical-align": "center"
+          });
         });
 
         expect(collectionElement.getAttribute("vertical-align")).to.equal("stretch", "Collection cross-axis-alignment should be stretch.");
@@ -1683,12 +1860,17 @@
 
       it("should set width 100% on u-coll-layout inside a vertical-scroll parent", function () {
         // [layout-type*="vertical-scroll"] > .u-coll-layout rule sets width: 100%.
-        const parent = document.createElement("uf-layout");
-        parent.setAttribute("layout-type", "vertical-scroll");
+        const occDef = new MockEntityDefinition("css_width_vs", "UX.OccurrenceLayout", "entity", {});
+        const result = createOccurrenceWidget(occDef, "css_width_vs_occ");
+        const parent = result.element;
+        const occWidget = result.widget;
         const collLayout = document.createElement("u-coll-layout");
         collLayout.classList.add("u-coll-layout");
         parent.appendChild(collLayout);
         document.body.appendChild(parent);
+        occWidget.dataUpdate({
+          "layout-type": "vertical-scroll"
+        });
 
         return asyncRun(function () {
         }).then(function () {
@@ -1702,12 +1884,17 @@
 
       it("should set width 100% on u-coll-layout inside a vertical-wrap parent", function () {
         // [layout-type*="vertical-wrap"] > .u-coll-layout rule sets width: 100%.
-        const parent = document.createElement("uf-layout");
-        parent.setAttribute("layout-type", "vertical-wrap");
+        const occDef = new MockEntityDefinition("css_width_vw", "UX.OccurrenceLayout", "entity", {});
+        const result = createOccurrenceWidget(occDef, "css_width_vw_occ");
+        const parent = result.element;
+        const occWidget = result.widget;
         const collLayout = document.createElement("u-coll-layout");
         collLayout.classList.add("u-coll-layout");
         parent.appendChild(collLayout);
         document.body.appendChild(parent);
+        occWidget.dataUpdate({
+          "layout-type": "vertical-wrap"
+        });
 
         return asyncRun(function () {
         }).then(function () {
@@ -1722,13 +1909,18 @@
 
     describe("Stretchable direct children flex-grow in uf-layout", function () {
       it("should apply flex-grow to u-stretchable direct child of uf-layout", function () {
-        // uf-layout > .u-stretchable sets flex-grow via --u-vertical-layout-grow / --u-layout-grow.
-        const layout = document.createElement("uf-layout");
-        layout.style.setProperty("--u-layout-grow", "1");
+        // uf-layout > .u-stretchable sets flex-grow via --u-layout-grow, which is set by the web
+        // component's shadow CSS when horizontal-align='stretch' in a horizontal layout.
+        const occDef = new MockEntityDefinition("css_stretchable_apply", "UX.OccurrenceLayout", "entity", {});
+        const result = createOccurrenceWidget(occDef, "css_stretchable_apply_occ");
+        const layout = result.element;
+        const occWidget = result.widget;
         const child = document.createElement("div");
         child.classList.add("u-stretchable");
         layout.appendChild(child);
         document.body.appendChild(layout);
+        occWidget.dataUpdate({ "layout-type": "horizontal-scroll",
+                               "horizontal-align": "stretch" });
 
         return asyncRun(function () {
         }).then(function () {
@@ -1740,12 +1932,16 @@
       });
 
       it("should not apply flex-grow to non-stretchable direct child of uf-layout", function () {
-        // Without .u-stretchable class, no flex-grow rule applies.
-        const layout = document.createElement("uf-layout");
-        layout.style.setProperty("--u-layout-grow", "1");
+        // Without .u-stretchable class, uf-layout > .u-stretchable does not match regardless of --u-layout-grow.
+        const occDef = new MockEntityDefinition("css_no_stretchable", "UX.OccurrenceLayout", "entity", {});
+        const result = createOccurrenceWidget(occDef, "css_no_stretchable_occ");
+        const layout = result.element;
+        const occWidget = result.widget;
         const child = document.createElement("div");
         layout.appendChild(child);
         document.body.appendChild(layout);
+        occWidget.dataUpdate({ "layout-type": "horizontal-scroll",
+                               "horizontal-align": "stretch" });
 
         return asyncRun(function () {
         }).then(function () {
@@ -1757,12 +1953,18 @@
       });
 
       it("should not apply flex-grow to nested uf-layout child without u-stretchable", function () {
-        // A nested uf-layout does not have .u-stretchable; it has its own container rules.
-        const layout = document.createElement("uf-layout");
-        layout.style.setProperty("--u-layout-grow", "1");
-        const nestedLayout = document.createElement("uf-layout");
+        // A nested uf-layout does not carry .u-stretchable; uf-layout > .u-stretchable does not match it.
+        const outerDef = new MockEntityDefinition("css_outer_no_lt", "UX.CollectionLayout", "entity", {});
+        const outerResult = createCollectionWidget(outerDef, "css_outer_no_lt_coll");
+        const layout = outerResult.element;
+        const collWidget = outerResult.widget;
+        const innerDef = new MockEntityDefinition("css_inner_no_lt", "UX.OccurrenceLayout", "entity", {});
+        const innerResult = createOccurrenceWidget(innerDef, "css_inner_no_lt_occ");
+        const nestedLayout = innerResult.element;
         layout.appendChild(nestedLayout);
         document.body.appendChild(layout);
+        collWidget.dataUpdate({ "layout-type-occurrences": "horizontal-scroll",
+                                "horizontal-align-occurrences": "stretch" });
 
         return asyncRun(function () {
         }).then(function () {
@@ -1774,16 +1976,21 @@
       });
     });
 
-    describe("switch, checkbox, radio-group, plain-text: no flex-grow as direct children", function () {
+    describe("No flex-grow for switch, checkbox, radio-group, and plain-text as direct children", function () {
       ["u-switch", "u-checkbox", "u-radio-group", "u-plain-text", "u-listbox"].forEach(function (tag) {
         it("should not apply flex-grow to " + tag + " as direct child of uf-layout", function () {
-          // These controls do not carry the u-stretchable class, so uf-layout > .u-stretchable does not match.
-          const layout = document.createElement("uf-layout");
-          layout.style.setProperty("--u-layout-grow", "1");
+          // These controls have no u-stretchable class, so uf-layout > .u-stretchable does not match
+          // them even though --u-layout-grow: 1 is set by the web component (horizontal-scroll + stretch).
+          const occDef = new MockEntityDefinition("css_compact_child_" + tag, "UX.OccurrenceLayout", "entity", {});
+          const result = createOccurrenceWidget(occDef, tag + "_compact_child_occ");
+          const layout = result.element;
+          const occWidget = result.widget;
           const control = document.createElement(tag);
           control.classList.add(tag);
           layout.appendChild(control);
           document.body.appendChild(layout);
+          occWidget.dataUpdate({ "layout-type": "horizontal-scroll",
+                                 "horizontal-align": "stretch" });
 
           return asyncRun(function () {
           }).then(function () {
@@ -1797,13 +2004,18 @@
 
       ["u-switch", "u-checkbox", "u-radio-group", "u-plain-text", "u-listbox"].forEach(function (tag) {
         it("should set flex-grow 0 on parent uf-layout whose only direct child is " + tag, function () {
-          // Without u-stretchable, the uf-layout:has(> .u-stretchable) rule does not match.
-          const layout = document.createElement("uf-layout");
-          layout.style.setProperty("--u-layout-grow", "1");
+          // uf-layout:has(> .u-stretchable) does not match — no stretchable child — so the layout
+          // itself does not grow even though --u-layout-grow: 1 is set by the web component.
+          const occDef = new MockEntityDefinition("css_compact_parent_" + tag, "UX.OccurrenceLayout", "entity", {});
+          const result = createOccurrenceWidget(occDef, tag + "_compact_parent_occ");
+          const layout = result.element;
+          const occWidget = result.widget;
           const control = document.createElement(tag);
           control.classList.add(tag);
           layout.appendChild(control);
           document.body.appendChild(layout);
+          occWidget.dataUpdate({ "layout-type": "horizontal-scroll",
+                                 "horizontal-align": "stretch" });
 
           return asyncRun(function () {
           }).then(function () {
@@ -1817,15 +2029,22 @@
 
       ["u-switch", "u-checkbox", "u-radio-group", "u-plain-text", "u-listbox"].forEach(function (tag) {
         it("should set flex-grow 0 on grandparent uf-layout when nested layout has only " + tag, function () {
-          // Without u-stretchable, uf-layout:has(> uf-layout > .u-stretchable) does not match.
-          const outerLayout = document.createElement("uf-layout");
-          outerLayout.style.setProperty("--u-layout-grow", "1");
-          const innerLayout = document.createElement("uf-layout");
+          // uf-layout:has(> uf-layout > .u-stretchable) does not match — inner has no stretchable child —
+          // so the outer layout does not grow even though --u-layout-grow: 1 is set by the web component.
+          const collDef = new MockEntityDefinition("css_compact_grand_" + tag, "UX.CollectionLayout", "entity", {});
+          const collResult = createCollectionWidget(collDef, tag + "_compact_grand_coll");
+          const outerLayout = collResult.element;
+          const collWidget = collResult.widget;
+          const occDef = new MockEntityDefinition("css_compact_grand_inner_" + tag, "UX.OccurrenceLayout", "entity", {});
+          const occResult = createOccurrenceWidget(occDef, tag + "_compact_grand_occ");
+          const innerLayout = occResult.element;
           const control = document.createElement(tag);
           control.classList.add(tag);
           innerLayout.appendChild(control);
           outerLayout.appendChild(innerLayout);
           document.body.appendChild(outerLayout);
+          collWidget.dataUpdate({ "layout-type-occurrences": "horizontal-scroll",
+                                  "horizontal-align-occurrences": "stretch" });
 
           return asyncRun(function () {
           }).then(function () {
@@ -1838,22 +2057,31 @@
       });
     });
 
-    describe("text-field, number-field, button: flex-grow respects --u-vertical-layout-grow guard", function () {
-      // --u-vertical-layout-grow is set by the uf-layout web component (layout_styles.js).
-      // These tests verify that uf-layout > .u-stretchable correctly reads the variable:
-      //   - when set to 0 (vertical layout), stretchable controls must not grow
-      //   - when unset / initial (horizontal layout), stretchable controls grow via --u-layout-grow
+    describe("Flex-grow guard for text-field, number-field, and button widget", function () {
+      // --u-vertical-layout-grow and --u-layout-grow are set by the uf-layout web component's shadow
+      // stylesheet (layout_styles.js) based on layout-type and alignment classes. The entity widget
+      // (CollectionLayout / OccurrenceLayout) drives this by calling setAttribute() via dataUpdate(),
+      // so we use createCollectionWidget / createOccurrenceWidget to go through the real widget lifecycle.
+      // Leaf control elements (text-field, button, etc.) are still created manually since they are not
+      // entity widgets — they just need the correct .u-stretchable class.
 
       ["u-text-field", "u-number-field", "u-button"].forEach(function (tag) {
         it("should not grow " + tag + " inside uf-layout when --u-vertical-layout-grow is 0", function () {
-          // Simulates vertical layout: web component sets --u-vertical-layout-grow: 0 on the host.
-          const layout = document.createElement("uf-layout");
-          layout.style.setProperty("--u-vertical-layout-grow", "0");
-          layout.style.setProperty("--u-layout-grow", "1");
+          // Vertical layout with stretch on both axes drives the shadow CSS:
+          //   vertical-align='stretch'   → u-jc-stretch (main axis)  → shadow CSS sets --u-vertical-layout-grow: 0.
+          //   horizontal-align='stretch' → u-ai-stretch (cross axis) → shadow CSS sets --u-layout-grow: 1.
+          // The guard (--u-vertical-layout-grow: 0) suppresses main-axis growth even though --u-layout-grow is 1.
+          const occDef = new MockEntityDefinition("css_guard_" + tag, "UX.OccurrenceLayout", "entity", {});
+          const result = createOccurrenceWidget(occDef, tag + "_guard_occ");
+          const layout = result.element;
+          const occWidget = result.widget;
           const control = document.createElement(tag);
           control.classList.add(tag, "u-stretchable");
           layout.appendChild(control);
           document.body.appendChild(layout);
+          occWidget.dataUpdate({ "layout-type": "vertical-scroll",
+                                 "vertical-align": "stretch",
+                                 "horizontal-align": "stretch" });
 
           return asyncRun(function () {
           }).then(function () {
@@ -1863,15 +2091,22 @@
             layout.remove();
           });
         });
+      });
 
+      ["u-text-field", "u-number-field", "u-button", "u-text-area"].forEach(function (tag) {
         it("should allow " + tag + " to grow inside uf-layout when --u-vertical-layout-grow is not constrained", function () {
-          // Simulates horizontal layout: --u-vertical-layout-grow is unset so flex-grow falls back to --u-layout-grow.
-          const layout = document.createElement("uf-layout");
-          layout.style.setProperty("--u-layout-grow", "1");
+          // Horizontal layout with stretch: shadow CSS sets --u-vertical-layout-grow: initial (guard off)
+          // and --u-layout-grow: 1; flex-grow falls back through the unset guard to --u-layout-grow.
+          const occDef = new MockEntityDefinition("css_allow_" + tag, "UX.OccurrenceLayout", "entity", {});
+          const result = createOccurrenceWidget(occDef, tag + "_allow_occ");
+          const layout = result.element;
+          const occWidget = result.widget;
           const control = document.createElement(tag);
           control.classList.add(tag, "u-stretchable");
           layout.appendChild(control);
           document.body.appendChild(layout);
+          occWidget.dataUpdate({ "layout-type": "horizontal-scroll",
+                                 "horizontal-align": "stretch" });
 
           return asyncRun(function () {
           }).then(function () {
@@ -1885,17 +2120,36 @@
 
       ["u-text-field", "u-number-field", "u-button"].forEach(function (tag) {
         it("should not grow the parent uf-layout container with only " + tag + " when --u-vertical-layout-grow is 0", function () {
-          // uf-layout:has(> uf-layout > .u-stretchable) reads --u-vertical-layout-grow.
-          // Simulates vertical layout: web component sets --u-vertical-layout-grow: 0 on the host.
-          const outerLayout = document.createElement("uf-layout");
-          outerLayout.style.setProperty("--u-vertical-layout-grow", "0");
-          outerLayout.style.setProperty("--u-layout-grow", "1");
-          const innerLayout = document.createElement("uf-layout");
+          // The outer (CollectionLayout) gets --u-layout-grow: 1 via shadow CSS when vertical-scroll +
+          // horizontal-align='stretch' → u-ai-stretch → :host(.u-layout-type-vs.u-ai-stretch) { --u-layout-grow: 1 }.
+          // In production, the guard --u-vertical-layout-grow: 0 is then set on the outer :host by
+          // :host:has(.u-layout-type-vs.u-jc-stretch:not(.u-ai-stretch)) when the slotted inner layout
+          // has vertical-scroll + vertical-align='stretch'. However, Chromium's :host:has() cannot match
+          // slotted light DOM children across shadow boundaries, so we set the guard directly on the element
+          // (as it would appear from the :host rule) to test that the CSS rule correctly reads it.
+          const collDef = new MockEntityDefinition("css_outer_" + tag, "UX.CollectionLayout", "entity", {});
+          const collResult = createCollectionWidget(collDef, tag + "_outer_coll");
+          const outerLayout = collResult.element;
+          const collWidget = collResult.widget;
+
+          const occDef = new MockEntityDefinition("css_inner_" + tag, "UX.OccurrenceLayout", "entity", {});
+          const occResult = createOccurrenceWidget(occDef, tag + "_inner_occ");
+          const innerLayout = occResult.element;
+          const occWidget = occResult.widget;
+
           const control = document.createElement(tag);
           control.classList.add(tag, "u-stretchable");
           innerLayout.appendChild(control);
           outerLayout.appendChild(innerLayout);
           document.body.appendChild(outerLayout);
+          // vertical-scroll + horizontal-align='stretch' → u-ai-stretch → shadow CSS: --u-layout-grow: 1 on outer :host.
+          collWidget.dataUpdate({ "layout-type-occurrences": "vertical-scroll",
+                                  "horizontal-align-occurrences": "stretch" });
+          occWidget.dataUpdate({ "layout-type": "vertical-scroll",
+                                 "vertical-align": "stretch" });
+          // Simulate the guard that :host:has() would set on the outer :host when it detects a vertical
+          // jc-stretch inner layout. This directly tests flex-grow: var(--u-vertical-layout-grow, var(--u-layout-grow, 0)) = 0.
+          outerLayout.style.setProperty("--u-vertical-layout-grow", "0");
 
           return asyncRun(function () {
           }).then(function () {
@@ -1907,15 +2161,24 @@
         });
 
         it("should allow the parent uf-layout container with only " + tag + " to grow when --u-vertical-layout-grow is not constrained", function () {
-          // Simulates horizontal layout: --u-vertical-layout-grow is unset so flex-grow falls back to --u-layout-grow.
-          const outerLayout = document.createElement("uf-layout");
-          outerLayout.style.setProperty("--u-layout-grow", "1");
-          const innerLayout = document.createElement("uf-layout");
+          // Outer (CollectionLayout): horizontal-scroll + horizontal-align='stretch' → shadow CSS sets
+          // --u-vertical-layout-grow: initial (guard off) and --u-layout-grow: 1; outer flex-grow falls back to --u-layout-grow.
+          const collDef = new MockEntityDefinition("css_outer_allow_" + tag, "UX.CollectionLayout", "entity", {});
+          const collResult = createCollectionWidget(collDef, tag + "_outer_allow_coll");
+          const outerLayout = collResult.element;
+          const collWidget = collResult.widget;
+
+          const occDef = new MockEntityDefinition("css_inner_allow_" + tag, "UX.OccurrenceLayout", "entity", {});
+          const occResult = createOccurrenceWidget(occDef, tag + "_inner_allow_occ");
+          const innerLayout = occResult.element;
+
           const control = document.createElement(tag);
           control.classList.add(tag, "u-stretchable");
           innerLayout.appendChild(control);
           outerLayout.appendChild(innerLayout);
           document.body.appendChild(outerLayout);
+          collWidget.dataUpdate({ "layout-type-occurrences": "horizontal-scroll",
+                                  "horizontal-align-occurrences": "stretch" });
 
           return asyncRun(function () {
           }).then(function () {
@@ -1924,6 +2187,135 @@
           }).finally(function () {
             outerLayout.remove();
           });
+        });
+      });
+
+      ["u-text-area"].forEach(function (tag) {
+        it("should allow the parent uf-layout container with only " + tag + " to grow when --u-vertical-layout-grow is not constrained", function () {
+          // Outer (CollectionLayout): horizontal-scroll + horizontal-align='stretch' → shadow CSS sets
+          // --u-vertical-layout-grow: initial (guard off) and --u-layout-grow: 1; outer flex-grow falls back to --u-layout-grow.
+          const collDef = new MockEntityDefinition("css_outer_allow_" + tag, "UX.CollectionLayout", "entity", {});
+          const collResult = createCollectionWidget(collDef, tag + "_outer_allow_coll");
+          const outerLayout = collResult.element;
+          const collWidget = collResult.widget;
+
+          const occDef = new MockEntityDefinition("css_inner_allow_" + tag, "UX.OccurrenceLayout", "entity", {});
+          const occResult = createOccurrenceWidget(occDef, tag + "_inner_allow_occ");
+          const innerLayout = occResult.element;
+
+          const control = document.createElement(tag);
+          control.classList.add(tag, "u-stretchable");
+          innerLayout.appendChild(control);
+          outerLayout.appendChild(innerLayout);
+          document.body.appendChild(outerLayout);
+          collWidget.dataUpdate({ "layout-type-occurrences": "horizontal-scroll",
+                                  "horizontal-align-occurrences": "stretch" });
+
+          return asyncRun(function () {
+          }).then(function () {
+            const styles = window.getComputedStyle(outerLayout);
+            expect(styles.flexGrow).to.equal("1");
+          }).finally(function () {
+            outerLayout.remove();
+          });
+        });
+      });
+    });
+
+    describe("Vertical growth behavior for text-area in stretch-aligned layouts", function () {
+      // u-text-area uses its own CSS rule (.u-text-area.u-stretchable { flex-grow: var(--u-layout-grow, 0) })
+      // which reads --u-layout-grow directly, intentionally bypassing the vertical-layout grow guard.
+      // This means u-text-area CAN grow in vertical layouts — unlike text-field, number-field, button
+      // which are blocked on the main axis in vertical layouts.
+
+      it("should grow u-text-area inside a vertical stretch-aligned layout", function () {
+        // Outer (OccurrenceLayout): vertical-scroll + horizontal-align='stretch'
+        //   → u-ai-stretch → shadow CSS sets --u-layout-grow: 1 on outer :host.
+        // Inner (OccurrenceLayout): vertical-scroll + vertical-align='stretch'
+        //   → u-jc-stretch (no u-ai-stretch) → triggers outer's :host:has(...) rule
+        //   → shadow CSS sets --u-vertical-layout-grow: 0 on outer :host (real guard mechanism).
+        // u-text-area (inside inner) uses flex-grow: var(--u-layout-grow, 0) directly →
+        // higher-specificity rule bypasses the guard and inherits --u-layout-grow: 1.
+        const outerDef = new MockEntityDefinition("css_texta_grow_outer", "UX.OccurrenceLayout", "entity", {});
+        const outerResult = createOccurrenceWidget(outerDef, "css_texta_grow_outer_occ");
+        const outerLayout = outerResult.element;
+        const outerOccWidget = outerResult.widget;
+        const innerDef = new MockEntityDefinition("css_texta_grow_inner", "UX.OccurrenceLayout", "entity", {});
+        const innerResult = createOccurrenceWidget(innerDef, "css_texta_grow_inner_occ");
+        const innerLayout = innerResult.element;
+        const innerOccWidget = innerResult.widget;
+        const taResult = createTextAreaWidget("css_texta_grow_ta");
+        const control = taResult.element;
+        innerLayout.appendChild(control);
+        outerLayout.appendChild(innerLayout);
+        document.body.appendChild(outerLayout);
+        outerOccWidget.dataUpdate({ "layout-type": "vertical-scroll",
+                                    "horizontal-align": "stretch" });
+        innerOccWidget.dataUpdate({ "layout-type": "vertical-scroll",
+                                    "vertical-align": "stretch" });
+
+        return asyncRun(function () {
+        }).then(function () {
+          const styles = window.getComputedStyle(control);
+          expect(styles.flexGrow).to.equal("1", "u-text-area should grow vertically, ignoring the --u-vertical-layout-grow: 0 guard.");
+        }).finally(function () {
+          outerLayout.remove();
+        });
+      });
+
+      it("should not grow u-text-area when parent layout has no stretch alignment (--u-layout-grow defaults to 0)", function () {
+        // No alignment set → no u-jc-stretch / u-ai-stretch → shadow CSS does not set --u-layout-grow.
+        // u-text-area falls back to the var(--u-layout-grow, 0) default of 0.
+        const occDef = new MockEntityDefinition("css_texta_no_grow", "UX.OccurrenceLayout", "entity", {});
+        const result = createOccurrenceWidget(occDef, "css_texta_no_grow_occ");
+        const layout = result.element;
+        const taResult = createTextAreaWidget("css_texta_no_grow_ta");
+        const control = taResult.element;
+        layout.appendChild(control);
+        document.body.appendChild(layout);
+        // No dataUpdate — default layout-type='auto', no stretch alignment.
+
+        return asyncRun(function () {
+        }).then(function () {
+          const styles = window.getComputedStyle(control);
+          expect(styles.flexGrow).to.equal("0", "u-text-area should not grow when no stretch alignment is set on the parent layout.");
+        }).finally(function () {
+          layout.remove();
+        });
+      });
+
+      it("should allow parent uf-layout to grow when it contains u-text-area inside a vertical stretch-aligned layout", function () {
+        // uf-layout:has(> .u-stretchable) grows the container when a stretchable child is present.
+        // u-text-area uses --u-layout-grow directly, bypassing the guard, so both it and the container grow.
+        // Outer (CollectionLayout): vertical-scroll + horizontal-align='stretch'
+        //   → u-ai-stretch → --u-layout-grow: 1 on outer :host; inherits down to control.
+        // Inner (OccurrenceLayout): vertical-scroll + vertical-align='stretch'
+        //   → u-jc-stretch (no u-ai-stretch) → triggers outer's :host:has(...) → --u-vertical-layout-grow: 0 on outer :host.
+        // u-text-area inside inner inherits --u-layout-grow: 1 from outer and uses it directly → flex-grow: 1.
+        const collDef = new MockEntityDefinition("css_texta_cont_outer", "UX.CollectionLayout", "entity", {});
+        const collResult = createCollectionWidget(collDef, "css_texta_cont_outer_coll");
+        const outerLayout = collResult.element;
+        const collWidget = collResult.widget;
+        const occDef = new MockEntityDefinition("css_texta_cont_inner", "UX.OccurrenceLayout", "entity", {});
+        const occResult = createOccurrenceWidget(occDef, "css_texta_cont_inner_occ");
+        const innerLayout = occResult.element;
+        const innerOccWidget = occResult.widget;
+        const taResult = createTextAreaWidget("css_texta_cont_ta");
+        const control = taResult.element;
+        innerLayout.appendChild(control);
+        outerLayout.appendChild(innerLayout);
+        document.body.appendChild(outerLayout);
+        collWidget.dataUpdate({ "layout-type-occurrences": "vertical-scroll",
+                                "horizontal-align-occurrences": "stretch" });
+        innerOccWidget.dataUpdate({ "layout-type": "vertical-scroll",
+                                    "vertical-align": "stretch" });
+
+        return asyncRun(function () {
+        }).then(function () {
+          const controlStyles = window.getComputedStyle(control);
+          expect(controlStyles.flexGrow).to.equal("1", "u-text-area should grow vertically inside nested uf-layout.");
+        }).finally(function () {
+          outerLayout.remove();
         });
       });
     });
@@ -1943,9 +2335,15 @@
      *   </uf-layout>
      * and appends it to the document for computed style resolution.
      */
+    let _buildEntityDOMCounter = 0;
     function buildEntityDOM(childElements) {
-      const coll = document.createElement("uf-layout");
-      const occ = document.createElement("uf-layout");
+      const id = ++_buildEntityDOMCounter;
+      const collDef = new MockEntityDefinition("bed_coll_" + id, "UX.CollectionLayout", "entity", {});
+      const occDef = new MockEntityDefinition("bed_occ_" + id, "UX.OccurrenceLayout", "entity", {});
+      const collResult = createCollectionWidget(collDef, "bed_coll_el_" + id);
+      const occResult = createOccurrenceWidget(occDef, "bed_occ_el_" + id);
+      const coll = collResult.element;
+      const occ = occResult.element;
       childElements.forEach(function (child) {
         occ.appendChild(child);
       });
@@ -1974,7 +2372,7 @@
       });
     });
 
-    describe("uf-layout detects stretchable direct children", function () {
+    describe("Detecting stretchable direct children in uf-layout", function () {
 
       it("should detect a single stretchable widget as direct child", function () {
         const widget = createStretchableWidget();
@@ -2001,7 +2399,7 @@
       });
     });
 
-    describe("outer uf-layout detects stretchable through inner uf-layout", function () {
+    describe("Outer uf-layout detects stretchable through inner uf-layout", function () {
 
       it("should detect stretchable grandchild via outer > inner > widget path", function () {
         const widget = createStretchableWidget();
@@ -2124,12 +2522,16 @@
       const widget = result.widget;
 
       await asyncRun(function () {
-        widget.dataUpdate({ "vertical-align-occurrences": "stretch" });
+        widget.dataUpdate({
+          "vertical-align-occurrences": "stretch"
+        });
       });
       expect(element.getAttribute("vertical-align")).to.equal("stretch", "vertical-align should be stretch after first update.");
 
       await asyncRun(function () {
-        widget.dataUpdate({ "horizontal-align-occurrences": "start" });
+        widget.dataUpdate({
+          "horizontal-align-occurrences": "start"
+        });
       });
       expect(element.getAttribute("horizontal-align")).to.equal("start", "horizontal-align should be updated to start.");
       expect(element.getAttribute("vertical-align")).to.equal("stretch", "vertical-align should remain stretch and not be overridden.");
@@ -2142,12 +2544,16 @@
       const widget = result.widget;
 
       await asyncRun(function () {
-        widget.dataUpdate({ "horizontal-align-occurrences": "center" });
+        widget.dataUpdate({
+          "horizontal-align-occurrences": "center"
+        });
       });
       expect(element.getAttribute("horizontal-align")).to.equal("center", "horizontal-align should be center after first update.");
 
       await asyncRun(function () {
-        widget.dataUpdate({ "vertical-align-occurrences": "end" });
+        widget.dataUpdate({
+          "vertical-align-occurrences": "end"
+        });
       });
       expect(element.getAttribute("vertical-align")).to.equal("end", "vertical-align should be updated to end.");
       expect(element.getAttribute("horizontal-align")).to.equal("center", "horizontal-align should remain center and not be overridden.");
@@ -2284,7 +2690,9 @@
 
       // Switch to horizontal-scroll without changing alignment.
       await asyncRun(function () {
-        widget.dataUpdate({ "layout-type": "horizontal-scroll" });
+        widget.dataUpdate({
+          "layout-type": "horizontal-scroll"
+        });
       });
       expect(element.getAttribute("layout-type")).to.equal("horizontal-scroll", "layout-type should switch to horizontal-scroll.");
       // vertical-align attribute should still hold the value "end"
@@ -2316,7 +2724,9 @@
     it("setting an unsupported property on CollectionLayout logs a warning and is ignored", function () {
       const warnSpy = sinon.spy(console, "warn");
       return asyncRun(function () {
-        collectionTester.dataUpdate({ "dummy-property": "some value" });
+        collectionTester.dataUpdate({
+          "dummy-property": "some value"
+        });
       }).then(function () {
         expect(warnSpy.calledWith(sinon.match("Widget does not support property 'dummy-property' - Ignored."))).to.be.true;
         warnSpy.restore();
@@ -2332,7 +2742,9 @@
       const occWidget = result.widget;
       const warnSpy = sinon.spy(console, "warn");
       return asyncRun(function () {
-        occWidget.dataUpdate({ "dummy-property": "some value" });
+        occWidget.dataUpdate({
+          "dummy-property": "some value"
+        });
       }).then(function () {
         expect(warnSpy.calledWith(sinon.match("Widget does not support property 'dummy-property' - Ignored."))).to.be.true;
         warnSpy.restore();
