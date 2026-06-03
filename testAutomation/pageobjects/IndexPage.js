@@ -7,6 +7,7 @@ class IndexPage extends BasePage {
     this.buttonUnitTestLink = '#button-unit-tests';
     this.childWidgetsWorkerUnitTestLink = '#child-widgets-worker-unit-tests';
     this.layoutWebComponentUnitTestLink = '#layout-web-component-unit-tests';
+    this.textFieldUnitTestLink = '#text-field-unit-tests';
     this.layoutWebComponentLink = '#layout';
     this.buttonWidgetLink = '#button';
     this.checkboxWidgetLink = '#checkbox';

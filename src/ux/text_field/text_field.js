@@ -116,6 +116,88 @@ export class TextField extends Widget {
   };
 
   /**
+   * Guards the FluentUI proxy against validity/empty-message combinations that cause
+   * ElementInternals.setValidity() to throw a TypeError.
+   *
+   * - email/url (typeMismatch): patches element.validate() to temporarily use proxy.type="text"
+   *   since a detached proxy's validationMessage is always "".
+   * - time/datetime-local (stepMismatch): forces proxy.step="0.001"; derives control.step
+   *   from the value format to drive the correct browser spinner.
+   *
+   * Must appear in static structure BEFORE AttributeString(value).
+   * @extends {WorkerBase}
+   */
+  static AttributeProxyGuard = class AttributeProxyGuard extends WorkerBase {
+
+    static _typeMismatchTypes = new Set(["email", "url"]);
+    static _patchedElements   = new WeakSet();
+    static _timeTypes         = new Set(["time", "datetime-local"]);
+    // Type-agnostic: both "time" and "datetime-local" share the same :SS / :SS.sss shape.
+    static _timeStepPatterns  = {
+      "ms":  /:\d{2}\.\d+/,  // :SS.sss → step 0.001
+      "sec": /:\d{2}:\d{2}/  // :MM:SS  → step 1
+    };
+
+    /**
+     * @param {typeof Widget} widgetClass
+     * @param {string} typePropId
+     * @param {string} valuePropId
+     */
+    constructor(widgetClass, typePropId, valuePropId) {
+      super(widgetClass);
+      this.propType = typePropId;
+      this.propValue = valuePropId;
+      this.registerSetter(widgetClass, typePropId, this);
+      this.registerSetter(widgetClass, valuePropId, this);
+    }
+
+    /**
+     * @param {Widget} widgetInstance
+     */
+    refresh(widgetInstance) {
+      this.log("refresh", { "widgetInstance": widgetInstance.getTraceDescription() });
+      const element = this.getElement(widgetInstance);
+
+      // One-time patch per element: suppress typeMismatch for email/url types.
+      if (!AttributeProxyGuard._patchedElements.has(element)) {
+        AttributeProxyGuard._patchedElements.add(element);
+        if (typeof element["validate"] === "function") {
+          const typeMismatchTypes = AttributeProxyGuard._typeMismatchTypes;
+          const original = /** @type {Function} */ (element["validate"]).bind(element);
+          element["validate"] = function() {
+            const proxy = this["proxy"];
+            if (proxy instanceof HTMLInputElement && typeMismatchTypes.has(proxy.type)) {
+              proxy.type = "text";
+              original();
+              proxy.type = this["type"];
+            } else {
+              original();
+            }
+          };
+        }
+      }
+
+      const type = this.getNode(widgetInstance.data, this.propType);
+      if (!AttributeProxyGuard._timeTypes.has(type)) {
+        return;
+      }
+
+      const proxy = element["proxy"];
+      const control = element["control"];
+
+      if (proxy instanceof HTMLInputElement) {
+        proxy.step = "0.001";  // keeps stepMismatch false on the detached proxy
+      }
+
+      if (control instanceof HTMLInputElement) {
+        const value = this.getNode(widgetInstance.data, this.propValue);
+        const { ms, sec } = AttributeProxyGuard._timeStepPatterns;
+        control.step = ms.test(value) ? "0.001" : sec.test(value) ? "1" : "";
+      }
+    }
+  };
+
+  /**
    * Widget Definition.
    */
   // prettier-ignore
@@ -129,6 +211,7 @@ export class TextField extends Widget {
     new AttributeString(this, "html:placeholder", "placeholder", undefined),
     new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new AttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline"),
+    new this.AttributeProxyGuard(this, "html:type", "value"),
     new AttributeChoice(this, "html:type", "type", ["text", "email", "password", "tel", "url", "date", "datetime-local", "time"], "text"),
     new AttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),
     new AttributeBoolean(this, "html:hidden", "hidden", false),

@@ -641,6 +641,28 @@ import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurren
       expect(widgetInstance.elements.widget).to.have.all.keys("button");
       expect(widgetInstance.elements.widget.button).to.equal("start-end");
     });
+
+    it("should warn when an invalid option is provided", function () {
+      const warnStub = sinon.stub(element, "warn");
+      const widgetInstance = {
+        "data": {
+          "icon-position": "invalid-option"
+        },
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": function () {
+          return "description";
+        }
+      };
+
+      element.refresh(widgetInstance);
+
+      expect(warnStub.calledOnce, "warn should be called once for an invalid option.").to.be.true;
+      expect(warnStub.calledWith("refresh", `Property '${propId}' invalid value (invalid-option)`, "Ignored"),
+        "warn should be called with the correct arguments identifying the invalid value.").to.be.true;
+      warnStub.restore();
+    });
   });
 
   // ===================================================================================================================

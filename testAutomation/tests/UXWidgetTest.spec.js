@@ -30,6 +30,12 @@ test('Layout Web Component Unit Tests', async ({ page }) => {
     await homePage.checkFailuresEncountered(newPage, test);
 });
 
+test('TextField Unit Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.textFieldUnitTestLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
 test('Layout Web Component Tests', async ({ page }) => {
     const newPage = await indexPage.openNewPage(indexPage.layoutWebComponentLink);
     const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
