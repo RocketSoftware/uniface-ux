@@ -5,587 +5,753 @@
   const expect = chai.expect;
 
   // Collection Entity test setup.
-  const collectionTester = new umockup.WidgetTester();
+  const collectionTester = new umockup.WidgetTester("UX.CollectionLayout", "uent:UXENTITY.NOMODEL");
   const collectionWidgetId = collectionTester.widgetId;
   const collectionWidgetName = collectionTester.widgetName;
   const collectionWidgetClass = collectionTester.getWidgetClass();
 
+  // Occurrence Entity test setup.
+  const occurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.1");
+  const occurrenceWidgetId = occurrenceTester.widgetId;
+  const occurrenceWidgetName = occurrenceTester.widgetName;
+  const occurrenceWidgetClass = occurrenceTester.getWidgetClass();
+
+  // Component Layout test setup.
+  const componentTester = new umockup.WidgetTester("UX.CompLayout", "ucpt:comp-layout");
+  const componentWidgetId = componentTester.widgetId;
+
   const asyncRun = umockup.asyncRun;
-  const MockEntityDefinition = umockup.MockEntityDefinition;
   const createSkeleton = umockup.createSkeleton;
 
-  // Create mock object definition based on the widget being tested.
-  let mockObjDef = new MockEntityDefinition(
-    "test_entity",
-    "UX.CollectionLayout",
-    "entity",
-    {}
-  );
+  const layoutTypes = ["vertical-scroll", "horizontal-scroll", "horizontal-wrap", "vertical-wrap", "auto"];
+  const alignmentValues = ["start", "center", "end", "space-between", "space-around", "space-evenly", "stretch", "auto"];
+  const appearanceValues = ["transparent", "outline", "card", "section", "panel"];
 
-  // Occurrence Entity setup.
-  const occurrenceMockDef = new MockEntityDefinition("test_occ_entity", "UX.OccurrenceLayout", "entity", {});
-  const occurrenceWidgetClass = occurrenceMockDef.getWidgetClass();
-  const occurrenceWidgetName = occurrenceMockDef.widgetClassName;
+  const mockEntityDef = {
+    "nm": "UXENTITY.NOMODEL",
+    "type": "entity",
+    "widget_class": "UX.CollectionLayout",
+    "occs": {
+      "#2": {
+        "type": "occurrence",
+        "#3": {
+          "nm": "TEXTFIELD.ENT.NOMODEL",
+          "type": "field",
+          "widget_class": "UX.TextField",
+          "properties": {
+            "html:type": "text"
+          },
+          "id": "#3"
+        },
+        "#4": {
+          "nm": "TEXTAREA.ENT.NOMODEL",
+          "type": "field",
+          "widget_class": "UX.TextArea",
+          "properties": {},
+          "id": "#4"
+        },
+        "#5": {
+          "nm": "SWITCH.ENT.NOMODEL",
+          "type": "field",
+          "widget_class": "UX.Switch",
+          "properties": {},
+          "id": "#5"
+        },
+        "widget_class": "UX.OccurrenceLayout"
+      }
+    },
+    "properties": {},
+    "id": "#2",
+    "hasNEDFields": true,
+    "ownsNEDFields": true
+  };
 
-  // TextArea widget class — resolved once at file scope, same pattern as collectionWidgetClass.
-  const textAreaWidgetClass = new MockEntityDefinition("_ta_class_resolver", "UX.TextArea", "field", {}).getWidgetClass();
+  const mockEntityDefWithMultipleOccs = {
+    "nm": "UXENTITY.NOMODEL",
+    "type": "entity",
+    "widget_class": "UX.CollectionLayout",
+    "occs": {
+      "#2": {
+        "type": "occurrence",
+        "#3": {
+          "nm": "TEXTFIELD.ENT.NOMODEL",
+          "type": "field",
+          "widget_class": "UX.TextField",
+          "properties": {
+            "html:type": "text"
+          },
+          "id": "#3"
+        },
+        "#4": {
+          "nm": "BUTTON.ENT.NOMODEL",
+          "type": "field",
+          "widget_class": "UX.Button",
+          "properties": {
+            "html:readonly": "true"
+          },
+          "id": "#4"
+        },
+        "#5": {
+          "nm": "TEXTAREA.ENT.NOMODEL",
+          "type": "field",
+          "widget_class": "UX.TextArea",
+          "properties": {},
+          "id": "#5"
+        },
+        "widget_class": "UX.OccurrenceLayout"
+      },
+      "#3": {
+        "type": "occurrence",
+        "#3": {
+          "nm": "TEXTFIELD.UXENTITY.NOMODEL",
+          "type": "field",
+          "widget_class": "UX.TextField",
+          "properties": {
+            "html:type": "text"
+          },
+          "id": "#3"
+        },
+        "#4": {
+          "nm": "BUTTON.UXENTITY.NOMODEL",
+          "type": "field",
+          "widget_class": "UX.Button",
+          "properties": {
+            "html:readonly": "true"
+          },
+          "id": "#4"
+        },
+        "#5": {
+          "nm": "TEXTAREA.UXENTITY.NOMODEL",
+          "type": "field",
+          "widget_class": "UX.TextArea",
+          "properties": {},
+          "id": "#5"
+        },
+        "widget_class": "UX.OccurrenceLayout"
+      }
+    },
+    "properties": {},
+    "id": "#2",
+    "hasNEDFields": true,
+    "ownsNEDFields": true
+  };
 
-  /**
-   * Helper function to create a text-area element with full widget initialization.
-   * Returns { element, widget } following the same pattern as createOccurrenceWidget.
-   */
-  let _textAreaCounter = 0;
-  function createTextAreaWidget(skeletonId) {
-    const id = skeletonId || ("text_area_widget_" + ++_textAreaCounter);
-    const skeleton = document.createElement("div");
-    skeleton.id = id;
-    const objDef = new MockEntityDefinition(id, "UX.TextArea", "field", {});
-    const element = textAreaWidgetClass.processLayout(skeleton, objDef);
-    // fluent-text-area only creates .control / .root inside its shadow DOM after connecting
-    // to the document. Append first so onConnect (which accesses those shadow elements) succeeds.
-    // The caller can move the element anywhere via appendChild — DOM nodes are moved, not copied.
-    document.body.appendChild(element);
-    const widget = new textAreaWidgetClass();
-    widget.onConnect(element, objDef);
-    widget.dataInit();
-    return {
-      "element": element,
-      "widget": widget
-    };
-  }
+  const mockComponentDef = {
+    "#2": {
+      "nm": "UXENTITY.NOMODEL",
+      "type": "entity",
+      "widget_class": "UX.CollectionLayout",
+      "occs": {
+        "#2": {
+          "#3": {
+            "nm": "TEXTFIELD.UXENTITY1.NOMODEL",
+            "type": "field",
+            "initval": "1234568",
+            "triggers": {
+              "ongetjs": {
+                "requesttype": "update"
+              }
+            },
+            "widget_class": "UX.TextField",
+            "properties": {
+              "html:type": "text"
+            },
+            "id": "#3"
+          },
+          "#4": {
+            "nm": "TEXTAREA.UXENTITY1.NOMODEL",
+            "type": "field",
+            "initval": "Hello",
+            "triggers": {
+              "ongetjs": {
+                "requesttype": "update"
+              }
+            },
+            "widget_class": "UX.TextArea",
+            "properties": {
+              "html:placeholder": "Add your suggestion"
+            },
+            "id": "#4"
+          },
+          "#5": {
+            "nm": "BUTTON.UXENTITY1.NOMODEL",
+            "type": "field",
+            "initval": "1234568",
+            "triggers": {
+              "ongetjs": {
+                "requesttype": "update"
+              }
+            },
+            "widget_class": "UX.Button",
+            "properties": {
+              "value": "Button"
+            },
+            "id": "#5"
+          },
+          "#6": {
+            "nm": "CHECKBOX.UXENTITY1.NOMODEL",
+            "type": "field",
+            "initval": "1234568",
+            "triggers": {
+              "ongetjs": {
+                "requesttype": "update"
+              }
+            },
+            "widget_class": "UX.Checkbox",
+            "properties": {
+              "value": "1"
+            },
+            "id": "#6"
+          },
+          "type": "occurrence",
+          "widget_class": "UX.OccurrenceLayout"
+        }
+      },
+      "properties": {
+        "label-size": "normal"
+      },
+      "id": "#2"
+    },
+    "componentname": "APPEARANCE",
+    "properties": {},
+    "type": "component",
+    "widget_class": "UX.CompLayout"
+  };
 
-  /**
-   * Helper function to create a collection element with widget initialization.
-   */
-  function createCollectionWidget(objDef, skeletonId) {
-    const skeleton = document.createElement("div");
-    if (skeletonId) {
-      skeleton.id = skeletonId;
+  const mockComponentDefWithTwoEntities = {
+    ...mockComponentDef,
+    "#4": {
+      "nm": "UXENTITY3.NOMODEL",
+      "type": "entity",
+      "widget_class": "UX.CollectionLayout",
+      "occs": {
+        "#3": {
+          "#4": {
+            "nm": "BUTTON.UXENTITY3.NOMODEL",
+            "type": "field",
+            "initval": "",
+            "triggers": {
+              "ongetjs": {
+                "requesttype": "update"
+              }
+            },
+            "widget_class": "UX.Button",
+            "properties": {
+              "value": "Button"
+            },
+            "id": "#4"
+          },
+          "#5": {
+            "nm": "CHECKBOX.UXENTITY3.NOMODEL",
+            "type": "field",
+            "initval": "1",
+            "triggers": {
+              "ongetjs": {
+                "requesttype": "update"
+              }
+            },
+            "widget_class": "UX.Checkbox",
+            "properties": {
+              "value": "1"
+            },
+            "id": "#5"
+          },
+          "#6": {
+            "nm": "SWITCH.UXENTITY3.NOMODEL",
+            "type": "field",
+            "initval": "1",
+            "triggers": {
+              "ongetjs": {
+                "requesttype": "update"
+              }
+            },
+            "widget_class": "UX.Switch",
+            "properties": {
+              "value": "1"
+            },
+            "id": "#6"
+          },
+          "type": "occurrence",
+          "widget_class": "UX.OccurrenceLayout"
+        }
+      },
+      "properties": {
+        "label-size": "normal"
+      },
+      "id": "#3"
     }
-    const element = collectionWidgetClass.processLayout(skeleton, objDef);
-    const widget = new collectionWidgetClass();
-    widget.onConnect(element, objDef);
-    widget.dataInit();
-    return {
-      "element": element,
-      "widget": widget
-    };
-  }
+  };
 
-  /**
-   * Helper function to create an occurrence element with widget initialization.
-   */
-  function createOccurrenceWidget(objDef, skeletonId) {
-    const skeleton = document.createElement("div");
-    if (skeletonId) {
-      skeleton.id = skeletonId;
-    }
-    const element = occurrenceWidgetClass.processLayout(skeleton, objDef);
-    const widget = new occurrenceWidgetClass();
-    widget.onConnect(element, objDef);
-    widget.dataInit();
-    return {
-      "element": element,
-      "widget": widget
-    };
-  }
-
-  function verifyWidgetClass(widgetClass) {
+  function verifyWidgetClass(widgetClass, widgetName) {
     assert(
       widgetClass,
-      `Widget class '${collectionWidgetName}' is not defined!
-          Hint: Check if the JavaScript file defined class '${collectionWidgetName}' is loaded.`
+      `Widget class '${widgetName}' is not defined!
+          Hint: Check if the JavaScript file defined class '${widgetName}' is loaded.`
     );
+  }
+  // Resets the widget container by clearing its content and adding a new anchor element for the widget.
+  function resetWidgetContainer() {
+    const container = document.getElementById("widget-container");
+    if (container) {
+      container.innerHTML = "";
+      const anchor = document.createElement("span");
+      anchor.id = "ux-widget";
+      container.appendChild(anchor);
+    }
   }
 
   describe("Uniface mockup tests", function () {
-    it(`get class ${collectionWidgetName}`, function () {
-      verifyWidgetClass(collectionWidgetClass);
+
+    it(`should load the ${collectionWidgetName} widget class`, function () {
+      verifyWidgetClass(collectionWidgetClass, collectionWidgetName);
     });
 
-    it(`get class ${occurrenceWidgetName}`, function () {
-      verifyWidgetClass(occurrenceWidgetClass);
+    it(`should load the ${occurrenceWidgetName} widget class`, function () {
+      verifyWidgetClass(occurrenceWidgetClass, occurrenceWidgetName);
     });
+
   });
 
   describe("Uniface static structure constructor() definition", function () {
 
     describe("CollectionLayout specific", function () {
+
       it("should have a static property structure of type Element", function () {
-        verifyWidgetClass(collectionWidgetClass);
         const structure = collectionWidgetClass.structure;
-
-        expect(structure.constructor).to.be.an.instanceof(Element.constructor);
-        expect(structure.tagName).to.equal("uf-layout");
-        expect(structure.childWorkers).to.be.an("array");
-      });
-
-      it("should have correct styleClass", function () {
-        const structure = collectionWidgetClass.structure;
-        expect(structure.styleClass).to.equal("");
+        expect(structure.constructor, "Structure constructor should be an instance of Element constructor.").to.be.an.instanceof(Element.constructor);
+        expect(structure.tagName, "Structure tagName should be 'uf-layout'.").to.equal("uf-layout");
+        expect(structure.styleClass, "Structure styleClass should be empty string.").to.equal("");
+        expect(structure.elementQuerySelector, "Structure elementQuerySelector should be empty string.").to.equal("");
+        expect(structure.childWorkers, "Structure childWorkers should be an array.").to.be.an("array");
       });
     });
 
     describe("OccurrenceLayout specific", function () {
+
       it("should have a static property structure of type Element", function () {
-        verifyWidgetClass(occurrenceWidgetClass);
         const structure = occurrenceWidgetClass.structure;
-
-        expect(structure.constructor).to.be.an.instanceof(Element.constructor);
-        expect(structure.tagName).to.equal("uf-layout");
-        expect(structure.childWorkers).to.be.an("array");
-      });
-
-      it("should have correct styleClass", function () {
-        const structure = occurrenceWidgetClass.structure;
-        expect(structure.styleClass).to.equal("");
+        expect(structure.constructor, "Structure constructor should be an instance of Element constructor.").to.be.an.instanceof(Element.constructor);
+        expect(structure.tagName, "Structure tagName should be 'uf-layout'.").to.equal("uf-layout");
+        expect(structure.styleClass, "Structure styleClass should be empty string.").to.equal("");
+        expect(structure.elementQuerySelector, "Structure elementQuerySelector should be empty string.").to.equal("");
+        expect(structure.childWorkers, "Structure childWorkers should be an array.").to.be.an("array");
       });
     });
   });
 
-  describe(`${collectionWidgetName}.processLayout()`, function () {
-    let element;
+  describe("processLayout()", function () {
 
-    it("processLayout()", function () {
-      verifyWidgetClass(collectionWidgetClass);
-      element = collectionTester.processLayout(mockObjDef);
-      expect(element).to.have.tagName(collectionTester.uxTagName);
-    });
+    describe("CollectionLayout specific", function () {
 
-    describe("Checks", function () {
-      before(function () {
-        verifyWidgetClass(collectionWidgetClass);
-        element = collectionTester.processLayout(mockObjDef);
-      });
+      describe("Checks", function () {
+        let element;
 
-      it("check instance of HTMLElement", function () {
-        expect(element).instanceOf(HTMLElement, `Function processLayout() of ${collectionWidgetName} does not return an HTMLElement.`);
-      });
+        before(function () {
+          const collectionSkeleton = createSkeleton(collectionWidgetId);
+          element = collectionTester.processLayout(collectionSkeleton, mockEntityDef);
+        });
 
-      it("check registration of web component", function () {
-        const customElementNames = ["uf-layout"];
-        for (const name of customElementNames) {
-          assert(window.customElements.get(name), `Web component ${name} has not been registered!`);
-        }
-      });
+        it("should be an instance of HTMLElement", function () {
+          expect(element, `Function processLayout() of ${collectionWidgetName} does not return an HTMLElement.`).instanceOf(HTMLElement);
+        });
 
-      it("check tagName", function () {
-        expect(element).to.have.tagName(collectionTester.uxTagName);
-      });
+        it("should register the web component", function () {
+          const customElementNames = ["uf-layout"];
+          for (const name of customElementNames) {
+            assert(window.customElements.get(name), `Web component ${name} has not been registered!`);
+          }
+        });
 
-      it("check id", function () {
-        expect(element).to.have.id(collectionWidgetId);
-      });
+        it("should have the correct tagName", function () {
+          expect(element, `Element should have tagName ${collectionTester.uxTagName}.`).to.have.tagName(collectionTester.uxTagName);
+        });
 
-      it("check label text element for CollectionLayout", function () {
-        assert(element.querySelector("span.u-label-text"), "CollectionLayout widget misses or has incorrect u-label-text element.");
-      });
+        it("should have the correct id", function () {
+          expect(element, `Element should have id ${collectionWidgetId}.`).to.have.id(collectionWidgetId);
+        });
 
-      it("check WidgetOccurrence placeholder for CollectionLayout", function () {
-        const placeholder = element.querySelector("span[id*='uocc:']");
-        assert(placeholder, "CollectionLayout should have a WidgetOccurrence placeholder span.");
+        it("should have label text element for CollectionLayout", function () {
+          assert(element.querySelector("span.u-label-text"), "CollectionLayout widget misses or has incorrect u-label-text element.");
+        });
       });
     });
-  });
 
-  describe(`${occurrenceWidgetName}.processLayout()`, function () {
-    let element;
+    describe("OccurrenceLayout specific", function () {
 
-    it("processLayout()", function () {
-      verifyWidgetClass(occurrenceWidgetClass);
-      const occSkeleton = createSkeleton("test_occ_layout");
-      element = occurrenceWidgetClass.processLayout(occSkeleton, occurrenceMockDef);
-      expect(element).to.have.tagName("uf-layout");
-    });
+      describe("Checks", function () {
+        let element;
 
-    describe("Checks", function () {
+        before(function () {
+          const occurrenceSkeleton = createSkeleton(occurrenceWidgetId);
+          element = occurrenceTester.processLayout(occurrenceSkeleton, mockEntityDef);
+        });
 
-      it("check instance of HTMLElement", function () {
-        expect(element).instanceOf(HTMLElement, `Function processLayout() of ${occurrenceWidgetName} does not return an HTMLElement.`);
+        it("should be an instance of HTMLElement", function () {
+          expect(element, `Function processLayout() of ${occurrenceWidgetName} does not return an HTMLElement.`).instanceOf(HTMLElement);
+        });
+
+        it("should register the web component", function () {
+          const customElementNames = ["uf-layout"];
+          for (const name of customElementNames) {
+            assert(window.customElements.get(name), `Web component ${name} has not been registered!`);
+          }
+        });
+
+        it("should have the correct tagName", function () {
+          expect(element, `Element should have tagName ${occurrenceTester.uxTagName}.`).to.have.tagName(occurrenceTester.uxTagName);
+        });
+
+        it("should have the correct id", function () {
+          expect(element, `Element should have id ${occurrenceWidgetId}.`).to.have.id(occurrenceWidgetId);
+        });
+
+        it("should not have a label text element for OccurrenceLayout", function () {
+          const labelElement = element.querySelector(":scope > span.u-label-text");
+          assert(!labelElement, "OccurrenceLayout should not have a u-label-text element.");
+        });
       });
-
-      it("check registration of web component", function () {
-        const customElementNames = ["uf-layout"];
-        for (const name of customElementNames) {
-          assert(window.customElements.get(name), `Web component ${name} has not been registered!`);
-        }
-      });
-
-      it("check tagName", function () {
-        expect(element).to.have.tagName("uf-layout");
-      });
-
-      it("check id", function () {
-        expect(element).to.have.id("test_occ_layout");
-      });
-
-      it("check no label element for OccurrenceLayout", function () {
-        const labelElement = element.querySelector(".u-label-text");
-        expect(labelElement).to.be.null;
-      });
-    });
-  });
-
-  describe("processLayout() - occurrence widget property handling", function () {
-
-    /**
-     * Extended mock entity definition that supports occurrence widget class lookup
-     * and tracks calls to setOccurrenceProperties for asserting the new
-     * occurrence property filtering logic in Widget.processLayout().
-     */
-    class MockEntityDefinitionWithOccurrence extends MockEntityDefinition {
-      constructor(name, widgetClassName, type, properties, occurrenceWidgetClassName) {
-        super(name, widgetClassName, type, properties);
-        this._occurrenceWidgetClassName = occurrenceWidgetClassName !== undefined ? occurrenceWidgetClassName : null;
-        this._occurrenceProperties = null;
-        this._setOccurrencePropertiesCalled = false;
-      }
-
-      getOccurrenceWidgetClass() {
-        return this._occurrenceWidgetClassName;
-      }
-
-      setOccurrenceProperties(properties) {
-        this._setOccurrencePropertiesCalled = true;
-        this._occurrenceProperties = properties;
-      }
-    }
-
-    it("should call setOccurrenceProperties with matching occurrence properties when entity has a valid occurrence widget class", function () {
-      const objDef = new MockEntityDefinitionWithOccurrence(
-        "test_entity_with_occ",
-        "UX.CollectionLayout",
-        "entity",
-        {
-          "layout-type": "vertical-scroll",
-          "horizontal-align": "center",
-          "label-text": "Label Only"
-        },
-        "UX.OccurrenceLayout"
-      );
-      const skeleton = createSkeleton("uent:test_occ_prop_matching");
-      collectionWidgetClass.processLayout(skeleton, objDef);
-
-      assert(objDef._setOccurrencePropertiesCalled, "setOccurrenceProperties() should be called when matching occurrence properties exist.");
-      expect(objDef._occurrenceProperties).to.be.an("object");
-      expect(objDef._occurrenceProperties["layout-type"]).to.equal("vertical-scroll");
-      expect(objDef._occurrenceProperties["horizontal-align"]).to.equal("center");
-    });
-
-    it("should not include non-occurrence properties in the setOccurrenceProperties call", function () {
-      const objDef = new MockEntityDefinitionWithOccurrence(
-        "test_entity_filtered_props",
-        "UX.CollectionLayout",
-        "entity",
-        {
-          "layout-type": "horizontal-scroll",
-          "label-text": "Not an occ prop",
-          "label-size": "large",
-          "area-slot": "header"
-        },
-        "UX.OccurrenceLayout"
-      );
-      const skeleton = createSkeleton("uent:test_occ_prop_filtered");
-      collectionWidgetClass.processLayout(skeleton, objDef);
-
-      assert(objDef._setOccurrencePropertiesCalled, "setOccurrenceProperties() should be called when at least one matching property exists.");
-      const occProps = objDef._occurrenceProperties;
-      expect(occProps).to.have.key("layout-type");
-      expect(occProps).to.not.have.key("label-text");
-      expect(occProps).to.not.have.key("label-size");
-      expect(occProps).to.not.have.key("area-slot");
-    });
-
-    it("should not call setOccurrenceProperties when no entity properties match the occurrence widget property IDs", function () {
-      const objDef = new MockEntityDefinitionWithOccurrence(
-        "test_entity_no_match",
-        "UX.CollectionLayout",
-        "entity",
-        {
-          "label-text": "Collection Label",
-          "label-size": "large",
-          "area-slot": "main"
-        },
-        "UX.OccurrenceLayout"
-      );
-      const skeleton = createSkeleton("uent:test_occ_prop_no_match");
-      collectionWidgetClass.processLayout(skeleton, objDef);
-
-      assert(!objDef._setOccurrencePropertiesCalled, "setOccurrenceProperties() should NOT be called when no properties match.");
-    });
-
-    it("should not call setOccurrenceProperties when getOccurrenceWidgetClass() returns null", function () {
-      const objDef = new MockEntityDefinitionWithOccurrence(
-        "test_entity_no_occ_class",
-        "UX.CollectionLayout",
-        "entity",
-        {
-          "layout-type": "vertical-scroll",
-          "horizontal-align": "start"
-        },
-        null // no occurrence widget class
-      );
-      const skeleton = createSkeleton("uent:test_occ_prop_null_class");
-      collectionWidgetClass.processLayout(skeleton, objDef);
-
-      assert(!objDef._setOccurrencePropertiesCalled, "setOccurrenceProperties() should NOT be called when occurrence widget class is null.");
-    });
-
-    it("should skip occurrence property handling when objectDefinition type is not 'entity'", function () {
-      const objDef = new MockEntityDefinitionWithOccurrence(
-        "test_non_entity",
-        "UX.CollectionLayout",
-        "component", // not "entity"
-        {
-          "layout-type": "vertical-scroll"
-        },
-        "UX.OccurrenceLayout"
-      );
-      const skeleton = createSkeleton("uent:test_non_entity_elem"); // has uent: prefix, type check is the reason it is skipped
-      collectionWidgetClass.processLayout(skeleton, objDef);
-
-      assert(!objDef._setOccurrencePropertiesCalled, "setOccurrenceProperties() should NOT be called when objectDefinition type is not 'entity'.");
-    });
-
-    it("should call setOccurrenceProperties with all three matching occurrence property IDs", function () {
-      const objDef = new MockEntityDefinitionWithOccurrence(
-        "test_entity_all_occ_props",
-        "UX.CollectionLayout",
-        "entity",
-        {
-          "layout-type": "vertical-wrap",
-          "horizontal-align": "evenly",
-          "vertical-align": "end"
-        },
-        "UX.OccurrenceLayout"
-      );
-      const skeleton = createSkeleton("uent:test_occ_prop_all");
-      collectionWidgetClass.processLayout(skeleton, objDef);
-
-      assert(objDef._setOccurrencePropertiesCalled, "setOccurrenceProperties() should be called.");
-      const occProps = objDef._occurrenceProperties;
-      expect(occProps["layout-type"]).to.equal("vertical-wrap");
-      expect(occProps["horizontal-align"]).to.equal("evenly");
-      expect(occProps["vertical-align"]).to.equal("end");
-      expect(Object.keys(occProps)).to.have.lengthOf(3, "All three occurrence properties should be present.");
-    });
-
-    it("should pass the correct property values to setOccurrenceProperties for each matched property", function () {
-      const objDef = new MockEntityDefinitionWithOccurrence(
-        "test_entity_prop_values",
-        "UX.CollectionLayout",
-        "entity",
-        {
-          "layout-type": "horizontal-wrap",
-          "vertical-align": "stretch"
-        },
-        "UX.OccurrenceLayout"
-      );
-      const skeleton = createSkeleton("uent:test_occ_prop_values");
-      collectionWidgetClass.processLayout(skeleton, objDef);
-
-      assert(objDef._setOccurrencePropertiesCalled, "setOccurrenceProperties() should be called.");
-      const occProps = objDef._occurrenceProperties;
-      expect(occProps["layout-type"]).to.equal("horizontal-wrap", "Correct value for layout-type should be passed.");
-      expect(occProps["vertical-align"]).to.equal("stretch", "Correct value for vertical-align should be passed.");
-      expect(occProps).to.not.have.key("horizontal-align", "Only properties present in objectDefinition should be included.");
-    });
-
-    it("should not call setOccurrenceProperties when elementId does not start with 'uent:'", function () {
-      const objDef = new MockEntityDefinitionWithOccurrence(
-        "test_entity_wrong_prefix",
-        "UX.CollectionLayout",
-        "entity",
-        {
-          "layout-type": "vertical-scroll",
-          "horizontal-align": "center"
-        },
-        "UX.OccurrenceLayout"
-      );
-      const skeleton = createSkeleton("ufld:test_occ_prop_wrong_prefix");
-      collectionWidgetClass.processLayout(skeleton, objDef);
-
-      assert(!objDef._setOccurrencePropertiesCalled, "setOccurrenceProperties() should NOT be called when elementId does not start with 'uent:'.");
     });
   });
 
   describe("Create widget", function () {
-    before(function () {
-      verifyWidgetClass(collectionWidgetClass);
-      collectionTester.construct();
-    });
 
-    it("constructor()", function () {
-      try {
+    describe("CollectionLayout specific", function () {
+
+      it("constructor()", function () {
         const widget = collectionTester.construct();
-        assert(widget, "Widget is not defined!");
-        verifyWidgetClass(collectionWidgetClass);
-      } catch (e) {
-        assert(false, `Failed to construct new widget, exception ${e}.`);
-      }
+        expect(widget, "collectionTester.construct() should return a widget instance").to.exist;
+        expect(collectionWidgetClass.defaultValues, "Collection widget class should define required default values").to.include.all.keys(
+          "class:u-coll-layout",
+          "layout-type-occurrences",
+          "horizontal-align-occurrences",
+          "vertical-align-occurrences",
+          "label-size",
+          "label-text",
+          "label-align",
+          "label-position",
+          "area-slot",
+          "appearance"
+        );
+      });
+
+      describe("onConnect()", function () {
+
+        it("should create and connect the element", function () {
+          const collectionSkeleton = createSkeleton(collectionWidgetId);
+          const widget = collectionTester.onConnect(collectionSkeleton, mockEntityDef);
+          const element = collectionTester.element;
+          assert(element, "Target element is not defined!");
+          assert(widget.elements.widget === element, "Widget is not connected!");
+        });
+      });
+
+      it("should render without any console errors or warnings", function () {
+        const errorSpy = sinon.spy(console, "error");
+        const warnSpy = sinon.spy(console, "warn");
+        try {
+          collectionTester.createWidget(null, createSkeleton(collectionWidgetId), mockEntityDef);
+        } finally {
+          const errorCount = errorSpy.callCount;
+          const warnCount = warnSpy.callCount;
+          errorSpy.restore();
+          warnSpy.restore();
+          assert.equal(errorCount, 0, `Expected no console errors during widget render, but got ${errorCount}.`);
+          assert.equal(warnCount, 0, `Expected no console warnings during widget render, but got ${warnCount}.`);
+        }
+      });
     });
 
-    describe("onConnect()", function () {
-      const element = collectionTester.processLayout(mockObjDef);
-      const widget = collectionTester.onConnect();
+    describe("OccurrenceLayout specific", function () {
 
-      it("check that the element is created and connected", function () {
-        assert(element, "Target element is not defined!");
-        assert(widget.elements.widget === element, "Widget is not connected!");
+      it("constructor()", function () {
+        const widget = occurrenceTester.construct();
+        expect(widget, "occurrenceTester.construct() should return a widget instance").to.exist;
+        expect(occurrenceWidgetClass.defaultValues, "Occurrence widget class should define required default values").to.include.all.keys(
+          "class:u-occ-layout",
+          "layout-type",
+          "horizontal-align",
+          "vertical-align",
+          "appearance-occurrences"
+        );
+      });
+
+      describe("onConnect()", function () {
+
+        it("should create and connect the element", function () {
+          const occurrenceSkeleton = createSkeleton(occurrenceWidgetId);
+          const widget = occurrenceTester.onConnect(occurrenceSkeleton, mockEntityDef);
+          const element = occurrenceTester.element;
+          assert(element, "Target element is not defined!");
+          assert(widget.elements.widget === element, "Widget is not connected!");
+        });
+      });
+
+      it("should render without any console errors or warnings", function () {
+        const errorSpy = sinon.spy(console, "error");
+        const warnSpy = sinon.spy(console, "warn");
+        try {
+          occurrenceTester.createWidget(null, createSkeleton(occurrenceWidgetId), mockEntityDef);
+        } finally {
+          const errorCount = errorSpy.callCount;
+          const warnCount = warnSpy.callCount;
+          errorSpy.restore();
+          warnSpy.restore();
+          assert.equal(errorCount, 0, `Expected no console errors during widget render, but got ${errorCount}.`);
+          assert.equal(warnCount, 0, `Expected no console warnings during widget render, but got ${warnCount}.`);
+        }
       });
     });
   });
 
   describe("dataInit()", function () {
-    describe("CollectionLayout tests", function () {
+
+    describe("CollectionLayout specific", function () {
+      const classes = collectionTester.getDefaultClasses();
       let element;
 
       before(function () {
-        collectionTester.createWidget();
+        const collectionSkeleton = createSkeleton(collectionWidgetId);
+        collectionTester.createWidget(null, collectionSkeleton, mockEntityDef);
         collectionTester.getDefaultValues();
         element = collectionTester.element;
         assert(element, "Widget top element is not defined!");
       });
 
-      it("check default properties values", function () {
-        // CollectionLayout default values.
-        assert.strictEqual(collectionTester.defaultValues["layout-type-occurrences"], "auto", "Default value of 'layout-type-occurrences' should be 'auto'.");
-        assert.strictEqual(collectionTester.defaultValues["horizontal-align-occurrences"], "auto", "Default value of 'horizontal-align-occurrences' should be 'auto'.");
-        assert.strictEqual(collectionTester.defaultValues["vertical-align-occurrences"], "auto", "Default value of 'vertical-align-occurrences' should be 'auto'.");
-        assert.strictEqual(collectionTester.defaultValues["label-size"], "normal", "Default value of 'label-size' should be 'normal'.");
-        assert.strictEqual(collectionTester.defaultValues["label-align"], "start", "Default value of 'label-align' should be 'start'.");
-        assert.strictEqual(collectionTester.defaultValues["label-position"], "above", "Default value of 'label-position' should be 'above'.");
-        assert.strictEqual(collectionTester.defaultValues["area-slot"], "main", "Default value of 'area-slot' should be 'main'.");
-        assert.strictEqual(collectionTester.defaultValues["appearance"], "transparent", "Default value of 'appearance' should be 'transparent'.");
+      for (const defaultClass in classes) {
+        it(`should apply default class '${defaultClass}' correctly`, function () {
+          if (classes[defaultClass]) {
+            expect(element, `Widget element should have class ${defaultClass}.`).to.have.class(defaultClass);
+          } else {
+            expect(element, `Widget element should not have class ${defaultClass}.`).not.to.have.class(defaultClass);
+          }
+        });
+      }
+
+      it("should have a valid widget id", function () {
+        assert.strictEqual(collectionTester.widgetId.toString().length > 0, true, "Widget id should be a non-empty string.");
       });
 
-      it("check u-coll-layout class is added after dataInit", function () {
-        expect(element).to.have.class("u-coll-layout");
+      it("should have default value 'auto' for 'layout-type-occurrences'", function () {
+        expect(collectionTester.defaultValues["layout-type-occurrences"], "Default value of 'layout-type-occurrences' should be 'auto'.").to.equal("auto");
       });
 
-      it("check show-label attribute is set to 'true' on the root element after dataInit", function () {
-        expect(element.getAttribute("show-label")).to.equal("true", "The 'show-label' attribute should be 'true' on the root element after initialization.");
+      it("should have default value 'auto' for 'horizontal-align-occurrences'", function () {
+        expect(collectionTester.defaultValues["horizontal-align-occurrences"], "Default value of 'horizontal-align-occurrences' should be 'auto'.").to.equal("auto");
       });
 
-      it("check default styles on root part", function () {
-        const shadowRoot = element.shadowRoot;
-        assert(shadowRoot, "Shadow root should exist.");
-        const rootPart = shadowRoot.querySelector("[part='root']");
-        assert(rootPart, "Root part should exist.");
-        const styles = window.getComputedStyle(rootPart);
-        assert(styles.gap, "Gap style should be set on root part.");
+      it("should have default value 'auto' for 'vertical-align-occurrences'", function () {
+        expect(collectionTester.defaultValues["vertical-align-occurrences"], "Default value of 'vertical-align-occurrences' should be 'auto'.").to.equal("auto");
+      });
+
+      it("should have default value 'normal' for 'label-size'", function () {
+        expect(collectionTester.defaultValues["label-size"], "Default value of 'label-size' should be 'normal'.").to.equal("normal");
+      });
+
+      it("should have default value 'start' for 'label-align'", function () {
+        expect(collectionTester.defaultValues["label-align"], "Default value of 'label-align' should be 'start'.").to.equal("start");
+      });
+
+      it("should have default value 'above' for 'label-position'", function () {
+        expect(collectionTester.defaultValues["label-position"], "Default value of 'label-position' should be 'above'.").to.equal("above");
+      });
+
+      it("should have default value 'main' for 'area-slot'", function () {
+        expect(collectionTester.defaultValues["area-slot"], "Default value of 'area-slot' should be 'main'.").to.equal("main");
+      });
+
+      it("should have default value 'transparent' for 'appearance'", function () {
+        expect(collectionTester.defaultValues["appearance"], "Default value of 'appearance' should be 'transparent'.").to.equal("transparent");
+      });
+
+      it("should set show-label attribute to 'true' on the root element after dataInit", function () {
+        expect(element.getAttribute("show-label"), "The 'show-label' attribute should be 'true' on the root element after initialization.").to.equal("true");
       });
     });
 
-    describe("OccurrenceLayout tests", function () {
-      let occElement;
+    describe("OccurrenceLayout specific", function () {
+      const classes = occurrenceTester.getDefaultClasses();
+      let element;
 
       before(function () {
-        const occMockDef = new MockEntityDefinition("test_occ_init", "UX.OccurrenceLayout", "entity", {});
-        const result = createOccurrenceWidget(occMockDef, "test_occ_init_elem");
-        occElement = result.element;
+        const occurrenceSkeleton = createSkeleton(occurrenceWidgetId);
+        occurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+        occurrenceTester.getDefaultValues();
+        element = occurrenceTester.element;
+        assert(element, "Widget top element is not defined!");
       });
 
-      it("check default properties values", function () {
-        // OccurrenceLayout default values.
-        const occWidget = occElement.__widget;
-        if (occWidget && occWidget.defaultValues) {
-          expect(occWidget.defaultValues["layout-type"]).to.equal("auto", "Default value of 'layout-type' should be 'auto'.");
-          expect(occWidget.defaultValues["horizontal-align"]).to.equal("auto", "Default value of 'horizontal-align' should be 'auto'.");
-          expect(occWidget.defaultValues["vertical-align"]).to.equal("auto", "Default value of 'vertical-align' should be 'auto'.");
-          expect(occWidget.defaultValues["appearance-occurrences"]).to.equal("transparent", "Default value of 'appearance-occurrences' should be 'transparent'.");
+      for (const defaultClass in classes) {
+        it(`should apply default class '${defaultClass}' correctly`, function () {
+          if (classes[defaultClass]) {
+            expect(element, `Widget element should have class ${defaultClass}.`).to.have.class(defaultClass);
+          } else {
+            expect(element, `Widget element should not have class ${defaultClass}.`).not.to.have.class(defaultClass);
+          }
+        });
+      }
 
-        }
+      it("should have a valid widget id", function () {
+        assert.strictEqual(occurrenceTester.widgetId.toString().length > 0, true, "Widget id should be a non-empty string.");
       });
 
-      it("check shadow root exists", function () {
-        const shadowRoot = occElement.shadowRoot;
-        assert(shadowRoot, "Shadow root should exist.");
+      it("should have correct default value for 'layout-type'", function () {
+        expect(occurrenceTester.defaultValues["layout-type"], "Default value of 'layout-type' should be 'auto'.").to.equal(
+          "auto"
+        );
       });
 
-      it("check u-occ-layout class is added after dataInit", function () {
-        expect(occElement).to.have.class("u-occ-layout");
+      it("should have default value 'auto' for 'horizontal-align'", function () {
+        expect(
+          occurrenceTester.defaultValues["horizontal-align"],
+          "Default value of 'horizontal-align' should be 'auto'."
+        ).to.equal("auto");
       });
 
-      it("check default styles on root part", function () {
-        const shadowRoot = occElement.shadowRoot;
-        assert(shadowRoot, "Shadow root should exist.");
-        const rootPart = shadowRoot.querySelector("[part='root']");
-        assert(occElement.classList.contains("u-occ-layout"), "OccurrenceLayout container class should exist.");
-        const styleTarget = rootPart || occElement;
-        const styles = window.getComputedStyle(styleTarget);
-        assert(typeof styles.gap === "string", "Gap style property should be available.");
+      it("should have default value 'auto' for 'vertical-align'", function () {
+        expect(
+          occurrenceTester.defaultValues["vertical-align"],
+          "Default value of 'vertical-align' should be 'auto'."
+        ).to.equal("auto");
+      });
+
+      it("should not have a default value for 'label-size' (collection-only property)", function () {
+        expect(occurrenceTester.defaultValues["label-size"], "OccurrenceLayout should not define 'label-size'.").to.be.undefined;
+      });
+
+      it("should not have a default value for 'label-align' (collection-only property)", function () {
+        expect(occurrenceTester.defaultValues["label-align"], "OccurrenceLayout should not define 'label-align'.").to.be.undefined;
+      });
+
+      it("should not have a default value for 'label-position' (collection-only property)", function () {
+        expect(occurrenceTester.defaultValues["label-position"], "OccurrenceLayout should not define 'label-position'.").to.be.undefined;
+      });
+
+      it("should not have a default value for 'area-slot' (collection-only property)", function () {
+        expect(occurrenceTester.defaultValues["area-slot"], "OccurrenceLayout should not define 'area-slot'.").to.be.undefined;
+      });
+
+      it("should have default value 'transparent' for 'appearance-occurrences'", function () {
+        expect(occurrenceTester.defaultValues["appearance-occurrences"], "Default value of 'appearance-occurrences' should be 'transparent'.").to.equal("transparent");
+      });
+
+      it("should not have a show-label attribute on the root element after dataInit (occurrence-only layout)", function () {
+        expect(element.getAttribute("show-label"), "OccurrenceLayout should not have a 'show-label' attribute.").to.be.null;
       });
     });
   });
 
   describe("dataUpdate()", function () {
-    let element;
 
-    before(function () {
-      return asyncRun(function () {
-        collectionTester.createWidget();
-        element = collectionTester.element;
-      }).then(function () {
-        assert(element, "Widget top element is not defined!");
+    describe("CollectionLayout specific", function () {
+      let element;
+
+      before(function () {
+        return asyncRun(function () {
+          const collectionSkeleton = createSkeleton(collectionWidgetId);
+          collectionTester.createWidget(null, collectionSkeleton, mockEntityDef);
+          element = collectionTester.element;
+        }).then(function () {
+          assert(element, "Widget top element is not defined!");
+        });
       });
-    });
 
-    describe("CollectionLayout properties", function () {
       describe("Label properties", function () {
-        it("update label-text", function () {
+
+        it("should update label-text", function () {
           const data = {
             "label-text": "Collection Label"
           };
           return asyncRun(function () {
             collectionTester.dataUpdate(data);
           }).then(function () {
-            const labelElement = element.querySelector(".u-label-text");
-            expect(labelElement).to.exist;
-            expect(labelElement.textContent).to.equal("Collection Label");
+            const labelElement = element.querySelector(":scope > .u-label-text");
+            expect(labelElement, "The '.u-label-text' element should exist after updating label-text.").to.exist;
+            expect(labelElement.textContent, "The label text content should equal 'Collection Label'.").to.equal("Collection Label");
           });
         });
 
         ["small", "medium", "large", "normal"].forEach(function (size) {
-          it(`update label-size to ${size}`, function () {
+          it(`should update label-size to ${size}`, function () {
             const data = {
+              "label-text": "Collection Label",
               "label-size": size
             };
             return asyncRun(function () {
               collectionTester.dataUpdate(data);
             }).then(function () {
-              expect(element.getAttribute("label-size")).to.equal(size);
+              expect(element.getAttribute("label-size"), `The 'label-size' attribute should equal '${size}'.`).to.equal(size);
             });
           });
         });
 
+        const labelSizeTagMap = {
+          "small": "h3",
+          "medium": "h2",
+          "large": "h1",
+          "normal": "span"
+        };
+        Object.entries(labelSizeTagMap).forEach(function ([size, expectedTag]) {
+          it(`should use tag '${expectedTag}' for label-text element when label-size is '${size}'`, function () {
+            return asyncRun(function () {
+              collectionTester.dataUpdate({
+                "label-text": "Tag Test",
+                "label-size": size
+              });
+            }).then(function () {
+              const labelElement = element.querySelector(":scope > .u-label-text");
+              assert(labelElement, `The '.u-label-text' element should exist for label-size '${size}'.`);
+              expect(labelElement.tagName.toLowerCase(), `The '.u-label-text' tag should be '${expectedTag}' for label-size '${size}'.`).to.equal(expectedTag);
+            });
+          });
+        });
+
+        it("should change label-text tag when label-size changes dynamically", function () {
+          return asyncRun(function () {
+            collectionTester.dataUpdate({
+              "label-text": "Dynamic Tag Test",
+              "label-size": "large"
+            });
+          }).then(function () {
+            const labelElement = element.querySelector(":scope > .u-label-text");
+            expect(labelElement.tagName.toLowerCase(), "Tag should be 'h1' for label-size 'large'.").to.equal("h1");
+            expect(labelElement.textContent, "Text should be preserved after tag change.").to.equal("Dynamic Tag Test");
+            return asyncRun(function () {
+              collectionTester.dataUpdate({ "label-size": "small" });
+            });
+          }).then(function () {
+            const labelElement = element.querySelector(":scope > .u-label-text");
+            expect(labelElement.tagName.toLowerCase(), "Tag should be 'h3' after changing label-size to 'small'.").to.equal("h3");
+            expect(labelElement.textContent, "Text should be preserved after tag change.").to.equal("Dynamic Tag Test");
+          });
+        });
+
         ["start", "center", "end"].forEach(function (alignment) {
-          it(`update label-align to ${alignment}`, function () {
+          it(`should update label-align to ${alignment}`, function () {
             const data = {
               "label-align": alignment
             };
             return asyncRun(function () {
               collectionTester.dataUpdate(data);
             }).then(function () {
-              expect(element.getAttribute("label-align")).to.equal(alignment);
+              expect(element.getAttribute("label-align"), `The 'label-align' attribute should equal '${alignment}'.`).to.equal(alignment);
             });
           });
         });
 
         ["above", "below", "before", "after"].forEach(function (position) {
-          it(`update label-position to ${position}`, function () {
+          it(`should update label-position to ${position}`, function () {
             const data = {
               "label-position": position
             };
             return asyncRun(function () {
               collectionTester.dataUpdate(data);
             }).then(function () {
-              expect(element.getAttribute("label-position")).to.equal(position);
+              expect(element.getAttribute("label-position"), `The 'label-position' attribute should equal '${position}'.`).to.equal(position);
             });
           });
         });
 
-        it("apply multiple label properties together", function () {
+        it("should apply multiple label properties together", function () {
           const data = {
             "label-text": "Combined Test",
             "label-size": "large",
@@ -595,16 +761,16 @@
           return asyncRun(function () {
             collectionTester.dataUpdate(data);
           }).then(function () {
-            expect(collectionTester.element.getAttribute("label-size")).to.equal("large");
-            expect(collectionTester.element.getAttribute("label-align")).to.equal("center");
-            expect(collectionTester.element.getAttribute("label-position")).to.equal("below");
-            const labelElement = collectionTester.element.querySelector(".u-label-text");
-            expect(labelElement).to.exist;
-            expect(labelElement.textContent).to.equal("Combined Test");
+            expect(collectionTester.element.getAttribute("label-size"), "The 'label-size' attribute should equal 'large'.").to.equal("large");
+            expect(collectionTester.element.getAttribute("label-align"), "The 'label-align' attribute should equal 'center'.").to.equal("center");
+            expect(collectionTester.element.getAttribute("label-position"), "The 'label-position' attribute should equal 'below'.").to.equal("below");
+            const labelElement = collectionTester.element.querySelector(":scope > .u-label-text");
+            expect(labelElement, "The '.u-label-text' element should exist after updating multiple label properties.").to.exist;
+            expect(labelElement.textContent, "The label text content should equal 'Combined Test'.").to.equal("Combined Test");
           });
         });
 
-        it("update label-text to empty string hides the label span", function () {
+        it("should update label-text to empty string hides the label span", function () {
           return asyncRun(function () {
             collectionTester.dataUpdate({
               "label-text": "Some Label"
@@ -616,13 +782,13 @@
               });
             });
           }).then(function () {
-            const labelElement = element.querySelector(".u-label-text");
-            expect(labelElement).to.exist;
-            expect(labelElement.hidden).to.be.true;
+            const labelElement = element.querySelector(":scope > .u-label-text");
+            expect(labelElement, "The '.u-label-text' element should exist after updating label-text to empty string.").to.exist;
+            expect(labelElement.hidden, "The '.u-label-text' element should be hidden when label-text is empty string.").to.be.true;
           });
         });
 
-        it("update label-text to null hides the label span", function () {
+        it("should update label-text to null hides the label span", function () {
           return asyncRun(function () {
             collectionTester.dataUpdate({
               "label-text": "Some Label"
@@ -634,113 +800,112 @@
               });
             });
           }).then(function () {
-            const labelElement = element.querySelector(".u-label-text");
-            expect(labelElement).to.exist;
-            expect(labelElement.hidden).to.be.true;
+            const labelElement = element.querySelector(":scope > .u-label-text");
+            expect(labelElement, "The '.u-label-text' element should exist after updating label-text to null.").to.exist;
+            expect(labelElement.hidden, "The '.u-label-text' element should be hidden when label-text is null.").to.be.true;
           });
         });
 
-        it("update label-text to the string 'null' shows the label span with text 'null'", function () {
+        it("should show the label span with text 'null' when label-text is set to the string 'null'", function () {
           return asyncRun(function () {
             collectionTester.dataUpdate({
               "label-text": "null"
             });
           }).then(function () {
-            const labelElement = element.querySelector(".u-label-text");
-            expect(labelElement).to.exist;
-            expect(labelElement.hidden).to.be.false;
-            expect(labelElement.textContent).to.equal("null");
+            const labelElement = element.querySelector(":scope > .u-label-text");
+            expect(labelElement, "The '.u-label-text' element should exist after updating label-text to 'null'.").to.exist;
+            expect(labelElement.hidden, "The '.u-label-text' element should be visible after updating label-text to 'null'.").to.be.false;
+            expect(labelElement.textContent, "The label text content should equal 'null'.").to.equal("null");
           });
         });
 
-        it("update label-text to a very long text shows the label span with the full text", function () {
+        it("should update label-text to a very long text shows the label span with the full text", function () {
           const longText = "This is a very long label of WIDGET and the question is, will it wrap or not?";
           return asyncRun(function () {
             collectionTester.dataUpdate({
               "label-text": longText
             });
           }).then(function () {
-            const labelElement = element.querySelector(".u-label-text");
-            expect(labelElement).to.exist;
-            expect(labelElement.hidden).to.be.false;
-            expect(labelElement.textContent).to.equal(longText);
+            const labelElement = element.querySelector(":scope > .u-label-text");
+            expect(labelElement, "The '.u-label-text' element should exist after updating label-text to a very long text.").to.exist;
+            expect(labelElement.hidden, "The '.u-label-text' element should be visible after updating label-text to a very long text.").to.be.false;
+            expect(labelElement.textContent, "The label text content should equal the very long text.").to.equal(longText);
           });
         });
       });
 
       describe("Container properties", function () {
         ["main", "header", "footer"].forEach(function (slot) {
-          it(`update area-slot to ${slot}`, function () {
+          it(`should update area-slot to ${slot}`, function () {
             const data = {
               "area-slot": slot
             };
             return asyncRun(function () {
               collectionTester.dataUpdate(data);
             }).then(function () {
-              expect(element.getAttribute("area-slot")).to.equal(slot);
+              expect(element.getAttribute("area-slot"), `The 'area-slot' attribute should equal '${slot}'.`).to.equal(slot);
             });
           });
         });
       });
 
       describe("Layout properties", function () {
-        const layoutTypes = ["vertical-scroll", "horizontal-scroll", "horizontal-wrap", "vertical-wrap", "auto"];
         layoutTypes.forEach(function (layoutType) {
-          it(`update layout-type to ${layoutType}`, function () {
+          it(`should update layout-type to ${layoutType}`, function () {
             const data = {
               "layout-type-occurrences": layoutType
             };
             return asyncRun(function () {
               collectionTester.dataUpdate(data);
             }).then(function () {
-              expect(element.getAttribute("layout-type")).to.equal(layoutType);
+              expect(element.getAttribute("layout-type"), `The 'layout-type' attribute should equal '${layoutType}'.`).to.equal(layoutType);
             });
           });
         });
 
-        ["start", "center", "end", "space-between", "space-around", "space-evenly", "stretch", "auto"].forEach(function (alignment) {
-          it(`update horizontal-align to ${alignment}`, function () {
+        alignmentValues.forEach(function (alignment) {
+          it(`should update horizontal-align to ${alignment}`, function () {
             const data = {
               "horizontal-align-occurrences": alignment
             };
             return asyncRun(function () {
               collectionTester.dataUpdate(data);
             }).then(function () {
-              expect(element.getAttribute("horizontal-align")).to.equal(alignment);
+              expect(element.getAttribute("horizontal-align"), `The 'horizontal-align' attribute should equal '${alignment}'.`).to.equal(alignment);
             });
           });
         });
 
-        ["start", "center", "end", "space-between", "space-around", "space-evenly", "stretch", "auto"].forEach(function (alignment) {
-          it(`update vertical-align to ${alignment}`, function () {
+        alignmentValues.forEach(function (alignment) {
+          it(`should update vertical-align to ${alignment}`, function () {
             const data = {
               "vertical-align-occurrences": alignment
             };
             return asyncRun(function () {
               collectionTester.dataUpdate(data);
             }).then(function () {
-              expect(element.getAttribute("vertical-align")).to.equal(alignment);
+              expect(element.getAttribute("vertical-align"), `The 'vertical-align' attribute should equal '${alignment}'.`).to.equal(alignment);
             });
           });
         });
       });
 
       describe("Appearance property", function () {
-        ["transparent", "outline", "card", "section", "panel"].forEach(function (appearance) {
-          it(`update appearance to ${appearance}`, function () {
+        appearanceValues.forEach(function (appearance) {
+          it(`should update appearance to ${appearance}`, function () {
             const data = {
               "appearance": appearance
             };
             return asyncRun(function () {
               collectionTester.dataUpdate(data);
             }).then(function () {
-              expect(element.getAttribute("appearance")).to.equal(appearance, `appearance attribute should be set to '${appearance}'.`);
+              expect(element.getAttribute("appearance"), `The 'appearance' attribute should be set to '${appearance}'.`).to.equal(appearance);
             });
           });
         });
 
         ["outline", "card", "section", "panel"].forEach(function (appearance) {
-          it(`appearance ${appearance} should have border-radius and padding`, function () {
+          it(`should have border-radius and padding for appearance ${appearance}`, function () {
             const data = {
               "appearance": appearance
             };
@@ -748,14 +913,14 @@
               collectionTester.dataUpdate(data);
             }).then(function () {
               const styles = window.getComputedStyle(element);
-              expect(parseFloat(styles.borderRadius)).to.be.above(0, `appearance '${appearance}' should have a non-zero border-radius.`);
-              expect(parseFloat(styles.padding)).to.be.above(0, `appearance '${appearance}' should have non-zero padding.`);
+              expect(parseFloat(styles.borderRadius), `appearance '${appearance}' should have a non-zero border-radius.`).to.be.above(0);
+              expect(parseFloat(styles.padding), `appearance '${appearance}' should have non-zero padding.`).to.be.above(0);
             });
           });
         });
 
         ["outline", "card", "panel"].forEach(function (appearance) {
-          it(`appearance ${appearance} should have border`, function () {
+          it(`should have border for appearance ${appearance}`, function () {
             const data = {
               "appearance": appearance
             };
@@ -764,15 +929,15 @@
             }).then(function () {
               const styles = window.getComputedStyle(element);
 
-              expect(parseFloat(styles.borderWidth)).to.be.above(0, `appearance '${appearance}' should have a non-zero border width.`);
-              expect(styles.borderStyle).to.equal("solid", `appearance '${appearance}' should have a solid border style.`);
-              expect(styles.borderColor).not.to.equal("transparent", `appearance '${appearance}' should have a non-transparent border color.`);
+              expect(parseFloat(styles.borderWidth), `appearance '${appearance}' should have a non-zero border width.`).to.be.above(0);
+              expect(styles.borderStyle, `appearance '${appearance}' should have a solid border style.`).to.equal("solid");
+              expect(styles.borderColor, `appearance '${appearance}' should have a non-transparent border color.`).not.to.equal("transparent");
             });
           });
         });
 
         ["card", "section", "panel"].forEach(function (appearance) {
-          it(`appearance ${appearance} should have background-color`, function () {
+          it(`should have background-color for appearance ${appearance}`, function () {
             const data = {
               "appearance": appearance
             };
@@ -780,12 +945,14 @@
               collectionTester.dataUpdate(data);
             }).then(function () {
               const styles = window.getComputedStyle(element);
-              expect(styles.backgroundColor).not.to.equal("rgba(0, 0, 0, 0)", `Appearance '${appearance}' should have a non-transparent background color.`);
+              expect(styles.backgroundColor, `Appearance '${appearance}' should have a non-transparent background color.`).not.to.equal(
+                "rgba(0, 0, 0, 0)"
+              );
             });
           });
         });
 
-        it("appearance card should have box-shadow", function () {
+        it("should have box-shadow for appearance card", function () {
           const data = {
             "appearance": "card"
           };
@@ -793,57 +960,57 @@
             collectionTester.dataUpdate(data);
           }).then(function () {
             const styles = window.getComputedStyle(element);
-            expect(styles.boxShadow).not.to.equal("none", "appearance 'card' should have a box-shadow applied.");
+            expect(styles.boxShadow, "appearance 'card' should have a box-shadow applied.").not.to.equal("none");
           });
         });
 
         ["transparent", "outline", "section", "panel"].forEach(function (appearance) {
-          it(`appearance ${appearance} should not have box-shadow`, function () {
+          it(`should not have box-shadow for appearance ${appearance}`, function () {
             const data = { "appearance": appearance };
             return asyncRun(function () {
               collectionTester.dataUpdate(data);
             }).then(function () {
               const styles = window.getComputedStyle(element);
-              expect(styles.boxShadow).to.equal("none", `appearance '${appearance}' should not have a box-shadow.`);
+              expect(styles.boxShadow, `appearance '${appearance}' should not have a box-shadow.`).to.equal("none");
             });
           });
         });
 
-        it("appearance transparent should not have border, padding or background-color", function () {
+        it("should not have border, padding or background-color for appearance transparent", function () {
           const data = { "appearance": "transparent" };
           return asyncRun(function () {
             collectionTester.dataUpdate(data);
           }).then(function () {
             const styles = window.getComputedStyle(element);
-            expect(parseFloat(styles.borderWidth)).to.equal(0, "appearance 'transparent' should have no border.");
-            expect(styles.backgroundColor).to.equal("rgba(0, 0, 0, 0)", "appearance 'transparent' should have a transparent background color.");
-            expect(parseFloat(styles.padding)).to.equal(0, "appearance 'transparent' should have no padding.");
+            expect(parseFloat(styles.borderWidth), "appearance 'transparent' should have no border.").to.equal(0);
+            expect(styles.backgroundColor, "appearance 'transparent' should have a transparent background color.").to.equal("rgba(0, 0, 0, 0)");
+            expect(parseFloat(styles.padding), "appearance 'transparent' should have no padding.").to.equal(0);
           });
         });
 
-        it("appearance outline should not have background-color", function () {
+        it("should not have background-color for appearance outline", function () {
           const data = { "appearance": "outline" };
           return asyncRun(function () {
             collectionTester.dataUpdate(data);
           }).then(function () {
             const styles = window.getComputedStyle(element);
-            expect(styles.backgroundColor).to.equal("rgba(0, 0, 0, 0)", "appearance 'outline' should have a transparent background color.");
+            expect(styles.backgroundColor, "appearance 'outline' should have a transparent background color.").to.equal("rgba(0, 0, 0, 0)");
           });
         });
 
-        it("appearance section should not have border", function () {
+        it("should not have border for appearance section", function () {
           const data = { "appearance": "section" };
           return asyncRun(function () {
             collectionTester.dataUpdate(data);
           }).then(function () {
             const styles = window.getComputedStyle(element);
-            expect(parseFloat(styles.borderWidth)).to.equal(0, "appearance 'section' should have no border.");
+            expect(parseFloat(styles.borderWidth), "appearance 'section' should have no border.").to.equal(0);
           });
         });
       });
 
       describe("Combined and independent property updates", function () {
-        it("should apply multiple layout properties together for CollectionLayout", function () {
+        it("should apply multiple layout properties together", function () {
           const data = {
             "layout-type-occurrences": "vertical-scroll",
             "horizontal-align-occurrences": "center",
@@ -852,107 +1019,253 @@
           return asyncRun(function () {
             collectionTester.dataUpdate(data);
           }).then(function () {
-            expect(element.getAttribute("layout-type")).to.equal("vertical-scroll");
-            expect(element.getAttribute("horizontal-align")).to.equal("center");
-            expect(element.getAttribute("vertical-align")).to.equal("stretch");
+            expect(element.getAttribute("layout-type"), "The 'layout-type' attribute should equal 'vertical-scroll'.").to.equal("vertical-scroll");
+            expect(element.getAttribute("horizontal-align"), "The 'horizontal-align' attribute should equal 'center'.").to.equal("center");
+            expect(element.getAttribute("vertical-align"), "The 'vertical-align' attribute should equal 'stretch'.").to.equal("stretch");
           });
         });
 
-        it("should update layout properties independently for CollectionLayout", function () {
+        it("should update layout properties independently", function () {
           const data1 = { "layout-type-occurrences": "horizontal-scroll" };
 
           return asyncRun(function () {
             collectionTester.dataUpdate(data1);
-          }).then(function () {
-            expect(element.getAttribute("layout-type")).to.equal("horizontal-scroll");
-            const data2 = { "horizontal-align-occurrences": "end" };
-            return asyncRun(function () {
-              collectionTester.dataUpdate(data2);
+          })
+            .then(function () {
+              expect(element.getAttribute("layout-type"), "The 'layout-type' attribute should equal 'horizontal-scroll' after first update.").to.equal("horizontal-scroll");
+              const data2 = { "horizontal-align-occurrences": "end" };
+              return asyncRun(function () {
+                collectionTester.dataUpdate(data2);
+              });
+            })
+            .then(function () {
+              expect(element.getAttribute("layout-type"), "The 'layout-type' attribute should still equal 'horizontal-scroll' after second update.").to.equal("horizontal-scroll");
+              expect(element.getAttribute("horizontal-align"), "The 'horizontal-align' attribute should equal 'end'.").to.equal("end");
+            });
+        });
+      });
+
+      describe("Custom CSS class", function () {
+        it("should apply a custom CSS class", function () {
+          return asyncRun(function () {
+            collectionTester.dataUpdate({
+              "class:class-test": true
             });
           }).then(function () {
-            expect(element.getAttribute("layout-type")).to.equal("horizontal-scroll");
-            expect(element.getAttribute("horizontal-align")).to.equal("end");
+            expect(element.classList.contains("class-test"), "Collection Layout should have custom class 'class-test'.").to.be.true;
+          });
+        });
+
+        it("should remove a custom CSS class", function () {
+          return asyncRun(function () {
+            collectionTester.dataUpdate({
+              "class:class-test": false
+            });
+          }).then(function () {
+            expect(element.classList.contains("class-test"), "Collection Layout should not have custom class 'class-test'.").to.be.false;
+          });
+        });
+
+        it("should apply multiple custom CSS classes simultaneously", function () {
+          return asyncRun(function () {
+            collectionTester.dataUpdate({
+              "class:class-a": true,
+              "class:class-b": true
+            });
+          }).then(function () {
+            expect(element.classList.contains("class-a"), "Collection Layout should have custom class 'class-a'.").to.be.true;
+            expect(element.classList.contains("class-b"), "Collection Layout should have custom class 'class-b'.").to.be.true;
           });
         });
       });
     });
 
-    describe("OccurrenceLayout properties", function () {
-      let occElement;
-      let occWidget;
+    describe("OccurrenceLayout specific", function () {
+      let element;
+      let localOccurrenceTester;
 
       before(function () {
-        if (!occurrenceWidgetClass) {
-          this.skip();
-        }
         return asyncRun(function () {
-          const occMockDef = new MockEntityDefinition("test_occ_update", "UX.OccurrenceLayout", "entity", {});
-          const result = createOccurrenceWidget(occMockDef, "test_occ_update_elem");
-          occElement = result.element;
-          occWidget = result.widget;
+          resetWidgetContainer();
+          const occurrenceSkeleton = createSkeleton(occurrenceWidgetId);
+          localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.1");
+          localOccurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+          element = localOccurrenceTester.element;
+        }).then(function () {
+          assert(element, "Widget top element is not defined!");
         });
       });
 
-      describe("Structural verification", function () {
-        it("should not have label element for OccurrenceLayout", function () {
-          const labelElement = occElement.querySelector(".u-label-text");
-          expect(labelElement).to.be.null;
+      it("should not update label properties on OccurrenceLayout", function () {
+        const data = {
+          "label-text": "Occurrence Label",
+          "label-size": "large",
+          "label-align": "center",
+          "label-position": "below"
+        };
+        return asyncRun(function () {
+          localOccurrenceTester.dataUpdate(data);
+        }).then(function () {
+          const labelElement = localOccurrenceTester.element.querySelector(":scope > span.u-label-text");
+          expect(labelElement, "OccurrenceLayout should not have a '.u-label-text' element.").to.be.null;
         });
       });
 
       describe("Layout properties", function () {
-        const layoutTypes = ["vertical-scroll", "horizontal-scroll", "horizontal-wrap", "vertical-wrap", "auto"];
         layoutTypes.forEach(function (layoutType) {
-          it(`update layout-type to ${layoutType}`, function () {
+          it(`should update layout-type to ${layoutType}`, function () {
             const data = {
               "layout-type": layoutType
             };
             return asyncRun(function () {
-              occWidget.dataUpdate(data);
+              localOccurrenceTester.dataUpdate(data);
             }).then(function () {
-              expect(occElement.getAttribute("layout-type")).to.equal(layoutType);
+              expect(localOccurrenceTester.element.getAttribute("layout-type"), `The 'layout-type' attribute should equal '${layoutType}'.`).to.equal(layoutType);
             });
           });
         });
-        ["start", "center", "end", "space-between", "space-around", "space-evenly", "stretch", "auto"].forEach(function (alignment) {
-          it(`update horizontal-align to ${alignment}`, function () {
+        alignmentValues.forEach(function (alignment) {
+          it(`should update horizontal-align to ${alignment}`, function () {
             const data = {
               "horizontal-align": alignment
             };
             return asyncRun(function () {
-              occWidget.dataUpdate(data);
+              localOccurrenceTester.dataUpdate(data);
             }).then(function () {
-              expect(occElement.getAttribute("horizontal-align")).to.equal(alignment);
+              expect(localOccurrenceTester.element.getAttribute("horizontal-align"), `The 'horizontal-align' attribute should equal '${alignment}'.`).to.equal(alignment);
             });
           });
         });
 
-        ["start", "center", "end", "space-between", "space-around", "space-evenly", "stretch", "auto"].forEach(function (alignment) {
-          it(`update occurrence:vertical-align to ${alignment}`, function () {
+        alignmentValues.forEach(function (alignment) {
+          it(`should update occurrence:vertical-align to ${alignment}`, function () {
             const data = {
               "vertical-align": alignment
-
             };
             return asyncRun(function () {
-              occWidget.dataUpdate(data);
+              localOccurrenceTester.dataUpdate(data);
             }).then(function () {
-              expect(occElement.getAttribute("vertical-align")).to.equal(alignment);
+              expect(localOccurrenceTester.element.getAttribute("vertical-align"), `The 'vertical-align' attribute should equal '${alignment}'.`).to.equal(alignment);
             });
           });
         });
       });
 
       describe("Appearance property", function () {
-        ["transparent", "outline", "card", "section", "panel"].forEach(function (appearance) {
-          it(`update appearance-occurrences to ${appearance}`, function () {
+        appearanceValues.forEach(function (appearance) {
+          it(`should update appearance-occurrences to ${appearance}`, function () {
             const data = {
               "appearance-occurrences": appearance
             };
             return asyncRun(function () {
-              occWidget.dataUpdate(data);
+              localOccurrenceTester.dataUpdate(data);
             }).then(function () {
-              expect(occElement.getAttribute("appearance")).to.equal(appearance, `appearance attribute should be set to '${appearance}'.`);
+              expect(localOccurrenceTester.element.getAttribute("appearance"), `The 'appearance' attribute should equal '${appearance}'.`).to.equal(appearance);
             });
+          });
+        });
+
+        ["outline", "card", "section", "panel"].forEach(function (appearance) {
+          it(`should have border-radius and padding for appearance ${appearance}`, function () {
+            const data = {
+              "appearance-occurrences": appearance
+            };
+            return asyncRun(function () {
+              localOccurrenceTester.dataUpdate(data);
+            }).then(function () {
+              const styles = window.getComputedStyle(element);
+              expect(parseFloat(styles.borderRadius), `appearance '${appearance}' should have a non-zero border-radius.`).to.be.above(0);
+              expect(parseFloat(styles.padding), `appearance '${appearance}' should have non-zero padding.`).to.be.above(0);
+            });
+          });
+        });
+
+        ["outline", "card", "panel"].forEach(function (appearance) {
+          it(`should have border for appearance ${appearance}`, function () {
+            const data = {
+              "appearance-occurrences": appearance
+            };
+            return asyncRun(function () {
+              localOccurrenceTester.dataUpdate(data);
+            }).then(function () {
+              const styles = window.getComputedStyle(element);
+
+              expect(parseFloat(styles.borderWidth), `appearance '${appearance}' should have a non-zero border width.`).to.be.above(0);
+              expect(styles.borderStyle, `appearance '${appearance}' should have a solid border style.`).to.equal("solid");
+              expect(styles.borderColor, `appearance '${appearance}' should have a non-transparent border color.`).not.to.equal("transparent");
+            });
+          });
+        });
+
+        ["card", "section", "panel"].forEach(function (appearance) {
+          it(`should have background-color for appearance ${appearance}`, function () {
+            const data = {
+              "appearance-occurrences": appearance
+            };
+            return asyncRun(function () {
+              localOccurrenceTester.dataUpdate(data);
+            }).then(function () {
+              const styles = window.getComputedStyle(element);
+              expect(styles.backgroundColor, `Appearance '${appearance}' should have a non-transparent background color.`).not.to.equal(
+                "rgba(0, 0, 0, 0)"
+              );
+            });
+          });
+        });
+
+        it("should have box-shadow for appearance card", function () {
+          const data = {
+            "appearance-occurrences": "card"
+          };
+          return asyncRun(function () {
+            localOccurrenceTester.dataUpdate(data);
+          }).then(function () {
+            const styles = window.getComputedStyle(element);
+            expect(styles.boxShadow, "appearance 'card' should have a box-shadow applied.").not.to.equal("none");
+          });
+        });
+
+        ["transparent", "outline", "section", "panel"].forEach(function (appearance) {
+          it(`should not have box-shadow for appearance ${appearance}`, function () {
+            const data = { "appearance-occurrences": appearance };
+            return asyncRun(function () {
+              localOccurrenceTester.dataUpdate(data);
+            }).then(function () {
+              const styles = window.getComputedStyle(element);
+              expect(styles.boxShadow, `appearance '${appearance}' should not have a box-shadow.`).to.equal("none");
+            });
+          });
+        });
+
+        it("should not have border, padding or background-color for appearance transparent", function () {
+          const data = { "appearance-occurrences": "transparent" };
+          return asyncRun(function () {
+            localOccurrenceTester.dataUpdate(data);
+          }).then(function () {
+            const styles = window.getComputedStyle(element);
+            expect(parseFloat(styles.borderWidth), "appearance 'transparent' should have no border.").to.equal(0);
+            expect(styles.backgroundColor, "appearance 'transparent' should have a transparent background color.").to.equal("rgba(0, 0, 0, 0)");
+            expect(parseFloat(styles.padding), "appearance 'transparent' should have no padding.").to.equal(0);
+          });
+        });
+
+        it("should not have background-color for appearance outline", function () {
+          const data = { "appearance-occurrences": "outline" };
+          return asyncRun(function () {
+            localOccurrenceTester.dataUpdate(data);
+          }).then(function () {
+            const styles = window.getComputedStyle(element);
+            expect(styles.backgroundColor, "appearance 'outline' should have a transparent background color.").to.equal("rgba(0, 0, 0, 0)");
+          });
+        });
+
+        it("should not have border for appearance section", function () {
+          const data = { "appearance-occurrences": "section" };
+          return asyncRun(function () {
+            localOccurrenceTester.dataUpdate(data);
+          }).then(function () {
+            const styles = window.getComputedStyle(element);
+            expect(parseFloat(styles.borderWidth), "appearance 'section' should have no border.").to.equal(0);
           });
         });
       });
@@ -965,11 +1278,11 @@
             "vertical-align": "end"
           };
           return asyncRun(function () {
-            occWidget.dataUpdate(data);
+            localOccurrenceTester.dataUpdate(data);
           }).then(function () {
-            expect(occElement.getAttribute("layout-type")).to.equal("horizontal-wrap");
-            expect(occElement.getAttribute("horizontal-align")).to.equal("space-between");
-            expect(occElement.getAttribute("vertical-align")).to.equal("end");
+            expect(localOccurrenceTester.element.getAttribute("layout-type"), "The 'layout-type' attribute should equal 'horizontal-wrap'.").to.equal("horizontal-wrap");
+            expect(localOccurrenceTester.element.getAttribute("horizontal-align"), "The 'horizontal-align' attribute should equal 'space-between'.").to.equal("space-between");
+            expect(localOccurrenceTester.element.getAttribute("vertical-align"), "The 'vertical-align' attribute should equal 'end'.").to.equal("end");
           });
         });
 
@@ -977,1791 +1290,1931 @@
           const data1 = { "layout-type": "horizontal-scroll" };
 
           return asyncRun(function () {
-            occWidget.dataUpdate(data1);
-          }).then(function () {
-            expect(occElement.getAttribute("layout-type")).to.equal("horizontal-scroll");
+            localOccurrenceTester.dataUpdate(data1);
+          })
+            .then(function () {
+              expect(localOccurrenceTester.element.getAttribute("layout-type"), "The 'layout-type' attribute should equal 'horizontal-scroll' after first update.").to.equal("horizontal-scroll");
 
-            const data2 = { "horizontal-align": "end" };
+              const data2 = { "horizontal-align": "end" };
 
-            return asyncRun(function () {
-              occWidget.dataUpdate(data2);
+              return asyncRun(function () {
+                localOccurrenceTester.dataUpdate(data2);
+              });
+            })
+            .then(function () {
+              expect(localOccurrenceTester.element.getAttribute("layout-type"), "The 'layout-type' attribute should still equal 'horizontal-scroll' after second update.").to.equal("horizontal-scroll");
+              expect(localOccurrenceTester.element.getAttribute("horizontal-align"), "The 'horizontal-align' attribute should equal 'end'.").to.equal("end");
+            });
+        });
+      });
+
+      describe("Custom CSS class", function () {
+
+        it("should apply a custom CSS class", function () {
+          return asyncRun(function () {
+            localOccurrenceTester.dataUpdate({
+              "class:class-test": true
             });
           }).then(function () {
-            expect(occElement.getAttribute("layout-type")).to.equal("horizontal-scroll");
-            expect(occElement.getAttribute("horizontal-align")).to.equal("end");
-          });
-        });
-      });
-    });
-  });
-
-  /**
-   * CollectionLayout always renders with show-label="true" and a label section
-   * above the content area. These tests verify that .root sizes to the remaining
-   * space after the label, rather than consuming the full host height.
-   */
-  describe("Label and Root Space Distribution", function () {
-    let element;
-
-    before(function () {
-      return asyncRun(function () {
-        collectionTester.createWidget();
-        element = collectionTester.element;
-      }).then(function () {
-        assert(element, "Widget top element is not defined.");
-      });
-    });
-
-    afterEach(function () {
-      element.style.height = "";
-    });
-
-    it("should have flex-grow 1 on .root so remaining space fills correctly after siblings", function () {
-      // Wait for a render frame so computed styles reflect the current layout.
-      return asyncRun(function () {}).then(function () {
-        const shadowRoot = element.shadowRoot;
-        assert(shadowRoot, "Shadow root should exist.");
-        const rootPart = shadowRoot.querySelector("[part='root']");
-        assert(rootPart, "Root part should exist.");
-        // flex: 1 ... auto sets flex-grow to 1; height: 100% must not be present to allow correct flex sizing.
-        expect(window.getComputedStyle(rootPart).flexGrow).to.equal("1");
-      });
-    });
-
-    it("should size .root below the full host height when a label is present", function () {
-      return asyncRun(function () {
-        element.style.height = "300px";
-        collectionTester.dataUpdate({
-          "label-text": "Test Label"
-        });
-      }).then(function () {
-        const shadowRoot = element.shadowRoot;
-        const rootPart = shadowRoot.querySelector("[part='root']");
-        const labelPart = shadowRoot.querySelector("[part='label']");
-        assert(rootPart, "Root part should exist.");
-        // .root must leave room for the label section; it must not consume the full host height.
-        if (labelPart && labelPart.offsetHeight > 0) {
-          expect(rootPart.offsetHeight).to.be.lessThan(element.clientHeight);
-        }
-      });
-    });
-
-    it("should not allow .root and label heights to exceed the host height", function () {
-      return asyncRun(function () {
-        element.style.height = "300px";
-        collectionTester.dataUpdate({
-          "label-text": "Test Label"
-        });
-      }).then(function () {
-        const shadowRoot = element.shadowRoot;
-        const rootPart = shadowRoot.querySelector("[part='root']");
-        const labelPart = shadowRoot.querySelector("[part='label']");
-        assert(rootPart, "Root part should exist.");
-        assert(labelPart, "Label part should exist when label-text is set.");
-        const totalHeight = rootPart.offsetHeight + labelPart.offsetHeight;
-        // Combined height of .root and .label must fit within the host boundaries.
-        expect(totalHeight).to.be.at.most(element.clientHeight);
-      });
-    });
-
-    it("should leave space for the label when label-position is below", function () {
-      return asyncRun(function () {
-        element.style.height = "300px";
-        collectionTester.dataUpdate({
-          "label-text": "Test Label",
-          "label-position": "below"
-        });
-      }).then(function () {
-        const shadowRoot = element.shadowRoot;
-        const rootPart = shadowRoot.querySelector("[part='root']");
-        const labelPart = shadowRoot.querySelector("[part='label']");
-        assert(rootPart, "Root part should exist.");
-        // With label-position below, .root must still accommodate the label; full host height is not consumed.
-        if (labelPart && labelPart.offsetHeight > 0) {
-          expect(rootPart.offsetHeight).to.be.lessThan(element.clientHeight);
-        }
-      });
-    });
-
-    it("should size .root below the full host height when vertical-align is end and label is present", function () {
-      return asyncRun(function () {
-        element.style.height = "300px";
-        collectionTester.dataUpdate({
-          "label-text": "Test Label",
-          "label-position": "above",
-          "layout-type": "vertical-scroll",
-          "vertical-align": "end"
-        });
-      }).then(function () {
-        const shadowRoot = element.shadowRoot;
-        const rootPart = shadowRoot.querySelector("[part='root']");
-        const labelPart = shadowRoot.querySelector("[part='label']");
-        assert(rootPart, "Root part should exist.");
-        // With vertical-align=end, .root must not overflow the host; flex-grow fills remaining space correctly.
-        if (labelPart && labelPart.offsetHeight > 0) {
-          expect(rootPart.offsetHeight).to.be.lessThan(element.clientHeight);
-        }
-      });
-    });
-
-    it("should size .root below the full host height when vertical-align is center and label is present", function () {
-      return asyncRun(function () {
-        element.style.height = "300px";
-        collectionTester.dataUpdate({
-          "label-text": "Test Label",
-          "label-position": "above",
-          "vertical-align": "center"
-        });
-      }).then(function () {
-        const shadowRoot = element.shadowRoot;
-        const rootPart = shadowRoot.querySelector("[part='root']");
-        const labelPart = shadowRoot.querySelector("[part='label']");
-        assert(rootPart, "Root part should exist.");
-        // .root must leave room for the label regardless of vertical-align value.
-        if (labelPart && labelPart.offsetHeight > 0) {
-          expect(rootPart.offsetHeight).to.be.lessThan(element.clientHeight);
-        }
-      });
-    });
-
-    it("should not affect .root sizing when label-position is before", function () {
-      return asyncRun(function () {
-        element.style.height = "300px";
-        collectionTester.dataUpdate({
-          "label-text": "Test Label",
-          "label-position": "before"
-        });
-      }).then(function () {
-        const shadowRoot = element.shadowRoot;
-        const rootPart = shadowRoot.querySelector("[part='root']");
-        assert(rootPart, "Root part should exist.");
-        // In row direction, label sits beside .root; the fix (removing height: 100%) does not affect this axis.
-        expect(window.getComputedStyle(element).flexDirection).to.equal("row");
-        // In row direction both label and .root stretch to the full host height via align-self: stretch.
-        // The -1 tolerance accounts for sub-pixel rounding between offsetHeight (integer) and clientHeight.
-        expect(rootPart.offsetHeight).to.be.at.least(element.clientHeight - 1);
-      });
-    });
-
-    it("should not affect .root sizing when label-position is after", function () {
-      return asyncRun(function () {
-        element.style.height = "300px";
-        collectionTester.dataUpdate({
-          "label-text": "Test Label",
-          "label-position": "after"
-        });
-      }).then(function () {
-        const shadowRoot = element.shadowRoot;
-        const rootPart = shadowRoot.querySelector("[part='root']");
-        assert(rootPart, "Root part should exist.");
-        // In row direction, label sits beside .root; the fix (removing height: 100%) does not affect this axis.
-        expect(window.getComputedStyle(element).flexDirection).to.equal("row");
-        // In row direction both label and .root stretch to the full host height via align-self: stretch.
-        // The -1 tolerance accounts for sub-pixel rounding between offsetHeight (integer) and clientHeight.
-        expect(rootPart.offsetHeight).to.be.at.least(element.clientHeight - 1);
-      });
-    });
-  });
-
-  describe("Collection and Occurrence combination behavior", function () {
-    // Common class references used across all tests in this section.
-    const CollectionLayoutClass = collectionWidgetClass;
-    const OccurrenceLayoutClass = occurrenceWidgetClass;
-
-    describe("Create Collection with Occurrences", function () {
-      let collectionElement;
-
-      it("should create a collection with multiple occurrence children", function () {
-        const collectionObjDef = new MockEntityDefinition("test_collection", "UX.CollectionLayout", "entity", {}, []);
-        const occurrenceDefs = [
-          new MockEntityDefinition("occurrence_1", "UX.OccurrenceLayout", "entity", {}),
-          new MockEntityDefinition("occurrence_2", "UX.OccurrenceLayout", "entity", {}),
-          new MockEntityDefinition("occurrence_3", "UX.OccurrenceLayout", "entity", {})
-        ];
-
-        const collectionResult = createCollectionWidget(collectionObjDef, "collection_test_id");
-        collectionElement = collectionResult.element;
-
-        expect(collectionElement).to.exist;
-        expect(collectionElement).to.have.tagName("UF-layout");
-        expect(collectionElement).to.have.class("u-coll-layout");
-
-        // Create occurrence elements with full widget initialization.
-        const occElements = occurrenceDefs.map(function (def, idx) {
-          const occResult = createOccurrenceWidget(def, "occ_" + (idx + 1) + "_skeleton");
-          return occResult.element;
-        });
-
-        // Verify each occurrence is of type OccurrenceLayout.
-        occElements.forEach(occ => {
-          expect(occ).to.have.class("u-occ-layout");
-        });
-      });
-
-      it("should have the correct structure for collection with occurrences", function () {
-        const collectionObjDef = new MockEntityDefinition("test_collection", "UX.CollectionLayout", "entity", {}, []);
-        collectionElement = CollectionLayoutClass.processLayout(createSkeleton("collection_struct_test"), collectionObjDef);
-
-        // Verify collection has label element.
-        const labelElement = collectionElement.querySelector(".u-label-text");
-        assert(labelElement, "Collection should have a label element.");
-
-        // Verify collection has occurrence placeholder.
-        const occurrencePlaceholder = collectionElement.querySelector("span[id*='uocc:']");
-        assert(occurrencePlaceholder, "Collection should have occurrence placeholder.");
-      });
-
-      it("should handle adding occurrence elements to collection", function () {
-        const occurrence1 = new MockEntityDefinition("occurrence_1", "UX.OccurrenceLayout", "entity", {});
-        const collectionObjDef = new MockEntityDefinition("test_collection", "UX.CollectionLayout", "entity", {}, []);
-
-        // Create collection and occurrence elements with full widget initialization.
-        const collectionResult = createCollectionWidget(collectionObjDef, "collection_add_occ_test");
-        const collectionElement = collectionResult.element;
-        const occurrenceResult = createOccurrenceWidget(occurrence1, "occ_1");
-        const occurrenceElement = occurrenceResult.element;
-
-        expect(collectionElement).to.exist;
-        expect(collectionElement).to.have.tagName("UF-layout");
-        expect(collectionElement).to.have.class("u-coll-layout");
-
-        // Verify it can be appended to collection element.
-        collectionElement.appendChild(occurrenceElement);
-        const addedOccurrence = collectionElement.querySelector(".u-occ-layout");
-
-        assert(addedOccurrence, "Occurrence should be added to collection.");
-        expect(addedOccurrence).to.have.tagName("UF-layout");
-        expect(addedOccurrence).to.have.class("u-occ-layout");
-        expect(addedOccurrence.id).to.equal("occ_1");
-      });
-
-      it("should support multiple occurrences in a collection", function () {
-        const occurrenceDefs = [
-          new MockEntityDefinition("occurrence_1", "UX.OccurrenceLayout", "entity", {}),
-          new MockEntityDefinition("occurrence_2", "UX.OccurrenceLayout", "entity", {}),
-          new MockEntityDefinition("occurrence_3", "UX.OccurrenceLayout", "entity", {})
-        ];
-        const collectionObjDef = new MockEntityDefinition("test_collection", "UX.CollectionLayout", "entity", {}, []);
-
-        // Create collection with widget (not used, only testing occurrence creation).
-        createCollectionWidget(collectionObjDef, "collection_multi_occ_test");
-
-        // Create multiple occurrence elements with full widget initialization.
-        const occurrences = occurrenceDefs.map(function (def, idx) {
-          const occResult = createOccurrenceWidget(def, "occ_" + (idx + 1));
-          return occResult.element;
-        });
-
-        // Verify all occurrences were created.
-        expect(occurrences).to.have.lengthOf(3);
-        occurrences.forEach((occ, index) => {
-          expect(occ).to.have.class("u-occ-layout");
-          expect(occ).to.have.tagName("UF-layout");
-          expect(occ.id).to.equal(`occ_${index + 1}`);
-        });
-      });
-    });
-
-    describe("Collection and Occurrence property interactions", function () {
-      let collectionElement;
-      let collectionWidget;
-      let occurrenceElement;
-      let occurrenceWidget;
-
-      before(function () {
-        return asyncRun(function () {
-          // Create collection.
-          const collectionObjDef = new MockEntityDefinition("test_collection", "UX.CollectionLayout", "entity", {}, []);
-          const collectionResult = createCollectionWidget(collectionObjDef, "prop_collection_test");
-          collectionElement = collectionResult.element;
-          collectionWidget = collectionResult.widget;
-
-          // Create occurrence.
-          const occObjDef = new MockEntityDefinition("occurrence_1", "UX.OccurrenceLayout", "entity", {});
-          const occResult = createOccurrenceWidget(occObjDef, "prop_occ_test");
-          occurrenceElement = occResult.element;
-          occurrenceWidget = occResult.widget;
-
-          // Add occurrence to collection.
-          collectionElement.appendChild(occurrenceElement);
-        });
-      });
-
-      it("should update collection properties without affecting occurrence", async function () {
-        const collectionData = {
-          "label-text": "Collection Label",
-          "layout-type-occurrences": "horizontal-scroll",
-          "horizontal-align-occurrences": "center"
-        };
-
-        await asyncRun(function () {
-          collectionWidget.dataUpdate(collectionData);
-        });
-
-        const shadowRoot = collectionElement.shadowRoot;
-        const labelElement = shadowRoot?.querySelector(".u-label-text");
-
-        // Verify label text is correctly set.
-        if (labelElement) {
-          expect(labelElement.textContent).to.equal("Collection Label", "Label text should match.");
-        }
-
-        // Verify collection attributes are correctly set.
-        expect(collectionElement.getAttribute("layout-type")).to.equal("horizontal-scroll", "The layout-type should be horizontal-scroll.");
-        expect(collectionElement.getAttribute("horizontal-align")).to.equal("center", "The horizontal-align should be center.");
-
-        // Verify occurrence is still present and unchanged.
-        const occInCollection = collectionElement.querySelector(".u-occ-layout");
-        expect(occInCollection).to.exist;
-
-        // Verify occurrence attributes are not affected.
-        expect(occurrenceElement.getAttribute("layout-type")).to.not.equal("horizontal-scroll", "Occurrence layout-type should not be affected.");
-      });
-
-      it("should update occurrence properties without affecting collection", async function () {
-        const occurrenceData = {
-          "layout-type": "horizontal-wrap",
-          "horizontal-align": "start",
-          "vertical-align": "stretch"
-        };
-
-        await asyncRun(function () {
-          occurrenceWidget.dataUpdate(occurrenceData);
-        });
-
-        // Verify occurrence element exists.
-        expect(occurrenceElement).to.exist;
-        expect(occurrenceElement).to.have.class("u-occ-layout");
-
-        // Verify occurrence attributes are correctly set.
-        expect(occurrenceElement.getAttribute("layout-type")).to.equal("horizontal-wrap", "Occurrence layout-type should be horizontal-wrap.");
-        expect(occurrenceElement.getAttribute("horizontal-align")).to.equal("start", "Occurrence main-axis-alignment should be start.");
-        expect(occurrenceElement.getAttribute("vertical-align")).to.equal("stretch", "Occurrence cross-axis-alignment should be stretch.");
-
-        // Verify collection is unchanged.
-        expect(collectionElement).to.have.class("u-coll-layout");
-        const collectionLayout = collectionElement.getAttribute("layout-type");
-        expect(collectionLayout).to.not.equal("horizontal-wrap", "Collection layout should not be affected by occurrence update.");
-      });
-
-      it("should support different layout types on collection and occurrence", async function () {
-        const collectionData = {
-          "layout-type-occurrences": "horizontal-scroll",
-          "horizontal-align-occurrences": "space-between",
-          "vertical-align-occurrences": "center"
-        };
-        const occurrenceData = {
-          "layout-type": "vertical-wrap",
-          "horizontal-align": "space-evenly",
-          "vertical-align": "end"
-        };
-
-        await asyncRun(function () {
-          collectionWidget.dataUpdate(collectionData);
-          occurrenceWidget.dataUpdate(occurrenceData);
-        });
-
-        // Both should maintain their respective structure.
-        expect(collectionElement).to.have.class("u-coll-layout");
-        expect(occurrenceElement).to.have.class("u-occ-layout");
-
-        // Verify collection attributes.
-        expect(collectionElement.getAttribute("layout-type")).to.equal("horizontal-scroll", "Collection should have horizontal-scroll layout.");
-        expect(collectionElement.getAttribute("horizontal-align")).to.equal("space-between", "Collection should have space-between alignment.");
-        expect(collectionElement.getAttribute("vertical-align")).to.equal("center", "Collection should have center cross-axis alignment.");
-
-        // Verify occurrence attributes are different.
-        expect(occurrenceElement.getAttribute("layout-type")).to.equal("vertical-wrap", "Occurrence should have vertical-wrap layout.");
-        expect(occurrenceElement.getAttribute("horizontal-align")).to.equal("space-evenly", "Occurrence should have space-evenly alignment.");
-        expect(occurrenceElement.getAttribute("vertical-align")).to.equal("end", "Occurrence should have end cross-axis alignment.");
-
-        // Verify they are independent.
-        expect(collectionElement.getAttribute("layout-type")).to.not.equal(occurrenceElement.getAttribute("layout-type"));
-      });
-
-      it("should maintain hierarchy when updating both collection and occurrence", async function () {
-        const collectionData = {
-          "label-text": "Parent Collection",
-          "layout-type-occurrences": "vertical-scroll",
-          "horizontal-align-occurrences": "start"
-        };
-        const occurrenceData = {
-          "layout-type": "horizontal-wrap",
-          "vertical-align": "center"
-        };
-
-        await asyncRun(function () {
-          collectionWidget.dataUpdate(collectionData);
-          occurrenceWidget.dataUpdate(occurrenceData);
-        });
-
-        // Verify collection has its label.
-        const labelElement = collectionElement?.querySelector(".u-label-text");
-        if (labelElement) {
-          expect(labelElement.textContent).to.equal("Parent Collection");
-        }
-        expect(collectionElement.getAttribute("layout-type")).to.equal("vertical-scroll");
-        expect(collectionElement.getAttribute("horizontal-align")).to.equal("start");
-
-        // Verify occurrence is still nested in collection.
-        const occInCollection = collectionElement.querySelector(".u-occ-layout");
-        expect(occInCollection).to.exist;
-        expect(occInCollection.getAttribute("layout-type")).to.equal("horizontal-wrap");
-        expect(occInCollection.getAttribute("vertical-align")).to.equal("center");
-      });
-    });
-
-    describe("Collection layout with nested occurrences", function () {
-      before(function () {
-        if (!CollectionLayoutClass || !OccurrenceLayoutClass) {
-          this.skip();
-        }
-      });
-
-      it("should handle collection with single occurrence", async function () {
-        const occurrence1 = new MockEntityDefinition("single_occurrence", "UX.OccurrenceLayout", "entity", {});
-        const collectionObjDef = new MockEntityDefinition("single_occ_collection", "UX.CollectionLayout", "entity", {}, []);
-
-        // Create collection and occurrence with widgets.
-        const collectionResult = createCollectionWidget(collectionObjDef, "single_occ_test");
-        const collectionElement = collectionResult.element;
-        const collectionWidget = collectionResult.widget;
-        const occResult = createOccurrenceWidget(occurrence1, "single_occ_elem");
-        const occElement = occResult.element;
-        const occWidget = occResult.widget;
-
-        // Add occurrence to collection.
-        collectionElement.appendChild(occElement);
-        const addedOcc = collectionElement.querySelector(".u-occ-layout");
-        expect(addedOcc).to.exist;
-
-        // Test property updates on both collection and single occurrence.
-        await asyncRun(function () {
-          collectionWidget.dataUpdate({
-            "label-text": "Single Occurrence Collection",
-            "layout-type-occurrences": "vertical-scroll",
-            "label-size": "large",
-            "label-position": "above"
-          });
-
-          occWidget.dataUpdate({
-            "layout-type": "horizontal-wrap",
-            "horizontal-align": "center",
-            "vertical-align": "stretch"
+            expect(element.classList.contains("class-test"), "Occurrence Layout should have custom class 'class-test'.").to.be.true;
           });
         });
 
-        const shadowRoot = collectionElement.shadowRoot;
-        // Verify collection properties.
-        const labelElement = shadowRoot.querySelector(".u-label-text");
-        if (labelElement) {
-          expect(labelElement.textContent).to.equal("Single Occurrence Collection");
-        }
-        expect(collectionElement.getAttribute("layout-type")).to.equal("vertical-scroll");
-        expect(collectionElement.getAttribute("label-size")).to.equal("large");
-        expect(collectionElement.getAttribute("label-position")).to.equal("above");
-
-        // Verify occurrence properties.
-        expect(occElement.getAttribute("layout-type")).to.equal("horizontal-wrap");
-        expect(occElement.getAttribute("horizontal-align")).to.equal("center");
-        expect(occElement.getAttribute("vertical-align")).to.equal("stretch");
-
-        // Verify both elements coexist properly.
-        const occurrences = collectionElement.querySelectorAll(".u-occ-layout");
-        expect(occurrences).to.have.lengthOf(1, "Should have exactly 1 occurrence element.");
-      });
-
-      it("should handle nested collection structure (collection inside occurrence inside collection)", async function () {
-        // Create definitions.
-        const innerOccurrence = new MockEntityDefinition("inner_occurrence", "UX.OccurrenceLayout", "entity", {});
-        const innerCollection = new MockEntityDefinition("inner_collection", "UX.CollectionLayout", "entity", {}, []);
-        const outerOccurrence = new MockEntityDefinition("outer_occurrence", "UX.OccurrenceLayout", "entity", {}, []);
-        const outerCollectionObjDef = new MockEntityDefinition("outer_collection", "UX.CollectionLayout", "entity", {}, []);
-
-        // Create outer collection with widget.
-        const outerCollResult = createCollectionWidget(outerCollectionObjDef, "nested_outer_collection");
-        const outerCollElement = outerCollResult.element;
-        const outerCollWidget = outerCollResult.widget;
-        expect(outerCollElement).to.exist;
-        expect(outerCollElement).to.have.class("u-coll-layout");
-
-        // Create outer occurrence with widget.
-        const outerOccResult = createOccurrenceWidget(outerOccurrence, "nested_outer_occurrence");
-        const outerOccElement = outerOccResult.element;
-        const outerOccWidget = outerOccResult.widget;
-        expect(outerOccElement).to.exist;
-        expect(outerOccElement).to.have.class("u-occ-layout");
-
-        // Add outer occurrence to outer collection.
-        outerCollElement.appendChild(outerOccElement);
-        const outerCollShadowRoot = outerCollElement.shadowRoot;
-
-        // Create inner collection with widget.
-        const innerCollResult = createCollectionWidget(innerCollection, "nested_inner_collection");
-        const innerCollElement = innerCollResult.element;
-        const innerCollWidget = innerCollResult.widget;
-        expect(innerCollElement).to.exist;
-        expect(innerCollElement).to.have.class("u-coll-layout");
-
-        // Add inner collection to outer occurrence.
-        outerOccElement.appendChild(innerCollElement);
-
-        // Create inner occurrence with widget.
-        const innerOccResult = createOccurrenceWidget(innerOccurrence, "nested_inner_occurrence");
-        const innerOccElement = innerOccResult.element;
-        const innerOccWidget = innerOccResult.widget;
-        expect(innerOccElement).to.exist;
-        expect(innerOccElement).to.have.class("u-occ-layout");
-
-        // Add inner occurrence to inner collection.
-        innerCollElement.appendChild(innerOccElement);
-        const innerCollShadowRoot = innerCollElement.shadowRoot;
-
-        // Verify nested DOM structure.
-        const outerOcc = outerCollElement.querySelector(".u-occ-layout");
-        expect(outerOcc).to.exist;
-        expect(outerOcc.id).to.equal("nested_outer_occurrence");
-
-        const innerColl = outerOccElement.querySelector(".u-coll-layout");
-        expect(innerColl).to.exist;
-        expect(innerColl.id).to.equal("nested_inner_collection");
-
-        const innerOcc = innerCollElement.querySelector(".u-occ-layout");
-        expect(innerOcc).to.exist;
-        expect(innerOcc.id).to.equal("nested_inner_occurrence");
-
-        // Test property updates at each level.
-        await asyncRun(function () {
-          outerCollWidget.dataUpdate({
-            "label-text": "Outer Collection",
-            "layout-type-occurrences": "vertical-scroll",
-            "label-size": "large"
-          });
-
-          outerOccWidget.dataUpdate({
-            "layout-type": "horizontal-wrap",
-            "horizontal-align": "start"
-          });
-
-          innerCollWidget.dataUpdate({
-            "label-text": "Inner Collection",
-            "layout-type-occurrences": "horizontal-scroll",
-            "label-size": "small"
-          });
-
-          innerOccWidget.dataUpdate({
-            "layout-type": "vertical-wrap",
-            "horizontal-align": "center"
+        it("should remove a custom CSS class", function () {
+          return asyncRun(function () {
+            localOccurrenceTester.dataUpdate({
+              "class:class-test": false
+            });
+          }).then(function () {
+            expect(element.classList.contains("class-test"), "Occurrence Layout should not have custom class 'class-test'.").to.be.false;
           });
         });
 
-        // Verify outer collection properties.
-        expect(outerCollElement.getAttribute("layout-type")).to.equal("vertical-scroll", "Outer collection layout-type should be vertical-scroll.");
-        expect(outerCollElement.getAttribute("label-size")).to.equal("large", "Outer collection label-size should be large.");
-
-        const outerCollLabel = outerCollShadowRoot?.querySelector(".u-label-text");
-        if (outerCollLabel) {
-          expect(outerCollLabel.textContent).to.equal("Outer Collection");
-        }
-
-        // Verify outer occurrence properties.
-        expect(outerOccElement.getAttribute("layout-type")).to.equal("horizontal-wrap", "Outer occurrence layout-type should be horizontal-wrap.");
-        expect(outerOccElement.getAttribute("horizontal-align")).to.equal("start", "Outer occurrence main-axis-alignment should be start.");
-
-        // Verify inner collection properties.
-        expect(innerCollElement.getAttribute("layout-type")).to.equal("horizontal-scroll", "Inner collection layout-type should be horizontal-scroll.");
-        expect(innerCollElement.getAttribute("label-size")).to.equal("small", "Inner collection label-size should be small.");
-
-        const innerCollLabel = innerCollShadowRoot?.querySelector(".u-label-text");
-        if (innerCollLabel) {
-          expect(innerCollLabel.textContent).to.equal("Inner Collection");
-        }
-
-        // Verify inner occurrence properties.
-        expect(innerOccElement.getAttribute("layout-type")).to.equal("vertical-wrap", "Inner occurrence layout-type should be vertical-wrap.");
-        expect(innerOccElement.getAttribute("horizontal-align")).to.equal("center", "Inner occurrence main-axis-alignment should be center.");
-
-        // Verify all properties are independent at each level.
-        expect(outerCollElement.getAttribute("layout-type")).to.not.equal(outerOccElement.getAttribute("layout-type"), "Outer collection and outer occurrence should have independent layout-type.");
-        expect(outerOccElement.getAttribute("layout-type")).to.not.equal(innerCollElement.getAttribute("layout-type"), "Outer occurrence and inner collection should have independent layout-type.");
-        expect(innerCollElement.getAttribute("layout-type")).to.not.equal(innerOccElement.getAttribute("layout-type"), "Inner collection and inner occurrence should have independent layout-type.");
-      });
-    });
-
-    describe("Collection and Occurrence comprehensive property tests", function () {
-      it("should correctly apply all layout properties to collection with single occurrence", async function () {
-        const occurrence1 = new MockEntityDefinition("layout_occ", "UX.OccurrenceLayout", "entity", {});
-        const collectionObjDef = new MockEntityDefinition("layout_test_collection", "UX.CollectionLayout", "entity", {}, []);
-
-        // Create collection and occurrence with widgets
-        const collectionResult = createCollectionWidget(collectionObjDef, "layout_test_id");
-        const collectionElement = collectionResult.element;
-        const collectionWidget = collectionResult.widget;
-        const occResult = createOccurrenceWidget(occurrence1, "layout_occ_elem");
-        const occElement = occResult.element;
-        const occWidget = occResult.widget;
-
-        // Add occurrence to collection
-        collectionElement.appendChild(occElement);
-
-        await asyncRun(function () {
-          // Apply all collection layout properties.
-          collectionWidget.dataUpdate({
-            "layout-type-occurrences": "horizontal-wrap",
-            "horizontal-align-occurrences": "space-evenly",
-            "vertical-align-occurrences": "stretch"
-          });
-
-          // Apply all occurrence layout properties.
-          occWidget.dataUpdate({
-            "layout-type": "vertical-scroll",
-            "horizontal-align": "space-between",
-            "vertical-align": "center"
+        it("should apply multiple custom CSS classes simultaneously", function () {
+          return asyncRun(function () {
+            localOccurrenceTester.dataUpdate({
+              "class:class-a": true,
+              "class:class-b": true
+            });
+          }).then(function () {
+            expect(element.classList.contains("class-a"), "Occurrence Layout should have custom class 'class-a'.").to.be.true;
+            expect(element.classList.contains("class-b"), "Occurrence Layout should have custom class 'class-b'.").to.be.true;
           });
         });
-
-        // Verify collection attributes.
-        expect(collectionElement.getAttribute("layout-type")).to.equal("horizontal-wrap", "Collection layout-type should be horizontal-wrap.");
-        expect(collectionElement.getAttribute("horizontal-align")).to.equal("space-evenly", "Collection main-axis-alignment should be space-evenly.");
-        expect(collectionElement.getAttribute("vertical-align")).to.equal("stretch", "Collection cross-axis-alignment should be stretch.");
-
-        // Verify occurrence attributes.
-        expect(occElement.getAttribute("layout-type")).to.equal("vertical-scroll", "Occurrence layout-type should be vertical-scroll.");
-        expect(occElement.getAttribute("horizontal-align")).to.equal("space-between", "Occurrence main-axis-alignment should be space-between.");
-        expect(occElement.getAttribute("vertical-align")).to.equal("center", "Occurrence cross-axis-alignment should be center.");
-
-        // Verify they are independent.
-        expect(collectionElement.getAttribute("layout-type")).to.not.equal(occElement.getAttribute("layout-type"), "Layout types should be independent.");
-        expect(collectionElement.getAttribute("horizontal-align")).to.not.equal(occElement.getAttribute("horizontal-align"), "Main axis alignments should be independent.");
-        expect(collectionElement.getAttribute("vertical-align")).to.not.equal(occElement.getAttribute("vertical-align"), "Cross axis alignments should be independent.");
-      });
-
-      it("should verify that collection with 2 occurrences maintains correct count and properties", async function () {
-        const occurrence1 = new MockEntityDefinition("two_occ_1", "UX.OccurrenceLayout", "entity", {});
-        const occurrence2 = new MockEntityDefinition("two_occ_2", "UX.OccurrenceLayout", "entity", {});
-
-        const collectionObjDef = new MockEntityDefinition("two_occ_collection", "UX.CollectionLayout", "entity", {}, []);
-
-        // Create skeleton elements for collection and both occurrences.
-        const skeletonElement = document.createElement("div");
-        skeletonElement.id = "two_occ_collection_id";
-        const occ1Skeleton = document.createElement("div");
-        occ1Skeleton.id = "two_occ_elem_1";
-        const occ2Skeleton = document.createElement("div");
-        occ2Skeleton.id = "two_occ_elem_2";
-
-        const collectionElement = CollectionLayoutClass.processLayout(skeletonElement, collectionObjDef);
-
-        const collectionWidget = new CollectionLayoutClass();
-        collectionWidget.onConnect(collectionElement, collectionObjDef);
-        collectionWidget.dataInit();
-
-        const occurrences = [];
-        const occWidgets = [];
-
-        // Create both occurrences.
-        const occDefs = [occurrence1, occurrence2];
-        const occSkeletons = [occ1Skeleton, occ2Skeleton];
-
-        occDefs.forEach((occDef, index) => {
-          const occElement = OccurrenceLayoutClass.processLayout(occSkeletons[index], occDef);
-
-          const occWidget = new OccurrenceLayoutClass();
-          occWidget.onConnect(occElement, occDef);
-          occWidget.dataInit();
-
-          occurrences.push(occElement);
-          occWidgets.push(occWidget);
-
-          // Add occurrence to collection.
-          collectionElement.appendChild(occElement);
-        });
-
-        // Verify occurrence count.
-        expect(occurrences).to.have.lengthOf(2, "Should have exactly 2 occurrences.");
-
-        await asyncRun(function () {
-          // Update collection properties.
-          collectionWidget.dataUpdate({
-            "label-text": "Two Occurrences Collection",
-            "layout-type-occurrences": "vertical-scroll",
-            "area-slot": "main"
-          });
-
-          // Update first occurrence.
-          occWidgets[0].dataUpdate({
-            "layout-type": "horizontal-scroll",
-            "horizontal-align": "start"
-          });
-
-          // Update second occurrence with different properties.
-          occWidgets[1].dataUpdate({
-            "layout-type": "vertical-wrap",
-            "horizontal-align": "end"
-          });
-        });
-
-        // Verify collection properties.
-        expect(collectionElement.getAttribute("layout-type")).to.equal("vertical-scroll");
-        expect(collectionElement.getAttribute("area-slot")).to.equal("main");
-
-        const shadowRoot = collectionElement.shadowRoot;
-        const labelElement = shadowRoot?.querySelector(".u-label-text");
-        if (labelElement) {
-          expect(labelElement.textContent).to.equal("Two Occurrences Collection");
-        }
-
-        // Verify first occurrence properties.
-        expect(occurrences[0].getAttribute("layout-type")).to.equal("horizontal-scroll", "First occurrence should have horizontal-scroll.");
-        expect(occurrences[0].getAttribute("horizontal-align")).to.equal("start", "First occurrence should have start alignment.");
-
-        // Verify second occurrence properties are different.
-        expect(occurrences[1].getAttribute("layout-type")).to.equal("vertical-wrap", "Second occurrence should have vertical-wrap.");
-        expect(occurrences[1].getAttribute("horizontal-align")).to.equal("end", "Second occurrence should have end alignment.");
-
-        // Verify both occurrences are present in DOM.
-        const occElements = collectionElement.querySelectorAll(".u-occ-layout");
-        expect(occElements).to.have.lengthOf(2, "Should have exactly 2 occurrence elements in DOM.");
-      });
-
-      it("should apply cross-axis-alignment property to both collection and occurrence", async function () {
-        const occurrence1 = new MockEntityDefinition("cross_align_occ", "UX.OccurrenceLayout", "entity", {});
-        const collectionObjDef = new MockEntityDefinition("cross_align_collection", "UX.CollectionLayout", "entity", {}, []);
-
-        // Create collection and occurrence with widgets.
-        const collectionResult = createCollectionWidget(collectionObjDef, "cross_align_stretch_test");
-        const collectionElement = collectionResult.element;
-        const collectionWidget = collectionResult.widget;
-        const occResult = createOccurrenceWidget(occurrence1, "cross_align_occ_stretch");
-        const occElement = occResult.element;
-        const occWidget = occResult.widget;
-
-        await asyncRun(function () {
-          collectionWidget.dataUpdate({
-            "vertical-align-occurrences": "stretch"
-          });
-          occWidget.dataUpdate({
-            "vertical-align": "center"
-          });
-        });
-
-        expect(collectionElement.getAttribute("vertical-align")).to.equal("stretch", "Collection cross-axis-alignment should be stretch.");
-        expect(occElement.getAttribute("vertical-align")).to.equal("center", "Occurrence cross-axis-alignment should be center.");
-      });
-
-      it("should inherit computed style when occurrence is set to auto and collection is non-auto", async function () {
-        const occurrence1 = new MockEntityDefinition("auto_inherit_occ", "UX.OccurrenceLayout", "entity", {});
-        const collectionObjDef = new MockEntityDefinition("auto_inherit_collection", "UX.CollectionLayout", "entity", {}, []);
-
-        // Create collection and occurrence with widgets.
-        const collectionResult = createCollectionWidget(collectionObjDef, "auto_inherit_test");
-        const collectionElement = collectionResult.element;
-        const collectionWidget = collectionResult.widget;
-        const occResult = createOccurrenceWidget(occurrence1, "auto_inherit_occ");
-        const occElement = occResult.element;
-        const occWidget = occResult.widget;
-
-        // Add occurrence to collection.
-        collectionElement.appendChild(occElement);
-
-        await asyncRun(function () {
-          // Set collection to a specific layout-type.
-          collectionWidget.dataUpdate({
-            "layout-type-occurrences": "horizontal-scroll",
-            "horizontal-align-occurrences": "center",
-            "vertical-align-occurrences": "stretch"
-          });
-
-          // Set occurrence to auto.
-          occWidget.dataUpdate({
-            "layout-type": "auto",
-            "horizontal-align": "auto",
-            "vertical-align": "auto"
-          });
-        });
-
-        // Verify attributes are set correctly.
-        expect(collectionElement.getAttribute("layout-type")).to.equal("horizontal-scroll", "Collection layout-type should be horizontal-scroll.");
-        expect(collectionElement.getAttribute("horizontal-align")).to.equal("center", "Collection main-axis-alignment should be center.");
-        expect(collectionElement.getAttribute("vertical-align")).to.equal("stretch", "Collection cross-axis-alignment should be stretch.");
-
-        expect(occElement.getAttribute("layout-type")).to.equal("auto", "Occurrence layout-type should be auto.");
-        expect(occElement.getAttribute("horizontal-align")).to.equal("auto", "Occurrence main-axis-alignment should be auto.");
-        expect(occElement.getAttribute("vertical-align")).to.equal("auto", "Occurrence cross-axis-alignment should be auto.");
-
-        // Get computed styles.
-        const collectionShadowRoot = collectionElement.shadowRoot;
-        const occShadowRoot = occElement.shadowRoot;
-
-        if (collectionShadowRoot && occShadowRoot) {
-          const collectionRootPart = collectionShadowRoot.querySelector("[part='root']");
-          const occRootPart = occShadowRoot.querySelector("[part='root']");
-
-          if (collectionRootPart && occRootPart) {
-            const collectionStyles = window.getComputedStyle(collectionRootPart);
-            const occStyles = window.getComputedStyle(occRootPart);
-
-            // When occurrence is set to auto, it should inherit/match the collection's computed flex properties.
-            expect(collectionStyles.flexDirection).to.exist;
-            expect(occStyles.flexDirection).to.exist;
-
-            // Both should have same computed values.
-            expect(collectionStyles.flexDirection).to.equal(occStyles.flexDirection);
-            expect(collectionStyles.justifyContent).to.equal(occStyles.justifyContent);
-            expect(collectionStyles.alignItems).to.equal(occStyles.alignItems);
-          }
-        }
       });
     });
   });
 
   describe("Entity Layout CSS Tests", function () {
-    // Tests for ent_layout.css: flex-grow guards per control type,
-    // --u-vertical-layout-grow variable, and width/height rules for collection/occurrence layouts.
 
-    describe("Collection and Occurrence Layout Width Rules", function () {
-      it("should set width 100% on u-coll-layout that is the only child", function () {
-        // u-coll-layout:only-child rule sets width: 100%.
-        const occLayout = document.createElement("u-occ-layout");
-        occLayout.classList.add("u-occ-layout");
-        const collLayout = document.createElement("u-coll-layout");
-        collLayout.classList.add("u-coll-layout");
-        occLayout.appendChild(collLayout);
-        document.body.appendChild(occLayout);
+    describe("CollectionLayout specific Layout Width Rules", function () {
+      let collElement;
 
-        return asyncRun(function () {
-        }).then(function () {
-          const collWidth = collLayout.getBoundingClientRect().width;
-          const parentWidth = occLayout.getBoundingClientRect().width;
-          expect(collWidth).to.equal(parentWidth);
-        }).finally(function () {
-          occLayout.remove();
-        });
-      });
+      describe("When u-coll-layout is the only child", function () {
+        let localCompTester;
 
-      it("should set width 100% on u-occ-layout that is the only child", function () {
-        // u-occ-layout:only-child rule sets width: 100%.
-        const collLayout = document.createElement("u-coll-layout");
-        collLayout.classList.add("u-coll-layout");
-        const occLayout = document.createElement("u-occ-layout");
-        occLayout.classList.add("u-occ-layout");
-        collLayout.appendChild(occLayout);
-        document.body.appendChild(collLayout);
-
-        return asyncRun(function () {
-        }).then(function () {
-          const occWidth = occLayout.getBoundingClientRect().width;
-          const parentWidth = collLayout.getBoundingClientRect().width;
-          expect(occWidth).to.equal(parentWidth);
-        }).finally(function () {
-          collLayout.remove();
-        });
-      });
-
-      it("should set width 100% on u-coll-layout inside a vertical-scroll parent", function () {
-        // [layout-type*="vertical-scroll"] > .u-coll-layout rule sets width: 100%.
-        const occDef = new MockEntityDefinition("css_width_vs", "UX.OccurrenceLayout", "entity", {});
-        const result = createOccurrenceWidget(occDef, "css_width_vs_occ");
-        const parent = result.element;
-        const occWidget = result.widget;
-        const collLayout = document.createElement("u-coll-layout");
-        collLayout.classList.add("u-coll-layout");
-        parent.appendChild(collLayout);
-        document.body.appendChild(parent);
-        occWidget.dataUpdate({
-          "layout-type": "vertical-scroll"
+        before(function () {
+          resetWidgetContainer();
+          localCompTester = new umockup.WidgetTester("UX.CompLayout", componentWidgetId);
+          const localCollectionTester = new umockup.WidgetTester("UX.CollectionLayout", collectionWidgetId);
+          const componentSkeleton = createSkeleton(componentWidgetId);
+          localCompTester.createWidget(null, componentSkeleton, mockComponentDef);
+          localCollectionTester.createWidget(null, localCompTester.element.querySelector(`[id="${collectionWidgetId}"]`), mockEntityDef);
+          collElement = localCollectionTester.element;
         });
 
-        return asyncRun(function () {
-        }).then(function () {
-          const collWidth = collLayout.getBoundingClientRect().width;
-          const parentWidth = parent.getBoundingClientRect().width;
-          expect(collWidth).to.equal(parentWidth);
-        }).finally(function () {
-          parent.remove();
-        });
-      });
-
-      it("should set width 100% on u-coll-layout inside a vertical-wrap parent", function () {
-        // [layout-type*="vertical-wrap"] > .u-coll-layout rule sets width: 100%.
-        const occDef = new MockEntityDefinition("css_width_vw", "UX.OccurrenceLayout", "entity", {});
-        const result = createOccurrenceWidget(occDef, "css_width_vw_occ");
-        const parent = result.element;
-        const occWidget = result.widget;
-        const collLayout = document.createElement("u-coll-layout");
-        collLayout.classList.add("u-coll-layout");
-        parent.appendChild(collLayout);
-        document.body.appendChild(parent);
-        occWidget.dataUpdate({
-          "layout-type": "vertical-wrap"
-        });
-
-        return asyncRun(function () {
-        }).then(function () {
-          const collWidth = collLayout.getBoundingClientRect().width;
-          const parentWidth = parent.getBoundingClientRect().width;
-          expect(collWidth).to.equal(parentWidth);
-        }).finally(function () {
-          parent.remove();
-        });
-      });
-    });
-
-    describe("Stretchable direct children flex-grow in uf-layout", function () {
-      it("should apply flex-grow to u-stretchable direct child of uf-layout", function () {
-        // uf-layout > .u-stretchable sets flex-grow via --u-layout-grow, which is set by the web
-        // component's shadow CSS when horizontal-align='stretch' in a horizontal layout.
-        const occDef = new MockEntityDefinition("css_stretchable_apply", "UX.OccurrenceLayout", "entity", {});
-        const result = createOccurrenceWidget(occDef, "css_stretchable_apply_occ");
-        const layout = result.element;
-        const occWidget = result.widget;
-        const child = document.createElement("div");
-        child.classList.add("u-stretchable");
-        layout.appendChild(child);
-        document.body.appendChild(layout);
-        occWidget.dataUpdate({ "layout-type": "horizontal-scroll",
-                               "horizontal-align": "stretch" });
-
-        return asyncRun(function () {
-        }).then(function () {
-          const styles = window.getComputedStyle(child);
-          expect(styles.flexGrow).to.equal("1");
-        }).finally(function () {
-          layout.remove();
-        });
-      });
-
-      it("should not apply flex-grow to non-stretchable direct child of uf-layout", function () {
-        // Without .u-stretchable class, uf-layout > .u-stretchable does not match regardless of --u-layout-grow.
-        const occDef = new MockEntityDefinition("css_no_stretchable", "UX.OccurrenceLayout", "entity", {});
-        const result = createOccurrenceWidget(occDef, "css_no_stretchable_occ");
-        const layout = result.element;
-        const occWidget = result.widget;
-        const child = document.createElement("div");
-        layout.appendChild(child);
-        document.body.appendChild(layout);
-        occWidget.dataUpdate({ "layout-type": "horizontal-scroll",
-                               "horizontal-align": "stretch" });
-
-        return asyncRun(function () {
-        }).then(function () {
-          const styles = window.getComputedStyle(child);
-          expect(styles.flexGrow).to.equal("0");
-        }).finally(function () {
-          layout.remove();
-        });
-      });
-
-      it("should not apply flex-grow to nested uf-layout child without u-stretchable", function () {
-        // A nested uf-layout does not carry .u-stretchable; uf-layout > .u-stretchable does not match it.
-        const outerDef = new MockEntityDefinition("css_outer_no_lt", "UX.CollectionLayout", "entity", {});
-        const outerResult = createCollectionWidget(outerDef, "css_outer_no_lt_coll");
-        const layout = outerResult.element;
-        const collWidget = outerResult.widget;
-        const innerDef = new MockEntityDefinition("css_inner_no_lt", "UX.OccurrenceLayout", "entity", {});
-        const innerResult = createOccurrenceWidget(innerDef, "css_inner_no_lt_occ");
-        const nestedLayout = innerResult.element;
-        layout.appendChild(nestedLayout);
-        document.body.appendChild(layout);
-        collWidget.dataUpdate({ "layout-type-occurrences": "horizontal-scroll",
-                                "horizontal-align-occurrences": "stretch" });
-
-        return asyncRun(function () {
-        }).then(function () {
-          const childStyles = window.getComputedStyle(nestedLayout);
-          expect(childStyles.flexGrow).to.equal("0");
-        }).finally(function () {
-          layout.remove();
-        });
-      });
-    });
-
-    describe("No flex-grow for switch, checkbox, radio-group, and plain-text as direct children", function () {
-      ["u-switch", "u-checkbox", "u-radio-group", "u-plain-text", "u-listbox"].forEach(function (tag) {
-        it("should not apply flex-grow to " + tag + " as direct child of uf-layout", function () {
-          // These controls have no u-stretchable class, so uf-layout > .u-stretchable does not match
-          // them even though --u-layout-grow: 1 is set by the web component (horizontal-scroll + stretch).
-          const occDef = new MockEntityDefinition("css_compact_child_" + tag, "UX.OccurrenceLayout", "entity", {});
-          const result = createOccurrenceWidget(occDef, tag + "_compact_child_occ");
-          const layout = result.element;
-          const occWidget = result.widget;
-          const control = document.createElement(tag);
-          control.classList.add(tag);
-          layout.appendChild(control);
-          document.body.appendChild(layout);
-          occWidget.dataUpdate({ "layout-type": "horizontal-scroll",
-                                 "horizontal-align": "stretch" });
-
+        it("should set width 100% on u-coll-layout inside a vertical-scroll parent", function () {
+          // u-coll-layout:only-child rule sets width: 100%.
           return asyncRun(function () {
+            localCompTester.dataUpdate({ "layout-type": "vertical-scroll" });
           }).then(function () {
-            const styles = window.getComputedStyle(control);
-            expect(styles.flexGrow).to.equal("0");
-          }).finally(function () {
-            layout.remove();
+            const collWidth = collElement.clientWidth;
+            const parentWidth = collElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedCollWidth = parentWidth - totalParentPadding;
+            expect(collWidth, "u-coll-layout width should equal parent width minus padding inside a vertical-scroll parent.").to.equal(expectedCollWidth);
+          });
+        });
+
+        it("should set width 100% on u-coll-layout inside a vertical-wrap parent", function () {
+          // u-coll-layout:only-child rule sets width: 100%.
+          return asyncRun(function () {
+            localCompTester.dataUpdate({ "layout-type": "vertical-wrap" });
+          }).then(function () {
+            const collWidth = collElement.clientWidth;
+            const parentWidth = collElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedCollWidth = parentWidth - totalParentPadding;
+            expect(collWidth, "u-coll-layout width should equal parent width minus padding inside a vertical-wrap parent.").to.equal(expectedCollWidth);
+          });
+        });
+
+        it("should set width 100% on u-coll-layout inside a horizontal-scroll parent", function () {
+          // u-coll-layout:only-child rule sets width: 100%.
+          return asyncRun(function () {
+            localCompTester.dataUpdate({ "layout-type": "horizontal-scroll" });
+          }).then(function () {
+            const collWidth = collElement.clientWidth;
+            const parentWidth = collElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedCollWidth = parentWidth - totalParentPadding;
+            expect(collWidth, "u-coll-layout width should equal parent width minus padding inside a horizontal-scroll parent.").to.equal(expectedCollWidth);
+          });
+        });
+
+        it("should set width 100% on u-coll-layout inside a horizontal-wrap parent", function () {
+          // u-coll-layout:only-child rule sets width: 100%.
+          return asyncRun(function () {
+            localCompTester.dataUpdate({ "layout-type": "horizontal-wrap" });
+          }).then(function () {
+            const collWidth = collElement.clientWidth;
+            const parentWidth = collElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedCollWidth = parentWidth - totalParentPadding;
+            expect(collWidth, "u-coll-layout width should equal parent width minus padding inside a horizontal-wrap parent.").to.equal(expectedCollWidth);
           });
         });
       });
 
-      ["u-switch", "u-checkbox", "u-radio-group", "u-plain-text", "u-listbox"].forEach(function (tag) {
-        it("should set flex-grow 0 on parent uf-layout whose only direct child is " + tag, function () {
-          // uf-layout:has(> .u-stretchable) does not match — no stretchable child — so the layout
-          // itself does not grow even though --u-layout-grow: 1 is set by the web component.
-          const occDef = new MockEntityDefinition("css_compact_parent_" + tag, "UX.OccurrenceLayout", "entity", {});
-          const result = createOccurrenceWidget(occDef, tag + "_compact_parent_occ");
-          const layout = result.element;
-          const occWidget = result.widget;
-          const control = document.createElement(tag);
-          control.classList.add(tag);
-          layout.appendChild(control);
-          document.body.appendChild(layout);
-          occWidget.dataUpdate({ "layout-type": "horizontal-scroll",
-                                 "horizontal-align": "stretch" });
+      describe("When u-coll-layout is not the only child", function () {
+        let localCompTester;
 
+        before(function () {
+          resetWidgetContainer();
+          localCompTester = new umockup.WidgetTester("UX.CompLayout", componentWidgetId);
+          const localCollectionTester = new umockup.WidgetTester("UX.CollectionLayout", collectionWidgetId);
+          const componentSkeleton = createSkeleton(componentWidgetId);
+          localCompTester.createWidget(null, componentSkeleton, mockComponentDefWithTwoEntities);
+          localCollectionTester.createWidget(null, localCompTester.element.querySelector(`[id="${collectionWidgetId}"]`), mockEntityDef);
+          collElement = localCollectionTester.element;
+        });
+
+        it("should set width 100% on u-coll-layout inside a vertical-scroll parent", function () {
           return asyncRun(function () {
+            localCompTester.dataUpdate({ "layout-type": "vertical-scroll" });
           }).then(function () {
-            const layoutStyles = window.getComputedStyle(layout);
-            expect(layoutStyles.flexGrow).to.equal("0");
-          }).finally(function () {
-            layout.remove();
+            const collWidth = collElement.clientWidth;
+            const parentWidth = collElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedCollWidth = parentWidth - totalParentPadding;
+            expect(collWidth, "u-coll-layout width should equal parent width minus padding inside a vertical-scroll parent.").to.equal(expectedCollWidth);
           });
         });
-      });
 
-      ["u-switch", "u-checkbox", "u-radio-group", "u-plain-text", "u-listbox"].forEach(function (tag) {
-        it("should set flex-grow 0 on grandparent uf-layout when nested layout has only " + tag, function () {
-          // uf-layout:has(> uf-layout > .u-stretchable) does not match — inner has no stretchable child —
-          // so the outer layout does not grow even though --u-layout-grow: 1 is set by the web component.
-          const collDef = new MockEntityDefinition("css_compact_grand_" + tag, "UX.CollectionLayout", "entity", {});
-          const collResult = createCollectionWidget(collDef, tag + "_compact_grand_coll");
-          const outerLayout = collResult.element;
-          const collWidget = collResult.widget;
-          const occDef = new MockEntityDefinition("css_compact_grand_inner_" + tag, "UX.OccurrenceLayout", "entity", {});
-          const occResult = createOccurrenceWidget(occDef, tag + "_compact_grand_occ");
-          const innerLayout = occResult.element;
-          const control = document.createElement(tag);
-          control.classList.add(tag);
-          innerLayout.appendChild(control);
-          outerLayout.appendChild(innerLayout);
-          document.body.appendChild(outerLayout);
-          collWidget.dataUpdate({ "layout-type-occurrences": "horizontal-scroll",
-                                  "horizontal-align-occurrences": "stretch" });
-
+        it("should set width 100% on u-coll-layout inside a vertical-wrap parent", function () {
           return asyncRun(function () {
+            localCompTester.dataUpdate({ "layout-type": "vertical-wrap" });
           }).then(function () {
-            const outerStyles = window.getComputedStyle(outerLayout);
-            expect(outerStyles.flexGrow).to.equal("0");
-          }).finally(function () {
-            outerLayout.remove();
+            const collWidth = collElement.clientWidth;
+            const parentWidth = collElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedCollWidth = parentWidth - totalParentPadding;
+            expect(collWidth, "u-coll-layout width should equal parent width minus padding inside a vertical-wrap parent.").to.equal(expectedCollWidth);
+          });
+        });
+
+        it("should not set width 100% on u-coll-layout inside a horizontal-scroll parent", function () {
+          return asyncRun(function () {
+            localCompTester.dataUpdate({ "layout-type": "horizontal-scroll" });
+          }).then(function () {
+            const collWidth = collElement.clientWidth;
+            const parentWidth = collElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedCollWidth = parentWidth - totalParentPadding;
+            expect(collWidth, "u-coll-layout width should not equal parent width minus padding inside a horizontal-scroll parent when not the only child.").not.to.equal(expectedCollWidth);
+          });
+        });
+
+        it("should not set width 100% on u-coll-layout inside a horizontal-wrap parent", function () {
+          return asyncRun(function () {
+            localCompTester.dataUpdate({ "layout-type": "horizontal-wrap" });
+          }).then(function () {
+            const collWidth = collElement.clientWidth;
+            const parentWidth = collElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(collElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedCollWidth = parentWidth - totalParentPadding;
+            expect(collWidth, "u-coll-layout width should not equal parent width minus padding inside a horizontal-wrap parent when not the only child.").not.to.equal(expectedCollWidth);
           });
         });
       });
     });
 
-    describe("Flex-grow guard for text-field, number-field, and button widget", function () {
-      // --u-vertical-layout-grow and --u-layout-grow are set by the uf-layout web component's shadow
-      // stylesheet (layout_styles.js) based on layout-type and alignment classes. The entity widget
-      // (CollectionLayout / OccurrenceLayout) drives this by calling setAttribute() via dataUpdate(),
-      // so we use createCollectionWidget / createOccurrenceWidget to go through the real widget lifecycle.
-      // Leaf control elements (text-field, button, etc.) are still created manually since they are not
-      // entity widgets — they just need the correct .u-stretchable class.
+    describe("OccurrenceLayout specific Layout Width Rules", function () {
+      let occElement;
 
-      ["u-text-field", "u-number-field", "u-button"].forEach(function (tag) {
-        it("should not grow " + tag + " inside uf-layout when --u-vertical-layout-grow is 0", function () {
-          // Vertical layout with stretch on both axes drives the shadow CSS:
-          //   vertical-align='stretch'   → u-jc-stretch (main axis)  → shadow CSS sets --u-vertical-layout-grow: 0.
-          //   horizontal-align='stretch' → u-ai-stretch (cross axis) → shadow CSS sets --u-layout-grow: 1.
-          // The guard (--u-vertical-layout-grow: 0) suppresses main-axis growth even though --u-layout-grow is 1.
-          const occDef = new MockEntityDefinition("css_guard_" + tag, "UX.OccurrenceLayout", "entity", {});
-          const result = createOccurrenceWidget(occDef, tag + "_guard_occ");
-          const layout = result.element;
-          const occWidget = result.widget;
-          const control = document.createElement(tag);
-          control.classList.add(tag, "u-stretchable");
-          layout.appendChild(control);
-          document.body.appendChild(layout);
-          occWidget.dataUpdate({ "layout-type": "vertical-scroll",
-                                 "vertical-align": "stretch",
-                                 "horizontal-align": "stretch" });
+      describe("When u-occ-layout is the only child", function () {
+        let localCollectionTester;
 
+        before(function () {
+          resetWidgetContainer();
+          localCollectionTester = new umockup.WidgetTester("UX.CollectionLayout", collectionWidgetId);
+          const localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", occurrenceWidgetId);
+          const collectionSkeleton = createSkeleton(collectionWidgetId);
+          localCollectionTester.createWidget(null, collectionSkeleton, mockEntityDef);
+          localOccurrenceTester.createWidget(null, localCollectionTester.element.querySelector(`[id="${occurrenceWidgetId}"]`), mockEntityDef);
+          occElement = localOccurrenceTester.element;
+        });
+
+        it("should set width 100% on u-occ-layout inside a vertical-scroll parent", function () {
+          // .u-occ-layout:only-of-type rule sets width: 100%.
           return asyncRun(function () {
+            localCollectionTester.dataUpdate({ "layout-type-occurrences": "vertical-scroll" });
           }).then(function () {
-            const styles = window.getComputedStyle(control);
-            expect(styles.flexGrow).to.equal("0");
-          }).finally(function () {
-            layout.remove();
+            const occWidth = occElement.clientWidth;
+            const parentWidth = occElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedOccWidth = parentWidth - totalParentPadding;
+            expect(occWidth, "u-occ-layout width should equal parent width minus padding inside a vertical-scroll parent.").to.equal(expectedOccWidth);
+          });
+        });
+
+        it("should set width 100% on u-occ-layout inside a vertical-wrap parent", function () {
+          // .u-occ-layout:only-of-type rule sets width: 100%.
+          return asyncRun(function () {
+            localCollectionTester.dataUpdate({ "layout-type-occurrences": "vertical-wrap" });
+          }).then(function () {
+            const occWidth = occElement.clientWidth;
+            const parentWidth = occElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedOccWidth = parentWidth - totalParentPadding;
+            expect(occWidth, "u-occ-layout width should equal parent width minus padding inside a vertical-wrap parent.").to.equal(expectedOccWidth);
+          });
+        });
+
+        it("should set width 100% on u-occ-layout inside a horizontal-scroll parent", function () {
+          // .u-occ-layout:only-of-type rule sets width: 100%.
+          return asyncRun(function () {
+            localCollectionTester.dataUpdate({ "layout-type-occurrences": "horizontal-scroll" });
+          }).then(function () {
+            const occWidth = occElement.clientWidth;
+            const parentWidth = occElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedOccWidth = parentWidth - totalParentPadding;
+            expect(occWidth, "u-occ-layout width should equal parent width minus padding inside a horizontal-scroll parent.").to.equal(expectedOccWidth);
+          });
+        });
+
+        it("should set width 100% on u-occ-layout inside a horizontal-wrap parent", function () {
+          // .u-occ-layout:only-of-type rule sets width: 100%.
+          return asyncRun(function () {
+            localCollectionTester.dataUpdate({ "layout-type-occurrences": "horizontal-wrap" });
+          }).then(function () {
+            const occWidth = occElement.clientWidth;
+            const parentWidth = occElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedOccWidth = parentWidth - totalParentPadding;
+            expect(occWidth, "u-occ-layout width should equal parent width minus padding inside a horizontal-wrap parent.").to.equal(expectedOccWidth);
           });
         });
       });
 
-      ["u-text-field", "u-number-field", "u-button", "u-text-area"].forEach(function (tag) {
-        it("should allow " + tag + " to grow inside uf-layout when --u-vertical-layout-grow is not constrained", function () {
-          // Horizontal layout with stretch: shadow CSS sets --u-vertical-layout-grow: initial (guard off)
-          // and --u-layout-grow: 1; flex-grow falls back through the unset guard to --u-layout-grow.
-          const occDef = new MockEntityDefinition("css_allow_" + tag, "UX.OccurrenceLayout", "entity", {});
-          const result = createOccurrenceWidget(occDef, tag + "_allow_occ");
-          const layout = result.element;
-          const occWidget = result.widget;
-          const control = document.createElement(tag);
-          control.classList.add(tag, "u-stretchable");
-          layout.appendChild(control);
-          document.body.appendChild(layout);
-          occWidget.dataUpdate({ "layout-type": "horizontal-scroll",
-                                 "horizontal-align": "stretch" });
+      describe("When u-occ-layout is not the only occurrence", function () {
+        let localCollectionTester;
 
-          return asyncRun(function () {
-          }).then(function () {
-            const styles = window.getComputedStyle(control);
-            expect(styles.flexGrow).to.equal("1");
-          }).finally(function () {
-            layout.remove();
-          });
+        before(function () {
+          resetWidgetContainer();
+          localCollectionTester = new umockup.WidgetTester("UX.CollectionLayout", collectionWidgetId);
+          const localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", occurrenceWidgetId);
+          const collectionSkeleton = createSkeleton(collectionWidgetId);
+          localCollectionTester.createWidget(null, collectionSkeleton, mockEntityDefWithMultipleOccs);
+          localOccurrenceTester.createWidget(null, localCollectionTester.element.querySelector(`[id="${occurrenceWidgetId}"]`), mockEntityDefWithMultipleOccs);
+          occElement = localOccurrenceTester.element;
         });
-      });
 
-      ["u-text-field", "u-number-field", "u-button"].forEach(function (tag) {
-        it("should not grow the parent uf-layout container with only " + tag + " when --u-vertical-layout-grow is 0", function () {
-          // The outer (CollectionLayout) gets --u-layout-grow: 1 via shadow CSS when vertical-scroll +
-          // horizontal-align='stretch' → u-ai-stretch → :host(.u-layout-type-vs.u-ai-stretch) { --u-layout-grow: 1 }.
-          // In production, the guard --u-vertical-layout-grow: 0 is then set on the outer :host by
-          // :host:has(.u-layout-type-vs.u-jc-stretch:not(.u-ai-stretch)) when the slotted inner layout
-          // has vertical-scroll + vertical-align='stretch'. However, Chromium's :host:has() cannot match
-          // slotted light DOM children across shadow boundaries, so we set the guard directly on the element
-          // (as it would appear from the :host rule) to test that the CSS rule correctly reads it.
-          const collDef = new MockEntityDefinition("css_outer_" + tag, "UX.CollectionLayout", "entity", {});
-          const collResult = createCollectionWidget(collDef, tag + "_outer_coll");
-          const outerLayout = collResult.element;
-          const collWidget = collResult.widget;
-
-          const occDef = new MockEntityDefinition("css_inner_" + tag, "UX.OccurrenceLayout", "entity", {});
-          const occResult = createOccurrenceWidget(occDef, tag + "_inner_occ");
-          const innerLayout = occResult.element;
-          const occWidget = occResult.widget;
-
-          const control = document.createElement(tag);
-          control.classList.add(tag, "u-stretchable");
-          innerLayout.appendChild(control);
-          outerLayout.appendChild(innerLayout);
-          document.body.appendChild(outerLayout);
-          // vertical-scroll + horizontal-align='stretch' → u-ai-stretch → shadow CSS: --u-layout-grow: 1 on outer :host.
-          collWidget.dataUpdate({ "layout-type-occurrences": "vertical-scroll",
-                                  "horizontal-align-occurrences": "stretch" });
-          occWidget.dataUpdate({ "layout-type": "vertical-scroll",
-                                 "vertical-align": "stretch" });
-          // Simulate the guard that :host:has() would set on the outer :host when it detects a vertical
-          // jc-stretch inner layout. This directly tests flex-grow: var(--u-vertical-layout-grow, var(--u-layout-grow, 0)) = 0.
-          outerLayout.style.setProperty("--u-vertical-layout-grow", "0");
-
+        it("should set width 100% on u-occ-layout inside a vertical-scroll parent", function () {
           return asyncRun(function () {
+            localCollectionTester.dataUpdate({ "layout-type-occurrences": "vertical-scroll" });
           }).then(function () {
-            const styles = window.getComputedStyle(outerLayout);
-            expect(styles.flexGrow).to.equal("0");
-          }).finally(function () {
-            outerLayout.remove();
+            const occWidth = occElement.clientWidth;
+            const parentWidth = occElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedOccWidth = parentWidth - totalParentPadding;
+            expect(occWidth, "u-occ-layout width should equal parent width minus padding inside a vertical-scroll parent.").to.equal(expectedOccWidth);
           });
         });
 
-        it("should allow the parent uf-layout container with only " + tag + " to grow when --u-vertical-layout-grow is not constrained", function () {
-          // Outer (CollectionLayout): horizontal-scroll + horizontal-align='stretch' → shadow CSS sets
-          // --u-vertical-layout-grow: initial (guard off) and --u-layout-grow: 1; outer flex-grow falls back to --u-layout-grow.
-          const collDef = new MockEntityDefinition("css_outer_allow_" + tag, "UX.CollectionLayout", "entity", {});
-          const collResult = createCollectionWidget(collDef, tag + "_outer_allow_coll");
-          const outerLayout = collResult.element;
-          const collWidget = collResult.widget;
-
-          const occDef = new MockEntityDefinition("css_inner_allow_" + tag, "UX.OccurrenceLayout", "entity", {});
-          const occResult = createOccurrenceWidget(occDef, tag + "_inner_allow_occ");
-          const innerLayout = occResult.element;
-
-          const control = document.createElement(tag);
-          control.classList.add(tag, "u-stretchable");
-          innerLayout.appendChild(control);
-          outerLayout.appendChild(innerLayout);
-          document.body.appendChild(outerLayout);
-          collWidget.dataUpdate({ "layout-type-occurrences": "horizontal-scroll",
-                                  "horizontal-align-occurrences": "stretch" });
-
+        it("should set width 100% on u-occ-layout inside a vertical-wrap parent", function () {
           return asyncRun(function () {
+            localCollectionTester.dataUpdate({ "layout-type-occurrences": "vertical-wrap" });
           }).then(function () {
-            const styles = window.getComputedStyle(outerLayout);
-            expect(styles.flexGrow).to.equal("1");
-          }).finally(function () {
-            outerLayout.remove();
+            const occWidth = occElement.clientWidth;
+            const parentWidth = occElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedOccWidth = parentWidth - totalParentPadding;
+            expect(occWidth, "u-occ-layout width should equal parent width minus padding inside a vertical-wrap parent.").to.equal(expectedOccWidth);
           });
         });
-      });
 
-      ["u-text-area"].forEach(function (tag) {
-        it("should allow the parent uf-layout container with only " + tag + " to grow when --u-vertical-layout-grow is not constrained", function () {
-          // Outer (CollectionLayout): horizontal-scroll + horizontal-align='stretch' → shadow CSS sets
-          // --u-vertical-layout-grow: initial (guard off) and --u-layout-grow: 1; outer flex-grow falls back to --u-layout-grow.
-          const collDef = new MockEntityDefinition("css_outer_allow_" + tag, "UX.CollectionLayout", "entity", {});
-          const collResult = createCollectionWidget(collDef, tag + "_outer_allow_coll");
-          const outerLayout = collResult.element;
-          const collWidget = collResult.widget;
-
-          const occDef = new MockEntityDefinition("css_inner_allow_" + tag, "UX.OccurrenceLayout", "entity", {});
-          const occResult = createOccurrenceWidget(occDef, tag + "_inner_allow_occ");
-          const innerLayout = occResult.element;
-
-          const control = document.createElement(tag);
-          control.classList.add(tag, "u-stretchable");
-          innerLayout.appendChild(control);
-          outerLayout.appendChild(innerLayout);
-          document.body.appendChild(outerLayout);
-          collWidget.dataUpdate({ "layout-type-occurrences": "horizontal-scroll",
-                                  "horizontal-align-occurrences": "stretch" });
-
+        it("should not set width 100% on u-occ-layout inside a horizontal-scroll parent", function () {
           return asyncRun(function () {
+            localCollectionTester.dataUpdate({ "layout-type-occurrences": "horizontal-scroll" });
           }).then(function () {
-            const styles = window.getComputedStyle(outerLayout);
-            expect(styles.flexGrow).to.equal("1");
-          }).finally(function () {
-            outerLayout.remove();
+            const occWidth = occElement.clientWidth;
+            const parentWidth = occElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedOccWidth = parentWidth - totalParentPadding;
+            expect(occWidth, "u-occ-layout width should not equal parent width minus padding inside a horizontal-scroll parent when not the only occurrence.").not.to.equal(expectedOccWidth);
           });
         });
-      });
-    });
 
-    describe("Vertical growth behavior for text-area in stretch-aligned layouts", function () {
-      // u-text-area uses its own CSS rule (.u-text-area.u-stretchable { flex-grow: var(--u-layout-grow, 0) })
-      // which reads --u-layout-grow directly, intentionally bypassing the vertical-layout grow guard.
-      // This means u-text-area CAN grow in vertical layouts — unlike text-field, number-field, button
-      // which are blocked on the main axis in vertical layouts.
-
-      it("should grow u-text-area inside a vertical stretch-aligned layout", function () {
-        // Outer (OccurrenceLayout): vertical-scroll + horizontal-align='stretch'
-        //   → u-ai-stretch → shadow CSS sets --u-layout-grow: 1 on outer :host.
-        // Inner (OccurrenceLayout): vertical-scroll + vertical-align='stretch'
-        //   → u-jc-stretch (no u-ai-stretch) → triggers outer's :host:has(...) rule
-        //   → shadow CSS sets --u-vertical-layout-grow: 0 on outer :host (real guard mechanism).
-        // u-text-area (inside inner) uses flex-grow: var(--u-layout-grow, 0) directly →
-        // higher-specificity rule bypasses the guard and inherits --u-layout-grow: 1.
-        const outerDef = new MockEntityDefinition("css_texta_grow_outer", "UX.OccurrenceLayout", "entity", {});
-        const outerResult = createOccurrenceWidget(outerDef, "css_texta_grow_outer_occ");
-        const outerLayout = outerResult.element;
-        const outerOccWidget = outerResult.widget;
-        const innerDef = new MockEntityDefinition("css_texta_grow_inner", "UX.OccurrenceLayout", "entity", {});
-        const innerResult = createOccurrenceWidget(innerDef, "css_texta_grow_inner_occ");
-        const innerLayout = innerResult.element;
-        const innerOccWidget = innerResult.widget;
-        const taResult = createTextAreaWidget("css_texta_grow_ta");
-        const control = taResult.element;
-        innerLayout.appendChild(control);
-        outerLayout.appendChild(innerLayout);
-        document.body.appendChild(outerLayout);
-        outerOccWidget.dataUpdate({ "layout-type": "vertical-scroll",
-                                    "horizontal-align": "stretch" });
-        innerOccWidget.dataUpdate({ "layout-type": "vertical-scroll",
-                                    "vertical-align": "stretch" });
-
-        return asyncRun(function () {
-        }).then(function () {
-          const styles = window.getComputedStyle(control);
-          expect(styles.flexGrow).to.equal("1", "u-text-area should grow vertically, ignoring the --u-vertical-layout-grow: 0 guard.");
-        }).finally(function () {
-          outerLayout.remove();
-        });
-      });
-
-      it("should not grow u-text-area when parent layout has no stretch alignment (--u-layout-grow defaults to 0)", function () {
-        // No alignment set → no u-jc-stretch / u-ai-stretch → shadow CSS does not set --u-layout-grow.
-        // u-text-area falls back to the var(--u-layout-grow, 0) default of 0.
-        const occDef = new MockEntityDefinition("css_texta_no_grow", "UX.OccurrenceLayout", "entity", {});
-        const result = createOccurrenceWidget(occDef, "css_texta_no_grow_occ");
-        const layout = result.element;
-        const taResult = createTextAreaWidget("css_texta_no_grow_ta");
-        const control = taResult.element;
-        layout.appendChild(control);
-        document.body.appendChild(layout);
-        // No dataUpdate — default layout-type='auto', no stretch alignment.
-
-        return asyncRun(function () {
-        }).then(function () {
-          const styles = window.getComputedStyle(control);
-          expect(styles.flexGrow).to.equal("0", "u-text-area should not grow when no stretch alignment is set on the parent layout.");
-        }).finally(function () {
-          layout.remove();
-        });
-      });
-
-      it("should allow parent uf-layout to grow when it contains u-text-area inside a vertical stretch-aligned layout", function () {
-        // uf-layout:has(> .u-stretchable) grows the container when a stretchable child is present.
-        // u-text-area uses --u-layout-grow directly, bypassing the guard, so both it and the container grow.
-        // Outer (CollectionLayout): vertical-scroll + horizontal-align='stretch'
-        //   → u-ai-stretch → --u-layout-grow: 1 on outer :host; inherits down to control.
-        // Inner (OccurrenceLayout): vertical-scroll + vertical-align='stretch'
-        //   → u-jc-stretch (no u-ai-stretch) → triggers outer's :host:has(...) → --u-vertical-layout-grow: 0 on outer :host.
-        // u-text-area inside inner inherits --u-layout-grow: 1 from outer and uses it directly → flex-grow: 1.
-        const collDef = new MockEntityDefinition("css_texta_cont_outer", "UX.CollectionLayout", "entity", {});
-        const collResult = createCollectionWidget(collDef, "css_texta_cont_outer_coll");
-        const outerLayout = collResult.element;
-        const collWidget = collResult.widget;
-        const occDef = new MockEntityDefinition("css_texta_cont_inner", "UX.OccurrenceLayout", "entity", {});
-        const occResult = createOccurrenceWidget(occDef, "css_texta_cont_inner_occ");
-        const innerLayout = occResult.element;
-        const innerOccWidget = occResult.widget;
-        const taResult = createTextAreaWidget("css_texta_cont_ta");
-        const control = taResult.element;
-        innerLayout.appendChild(control);
-        outerLayout.appendChild(innerLayout);
-        document.body.appendChild(outerLayout);
-        collWidget.dataUpdate({ "layout-type-occurrences": "vertical-scroll",
-                                "horizontal-align-occurrences": "stretch" });
-        innerOccWidget.dataUpdate({ "layout-type": "vertical-scroll",
-                                    "vertical-align": "stretch" });
-
-        return asyncRun(function () {
-        }).then(function () {
-          const controlStyles = window.getComputedStyle(control);
-          expect(controlStyles.flexGrow).to.equal("1", "u-text-area should grow vertically inside nested uf-layout.");
-        }).finally(function () {
-          outerLayout.remove();
+        it("should not set width 100% on u-occ-layout inside a horizontal-wrap parent", function () {
+          return asyncRun(function () {
+            localCollectionTester.dataUpdate({ "layout-type-occurrences": "horizontal-wrap" });
+          }).then(function () {
+            const occWidth = occElement.clientWidth;
+            const parentWidth = occElement.parentElement.clientWidth;
+            const parentLeftPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingLeft);
+            const parentRightPadding = parseInt(window.getComputedStyle(occElement.parentElement).paddingRight);
+            const totalParentPadding = parentLeftPadding + parentRightPadding;
+            const expectedOccWidth = parentWidth - totalParentPadding;
+            expect(occWidth, "u-occ-layout width should not equal parent width minus padding inside a horizontal-wrap parent when not the only occurrence.").not.to.equal(expectedOccWidth);
+          });
         });
       });
     });
   });
 
-  // ===========================================================================================================
-  // == Stretchable CSS :has() behaviour tests =================================================================
-  // ===========================================================================================================
-  describe("Stretchable container growth via CSS :has()", function () {
+  describe("Stretchable behavior in uf-layout", function () {
 
-    /**
-     * Helper: creates a DOM tree
-     *   <uf-layout>       (outer)
-     *     <uf-layout>     (inner)
-     *       ...childElements
-     *     </uf-layout>
-     *   </uf-layout>
-     * and appends it to the document for computed style resolution.
-     */
-    let _buildEntityDOMCounter = 0;
-    function buildEntityDOM(childElements) {
-      const id = ++_buildEntityDOMCounter;
-      const collDef = new MockEntityDefinition("bed_coll_" + id, "UX.CollectionLayout", "entity", {});
-      const occDef = new MockEntityDefinition("bed_occ_" + id, "UX.OccurrenceLayout", "entity", {});
-      const collResult = createCollectionWidget(collDef, "bed_coll_el_" + id);
-      const occResult = createOccurrenceWidget(occDef, "bed_occ_el_" + id);
-      const coll = collResult.element;
-      const occ = occResult.element;
-      childElements.forEach(function (child) {
-        occ.appendChild(child);
-      });
-      coll.appendChild(occ);
-      document.body.appendChild(coll);
-      return { "coll": coll,
-               "occ": occ };
-    }
-
-    function createStretchableWidget() {
-      const el = document.createElement("fluent-text-field");
-      el.classList.add("u-text-field", "u-stretchable");
-      return el;
-    }
-
-    function createCompactWidget() {
-      const el = document.createElement("fluent-switch");
-      el.classList.add("u-switch");
-      return el;
-    }
-
-    afterEach(function () {
-      // Clean up any appended entity DOM trees.
-      document.querySelectorAll("body > uf-layout").forEach(function (el) {
-        el.remove();
-      });
-    });
-
-    describe("Detecting stretchable direct children in uf-layout", function () {
-
-      it("should detect a single stretchable widget as direct child", function () {
-        const widget = createStretchableWidget();
-        const dom = buildEntityDOM([widget]);
-        expect(dom.occ.querySelector(":scope > .u-stretchable"), "uf-layout should have a direct stretchable child").to.exist;
-      });
-
-      it("should not detect stretchable when all children are compact", function () {
-        const widget = createCompactWidget();
-        const dom = buildEntityDOM([widget]);
-        expect(dom.occ.querySelector(":scope > .u-stretchable"), "uf-layout should have no stretchable direct child").to.be.null;
-      });
-
-      it("should detect stretchable in a mix of stretchable and compact children", function () {
-        const stretchable = createStretchableWidget();
-        const compact = createCompactWidget();
-        const dom = buildEntityDOM([stretchable, compact]);
-        expect(dom.occ.querySelector(":scope > .u-stretchable"), "uf-layout should detect the stretchable child among mixed children").to.exist;
-      });
-
-      it("should not detect stretchable when uf-layout is empty", function () {
-        const dom = buildEntityDOM([]);
-        expect(dom.occ.querySelector(":scope > .u-stretchable"), "Empty uf-layout should not match").to.be.null;
-      });
-    });
-
-    describe("Outer uf-layout detects stretchable through inner uf-layout", function () {
-
-      it("should detect stretchable grandchild via outer > inner > widget path", function () {
-        const widget = createStretchableWidget();
-        const dom = buildEntityDOM([widget]);
-        const match = dom.coll.querySelector(":scope > uf-layout > .u-stretchable");
-        expect(match, "outer uf-layout should detect stretchable grandchild through inner uf-layout").to.exist;
+    describe("When a uf-layout has stretchable direct children", function () {
+      let localOccurrenceTester;
+      let stretchableTesters;
+      before(function () {
+        resetWidgetContainer();
+        const mockEntityDef = {
+          "nm": "UXENTITY.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "#3": {
+                "nm": "TEXTFIELD.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.TextField",
+                "properties": { "html:type": "text" },
+                "id": "#3"
+              },
+              "#4": {
+                "nm": "TEXTAREA.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.TextArea",
+                "properties": {},
+                "id": "#4"
+              },
+              "#6": {
+                "nm": "BUTTON.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.Button",
+                "properties": {},
+                "id": "#6"
+              },
+              "#7": {
+                "nm": "NUMBERFIELD.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.NumberField",
+                "properties": {},
+                "id": "#7"
+              },
+              "#10": {
+                "nm": "SELECT.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.Select",
+                "properties": {},
+                "id": "#10"
+              },
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#2",
+          "hasNEDFields": true,
+          "ownsNEDFields": true
+        };
+        stretchableTesters = [
+          new umockup.WidgetTester("UX.TextField", "ufld:TEXTFIELD.ENT.NOMODEL"),
+          new umockup.WidgetTester("UX.TextArea", "ufld:TEXTAREA.ENT.NOMODEL"),
+          new umockup.WidgetTester("UX.Button", "ufld:BUTTON.ENT.NOMODEL"),
+          new umockup.WidgetTester("UX.NumberField", "ufld:NUMBERFIELD.ENT.NOMODEL"),
+          new umockup.WidgetTester("UX.Select", "ufld:SELECT.ENT.NOMODEL")
+        ];
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.3");
+        const occurrenceSkeleton = createSkeleton("uocc:UXENTITY.NOMODEL.3");
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+        stretchableTesters.forEach(function (tester) {
+          tester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${tester.widgetId}"]`), null);
+        });
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "horizontal-scroll",
+          "horizontal-align": "stretch"
+        });
       });
 
-      it("should not detect stretchable when inner layout contains only compact children", function () {
-        const widget = createCompactWidget();
-        const dom = buildEntityDOM([widget]);
-        const match = dom.coll.querySelector(":scope > uf-layout > .u-stretchable");
-        expect(match, "outer uf-layout should not detect stretchable when only compact children exist").to.be.null;
+      it("should apply flex-grow to parent uf-layout", function () {
+        expect(window.getComputedStyle(localOccurrenceTester.element).flexGrow, "Parent uf-layout should have flex-grow: 1 when it has stretchable direct children.").to.equal("1");
       });
 
-      it("should not detect stretchable when inner uf-layout is empty", function () {
-        const dom = buildEntityDOM([]);
-        const match = dom.coll.querySelector(":scope > uf-layout > .u-stretchable");
-        expect(match, "Empty outer uf-layout should not match").to.be.null;
+      it("should apply flex-grow to stretchable direct child such as text-field, text-area, button, number-field and select of uf-layout", function () {
+        stretchableTesters.forEach(function (tester) {
+          expect(window.getComputedStyle(tester.element).flexGrow, `Stretchable child '${tester.widgetName}' should have flex-grow: 1 as a direct child of uf-layout.`).to.equal("1");
+        });
       });
     });
 
-    describe("Sub-widget inside a widget is excluded by direct child selector", function () {
-
-      it("should only count the top-level widget, not a nested sub-widget button", function () {
-        const textField = createStretchableWidget();
-        const subButton = document.createElement("fluent-button");
-        subButton.classList.add("u-button", "u-stretchable");
-        textField.appendChild(subButton);
-
-        const dom = buildEntityDOM([textField]);
-
-        const directChildren = dom.occ.querySelectorAll(":scope > .u-stretchable");
-        expect(directChildren.length, "Only one direct stretchable child should exist").to.equal(1);
-        expect(directChildren[0].tagName.toLowerCase(), "Direct stretchable child should be the text-field, not the sub-widget button").to.equal("fluent-text-field");
+    describe("When a uf-layout has non-stretchable direct children", function () {
+      let localOccurrenceTester;
+      let nonStretchableTesters;
+      before(function () {
+        resetWidgetContainer();
+        const mockEntityDef = {
+          "nm": "UXENTITY.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "#5": {
+                "nm": "PLAINTEXT.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.PlainText",
+                "properties": {},
+                "id": "#5"
+              },
+              "#8": {
+                "nm": "CHECKBOX.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.Checkbox",
+                "properties": {},
+                "id": "#8"
+              },
+              "#9": {
+                "nm": "SWITCH.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.Switch",
+                "properties": {},
+                "id": "#9"
+              },
+              "#11": {
+                "nm": "LISTBOX.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.Listbox",
+                "properties": {},
+                "id": "#11"
+              },
+              "#12": {
+                "nm": "RADIOGROUP.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.RadioGroup",
+                "properties": {},
+                "id": "#12"
+              },
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#2",
+          "hasNEDFields": true,
+          "ownsNEDFields": true
+        };
+        nonStretchableTesters = [
+          new umockup.WidgetTester("UX.PlainText", "ufld:PLAINTEXT.ENT.NOMODEL"),
+          new umockup.WidgetTester("UX.Checkbox", "ufld:CHECKBOX.ENT.NOMODEL"),
+          new umockup.WidgetTester("UX.Switch", "ufld:SWITCH.ENT.NOMODEL"),
+          new umockup.WidgetTester("UX.Listbox", "ufld:LISTBOX.ENT.NOMODEL"),
+          new umockup.WidgetTester("UX.RadioGroup", "ufld:RADIOGROUP.ENT.NOMODEL")
+        ];
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.3");
+        const occurrenceSkeleton = createSkeleton("uocc:UXENTITY.NOMODEL.3");
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "horizontal-scroll",
+          "horizontal-align": "stretch"
+        });
+        nonStretchableTesters.forEach(function (tester) {
+          tester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${tester.widgetId}"]`), null);
+        });
       });
 
-      it("should not match when a compact widget contains a stretchable sub-widget", function () {
-        const switchEl = createCompactWidget();
-        const subButton = document.createElement("fluent-button");
-        subButton.classList.add("u-button", "u-stretchable");
-        switchEl.appendChild(subButton);
-
-        const dom = buildEntityDOM([switchEl]);
-
-        const directStretchable = dom.occ.querySelector(":scope > .u-stretchable");
-        expect(directStretchable, "occ-layout should not match when only nested sub-widgets are stretchable").to.be.null;
+      it("should not apply flex-grow to parent uf-layout", function () {
+        expect(window.getComputedStyle(localOccurrenceTester.element).flexGrow, "Parent uf-layout should have flex-grow: 0 when all direct children are non-stretchable.").to.equal("0");
       });
 
-      it("outer uf-layout should not match when stretchable exists only inside a nested sub-widget", function () {
-        const switchEl = createCompactWidget();
-        const subButton = document.createElement("fluent-button");
-        subButton.classList.add("u-button", "u-stretchable");
-        switchEl.appendChild(subButton);
+      it("should not apply flex-grow to stretchable direct child such as plaintext, checkbox, switch, listbox and radio-group of uf-layout", function () {
+        return asyncRun(function () {}).then(function () {
+          nonStretchableTesters.forEach(function (tester) {
+            expect(window.getComputedStyle(tester.element).flexGrow, `Non-stretchable child '${tester.widgetName}' should have flex-grow: 0 as a direct child of uf-layout.`).to.equal("0");
+          });
+        });
+      });
 
-        const dom = buildEntityDOM([switchEl]);
-
-        const match = dom.coll.querySelector(":scope > uf-layout > .u-stretchable");
-        expect(match, "outer uf-layout should not match when stretchable is only nested inside a compact widget").to.be.null;
+      it("should retain natural offsetWidth for each non-stretchable child when horizontal-align is stretch", function () {
+        const widthsWithStretch = nonStretchableTesters.map(function (tester) {
+          return tester.element.offsetWidth;
+        });
+        return asyncRun(function () {
+          localOccurrenceTester.dataUpdate({ "horizontal-align": "auto" });
+        }).then(function () {
+          nonStretchableTesters.forEach(function (tester, i) {
+            expect(widthsWithStretch[i], `'${tester.widgetName}' offsetWidth should be unchanged by horizontal-align stretch (retains natural width).`).to.equal(tester.element.offsetWidth);
+          });
+        });
       });
     });
 
-    describe("Dynamic addition and removal of u-stretchable class", function () {
+    describe("When the sole direct child of a u-occ-layout with u-jc-stretch is a non-stretchable control", function () {
+      [
+        {
+          "widgetClass": "UX.Switch",
+          "nm": "SWITCH.ENT.NOMODEL",
+          "fieldId": "#9"
+        },
+        {
+          "widgetClass": "UX.Checkbox",
+          "nm": "CHECKBOX.ENT.NOMODEL",
+          "fieldId": "#8"
+        },
+        {
+          "widgetClass": "UX.RadioGroup",
+          "nm": "RADIOGROUP.ENT.NOMODEL",
+          "fieldId": "#12"
+        },
+        {
+          "widgetClass": "UX.PlainText",
+          "nm": "PLAINTEXT.ENT.NOMODEL",
+          "fieldId": "#5"
+        },
+        {
+          "widgetClass": "UX.Listbox",
+          "nm": "LISTBOX.ENT.NOMODEL",
+          "fieldId": "#11"
+        }
+      ].forEach(function ({ widgetClass, nm, fieldId }) {
+        describe(`When the sole child is ${widgetClass}`, function () {
+          let localOccurrenceTester;
 
-      it("should lose the match after removing u-stretchable from the only widget", function () {
-        const widget = createStretchableWidget();
-        const dom = buildEntityDOM([widget]);
+          before(function () {
+            resetWidgetContainer();
+            const mockEntityDef = {
+              "nm": "UXENTITY.NOMODEL",
+              "type": "entity",
+              "widget_class": "UX.CollectionLayout",
+              "occs": {
+                "#2": {
+                  "type": "occurrence",
+                  [fieldId]: {
+                    "nm": nm,
+                    "type": "field",
+                    "widget_class": widgetClass,
+                    "properties": {},
+                    "id": fieldId
+                  },
+                  "widget_class": "UX.OccurrenceLayout"
+                }
+              },
+              "properties": {},
+              "id": "#2",
+              "hasNEDFields": true,
+              "ownsNEDFields": true
+            };
+            localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.3");
+            const occurrenceSkeleton = createSkeleton("uocc:UXENTITY.NOMODEL.3");
+            localOccurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+            const childTester = new umockup.WidgetTester(widgetClass, `ufld:${nm}`);
+            childTester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${childTester.widgetId}"]`), null);
+            localOccurrenceTester.dataUpdate({
+              "layout-type": "horizontal-scroll",
+              "horizontal-align": "stretch"
+            });
+          });
 
-        expect(dom.occ.querySelector(":scope > .u-stretchable"), "Before removal: should match").to.exist;
-
-        widget.classList.remove("u-stretchable");
-
-        expect(dom.occ.querySelector(":scope > .u-stretchable"), "After removal: should no longer match").to.be.null;
-      });
-
-      it("should gain the match after adding u-stretchable to a widget", function () {
-        const widget = document.createElement("fluent-text-field");
-        widget.classList.add("u-text-field");
-        const dom = buildEntityDOM([widget]);
-
-        expect(dom.occ.querySelector(":scope > .u-stretchable"), "Before addition: should not match").to.be.null;
-
-        widget.classList.add("u-stretchable");
-
-        expect(dom.occ.querySelector(":scope > .u-stretchable"), "After addition: should match").to.exist;
-      });
-
-      it("should still match after removing u-stretchable from one sibling when another remains", function () {
-        const widget1 = createStretchableWidget();
-        const widget2 = document.createElement("fluent-number-field");
-        widget2.classList.add("u-number-field", "u-stretchable");
-        const dom = buildEntityDOM([widget1, widget2]);
-
-        widget1.classList.remove("u-stretchable");
-
-        expect(dom.occ.querySelector(":scope > .u-stretchable"), "Should still match because widget2 is stretchable").to.exist;
-      });
-
-      it("should lose match on both occ and coll after removing u-stretchable from all children", function () {
-        const widget1 = createStretchableWidget();
-        const widget2 = document.createElement("fluent-number-field");
-        widget2.classList.add("u-number-field", "u-stretchable");
-        const dom = buildEntityDOM([widget1, widget2]);
-
-        widget1.classList.remove("u-stretchable");
-        widget2.classList.remove("u-stretchable");
-
-        expect(dom.occ.querySelector(":scope > .u-stretchable"), "uf-layout should not match after all stretchable removed").to.be.null;
-        expect(dom.coll.querySelector(":scope > uf-layout > .u-stretchable"), "outer uf-layout should not match after all stretchable removed").to.be.null;
+          it("should have flex-grow 0 on u-occ-layout despite u-jc-stretch because the :has() rule does not match a non-stretchable sole child", function () {
+            expect(localOccurrenceTester.element.classList.contains("u-jc-stretch"),
+              `u-occ-layout should have u-jc-stretch when horizontal-align is stretch (sole child is '${widgetClass}').`).to.be.true;
+            expect(window.getComputedStyle(localOccurrenceTester.element).flexGrow, `u-occ-layout flex-grow should be 0 when the sole child is the non-stretchable '${widgetClass}', overriding u-jc-stretch via the :has() rule.`).to.equal("0");
+          });
+        });
       });
     });
 
-  });
+    describe("When a uf-layout has nested uf-layout", function () {
+      let localOccurrenceTester;
+      let nestedEntityTester;
+      beforeEach(function () {
+        resetWidgetContainer();
+        const mockEntityDef = {
+          "nm": "UXENTITY.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "#3": {
+                "nm": "TEXTFIELD.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.TextField",
+                "properties": { "html:type": "text" },
+                "id": "#3"
+              },
+              "#13": {
+                "nm": "NESTED.ENT.NOMODEL",
+                "type": "entity",
+                "widget_class": "UX.CollectionLayout",
+                "occs": {
+                  "#14": {
+                    "type": "occurrence",
+                    "#15": {
+                      "nm": "TEXTFIELD.NESTED.ENT.NOMODEL",
+                      "type": "field",
+                      "widget_class": "UX.TextField",
+                      "properties": { "html:type": "text" },
+                      "id": "#15"
+                    },
+                    "widget_class": "UX.OccurrenceLayout"
+                  }
+                },
+                "properties": {},
+                "id": "#13"
+              },
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#2",
+          "hasNEDFields": true,
+          "ownsNEDFields": true
+        };
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.3");
+        const occurrenceSkeleton = createSkeleton("uocc:UXENTITY.NOMODEL.3");
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+        nestedEntityTester = new umockup.WidgetTester("UX.CollectionLayout", "uent:NESTED.ENT.NOMODEL");
+        const nestedEntitySkeleton = localOccurrenceTester.element.querySelector(`[id="${nestedEntityTester.widgetId}"]`);
+        nestedEntityTester.createWidget(null, nestedEntitySkeleton, mockEntityDef.occs["#2"]["#13"]);
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "horizontal-scroll",
+          "horizontal-align": "stretch"
+        });
+      });
 
-  describe("Alignment property independence", function () {
-    it("setting horizontal-align alone does not override vertical-align on CollectionLayout", async function () {
-      const collectionObjDef = new MockEntityDefinition("align_indep_coll_1", "UX.CollectionLayout", "entity", {}, []);
-      const result = createCollectionWidget(collectionObjDef, "align_indep_coll_1_elem");
-      const element = result.element;
-      const widget = result.widget;
+      it("should apply flex-grow to the parent uf-layout when its direct child nested uf-layout has stretch alignment", function () {
+        // horizontal-align-occurrences sets .u-jc-stretch on the CollectionLayout element,
+        // which makes localOccurrenceTester match uf-layout:has(> uf-layout:is(.u-jc-stretch)).
+        nestedEntityTester.dataUpdate({
+          "layout-type-occurrences": "horizontal-scroll",
+          "horizontal-align-occurrences": "stretch"
+        });
 
-      await asyncRun(function () {
-        widget.dataUpdate({
+        // uf-layout:has(> uf-layout:is(.u-jc-stretch)) matches localOccurrenceTester it gets flex-grow
+        expect(window.getComputedStyle(localOccurrenceTester.element).flexGrow, "Parent uf-layout should have flex-grow: 1 when its direct child nested uf-layout has stretch alignment.").to.equal("1");
+      });
+
+      it("should not apply flex-grow to nested uf-layout child without alignment/justify stretch class", function () {
+        expect(window.getComputedStyle(nestedEntityTester.element).flexGrow, "Nested uf-layout child should have flex-grow: 0 when it has no stretch alignment or justify class.").to.equal("0");
+      });
+    });
+
+    describe("When a CollectionLayout has an OccurrenceLayout child with stretchable widgets", function () {
+      let localCollectionTester;
+      let localOccurrenceTester;
+      let stretchFieldTester;
+
+      before(function () {
+        resetWidgetContainer();
+        const entityDef = {
+          "nm": "UXENTITY.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "#3": {
+                "nm": "TEXTFIELD.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.TextField",
+                "properties": { "html:type": "text" },
+                "id": "#3"
+              },
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#2",
+          "hasNEDFields": true,
+          "ownsNEDFields": true
+        };
+        localCollectionTester = new umockup.WidgetTester("UX.CollectionLayout", collectionWidgetId);
+        const collectionSkeleton = createSkeleton(collectionWidgetId);
+        localCollectionTester.createWidget(null, collectionSkeleton, entityDef);
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", occurrenceWidgetId);
+        localOccurrenceTester.createWidget(null, localCollectionTester.element.querySelector(`[id="${occurrenceWidgetId}"]`), entityDef);
+        stretchFieldTester = new umockup.WidgetTester("UX.TextField", "ufld:TEXTFIELD.ENT.NOMODEL");
+        stretchFieldTester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${stretchFieldTester.widgetId}"]`), null);
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "horizontal-scroll",
+          "horizontal-align": "stretch"
+        });
+        localCollectionTester.dataUpdate({
+          "layout-type-occurrences": "horizontal-scroll",
+          "horizontal-align-occurrences": "stretch"
+        });
+      });
+
+      it("should apply flex-grow to the CollectionLayout when its OccurrenceLayout child has stretchable direct children", function () {
+        // uf-layout:has(> uf-layout > .u-stretchable) matches CollectionLayout gets flex-grow
+        expect(window.getComputedStyle(localCollectionTester.element).flexGrow, "CollectionLayout should have flex-grow: 1 when its OccurrenceLayout child has stretchable direct children.").to.equal("1");
+      });
+    });
+
+    describe("When a uf-layout has both stretchable and non-stretchable direct children", function () {
+      let localOccurrenceTester;
+      let textFieldTester;
+      let switchTester;
+
+      before(function () {
+        resetWidgetContainer();
+        const mockEntityDef = {
+          "nm": "UXENTITY.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "#3": {
+                "nm": "TEXTFIELD.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.TextField",
+                "properties": { "html:type": "text" },
+                "id": "#3"
+              },
+              "#9": {
+                "nm": "SWITCH.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.Switch",
+                "properties": {},
+                "id": "#9"
+              },
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#2",
+          "hasNEDFields": true,
+          "ownsNEDFields": true
+        };
+        textFieldTester = new umockup.WidgetTester("UX.TextField", "ufld:TEXTFIELD.ENT.NOMODEL");
+        switchTester = new umockup.WidgetTester("UX.Switch", "ufld:SWITCH.ENT.NOMODEL");
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.3");
+        const occurrenceSkeleton = createSkeleton("uocc:UXENTITY.NOMODEL.3");
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+        textFieldTester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${textFieldTester.widgetId}"]`), null);
+        switchTester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${switchTester.widgetId}"]`), null);
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "horizontal-scroll",
+          "horizontal-align": "stretch"
+        });
+      });
+
+      it("should apply flex-grow to the parent when at least one direct child is stretchable", function () {
+        expect(window.getComputedStyle(localOccurrenceTester.element).flexGrow, "Parent uf-layout should have flex-grow: 1 when at least one direct child is stretchable.").to.equal("1");
+      });
+
+      it("should apply flex-grow to the stretchable child but not the non-stretchable sibling", function () {
+        expect(window.getComputedStyle(textFieldTester.element).flexGrow, "Stretchable text-field should have flex-grow: 1 as a direct child of uf-layout.").to.equal("1");
+        expect(window.getComputedStyle(switchTester.element).flexGrow, "Non-stretchable switch sibling should have flex-grow: 0 as a direct child of uf-layout.").to.equal("0");
+      });
+    });
+
+    describe("When a .u-stretchable element is nested inside a non-stretchable widget", function () {
+      let localOccurrenceTester;
+      let switchTester;
+
+      before(function () {
+        resetWidgetContainer();
+        const mockEntityDef = {
+          "nm": "UXENTITY.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "#9": {
+                "nm": "SWITCH.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.Switch",
+                "properties": {},
+                "id": "#9"
+              },
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#2",
+          "hasNEDFields": true,
+          "ownsNEDFields": true
+        };
+        switchTester = new umockup.WidgetTester("UX.Switch", "ufld:SWITCH.ENT.NOMODEL");
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.3");
+        const occurrenceSkeleton = createSkeleton("uocc:UXENTITY.NOMODEL.3");
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+        switchTester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${switchTester.widgetId}"]`), null);
+        // Manually nest a .u-stretchable element inside the Switch's host element.
+        // The CSS uses the direct child combinator (uf-layout > .u-stretchable), so
+        // an element nested inside the Switch host must not trigger flex-grow on uf-layout.
+        const nestedStretchable = document.createElement("span");
+        nestedStretchable.classList.add("u-stretchable");
+        switchTester.element.appendChild(nestedStretchable);
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "horizontal-scroll",
+          "horizontal-align": "stretch"
+        });
+      });
+
+      it("should not apply flex-grow to the parent uf-layout when .u-stretchable is nested inside a widget, not a direct child of uf-layout", function () {
+        // The direct child selector uf-layout > .u-stretchable does not reach elements
+        // nested inside another widget element.
+        expect(window.getComputedStyle(localOccurrenceTester.element).flexGrow, "Parent uf-layout should have flex-grow: 0 when .u-stretchable is nested inside a widget, not a direct child of uf-layout.").to.equal("0");
+      });
+    });
+
+    describe("When the u-stretchable class is added or removed dynamically", function () {
+      let localOccurrenceTester;
+      let textFieldTester;
+
+      beforeEach(function () {
+        resetWidgetContainer();
+        const mockEntityDef = {
+          "nm": "UXENTITY.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "#3": {
+                "nm": "TEXTFIELD.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.TextField",
+                "properties": { "html:type": "text" },
+                "id": "#3"
+              },
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#2",
+          "hasNEDFields": true,
+          "ownsNEDFields": true
+        };
+        textFieldTester = new umockup.WidgetTester("UX.TextField", "ufld:TEXTFIELD.ENT.NOMODEL");
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.3");
+        const occurrenceSkeleton = createSkeleton("uocc:UXENTITY.NOMODEL.3");
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+        textFieldTester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${textFieldTester.widgetId}"]`), null);
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "horizontal-scroll",
+          "horizontal-align": "stretch"
+        });
+      });
+
+      it("should lose flex-grow on the parent after removing u-stretchable from the only stretchable child", function () {
+        expect(window.getComputedStyle(localOccurrenceTester.element).flexGrow, "Before removal: parent should grow").to.equal("1");
+        textFieldTester.element.classList.remove("u-stretchable");
+        expect(window.getComputedStyle(localOccurrenceTester.element).flexGrow, "After removal: parent should no longer grow").to.equal("0");
+      });
+
+      it("should gain flex-grow on the parent after adding u-stretchable to a non-stretchable child", function () {
+        return asyncRun(function () {
+          textFieldTester.element.classList.remove("u-stretchable");
+        }).then(function () {
+          expect(window.getComputedStyle(localOccurrenceTester.element).flexGrow, "Before addition: parent should not grow").to.equal("0");
+          textFieldTester.element.classList.add("u-stretchable");
+          expect(window.getComputedStyle(localOccurrenceTester.element).flexGrow, "After addition: parent should grow").to.equal("1");
+        });
+      });
+    });
+
+    describe("When the layout type is vertical with horizontal-align stretch, flex-grow is suppressed for all stretchable children", function () {
+      let localOccurrenceTester;
+      let stretchableTesters;
+
+      before(function () {
+        resetWidgetContainer();
+        const entityDef = {
+          "nm": "UXENTITY.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "#3": {
+                "nm": "TEXTFIELD.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.TextField",
+                "properties": { "html:type": "text" },
+                "id": "#3"
+              },
+              "#4": {
+                "nm": "TEXTAREA.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.TextArea",
+                "properties": {},
+                "id": "#4"
+              },
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#2",
+          "hasNEDFields": true,
+          "ownsNEDFields": true
+        };
+        stretchableTesters = [
+          new umockup.WidgetTester("UX.TextField", "ufld:TEXTFIELD.ENT.NOMODEL"),
+          new umockup.WidgetTester("UX.TextArea", "ufld:TEXTAREA.ENT.NOMODEL")
+        ];
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.4");
+        const occurrenceSkeleton = createSkeleton("uocc:UXENTITY.NOMODEL.4");
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, entityDef);
+        stretchableTesters.forEach(function (tester) {
+          tester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${tester.widgetId}"]`), null);
+        });
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "vertical-scroll",
+          "horizontal-align": "stretch"
+        });
+      });
+
+      it("should not apply flex-grow to stretchable direct children in a vertical-scroll layout", function () {
+        stretchableTesters.forEach(function (tester) {
+          expect(window.getComputedStyle(tester.element).flexGrow, `Stretchable child '${tester.widgetName}' should have flex-grow: 0 in a vertical-scroll layout with horizontal-align stretch.`).to.equal("0");
+        });
+      });
+
+      it("should not apply flex-grow to stretchable direct children in a vertical-wrap layout", function () {
+        return asyncRun(function () {
+          localOccurrenceTester.dataUpdate({
+            "layout-type": "vertical-wrap",
+            "horizontal-align": "stretch"
+          });
+        }).then(function () {
+          stretchableTesters.forEach(function (tester) {
+            expect(window.getComputedStyle(tester.element).flexGrow, `Stretchable child '${tester.widgetName}' should have flex-grow: 0 in a vertical-wrap layout with horizontal-align stretch.`).to.equal("0");
+          });
+        });
+      });
+    });
+
+    describe("When u-text-area bypasses the vertical grow guard in a vertical-align stretch layout", function () {
+      let localOccurrenceTester;
+      let textFieldTester;
+      let textAreaTester;
+
+      before(function () {
+        resetWidgetContainer();
+        const entityDef = {
+          "nm": "UXENTITY.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "#3": {
+                "nm": "TEXTFIELD.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.TextField",
+                "properties": { "html:type": "text" },
+                "id": "#3"
+              },
+              "#4": {
+                "nm": "TEXTAREA.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.TextArea",
+                "properties": {},
+                "id": "#4"
+              },
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#2",
+          "hasNEDFields": true,
+          "ownsNEDFields": true
+        };
+        textFieldTester = new umockup.WidgetTester("UX.TextField", "ufld:TEXTFIELD.ENT.NOMODEL");
+        textAreaTester = new umockup.WidgetTester("UX.TextArea", "ufld:TEXTAREA.ENT.NOMODEL");
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.3");
+        const occurrenceSkeleton = createSkeleton("uocc:UXENTITY.NOMODEL.3");
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, entityDef);
+        textFieldTester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${textFieldTester.widgetId}"]`), null);
+        textAreaTester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${textAreaTester.widgetId}"]`), null);
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "vertical-scroll",
+          "vertical-align": "stretch"
+        });
+      });
+
+      it("should not apply flex-grow to text-field the vertical grow guard suppresses main-axis growth", function () {
+        // uf-layout > .u-stretchable reads flex-grow: var(--u-vertical-layout-grow, var(--u-layout-grow, 0))
+        // --u-vertical-layout-grow: 0 is set on .root text-field inherits 0, guard wins.
+        expect(window.getComputedStyle(textFieldTester.element).flexGrow,
+          "text-field should not grow: --u-vertical-layout-grow: 0 on .root suppresses growth.").to.equal("0");
+      });
+
+      it("should apply flex-grow to u-text-area it reads --u-layout-grow directly, bypassing the guard", function () {
+        // .u-text-area.u-stretchable { flex-grow: var(--u-layout-grow, 0) } higher specificity.
+        // --u-layout-grow: 1 is set on :host (via :host(.u-jc-stretch)) and inherited via .root.
+        // --u-vertical-layout-grow: 0 is ignored by this rule.
+        expect(window.getComputedStyle(textAreaTester.element).flexGrow,
+          "u-text-area should grow: its rule reads --u-layout-grow: 1 directly, bypassing --u-vertical-layout-grow: 0.").to.equal("1");
+      });
+    });
+
+    describe("When text-field, number-field, and button do not grow vertically with vertical-align stretch", function () {
+      let localOccurrenceTester;
+      let textFieldTester;
+      let numberFieldTester;
+      let buttonTester;
+
+      before(function () {
+        resetWidgetContainer();
+        const entityDef = {
+          "nm": "UXENTITY.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "#3": {
+                "nm": "TEXTFIELD.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.TextField",
+                "properties": { "html:type": "text" },
+                "id": "#3"
+              },
+              "#7": {
+                "nm": "NUMBERFIELD.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.NumberField",
+                "properties": {},
+                "id": "#7"
+              },
+              "#6": {
+                "nm": "BUTTON.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.Button",
+                "properties": {},
+                "id": "#6"
+              },
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#2",
+          "hasNEDFields": true,
+          "ownsNEDFields": true
+        };
+        textFieldTester = new umockup.WidgetTester("UX.TextField", "ufld:TEXTFIELD.ENT.NOMODEL");
+        numberFieldTester = new umockup.WidgetTester("UX.NumberField", "ufld:NUMBERFIELD.ENT.NOMODEL");
+        buttonTester = new umockup.WidgetTester("UX.Button", "ufld:BUTTON.ENT.NOMODEL");
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.3");
+        const occurrenceSkeleton = createSkeleton("uocc:UXENTITY.NOMODEL.3");
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, entityDef);
+        [textFieldTester, numberFieldTester, buttonTester].forEach(function (tester) {
+          tester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${tester.widgetId}"]`), null);
+        });
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "vertical-scroll",
+          "vertical-align": "stretch"
+        });
+      });
+
+      it("should have flex-grow 0 on each control — the --u-vertical-layout-grow: 0 guard suppresses main-axis growth", function () {
+        [textFieldTester, numberFieldTester, buttonTester].forEach(function (tester) {
+          expect(window.getComputedStyle(tester.element).flexGrow,
+            `'${tester.widgetName}' flex-grow should be 0: --u-vertical-layout-grow: 0 guard prevents vertical growth.`).to.equal("0");
+        });
+      });
+
+      it("should retain natural offsetHeight for each control — vertical-align stretch does not increase height", function () {
+        const heightsWithStretch = [textFieldTester, numberFieldTester, buttonTester].map(function (tester) {
+          return tester.element.offsetHeight;
+        });
+        return asyncRun(function () {
+          localOccurrenceTester.dataUpdate({ "vertical-align": "auto" });
+        }).then(function () {
+          [textFieldTester, numberFieldTester, buttonTester].forEach(function (tester, i) {
+            expect(heightsWithStretch[i],
+              `'${tester.widgetName}' offsetHeight should be unchanged by vertical-align stretch (retains natural height).`).to.equal(tester.element.offsetHeight);
+          });
+        });
+      });
+    });
+
+    describe("When text-field, number-field, and button do grow horizontally with horizontal-align stretch", function () {
+      let localOccurrenceTester;
+      let textFieldTester;
+      let numberFieldTester;
+      let buttonTester;
+
+      before(function () {
+        resetWidgetContainer();
+        const entityDef = {
+          "nm": "UXENTITY.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "#3": {
+                "nm": "TEXTFIELD.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.TextField",
+                "properties": { "html:type": "text" },
+                "id": "#3"
+              },
+              "#7": {
+                "nm": "NUMBERFIELD.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.NumberField",
+                "properties": {},
+                "id": "#7"
+              },
+              "#6": {
+                "nm": "BUTTON.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.Button",
+                "properties": {},
+                "id": "#6"
+              },
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#2",
+          "hasNEDFields": true,
+          "ownsNEDFields": true
+        };
+        textFieldTester = new umockup.WidgetTester("UX.TextField", "ufld:TEXTFIELD.ENT.NOMODEL");
+        numberFieldTester = new umockup.WidgetTester("UX.NumberField", "ufld:NUMBERFIELD.ENT.NOMODEL");
+        buttonTester = new umockup.WidgetTester("UX.Button", "ufld:BUTTON.ENT.NOMODEL");
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.3");
+        const occurrenceSkeleton = createSkeleton("uocc:UXENTITY.NOMODEL.3");
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, entityDef);
+        [textFieldTester, numberFieldTester, buttonTester].forEach(function (tester) {
+          tester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${tester.widgetId}"]`), null);
+        });
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "horizontal-scroll",
+          "horizontal-align": "stretch"
+        });
+      });
+
+      it("should have flex-grow 1 on each control — the --u-vertical-layout-grow guard is cleared for horizontal layouts", function () {
+        // For horizontal layouts, --u-vertical-layout-grow is not set (initial), so
+        // flex-grow: var(--u-vertical-layout-grow, var(--u-layout-grow, 0)) resolves to
+        // var(--u-layout-grow, 0) which is 1 when u-jc-stretch is active.
+        [textFieldTester, numberFieldTester, buttonTester].forEach(function (tester) {
+          expect(window.getComputedStyle(tester.element).flexGrow,
+            `'${tester.widgetName}' flex-grow should be 1: --u-vertical-layout-grow is cleared for horizontal-scroll layouts.`).to.equal("1");
+        });
+      });
+
+      it("should grow offsetWidth when horizontal-align is stretch and shrink back when removed", function () {
+        const widthsWithStretch = [textFieldTester, numberFieldTester, buttonTester].map(function (tester) {
+          return tester.element.offsetWidth;
+        });
+        return asyncRun(function () {
+          localOccurrenceTester.dataUpdate({ "horizontal-align": "auto" });
+        }).then(function () {
+          [textFieldTester, numberFieldTester, buttonTester].forEach(function (tester, i) {
+            expect(widthsWithStretch[i],
+              `'${tester.widgetName}' offsetWidth with stretch should be greater than natural width without stretch.`).to.be.greaterThan(tester.element.offsetWidth);
+          });
+        });
+      });
+    });
+
+    describe("When an OccurrenceLayout contains only a text-field", function () {
+      let localOccurrenceTester;
+      let textFieldTester;
+
+      const entityDef = {
+        "nm": "UXENTITY.NOMODEL",
+        "type": "entity",
+        "widget_class": "UX.CollectionLayout",
+        "occs": {
+          "#2": {
+            "type": "occurrence",
+            "#3": {
+              "nm": "TEXTFIELD.ENT.NOMODEL",
+              "type": "field",
+              "widget_class": "UX.TextField",
+              "properties": { "html:type": "text" },
+              "id": "#3"
+            },
+            "widget_class": "UX.OccurrenceLayout"
+          }
+        },
+        "properties": {},
+        "id": "#2",
+        "hasNEDFields": true,
+        "ownsNEDFields": true
+      };
+
+      beforeEach(function () {
+        resetWidgetContainer();
+        textFieldTester = new umockup.WidgetTester("UX.TextField", "ufld:TEXTFIELD.ENT.NOMODEL");
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.3");
+        const occurrenceSkeleton = createSkeleton("uocc:UXENTITY.NOMODEL.3");
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, entityDef);
+        textFieldTester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${textFieldTester.widgetId}"]`), null);
+      });
+
+      it("should not grow vertically with vertical-scroll and vertical-align stretch — --u-vertical-layout-grow: 0 guard applies", function () {
+        return asyncRun(function () {
+          localOccurrenceTester.dataUpdate({
+            "layout-type": "vertical-scroll",
+            "vertical-align": "stretch"
+          });
+        }).then(function () {
+          const heightWithStretch = textFieldTester.element.offsetHeight;
+          expect(window.getComputedStyle(textFieldTester.element).flexGrow,
+            "text-field flex-grow should be 0 in a vertical-scroll layout: --u-vertical-layout-grow: 0 guard suppresses growth.").to.equal("0");
+          return asyncRun(function () {
+            localOccurrenceTester.dataUpdate({ "vertical-align": "auto" });
+          }).then(function () {
+            expect(heightWithStretch,
+              "text-field offsetHeight should be unchanged by vertical-align stretch (retains natural height).").to.equal(textFieldTester.element.offsetHeight);
+          });
+        });
+      });
+
+      it("should grow horizontally with horizontal-scroll and horizontal-align stretch — --u-vertical-layout-grow guard is cleared", function () {
+        return asyncRun(function () {
+          localOccurrenceTester.dataUpdate({
+            "layout-type": "horizontal-scroll",
+            "horizontal-align": "stretch"
+          });
+        }).then(function () {
+          const widthWithStretch = textFieldTester.element.offsetWidth;
+          expect(window.getComputedStyle(textFieldTester.element).flexGrow,
+            "text-field flex-grow should be 1 in a horizontal-scroll layout: --u-vertical-layout-grow is cleared, --u-layout-grow: 1 wins.").to.equal("1");
+          return asyncRun(function () {
+            localOccurrenceTester.dataUpdate({ "horizontal-align": "auto" });
+          }).then(function () {
+            expect(widthWithStretch,
+              "text-field offsetWidth with stretch should be greater than natural width without stretch.").to.be.greaterThan(textFieldTester.element.offsetWidth);
+          });
+        });
+      });
+    });
+
+    describe("When layout-type switches at runtime from vertical-scroll to horizontal-scroll with stretch alignment", function () {
+      let localOccurrenceTester;
+      let textFieldTester;
+
+      before(function () {
+        resetWidgetContainer();
+        const entityDef = {
+          "nm": "UXENTITY.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "#3": {
+                "nm": "TEXTFIELD.ENT.NOMODEL",
+                "type": "field",
+                "widget_class": "UX.TextField",
+                "properties": { "html:type": "text" },
+                "id": "#3"
+              },
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#2",
+          "hasNEDFields": true,
+          "ownsNEDFields": true
+        };
+        textFieldTester = new umockup.WidgetTester("UX.TextField", "ufld:TEXTFIELD.ENT.NOMODEL");
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", "uocc:UXENTITY.NOMODEL.3");
+        const occurrenceSkeleton = createSkeleton("uocc:UXENTITY.NOMODEL.3");
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, entityDef);
+        textFieldTester.createWidget(null, localOccurrenceTester.element.querySelector(`[id="${textFieldTester.widgetId}"]`), null);
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "vertical-scroll",
+          "vertical-align": "stretch"
+        });
+      });
+
+      it("should have u-jc-stretch on the container after vertical-scroll with vertical-align stretch", function () {
+        expect(localOccurrenceTester.element.classList.contains("u-jc-stretch"),
+          "u-occ-layout should have u-jc-stretch when layout-type is vertical-scroll and vertical-align is stretch.").to.be.true;
+        expect(localOccurrenceTester.element.classList.contains("u-ai-stretch"),
+          "u-occ-layout should not have u-ai-stretch when layout-type is vertical-scroll.").to.be.false;
+        expect(window.getComputedStyle(textFieldTester.element).flexGrow,
+          "text-field flex-grow should be 0: --u-vertical-layout-grow: 0 guard is active.").to.equal("0");
+      });
+
+      it("should replace u-jc-stretch with u-ai-stretch after switching to horizontal-scroll", function () {
+        return asyncRun(function () {
+          localOccurrenceTester.dataUpdate({ "layout-type": "horizontal-scroll" });
+        }).then(function () {
+          expect(localOccurrenceTester.element.classList.contains("u-jc-stretch"),
+            "u-jc-stretch should be absent after switching to horizontal-scroll.").to.be.false;
+          expect(localOccurrenceTester.element.classList.contains("u-ai-stretch"),
+            "u-ai-stretch should be present after switching to horizontal-scroll with vertical-align stretch.").to.be.true;
+        });
+      });
+    });
+
+    describe("When OccurrenceLayout has layout-type vertical-scroll and horizontal-align stretch", function () {
+      let localOccurrenceTester;
+
+      before(function () {
+        resetWidgetContainer();
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", occurrenceWidgetId);
+        const occurrenceSkeleton = createSkeleton(occurrenceWidgetId);
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "vertical-scroll",
+          "horizontal-align": "stretch"
+        });
+      });
+
+      it("should apply u-ai-stretch (not u-jc-stretch) to u-occ-layout when the cross axis has stretch", function () {
+        expect(localOccurrenceTester.element.classList.contains("u-ai-stretch"),
+          "u-occ-layout should have u-ai-stretch when layout-type is vertical-scroll and horizontal-align is stretch.").to.be.true;
+        expect(localOccurrenceTester.element.classList.contains("u-jc-stretch"),
+          "u-occ-layout should not have u-jc-stretch when horizontal-align is stretch in a vertical-scroll layout.").to.be.false;
+      });
+    });
+
+    describe("When OccurrenceLayout vertical-align changes away from stretch", function () {
+      let localOccurrenceTester;
+
+      before(function () {
+        resetWidgetContainer();
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", occurrenceWidgetId);
+        const occurrenceSkeleton = createSkeleton(occurrenceWidgetId);
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+        localOccurrenceTester.dataUpdate({
+          "layout-type": "vertical-scroll",
+          "vertical-align": "stretch"
+        });
+      });
+
+      it("should remove u-jc-stretch from u-occ-layout when vertical-align changes away from stretch", function () {
+        expect(localOccurrenceTester.element.classList.contains("u-jc-stretch"),
+          "u-occ-layout should have u-jc-stretch before alignment change.").to.be.true;
+        return asyncRun(function () {
+          localOccurrenceTester.dataUpdate({ "vertical-align": "start" });
+        }).then(function () {
+          expect(localOccurrenceTester.element.classList.contains("u-jc-stretch"),
+            "u-occ-layout should not have u-jc-stretch after vertical-align changes to 'start'.").to.be.false;
+        });
+      });
+    });
+
+    describe("When CollectionLayout has layout-type-occurrences vertical-scroll and vertical-align-occurrences stretch", function () {
+      let localCollectionTester;
+      let collElement;
+
+      before(function () {
+        resetWidgetContainer();
+        localCollectionTester = new umockup.WidgetTester("UX.CollectionLayout", collectionWidgetId);
+        const collectionSkeleton = createSkeleton(collectionWidgetId);
+        localCollectionTester.createWidget(null, collectionSkeleton, mockEntityDef);
+        collElement = localCollectionTester.element;
+        localCollectionTester.dataUpdate({
+          "layout-type-occurrences": "vertical-scroll",
           "vertical-align-occurrences": "stretch"
         });
       });
-      expect(element.getAttribute("vertical-align")).to.equal("stretch", "vertical-align should be stretch after first update.");
 
-      await asyncRun(function () {
-        widget.dataUpdate({
-          "horizontal-align-occurrences": "start"
+      it("should apply u-jc-stretch (not u-ai-stretch) to u-coll-layout when main axis has stretch", function () {
+        expect(collElement.classList.contains("u-jc-stretch"),
+          "u-coll-layout should have u-jc-stretch when layout-type-occurrences is vertical-scroll and vertical-align-occurrences is stretch.").to.be.true;
+        expect(collElement.classList.contains("u-ai-stretch"),
+          "u-coll-layout should not have u-ai-stretch when layout-type-occurrences is vertical-scroll.").to.be.false;
+      });
+
+      it("should remove u-jc-stretch from u-coll-layout when vertical-align-occurrences changes away from stretch", function () {
+        return asyncRun(function () {
+          localCollectionTester.dataUpdate({ "vertical-align-occurrences": "stretch" });
+        }).then(function () {
+          expect(collElement.classList.contains("u-jc-stretch"),
+            "u-coll-layout should have u-jc-stretch before alignment change.").to.be.true;
+          return asyncRun(function () {
+            localCollectionTester.dataUpdate({ "vertical-align-occurrences": "start" });
+          });
+        }).then(function () {
+          expect(collElement.classList.contains("u-jc-stretch"),
+            "u-coll-layout should not have u-jc-stretch after vertical-align-occurrences changes to 'start'.").to.be.false;
         });
       });
-      expect(element.getAttribute("horizontal-align")).to.equal("start", "horizontal-align should be updated to start.");
-      expect(element.getAttribute("vertical-align")).to.equal("stretch", "vertical-align should remain stretch and not be overridden.");
     });
 
-    it("setting vertical-align-occurrences alone does not override horizontal-align on CollectionLayout", async function () {
-      const collectionObjDef = new MockEntityDefinition("align_indep_coll_2", "UX.CollectionLayout", "entity", {}, []);
-      const result = createCollectionWidget(collectionObjDef, "align_indep_coll_2_elem");
-      const element = result.element;
-      const widget = result.widget;
+    describe("When CollectionLayout has layout-type-occurrences vertical-scroll and only horizontal-align-occurrences stretch", function () {
+      let localCollectionTester;
+      let collElement;
 
-      await asyncRun(function () {
-        widget.dataUpdate({
-          "horizontal-align-occurrences": "center"
+      before(function () {
+        resetWidgetContainer();
+        localCollectionTester = new umockup.WidgetTester("UX.CollectionLayout", collectionWidgetId);
+        const collectionSkeleton = createSkeleton(collectionWidgetId);
+        localCollectionTester.createWidget(null, collectionSkeleton, mockEntityDef);
+        collElement = localCollectionTester.element;
+        localCollectionTester.dataUpdate({
+          "layout-type-occurrences": "vertical-scroll",
+          "vertical-align-occurrences": "start",
+          "horizontal-align-occurrences": "stretch"
         });
       });
-      expect(element.getAttribute("horizontal-align")).to.equal("center", "horizontal-align should be center after first update.");
 
-      await asyncRun(function () {
-        widget.dataUpdate({
-          "vertical-align-occurrences": "end"
-        });
+      it("should apply u-ai-stretch (not u-jc-stretch) to u-coll-layout when only the cross axis has stretch", function () {
+        expect(
+          collElement.classList.contains("u-jc-stretch"),
+          "u-coll-layout should not have u-jc-stretch when vertical-align-occurrences is not stretch."
+        ).to.be.false;
+        expect(
+          collElement.classList.contains("u-ai-stretch"),
+          "u-coll-layout should have u-ai-stretch when horizontal-align-occurrences is stretch in a vertical-scroll layout."
+        ).to.be.true;
       });
-      expect(element.getAttribute("vertical-align")).to.equal("end", "vertical-align should be updated to end.");
-      expect(element.getAttribute("horizontal-align")).to.equal("center", "horizontal-align should remain center and not be overridden.");
     });
 
-    it("setting horizontal-align-occurrences: center and vertical-align-occurrences: end together keeps each axis independent", async function () {
-      const collectionObjDef = new MockEntityDefinition("align_indep_coll_3", "UX.CollectionLayout", "entity", {}, []);
-      const result = createCollectionWidget(collectionObjDef, "align_indep_coll_3_elem");
-      const element = result.element;
-      const widget = result.widget;
+    describe("When CollectionLayout has layout-type-occurrences horizontal-scroll and horizontal-align-occurrences stretch", function () {
+      let localCollectionTester;
+      let collElement;
 
-      await asyncRun(function () {
-        widget.dataUpdate({
+      before(function () {
+        resetWidgetContainer();
+        localCollectionTester = new umockup.WidgetTester("UX.CollectionLayout", collectionWidgetId);
+        const collectionSkeleton = createSkeleton(collectionWidgetId);
+        localCollectionTester.createWidget(null, collectionSkeleton, mockEntityDef);
+        collElement = localCollectionTester.element;
+        localCollectionTester.dataUpdate({
           "layout-type-occurrences": "horizontal-scroll",
-          "horizontal-align-occurrences": "center",
-          "vertical-align-occurrences": "end"
+          "horizontal-align-occurrences": "stretch"
         });
       });
 
-      expect(element.getAttribute("layout-type")).to.equal("horizontal-scroll", "layout-type should be horizontal-scroll.");
-      expect(element.getAttribute("horizontal-align")).to.equal("center", "horizontal-align should be center.");
-      expect(element.getAttribute("vertical-align")).to.equal("end", "vertical-align should be end and NOT be overridden to center.");
+      it("should apply u-jc-stretch to u-coll-layout when layout-type-occurrences is horizontal-scroll and horizontal-align-occurrences is stretch", function () {
+        expect(collElement.classList.contains("u-jc-stretch"),
+          "u-coll-layout should have u-jc-stretch when layout-type-occurrences is horizontal-scroll and horizontal-align-occurrences is stretch.").to.be.true;
+      });
     });
 
-    it("all alignment and layout entity properties set simultaneously are each applied to their correct attribute", async function () {
-      const collectionObjDef = new MockEntityDefinition("align_indep_coll_4", "UX.CollectionLayout", "entity", {}, []);
-      const result = createCollectionWidget(collectionObjDef, "align_indep_coll_4_elem");
-      const element = result.element;
-      const widget = result.widget;
+    describe("When CollectionLayout has both alignment axes set to auto", function () {
+      let localCollectionTester;
+      let collElement;
 
-      await asyncRun(function () {
-        widget.dataUpdate({
-          "layout-type-occurrences": "horizontal-scroll",
-          "label-text": "Entity Label",
+      before(function () {
+        resetWidgetContainer();
+        localCollectionTester = new umockup.WidgetTester("UX.CollectionLayout", collectionWidgetId);
+        const collectionSkeleton = createSkeleton(collectionWidgetId);
+        localCollectionTester.createWidget(null, collectionSkeleton, mockEntityDef);
+        collElement = localCollectionTester.element;
+        localCollectionTester.dataUpdate({
+          "horizontal-align-occurrences": "auto",
+          "vertical-align-occurrences": "auto"
+        });
+      });
+
+      it("should apply neither u-jc-stretch nor u-ai-stretch to u-coll-layout when both alignment axes are auto", function () {
+        expect(collElement.classList.contains("u-jc-stretch"),
+          "u-coll-layout should not have u-jc-stretch when horizontal-align-occurrences is auto.").to.be.false;
+        expect(collElement.classList.contains("u-ai-stretch"),
+          "u-coll-layout should not have u-ai-stretch when vertical-align-occurrences is auto.").to.be.false;
+      });
+    });
+  });
+
+  describe("Reset properties", function () {
+
+    describe("CollectionLayout specific", function () {
+
+      let localCollectionTester;
+      let collElement;
+
+      before(function () {
+        resetWidgetContainer();
+        localCollectionTester = new umockup.WidgetTester("UX.CollectionLayout", collectionWidgetId);
+        const collectionSkeleton = createSkeleton(collectionWidgetId);
+        localCollectionTester.createWidget(null, collectionSkeleton, mockEntityDef);
+        collElement = localCollectionTester.element;
+      });
+
+      it("should reset all properties and values to initial values if initial values exist", function () {
+        const initialValues = {
+          "label-text": "Label text",
           "label-size": "medium",
+          "label-align": "center",
+          "label-position": "below",
+          "layout-type-occurrences": "vertical-wrap",
           "horizontal-align-occurrences": "center",
-          "vertical-align-occurrences": "end"
-        });
+          "vertical-align-occurrences": "end",
+          "appearance": "panel"
+        };
+
+        return asyncRun(function () {
+          // Step 1: Call dataInit() to mock initial non-default screen load values.
+          localCollectionTester.dataInit(null, null, null, initialValues);
+        })
+          // Step 2: Apply a representative set of properties.
+          .then(function () {
+            return asyncRun(function () {
+              localCollectionTester.dataUpdate({
+                "label-text": "Abc",
+                "label-size": "small",
+                "label-align": "end",
+                "label-position": "before",
+                "layout-type-occurrences": "horizontal-wrap",
+                "horizontal-align-occurrences": "end",
+                "vertical-align-occurrences": "center",
+                "appearance": "outline"
+              });
+            });
+          })
+          .then(function () {
+            // Step 3: Verify all representative properties are applied.
+            expect(collElement.querySelector(":scope > .u-label-text").hasAttribute("hidden"), "Label text span should not be hidden after reset.").to.be.false;
+            expect(collElement.querySelector(":scope > .u-label-text").innerText, "Label text should be 'Abc'.").to.equal("Abc");
+            expect(collElement.getAttribute("label-position"), "label-position should be 'before'.").to.equal("before");
+            expect(collElement.getAttribute("label-align"), "label-align should be 'end'.").to.equal("end");
+            expect(collElement.getAttribute("label-size"), "label-size should be 'small'.").to.equal("small");
+            expect(collElement.getAttribute("layout-type"), "layout-type should be 'horizontal-wrap'.").to.equal("horizontal-wrap");
+            expect(collElement.getAttribute("horizontal-align"), "horizontal-align should be 'end'.").to.equal("end");
+            expect(collElement.getAttribute("vertical-align"), "vertical-align should be 'center'.").to.equal("center");
+            expect(collElement.getAttribute("appearance"), "appearance should be 'outline'.").to.equal("outline");
+          })
+          .then(function () {
+            // Step 4: Call resetWidget() to reset all properties to initial values.
+            return asyncRun(function () {
+              localCollectionTester.resetWidget();
+            });
+          })
+          .then(function () {
+            // Step 5: Verify all properties are reset to initial values.
+            expect(collElement.querySelector(":scope > .u-label-text").hasAttribute("hidden"), "Label text span should not be hidden after reset.").to.be.false;
+            expect(collElement.querySelector(":scope > .u-label-text").innerText, "Label text should be 'Label text'.").to.equal("Label text");
+            expect(collElement.getAttribute("label-position"), "label-position should be reset to 'below'.").to.equal("below");
+            expect(collElement.getAttribute("label-align"), "label-align should be reset to 'center'.").to.equal("center");
+            expect(collElement.getAttribute("label-size"), "label-size should be reset to 'medium'.").to.equal("medium");
+            expect(collElement.getAttribute("layout-type"), "layout-type should be reset to 'vertical-wrap'.").to.equal("vertical-wrap");
+            expect(collElement.getAttribute("horizontal-align"), "horizontal-align should be reset to 'center'.").to.equal("center");
+            expect(collElement.getAttribute("vertical-align"), "vertical-align should be reset to 'end'.").to.equal("end");
+            expect(collElement.getAttribute("appearance"), "appearance should be reset to 'panel'.").to.equal("panel");
+          });
       });
 
-      expect(element.getAttribute("layout-type")).to.equal("horizontal-scroll", "layout-type should be horizontal-scroll.");
-      expect(element.getAttribute("horizontal-align")).to.equal("center", "horizontal-align should be center.");
-      expect(element.getAttribute("vertical-align")).to.equal("end", "vertical-align should be end and NOT overridden to center.");
-      expect(element.getAttribute("label-size")).to.equal("medium", "label-size should be medium.");
+      it("should reset all properties and values to default values if no initial values exist", function () {
+        const initialValues = {};
 
-      const shadowRoot = element.shadowRoot;
-      const labelElement = shadowRoot && shadowRoot.querySelector(".u-label-text");
-      if (labelElement) {
-        expect(labelElement.textContent).to.equal("Entity Label", "label-text should be Entity Label.");
-      }
+        return (
+          asyncRun(function () {
+            // Step 1: Call dataInit() to mock initial non-default screen load values.
+            localCollectionTester.dataInit(null, null, null, initialValues);
+          })
+            // Step 2: Apply a representative set of properties.
+            .then(function () {
+              return asyncRun(function () {
+                localCollectionTester.dataUpdate({
+                  "label-text": "Abc",
+                  "label-size": "small",
+                  "label-align": "end",
+                  "label-position": "before",
+                  "layout-type-occurrences": "horizontal-wrap",
+                  "horizontal-align-occurrences": "end",
+                  "vertical-align-occurrences": "center",
+                  "appearance": "outline"
+                });
+              });
+            })
+            .then(function () {
+              // Step 3: Verify all representative properties are applied.
+              expect(collElement.querySelector(":scope > .u-label-text").hasAttribute("hidden"), "Label text span should not be hidden after reset.").to.be.false;
+              expect(collElement.querySelector(":scope > .u-label-text").innerText, "Label text should be 'Abc'.").to.equal("Abc");
+              expect(collElement.getAttribute("label-position"), "label-position should be 'before'.").to.equal("before");
+              expect(collElement.getAttribute("label-align"), "label-align should be 'end'.").to.equal("end");
+              expect(collElement.getAttribute("label-size"), "label-size should be 'small'.").to.equal("small");
+              expect(collElement.getAttribute("layout-type"), "layout-type should be 'horizontal-wrap'.").to.equal("horizontal-wrap");
+              expect(collElement.getAttribute("horizontal-align"), "horizontal-align should be 'end'.").to.equal("end");
+              expect(collElement.getAttribute("vertical-align"), "vertical-align should be 'center'.").to.equal("center");
+              expect(collElement.getAttribute("appearance"), "appearance should be 'outline'.").to.equal("outline");
+            })
+            .then(function () {
+              // Step 4: Call resetWidget() to reset all properties to default values.
+              return asyncRun(function () {
+                localCollectionTester.resetWidget();
+              });
+            })
+            .then(function () {
+              // Step 5: Verify all properties are reset to default values.
+              expect(collElement.querySelector(":scope > .u-label-text").hasAttribute("hidden"), "Label text span should be hidden.").to.be.true;
+              expect(collElement.querySelector(":scope > .u-label-text").innerText, "Label text should be empty.").to.equal("");
+              expect(collElement.getAttribute("label-position"), "label-position should be reset to 'above'.").to.equal("above");
+              expect(collElement.getAttribute("label-align"), "label-align should be reset to 'start'.").to.equal("start");
+              expect(collElement.getAttribute("label-size"), "label-size should be reset to 'normal'.").to.equal("normal");
+              expect(collElement.getAttribute("layout-type"), "layout-type should be reset to 'auto'.").to.equal("auto");
+              expect(collElement.getAttribute("horizontal-align"), "horizontal-align should be reset to 'auto'.").to.equal("auto");
+              expect(collElement.getAttribute("vertical-align"), "vertical-align should be reset to 'auto'.").to.equal("auto");
+              expect(collElement.getAttribute("appearance"), "appearance should be reset to 'transparent'.").to.equal("transparent");
+            })
+        );
+      });
+
+      it("should reset specific properties and values to initial values that have initial values and leave others unchanged", function () {
+        const initialValues = {
+          "label-text": "Label text",
+          "appearance": "card"
+        };
+
+        return (
+          asyncRun(function () {
+            // Step 1: Call dataInit() to mock initial non-default screen load values.
+            localCollectionTester.dataInit(null, null, null, initialValues);
+          })
+            // Step 2: Apply a representative set of properties.
+            .then(function () {
+              return asyncRun(function () {
+                localCollectionTester.dataUpdate({
+                  "label-text": "Abc",
+                  "label-size": "small",
+                  "label-align": "end",
+                  "label-position": "before",
+                  "layout-type-occurrences": "horizontal-wrap",
+                  "horizontal-align-occurrences": "end",
+                  "vertical-align-occurrences": "center",
+                  "appearance": "outline"
+                });
+              });
+            })
+            .then(function () {
+              // Step 3: Verify all representative properties are applied.
+              expect(collElement.querySelector(":scope > .u-label-text").hasAttribute("hidden"), "Label text span should not be hidden after reset.").to.be.false;
+              expect(collElement.querySelector(":scope > .u-label-text").innerText, "Label text should be 'Abc'.").to.equal("Abc");
+              expect(collElement.getAttribute("label-position"), "label-position should be 'before'.").to.equal("before");
+              expect(collElement.getAttribute("label-align"), "label-align should be 'end'.").to.equal("end");
+              expect(collElement.getAttribute("label-size"), "label-size should be 'small'.").to.equal("small");
+              expect(collElement.getAttribute("layout-type"), "layout-type should be 'horizontal-wrap'.").to.equal("horizontal-wrap");
+              expect(collElement.getAttribute("horizontal-align"), "horizontal-align should be 'end'.").to.equal("end");
+              expect(collElement.getAttribute("vertical-align"), "vertical-align should be 'center'.").to.equal("center");
+              expect(collElement.getAttribute("appearance"), "appearance should be 'outline'.").to.equal("outline");
+            })
+            .then(function () {
+              // Step 4: Call resetWidget() to reset label-text and appearance properties to initial values.
+              return asyncRun(function () {
+                localCollectionTester.resetWidget(["label-text", "appearance"]);
+              });
+            })
+            .then(function () {
+              // Step 5: Verify reset properties ('label-text', 'appearance') are restored to initial values; others remain unchanged.
+              expect(collElement.querySelector(":scope > .u-label-text").hasAttribute("hidden"), "Label text span should not be hidden after reset.").to.be.false;
+              expect(collElement.querySelector(":scope > .u-label-text").innerText, "Label text should be 'Label text'.").to.equal("Label text");
+              expect(collElement.getAttribute("label-position"), "label-position should remain 'before' (not reset).").to.equal("before");
+              expect(collElement.getAttribute("label-align"), "label-align should remain 'end' (not reset).").to.equal("end");
+              expect(collElement.getAttribute("label-size"), "label-size should remain 'small' (not reset).").to.equal("small");
+              expect(collElement.getAttribute("layout-type"), "layout-type should remain 'horizontal-wrap' (not reset).").to.equal("horizontal-wrap");
+              expect(collElement.getAttribute("horizontal-align"), "horizontal-align should remain 'end' (not reset).").to.equal("end");
+              expect(collElement.getAttribute("vertical-align"), "vertical-align should remain 'center' (not reset).").to.equal("center");
+              expect(collElement.getAttribute("appearance"), "appearance should be reset to 'card'.").to.equal("card");
+            })
+        );
+      });
+    });
+
+    describe("OccurrenceLayout specific", function () {
+
+      let localOccurrenceTester;
+      let occElement;
+
+      before(function () {
+        resetWidgetContainer();
+        localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", occurrenceWidgetId);
+        const occurrenceSkeleton = createSkeleton(occurrenceWidgetId);
+        localOccurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+        occElement = localOccurrenceTester.element;
+      });
+
+      it("should reset all properties to initial values if initial values exist", function () {
+        const initialValues = {
+          "layout-type": "horizontal-scroll",
+          "horizontal-align": "space-between",
+          "vertical-align": "end",
+          "appearance-occurrences": "section"
+        };
+
+        return asyncRun(function () {
+          // Step 1: Call dataInit() to mock initial non-default screen load values.
+          localOccurrenceTester.dataInit(null, null, null, initialValues);
+        })
+          // Step 2: Apply a representative set of properties.
+          .then(function () {
+            return asyncRun(function () {
+              localOccurrenceTester.dataUpdate({
+                "layout-type": "vertical-wrap",
+                "horizontal-align": "end",
+                "vertical-align": "start",
+                "appearance-occurrences": "panel"
+              });
+            });
+          })
+          .then(function () {
+            // Step 3: Verify all representative properties are applied.
+            expect(occElement.getAttribute("layout-type"), "layout-type should be 'vertical-wrap'.").to.equal("vertical-wrap");
+            expect(occElement.getAttribute("horizontal-align"), "horizontal-align should be 'end'.").to.equal("end");
+            expect(occElement.getAttribute("vertical-align"), "vertical-align should be 'start'.").to.equal("start");
+            expect(occElement.getAttribute("appearance"), "appearance should be 'panel'.").to.equal("panel");
+          })
+          .then(function () {
+            // Step 4: Call resetWidget() to reset all properties to initial values.
+            return asyncRun(function () {
+              localOccurrenceTester.resetWidget();
+            });
+          })
+          .then(function () {
+            // Step 5: Verify all properties are reset to initial values.
+            expect(occElement.getAttribute("layout-type"), "layout-type should be reset to 'horizontal-scroll'.").to.equal("horizontal-scroll");
+            expect(occElement.getAttribute("horizontal-align"), "horizontal-align should be reset to 'space-between'.").to.equal("space-between");
+            expect(occElement.getAttribute("vertical-align"), "vertical-align should be reset to 'end'.").to.equal("end");
+            expect(occElement.getAttribute("appearance"), "appearance should be reset to 'section'.").to.equal("section");
+          });
+      });
+
+      it("should reset all properties to default values if no initial values exist", function () {
+        const initialValues = {};
+
+        return asyncRun(function () {
+          // Step 1: Call dataInit() to mock initial non-default screen load values.
+          localOccurrenceTester.dataInit(null, null, null, initialValues);
+        })
+          // Step 2: Apply a representative set of properties.
+          .then(function () {
+            return asyncRun(function () {
+              localOccurrenceTester.dataUpdate({
+                "layout-type": "horizontal-wrap",
+                "horizontal-align": "space-between",
+                "vertical-align": "end",
+                "appearance-occurrences": "section"
+              });
+            });
+          })
+          .then(function () {
+            // Step 3: Verify all representative properties are applied.
+            expect(occElement.getAttribute("layout-type"), "layout-type should be 'horizontal-wrap'.").to.equal("horizontal-wrap");
+            expect(occElement.getAttribute("horizontal-align"), "horizontal-align should be 'space-between'.").to.equal("space-between");
+            expect(occElement.getAttribute("vertical-align"), "vertical-align should be 'end'.").to.equal("end");
+            expect(occElement.getAttribute("appearance"), "appearance should be 'section'.").to.equal("section");
+          })
+          .then(function () {
+            // Step 4: Call resetWidget() to reset all properties to default values.
+            return asyncRun(function () {
+              localOccurrenceTester.resetWidget();
+            });
+          })
+          .then(function () {
+            // Step 5: Verify all properties are reset to default values.
+            expect(occElement.getAttribute("layout-type"), "layout-type should be reset to 'auto'.").to.equal("auto");
+            expect(occElement.getAttribute("horizontal-align"), "horizontal-align should be reset to 'auto'.").to.equal("auto");
+            expect(occElement.getAttribute("vertical-align"), "vertical-align should be reset to 'auto'.").to.equal("auto");
+            expect(occElement.getAttribute("appearance"), "appearance should be reset to 'transparent'.").to.equal("transparent");
+          });
+      });
+
+      it("should reset specific properties to initial values that have initial values and leave others unchanged", function () {
+        const initialValues = {
+          "horizontal-align": "space-around",
+          "appearance-occurrences": "card"
+        };
+
+        return asyncRun(function () {
+          // Step 1: Call dataInit() to mock initial non-default screen load values.
+          localOccurrenceTester.dataInit(null, null, null, initialValues);
+        })
+          // Step 2: Apply a representative set of properties.
+          .then(function () {
+            return asyncRun(function () {
+              localOccurrenceTester.dataUpdate({
+                "layout-type": "horizontal-scroll",
+                "horizontal-align": "center",
+                "vertical-align": "start",
+                "appearance-occurrences": "panel"
+              });
+            });
+          })
+          .then(function () {
+            // Step 3: Verify all representative properties are applied.
+            expect(occElement.getAttribute("layout-type"), "layout-type should be 'horizontal-scroll'.").to.equal("horizontal-scroll");
+            expect(occElement.getAttribute("horizontal-align"), "horizontal-align should be 'center'.").to.equal("center");
+            expect(occElement.getAttribute("vertical-align"), "vertical-align should be 'start'.").to.equal("start");
+            expect(occElement.getAttribute("appearance"), "appearance should be 'panel'.").to.equal("panel");
+          })
+          .then(function () {
+            // Step 4: Call resetWidget() to reset specific properties to initial values.
+            return asyncRun(function () {
+              localOccurrenceTester.resetWidget(["horizontal-align", "appearance-occurrences"]);
+            });
+          })
+          .then(function () {
+            // Step 5: Verify reset properties ('horizontal-align', 'appearance-occurrences') are restored to initial values; others remain unchanged.
+            expect(occElement.getAttribute("layout-type"), "layout-type should remain 'horizontal-scroll' (not reset).").to.equal("horizontal-scroll");
+            expect(occElement.getAttribute("horizontal-align"), "horizontal-align should be reset to 'space-around'.").to.equal("space-around");
+            expect(occElement.getAttribute("vertical-align"), "vertical-align should remain 'start' (not reset).").to.equal("start");
+            expect(occElement.getAttribute("appearance"), "appearance should be reset to 'card'.").to.equal("card");
+          });
+      });
     });
   });
 
-  describe("CSS axis mapping for layout-type", function () {
-    it("for horizontal-scroll layout, horizontal-align: end sets horizontal-align attribute to end on OccurrenceLayout", async function () {
-      const occObjDef = new MockEntityDefinition("axis_map_occ_1", "UX.OccurrenceLayout", "entity", {});
-      const result = createOccurrenceWidget(occObjDef, "axis_map_occ_1_elem");
-      const element = result.element;
-      const widget = result.widget;
+  describe("Widget reuse", function () {
+    let element;
 
-      await asyncRun(function () {
-        widget.dataUpdate({ "layout-type": "horizontal-scroll",
-                            "horizontal-align": "end" });
-      });
+    describe("CollectionLayout specific", function () {
 
-      expect(element.getAttribute("layout-type")).to.equal("horizontal-scroll", "layout-type should be horizontal-scroll.");
-      expect(element.getAttribute("horizontal-align")).to.equal("end", "horizontal-align attribute should be end.");
-      // vertical-align should be unaffected (still its default).
-      expect(element.getAttribute("vertical-align")).to.not.equal("end", "vertical-align should NOT be changed to end.");
-    });
-
-    it("for horizontal-scroll layout, vertical-align: end sets vertical-align attribute to end on OccurrenceLayout", async function () {
-      const occObjDef = new MockEntityDefinition("axis_map_occ_2", "UX.OccurrenceLayout", "entity", {});
-      const result = createOccurrenceWidget(occObjDef, "axis_map_occ_2_elem");
-      const element = result.element;
-      const widget = result.widget;
-
-      await asyncRun(function () {
-        widget.dataUpdate({ "layout-type": "horizontal-scroll",
-                            "vertical-align": "end" });
-      });
-
-      expect(element.getAttribute("layout-type")).to.equal("horizontal-scroll", "layout-type should be horizontal-scroll.");
-      expect(element.getAttribute("vertical-align")).to.equal("end", "vertical-align attribute should be end.");
-      // horizontal-align should be unaffected.
-      expect(element.getAttribute("horizontal-align")).to.not.equal("end", "horizontal-align should NOT be changed to end.");
-    });
-
-    it("for vertical-scroll layout, vertical-align: end sets vertical-align attribute to end on OccurrenceLayout", async function () {
-      const occObjDef = new MockEntityDefinition("axis_map_occ_3", "UX.OccurrenceLayout", "entity", {});
-      const result = createOccurrenceWidget(occObjDef, "axis_map_occ_3_elem");
-      const element = result.element;
-      const widget = result.widget;
-
-      await asyncRun(function () {
-        widget.dataUpdate({ "layout-type": "vertical-scroll",
-                            "vertical-align": "end" });
-      });
-
-      expect(element.getAttribute("layout-type")).to.equal("vertical-scroll", "layout-type should be vertical-scroll.");
-      expect(element.getAttribute("vertical-align")).to.equal("end", "vertical-align attribute should be end.");
-      expect(element.getAttribute("horizontal-align")).to.not.equal("end", "horizontal-align should NOT be changed to end.");
-    });
-
-    it("for vertical-scroll layout, horizontal-align: end sets horizontal-align attribute to end on OccurrenceLayout", async function () {
-      const occObjDef = new MockEntityDefinition("axis_map_occ_4", "UX.OccurrenceLayout", "entity", {});
-      const result = createOccurrenceWidget(occObjDef, "axis_map_occ_4_elem");
-      const element = result.element;
-      const widget = result.widget;
-
-      await asyncRun(function () {
-        widget.dataUpdate({ "layout-type": "vertical-scroll",
-                            "horizontal-align": "end" });
-      });
-
-      expect(element.getAttribute("layout-type")).to.equal("vertical-scroll", "layout-type should be vertical-scroll.");
-      expect(element.getAttribute("horizontal-align")).to.equal("end", "horizontal-align attribute should be end.");
-      expect(element.getAttribute("vertical-align")).to.not.equal("end", "vertical-align should NOT be changed to end.");
-    });
-
-    it("switching layout-type from vertical-scroll to horizontal-scroll keeps alignment attributes independently correct", async function () {
-      const occObjDef = new MockEntityDefinition("axis_map_occ_5", "UX.OccurrenceLayout", "entity", {});
-      const result = createOccurrenceWidget(occObjDef, "axis_map_occ_5_elem");
-      const element = result.element;
-      const widget = result.widget;
-
-      // Set up with vertical-scroll, vertical-align: end.
-      await asyncRun(function () {
-        widget.dataUpdate({ "layout-type": "vertical-scroll",
-                            "vertical-align": "end" });
-      });
-      expect(element.getAttribute("layout-type")).to.equal("vertical-scroll");
-      expect(element.getAttribute("vertical-align")).to.equal("end", "vertical-align should be end with vertical-scroll.");
-
-      // Switch to horizontal-scroll without changing alignment.
-      await asyncRun(function () {
-        widget.dataUpdate({
-          "layout-type": "horizontal-scroll"
-        });
-      });
-      expect(element.getAttribute("layout-type")).to.equal("horizontal-scroll", "layout-type should switch to horizontal-scroll.");
-      // vertical-align attribute should still hold the value "end"
-      // (axis remapping is a CSS concern, the attribute itself stays).
-      expect(element.getAttribute("vertical-align")).to.equal("end", "vertical-align attribute should remain end after layout-type switch.");
-    });
-
-    it("layout-type: horizontal-scroll with vertical-align-occurrences: end on CollectionLayout sets correct attributes", async function () {
-      const collectionObjDef = new MockEntityDefinition("axis_map_coll_6", "UX.CollectionLayout", "entity", {}, []);
-      const result = createCollectionWidget(collectionObjDef, "axis_map_coll_6_elem");
-      const element = result.element;
-      const widget = result.widget;
-
-      await asyncRun(function () {
-        widget.dataUpdate({
-          "layout-type-occurrences": "horizontal-scroll",
-          "vertical-align-occurrences": "end"
-        });
-      });
-
-      expect(element.getAttribute("layout-type")).to.equal("horizontal-scroll", "layout-type should be horizontal-scroll.");
-      expect(element.getAttribute("vertical-align")).to.equal("end", "vertical-align attribute should be end.");
-      // horizontal-align must remain at its default (auto), NOT change to end.
-      expect(element.getAttribute("horizontal-align")).to.not.equal("end", "horizontal-align should NOT be set to end by vertical-align-occurrences.");
-    });
-  });
-
-  describe("Invalid property handling", function () {
-    it("setting an unsupported property on CollectionLayout logs a warning and is ignored", function () {
-      const warnSpy = sinon.spy(console, "warn");
-      return asyncRun(function () {
-        collectionTester.dataUpdate({
-          "dummy-property": "some value"
-        });
-      }).then(function () {
-        expect(warnSpy.calledWith(sinon.match("Widget does not support property 'dummy-property' - Ignored."))).to.be.true;
-        warnSpy.restore();
-      }).catch(function (e) {
-        warnSpy.restore();
-        throw e;
+      it("should reset all properties and values to defaults when reused", function () {
+        const collectionSkeleton = createSkeleton(collectionWidgetId);
+        collectionTester.createWidget(null, collectionSkeleton, mockEntityDef);
+        element = collectionTester.element;
+        // Step 1: Apply a representative set of properties.
+        return asyncRun(function () {
+          collectionTester.dataUpdate({
+            "label-text": "Label text",
+            "label-position": "below",
+            "layout-type-occurrences": "horizontal-scroll",
+            "horizontal-align-occurrences": "space-between"
+          });
+        })
+          .then(function () {
+            // Step 2: Verify all properties are applied before reuse.
+            expect(element.querySelector(":scope > .u-label-text").innerText, "Text should be 'Label text' before reuse.").to.equal("Label text");
+            assert(!element.querySelector(":scope > .u-label-text").hasAttribute("hidden"), "Label text span should be visible before reuse.");
+            expect(element.getAttribute("label-position"), "label-position should be 'below' before reuse.").to.equal("below");
+            expect(element.getAttribute("layout-type"), "layout-type should be 'horizontal-scroll' before reuse.").to.equal("horizontal-scroll");
+            expect(element.getAttribute("horizontal-align"), "horizontal-align should be 'space-between' before reuse.").to.equal("space-between");
+          })
+          .then(function () {
+            // Step 3: Simulate Uniface widget reuse clean up the current occurrence, then re-initialize with defaults.
+            collectionTester.dataCleanup();
+            return asyncRun(function () {
+              collectionTester.dataInit();
+            });
+          })
+          .then(function () {
+            // Step 4: Verify all properties and value are reset to defaults after reuse.
+            assert(element.querySelector(":scope > .u-label-text").hasAttribute("hidden"), "Label text span should be hidden after reuse.");
+            expect(element.querySelector(":scope > .u-label-text").innerText, "Label text should be empty after reuse.").to.equal("");
+            expect(element.getAttribute("label-position"), "label-position should be reset to 'above' after reuse.").to.equal("above");
+            expect(element.getAttribute("layout-type"), "layout-type should be reset to 'auto' after reuse.").to.equal("auto");
+            expect(element.getAttribute("horizontal-align"), "horizontal-align should be reset to 'auto' after reuse.").to.equal("auto");
+          });
       });
     });
 
-    it("setting an unsupported property on OccurrenceLayout logs a warning and is ignored", function () {
-      const occMockDef = new MockEntityDefinition("test_occ_invalid_prop", "UX.OccurrenceLayout", "entity", {});
-      const result = createOccurrenceWidget(occMockDef, "occ_invalid_prop_elem");
-      const occWidget = result.widget;
-      const warnSpy = sinon.spy(console, "warn");
-      return asyncRun(function () {
-        occWidget.dataUpdate({
-          "dummy-property": "some value"
-        });
-      }).then(function () {
-        expect(warnSpy.calledWith(sinon.match("Widget does not support property 'dummy-property' - Ignored."))).to.be.true;
-        warnSpy.restore();
-      }).catch(function (e) {
-        warnSpy.restore();
-        throw e;
-      });
-    });
-  });
+    describe("OccurrenceLayout specific", function () {
 
-  describe("Reset all properties", function () {
-    it("reset all properties", function () {
-      try {
-        collectionTester.dataUpdate(collectionTester.getDefaultValues());
-      } catch (e) {
-        assert(false, `Failed to reset the properties, exception ${e}.`);
-      }
+      it("should reset all properties and value to defaults when reused", function () {
+        const occurrenceSkeleton = createSkeleton(occurrenceWidgetId);
+        occurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+        element = occurrenceTester.element;
+        // Step 1: Apply a representative set of properties.
+        return asyncRun(function () {
+          occurrenceTester.dataUpdate({
+            "layout-type": "horizontal-wrap",
+            "horizontal-align": "space-around",
+            "appearance-occurrences": "card"
+          });
+        })
+          .then(function () {
+            // Step 2: Verify all properties are applied before reuse.
+            expect(element.getAttribute("layout-type"), "layout-type should be 'horizontal-wrap' before reuse.").to.equal("horizontal-wrap");
+            expect(element.getAttribute("horizontal-align"), "horizontal-align should be 'space-around' before reuse.").to.equal("space-around");
+            expect(element.getAttribute("appearance"), "appearance should be 'card' before reuse.").to.equal("card");
+          })
+          .then(function () {
+            // Step 3: Simulate Uniface widget reuse clean up the current occurrence, then re-initialize with defaults.
+            occurrenceTester.dataCleanup();
+            return asyncRun(function () {
+              occurrenceTester.dataInit();
+            });
+          })
+          .then(function () {
+            // Step 4: Verify all properties and value are reset to defaults after reuse.
+            expect(element.getAttribute("layout-type"), "layout-type should be reset to 'auto' after reuse.").to.equal("auto");
+            expect(element.getAttribute("horizontal-align"), "horizontal-align should be reset to 'auto' after reuse.").to.equal("auto");
+            expect(element.getAttribute("appearance"), "appearance should be reset to 'transparent' after reuse.").to.equal("transparent");
+          });
+      });
     });
   });
 })();

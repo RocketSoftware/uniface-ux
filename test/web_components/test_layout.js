@@ -3457,5 +3457,225 @@
         });
       });
     });
+
+    // =========================================================================
+    // Label Spacing (--label-spacing CSS custom property)
+    // =========================================================================
+    // --label-spacing is set by the :host([label-size]) rule inside the component's
+    // shadow stylesheet — NOT as an inline style — so it must be read with
+    // getComputedStyle(host).getPropertyValue("--label-spacing"), not
+    // host.style.getPropertyValue("--label-spacing") which always returns "".
+    //
+    // The variable drives the margin on .label for each label-position:
+    //   above  → marginBlockEnd
+    //   below  → marginBlockStart
+    //   before → marginInlineEnd
+    //   after  → marginInlineStart
+    // =========================================================================
+    describe("Label Spacing (--label-spacing)", function () {
+      let layout;
+
+      beforeEach(function () {
+        layout = createLayout();
+        layout.setAttribute("show-label", "true");
+      });
+
+      afterEach(function () {
+        cleanupLayout(layout);
+      });
+
+      describe("--label-spacing custom property value", function () {
+        ["small", "medium", "large"].forEach(function (size) {
+          it(`should set --label-spacing when label-size is '${size}'`, function () {
+            return asyncRun(function () {
+              layout.setAttribute("label-size", size);
+            }).then(function () {
+              const spacing = window.getComputedStyle(layout).getPropertyValue("--label-spacing").trim();
+              expect(spacing, `--label-spacing should be set for label-size '${size}'.`).to.not.equal("");
+            });
+          });
+        });
+
+        it("should have an empty --label-spacing when no label-size is set", function () {
+          return asyncRun(function () {
+            layout.removeAttribute("label-size");
+          }).then(function () {
+            const spacing = window.getComputedStyle(layout).getPropertyValue("--label-spacing").trim();
+            expect(spacing, "--label-spacing should be empty when label-size is not set.").to.equal("");
+          });
+        });
+
+        it("should clear --label-spacing when label-size attribute is removed", function () {
+          return asyncRun(function () {
+            layout.setAttribute("label-size", "large");
+          }).then(function () {
+            const spacingBefore = window.getComputedStyle(layout).getPropertyValue("--label-spacing").trim();
+            expect(spacingBefore, "--label-spacing should be set initially.").to.not.equal("");
+            return asyncRun(function () {
+              layout.removeAttribute("label-size");
+            });
+          }).then(function () {
+            const spacingAfter = window.getComputedStyle(layout).getPropertyValue("--label-spacing").trim();
+            expect(spacingAfter, "--label-spacing should be empty after removing label-size.").to.equal("");
+          });
+        });
+
+        it("should update --label-spacing when switching between label sizes", function () {
+          return asyncRun(function () {
+            layout.setAttribute("label-size", "small");
+          }).then(function () {
+            const smallSpacing = window.getComputedStyle(layout).getPropertyValue("--label-spacing").trim();
+            return asyncRun(function () {
+              layout.setAttribute("label-size", "large");
+            }).then(function () {
+              const largeSpacing = window.getComputedStyle(layout).getPropertyValue("--label-spacing").trim();
+              expect(smallSpacing, "small --label-spacing should be set.").to.not.equal("");
+              expect(largeSpacing, "large --label-spacing should be set.").to.not.equal("");
+              expect(smallSpacing).to.not.equal(largeSpacing, "small and large --label-spacing values should differ.");
+            });
+          });
+        });
+      });
+
+      describe("--label-spacing effect on .label margins (label-position above/below)", function () {
+        it("should apply non-zero marginBlockEnd to .label when label-position is 'above' and label-size is set", function () {
+          return asyncRun(function () {
+            layout.setAttribute("label-position", "above");
+            layout.setAttribute("label-size", "medium");
+          }).then(function () {
+            const labelEl = layout.shadowRoot.querySelector(".label");
+            assert(labelEl, "Label element should exist when show-label is true.");
+            const margin = parseFloat(window.getComputedStyle(labelEl).marginBlockEnd);
+            expect(margin, "marginBlockEnd should be non-zero with label-size 'medium' and label-position 'above'.").to.be.above(0);
+          });
+        });
+
+        it("should apply non-zero marginBlockStart to .label when label-position is 'below' and label-size is set", function () {
+          return asyncRun(function () {
+            layout.setAttribute("label-position", "below");
+            layout.setAttribute("label-size", "medium");
+          }).then(function () {
+            const labelEl = layout.shadowRoot.querySelector(".label");
+            assert(labelEl, "Label element should exist when show-label is true.");
+            const margin = parseFloat(window.getComputedStyle(labelEl).marginBlockStart);
+            expect(margin, "marginBlockStart should be non-zero with label-size 'medium' and label-position 'below'.").to.be.above(0);
+          });
+        });
+
+        it("should have zero marginBlockEnd when label-size is not set (no --label-spacing)", function () {
+          return asyncRun(function () {
+            layout.setAttribute("label-position", "above");
+            layout.removeAttribute("label-size");
+          }).then(function () {
+            const labelEl = layout.shadowRoot.querySelector(".label");
+            assert(labelEl, "Label element should exist when show-label is true.");
+            const margin = parseFloat(window.getComputedStyle(labelEl).marginBlockEnd);
+            expect(margin, "marginBlockEnd should be 0 when no label-size is set.").to.equal(0);
+          });
+        });
+
+        it("should have zero marginBlockStart when label-size is not set (no --label-spacing)", function () {
+          return asyncRun(function () {
+            layout.setAttribute("label-position", "below");
+            layout.removeAttribute("label-size");
+          }).then(function () {
+            const labelEl = layout.shadowRoot.querySelector(".label");
+            assert(labelEl, "Label element should exist when show-label is true.");
+            const margin = parseFloat(window.getComputedStyle(labelEl).marginBlockStart);
+            expect(margin, "marginBlockStart should be 0 when no label-size is set.").to.equal(0);
+          });
+        });
+
+        it("should produce a larger margin for 'large' than for 'small' label-size", function () {
+          let smallMargin, largeMargin;
+          return asyncRun(function () {
+            layout.setAttribute("label-position", "above");
+            layout.setAttribute("label-size", "small");
+          }).then(function () {
+            const labelEl = layout.shadowRoot.querySelector(".label");
+            assert(labelEl, "Label element should exist.");
+            smallMargin = parseFloat(window.getComputedStyle(labelEl).marginBlockEnd);
+            return asyncRun(function () {
+              layout.setAttribute("label-size", "large");
+            });
+          }).then(function () {
+            const labelEl = layout.shadowRoot.querySelector(".label");
+            largeMargin = parseFloat(window.getComputedStyle(labelEl).marginBlockEnd);
+            expect(largeMargin, "large label-size should produce a larger margin than small.").to.be.above(smallMargin);
+          });
+        });
+      });
+
+      describe("--label-spacing effect on .label margins (label-position before/after)", function () {
+        it("should apply non-zero marginInlineEnd to .label when label-position is 'before' and label-size is set", function () {
+          return asyncRun(function () {
+            layout.setAttribute("label-position", "before");
+            layout.setAttribute("label-size", "medium");
+          }).then(function () {
+            const labelEl = layout.shadowRoot.querySelector(".label");
+            assert(labelEl, "Label element should exist when show-label is true.");
+            const margin = parseFloat(window.getComputedStyle(labelEl).marginInlineEnd);
+            expect(margin, "marginInlineEnd should be non-zero with label-size 'medium' and label-position 'before'.").to.be.above(0);
+          });
+        });
+
+        it("should apply non-zero marginInlineStart to .label when label-position is 'after' and label-size is set", function () {
+          return asyncRun(function () {
+            layout.setAttribute("label-position", "after");
+            layout.setAttribute("label-size", "medium");
+          }).then(function () {
+            const labelEl = layout.shadowRoot.querySelector(".label");
+            assert(labelEl, "Label element should exist when show-label is true.");
+            const margin = parseFloat(window.getComputedStyle(labelEl).marginInlineStart);
+            expect(margin, "marginInlineStart should be non-zero with label-size 'medium' and label-position 'after'.").to.be.above(0);
+          });
+        });
+
+        it("should have zero marginInlineEnd when label-size is not set (no --label-spacing)", function () {
+          return asyncRun(function () {
+            layout.setAttribute("label-position", "before");
+            layout.removeAttribute("label-size");
+          }).then(function () {
+            const labelEl = layout.shadowRoot.querySelector(".label");
+            assert(labelEl, "Label element should exist when show-label is true.");
+            const margin = parseFloat(window.getComputedStyle(labelEl).marginInlineEnd);
+            expect(margin, "marginInlineEnd should be 0 when no label-size is set.").to.equal(0);
+          });
+        });
+
+        it("should have zero marginInlineStart when label-size is not set (no --label-spacing)", function () {
+          return asyncRun(function () {
+            layout.setAttribute("label-position", "after");
+            layout.removeAttribute("label-size");
+          }).then(function () {
+            const labelEl = layout.shadowRoot.querySelector(".label");
+            assert(labelEl, "Label element should exist when show-label is true.");
+            const margin = parseFloat(window.getComputedStyle(labelEl).marginInlineStart);
+            expect(margin, "marginInlineStart should be 0 when no label-size is set.").to.equal(0);
+          });
+        });
+
+        it("should produce a larger margin for 'large' than for 'small' label-size", function () {
+          let smallMargin, largeMargin;
+          return asyncRun(function () {
+            layout.setAttribute("label-position", "before");
+            layout.setAttribute("label-size", "small");
+          })
+            .then(function () {
+              const labelEl = layout.shadowRoot.querySelector(".label");
+              assert(labelEl, "Label element should exist.");
+              smallMargin = parseFloat(window.getComputedStyle(labelEl).marginInlineEnd);
+              return asyncRun(function () {
+                layout.setAttribute("label-size", "large");
+              });
+            })
+            .then(function () {
+              const labelEl = layout.shadowRoot.querySelector(".label");
+              largeMargin = parseFloat(window.getComputedStyle(labelEl).marginInlineEnd);
+              expect(largeMargin, "large label-size should produce a larger margin than small.").to.be.above(smallMargin);
+            });
+        });
+      });
+    });
   });
 })();

@@ -28,7 +28,6 @@
   describe("Uniface static structure constructor() definition", function () {
 
     it("should have a static property structure of type Element", function () {
-      verifyWidgetClass(widgetClass);
       const structure = widgetClass.structure;
       expect(structure.constructor, "Structure constructor should be an instance of Element constructor.").to.be.an.instanceof(Element.constructor);
       expect(structure.tagName, "Structure tagName should be 'fluent-button'.").to.equal("fluent-button");
@@ -45,7 +44,6 @@
     describe("Checks", function () {
 
       before(function () {
-        verifyWidgetClass(widgetClass);
         element = tester.processLayout();
       });
 
@@ -83,20 +81,30 @@
   describe("Create widget", function () {
 
     before(function () {
-      verifyWidgetClass(widgetClass);
       tester.construct();
     });
 
     it("constructor()", function () {
-      try {
-        const widget = tester.construct();
-        assert(widget, "Widget is not defined!");
-        verifyWidgetClass(widgetClass);
-        assert(widgetClass.defaultValues["class:u-button"], "Class is not defined!");
-        assert(widgetClass.defaultValues["class:u-stretchable"], "class:u-stretchable should be registered as a default value.");
-      } catch (e) {
-        assert(false, `Failed to construct new widget, exception ${e}.`);
-      }
+      const widget = tester.construct();
+      expect(widget, "tester.construct() should return a widget instance").to.exist;
+      expect(widgetClass.defaultValues, "Widget class should define required default values").to.include.all.keys(
+        "class:u-button",
+        "class:neutral",
+        "class:u-stretchable",
+        "html:appearance",
+        "html:disabled",
+        "html:hidden",
+        "html:maxlength",
+        "html:minlength",
+        "html:readonly",
+        "html:tabindex",
+        "html:title",
+        "icon",
+        "icon-position",
+        "value"
+      );
+      expect(widgetClass.defaultValues["class:u-button"], "Class is not defined!").to.exist;
+      expect(widgetClass.defaultValues["class:u-stretchable"], "class:u-stretchable should be registered as a default value.").to.exist;
     });
 
     describe("onConnect()", function () {
@@ -966,26 +974,183 @@
     });
   });
 
-  describe("Reset all properties", function () {
-    it("should reset all properties to defaults", function () {
-      try {
-        tester.dataUpdate(tester.getDefaultValues());
-      } catch (e) {
-        assert(false, `Failed to reset the properties, exception ${e}.`);
-      }
+  describe("Reset properties", function () {
+    let element;
+
+    before(function () {
+      tester.createWidget();
+      element = tester.element;
+    });
+
+    it("should reset all properties and values to initial values if initial values exist", function () {
+      const initialValues = {
+        "value": "Abc",
+        "html:tabindex": 1,
+        "html:title": "Title text",
+        "html:appearance": "accent",
+        "html:hidden": true,
+        "html:disabled": true
+      };
+
+      return (
+        asyncRun(function () {
+          // Step 1: Call dataInit() to mock initial non-default screen load values.
+          tester.dataInit(null, null, null, initialValues);
+        })
+          // Step 2: Apply a representative set of properties.
+          .then(function () {
+            return asyncRun(function () {
+              tester.dataUpdate({
+                "value": "Xyz",
+                "html:tabindex": 0,
+                "html:title": "Title",
+                "html:appearance": "outline",
+                "html:hidden": false,
+                "html:disabled": true
+              });
+            });
+          })
+          .then(function () {
+            // Step 3: Verify all representative properties are applied.
+            expect(element.querySelector("span.u-text").innerText, "Text should be 'Xyz'.").to.equal("Xyz");
+            expect(element.getAttribute("tabindex"), "Tabindex should be '0'.").to.equal("0");
+            expect(element.getAttribute("title"), "Title should be 'Title'.").to.equal("Title");
+            expect(element, "Button should have 'outline' class.").to.have.class("outline");
+            expect(element.getAttribute("appearance"), "Appearance should be 'outline'.").to.equal("outline");
+            expect(element.hasAttribute("hidden"), "Button should not be hidden.").to.be.false;
+            expect(element.hasAttribute("disabled"), "Button should be disabled.").to.be.true;
+          })
+          .then(function () {
+            // Step 4: Call resetWidget() to reset all properties to initial values.
+            return asyncRun(function () {
+              tester.resetWidget();
+            });
+          })
+          .then(function () {
+            // Step 5: Verify all properties are reset to initial values.
+            expect(element.querySelector("span.u-text").innerText, "Text should be 'Abc'.").to.equal("Abc");
+            expect(element.getAttribute("tabindex"), "Tabindex should be '1'.").to.equal("1");
+            expect(element.getAttribute("title"), "Title should be 'Title text'.").to.equal("Title text");
+            expect(element, "Button should have 'accent' class.").to.have.class("accent");
+            expect(element.getAttribute("appearance"), "Appearance should be 'accent'.").to.equal("accent");
+            expect(element.hasAttribute("hidden"), "Button should be hidden.").to.be.true;
+            expect(element.hasAttribute("disabled"), "Button should be disabled.").to.be.true;
+          })
+      );
+    });
+
+    it("should reset all properties and values to default values if no initial values exist", function () {
+      const initialValues = {};
+
+      return (
+        asyncRun(function () {
+          // Step 1: Call dataInit() to mock initial non-default screen load values.
+          tester.dataInit(null, null, null, initialValues);
+        })
+          // Step 2: Apply a representative set of properties.
+          .then(function () {
+            return asyncRun(function () {
+              tester.dataUpdate({
+                "value": "Xyz",
+                "html:tabindex": 0,
+                "html:title": "Title",
+                "html:appearance": "outline",
+                "html:hidden": false,
+                "html:disabled": true
+              });
+            });
+          })
+          .then(function () {
+            // Step 3: Verify all representative properties are applied.
+            expect(element.querySelector("span.u-text").innerText, "Text should be 'Xyz'.").to.equal("Xyz");
+            expect(element.getAttribute("tabindex"), "Tabindex should be '0'.").to.equal("0");
+            expect(element.getAttribute("title"), "Title should be 'Title'.").to.equal("Title");
+            expect(element, "Button should have 'outline' class.").to.have.class("outline");
+            expect(element.getAttribute("appearance"), "Appearance should be 'outline'.").to.equal("outline");
+            expect(element.hasAttribute("hidden"), "Button should not be hidden.").to.be.false;
+            expect(element.hasAttribute("disabled"), "Button should be disabled.").to.be.true;
+          })
+          .then(function () {
+            // Step 4: Call resetWidget() to reset all properties to default values.
+            return asyncRun(function () {
+              tester.resetWidget();
+            });
+          })
+          .then(function () {
+            // Step 5: Verify all properties are reset to default values.
+            expect(element.querySelector("span.u-text").hasAttribute("hidden"), "Text should be hidden.").to.be.true;
+            expect(element.querySelector("span.u-text").innerText, "Text should be empty.").to.equal("");
+            expect(element.querySelector("span.u-icon").hasAttribute("hidden"), "Icon should be hidden.").to.be.true;
+            expect(element.getAttribute("tabindex"), "Tabindex should be '0'.").to.equal("0");
+            expect(element.getAttribute("title"), "Title should be null.").to.equal(null);
+            expect(element.classList.contains("neutral"), "Button should have 'neutral' class.").to.be.true;
+            expect(element.getAttribute("appearance"), "Appearance should be 'neutral'.").to.equal("neutral");
+            expect(element.hasAttribute("hidden"), "Button should not be hidden.").to.be.false;
+            expect(element.hasAttribute("disabled"), "Button should not be disabled.").to.be.false;
+          })
+      );
+    });
+
+    it("should reset specific properties and values to initial values that have initial values and leave others unchanged", function () {
+      const initialValues = {
+        "value": "Abc",
+        "html:appearance": "accent"
+      };
+
+      return (
+        asyncRun(function () {
+          // Step 1: Call dataInit() to mock initial non-default screen load values.
+          tester.dataInit(null, null, null, initialValues);
+        })
+          // Step 2: Apply a representative set of properties.
+          .then(function () {
+            return asyncRun(function () {
+              tester.dataUpdate({
+                "value": "Xyz",
+                "html:tabindex": 0,
+                "html:title": "Title",
+                "html:appearance": "outline",
+                "html:hidden": false,
+                "html:disabled": true
+              });
+            });
+          })
+          .then(function () {
+            // Step 3: Verify all representative properties are applied.
+            expect(element.querySelector("span.u-text").innerText, "Text should be 'Xyz'.").to.equal("Xyz");
+            expect(element.getAttribute("tabindex"), "Tabindex should be '0'.").to.equal("0");
+            expect(element.getAttribute("title"), "Title should be 'Title'.").to.equal("Title");
+            expect(element, "Button should have 'outline' class.").to.have.class("outline");
+            expect(element.getAttribute("appearance"), "Appearance should be 'outline'.").to.equal("outline");
+            expect(element.hasAttribute("hidden"), "Button should not be hidden.").to.be.false;
+            expect(element.hasAttribute("disabled"), "Button should be disabled.").to.be.true;
+          })
+          .then(function () {
+            // Step 4: Call resetWidget() to reset value and html:appearance properties to initial values.
+            return asyncRun(function () {
+              tester.resetWidget(["value", "html:appearance"]);
+            });
+          })
+          .then(function () {
+            // Step 5: Verify reset properties ('value', 'html:appearance') are restored to initial values; others remain unchanged.
+            expect(element.querySelector("span.u-text").innerText, "Text should be 'Abc' after reset.").to.equal("Abc");
+            expect(element.getAttribute("tabindex"), "Tabindex should remain '0' (not reset).").to.equal("0");
+            expect(element.getAttribute("title"), "Title should remain 'Title' (not reset).").to.equal("Title");
+            expect(element, "Button should have 'accent' class after reset.").to.have.class("accent");
+            expect(element.getAttribute("appearance"), "Appearance should be reset to 'accent'.").to.equal("accent");
+            expect(element.hasAttribute("hidden"), "Button should not be hidden after reset.").to.be.false;
+            expect(element.hasAttribute("disabled"), "Button should remain disabled (not reset).").to.be.true;
+          })
+      );
     });
   });
 
   describe("Widget reuse", function () {
     let element;
 
-    before(function () {
+    it("should reset all properties and values to defaults when reused", function () {
       tester.createWidget();
       element = tester.element;
-      assert(element, "Widget top element is not defined!");
-    });
-
-    it("should reset all properties and value to defaults when reused", function () {
       // Step 1: Apply a representative set of properties.
       return asyncRun(function () {
         tester.dataUpdate({

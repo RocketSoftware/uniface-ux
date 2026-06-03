@@ -401,7 +401,7 @@
           "prefix-icon": "Accounts"
         });
       }).then(function () {
-        assert.equal(element.childNodes[1].className, "u-prefix ms-Icon ms-Icon--Accounts", "Widget element doesn't has class u-prefix ms-Icon ms-Icon--Accounts.");
+        assert.equal(element.childNodes[1].className, "u-prefix ms-Icon ms-Icon--Accounts", "Widget element doesn't have class u-prefix ms-Icon ms-Icon--Accounts.");
       });
     });
 
@@ -424,7 +424,7 @@
           "suffix-icon": "Accounts"
         });
       }).then(function () {
-        assert.equal(element.childNodes[3].className, "u-suffix ms-Icon ms-Icon--Accounts", "Widget element doesn't has class u-suffix ms-Icon ms-Icon--Accounts.");
+        assert.equal(element.childNodes[3].className, "u-suffix ms-Icon ms-Icon--Accounts", "Widget element doesn't have class u-suffix ms-Icon ms-Icon--Accounts.");
       });
     });
 
@@ -597,6 +597,82 @@
       });
     });
 
+    it("should apply readonly and store invalid email value without throwing an exception when both are set together via dataUpdate", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "email",
+          "html:readonly": true,
+          "html:pattern": ".*",
+          "value": "not-a-valid-email"
+        });
+      }).then(function () {
+        assert(element.readOnly, "Widget should be set in readonly mode.");
+        assert.equal(element.value, "not-a-valid-email", "Invalid email value should be stored on the element.");
+      }).then(function () {
+        tester.userInput("");
+      });
+    });
+
+    it("should maintain readonly and store invalid email value without throwing an exception when value is set via dataUpdate while field is readonly", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "email",
+          "html:readonly": true
+        });
+      }).then(function () {
+        tester.dataUpdate({
+          "value": "not-a-valid-email"
+        });
+      }).then(function () {
+        assert(element.readOnly, "Widget should be set in readonly mode.");
+        assert.equal(element.value, "not-a-valid-email", "Invalid email value should be stored on the element.");
+      }).then(function () {
+        tester.userInput("");
+      });
+    });
+
+    it("should apply disabled and store invalid email value without throwing an exception when both are set together via dataUpdate", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "email",
+          "html:disabled": true,
+          "html:pattern": ".*",
+          "value": "not-a-valid-email"
+        });
+      }).then(function () {
+        assert(element.disabled, "Widget should be set in disabled mode.");
+        assert.equal(element.value, "not-a-valid-email", "Invalid email value should be stored on the element.");
+      }).then(function () {
+        tester.dataUpdate({
+          "html:disabled": false,
+          "html:type": "text",
+          "value": ""
+        });
+      });
+    });
+
+    it("should maintain disabled and store invalid email value without throwing an exception when value is set via dataUpdate while field is disabled", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "email",
+          "html:disabled": true
+        });
+      }).then(function () {
+        tester.dataUpdate({
+          "value": "not-a-valid-email"
+        });
+      }).then(function () {
+        assert(element.disabled, "Widget should be set in disabled mode.");
+        assert.equal(element.value, "not-a-valid-email", "Invalid email value should be stored on the element.");
+      }).then(function () {
+        tester.dataUpdate({
+          "html:disabled": false,
+          "html:type": "text",
+          "value": ""
+        });
+      });
+    });
+
     it("set type as password in text field", function () {
       let placeHolderText = "Input Password";
       // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
@@ -632,6 +708,80 @@
         assert.equal(element.getAttribute("placeholder"), placeHolderText, "Failed to show the placeHolderText attribute and value does not match.");
         assert(element.hasAttribute("type"), "Failed to show the type as url attribute.");
         assert(element.hasAttribute("placeholder"), "Failed to show the placeHolderText attribute and value does not match.");
+      });
+    });
+
+    it("should apply readonly and store invalid url value without throwing an exception when both are set together via dataUpdate", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "url",
+          "html:readonly": true,
+          "value": "not-a-valid-url"
+        });
+      }).then(function () {
+        assert(element.readOnly, "Widget should be set in readonly mode.");
+        assert.equal(element.value, "not-a-valid-url", "Invalid url value should be stored on the element.");
+      }).then(function () {
+        tester.userInput("");
+      });
+    });
+
+    it("should maintain readonly and store invalid url value without throwing an exception when value is set via dataUpdate while field is readonly", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "url",
+          "html:readonly": true
+        });
+      }).then(function () {
+        tester.dataUpdate({
+          "value": "not-a-valid-url"
+        });
+      }).then(function () {
+        assert(element.readOnly, "Widget should be set in readonly mode.");
+        assert.equal(element.value, "not-a-valid-url", "Invalid url value should be stored on the element.");
+      }).then(function () {
+        tester.userInput("");
+      });
+    });
+
+    it("should apply disabled and store invalid url value without throwing an exception when both are set together via dataUpdate", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "url",
+          "html:disabled": true,
+          "value": "not-a-valid-url"
+        });
+      }).then(function () {
+        assert(element.disabled, "Widget should be set in disabled mode.");
+        assert.equal(element.value, "not-a-valid-url", "Invalid url value should be stored on the element.");
+      }).then(function () {
+        tester.dataUpdate({
+          "html:disabled": false,
+          "html:type": "text",
+          "value": ""
+        });
+      });
+    });
+
+    it("should maintain disabled and store invalid url value without throwing an exception when value is set via dataUpdate while field is disabled", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "url",
+          "html:disabled": true
+        });
+      }).then(function () {
+        tester.dataUpdate({
+          "value": "not-a-valid-url"
+        });
+      }).then(function () {
+        assert(element.disabled, "Widget should be set in disabled mode.");
+        assert.equal(element.value, "not-a-valid-url", "Invalid url value should be stored on the element.");
+      }).then(function () {
+        tester.dataUpdate({
+          "html:disabled": false,
+          "html:type": "text",
+          "value": ""
+        });
       });
     });
 
@@ -678,6 +828,7 @@
       }).then(function () {
         assert.equal(element.getAttribute("type"), "datetime-local", "Failed to set the type as datetime-local.");
         assert.equal(tester.widget.getValue(), dateTimeValue, "Failed to set the datetime-local value.");
+        assert.equal(element.value, dateTimeValue, "Element value should match the set datetime-local value.");
         // Clear the value for subsequent tests.
         tester.dataUpdate({
           "value":""
@@ -707,10 +858,83 @@
       }).then(function () {
         assert.equal(element.getAttribute("type"), "time", "Failed to set the type as time.");
         assert.equal(tester.widget.getValue(), timeValue, "Failed to set the time value.");
+        assert.equal(element.value, timeValue, "Element value should match the set time value.");
         // Clear the value for subsequent tests.
         tester.dataUpdate({
           "value": ""
         });
+      });
+    });
+
+    it("should set a valid time value with seconds (HH:MM:SS)", function () {
+      const errorSpy = sinon.spy(console, "error");
+      let timeValue = "14:30:45";
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "time",
+          "value": timeValue
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("type"), "time", "Failed to set the type as time.");
+        assert.equal(tester.widget.getValue(), timeValue, "Failed to set the time value with seconds.");
+        assert.equal(element.value, timeValue, "Element value should match the set time value with seconds.");
+        sinon.assert.notCalled(errorSpy);
+        errorSpy.restore();
+        tester.dataUpdate({ "value": "" });
+      });
+    });
+
+    it("should set a valid time value with milliseconds (HH:MM:SS.sss)", function () {
+      const errorSpy = sinon.spy(console, "error");
+      let timeValue = "14:30:45.500";
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "time",
+          "value": timeValue
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("type"), "time", "Failed to set the type as time.");
+        assert.equal(tester.widget.getValue(), timeValue, "Failed to set the time value with milliseconds.");
+        assert.equal(element.value, timeValue, "Element value should match the set time value with milliseconds.");
+        sinon.assert.notCalled(errorSpy);
+        errorSpy.restore();
+        tester.dataUpdate({ "value": "" });
+      });
+    });
+
+    it("should set a valid datetime-local value with seconds", function () {
+      const errorSpy = sinon.spy(console, "error");
+      let dateTimeValue = "2026-04-23T14:30:45";
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "datetime-local",
+          "value": dateTimeValue
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("type"), "datetime-local", "Failed to set the type as datetime-local.");
+        assert.equal(tester.widget.getValue(), dateTimeValue, "Failed to set the datetime-local value with seconds.");
+        assert.equal(element.value, dateTimeValue, "Element value should match the set datetime-local value with seconds.");
+        sinon.assert.notCalled(errorSpy);
+        errorSpy.restore();
+        tester.dataUpdate({ "value": "" });
+      });
+    });
+
+    it("should apply u-blocked class and produce no errors when blockUI() is called with a time value containing seconds", function () {
+      const errorSpy = sinon.spy(console, "error");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "time",
+          "value": "14:30:45"
+        });
+      }).then(function () {
+        tester.widget.blockUI();
+      }).then(function () {
+        expect(element, "Class u-blocked is not applied.").to.have.class("u-blocked");
+        sinon.assert.notCalled(errorSpy);
+        errorSpy.restore();
+        tester.widget.unblockUI();
+        tester.dataUpdate({ "value": "" });
       });
     });
 
@@ -726,7 +950,7 @@
       });
     });
 
-    it("set button as subwidget in text field", function () {
+    it("should render changebutton subwidget with icon and slot", function () {
       // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
       return asyncRun(function () {
         tester.dataUpdate({
@@ -745,7 +969,7 @@
       });
     });
 
-    it("set button as subwidget in text field with change button icon", function () {
+    it("should render changebutton subwidget with icon in start position", function () {
       // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
       return asyncRun(function () {
         tester.dataUpdate({
@@ -764,7 +988,7 @@
       });
     });
 
-    it("set button as subwidget in textField with change button icon as false", function () {
+    it("should retain changebutton subwidget when changebutton is false", function () {
       // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
       return asyncRun(function () {
         tester.dataUpdate({
@@ -777,7 +1001,7 @@
       });
     });
 
-    it("set button as subwidget in textField with textfield disabled as true", function () {
+    it("should disable changebutton subwidget when textfield is disabled", function () {
       let disabled = true;
       // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
       return asyncRun(function () {
@@ -794,7 +1018,7 @@
       });
     });
 
-    it("set button as subwidget in textField with textfield disabled as false", function () {
+    it("should enable changebutton subwidget when textfield is not disabled", function () {
       let disabled = false;
       // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
       return asyncRun(function () {
@@ -811,7 +1035,7 @@
       });
     });
 
-    it("show label", function () {
+    it("should show label text when label-text is set", function () {
       let textFieldLabel = "Label";
       // Calling mock dataUpdate() to have updated widgetProperties and then call widget dataUpdate().
       return asyncRun(function () {
@@ -865,7 +1089,7 @@
       });
     });
 
-    it("reset label and its position", function () {
+    it("should reset label-text and label-position to defaults when RESET is passed", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "label-position": uniface.RESET,
@@ -879,14 +1103,14 @@
       });
     });
 
-    it("check reset label position styles", function () {
+    it("should apply default flex-direction after label position reset", function () {
       // If u-label-position attribute is added element display is changed.
       let numberFieldStyle = window.getComputedStyle(element, null);
       let flexPropertyValue = numberFieldStyle.getPropertyValue("flex-direction");
       assert.equal(flexPropertyValue, "column");
     });
 
-    it("setting minlength and maxlength", function () {
+    it("should set minlength and maxlength attributes", function () {
       let minlength = 2;
       let maxlength = 5;
 
@@ -902,6 +1126,317 @@
         assert.equal(element.getAttribute("maxlength"), maxlength, `Max is not same ${maxlength}.`);
       });
     });
+
+    it("should apply disabled state when changebutton is false and html:disabled is true", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "changebutton": false,
+          "changebutton:value": "Clock",
+          "label-text": "Label",
+          "label-position": "above",
+          "html:placeholder": "Enter Text",
+          "html:disabled": true
+        });
+      }).then(function () {
+        assert(element.hasAttribute("disabled"), "Widget should be in disabled state.");
+        let changeButton = element.querySelector("fluent-button.u-sw-changebutton");
+        assert(changeButton.hidden, "Change button should be hidden when changebutton is false.");
+      });
+    });
+
+    it("should remove disabled state when html:disabled is false with changebutton true", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "changebutton": true,
+          "changebutton:icon": "Clock",
+          "changebutton:value": "Clock",
+          "label-text": "Label",
+          "label-position": "above",
+          "html:disabled": false,
+          "html:placeholder": "Enter Text"
+        });
+      }).then(function () {
+        assert(!element.hasAttribute("disabled"), "Widget should not be in disabled state.");
+        let changeButton = element.querySelector("fluent-button.u-sw-changebutton");
+        assert(!changeButton.hidden, "Change button should be visible when changebutton is true.");
+        assert(!changeButton.hasAttribute("disabled"), "Change button should not be disabled.");
+      });
+    });
+
+    it("should not change state when html:disabled is set to an invalid value", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "changebutton": true,
+          "changebutton:value": "Clock",
+          "html:disabled": false
+        });
+      }).then(function () {
+        let disabledBefore = element.getAttribute("disabled");
+        tester.dataUpdate({
+          "html:disabled": "xxxx"
+        });
+        return asyncRun(function () {}).then(function () {
+          let disabledAfter = element.getAttribute("disabled");
+          assert.equal(disabledBefore, disabledAfter, "Widget should not change its disabled state for invalid value.");
+        });
+      });
+    });
+
+    it("should not change state when html:readonly is set to an invalid value", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": false
+        });
+      }).then(function () {
+        let readonlyBefore = element.getAttribute("readonly");
+        tester.dataUpdate({
+          "html:readonly": "xxxx"
+        });
+        return asyncRun(function () {}).then(function () {
+          let readonlyAfter = element.getAttribute("readonly");
+          assert.equal(readonlyBefore, readonlyAfter, "Widget should not change its readonly state for invalid value.");
+        });
+      });
+    });
+
+    it("should apply both disabled and readonly attributes when both are set to true", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:readonly": true,
+          "html:disabled": true
+        });
+      }).then(function () {
+        assert(element.hasAttribute("disabled"), "Widget should be in disabled state.");
+        assert(element.hasAttribute("readonly"), "Widget should be in readonly state.");
+      });
+    });
+
+    it("should set tabindex to -1 when html:tabindex is set to negative value", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:tabindex": -1
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("tabindex"), "-1", "Tabindex should be set to -1.");
+      });
+    });
+
+    it("should set the title attribute when html:title is specified", function () {
+      let titleText = "This is the title text";
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:title": titleText
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("title"), titleText, "Title attribute should match the specified value.");
+      });
+    });
+
+    it("should set the title attribute to empty when html:title is empty", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:title": ""
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("title"), "", "Title attribute should be empty.");
+      });
+    });
+
+    it("should set the spellcheck attribute to false", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:spellcheck": false
+        });
+      }).then(function () {
+        assert(!element.spellcheck, "Spellcheck attribute should be set to false.");
+      });
+    });
+
+    it("should set the size attribute to 5", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:size": "5"
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("size"), "5", "Size attribute should be set to 5.");
+      });
+    });
+
+    it("should set the size attribute to -1", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:size": "-1"
+        });
+      }).then(function () {
+        assert.equal(element.getAttribute("size"), "-1", "Size attribute should be set to -1.");
+      });
+    });
+
+    it("should log a console warning when html:maxlength is set to -1", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:maxlength": -1
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'html:maxlength' is not a positive number - Ignored."))).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("should log a console warning when html:minlength is set to -1", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:minlength": -1
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'html:minlength' is not a positive number - Ignored."))).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("should log a console warning when html:minlength or html:maxlength is set on a non-empty value", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "value": "abcde",
+          "html:minlength": 1,
+          "html:maxlength": 5
+        });
+      }).then(function () {
+        // Try setting new min/max while value is present.
+        tester.dataUpdate({
+          "html:minlength": 3,
+          "html:maxlength": 7
+        });
+        return asyncRun(function () {}).then(function () {
+          expect(warnSpy.calledWith(sinon.match("cannot be set if control-value is not"))).to.be.true;
+          warnSpy.restore();
+          // Reset value for subsequent tests.
+          tester.dataUpdate({ "value": "" });
+        });
+      });
+    });
+
+    it("should log a console warning when html:maxlength is less than html:minlength", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "value": ""
+        });
+        tester.dataUpdate({
+          "html:maxlength": 5,
+          "html:minlength": 10
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Invalid combination"))).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("should handle setting html:minlength to null after valid min/maxlength", function () {
+      const errorSpy = sinon.spy(console, "error");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "value": ""
+        });
+        tester.dataUpdate({
+          "html:minlength": 2,
+          "html:maxlength": 5
+        });
+      }).then(function () {
+        return asyncRun(function () {
+          tester.dataUpdate({
+            "html:minlength": null
+          });
+        }).then(function () {
+          // Widget should handle null minlength without errors.
+          sinon.assert.notCalled(errorSpy);
+          errorSpy.restore();
+        });
+      });
+    });
+
+    it("should handle setting both html:minlength and html:maxlength to null", function () {
+      const errorSpy = sinon.spy(console, "error");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:minlength": null,
+          "html:maxlength": null
+        });
+      }).then(function () {
+        // Widget should handle null min and maxlength without errors.
+        sinon.assert.notCalled(errorSpy);
+        errorSpy.restore();
+      });
+    });
+
+    it("should not show change button when changebutton is set to empty string", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "changebutton": ""
+        });
+      }).then(function () {
+        let changeButton = element.querySelector("fluent-button.u-sw-changebutton");
+        assert(changeButton.hidden, "Change button should be hidden when changebutton is empty.");
+      });
+    });
+
+    it("should display the string 'undefined' as label text when label-text is set to 'undefined'", function () {
+      let labelText = "undefined";
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": labelText
+        });
+      }).then(function () {
+        assert.equal(element.querySelector("span.u-label-text").innerText, labelText, "Label text should display 'undefined'.");
+        assert(!element.querySelector("span.u-label-text").hasAttribute("hidden"), "Label element should be visible.");
+      });
+    });
+
+    it("should position the label after the element", function () {
+      let textFieldLabel = "Label";
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "after",
+          "label-text": textFieldLabel
+        });
+      }).then(function () {
+        let labelPosition = element.getAttribute("u-label-position");
+        assert.equal(labelPosition, "after", "Label position should be 'after'.");
+      });
+    });
+
+    it("should log a console warning for an invalid label-position value", function () {
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-position": "top"
+        });
+      }).then(function () {
+        expect(warnSpy.calledWith(sinon.match("Property 'label-position' invalid value (top) - Ignored."))).to.be.true;
+        warnSpy.restore();
+      });
+    });
+
+    it("should wrap label text when text field width is decreased", function () {
+      let longLabel = "This is a very long label of widget and the question is, should it wrap or not";
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "label-text": longLabel,
+          "label-position": "above"
+        });
+
+        // Shrink the host element to trigger label wrapping.
+        element.style.width = "100px";
+      }, 1).then(function () {
+        let label = element.querySelector("span.u-label-text");
+        let labelWidth = Math.round(label.getBoundingClientRect().width);
+        let elementWidth = Math.round(element.getBoundingClientRect().width);
+        assert.isAtMost(labelWidth, elementWidth, "Label should not exceed text field width.");
+      });
+    });
   });
 
   describe("showError()", function () {
@@ -912,7 +1447,7 @@
       verifyWidgetClass(widgetClass);
     });
 
-    it("set invalid value in text field", function () {
+    it("should show error state for invalid value in text field", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "error": true,
@@ -935,7 +1470,8 @@
       element = tester.element;
       verifyWidgetClass(widgetClass);
     });
-    it("hide error: set invalid value in text field", function () {
+
+    it("should hide error state when error is set to false", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "error": false,
@@ -945,7 +1481,7 @@
         widget.hideError("");
         expect(element).to.not.have.class("u-invalid");
         assert(element.querySelector("span.u-error-icon").hasAttribute("hidden"), "Failed to show the hidden attribute.");
-        assert(element.childNodes[2].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't has class u-error-icon ms-Icon ms-Icon--AlertSolid.");
+        assert(element.childNodes[2].className, "u-error-icon ms-Icon ms-Icon--AlertSolid", "Widget element doesn't have class u-error-icon ms-Icon ms-Icon--AlertSolid.");
         assert(element.querySelector("span.u-error-icon").hasAttribute("slot"), "The slot attribute is not present.");
         assert(element.querySelector("span.u-error-icon").hasAttribute("title"), "The title attribute is not present.");
       });
@@ -959,7 +1495,7 @@
       properties = widget.data;
     });
 
-    it("verify single line value matches primaryPlainText returned by getValueFormatted()", function () {
+    it("should return single line value as primaryPlainText from getValueFormatted()", function () {
       valueProperty = "Single line value";
       return asyncRun(function () {
         tester.dataUpdate({
@@ -971,7 +1507,7 @@
       });
     });
 
-    it("verify the value returned by getValueFormatted() doesn't include the line breaks", function () {
+    it("should not include line breaks in the value returned by getValueFormatted()", function () {
       valueProperty = "testing value with multiple lines: line 1, line 2";
       return asyncRun(function () {
         tester.dataUpdate({
@@ -993,7 +1529,7 @@
       element = tester.element;
     });
 
-    it("check if the 'u-blocked' class is applied and ensure the widget is readOnly when the blockUI() is invoked", function () {
+    it("should apply 'u-blocked' class and set widget to readOnly when blockUI() is invoked", function () {
       return asyncRun(function () {
         widget.blockUI();
       }).then(function () {
@@ -1010,7 +1546,7 @@
       });
     });
 
-    it("set invalid email in text field to cause html validation error and then call blockUI()", function () {
+    it("should disable instead of readOnly when blockUI() is called with a validation error present", function () {
       const errorSpy = sinon.spy(console, "error");
       return asyncRun(function () {
         tester.dataUpdate({
@@ -1052,13 +1588,14 @@
       widget.blockUI();
     });
 
-    it("check if the 'u-blocked' class is removed and ensure that the widget is not readonly after unblockUI() is invoked", function () {
+    it("should remove 'u-blocked' class and readOnly state when unblockUI() is invoked", function () {
       return asyncRun(function () {
         widget.unblockUI();
       }).then(function () {
         expect(element, "Class u-blocked is not removed.").not.to.have.class("u-blocked");
         expect(widget.data.uiblocked).equal(false);
         assert(!element.readOnly, "Failed to remove the widget from readonly mode.");
+        assert(!element.disabled, "Failed to remove the widget from disabled mode.");
 
         let buttonElement = element.querySelector("fluent-button.u-sw-changebutton");
         expect(buttonElement).not.to.have.class("u-blocked");
@@ -1066,7 +1603,7 @@
       });
     });
 
-    it("check if the readonly mode is retained after unblockUI() is called", function () {
+    it("should retain readonly mode after unblockUI() is called", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "html:readonly": true
@@ -1095,7 +1632,7 @@
       });
     });
 
-    it("check if the 'u-blocked' class is removed and ensure that the widget is not disabled after unblockUI() is invoked", function () {
+    it("should remove 'u-blocked' class and disabled state when unblockUI() is invoked", function () {
       return asyncRun(function () {
         widget.unblockUI();
       }).then(function () {
@@ -1109,7 +1646,7 @@
       });
     });
 
-    it("check if the disabled mode is retained after unblockUI() is called", function () {
+    it("should retain disabled mode after unblockUI() is called", function () {
       return asyncRun(function () {
         tester.dataUpdate({
           "html:disabled": true
@@ -1126,8 +1663,83 @@
     });
   });
 
+  describe("Text field changebutton trigger", function () {
+    const triggerMap = {
+      "onchange": function () {
+        tester.debugLog("Onchange trigger fired.");
+      }
+    };
+    const trigger = "onchange";
+
+    beforeEach(async function () {
+      await asyncRun(function () {
+        tester.createWidget(triggerMap);
+        tester.dataUpdate({
+          "value": "",
+          "changebutton": true,
+          "changebutton:value": "Clock"
+        });
+      });
+      tester.resetTriggerCalled(trigger);
+    });
+
+    it("should fire the onchange trigger when Enter key is pressed with changebutton enabled", function () {
+      let inputValue = "enter test";
+      tester.userInput(inputValue);
+      expect(tester.calledOnce(trigger)).to.be.true;
+    });
+
+    it("should fire the change event when the change button is clicked", function () {
+      let changeButton = tester.element.querySelector("fluent-button.u-sw-changebutton");
+      changeButton.click();
+      expect(tester.calledOnce(trigger)).to.be.true;
+    });
+  });
+
+  describe("validate()", function () {
+    let widget;
+
+    before(function () {
+      widget = tester.createWidget();
+
+    });
+
+    it("should return validation error for invalid email input", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "email"
+        });
+        tester.userInput("random text");
+      }).then(function () {
+        let validationMessage = widget.validate();
+        assert(validationMessage, "Validation message should be returned for invalid email.");
+        // Clear input for subsequent tests.
+        tester.userInput("");
+      });
+    });
+
+    it("should return validation error when value is less than minlength", function () {
+      return asyncRun(function () {
+        tester.dataUpdate({
+          "html:type": "text",
+          "value": ""
+        });
+        tester.dataUpdate({
+          "html:minlength": 2,
+          "html:maxlength": 10
+        });
+        tester.userInput("a");
+      }).then(function () {
+        let validationMessage = widget.validate();
+        assert(validationMessage, "Validation message should be returned when value length is less than minlength.");
+        // Clear input for subsequent tests.
+        tester.userInput("");
+      });
+    });
+  });
+
   describe("Reset all properties", function () {
-    it("reset all properties", function () {
+    it("should reset all properties to defaults", function () {
       try {
         tester.dataUpdate(tester.getDefaultValues());
       } catch (e) {
