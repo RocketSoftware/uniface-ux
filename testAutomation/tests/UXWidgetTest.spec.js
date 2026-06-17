@@ -24,6 +24,12 @@ test('ChildWidgets Worker Unit Tests', async ({ page }) => {
     await homePage.checkFailuresEncountered(newPage, test);
 });
 
+test('HeaderFooter Unit Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.headerFooterUnitTestLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
 test('Layout Web Component Unit Tests', async ({ page }) => {
     const newPage = await indexPage.openNewPage(indexPage.layoutWebComponentUnitTestLink);
     const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);

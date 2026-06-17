@@ -512,7 +512,6 @@
       before(function () {
         const collectionSkeleton = createSkeleton(collectionWidgetId);
         collectionTester.createWidget(null, collectionSkeleton, mockEntityDef);
-        collectionTester.getDefaultValues();
         element = collectionTester.element;
         assert(element, "Widget top element is not defined!");
       });
@@ -561,6 +560,14 @@
 
       it("should have default value 'transparent' for 'appearance'", function () {
         expect(collectionTester.defaultValues["appearance"], "Default value of 'appearance' should be 'transparent'.").to.equal("transparent");
+      });
+
+      it("should have default value '' for 'label-text' and the label span should be hidden and empty", function () {
+        expect(collectionTester.defaultValues["label-text"], "Default value of 'label-text' should be empty string.").to.equal("");
+        const labelElement = element.querySelector(":scope > .u-label-text");
+        expect(labelElement, "The '.u-label-text' element should exist after dataInit.").to.exist;
+        expect(labelElement.textContent, "The label text content should be empty string by default.").to.equal("");
+        expect(labelElement.hidden, "The '.u-label-text' element should be hidden by default.").to.be.true;
       });
 
       it("should set show-label attribute to 'true' on the root element after dataInit", function () {
@@ -1639,6 +1646,63 @@
             const expectedOccWidth = parentWidth - totalParentPadding;
             expect(occWidth, "u-occ-layout width should not equal parent width minus padding inside a horizontal-wrap parent when not the only occurrence.").not.to.equal(expectedOccWidth);
           });
+        });
+      });
+    });
+
+    describe("Shadow root structure and ::part(root) gap", function () {
+
+      describe("CollectionLayout specific", function () {
+        let collElement;
+
+        before(function () {
+          resetWidgetContainer();
+          const localCollectionTester = new umockup.WidgetTester("UX.CollectionLayout", collectionWidgetId);
+          const collectionSkeleton = createSkeleton(collectionWidgetId);
+          localCollectionTester.createWidget(null, collectionSkeleton, mockEntityDef);
+          collElement = localCollectionTester.element;
+        });
+
+        it("should have a shadow root on u-coll-layout", function () {
+          assert(collElement.shadowRoot, "Shadow root should exist on u-coll-layout.");
+        });
+
+        it("should have a ::part(root) element in the shadow root of u-coll-layout", function () {
+          const rootPart = collElement.shadowRoot.querySelector("[part='root']");
+          assert(rootPart, "::part(root) should exist in the shadow root of u-coll-layout.");
+        });
+
+        it("should have a non-zero gap on u-coll-layout::part(root) set by --u-spacing * 0.5", function () {
+          const rootPart = collElement.shadowRoot.querySelector("[part='root']");
+          const gap = parseFloat(window.getComputedStyle(rootPart).gap);
+          expect(gap, "u-coll-layout::part(root) should have a non-zero gap set by calc(var(--u-spacing) * 0.5).").to.be.above(0);
+        });
+      });
+
+      describe("OccurrenceLayout specific", function () {
+        let occElement;
+
+        before(function () {
+          resetWidgetContainer();
+          const localOccurrenceTester = new umockup.WidgetTester("UX.OccurrenceLayout", occurrenceWidgetId);
+          const occurrenceSkeleton = createSkeleton(occurrenceWidgetId);
+          localOccurrenceTester.createWidget(null, occurrenceSkeleton, mockEntityDef);
+          occElement = localOccurrenceTester.element;
+        });
+
+        it("should have a shadow root on u-occ-layout", function () {
+          assert(occElement.shadowRoot, "Shadow root should exist on u-occ-layout.");
+        });
+
+        it("should have a ::part(root) element in the shadow root of u-occ-layout", function () {
+          const rootPart = occElement.shadowRoot.querySelector("[part='root']");
+          assert(rootPart, "::part(root) should exist in the shadow root of u-occ-layout.");
+        });
+
+        it("should have a non-zero gap on u-occ-layout::part(root) set by --u-spacing * 0.5", function () {
+          const rootPart = occElement.shadowRoot.querySelector("[part='root']");
+          const gap = parseFloat(window.getComputedStyle(rootPart).gap);
+          expect(gap, "u-occ-layout::part(root) should have a non-zero gap set by calc(var(--u-spacing) * 0.5).").to.be.above(0);
         });
       });
     });
