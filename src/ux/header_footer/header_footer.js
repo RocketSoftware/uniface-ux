@@ -6,7 +6,7 @@ import { AttributeString } from "../framework/workers/attribute_string.js";
 import { ChildWidgets } from "../framework/workers/child_widgets.js";
 import { parseColorHexRGB } from "@microsoft/fast-colors";
 import { SwatchRGB } from "@microsoft/fast-components";
-import { neutralBaseColor, accentBaseColor, baseLayerLuminance } from "@fluentui/web-components";
+import { neutralBaseColor, accentBaseColor, baseLayerLuminance, StandardLuminance } from "@fluentui/web-components";
 
 /**
  * Generates index rules dynamically for any number of children.
@@ -149,6 +149,11 @@ export class HeaderFooter extends Widget {
       "accent": "#4A9EFF",
       "luminance": 0.23
     },
+    "main": {
+      "neutral": "#808080",
+      "accent": "#0078d4",
+      "luminance": StandardLuminance.LightMode
+    },
     "footer": {
       "neutral": "#808080",
       "accent": "#0078d4",
@@ -193,45 +198,6 @@ export class HeaderFooter extends Widget {
   }
 
   /**
-   * Handles intelligent sticky placement for footer that switches between fixed and sticky
-   * based on whether content overflows (has scrollbar).
-   * Nested HeaderFooter always use sticky positioning (never fixed).
-   */
-  handleStickyPlacement() {
-    const container = this.elements.widget;
-    const footer = container.querySelector(":scope > .u-footer");
-    const isNested = container.parentElement?.closest(".u-header-footer");
-
-    const updateFooterPlacement = () => {
-      if (footer.getAttribute("placement") !== "sticky") {
-        // Remove data-behavior when placement is not sticky.
-        footer.removeAttribute("data-behavior");
-        return;
-      }
-
-      // Check if container has enough space to fit on screen without scrolling.
-      // If footer is currently fixed, it's removed from document flow, so add its height back
-      // to get the true content height for comparison.
-      const containerHeight = footer.getAttribute("data-behavior") === "fixed"
-        ? parseFloat(window.getComputedStyle(container).height) + parseFloat(window.getComputedStyle(footer).height)
-        : parseFloat(window.getComputedStyle(container).height);
-      const hasEmptySpace = containerHeight < window.innerHeight;
-      const useSticky = isNested || !hasEmptySpace;
-      footer.setAttribute("data-behavior", useSticky ? "sticky" : "fixed");
-    };
-
-    updateFooterPlacement();
-
-    window.addEventListener("resize", updateFooterPlacement);
-
-    this._mutationObserver = new window.MutationObserver(updateFooterPlacement);
-    this._mutationObserver.observe(container, {
-      "childList": true,
-      "subtree": true
-    });
-  }
-
-  /**
    * Private Uniface API method - onConnect.
    * Called when the widget connects to the DOM. Applies default theme to all sections and sets up intelligent footer placement behavior.
    */
@@ -239,9 +205,8 @@ export class HeaderFooter extends Widget {
     let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
     // Apply default theme to all sections.
     this.applyDefaultTheme(widgetElement, "header");
+    this.applyDefaultTheme(widgetElement, "main");
     this.applyDefaultTheme(widgetElement, "footer");
-    // Set up intelligent footer placement behavior.
-    this.handleStickyPlacement();
     return valueUpdaters;
   }
 }

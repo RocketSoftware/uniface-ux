@@ -239,15 +239,11 @@
     it("should have default header placement", function () {
       const header = element.querySelector(".u-header");
       expect(header.getAttribute("placement"), "Header placement should be 'sticky' by default.").to.equal("sticky");
-      // Note: data-behavior is only set when handleStickyPlacement() is called in onConnect().
-      // During dataInit(), the attribute is not yet set.
     });
 
     it("should have default footer placement", function () {
       const footer = element.querySelector(".u-footer");
       expect(footer.getAttribute("placement"), "Footer placement should be 'sticky' by default.").to.equal("sticky");
-      // Note: data-behavior is only set when handleStickyPlacement() is called in onConnect().
-      // During dataInit(), the attribute is not yet set.
     });
 
     it("should have sections structure", function () {
@@ -260,14 +256,57 @@
       assert(footer, "Footer section should exist.");
     });
 
-    it("should not have data-behavior set during dataInit()", function () {
+    it("should stretch to full dynamic viewport height", function () {
+      const parent = element.parentElement;
+      assert(parent, "HeaderFooter should be attached to a parent container.");
+
+      const previousMinHeight = parent.style.minHeight;
+      try {
+        parent.style.minHeight = "100dvh";
+
+        const parentStyles = window.getComputedStyle(parent);
+        const styles = window.getComputedStyle(element);
+        expect(styles.height, "HeaderFooter height should inherit the parent dynamic viewport min-height.").to.equal(
+          parentStyles.minHeight
+        );
+      } finally {
+        parent.style.minHeight = previousMinHeight;
+      }
+    });
+
+    it("should apply section flex and width defaults", function () {
       const header = element.querySelector(".u-header");
+      const main = element.querySelector(".u-main");
       const footer = element.querySelector(".u-footer");
 
-      // data-behavior should not be set yet since handleStickyPlacement() hasn't been called.
-      // Note: header never gets data-behavior attribute, only footer does.
-      expect(header.hasAttribute("data-behavior")).to.be.false;
-      expect(footer.hasAttribute("data-behavior")).to.be.false;
+      const headerStyle = window.getComputedStyle(header);
+      const mainStyle = window.getComputedStyle(main);
+      const footerStyle = window.getComputedStyle(footer);
+
+      expect(headerStyle.flexGrow, "Header should not grow.").to.equal("0");
+      expect(mainStyle.flexGrow, "Main should grow to fill available space.").to.equal("1");
+      expect(footerStyle.flexGrow, "Footer should not grow.").to.equal("0");
+
+      expect(headerStyle.width, "Header width should fill container.").to.not.equal("0px");
+      expect(mainStyle.width, "Main width should fill container.").to.not.equal("0px");
+      expect(footerStyle.width, "Footer width should fill container.").to.not.equal("0px");
+    });
+
+    it("should apply shared section padding from CSS", function () {
+      const header = element.querySelector(".u-header");
+      const main = element.querySelector(".u-main");
+      const footer = element.querySelector(".u-footer");
+
+      const headerStyle = window.getComputedStyle(header);
+      const mainStyle = window.getComputedStyle(main);
+      const footerStyle = window.getComputedStyle(footer);
+
+      expect(parseFloat(headerStyle.paddingLeft), "Header should have non-zero horizontal padding.").to.be.above(0);
+      expect(parseFloat(mainStyle.paddingLeft), "Main should have non-zero horizontal padding.").to.be.above(0);
+      expect(parseFloat(footerStyle.paddingLeft), "Footer should have non-zero horizontal padding.").to.be.above(0);
+
+      expect(headerStyle.paddingLeft, "Header and main should use same horizontal padding rule.").to.equal(mainStyle.paddingLeft);
+      expect(mainStyle.paddingLeft, "Main and footer should use same horizontal padding rule.").to.equal(footerStyle.paddingLeft);
     });
 
     it("should have default header placement='sticky'", function () {
@@ -362,8 +401,6 @@
         }).then(function () {
           const header = element.querySelector(".u-header");
           expect(header.getAttribute("placement"), "Header placement attribute should be 'sticky'.").to.equal("sticky");
-          // Note: data-behavior is set by observers that trigger on size/DOM changes.
-          // It may not be immediately set after dataUpdate, so we don't check it here.
         });
       });
 
@@ -408,8 +445,6 @@
           expect(footer.getAttribute("placement"), "Footer placement attribute should be 'sticky'.").to.equal("sticky");
           const footerStyle = window.getComputedStyle(footer);
           expect(footerStyle.display, "Footer with placement='sticky' should not have display 'none'.").to.not.equal("none");
-          // Note: data-behavior is set by observers that trigger on size/DOM changes.
-          // It may not be immediately set after dataUpdate, so we don't check it here.
         });
       });
 
@@ -443,8 +478,6 @@
           const footer = element.querySelector(".u-footer");
           expect(header.getAttribute("placement"), "Header placement attribute should be 'sticky'.").to.equal("sticky");
           expect(footer.getAttribute("placement"), "Footer placement attribute should be 'sticky'.").to.equal("sticky");
-          // Note: data-behavior is set by observers that trigger on size/DOM changes.
-          // It may not be immediately set after dataUpdate, so we don't check it here.
         });
       });
 
@@ -461,8 +494,6 @@
           expect(footer.getAttribute("placement"), "Footer placement attribute should be 'sticky'.").to.equal("sticky");
           const headerStyle = window.getComputedStyle(header);
           expect(headerStyle.display, "Header with placement='hidden' should have display 'none'.").to.equal("none");
-          // Note: data-behavior is set by observers that trigger on size/DOM changes.
-          // It may not be immediately set after dataUpdate, so we don't check it here.
         });
       });
 
@@ -1142,7 +1173,7 @@
     });
   });
 
-  describe("Data-behavior attribute tests", function () {
+  describe("Placement CSS behavior", function () {
     let element;
     let widget;
 
@@ -1153,109 +1184,29 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("should set data-behavior on header and footer with sticky placement", function () {
-      return asyncRun(function () {
-        const footer = element.querySelector(".u-footer");
+    it("should lower z-index for nested header-footer header", function () {
+      const wrapper = document.createElement("div");
+      wrapper.className = "u-header-footer";
 
-        // Trigger MutationObserver by adding and removing a temporary element.
-        const temp = document.createElement("span");
-        footer.appendChild(temp);
-        footer.removeChild(temp);
-      }).then(function () {
-        const header = element.querySelector(".u-header");
-        const footer = element.querySelector(".u-footer");
+      const nestedContainer = document.createElement("div");
+      nestedContainer.className = "u-header-footer";
 
-        // Both should have placement="sticky" by default.
-        expect(header.getAttribute("placement")).to.equal("sticky");
-        expect(footer.getAttribute("placement")).to.equal("sticky");
+      const nestedHeader = document.createElement("div");
+      nestedHeader.className = "u-header";
+      nestedContainer.appendChild(nestedHeader);
+      wrapper.appendChild(nestedContainer);
+      document.body.appendChild(wrapper);
 
-        // Only footer should have data-behavior attribute set (header does not use dynamic behavior).
-        expect(header.hasAttribute("data-behavior")).to.be.false;
-        expect(footer.hasAttribute("data-behavior")).to.be.true;
-
-        // Footer value should be 'fixed' or 'sticky'.
-        const footerBehavior = footer.getAttribute("data-behavior");
-        expect(["fixed", "sticky"]).to.include(footerBehavior);
-      });
+      try {
+        const nestedHeaderStyle = window.getComputedStyle(nestedHeader);
+        expect(nestedHeaderStyle.zIndex, "Nested header should use lower z-index than outer sticky header.").to.equal("9");
+      } finally {
+        wrapper.remove();
+      }
     });
 
-    it("should not set data-behavior when placement is scroll", function () {
+    it("should apply sticky positioning through placement attributes", function () {
       return asyncRun(function () {
-        widget.dataUpdate({
-          "footer:placement": "scroll"
-        });
-
-        const footer = element.querySelector(".u-footer");
-
-        // Trigger MutationObserver by adding and removing a temporary element.
-        const temp = document.createElement("span");
-        footer.appendChild(temp);
-        footer.removeChild(temp);
-      }).then(function () {
-        const footer = element.querySelector(".u-footer");
-        expect(footer.getAttribute("placement")).to.equal("scroll");
-
-        // Data-behavior should be removed when placement is not sticky.
-        expect(footer.hasAttribute("data-behavior")).to.be.false;
-      });
-    });
-
-    it("should not set data-behavior when placement is hidden", function () {
-      return asyncRun(function () {
-        widget.dataUpdate({
-          "footer:placement": "hidden"
-        });
-
-        const footer = element.querySelector(".u-footer");
-
-        // Trigger MutationObserver by adding and removing a temporary element.
-        const temp = document.createElement("span");
-        footer.appendChild(temp);
-        footer.removeChild(temp);
-      }).then(function () {
-        const footer = element.querySelector(".u-footer");
-        expect(footer.getAttribute("placement")).to.equal("hidden");
-
-        // Data-behavior should be removed when placement is not sticky.
-        expect(footer.hasAttribute("data-behavior")).to.be.false;
-      });
-    });
-
-    it("should update data-behavior when switching back to sticky", function () {
-      return asyncRun(function () {
-        // First set to scroll.
-        widget.dataUpdate({
-          "footer:placement": "scroll"
-        });
-      }).then(function () {
-        const footer = element.querySelector(".u-footer");
-        expect(footer.getAttribute("placement")).to.equal("scroll");
-
-        // Then switch back to sticky.
-        return asyncRun(function () {
-          widget.dataUpdate({
-            "footer:placement": "sticky"
-          });
-
-          // Trigger MutationObserver by adding and removing a temporary element.
-          const temp = document.createElement("span");
-          footer.appendChild(temp);
-          footer.removeChild(temp);
-        });
-      }).then(function () {
-        const footer = element.querySelector(".u-footer");
-        expect(footer.getAttribute("placement")).to.equal("sticky");
-
-        // Data-behavior should be set (it's set on initial load and not removed).
-        expect(footer.hasAttribute("data-behavior")).to.be.true;
-        const behavior = footer.getAttribute("data-behavior");
-        expect(["fixed", "sticky"]).to.include(behavior);
-      });
-    });
-
-    it("should apply correct CSS position based on data-behavior", function () {
-      return asyncRun(function () {
-        // Reset to sticky placement.
         widget.dataUpdate({
           "header:placement": "sticky",
           "footer:placement": "sticky"
@@ -1263,93 +1214,40 @@
       }).then(function () {
         const header = element.querySelector(".u-header");
         const footer = element.querySelector(".u-footer");
-        const footerBehavior = footer.getAttribute("data-behavior");
 
-        // Verify that attributes are correctly set for CSS to apply.
         expect(header.getAttribute("placement")).to.equal("sticky");
         expect(footer.getAttribute("placement")).to.equal("sticky");
-        // Only footer has data-behavior.
-        expect(header.hasAttribute("data-behavior")).to.be.false;
-        expect(["fixed", "sticky"]).to.include(footerBehavior);
 
-        // Check computed styles when browser supports it.
+        const headerStyle = window.getComputedStyle(header);
         const footerStyle = window.getComputedStyle(footer);
-
-        // CSS position should match data-behavior (if computed style is available).
-        if (footerStyle.position) {
-          if (footerBehavior === "fixed") {
-            expect(footerStyle.position).to.equal("fixed");
-          } else if (footerBehavior === "sticky") {
-            expect(footerStyle.position).to.equal("sticky");
-          }
-        }
+        expect(["sticky", "-webkit-sticky"]).to.include(headerStyle.position);
+        expect(["sticky", "-webkit-sticky"]).to.include(footerStyle.position);
       });
     });
 
-    it("should set data-behavior to sticky or fixed when content overflows", function () {
+    it("should remove sticky positioning when footer placement is scroll", function () {
       return asyncRun(function () {
-        // Create multiple child definitions to generate scrollable content.
-        const componentDef = {
-          "componentname": "TESTCOMPONENT",
-          "properties": {},
-          "type": "component",
-          "widget_class": "UX.CompLayout"
-        };
-
-        for (let i = 1; i <= 10; i++) {
-          componentDef[`#${i + 1}`] = {
-            "nm": `ScrollField${i}`,
-            "type": "field",
-            "widget_class": "UX.TextField",
-            "properties": { "area-slot": "main" },
-            "id": `#${i + 1}`
-          };
-        }
-
-        componentTester.createWidget(null, createSkeleton(componentWidgetId), componentDef);
-        const testElement = componentTester.element;
-        const testWidget = componentTester.widget;
-
-        // Set placement to sticky and ensure content has height.
-        testWidget.dataUpdate({
-          "footer:placement": "sticky",
-          "main:padding": "large"
+        widget.dataUpdate({
+          "footer:placement": "scroll"
         });
-
-        const main = testElement.querySelector(".u-main");
-        const footer = testElement.querySelector(".u-footer");
-
-        // Add some height to child elements to create overflow.
-        const childElements = main.querySelectorAll("[id^='ufld:']");
-        childElements.forEach(child => {
-          child.style.height = "100px";
-          child.style.marginBottom = "20px";
-        });
-
-        // Trigger MutationObserver by adding and removing a temporary element.
-        const temp = document.createElement("span");
-        footer.appendChild(temp);
-        footer.removeChild(temp);
       }).then(function () {
-        const testElement = componentTester.element;
-        const footer = testElement.querySelector(".u-footer");
-
-        expect(footer.getAttribute("placement")).to.equal("sticky");
-
-        // Verify data-behavior is set to sticky or fixed.
-        expect(footer.hasAttribute("data-behavior")).to.be.true;
-        const behavior = footer.getAttribute("data-behavior");
-        expect(["sticky", "fixed"]).to.include(behavior, "Footer should have data-behavior set to sticky or fixed when content overflows.");
-
-        // Verify computed style matches behavior (if styles are computed).
+        const footer = element.querySelector(".u-footer");
+        expect(footer.getAttribute("placement")).to.equal("scroll");
         const footerStyle = window.getComputedStyle(footer);
-        if (footerStyle.position && footerStyle.position !== "") {
-          if (behavior === "sticky") {
-            expect(["sticky", "-webkit-sticky"]).to.include(footerStyle.position);
-          } else if (behavior === "fixed") {
-            expect(footerStyle.position).to.equal("fixed");
-          }
-        }
+        expect(footerStyle.position, "Footer with placement='scroll' should not have sticky position.").to.not.equal("sticky");
+      });
+    });
+
+    it("should hide footer section when placement is hidden", function () {
+      return asyncRun(function () {
+        widget.dataUpdate({
+          "footer:placement": "hidden"
+        });
+      }).then(function () {
+        const footer = element.querySelector(".u-footer");
+        expect(footer.getAttribute("placement")).to.equal("hidden");
+        const footerStyle = window.getComputedStyle(footer);
+        expect(footerStyle.display).to.equal("none");
       });
     });
   });
@@ -1367,6 +1265,7 @@
       const defaultTheme = componentWidgetClass.defaultTheme;
       assert(defaultTheme, "defaultTheme should be defined on widget class.");
       assert(defaultTheme.header, "defaultTheme should have header configuration.");
+      assert(defaultTheme.main, "defaultTheme should have main configuration.");
       assert(defaultTheme.footer, "defaultTheme should have footer configuration.");
     });
 
@@ -1382,6 +1281,26 @@
       expect(footerTheme.neutral).to.equal("#808080");
       expect(footerTheme.accent).to.equal("#0078d4");
       expect(footerTheme.luminance).to.equal(0.9);
+    });
+
+    it("should have correct default theme values for main", function () {
+      const mainTheme = componentWidgetClass.defaultTheme.main;
+      expect(mainTheme.neutral).to.equal("#808080");
+      expect(mainTheme.accent).to.equal("#0078d4");
+      expect(mainTheme.luminance, "Main luminance should be light mode.").to.be.above(0.9);
+    });
+
+    it("should apply light mode luminance to main section", function () {
+      let main;
+      return asyncRun(function () {
+        main = element.querySelector(".u-main");
+        assert(main, "Main section should exist");
+        assert(main.isConnected, "Main should be connected to DOM");
+      }).then(function () {
+        const computedStyle = window.getComputedStyle(main);
+        const mainLuminance = computedStyle.getPropertyValue("--base-layer-luminance");
+        expect(parseFloat(mainLuminance), "Main theme should have light-mode luminance.").to.be.above(0.9);
+      });
     });
 
     it("should apply dark mode luminance to header section", function () {
@@ -1693,54 +1612,6 @@
         expect(widget.applyDefaultTheme).to.be.a("function");
         expect(componentWidgetClass.defaultTheme.header.luminance).to.equal(0.23);
         done();
-      });
-    });
-  });
-
-  describe("Sticky placement with window resize", function () {
-    let element;
-    let widget;
-
-    before(function () {
-      componentTester.createWidget(null, createSkeleton(componentWidgetId), mockComponentDef);
-      widget = componentTester.widget;
-      element = componentTester.element;
-      assert(element, "Widget top element is not defined!");
-    });
-
-    it("should respond to window resize events", function () {
-      return asyncRun(function () {
-        // Ensure footer has sticky placement.
-        widget.dataUpdate({ "footer:placement": "sticky" });
-
-        // Trigger window resize event.
-        // eslint-disable-next-line no-undef
-        window.dispatchEvent(new Event("resize"));
-      }).then(function () {
-        const footer = element.querySelector(".u-footer");
-        const afterResizeBehavior = footer.getAttribute("data-behavior");
-
-        // Behavior attribute should exist when placement is sticky.
-        if (afterResizeBehavior) {
-          expect(["sticky", "fixed"]).to.include(afterResizeBehavior);
-        }
-      });
-    });
-
-    it("should maintain footer data-behavior after multiple resizes", function () {
-      return asyncRun(function () {
-        // Trigger multiple resize events.
-        for (let i = 0; i < 5; i++) {
-          // eslint-disable-next-line no-undef
-          window.dispatchEvent(new Event("resize"));
-        }
-      }).then(function () {
-        const footer = element.querySelector(".u-footer");
-        const behavior = footer.getAttribute("data-behavior");
-        expect(footer.getAttribute("placement")).to.equal("sticky");
-        if (behavior) {
-          expect(["sticky", "fixed"]).to.include(behavior);
-        }
       });
     });
   });

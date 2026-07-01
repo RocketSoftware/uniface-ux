@@ -90,9 +90,9 @@
         expect(HeaderFooter.uiBlocking, "uiBlocking should be an empty string.").to.equal("");
       });
 
-      it("should define defaultTheme for header and footer", function () {
+      it("should define defaultTheme for header, main and footer", function () {
         expect(HeaderFooter.defaultTheme, "defaultTheme should be an object.").to.be.an("object");
-        expect(HeaderFooter.defaultTheme, "defaultTheme should define both header and footer themes.").to.include.all.keys("header", "footer");
+        expect(HeaderFooter.defaultTheme, "defaultTheme should define header, main and footer themes.").to.include.all.keys("header", "main", "footer");
       });
 
       it("should define expected defaultTheme values", function () {
@@ -101,6 +101,10 @@
           "accent": "#4A9EFF",
           "luminance": 0.23
         });
+        expect(HeaderFooter.defaultTheme.main.neutral).to.equal("#808080");
+        expect(HeaderFooter.defaultTheme.main.accent).to.equal("#0078d4");
+        expect(HeaderFooter.defaultTheme.main.luminance).to.be.a("number");
+        expect(HeaderFooter.defaultTheme.main.luminance).to.be.above(0.9);
         expect(HeaderFooter.defaultTheme.footer).to.deep.equal({
           "neutral": "#808080",
           "accent": "#0078d4",
@@ -258,7 +262,7 @@
           expect(applyColorPaletteSpy.firstCall.args[3], "Header luminance should match default theme.").to.equal(0.23);
         });
 
-        it("should not call applyColorPalette() for section without theme", function () {
+        it("should call applyColorPalette() for themed main section", function () {
           const applyColorPaletteSpy = sinon.spy();
           const context = {
             "applyColorPalette": applyColorPaletteSpy
@@ -266,7 +270,22 @@
 
           HeaderFooter.prototype.applyDefaultTheme.call(context, fixture.shell, "main");
 
-          expect(applyColorPaletteSpy.notCalled, "applyColorPalette() should not be called for non-themed section.").to.equal(true);
+          expect(applyColorPaletteSpy.calledOnce, "applyColorPalette() should be called exactly once for main.").to.equal(true);
+          expect(applyColorPaletteSpy.firstCall.args[0].classList.contains("u-main"), "Target element should be main section.").to.equal(true);
+          expect(applyColorPaletteSpy.firstCall.args[1], "Main neutral color should match default theme.").to.equal("#808080");
+          expect(applyColorPaletteSpy.firstCall.args[2], "Main accent color should match default theme.").to.equal("#0078d4");
+          expect(applyColorPaletteSpy.firstCall.args[3], "Main luminance should match default theme.").to.equal(HeaderFooter.defaultTheme.main.luminance);
+        });
+
+        it("should not call applyColorPalette() for unknown section without theme", function () {
+          const applyColorPaletteSpy = sinon.spy();
+          const context = {
+            "applyColorPalette": applyColorPaletteSpy
+          };
+
+          HeaderFooter.prototype.applyDefaultTheme.call(context, fixture.shell, "unknown");
+
+          expect(applyColorPaletteSpy.notCalled, "applyColorPalette() should not be called for unknown section.").to.equal(true);
         });
 
         it("should not call applyColorPalette() when themed section element does not exist", function () {
@@ -282,185 +301,9 @@
         });
       });
 
-      describe("handleStickyPlacement()", function () {
-        let fixture;
-        let parentHeaderFooter;
-
-        function createWindowStubs(options = {}) {
-          const {
-            onAddEventListener,
-            onGetComputedStyle,
-            onObserve
-          } = options;
-
-          const addEventListenerStub = sinon.stub(window, "addEventListener").callsFake(function (eventName, callback) {
-            if (typeof onAddEventListener === "function") {
-              onAddEventListener(eventName, callback);
-            }
-          });
-
-          const getComputedStyleStub = sinon.stub(window, "getComputedStyle").callsFake(function (element) {
-            if (typeof onGetComputedStyle === "function") {
-              return onGetComputedStyle(element);
-            }
-            return { "height": "0px" };
-          });
-
-          const observeSpy = sinon.spy();
-
-          const mutationObserverStub = sinon.stub(window, "MutationObserver").callsFake(function (callback) {
-            this.callback = callback;
-            this.observe = function (target, config) {
-              observeSpy(target, config);
-              if (typeof onObserve === "function") {
-                onObserve(target, config);
-              }
-            };
-          });
-
-          return {
-            addEventListenerStub,
-            getComputedStyleStub,
-            mutationObserverStub,
-            observeSpy
-          };
-        }
-
-        beforeEach(function () {
-          fixture = createHeaderFooterShell();
-          parentHeaderFooter = null;
-        });
-
-        afterEach(function () {
-          if (parentHeaderFooter) {
-            parentHeaderFooter.remove();
-          } else if (fixture?.shell) {
-            fixture.shell.remove();
-          }
-
-          fixture = null;
-          parentHeaderFooter = null;
-        });
-
-        it("should set footer data-behavior and register resize/mutation observers", function () {
-          let resizeHandler = null;
-          const {
-            addEventListenerStub,
-            getComputedStyleStub,
-            mutationObserverStub,
-            observeSpy
-          } = createWindowStubs({
-            onAddEventListener(eventName, callback) {
-              if (eventName === "resize") {
-                resizeHandler = callback;
-              }
-            },
-            onGetComputedStyle(element) {
-              if (element === fixture.shell) {
-                return { "height": "300px" };
-              }
-              if (element === fixture.footer) {
-                return { "height": "50px" };
-              }
-              return { "height": "0px" };
-            }
-          });
-
-          try {
-            const mockInstance = { "elements": { "widget": fixture.shell } };
-            HeaderFooter.prototype.handleStickyPlacement.call(mockInstance);
-
-            expect(fixture.footer.getAttribute("data-behavior"), "Footer sticky placement should resolve to fixed when content does not overflow.").to.equal("fixed");
-            expect(typeof resizeHandler, "Resize handler should be registered.").to.equal("function");
-            expect(observeSpy.calledOnce, "MutationObserver.observe() should be called once.").to.equal(true);
-            expect(observeSpy.firstCall.args[0], "observeSpy should capture widget container as first argument.").to.equal(fixture.shell);
-            expect(observeSpy.firstCall.args[1].childList, "observeSpy should capture childList=true in observe options.").to.equal(true);
-            expect(observeSpy.firstCall.args[1].subtree, "observeSpy should capture subtree=true in observe options.").to.equal(true);
-            expect(mockInstance._mutationObserver, "MutationObserver instance should be stored on widget instance.").to.exist;
-            expect(addEventListenerStub.calledOnce, "addEventListener() should be called once.").to.equal(true);
-            expect(getComputedStyleStub.called, "getComputedStyle() should be called.").to.equal(true);
-            expect(mutationObserverStub.calledOnce, "MutationObserver constructor should be called once.").to.equal(true);
-          } finally {
-            addEventListenerStub.restore();
-            getComputedStyleStub.restore();
-            mutationObserverStub.restore();
-          }
-        });
-
-        it("should remove data-behavior when footer placement is not sticky", function () {
-          fixture.footer.setAttribute("placement", "scroll");
-          fixture.footer.setAttribute("data-behavior", "sticky");
-
-          const {
-            addEventListenerStub,
-            getComputedStyleStub,
-            mutationObserverStub
-          } = createWindowStubs({
-            onGetComputedStyle() {
-              return { "height": "300px" };
-            }
-          });
-
-          try {
-            const mockInstance = { "elements": { "widget": fixture.shell } };
-            HeaderFooter.prototype.handleStickyPlacement.call(mockInstance);
-
-            expect(fixture.footer.hasAttribute("data-behavior"), "data-behavior should be removed when placement is not sticky.").to.equal(false);
-            expect(addEventListenerStub.calledOnce, "addEventListener() should still be registered.").to.equal(true);
-            expect(mutationObserverStub.calledOnce, "MutationObserver constructor should be called once.").to.equal(true);
-          } finally {
-            addEventListenerStub.restore();
-            getComputedStyleStub.restore();
-            mutationObserverStub.restore();
-          }
-        });
-
-        it("should update behavior on resize callback when content transitions from fitting to overflowing", function () {
-          let resizeHandler = null;
-          let callCount = 0;
-
-          const {
-            addEventListenerStub,
-            getComputedStyleStub,
-            mutationObserverStub
-          } = createWindowStubs({
-            onAddEventListener(eventName, callback) {
-              if (eventName === "resize") {
-                resizeHandler = callback;
-              }
-            },
-            onGetComputedStyle(element) {
-              if (element === fixture.shell) {
-                callCount += 1;
-                return { "height": callCount === 1 ? "300px" : "2000px" };
-              }
-              if (element === fixture.footer) {
-                return { "height": "50px" };
-              }
-              return { "height": "0px" };
-            }
-          });
-
-          try {
-            const mockInstance = { "elements": { "widget": fixture.shell } };
-            HeaderFooter.prototype.handleStickyPlacement.call(mockInstance);
-            expect(fixture.footer.getAttribute("data-behavior")).to.equal("fixed");
-
-            resizeHandler();
-            expect(fixture.footer.getAttribute("data-behavior"), "Resize should recompute to sticky when content overflows.").to.equal("sticky");
-            expect(addEventListenerStub.calledOnce, "addEventListener() should be called once.").to.equal(true);
-            expect(mutationObserverStub.calledOnce, "MutationObserver constructor should be called once.").to.equal(true);
-          } finally {
-            addEventListenerStub.restore();
-            getComputedStyleStub.restore();
-            mutationObserverStub.restore();
-          }
-        });
-      });
-
       describe("onConnect()", function () {
 
-        it("should call super.onConnect() and applyDefaultTheme() plus handleStickyPlacement()", function () {
+        it("should call super.onConnect() and applyDefaultTheme() for header, main and footer", function () {
           const { shell } = createHeaderFooterShell();
           const superPrototype = Object.getPrototypeOf(HeaderFooter.prototype);
           const originalSuperOnConnect = superPrototype.onConnect;
@@ -472,19 +315,17 @@
 
           try {
             const applyDefaultThemeSpy = sinon.spy();
-            const handleStickyPlacementSpy = sinon.spy();
             const mockInstance = {
-              "applyDefaultTheme": applyDefaultThemeSpy,
-              "handleStickyPlacement": handleStickyPlacementSpy
+              "applyDefaultTheme": applyDefaultThemeSpy
             };
 
             const returned = HeaderFooter.prototype.onConnect.call(mockInstance, shell, {});
 
             expect(returned, "onConnect() should return value updaters from super.onConnect().").to.equal(expectedUpdaters);
-            expect(applyDefaultThemeSpy.callCount, "onConnect() should call applyDefaultTheme() twice.").to.equal(2);
+            expect(applyDefaultThemeSpy.callCount, "onConnect() should call applyDefaultTheme() three times.").to.equal(3);
             expect(applyDefaultThemeSpy.firstCall.args, "First applyDefaultTheme() call should target header.").to.deep.equal([shell, "header"]);
-            expect(applyDefaultThemeSpy.secondCall.args, "Second applyDefaultTheme() call should target footer.").to.deep.equal([shell, "footer"]);
-            expect(handleStickyPlacementSpy.calledOnce, "onConnect() should call handleStickyPlacement() once.").to.equal(true);
+            expect(applyDefaultThemeSpy.secondCall.args, "Second applyDefaultTheme() call should target main.").to.deep.equal([shell, "main"]);
+            expect(applyDefaultThemeSpy.thirdCall.args, "Third applyDefaultTheme() call should target footer.").to.deep.equal([shell, "footer"]);
           } finally {
             superPrototype.onConnect = originalSuperOnConnect;
             shell.remove();

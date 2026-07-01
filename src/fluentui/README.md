@@ -22,3 +22,9 @@ The next Office UI fabric CSS files have been downloaded:
 Relevant assets are located in folder assets.
 
 License for CSS file usage: http://aka.ms/fabric-assets-license
+
+## Available Icons
+
+### Official References
+
+- [Fluent UI Icons Gallery](https://developer.microsoft.com/en-us/fluentui#/styles/web/icons) : Searchable catalog of Fluent UI Fabric MDL2 icons.

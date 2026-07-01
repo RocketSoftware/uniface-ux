@@ -1,13 +1,13 @@
 # RELEASE NOTE - Uniface UX
 
-## Release 10.4.03.043
+## Release 10.4.03.045
 
-- Uniface release: 10.4.03.043
+- Uniface release: 10.4.03.045
 - UX Interface Version: 2
 
-### Bug Fixes
+### Feature
 
-- `uxTextField` (`uxEmailField`, `uxUrlField`):
-  - A `TypeError` was thrown when a value that did not conform to the field type was assigned to an `html:type="email"` or `html:type="url"` field while the widget was in read-only mode, leaving the widget in a non-functional state.
+- `uxHeaderFooter`, `uxLayout(uxCompLayout)`:
+  - In Generated mode, widgets automatically adapt their height to fill the available browser viewport. A minimum page height is maintained during rendering, enabling these widgets to expand into the remaining viewport space by default for a seamless full-height layout.
 
 For older releases, see [CHANGELOG.md](CHANGELOG.md)

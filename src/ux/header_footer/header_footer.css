@@ -1,9 +1,23 @@
-body {
-  margin: 0;
-}
-
 .u-header-footer {
   position: relative;
+  min-height: inherit;
+  height: 100%;
+  --u-layout-flex-direction: column;
+}
+
+.u-header-footer .u-header {
+  flex: 0 0 auto;
+  width: 100%;
+}
+ 
+.u-header-footer .u-main {
+  flex: 1 1 auto;
+  width: 100%;
+}
+ 
+.u-header-footer .u-footer {  
+  flex: 0 0 auto;
+  width: 100%;
 }
 
 .u-header-footer .u-header:empty,
@@ -21,29 +35,20 @@ body {
   z-index: 10;
 }
 
-.u-header-footer .u-footer[placement="sticky"][data-behavior="fixed"] {
-  position: fixed;
+/* Sticky placement for footer. */
+.u-header-footer .u-footer[placement="sticky"] {
+  position: sticky;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 10;
 }
 
-.u-header-footer .u-footer[placement="sticky"][data-behavior="sticky"] {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  z-index: 10;
-}
-
 .u-header-footer .u-header,
+.u-header-footer .u-main,
 .u-header-footer .u-footer {
   padding: var(--u-spacing) calc((var(--u-spacing)) * 1.5);
   background: var(--fill-color);
-}
-
-.u-header-footer .u-main {
-  padding: var(--u-spacing) calc((var(--u-spacing)) * 1.5);
 }
 
 .u-header-footer .u-header::part(root),
@@ -53,4 +58,9 @@ body {
 
 .u-header-footer .u-main::part(root) {
   gap: var(--u-spacing);
+}
+
+/* Lower z-index for nested header-footer headers to keep them below the outer header. */
+.u-header-footer .u-header-footer .u-header {
+  z-index: 9;
 }
