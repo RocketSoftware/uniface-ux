@@ -7,3 +7,8 @@
 :not(span.udsp_default) > .u-comp-layout {
   padding: var(--u-spacing) calc(var(--u-spacing) * 1.5);
 }
+
+.u-comp-layout {
+  min-height: inherit;
+  height: 100%;
+}

@@ -301,6 +301,24 @@
       const hasPadding = parseFloat(styles.paddingLeft) > 0 && parseFloat(styles.paddingRight) > 0 && parseFloat(styles.paddingTop) > 0 && parseFloat(styles.paddingBottom) > 0;
       expect(hasPadding, "Padding property should be set on layout element.").to.be.true;
     });
+
+    it("should stretch to full dynamic viewport height", function () {
+      const parent = element.parentElement;
+      assert(parent, "Comp layout should be attached to a parent container.");
+
+      const previousMinHeight = parent.style.minHeight;
+      try {
+        parent.style.minHeight = "100dvh";
+
+        const parentStyles = window.getComputedStyle(parent);
+        const styles = window.getComputedStyle(element);
+        expect(styles.height, "Comp layout height should inherit the parent dynamic viewport min-height.").to.equal(
+          parentStyles.minHeight
+        );
+      } finally {
+        parent.style.minHeight = previousMinHeight;
+      }
+    });
   });
 
   describe("dataUpdate()", function () {
