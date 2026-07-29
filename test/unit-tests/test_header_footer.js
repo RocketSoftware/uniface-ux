@@ -1,4 +1,4 @@
-/* global chai, describe, it, beforeEach, afterEach, sinon, UNIFACE */
+/* global chai, describe, it, UNIFACE */
 
 (function () {
   "use strict";
@@ -20,31 +20,6 @@
     expect(slotConfig, "slotConfig should be available to read indexRules.").to.exist;
     expect(slotConfig.indexRules, "slotConfig.indexRules should be available.").to.exist;
     return slotConfig.indexRules;
-  }
-
-  function createHeaderFooterShell() {
-    const shell = document.createElement("uf-shell");
-    shell.className = "u-header-footer";
-
-    const header = document.createElement("uf-header");
-    header.className = "u-header";
-    shell.appendChild(header);
-
-    const main = document.createElement("uf-main");
-    main.className = "u-main";
-    shell.appendChild(main);
-
-    const footer = document.createElement("uf-footer");
-    footer.className = "u-footer";
-    footer.setAttribute("placement", "sticky");
-    shell.appendChild(footer);
-
-    return {
-      shell,
-      header,
-      main,
-      footer
-    };
   }
 
   describe("HeaderFooter", function () {
@@ -90,26 +65,54 @@
         expect(HeaderFooter.uiBlocking, "uiBlocking should be an empty string.").to.equal("");
       });
 
-      it("should define defaultTheme for header, main and footer", function () {
+      it("should define defaultTheme for header, main, and footer", function () {
         expect(HeaderFooter.defaultTheme, "defaultTheme should be an object.").to.be.an("object");
-        expect(HeaderFooter.defaultTheme, "defaultTheme should define header, main and footer themes.").to.include.all.keys("header", "main", "footer");
+        expect(HeaderFooter.defaultTheme, "defaultTheme should define header, main, and footer themes.").to.include.all.keys("header", "main", "footer");
       });
 
-      it("should define expected defaultTheme values", function () {
-        expect(HeaderFooter.defaultTheme.header).to.deep.equal({
-          "neutral": "#0078d4",
-          "accent": "#4A9EFF",
-          "luminance": 0.23
-        });
-        expect(HeaderFooter.defaultTheme.main.neutral).to.equal("#808080");
-        expect(HeaderFooter.defaultTheme.main.accent).to.equal("#0078d4");
-        expect(HeaderFooter.defaultTheme.main.luminance).to.be.a("number");
-        expect(HeaderFooter.defaultTheme.main.luminance).to.be.above(0.9);
-        expect(HeaderFooter.defaultTheme.footer).to.deep.equal({
-          "neutral": "#808080",
-          "accent": "#0078d4",
-          "luminance": 0.9
-        });
+      it("should have correct default theme values for header light mode", function () {
+        const headerTheme = HeaderFooter.defaultTheme.header;
+        expect(headerTheme.light, "Header should have light mode configuration.").to.exist;
+        expect(headerTheme.dark, "Header should have dark mode configuration.").to.exist;
+        expect(headerTheme.light.neutral).to.equal("#0078d4");
+        expect(headerTheme.light.accent).to.equal("#4A9EFF");
+        expect(headerTheme.light.luminance).to.equal(0.23);
+      });
+
+      it("should have correct default theme values for header dark mode", function () {
+        const headerTheme = HeaderFooter.defaultTheme.header;
+        expect(headerTheme.dark, "Header should have dark mode configuration.").to.exist;
+        expect(headerTheme.dark.neutral).to.equal("#0078d4");
+        expect(headerTheme.dark.accent).to.equal("#4A9EFF");
+        expect(headerTheme.dark.luminance).to.equal(0.16);
+      });
+
+      it("should have correct default theme values for main light mode", function () {
+        const mainTheme = HeaderFooter.defaultTheme.main;
+        expect(mainTheme.light, "Main should have light mode configuration.").to.exist;
+        expect(mainTheme.dark, "Main should have dark mode configuration.").to.exist;
+        expect(mainTheme.light.luminance).to.equal(0.98);
+      });
+
+      it("should have correct default theme values for main dark mode", function () {
+        const mainTheme = HeaderFooter.defaultTheme.main;
+        expect(mainTheme.dark, "Main should have dark mode configuration.").to.exist;
+        expect(mainTheme.dark.neutral).to.equal("#52565d");
+        expect(mainTheme.dark.luminance).to.equal(0.12);
+      });
+
+      it("should have correct default theme values for footer light mode", function () {
+        const footerTheme = HeaderFooter.defaultTheme.footer;
+        expect(footerTheme.light, "Footer should have light mode configuration.").to.exist;
+        expect(footerTheme.dark, "Footer should have dark mode configuration.").to.exist;
+        expect(footerTheme.light.luminance).to.equal(0.9);
+      });
+
+      it("should have correct default theme values for footer dark mode", function () {
+        const footerTheme = HeaderFooter.defaultTheme.footer;
+        expect(footerTheme.dark, "Footer should have dark mode configuration.").to.exist;
+        expect(footerTheme.dark.neutral).to.equal("#52565d");
+        expect(footerTheme.dark.luminance).to.equal(0.10);
       });
     });
 
@@ -215,122 +218,6 @@
         expect("0" in indexRules, "Proxy should report false for zero.").to.equal(false);
         expect("-2" in indexRules, "Proxy should report false for negative count.").to.equal(false);
         expect("main" in indexRules, "Proxy should report false for non-numeric keys.").to.equal(false);
-      });
-    });
-
-    describe("Instance methods", function () {
-      describe("applyColorPalette()", function () {
-
-        it("should not throw for valid colors", function () {
-          const element = document.createElement("div");
-          expect(function () {
-            HeaderFooter.prototype.applyColorPalette.call({}, element, "#0078d4", "#4A9EFF", 0.5);
-          }, "applyColorPalette() should not throw for valid colors.").to.not.throw();
-        });
-
-        it("should not throw for invalid hex color", function () {
-          const element = document.createElement("div");
-          expect(function () {
-            HeaderFooter.prototype.applyColorPalette.call({}, element, "not-a-color", "#4A9EFF", 0.5);
-          }, "applyColorPalette() should handle invalid neutral color gracefully.").to.not.throw();
-        });
-      });
-
-      describe("applyDefaultTheme()", function () {
-        let fixture;
-
-        beforeEach(function () {
-          fixture = createHeaderFooterShell();
-        });
-
-        afterEach(function () {
-          fixture.shell.remove();
-        });
-
-        it("should call applyColorPalette() for themed header section", function () {
-          const applyColorPaletteSpy = sinon.spy();
-          const context = {
-            "applyColorPalette": applyColorPaletteSpy
-          };
-
-          HeaderFooter.prototype.applyDefaultTheme.call(context, fixture.shell, "header");
-
-          expect(applyColorPaletteSpy.calledOnce, "applyColorPalette() should be called exactly once for header.").to.equal(true);
-          expect(applyColorPaletteSpy.firstCall.args[0].classList.contains("u-header"), "Target element should be header section.").to.equal(true);
-          expect(applyColorPaletteSpy.firstCall.args[1], "Header neutral color should match default theme.").to.equal("#0078d4");
-          expect(applyColorPaletteSpy.firstCall.args[2], "Header accent color should match default theme.").to.equal("#4A9EFF");
-          expect(applyColorPaletteSpy.firstCall.args[3], "Header luminance should match default theme.").to.equal(0.23);
-        });
-
-        it("should call applyColorPalette() for themed main section", function () {
-          const applyColorPaletteSpy = sinon.spy();
-          const context = {
-            "applyColorPalette": applyColorPaletteSpy
-          };
-
-          HeaderFooter.prototype.applyDefaultTheme.call(context, fixture.shell, "main");
-
-          expect(applyColorPaletteSpy.calledOnce, "applyColorPalette() should be called exactly once for main.").to.equal(true);
-          expect(applyColorPaletteSpy.firstCall.args[0].classList.contains("u-main"), "Target element should be main section.").to.equal(true);
-          expect(applyColorPaletteSpy.firstCall.args[1], "Main neutral color should match default theme.").to.equal("#808080");
-          expect(applyColorPaletteSpy.firstCall.args[2], "Main accent color should match default theme.").to.equal("#0078d4");
-          expect(applyColorPaletteSpy.firstCall.args[3], "Main luminance should match default theme.").to.equal(HeaderFooter.defaultTheme.main.luminance);
-        });
-
-        it("should not call applyColorPalette() for unknown section without theme", function () {
-          const applyColorPaletteSpy = sinon.spy();
-          const context = {
-            "applyColorPalette": applyColorPaletteSpy
-          };
-
-          HeaderFooter.prototype.applyDefaultTheme.call(context, fixture.shell, "unknown");
-
-          expect(applyColorPaletteSpy.notCalled, "applyColorPalette() should not be called for unknown section.").to.equal(true);
-        });
-
-        it("should not call applyColorPalette() when themed section element does not exist", function () {
-          const applyColorPaletteSpy = sinon.spy();
-          const context = {
-            "applyColorPalette": applyColorPaletteSpy
-          };
-
-          fixture.header.remove();
-          HeaderFooter.prototype.applyDefaultTheme.call(context, fixture.shell, "header");
-
-          expect(applyColorPaletteSpy.notCalled, "applyColorPalette() should not be called when section element is missing.").to.equal(true);
-        });
-      });
-
-      describe("onConnect()", function () {
-
-        it("should call super.onConnect() and applyDefaultTheme() for header, main and footer", function () {
-          const { shell } = createHeaderFooterShell();
-          const superPrototype = Object.getPrototypeOf(HeaderFooter.prototype);
-          const originalSuperOnConnect = superPrototype.onConnect;
-          const expectedUpdaters = ["value-updater"];
-
-          superPrototype.onConnect = function () {
-            return expectedUpdaters;
-          };
-
-          try {
-            const applyDefaultThemeSpy = sinon.spy();
-            const mockInstance = {
-              "applyDefaultTheme": applyDefaultThemeSpy
-            };
-
-            const returned = HeaderFooter.prototype.onConnect.call(mockInstance, shell, {});
-
-            expect(returned, "onConnect() should return value updaters from super.onConnect().").to.equal(expectedUpdaters);
-            expect(applyDefaultThemeSpy.callCount, "onConnect() should call applyDefaultTheme() three times.").to.equal(3);
-            expect(applyDefaultThemeSpy.firstCall.args, "First applyDefaultTheme() call should target header.").to.deep.equal([shell, "header"]);
-            expect(applyDefaultThemeSpy.secondCall.args, "Second applyDefaultTheme() call should target main.").to.deep.equal([shell, "main"]);
-            expect(applyDefaultThemeSpy.thirdCall.args, "Third applyDefaultTheme() call should target footer.").to.deep.equal([shell, "footer"]);
-          } finally {
-            superPrototype.onConnect = originalSuperOnConnect;
-            shell.remove();
-          }
-        });
       });
     });
   });

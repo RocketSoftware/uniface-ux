@@ -9,13 +9,13 @@
   flex: 0 0 auto;
   width: 100%;
 }
- 
+
 .u-header-footer .u-main {
   flex: 1 1 auto;
   width: 100%;
 }
- 
-.u-header-footer .u-footer {  
+
+.u-header-footer .u-footer {
   flex: 0 0 auto;
   width: 100%;
 }
@@ -63,4 +63,16 @@
 /* Lower z-index for nested header-footer headers to keep them below the outer header. */
 .u-header-footer .u-header-footer .u-header {
   z-index: 9;
+}
+
+/* Elevated card shadow for main and footer areas in explicit dark mode. */
+:root[data-u-color-mode="dark" i] .u-header-footer :is(.u-main, .u-footer) {
+  --u-elevation-shadow-card-rest: 2px 2px 0px rgba(0, 0, 0, 0.30), 0 2px 2px 2px rgba(0, 0, 0, 0.40);
+}
+
+/* Elevated card shadow for main and footer areas when color mode is auto and the system prefers dark. */
+@media (prefers-color-scheme: dark) {
+  :root[data-u-color-mode="auto" i] .u-header-footer :is(.u-main, .u-footer) {
+    --u-elevation-shadow-card-rest: 2px 2px 0px rgba(0, 0, 0, 0.30), 0 2px 2px 2px rgba(0, 0, 0, 0.40);
+  }
 }

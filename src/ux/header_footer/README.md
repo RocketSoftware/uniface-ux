@@ -43,6 +43,10 @@ Each section (header, main, footer) provides full control over layout behavior:
 
 These properties allow control over how content is arranged and displayed within each section.
 
+### Section Theming
+
+Each section (header, main, footer) has a predefined theme with light and dark mode variants. The widget automatically applies the appropriate theme based on the current color mode. Themes define design tokens such as neutral colors, accent colors, and luminance values to ensure consistent visual styling, proper contrast, and readability across different color modes.
+
 ### ChildWidgets Framework Integration
 
 The widget leverages the ChildWidgets API to manage dynamic child widget insertion, slot assignment, and lifecycle management. This ensures seamless

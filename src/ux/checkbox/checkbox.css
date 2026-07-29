@@ -1,6 +1,23 @@
 .u-checkbox {
   align-items: flex-start;
   flex-grow: 0;
+  /* Error state colors. */
+  --u-checkbox-error-hover: #8b1d22;
+  --u-checkbox-error-active: #ba393f;
+}
+
+/* Dark mode overrides - dark mode. */
+:root[data-u-color-mode="dark" i] .u-checkbox {
+  --u-checkbox-error-hover: #e06f6f;
+  --u-checkbox-error-active: #ff9090;
+}
+
+/* Dark mode overrides - auto mode (only when system prefers dark). */
+@media (prefers-color-scheme: dark) {
+  :root[data-u-color-mode="auto" i] .u-checkbox {
+    --u-checkbox-error-hover: #e06f6f;
+    --u-checkbox-error-active: #ff9090;
+  }
 }
 
 .u-checkbox::part(control) {
@@ -32,7 +49,7 @@
 /* Styling error icons as per fluent design system. */
 .u-checkbox.u-invalid .u-error-icon,
 .u-checkbox.u-format-invalid .u-error-icon {
-  color: #d13438;
+  color: var(--u-error-color);
 }
 
 /* To add space between error-icon and the checkbox control in before label-position. */
@@ -54,52 +71,52 @@
 /* Styling Checked Checkbox in error or invalid state. */
 .u-checkbox.u-invalid.checked::part(control),
 .u-checkbox.u-format-invalid.checked::part(control) {
-  --accent-fill-rest: #d13438;
+  --accent-fill-rest: var(--u-error-color);
 }
 
 .u-checkbox.u-invalid.checked:hover::part(control),
 .u-checkbox.u-format-invalid.checked:hover::part(control) {
-  --accent-fill-hover: #bb2e32;
+  --accent-fill-hover: var(--u-checkbox-error-hover);
 }
 
 .u-checkbox.u-invalid.checked:active::part(control),
 .u-checkbox.u-format-invalid.checked:active::part(control) {
-  --accent-fill-active: #d54649;
+  --accent-fill-active: var(--u-checkbox-error-active);
 }
 
 /* Styling Unchecked Checkbox in error or invalid state. */
 .u-checkbox.u-invalid::part(control),
 .u-checkbox.u-format-invalid::part(control) {
-  --neutral-stroke-strong-rest: #d13438;
+  --neutral-stroke-strong-rest: var(--u-error-color);
 }
 
 .u-checkbox.u-invalid:hover::part(control),
 .u-checkbox.u-format-invalid:hover::part(control) {
-  --neutral-stroke-strong-hover: #bb2e32;
+  --neutral-stroke-strong-hover: var(--u-checkbox-error-hover);
 }
 
 .u-checkbox.u-invalid:active::part(control),
 .u-checkbox.u-format-invalid:active::part(control) {
-  --neutral-stroke-strong-active: #d54649;
+  --neutral-stroke-strong-active: var(--u-checkbox-error-active);
 }
 
 /* Styling Indeterminate Checkbox in error or invalid state. */
 .u-checkbox.u-invalid.indeterminate::part(control),
 .u-checkbox.u-format-invalid.indeterminate::part(control) {
-  --neutral-stroke-strong-rest: #d13438;
-  --neutral-foreground-rest: #d13438;
+  --neutral-stroke-strong-rest: var(--u-error-color);
+  --neutral-foreground-rest: var(--u-error-color);
 }
 
 .u-checkbox.u-invalid.indeterminate:hover::part(control),
 .u-checkbox.u-format-invalid.indeterminate:hover::part(control) {
-  --neutral-stroke-strong-hover: #bb2e32;
-  --neutral-foreground-rest: #bb2e32;
+  --neutral-stroke-strong-hover: var(--u-checkbox-error-hover);
+  --neutral-foreground-rest: var(--u-checkbox-error-hover);
 }
 
 .u-checkbox.u-invalid.indeterminate:active::part(control),
 .u-checkbox.u-format-invalid.indeterminate:active::part(control) {
-  --neutral-stroke-strong-active: #d54649;
-  --neutral-foreground-rest: #d54649;
+  --neutral-stroke-strong-active: var(--u-checkbox-error-active);
+  --neutral-foreground-rest: var(--u-checkbox-error-active);
 }
 
 /* When label-position is before, the checkbox control should appear at the very end, after label and error-icon. */

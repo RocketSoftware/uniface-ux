@@ -52,4 +52,7 @@
  *  @property {string} [labelText] - Unformatted label-text.
  *  @property {string | undefined} [labelText] - Unformatted label-text.
  *  @property {boolean | undefined} [isNotSupported] - Whether this representation is supported in the parent widget or not.
+ *
+ * @typedef {string} ColorMode
+ * @typedef {"light" | "dark"} ResolvedColorMode
  */

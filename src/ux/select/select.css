@@ -81,13 +81,13 @@
 /* Styling the border color ( according to the fluent design system ) when the widget is in an invalid state and has no focus. */
 .u-select.u-invalid:not(:focus)::part(control),
 .u-select.u-format-invalid:not(:focus)::part(control) {
-  border-color: #d13438;
+  border-color: var(--u-error-color);
 }
 
 /* Styling the error icon ( according to the fluent design system ) when the widget is in an invalid state. */
 .u-select.u-invalid .u-error-icon,
 .u-select.u-format-invalid .u-error-icon {
-  color: #d13438;
+  color: var(--u-error-color);
 }
 
 /* Increase the z-index of listbox so that it is not hidden below button and text*/

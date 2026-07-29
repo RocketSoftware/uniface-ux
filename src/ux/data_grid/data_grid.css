@@ -79,7 +79,7 @@
 }
 
 .u-datagrid-container .u-datagrid-header-cell {
-  background-color: var(--neutral-layer-2);
+  background-color: var(--neutral-layer-3);
   text-overflow: ellipsis;
 }
 
@@ -185,5 +185,5 @@
 .u-datagrid-container .u-datagrid-content-cell.u-format-invalid .u-value,
 .u-datagrid-container .u-datagrid-content-cell.u-invalid .u-error-icon,
 .u-datagrid-container .u-datagrid-content-cell.u-format-invalid .u-error-icon {
-  color: #d13438;
+  color: var(--u-error-color);
 }

@@ -4,9 +4,8 @@ import { StyleClassManager } from "../framework/workers/style_class_manager.js";
 import { AttributeChoice } from "../framework/workers/attribute_choice.js";
 import { AttributeString } from "../framework/workers/attribute_string.js";
 import { ChildWidgets } from "../framework/workers/child_widgets.js";
-import { parseColorHexRGB } from "@microsoft/fast-colors";
-import { SwatchRGB } from "@microsoft/fast-components";
-import { neutralBaseColor, accentBaseColor, baseLayerLuminance, StandardLuminance } from "@fluentui/web-components";
+import { AttributeTheme } from "../framework/workers/attribute_theme.js";
+import { StandardLuminance } from "@fluentui/web-components";
 
 /**
  * Generates index rules dynamically for any number of children.
@@ -97,6 +96,45 @@ export class HeaderFooter extends Widget {
     "indexRules": createDynamicIndexRules()
   };
 
+  /**
+   * Default theme configuration for HeaderFooter sections.
+   * Each section has separate light and dark variants.
+   * Base color values are only provided if they vary from the default fluent theme.
+   * Luminance values are always provided to ensure proper light/dark mode switching.
+   */
+  static defaultTheme = {
+    "header": {
+      "light": {
+        "neutral": "#0078d4",
+        "accent": "#4A9EFF",
+        "luminance": 0.23
+      },
+      "dark": {
+        "neutral": "#0078d4",
+        "accent": "#4A9EFF",
+        "luminance": 0.16
+      }
+    },
+    "main": {
+      "light": {
+        "luminance": StandardLuminance.LightMode
+      },
+      "dark": {
+        "neutral": "#52565d",
+        "luminance": 0.12
+      }
+    },
+    "footer": {
+      "light": {
+        "luminance": 0.9
+      },
+      "dark": {
+        "neutral": "#52565d",
+        "luminance": 0.10
+      }
+    }
+  };
+
   static structure = new Element(
     this,
     "uf-shell",
@@ -108,6 +146,7 @@ export class HeaderFooter extends Widget {
       // Header Section.
       new Element(this, "uf-header", "u-header", ".u-header", [
         new AttributeString(this, undefined, "role", "banner", true),
+        new AttributeTheme(this, this.defaultTheme.header),
         new AttributeChoice(this, "header:placement", "placement", ["scroll", "sticky", "hidden"], "sticky", true),
         // Layout controls (aligned with uf-container).
         new AttributeChoice(this, "header:layout-type", "layout-type", ["vertical-scroll", "horizontal-scroll", "vertical-wrap", "horizontal-wrap", "auto"], "horizontal-wrap", true),
@@ -119,6 +158,7 @@ export class HeaderFooter extends Widget {
       // Main Section.
       new Element(this, "uf-main", "u-main", ".u-main", [
         new AttributeString(this, undefined, "role", "main", true),
+        new AttributeTheme(this, this.defaultTheme.main),
         // Layout controls (aligned with uf-container).
         new AttributeChoice(this, "main:layout-type", "layout-type", ["vertical-scroll", "horizontal-scroll", "vertical-wrap", "horizontal-wrap", "auto"], "vertical-scroll", true),
         new AttributeChoice(this, "main:horizontal-align", "horizontal-align", ["start", "center", "end", "space-between", "space-around", "space-evenly", "stretch", "auto"], "start", true),
@@ -129,6 +169,7 @@ export class HeaderFooter extends Widget {
       // Footer Section.
       new Element(this, "uf-footer", "u-footer", ".u-footer", [
         new AttributeString(this, undefined, "role", "contentinfo", true),
+        new AttributeTheme(this, this.defaultTheme.footer),
         new AttributeChoice(this, "footer:placement", "placement", ["scroll", "sticky", "hidden"], "sticky", true),
         // Layout controls (aligned with uf-container).
         new AttributeChoice(this, "footer:layout-type", "layout-type", ["vertical-scroll", "horizontal-scroll", "vertical-wrap", "horizontal-wrap", "auto"], "horizontal-wrap", true),
@@ -138,75 +179,4 @@ export class HeaderFooter extends Widget {
       ])
     ]
   );
-
-  /**
-   * Default theme configuration for HeaderFooter sections.
-   * Each section can have its own neutral color, accent color, and luminance.
-   */
-  static defaultTheme = {
-    "header": {
-      "neutral": "#0078d4",
-      "accent": "#4A9EFF",
-      "luminance": 0.23
-    },
-    "main": {
-      "neutral": "#808080",
-      "accent": "#0078d4",
-      "luminance": StandardLuminance.LightMode
-    },
-    "footer": {
-      "neutral": "#808080",
-      "accent": "#0078d4",
-      "luminance": 0.9
-    }
-  };
-
-  /**
-   * Update color palette of an element by setting base design tokens.
-   *
-   * @param {HTMLElement} element - Target element.
-   * @param {string} neutralColor - Neutral base color for neutral palette (background tint).
-   * @param {string} accentColor - Accent base color for interactive elements.
-   * @param {number} luminance - 0 (dark mode) to 1 (light mode), typically 0.15 for dark, 0.98 for light.
-   */
-  applyColorPalette(element, neutralColor, accentColor, luminance) {
-    const parsedNeutral = parseColorHexRGB(neutralColor);
-    const parsedAccent = parseColorHexRGB(accentColor);
-
-    if (parsedNeutral) {
-      neutralBaseColor.setValueFor(element, SwatchRGB.from(parsedNeutral));
-    }
-    if (parsedAccent) {
-      accentBaseColor.setValueFor(element, SwatchRGB.from(parsedAccent));
-    }
-    baseLayerLuminance.setValueFor(element, luminance);
-  }
-
-  /**
-   * Apply default theme to a HeaderFooter section.
-   *
-   * @param {HTMLElement} widgetElement - Root widget element.
-   * @param {string} sectionName - Section name ('header', 'main', or 'footer').
-   */
-  applyDefaultTheme(widgetElement, sectionName) {
-    const element = widgetElement.querySelector(`:scope > .u-${sectionName}`);
-    const theme = HeaderFooter.defaultTheme[sectionName];
-
-    if (element instanceof HTMLElement && theme) {
-      this.applyColorPalette(element, theme.neutral, theme.accent, theme.luminance);
-    }
-  }
-
-  /**
-   * Private Uniface API method - onConnect.
-   * Called when the widget connects to the DOM. Applies default theme to all sections and sets up intelligent footer placement behavior.
-   */
-  onConnect(widgetElement, objectDefinition) {
-    let valueUpdaters = super.onConnect(widgetElement, objectDefinition);
-    // Apply default theme to all sections.
-    this.applyDefaultTheme(widgetElement, "header");
-    this.applyDefaultTheme(widgetElement, "main");
-    this.applyDefaultTheme(widgetElement, "footer");
-    return valueUpdaters;
-  }
 }
