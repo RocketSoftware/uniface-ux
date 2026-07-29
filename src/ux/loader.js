@@ -7,6 +7,10 @@ import {registerWidgetClass} from "./framework/common/dsp_connector.js";
 // Import web components
 import "../web_components/index.js";
 
+// Initialize application-level implementations and settings for ux-widgets.
+// Currently this entrypoint handles color-mode and can be extended with
+// additional app-wide features over time.
+import "./framework/common/application.js";
 
 // The UX field level widgets to include
 import {Button} from "./button/button.js";

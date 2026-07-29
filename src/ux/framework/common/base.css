@@ -1,4 +1,27 @@
 /**
+ * Global UX design tokens.
+ * Light mode defaults with dark mode overrides based on data-u-color-mode attribute or system preference.
+ */
+:root {
+  --u-error-color: #a4262c;
+  --u-elevation-shadow-card-rest: var(--elevation-shadow-card-rest);
+}
+
+/* Dark mode overrides - dark mode. */
+:root[data-u-color-mode="dark" i] {
+  --u-error-color: #F9AEB2;
+  --u-elevation-shadow-card-rest: 0 4px 8px 2px rgba(0, 0, 0, 0.14), 0 4px 2px 1px rgba(0, 0, 0, 0.20);
+}
+
+/* Dark mode overrides - auto mode (only when system prefers dark). */
+@media (prefers-color-scheme: dark) {
+  :root[data-u-color-mode="auto" i] {
+    --u-error-color: #F9AEB2;
+    --u-elevation-shadow-card-rest: 0 4px 8px 2px rgba(0, 0, 0, 0.14), 0 4px 2px 1px rgba(0, 0, 0, 0.20);
+  }
+}
+
+/**
  * Styling the pseudo element of uxTextField, uxNumberField and uxTextArea
  * to position it relative to the root element for active and focus interactions.
  */
@@ -193,7 +216,7 @@ uf-layout:is([appearance="outline"], [appearance="card"], [appearance="panel"]) 
 /* Card: elevated surface with fill background and drop shadow. */
 uf-layout[appearance="card"] {
   background: var(--fill-color);
-  box-shadow: var(--elevation-shadow-card-rest);
+  box-shadow: var(--u-elevation-shadow-card-rest);
 }
 
 /* Panel: recessed surface using layer fill. */
@@ -203,5 +226,5 @@ uf-layout[appearance="panel"] {
 
 /* Section: grouped area using neutral layer background. */
 uf-layout[appearance="section"] {
-  background: var(--neutral-layer-3);
+  background: var(--neutral-layer-2);
 }

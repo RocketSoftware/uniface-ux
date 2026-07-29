@@ -38,6 +38,7 @@ A worker is a functional service module that performs a specific task, such as f
 | [AttributeNumber](#attributenumber)                 | [attribute_number.js](./attribute_number.js)                   |
 | [AttributeRange](#attributerange)                   | [attribute_range.js](./attribute_range.js)                     |
 | [AttributeString](#attributestring)                 | [attribute_string.js](./attribute_string.js)                   |
+| [AttributeTheme](#attributetheme)                   | [attribute_theme.js](./attribute_theme.js)                     |
 | [AttributeUIBlocking](#attributeuiblocking)         | [attribute_ui_blocking.js](./attribute_ui_blocking.js)         |
 | [ChildWidgets](#childwidgets)                       | [child_widgets.js](./child_widgets.js)                         |
 | [Element](#element)                                 | [element.js](./element.js)                                     |
@@ -101,6 +102,12 @@ AttributeString handles string-based attributes (general purpose). It is used fo
 
 ---
 
+### AttributeTheme
+
+AttributeTheme applies design tokens to widget elements and updates them when the active color mode changes. It listens for color mode changes and reapplies token values to keep the widget theme in sync.
+
+---
+
 ### AttributeUIBlocking
 
 AttributeUIBlocking controls UI blocking behavior (disabled/readonly states). It adds or removes `u-blocked` class and toggles between different states, such as disabled, read-only.
@@ -115,7 +122,7 @@ ChildWidgets processes child widgets and distributes them into optional slots wi
 
 ### Element
 
-Element manages the creation and placement of DOM elements within a widget’s structure. It ensures each element is correctly inserted and maintained according to the widget’s hierarchy and configuration rules.
+Element manages the creation and placement of DOM elements within a widget's structure. It ensures each element is correctly inserted and maintained according to the widget's hierarchy and configuration rules. It also cascades initialization to all child workers, allowing them to establish their initial state before the widget is connected to the DOM.
 
 ---
 

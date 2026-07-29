@@ -1,5 +1,19 @@
 .u-plain-text {
   flex-grow: 0;
+  /* Error state background color. */
+  --u-plain-text-error-bg: #f6d5d7;
+}
+
+/* Dark mode overrides - dark mode. */
+:root[data-u-color-mode="dark" i] .u-plain-text {
+  --u-plain-text-error-bg: #5a2828;
+}
+
+/* Dark mode overrides - auto mode (only when system prefers dark). */
+@media (prefers-color-scheme: dark) {
+  :root[data-u-color-mode="auto" i] .u-plain-text {
+    --u-plain-text-error-bg: #5a2828;
+  }
 }
 
 .u-plain-text .u-control,
@@ -10,13 +24,13 @@
 /* Styling the background color when the widget is in an invalid state. */
 .u-plain-text.u-invalid,
 .u-plain-text.u-format-invalid {
-    background-color: #f6d5d7;
+    background-color: var(--u-plain-text-error-bg);
 }
 
 /* Styling the error icon ( according to the fluent design system ) when the widget is in an invalid state. */
 .u-plain-text.u-invalid .u-error-icon,
 .u-plain-text.u-format-invalid .u-error-icon {
-    color: #d13438;
+    color: var(--u-error-color);
     padding-inline-start: 4px;
     vertical-align: text-top;
 }

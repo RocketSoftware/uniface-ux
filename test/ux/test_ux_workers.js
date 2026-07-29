@@ -63,6 +63,20 @@ import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurren
       element = worker.getElement(widgetInstance);
       expect(element).to.have.tagName("div");
     });
+
+    // initializeLayout() doesn't do anything.
+    it("should not throw when initializeLayout() is called", function () {
+      const widgetInstance = {
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": function () {
+          return "description";
+        }
+      };
+      const widgetElement = worker.getElement(widgetInstance);
+      expect(() => worker.initializeLayout(widgetElement), "initializeLayout() should not throw errors.").to.not.throw();
+    });
   });
 
   // ===================================================================================================================
@@ -172,6 +186,20 @@ import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurren
       expect(layoutElement.querySelector("u-label-text"));
       expect(layoutElement.querySelector("u-checked-message"));
     });
+
+    it("should cascade initializeLayout() to all child workers", function () {
+      let layoutElement = element.getLayout(definitions);
+      const spies = childWorkers.map((childWorker) => sinon.spy(childWorker, "initializeLayout"));
+
+      element.initializeLayout(layoutElement);
+
+      spies.forEach((spy) => {
+        expect(spy.calledOnce, "initializeLayout() should be called on each child worker.").to.be.true;
+        expect(spy.calledWith(layoutElement), "initializeLayout() should be called with the widget element.").to.be.true;
+        spy.restore();
+      });
+    });
+
   });
 
   // ===================================================================================================================

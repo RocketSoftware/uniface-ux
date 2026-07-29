@@ -12,6 +12,18 @@ test.beforeEach(async ({ page }) => {
     await basePage.open();
 });
 
+test('Application Unit Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.applicationUnitTestLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
+test('AttributeTheme Worker Unit Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.attributeThemeUnitTestLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
 test('Button Unit Tests', async ({ page }) => {
     const newPage = await indexPage.openNewPage(indexPage.buttonUnitTestLink);
     const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);

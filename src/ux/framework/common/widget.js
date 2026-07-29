@@ -99,6 +99,10 @@ export class Widget extends Base {
     let elementId = skeletonWidgetElement.id;
 
     let widgetElement = this.structure.getLayout(objectDefinition);
+
+    // Initializes the created layout element with worker-specific defaults that must be in place before the widget is inserted into the document.
+    this.structure.initializeLayout(widgetElement);
+
     if (elementId) {
       // This widget is bound to Uniface.
       widgetElement.id = elementId;

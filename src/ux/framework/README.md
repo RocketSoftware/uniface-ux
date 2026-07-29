@@ -34,6 +34,9 @@ For full UX widget interface specifications, refer to the official Uniface docum
  
 **[`widget.js`](./common/widget.js)**  
   Defines the widget base class and is shared by all UX widgets. It implements all UX Interface life cycle methods and acts as the glue between Uniface and the workers.
+
+**[`application.js`](./common/application.js)**  
+  Manages application-level settings and document-wide behavior for the framework.
  
 [**`workers`**](./workers/)
 The **workers** directory contains JavaScript files that define specific Worker classes. For example, Element, ElementError, SubWidget, each responsible for handling specific widget behavior.

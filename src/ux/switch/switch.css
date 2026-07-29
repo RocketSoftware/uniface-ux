@@ -2,6 +2,23 @@
   vertical-align: bottom;
   align-items: flex-start;
   flex-grow: 0;
+  /* Error state colors. */
+  --u-switch-error-hover: #8b1d22;
+  --u-switch-error-active: #ba393f;
+}
+
+/* Dark mode overrides - dark mode. */
+:root[data-u-color-mode="dark" i] .u-switch {
+  --u-switch-error-hover: #e06f6f;
+  --u-switch-error-active: #ff9090;
+}
+
+/* Dark mode overrides - auto mode (only when system prefers dark). */
+@media (prefers-color-scheme: dark) {
+  :root[data-u-color-mode="auto" i] .u-switch {
+    --u-switch-error-hover: #e06f6f;
+    --u-switch-error-active: #ff9090;
+  }
 }
 
 /* Styling the toggle switch for consistent positioning during DOM update interruptions. */
@@ -17,39 +34,39 @@
 /* Styling the checked switch when the widget is in an invalid state. */
 .u-switch.u-invalid.checked::part(switch),
 .u-switch.u-format-invalid.checked::part(switch) {
-  --accent-fill-rest: #d13438;
+  --accent-fill-rest: var(--u-error-color);
 }
 
 .u-switch.u-invalid.checked:hover::part(switch),
 .u-switch.u-format-invalid.checked:hover::part(switch) {
-  --accent-fill-hover: #d83435;
+  --accent-fill-hover: var(--u-switch-error-hover);
 }
 
 .u-switch.u-invalid.checked:active::part(switch),
 .u-switch.u-format-invalid.checked:active::part(switch) {
-  --accent-fill-active: #dd4c4c;
+  --accent-fill-active: var(--u-switch-error-active);
 }
 
 /* Styling the unchecked switch when the widget is in an invalid state. */
 .u-switch.u-invalid::part(switch),
 .u-switch.u-format-invalid::part(switch) {
-  --neutral-stroke-strong-rest: #d13438;
+  --neutral-stroke-strong-rest: var(--u-error-color);
 }
 
 .u-switch.u-invalid:hover::part(switch),
 .u-switch.u-format-invalid:hover::part(switch) {
-  --neutral-stroke-strong-hover: #d13438;
+  --neutral-stroke-strong-hover: var(--u-error-color);
 }
 
 .u-switch.u-invalid:active::part(switch),
 .u-switch.u-format-invalid:active::part(switch) {
-  --neutral-stroke-strong-active: #d13438;
+  --neutral-stroke-strong-active: var(--u-error-color);
 }
 
 /* Styling the unchecked switch toggle when the widget is in an invalid state. */
 .u-switch.u-invalid:not(.checked)::part(switch-toggle),
 .u-switch.u-format-invalid:not(.checked)::part(switch-toggle) {
-  --neutral-foreground-rest: #d13438;
+  --neutral-foreground-rest: var(--u-error-color);
 }
 
 .u-switch::part(error) {
@@ -61,7 +78,7 @@
 .u-switch.u-invalid::part(error),
 .u-switch.u-format-invalid::part(error) {
   --type-ramp-base-line-height: 18px;
-  color: #d13438;
+  color: var(--u-error-color);
 }
 
 /* Styling the error icon when the switch is in disabled or readonly state */

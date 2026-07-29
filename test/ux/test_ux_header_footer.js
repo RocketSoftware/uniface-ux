@@ -1261,118 +1261,6 @@
       assert(element, "Widget top element is not defined!");
     });
 
-    it("should have defaultTheme static property defined", function () {
-      const defaultTheme = componentWidgetClass.defaultTheme;
-      assert(defaultTheme, "defaultTheme should be defined on widget class.");
-      assert(defaultTheme.header, "defaultTheme should have header configuration.");
-      assert(defaultTheme.main, "defaultTheme should have main configuration.");
-      assert(defaultTheme.footer, "defaultTheme should have footer configuration.");
-    });
-
-    it("should have correct default theme values for header", function () {
-      const headerTheme = componentWidgetClass.defaultTheme.header;
-      expect(headerTheme.neutral).to.equal("#0078d4");
-      expect(headerTheme.accent).to.equal("#4A9EFF");
-      expect(headerTheme.luminance).to.equal(0.23);
-    });
-
-    it("should have correct default theme values for footer", function () {
-      const footerTheme = componentWidgetClass.defaultTheme.footer;
-      expect(footerTheme.neutral).to.equal("#808080");
-      expect(footerTheme.accent).to.equal("#0078d4");
-      expect(footerTheme.luminance).to.equal(0.9);
-    });
-
-    it("should have correct default theme values for main", function () {
-      const mainTheme = componentWidgetClass.defaultTheme.main;
-      expect(mainTheme.neutral).to.equal("#808080");
-      expect(mainTheme.accent).to.equal("#0078d4");
-      expect(mainTheme.luminance, "Main luminance should be light mode.").to.be.above(0.9);
-    });
-
-    it("should apply light mode luminance to main section", function () {
-      let main;
-      return asyncRun(function () {
-        main = element.querySelector(".u-main");
-        assert(main, "Main section should exist");
-        assert(main.isConnected, "Main should be connected to DOM");
-      }).then(function () {
-        const computedStyle = window.getComputedStyle(main);
-        const mainLuminance = computedStyle.getPropertyValue("--base-layer-luminance");
-        expect(parseFloat(mainLuminance), "Main theme should have light-mode luminance.").to.be.above(0.9);
-      });
-    });
-
-    it("should apply dark mode luminance to header section", function () {
-      let header;
-      return asyncRun(function () {
-        header = element.querySelector(".u-header");
-        // Verify that header section exists and is connected.
-        assert(header, "Header section should exist");
-        assert(header.isConnected, "Header should be connected to DOM");
-      }).then(function () {
-        const computedStyle = window.getComputedStyle(header);
-        const headerLuminance = computedStyle.getPropertyValue("--base-layer-luminance");
-        // Verify the theme configuration has correct luminance value.
-        expect(headerLuminance).to.equal("0.23", "Header theme should have luminance 0.23");
-      });
-    });
-
-    it("should apply custom luminance to footer section", function () {
-      let footer;
-      return asyncRun(function () {
-        footer = element.querySelector(".u-footer");
-        // Verify that footer section exists and is connected.
-        assert(footer, "Footer section should exist");
-        assert(footer.isConnected, "Footer should be connected to DOM");
-      }).then(function () {
-        const computedStyle = window.getComputedStyle(footer);
-        const footerLuminance = computedStyle.getPropertyValue("--base-layer-luminance");
-        // Verify the theme configuration has correct luminance value.
-        expect(footerLuminance).to.equal("0.9", "Footer theme should have luminance 0.9");
-      });
-    });
-
-    it("should have blue neutral color for header section", function () {
-      const header = element.querySelector(".u-header");
-      const headerTheme = componentWidgetClass.defaultTheme.header;
-
-      expect(headerTheme.neutral).to.equal("#0078d4");
-      const headerStyle = window.getComputedStyle(header);
-      const headerNeutral = headerStyle.getPropertyValue("--neutral-base-color");
-      assert(headerNeutral !== "", "Header neutral color should be applied.");
-    });
-
-    it("should have gray neutral color for footer section", function () {
-      const footer = element.querySelector(".u-footer");
-      const footerTheme = componentWidgetClass.defaultTheme.footer;
-
-      expect(footerTheme.neutral).to.equal("#808080");
-      const footerStyle = window.getComputedStyle(footer);
-      const footerNeutral = footerStyle.getPropertyValue("--neutral-base-color");
-      assert(footerNeutral !== "", "Footer neutral color should be applied.");
-    });
-
-    it("should have lighter blue accent color for header section", function () {
-      const header = element.querySelector(".u-header");
-      const headerTheme = componentWidgetClass.defaultTheme.header;
-
-      expect(headerTheme.accent).to.equal("#4A9EFF");
-      const headerStyle = window.getComputedStyle(header);
-      const headerAccent = headerStyle.getPropertyValue("--accent-base-color");
-      assert(headerAccent !== "", "Header accent color should be applied.");
-    });
-
-    it("should have standard blue accent color for footer section", function () {
-      const footer = element.querySelector(".u-footer");
-      const footerTheme = componentWidgetClass.defaultTheme.footer;
-
-      expect(footerTheme.accent).to.equal("#0078d4");
-      const footerStyle = window.getComputedStyle(footer);
-      const footerAccent = footerStyle.getPropertyValue("--accent-base-color");
-      assert(footerAccent !== "", "Footer accent color should be applied.");
-    });
-
     it("should have child widgets in header section inherit theme tokens", function () {
       return asyncRun(function () {
         const componentDef = {
@@ -1411,7 +1299,49 @@
         // Child should inherit exact header theme values.
         expect(childNeutral).to.equal(headerNeutral, "Child widget should inherit same neutral-base-color as header.");
         expect(childAccent).to.equal(headerAccent, "Child widget should inherit same accent-base-color as header.");
-        expect(childLuminance).to.equal(headerLuminance, "Child widget should inherit same luminance as header (0.23).");
+        expect(childLuminance).to.equal(headerLuminance, "Child widget should inherit same luminance as header.");
+      });
+    });
+
+    it("should have child widgets in main section inherit theme tokens", function () {
+      return asyncRun(function () {
+        const componentDef = {
+          "#2": {
+            "nm": "MainChild",
+            "type": "field",
+            "widget_class": "UX.TextField",
+            "properties": { "area-slot": "main" },
+            "id": "#2"
+          },
+          "componentname": "TESTCOMPONENT",
+          "properties": {},
+          "type": "component",
+          "widget_class": "UX.CompLayout"
+        };
+        componentTester.createWidget(null, createSkeleton(componentWidgetId), componentDef);
+        componentTester.onConnect();
+      }).then(function () {
+        const element = componentTester.element;
+
+        const mainSection = element.querySelector(".u-main");
+        const childElement = mainSection.querySelector("[id^='ufld:'], [id^='uent:']");
+        assert(childElement, "Child widget should exist in main section.");
+
+        const mainStyle = window.getComputedStyle(mainSection);
+        const childStyle = window.getComputedStyle(childElement);
+
+        const mainNeutral = mainStyle.getPropertyValue("--neutral-base-color");
+        const mainAccent = mainStyle.getPropertyValue("--accent-base-color");
+        const mainLuminance = mainStyle.getPropertyValue("--base-layer-luminance");
+
+        const childNeutral = childStyle.getPropertyValue("--neutral-base-color");
+        const childAccent = childStyle.getPropertyValue("--accent-base-color");
+        const childLuminance = childStyle.getPropertyValue("--base-layer-luminance");
+
+        // Child should inherit exact main theme values.
+        expect(childNeutral).to.equal(mainNeutral, "Child widget should inherit same neutral-base-color as main.");
+        expect(childAccent).to.equal(mainAccent, "Child widget should inherit same accent-base-color as main.");
+        expect(childLuminance).to.equal(mainLuminance, "Child widget should inherit same luminance as main.");
       });
     });
 
@@ -1453,165 +1383,690 @@
         // Child should inherit exact footer theme values.
         expect(childNeutral).to.equal(footerNeutral, "Child widget should inherit same neutral-base-color as footer.");
         expect(childAccent).to.equal(footerAccent, "Child widget should inherit same accent-base-color as footer.");
-        expect(childLuminance).to.equal(footerLuminance, "Child widget should inherit same luminance as footer (0.9).");
+        expect(childLuminance).to.equal(footerLuminance, "Child widget should inherit same luminance as footer.");
       });
     });
   });
 
-  describe("applyColorPalette method tests", function () {
+  describe("Color-mode theme switching", function () {
     let element;
-    let widget;
+
+    function waitForNextFrame() {
+      return asyncRun(function () {
+        // Intentionally empty: wait one repaint tick so body color-mode observers can propagate updates.
+      });
+    }
 
     before(function () {
       componentTester.createWidget(null, createSkeleton(componentWidgetId), mockComponentDef);
-      widget = componentTester.widget;
       element = componentTester.element;
       assert(element, "Widget top element is not defined!");
     });
 
-    it("should apply custom color palette to header section", function () {
-      const header = element.querySelector(".u-header");
-      const customNeutral = "#FF5733";
-      const customAccent = "#33FF57";
-      const customLuminance = 0.5;
-
-      widget.applyColorPalette(header, customNeutral, customAccent, customLuminance);
-
-      const headerStyle = window.getComputedStyle(header);
-      const neutralColor = headerStyle.getPropertyValue("--neutral-base-color");
-      const accentColor = headerStyle.getPropertyValue("--accent-base-color");
-      const luminance = headerStyle.getPropertyValue("--base-layer-luminance");
-
-      // CSS custom properties should be set (may be empty string in some test environments).
-      assert(neutralColor !== null && neutralColor !== undefined, "Neutral color property should exist.");
-      assert(accentColor !== null && accentColor !== undefined, "Accent color property should exist.");
-      expect(luminance).to.not.be.null;
+    afterEach(function () {
+      delete document.documentElement.dataset.uColorMode;
     });
 
-    it("should apply custom color palette to footer section", function () {
-      const footer = element.querySelector(".u-footer");
-      const customNeutral = "#ABCDEF";
-      const customAccent = "#FEDCBA";
-      const customLuminance = 0.25;
-
-      widget.applyColorPalette(footer, customNeutral, customAccent, customLuminance);
-
-      const footerStyle = window.getComputedStyle(footer);
-      const neutralColor = footerStyle.getPropertyValue("--neutral-base-color");
-      const accentColor = footerStyle.getPropertyValue("--accent-base-color");
-      const luminance = footerStyle.getPropertyValue("--base-layer-luminance");
-
-      // CSS custom properties should be set (may be empty string in some test environments).
-      assert(neutralColor !== null && neutralColor !== undefined, "Neutral color property should exist.");
-      assert(accentColor !== null && accentColor !== undefined, "Accent color property should exist.");
-      expect(luminance).to.not.be.null;
-    });
-
-    it("should handle invalid hex color gracefully", function () {
-      const header = element.querySelector(".u-header");
-      const invalidColor = "not-a-color";
-      const validAccent = "#0078d4";
-      const validLuminance = 0.5;
-
-      // Should not throw error with invalid color.
-      expect(() => {
-        widget.applyColorPalette(header, invalidColor, validAccent, validLuminance);
-      }).to.not.throw();
-    });
-
-    it("should apply different colors to different sections simultaneously", function () {
+    it("should apply header light theme when html data-u-color-mode is light", function () {
       return asyncRun(function () {
-        const header = element.querySelector(".u-header");
-        const footer = element.querySelector(".u-footer");
-
-        widget.applyColorPalette(header, "#FF0000", "#00FF00", 0.2);
-        widget.applyColorPalette(footer, "#0000FF", "#FF0000", 0.8);
+        document.documentElement.dataset.uColorMode = "light";
+      }).then(function () {
+        return waitForNextFrame();
       }).then(function () {
         const header = element.querySelector(".u-header");
+        assert(header, "Header section should exist.");
+        const headerStyle = window.getComputedStyle(header);
+        const expectedTheme = componentWidgetClass.defaultTheme.header.light;
+
+        expect(
+          headerStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Header neutral color should match the light theme neutral token."
+        ).to.equal(String(expectedTheme.neutral).toLowerCase());
+        expect(
+          headerStyle.getPropertyValue("--accent-base-color").trim().toLowerCase(),
+          "Header accent color should match the light theme accent token."
+        ).to.equal(String(expectedTheme.accent).toLowerCase());
+        expect(
+          Number.parseFloat(headerStyle.getPropertyValue("--base-layer-luminance")),
+          "Header luminance should match the light theme luminance token."
+        ).to.equal(expectedTheme.luminance);
+      });
+    });
+
+    it("should apply main light theme when html data-u-color-mode is light", function () {
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "light";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const main = element.querySelector(".u-main");
+        assert(main, "Main section should exist.");
+
+        const mainStyle = window.getComputedStyle(main);
+        const mainTheme = componentWidgetClass.defaultTheme.main.light;
+        const shellStyle = window.getComputedStyle(element);
+
+        expect(
+          mainStyle.getPropertyValue("--neutral-base-color"),
+          "Main neutral-base-color should not be locally overridden in light mode."
+        ).to.equal(shellStyle.getPropertyValue("--neutral-base-color"));
+        expect(
+          mainStyle.getPropertyValue("--accent-base-color"),
+          "Main accent-base-color should not be locally overridden in light mode."
+        ).to.equal(shellStyle.getPropertyValue("--accent-base-color"));
+        expect(
+          Number.parseFloat(mainStyle.getPropertyValue("--base-layer-luminance")),
+          "Main luminance should match the light theme luminance token."
+        ).to.equal(mainTheme.luminance);
+      });
+    });
+
+    it("should apply footer light theme when html data-u-color-mode is light", function () {
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "light";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
         const footer = element.querySelector(".u-footer");
+        assert(footer, "Footer section should exist.");
 
-        const headerLuminance = window.getComputedStyle(header).getPropertyValue("--base-layer-luminance");
-        const footerLuminance = window.getComputedStyle(footer).getPropertyValue("--base-layer-luminance");
+        const footerStyle = window.getComputedStyle(footer);
+        const footerTheme = componentWidgetClass.defaultTheme.footer.light;
+        const shellStyle = window.getComputedStyle(element);
 
-        // CSS custom properties should be set (may be empty string in some test environments).
-        expect(headerLuminance).to.not.be.null;
-        expect(footerLuminance).to.not.be.null;
-      });
-    });
-  });
-
-  describe("applyDefaultTheme method tests", function () {
-    let element;
-    let widget;
-
-    before(function () {
-      componentTester.createWidget(null, createSkeleton(componentWidgetId), mockComponentDef);
-      element = componentTester.element;
-      widget = componentTester.widget;
-      assert(element, "Widget top element is not defined!");
-    });
-
-    it("should apply default theme to header on widget creation", function (done) {
-      const header = element.querySelector(".u-header");
-      const headerTheme = componentWidgetClass.defaultTheme.header;
-
-      // Ensure element is in document for getComputedStyle to work.
-      if (!element.isConnected) {
-        document.body.appendChild(element);
-      }
-
-      // Wait for browser to apply design tokens.
-      requestAnimationFrame(() => {
-        // In test environment, Fluent UI tokens may not set CSS properties.
-        // Just verify the method was called successfully (no errors thrown).
-        expect(header).to.exist;
-        expect(widget.applyDefaultTheme).to.be.a("function");
-        expect(headerTheme.luminance).to.equal(0.23);
-        done();
+        expect(
+          footerStyle.getPropertyValue("--neutral-base-color"),
+          "Footer neutral-base-color should not be locally overridden in light mode."
+        ).to.equal(shellStyle.getPropertyValue("--neutral-base-color"));
+        expect(
+          footerStyle.getPropertyValue("--accent-base-color"),
+          "Footer accent-base-color should not be locally overridden in light mode."
+        ).to.equal(shellStyle.getPropertyValue("--accent-base-color"));
+        expect(
+          Number.parseFloat(footerStyle.getPropertyValue("--base-layer-luminance")),
+          "Footer luminance should match the light theme luminance token."
+        ).to.equal(footerTheme.luminance);
       });
     });
 
-    it("should apply default theme to footer on widget creation", function (done) {
-      const footer = element.querySelector(".u-footer");
-      const footerTheme = componentWidgetClass.defaultTheme.footer;
+    it("should apply header dark theme when html data-u-color-mode is dark", function () {
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "dark";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const header = element.querySelector(".u-header");
+        assert(header, "Header section should exist.");
+        const headerStyle = window.getComputedStyle(header);
+        const expectedTheme = componentWidgetClass.defaultTheme.header.dark;
 
-      // Ensure element is in document.
-      if (!element.isConnected) {
-        document.body.appendChild(element);
-      }
-
-      // Wait for browser to apply design tokens.
-      requestAnimationFrame(() => {
-        // In test environment, Fluent UI tokens may not set CSS properties.
-        // Just verify the method was called successfully (no errors thrown).
-        expect(footer).to.exist;
-        expect(widget.applyDefaultTheme).to.be.a("function");
-        expect(footerTheme.luminance).to.equal(0.9);
-        done();
+        expect(
+          headerStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Header neutral color should match the dark theme neutral token."
+        ).to.equal(String(expectedTheme.neutral).toLowerCase());
+        expect(
+          headerStyle.getPropertyValue("--accent-base-color").trim().toLowerCase(),
+          "Header accent color should match the dark theme accent token."
+        ).to.equal(String(expectedTheme.accent).toLowerCase());
+        expect(
+          Number.parseFloat(headerStyle.getPropertyValue("--base-layer-luminance")),
+          "Header luminance should match the dark theme luminance token."
+        ).to.equal(expectedTheme.luminance);
       });
     });
 
-    it("should allow re-applying default theme to a section", function (done) {
-      const header = element.querySelector(".u-header");
+    it("should apply main dark theme when html data-u-color-mode is dark", function () {
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "dark";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const main = element.querySelector(".u-main");
+        assert(main, "Main section should exist.");
 
-      // Ensure element is in document.
-      if (!element.isConnected) {
-        document.body.appendChild(element);
-      }
+        const mainStyle = window.getComputedStyle(main);
+        const mainTheme = componentWidgetClass.defaultTheme.main.dark;
+        const shellStyle = window.getComputedStyle(element);
 
-      // First apply custom theme.
-      widget.applyColorPalette(header, "#FFFFFF", "#000000", 0.1);
+        expect(
+          mainStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Main neutral color should match the dark theme neutral token."
+        ).to.equal(String(mainTheme.neutral).toLowerCase());
+        expect(
+          mainStyle.getPropertyValue("--accent-base-color"),
+          "Main accent-base-color should not be locally overridden in dark mode."
+        ).to.equal(shellStyle.getPropertyValue("--accent-base-color"));
+        expect(
+          Number.parseFloat(mainStyle.getPropertyValue("--base-layer-luminance")),
+          "Main luminance should match the dark theme luminance token."
+        ).to.equal(mainTheme.luminance);
+      });
+    });
 
-      // Then re-apply default theme.
-      widget.applyDefaultTheme(element, "header");
+    it("should apply footer dark theme when html data-u-color-mode is dark", function () {
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "dark";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const footer = element.querySelector(".u-footer");
+        assert(footer, "Footer section should exist.");
 
-      // Wait for browser to apply design tokens.
-      requestAnimationFrame(() => {
-        // In test environment, just verify methods executed without errors.
-        expect(widget.applyColorPalette).to.be.a("function");
-        expect(widget.applyDefaultTheme).to.be.a("function");
-        expect(componentWidgetClass.defaultTheme.header.luminance).to.equal(0.23);
-        done();
+        const footerStyle = window.getComputedStyle(footer);
+        const footerTheme = componentWidgetClass.defaultTheme.footer.dark;
+        const shellStyle = window.getComputedStyle(element);
+
+        expect(
+          footerStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Footer neutral color should match the dark theme neutral token."
+        ).to.equal(String(footerTheme.neutral).toLowerCase());
+        expect(
+          footerStyle.getPropertyValue("--accent-base-color"),
+          "Footer accent-base-color should not be locally overridden in dark mode."
+        ).to.equal(shellStyle.getPropertyValue("--accent-base-color"));
+        expect(
+          Number.parseFloat(footerStyle.getPropertyValue("--base-layer-luminance")),
+          "Footer luminance should match the dark theme luminance token."
+        ).to.equal(footerTheme.luminance);
+      });
+    });
+
+    it("should apply header resolved theme when html data-u-color-mode is auto", function () {
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "auto";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const resolvedMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        const header = element.querySelector(".u-header");
+        assert(header, "Header section should exist.");
+
+        const headerStyle = window.getComputedStyle(header);
+        const headerTheme = componentWidgetClass.defaultTheme.header[resolvedMode];
+
+        expect(
+          headerStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Header neutral color should match the resolved mode neutral token."
+        ).to.equal(String(headerTheme.neutral).toLowerCase());
+        expect(
+          headerStyle.getPropertyValue("--accent-base-color").trim().toLowerCase(),
+          "Header accent color should match the resolved mode accent token."
+        ).to.equal(String(headerTheme.accent).toLowerCase());
+        expect(
+          Number.parseFloat(headerStyle.getPropertyValue("--base-layer-luminance")),
+          "Header luminance should match the resolved mode luminance token."
+        ).to.equal(headerTheme.luminance);
+      });
+    });
+
+    it("should apply main resolved theme when html data-u-color-mode is auto", function () {
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "auto";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const resolvedMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        const main = element.querySelector(".u-main");
+        assert(main, "Main section should exist.");
+
+        const mainStyle = window.getComputedStyle(main);
+        const mainTheme = componentWidgetClass.defaultTheme.main[resolvedMode];
+        const shellStyle = window.getComputedStyle(element);
+
+        if (resolvedMode === "dark") {
+          expect(
+            mainStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+            "Main neutral color should match the resolved mode neutral token."
+          ).to.equal(String(componentWidgetClass.defaultTheme.main.dark.neutral).toLowerCase());
+        } else {
+          expect(
+            mainStyle.getPropertyValue("--neutral-base-color"),
+            "Main neutral-base-color should not be locally overridden in light mode."
+          ).to.equal(shellStyle.getPropertyValue("--neutral-base-color"));
+        }
+        expect(
+          mainStyle.getPropertyValue("--accent-base-color"),
+          "Main accent-base-color should not be locally overridden."
+        ).to.equal(shellStyle.getPropertyValue("--accent-base-color"));
+        expect(
+          Number.parseFloat(mainStyle.getPropertyValue("--base-layer-luminance")),
+          "Main luminance should match the resolved mode luminance token."
+        ).to.equal(mainTheme.luminance);
+      });
+    });
+
+    it("should apply footer resolved theme when html data-u-color-mode is auto", function () {
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "auto";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const resolvedMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        const footer = element.querySelector(".u-footer");
+        assert(footer, "Footer section should exist.");
+
+        const footerStyle = window.getComputedStyle(footer);
+        const footerTheme = componentWidgetClass.defaultTheme.footer[resolvedMode];
+        const shellStyle = window.getComputedStyle(element);
+
+        if (resolvedMode === "dark") {
+          expect(
+            footerStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+            "Footer neutral color should match the resolved mode neutral token."
+          ).to.equal(String(componentWidgetClass.defaultTheme.footer.dark.neutral).toLowerCase());
+        } else {
+          expect(
+            footerStyle.getPropertyValue("--neutral-base-color"),
+            "Footer neutral-base-color should not be locally overridden in light mode."
+          ).to.equal(shellStyle.getPropertyValue("--neutral-base-color"));
+        }
+        expect(
+          footerStyle.getPropertyValue("--accent-base-color"),
+          "Footer accent-base-color should not be locally overridden."
+        ).to.equal(shellStyle.getPropertyValue("--accent-base-color"));
+        expect(
+          Number.parseFloat(footerStyle.getPropertyValue("--base-layer-luminance")),
+          "Footer luminance should match the resolved mode luminance token."
+        ).to.equal(footerTheme.luminance);
+      });
+    });
+
+    it("should update header tokens when html data-u-color-mode changes from light to dark", function () {
+      let lightHeaderLuminance;
+
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "light";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const header = element.querySelector(".u-header");
+        assert(header, "Header section should exist.");
+        const headerStyle = window.getComputedStyle(header);
+        lightHeaderLuminance = Number.parseFloat(headerStyle.getPropertyValue("--base-layer-luminance"));
+        expect(
+          lightHeaderLuminance,
+          "Header luminance should match the light theme before mode switching."
+        ).to.equal(componentWidgetClass.defaultTheme.header.light.luminance);
+
+        return asyncRun(function () {
+          document.documentElement.dataset.uColorMode = "dark";
+        });
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const header = element.querySelector(".u-header");
+        assert(header, "Header section should exist.");
+        const headerStyle = window.getComputedStyle(header);
+        const darkHeaderLuminance = Number.parseFloat(headerStyle.getPropertyValue("--base-layer-luminance"));
+
+        const darkTheme = componentWidgetClass.defaultTheme.header.dark;
+        expect(
+          headerStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Header neutral color should match the dark theme after mode switching."
+        ).to.equal(String(darkTheme.neutral).toLowerCase());
+        expect(
+          headerStyle.getPropertyValue("--accent-base-color").trim().toLowerCase(),
+          "Header accent color should match the dark theme after mode switching."
+        ).to.equal(String(darkTheme.accent).toLowerCase());
+        expect(
+          darkHeaderLuminance,
+          "Header luminance should match the dark theme after mode switching."
+        ).to.equal(darkTheme.luminance);
+        expect(darkHeaderLuminance).to.not.equal(lightHeaderLuminance, "Header luminance token should change when switching modes.");
+      });
+    });
+
+    it("should update main tokens when html data-u-color-mode changes from light to dark", function () {
+      let lightMainLuminance;
+
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "light";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const main = element.querySelector(".u-main");
+        assert(main, "Main section should exist.");
+        const mainStyle = window.getComputedStyle(main);
+        lightMainLuminance = Number.parseFloat(mainStyle.getPropertyValue("--base-layer-luminance"));
+        expect(
+          lightMainLuminance,
+          "Main luminance should match the light theme before mode switching."
+        ).to.equal(componentWidgetClass.defaultTheme.main.light.luminance);
+
+        return asyncRun(function () {
+          document.documentElement.dataset.uColorMode = "dark";
+        });
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const main = element.querySelector(".u-main");
+        assert(main, "Main section should exist.");
+        const mainStyle = window.getComputedStyle(main);
+        const darkMainLuminance = Number.parseFloat(mainStyle.getPropertyValue("--base-layer-luminance"));
+
+        const darkTheme = componentWidgetClass.defaultTheme.main.dark;
+        const shellStyle = window.getComputedStyle(element);
+        expect(
+          mainStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Main neutral color should match the dark theme after mode switching."
+        ).to.equal(String(darkTheme.neutral).toLowerCase());
+        expect(
+          mainStyle.getPropertyValue("--accent-base-color"),
+          "Main accent-base-color should not be locally overridden in dark mode."
+        ).to.equal(shellStyle.getPropertyValue("--accent-base-color"));
+        expect(
+          darkMainLuminance,
+          "Main luminance should match the dark theme after mode switching."
+        ).to.equal(darkTheme.luminance);
+        expect(darkMainLuminance).to.not.equal(lightMainLuminance, "Main luminance token should change when switching modes.");
+      });
+    });
+
+    it("should update footer tokens when html data-u-color-mode changes from light to dark", function () {
+      let lightFooterLuminance;
+
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "light";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const footer = element.querySelector(".u-footer");
+        assert(footer, "Footer section should exist.");
+        const footerStyle = window.getComputedStyle(footer);
+        lightFooterLuminance = Number.parseFloat(footerStyle.getPropertyValue("--base-layer-luminance"));
+        expect(
+          lightFooterLuminance,
+          "Footer luminance should match the light theme before mode switching."
+        ).to.equal(componentWidgetClass.defaultTheme.footer.light.luminance);
+
+        return asyncRun(function () {
+          document.documentElement.dataset.uColorMode = "dark";
+        });
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const footer = element.querySelector(".u-footer");
+        assert(footer, "Footer section should exist.");
+        const footerStyle = window.getComputedStyle(footer);
+        const darkFooterLuminance = Number.parseFloat(footerStyle.getPropertyValue("--base-layer-luminance"));
+
+        const darkTheme = componentWidgetClass.defaultTheme.footer.dark;
+        const shellStyle = window.getComputedStyle(element);
+        expect(
+          footerStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Footer neutral color should match the dark theme after mode switching."
+        ).to.equal(String(darkTheme.neutral).toLowerCase());
+        expect(
+          footerStyle.getPropertyValue("--accent-base-color"),
+          "Footer accent-base-color should not be locally overridden in dark mode."
+        ).to.equal(shellStyle.getPropertyValue("--accent-base-color"));
+        expect(
+          darkFooterLuminance,
+          "Footer luminance should match the dark theme after mode switching."
+        ).to.equal(darkTheme.luminance);
+        expect(darkFooterLuminance).to.not.equal(lightFooterLuminance, "Footer luminance token should change when switching modes.");
+      });
+    });
+
+    it("should update header tokens when html data-u-color-mode changes from dark to light", function () {
+      let darkHeaderLuminance;
+
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "dark";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const header = element.querySelector(".u-header");
+        assert(header, "Header section should exist.");
+        const headerStyle = window.getComputedStyle(header);
+        darkHeaderLuminance = Number.parseFloat(headerStyle.getPropertyValue("--base-layer-luminance"));
+        expect(
+          darkHeaderLuminance,
+          "Header luminance should match the dark theme before mode switching."
+        ).to.equal(componentWidgetClass.defaultTheme.header.dark.luminance);
+
+        return asyncRun(function () {
+          document.documentElement.dataset.uColorMode = "light";
+        });
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const header = element.querySelector(".u-header");
+        assert(header, "Header section should exist.");
+        const headerStyle = window.getComputedStyle(header);
+        const lightHeaderLuminance = Number.parseFloat(headerStyle.getPropertyValue("--base-layer-luminance"));
+
+        const lightTheme = componentWidgetClass.defaultTheme.header.light;
+        expect(
+          headerStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Header neutral color should match the light theme after mode switching."
+        ).to.equal(String(lightTheme.neutral).toLowerCase());
+        expect(
+          headerStyle.getPropertyValue("--accent-base-color").trim().toLowerCase(),
+          "Header accent color should match the light theme after mode switching."
+        ).to.equal(String(lightTheme.accent).toLowerCase());
+        expect(
+          lightHeaderLuminance,
+          "Header luminance should match the light theme after mode switching."
+        ).to.equal(lightTheme.luminance);
+        expect(lightHeaderLuminance).to.not.equal(darkHeaderLuminance, "Header luminance token should change when switching modes.");
+      });
+    });
+
+    it("should update main tokens when html data-u-color-mode changes from dark to light", function () {
+      let darkMainLuminance;
+
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "dark";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const main = element.querySelector(".u-main");
+        assert(main, "Main section should exist.");
+        const mainStyle = window.getComputedStyle(main);
+        darkMainLuminance = Number.parseFloat(mainStyle.getPropertyValue("--base-layer-luminance"));
+        expect(
+          darkMainLuminance,
+          "Main luminance should match the dark theme before mode switching."
+        ).to.equal(componentWidgetClass.defaultTheme.main.dark.luminance);
+        expect(
+          mainStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Main neutral color should match the dark theme before mode switching."
+        ).to.equal(String(componentWidgetClass.defaultTheme.main.dark.neutral).toLowerCase());
+
+        return asyncRun(function () {
+          document.documentElement.dataset.uColorMode = "light";
+        });
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const main = element.querySelector(".u-main");
+        assert(main, "Main section should exist.");
+        const mainStyle = window.getComputedStyle(main);
+        const lightMainLuminance = Number.parseFloat(mainStyle.getPropertyValue("--base-layer-luminance"));
+
+        const lightTheme = componentWidgetClass.defaultTheme.main.light;
+        const shellStyle = window.getComputedStyle(element);
+        expect(
+          mainStyle.getPropertyValue("--neutral-base-color"),
+          "Main neutral-base-color should not be locally overridden in light mode."
+        ).to.equal(shellStyle.getPropertyValue("--neutral-base-color"));
+        expect(
+          mainStyle.getPropertyValue("--accent-base-color"),
+          "Main accent-base-color should not be locally overridden in light mode."
+        ).to.equal(shellStyle.getPropertyValue("--accent-base-color"));
+        expect(
+          lightMainLuminance,
+          "Main luminance should match the light theme after mode switching."
+        ).to.equal(lightTheme.luminance);
+        expect(lightMainLuminance).to.not.equal(darkMainLuminance, "Main luminance token should change when switching modes.");
+      });
+    });
+
+    it("should update footer tokens when html data-u-color-mode changes from dark to light", function () {
+      let darkFooterLuminance;
+
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "dark";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const footer = element.querySelector(".u-footer");
+        assert(footer, "Footer section should exist.");
+        const footerStyle = window.getComputedStyle(footer);
+        darkFooterLuminance = Number.parseFloat(footerStyle.getPropertyValue("--base-layer-luminance"));
+        expect(
+          darkFooterLuminance,
+          "Footer luminance should match the dark theme before mode switching."
+        ).to.equal(componentWidgetClass.defaultTheme.footer.dark.luminance);
+        expect(
+          footerStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Footer neutral color should match the dark theme before mode switching."
+        ).to.equal(String(componentWidgetClass.defaultTheme.footer.dark.neutral).toLowerCase());
+
+        return asyncRun(function () {
+          document.documentElement.dataset.uColorMode = "light";
+        });
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const footer = element.querySelector(".u-footer");
+        assert(footer, "Footer section should exist.");
+        const footerStyle = window.getComputedStyle(footer);
+        const lightFooterLuminance = Number.parseFloat(footerStyle.getPropertyValue("--base-layer-luminance"));
+
+        const lightTheme = componentWidgetClass.defaultTheme.footer.light;
+        const shellStyle = window.getComputedStyle(element);
+        expect(
+          footerStyle.getPropertyValue("--neutral-base-color"),
+          "Footer neutral-base-color should not be locally overridden in light mode."
+        ).to.equal(shellStyle.getPropertyValue("--neutral-base-color"));
+        expect(
+          footerStyle.getPropertyValue("--accent-base-color"),
+          "Footer accent-base-color should not be locally overridden in light mode."
+        ).to.equal(shellStyle.getPropertyValue("--accent-base-color"));
+        expect(
+          lightFooterLuminance,
+          "Footer luminance should match the light theme after mode switching."
+        ).to.equal(lightTheme.luminance);
+        expect(lightFooterLuminance).to.not.equal(darkFooterLuminance, "Footer luminance token should change when switching modes.");
+      });
+    });
+
+    it("should apply header dark theme when color-mode-change event is dispatched", function () {
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "light";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const header = element.querySelector(".u-header");
+        assert(header, "Header section should exist.");
+
+        // Dispatch color-mode-change event.
+        const colorModeChangeEvent = new window.CustomEvent("color-mode-change", {
+          "detail": { "resolvedMode": "dark" },
+          "bubbles": true,
+          "cancelable": true
+        });
+        header.dispatchEvent(colorModeChangeEvent);
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const header = element.querySelector(".u-header");
+        assert(header, "Header section should exist.");
+        const headerStyle = window.getComputedStyle(header);
+        const expectedTheme = componentWidgetClass.defaultTheme.header.dark;
+
+        expect(
+          headerStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Header neutral color should match the dark theme after event dispatch."
+        ).to.equal(String(expectedTheme.neutral).toLowerCase());
+        expect(
+          headerStyle.getPropertyValue("--accent-base-color").trim().toLowerCase(),
+          "Header accent color should match the dark theme after event dispatch."
+        ).to.equal(String(expectedTheme.accent).toLowerCase());
+        expect(
+          Number.parseFloat(headerStyle.getPropertyValue("--base-layer-luminance")),
+          "Header luminance should match the dark theme after event dispatch."
+        ).to.equal(expectedTheme.luminance);
+      });
+    });
+
+    it("should apply main dark theme when color-mode-change event is dispatched", function () {
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "light";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const main = element.querySelector(".u-main");
+        assert(main, "Main section should exist.");
+
+        // Dispatch color-mode-change event.
+        const colorModeChangeEvent = new window.CustomEvent("color-mode-change", {
+          "detail": { "resolvedMode": "dark" },
+          "bubbles": true
+        });
+        main.dispatchEvent(colorModeChangeEvent);
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const main = element.querySelector(".u-main");
+        assert(main, "Main section should exist.");
+        const mainStyle = window.getComputedStyle(main);
+        const expectedTheme = componentWidgetClass.defaultTheme.main.dark;
+        const shellStyle = window.getComputedStyle(element);
+
+        expect(
+          mainStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Main neutral color should match the dark theme after event dispatch."
+        ).to.equal(String(expectedTheme.neutral).toLowerCase());
+        expect(
+          mainStyle.getPropertyValue("--accent-base-color"),
+          "Main accent-base-color should not be locally overridden in dark mode."
+        ).to.equal(shellStyle.getPropertyValue("--accent-base-color"));
+        expect(
+          Number.parseFloat(mainStyle.getPropertyValue("--base-layer-luminance")),
+          "Main luminance should match the dark theme after event dispatch."
+        ).to.equal(expectedTheme.luminance);
+      });
+    });
+
+    it("should apply footer dark theme when color-mode-change event is dispatched", function () {
+      return asyncRun(function () {
+        document.documentElement.dataset.uColorMode = "light";
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const footer = element.querySelector(".u-footer");
+        assert(footer, "Footer section should exist.");
+
+        // Dispatch color-mode-change event.
+        const colorModeChangeEvent = new window.CustomEvent("color-mode-change", {
+          "detail": { "resolvedMode": "dark" },
+          "bubbles": true
+        });
+        footer.dispatchEvent(colorModeChangeEvent);
+      }).then(function () {
+        return waitForNextFrame();
+      }).then(function () {
+        const footer = element.querySelector(".u-footer");
+        assert(footer, "Footer section should exist.");
+        const footerStyle = window.getComputedStyle(footer);
+        const expectedTheme = componentWidgetClass.defaultTheme.footer.dark;
+        const shellStyle = window.getComputedStyle(element);
+
+        expect(
+          footerStyle.getPropertyValue("--neutral-base-color").trim().toLowerCase(),
+          "Footer neutral color should match the dark theme after event dispatch."
+        ).to.equal(String(expectedTheme.neutral).toLowerCase());
+        expect(
+          footerStyle.getPropertyValue("--accent-base-color"),
+          "Footer accent-base-color should not be locally overridden in dark mode."
+        ).to.equal(shellStyle.getPropertyValue("--accent-base-color"));
+        expect(
+          Number.parseFloat(footerStyle.getPropertyValue("--base-layer-luminance")),
+          "Footer luminance should match the dark theme after event dispatch."
+        ).to.equal(expectedTheme.luminance);
       });
     });
   });

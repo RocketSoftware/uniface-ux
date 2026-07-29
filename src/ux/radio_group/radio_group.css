@@ -36,7 +36,7 @@
 }
 
 .u-radio-group .u-error-icon::before {
-  color: #d13438;
+  color: var(--u-error-color);
   padding-inline-start: calc((var(--design-unit) * .5px));
 }
 

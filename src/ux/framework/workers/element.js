@@ -72,6 +72,18 @@ export class Element extends WorkerBase {
   }
 
   /**
+   * Initializes this element and cascades `initializeLayout` to all child workers.
+   * This ensures all child workers can establish their initial state before the widget
+   * is connected to the DOM.
+   * @param {HTMLElement} widgetElement - The root widget element.
+   */
+  initializeLayout(widgetElement) {
+    this.childWorkers?.forEach((worker) => {
+      worker.initializeLayout(widgetElement);
+    });
+  }
+
+  /**
    * Refreshes the widget based on properties.
    * @param {Widget} widgetInstance
    */

@@ -37,6 +37,18 @@ export class WorkerBase extends Base {
   }
 
   /**
+   * Initializes the created layout element with worker-specific defaults.
+   * Called from Widget.processLayout() after getLayout(), before the element is
+   * connected to the DOM. Override in specific workers to set initial attribute
+   * values, design tokens, or other element state that must be in place before
+   * the widget is inserted into the document and refresh is called.
+   * @param {HTMLElement} _widgetElement - The root widget element created by getLayout().
+   */
+  initializeLayout(_widgetElement) {
+    // intentionally left empty.
+  }
+
+  /**
    * Sets the styleClass that identifies the element this setters work on.
    * @param {string} elementQuerySelector
    */
