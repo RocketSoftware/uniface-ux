@@ -482,6 +482,43 @@ import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurren
       expect(widgetInstance.elements.widget.hidden).to.equal(true);
       expect(widgetInstance.elements.widget.classList).to.have.lengthOf(0);
     });
+
+    it("should propagate parameterCallback from subwidget EventTrigger through parent mapTrigger", function () {
+      const Button = getWidgetClass("UX.Button");
+      const testCallback = function () {
+        return ["p1", "p2"];
+      };
+      const originalCallback = Button.triggers["detail"].parameterCallback;
+      Button.triggers["detail"].parameterCallback = testCallback;
+
+      // Local subclass avoids corrupting the shared Widget registries.
+      class ParentWidget extends Widget {
+        static subWidgets = {};
+        static subWidgetWorkers = [];
+        static defaultValues = {};
+        static setters = {};
+        static getters = {};
+        static triggers = {};
+      }
+      ParentWidget.structure = new Element(ParentWidget, "div", "", "", [
+        new SubWidget(ParentWidget, "span", "", "", "", "btn", "UX.Button", {}, false, ["detail"], [])
+      ]);
+
+      const layout = ParentWidget.processLayout(document.createElement("div"), "");
+      document.body.appendChild(layout);
+      const parentWidget = new ParentWidget();
+      parentWidget.onConnect(layout);
+      parentWidget.dataInit();
+
+      const result = parentWidget.mapTrigger("btn_detail");
+
+      Button.triggers["detail"].parameterCallback = originalCallback;
+      layout.parentNode.removeChild(layout);
+
+      expect(result, "mapTrigger should return a mapping for the delegated subwidget trigger.").to.exist;
+      expect(result.parameter_callback, "parameter_callback should be the one registered on Button's EventTrigger.").to.equal(testCallback);
+      expect(result.parameter_callback(), "parameter_callback should return the expected values.").to.deep.equal(["p1", "p2"]);
+    });
   });
 
   // ===================================================================================================================
@@ -966,6 +1003,7 @@ import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurren
     it("should initialize with correct properties for EventTrigger class", function () {
       expect(element.widgetClass).to.equal(widgetClass);
       expect(element.triggerName).to.equal(triggerName);
+      expect(element.parameterCallback).to.be.undefined;
     });
 
     it("check registerTrigger() functionality", function () {
@@ -986,6 +1024,94 @@ import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurren
       expect(returnMapping.event_name).to.equal(eventName);
       expect(returnMapping.validate).to.equal(validate);
       expect(returnMapping.element).to.have.tagName("div");
+      expect(returnMapping.parameter_callback).to.be.undefined;
+    });
+
+    it("check getTriggerMapping() includes parameterCallback when provided", function () {
+      const testCallback = () => ["value1", "value2"];
+      const eventTriggerWithCallback = new EventTrigger(widgetClass, "test-trigger", "click", true, testCallback);
+
+      const widgetInstance = {
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": function () {
+          return "description";
+        }
+      };
+
+      let returnMapping = eventTriggerWithCallback.getTriggerMapping(widgetInstance);
+      expect(returnMapping).to.have.property("parameter_callback");
+      expect(returnMapping.parameter_callback).to.equal(testCallback);
+      expect(returnMapping.parameter_callback()).to.deep.equal(["value1", "value2"]);
+    });
+
+    it("parameterCallback should receive widget as this and first argument", function () {
+      const testCallback = function(widgetArg) {
+        return [this.data.testValue, widgetArg.data.testValue];
+      };
+      const eventTriggerWithCallback = new EventTrigger(widgetClass, "test-trigger", "click", true, testCallback);
+
+      const widgetInstance = {
+        "data": {
+          "testValue": "test-param"
+        },
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": function () {
+          return "description";
+        }
+      };
+
+      const returnMapping = eventTriggerWithCallback.getTriggerMapping(widgetInstance);
+      const result = returnMapping.parameter_callback.call(widgetInstance, widgetInstance);
+      expect(result).to.deep.equal(["test-param", "test-param"]);
+    });
+
+    it("parameterCallback supports dynamic-length return arrays", function () {
+      const testCallback = function() {
+        return this.data.values;
+      };
+      const eventTriggerWithCallback = new EventTrigger(widgetClass, "test-trigger", "click", true, testCallback);
+
+      const widgetInstance = {
+        "data": {
+          "values": ["p1", "p2", "p3", "p4"]
+        },
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": function () {
+          return "description";
+        }
+      };
+
+      const returnMapping = eventTriggerWithCallback.getTriggerMapping(widgetInstance);
+      expect(returnMapping.parameter_callback.call(widgetInstance, widgetInstance)).to.deep.equal(["p1", "p2", "p3", "p4"]);
+    });
+
+    it("parameterCallback should not execute during getTriggerMapping", function () {
+      let callCount = 0;
+      const testCallback = function() {
+        callCount += 1;
+        return ["value"];
+      };
+      const eventTriggerWithCallback = new EventTrigger(widgetClass, "test-trigger", "click", true, testCallback);
+
+      const widgetInstance = {
+        "elements": {
+          "widget": document.createElement("div")
+        },
+        "getTraceDescription": function () {
+          return "description";
+        }
+      };
+
+      const returnMapping = eventTriggerWithCallback.getTriggerMapping(widgetInstance);
+      expect(callCount).to.equal(0);
+      expect(returnMapping.parameter_callback()).to.deep.equal(["value"]);
+      expect(callCount).to.equal(1);
     });
   });
 
