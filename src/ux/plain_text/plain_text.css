@@ -2,64 +2,70 @@
   flex-grow: 0;
   /* Error state background color. */
   --u-plain-text-error-bg: #f6d5d7;
+  /* Error state foreground color. */
+  --u-plain-text-error-fg: #6d0e0e;
 }
 
 /* Dark mode overrides - dark mode. */
 :root[data-u-color-mode="dark" i] .u-plain-text {
   --u-plain-text-error-bg: #5a2828;
+  --u-plain-text-error-fg: #ffc9ce;
 }
 
 /* Dark mode overrides - auto mode (only when system prefers dark). */
 @media (prefers-color-scheme: dark) {
   :root[data-u-color-mode="auto" i] .u-plain-text {
     --u-plain-text-error-bg: #5a2828;
+    --u-plain-text-error-fg: #ffc9ce;
   }
 }
 
 .u-plain-text .u-control,
 .u-plain-text .u-paragraph {
-    background-color: inherit;
+  background-color: inherit;
 }
 
 /* Styling the background color when the widget is in an invalid state. */
 .u-plain-text.u-invalid,
 .u-plain-text.u-format-invalid {
-    background-color: var(--u-plain-text-error-bg);
+  background-color: var(--u-plain-text-error-bg);
+  color: var(--u-plain-text-error-fg);
 }
 
 /* Styling the error icon ( according to the fluent design system ) when the widget is in an invalid state. */
 .u-plain-text.u-invalid .u-error-icon,
 .u-plain-text.u-format-invalid .u-error-icon {
-    color: var(--u-error-color);
-    padding-inline-start: 4px;
-    vertical-align: text-top;
+  color: var(--u-error-color);
+  padding-inline-start: 4px;
+  vertical-align: text-top;
 }
 
 .u-plain-text .u-prefix:after {
-    content: " ";
+  content: " ";
 }
 
 .u-plain-text .u-suffix:not(.ms-Icon)::before {
-    content: " ";
+  content: " ";
 }
 
 .u-plain-text .u-prefix.ms-Icon {
-    padding-inline-end: 4px;
-    vertical-align: text-top;
+  padding-inline-end: 4px;
+  vertical-align: text-top;
 }
 
 .u-plain-text .u-suffix.ms-Icon {
-    padding-inline-start: 4px;
-    vertical-align: text-top;
+  padding-inline-start: 4px;
+  vertical-align: text-top;
 }
 
 .u-plain-text .u-label-text:after {
-    content: " ";
+  content: " ";
 }
 
 /* Styling the valrep value to enclose it within parentheses. */
 .u-plain-text .u-value {
-  color: var(--neutral-base-color);
+  color: currentColor;
+  opacity: 0.7;
   font-style: italic;
 }
 
@@ -73,5 +79,5 @@
 
 /* Remove padding from error icon when control is empty (representation-only format with invalid value). */
 .u-plain-text .u-control:empty ~ .u-error-icon {
-    padding-inline-start: 0;
+  padding-inline-start: 0;
 }

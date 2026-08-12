@@ -37,7 +37,8 @@
 
 /* Styling for value when display-format is valrep. */
 .u-listbox .u-value {
-  color: var(--neutral-base-color);
+  color: currentColor;
+  opacity: 0.7;
   font-style: italic;
 }
 
@@ -72,4 +73,4 @@
 .u-listbox .u-label-text:not([hidden]),
 .u-listbox .u-error-icon:not([hidden]) {
   margin-bottom: 4px;
-} 
+}

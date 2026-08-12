@@ -60,7 +60,8 @@
 }
 
 .u-radio-group .u-radio .u-value {
-  color: var(--neutral-base-color);
+  color: currentColor;
+  opacity: 0.7;
   font-style: italic;
 }
 

@@ -9,6 +9,8 @@
  */
 .u-select::part(control) {
   min-height: unset;
+  background: padding-box linear-gradient(var(--neutral-fill-rest), var(--neutral-fill-rest)),
+              border-box var(--neutral-stroke-input-rest);
 }
 
 .u-select::part(selected-value) {
@@ -28,7 +30,7 @@
 
 .u-select.u-readonly::part(control) {
   background: padding-box linear-gradient(var(--neutral-fill-rest), var(--neutral-fill-rest)),
-    border-box var(--neutral-stroke-control-rest);
+              border-box var(--neutral-stroke-input-rest);
 }
 
 .u-select.u-readonly::part(listbox) {
@@ -40,7 +42,7 @@
 }
 
 .u-select .u-placeholder {
-  color: var(--neutral-base-color);
+  color: var(--input-placeholder-rest);
   font-style: italic;
 }
 
@@ -53,7 +55,8 @@
 }
 
 .u-select .u-value {
-  color: var(--neutral-base-color);
+  color: currentColor;
+  opacity: 0.7;
   font-style: italic;
 }
 
@@ -76,6 +79,12 @@
 .u-select:focus-within::part(control) {
   outline: calc(var(--focus-stroke-width) * 1px) solid var(--focus-stroke-outer);
   outline-offset: calc(var(--focus-stroke-width) * -1px);
+}
+
+/* Styling the hover state for the control border and background when the widget is not disabled and not focused. */
+.u-select:not([disabled]):not(:focus-within):hover::part(control) {
+  background: padding-box linear-gradient(var(--neutral-fill-hover), var(--neutral-fill-hover)),
+              border-box var(--neutral-stroke-input-hover);
 }
 
 /* Styling the border color ( according to the fluent design system ) when the widget is in an invalid state and has no focus. */
