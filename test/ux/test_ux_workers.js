@@ -214,6 +214,7 @@ import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurren
     let defaultIcon;
     let slottedElement;
     let dynamicLabelElement;
+    let objectDefinition;
 
     const widgetInstance = {
       "data": {
@@ -245,93 +246,146 @@ import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurren
       defaultText = "defaultText";
       defaultIcon = "default.png";
       slottedElement = new ElementIconText(widgetClass, "", "", "", "", propText, defaultText, propIcon, defaultIcon);
-      dynamicLabelElement = new ElementIconText(widgetClass, "span", "label-class", "", "label-slot", propText, defaultText, null, null, true);
+      dynamicLabelElement = new ElementIconText(widgetClass, "span", "label-class", ".label-class", "label-slot", propText, defaultText, null, null, true);
+
+      // Setup objectDefinition with default label-size.
+      objectDefinition = {
+        "getProperty": sinon.stub()
+      };
+      objectDefinition.getProperty.withArgs("label-size").returns("normal");
     });
 
-    it("should initialize with correct properties for ElementIconText class", function () {
-      expect(slottedElement.widgetClass).to.equal(widgetClass);
-      expect(slottedElement.textPropId).to.equal(propText);
-      expect(slottedElement.textDefaultValue).to.equal(defaultText);
-      expect(slottedElement.iconPropId).to.equal(propIcon);
-      expect(slottedElement.iconDefaultValue).to.equal(defaultIcon);
-      expect(slottedElement.isDynamicLabel).to.be.false;
-      expect(slottedElement.currentLabelSize).to.be.null;
+    it("should initialize with correct properties", function () {
+      expect(slottedElement.widgetClass, "Widget class should be initialized correctly.").to.equal(widgetClass);
+      expect(slottedElement.textPropId, "Text property identifier should be initialized correctly.").to.equal(propText);
+      expect(slottedElement.textDefaultValue, "Default text value should be initialized correctly.").to.equal(defaultText);
+      expect(slottedElement.iconPropId, "Icon property identifier should be initialized correctly.").to.equal(propIcon);
+      expect(slottedElement.iconDefaultValue, "Default icon value should be initialized correctly.").to.equal(defaultIcon);
+      assert(!slottedElement.isDynamicLabel, "The isDynamicLabel flag should be false for non-dynamic labels.");
 
-      // Test isDynamicLabel initialization
-      expect(dynamicLabelElement.isDynamicLabel).to.be.true;
-      expect(dynamicLabelElement.currentLabelSize).to.be.null;
+      // Verify dynamicLabelElement initialization with different values.
+      assert(dynamicLabelElement.isDynamicLabel, "The isDynamicLabel flag should be true for dynamic labels.");
+      expect(dynamicLabelElement.tagName, "Dynamic label should have tagName 'span'.").to.equal("span");
+      expect(dynamicLabelElement.styleClass, "Dynamic label should have styleClass 'label-class'.").to.equal("label-class");
+      expect(dynamicLabelElement.elementQuerySelector, "Dynamic label should have elementQuerySelector '.label-class'.").to.equal(".label-class");
+      expect(dynamicLabelElement.slot, "Dynamic label should have slot 'label-slot'.").to.equal("label-slot");
     });
 
-    it("check getters/setters changed for propIcon, propText for ElementIconText class", function () {
-      expect(slottedElement.widgetClass.defaultValues.icon).to.equal(defaultIcon);
-      expect(slottedElement.widgetClass.defaultValues.text).to.equal(defaultText);
-
-      // Test label-size setter registration for dynamic labels
-      expect(widgetClass.setters["label-size"]).to.exist;
-      expect(widgetClass.setters["label-size"]).to.include(dynamicLabelElement);
+    it("should register default values for text and icon properties", function () {
+      expect(slottedElement.widgetClass.defaultValues.icon, "Default icon value should be registered.").to.equal(defaultIcon);
+      expect(slottedElement.widgetClass.defaultValues.text, "Default text value should be registered.").to.equal(defaultText);
     });
 
-    it("should refresh correctly for ElementIconText class", function () {
+    it("should register setters when iconPropId and textPropId are provided", function () {
+      // slottedElement has both icon and text.
+      expect(widgetClass.setters["icon"], "Icon setter should be registered.").to.include(slottedElement);
+      expect(widgetClass.setters["text"], "Text setter should be registered for slottedElement.").to.include(slottedElement);
+
+      // dynamicLabelElement has only text (iconPropId is null).
+      expect(widgetClass.setters["text"], "Text setter should be registered for dynamicLabelElement.").to.include(dynamicLabelElement);
+      expect(widgetClass.setters["icon"], "Icon setter should NOT include dynamicLabelElement.").to.not.include(dynamicLabelElement);
+    });
+
+    it("should register label-size setter when isDynamicLabel is true", function () {
+      expect(widgetClass.setters["label-size"], "label-size setter should be registered for dynamicLabelElement.").to.include(dynamicLabelElement);
+      expect(widgetClass.setters["label-size"], "label-size setter should NOT include slottedElement.").to.not.include(slottedElement);
+    });
+
+    it("should create element with correct tag based on label-size in getLayout()", function () {
+      objectDefinition.getProperty.withArgs("label-size").returns("medium");
+      let element = dynamicLabelElement.getLayout(objectDefinition);
+      expect(element.tagName.toLowerCase(), "Element tag should be h2 for medium label-size.").to.equal("h2");
+      assert(element.classList.contains("label-class"), "Label class should be applied in getLayout().");
+    });
+
+    it("should refresh correctly", function () {
       slottedElement.refresh(widgetInstance);
       let mockIconClasses = ["ms-Icon", "ms-Icon--testicon.png"];
-      expect(widgetInstance.elements.widget.hidden).to.equal(false);
-      expect([...widgetInstance.elements.widget.classList].includes(...mockIconClasses)).to.equal(true);
+      assert(!widgetInstance.elements.widget.hidden, "Element should be visible when icon is set.");
+      assert([...widgetInstance.elements.widget.classList].includes(...mockIconClasses), "Icon classes should be applied.");
 
       widgetInstance.data["icon"] = "";
       slottedElement.refresh(widgetInstance);
-      expect(widgetInstance.elements.widget.innerText).to.equal("defaultText");
-      expect([...widgetInstance.elements.widget.classList].includes(...mockIconClasses)).to.equal(false);
+      expect(widgetInstance.elements.widget.innerText, "Default text should be displayed when icon is empty.").to.equal("defaultText");
+      assert(![...widgetInstance.elements.widget.classList].includes(...mockIconClasses), "Icon classes should be removed when icon is empty.");
+    });
+
+    it("should refresh correctly with a dynamic label size", function () {
+      // Create initial element using getLayout (simulates processLayout phase).
+      const initialLabel = dynamicLabelElement.getLayout(objectDefinition);
+      const container = document.createElement("div");
+      container.appendChild(initialLabel);
+
+      const dynamicWidgetInstance = {
+        "data": {
+          "label-size": "large",
+          "text": "Dynamic Label"
+        },
+        "elements": {
+          "widget": container
+        },
+        "getTraceDescription": function () {
+          return "description";
+        }
+      };
+
+      dynamicLabelElement.refresh(dynamicWidgetInstance);
+
+      const updatedLabel = container.querySelector(".label-class");
+      expect(updatedLabel.tagName.toLowerCase(), "Label element should be replaced with 'h1' during refresh() for label-size 'large'.").to.equal("h1");
+      expect(updatedLabel.innerText, "Label text should be set from the 'text' property during refresh().").to.equal("Dynamic Label");
+      expect(updatedLabel.hidden, "Label element should be visible once text is set.").to.be.false;
     });
 
     it("should return correct tag name for different label sizes", function () {
-      expect(dynamicLabelElement.getTagNameForLabelSize("small")).to.equal("h3");
-      expect(dynamicLabelElement.getTagNameForLabelSize("medium")).to.equal("h2");
-      expect(dynamicLabelElement.getTagNameForLabelSize("large")).to.equal("h1");
-      expect(dynamicLabelElement.getTagNameForLabelSize("unknown")).to.equal("span");
-      expect(dynamicLabelElement.getTagNameForLabelSize(null)).to.equal("span");
+      expect(dynamicLabelElement.getTagNameForLabelSize("small"), "Small label-size should map to h3.").to.equal("h3");
+      expect(dynamicLabelElement.getTagNameForLabelSize("medium"), "Medium label-size should map to h2.").to.equal("h2");
+      expect(dynamicLabelElement.getTagNameForLabelSize("large"), "Large label-size should map to h1.").to.equal("h1");
+      expect(dynamicLabelElement.getTagNameForLabelSize("normal"), "Normal label-size should fall back to the worker's own configured tag name.").to.equal(dynamicLabelElement.tagName);
     });
 
-    it("should create element with correct tag based on label-size in getLayout", function () {
-      const objectDefinition = {
-        "getProperty": sinon.stub()
-      };
-
-      objectDefinition.getProperty.withArgs("label-size").returns("medium");
-      let element = dynamicLabelElement.getLayout(objectDefinition);
-      expect(element.tagName.toLowerCase()).to.equal("h2");
-      expect(element.classList.contains("label-class")).to.be.true;
-      expect(dynamicLabelElement.currentLabelSize).to.equal("medium");
+    it("should fall back to the worker's own configured tag name for an invalid label-size", function () {
+      const divLabelElement = new ElementIconText(widgetClass, "div", "label-class", "", "label-slot", propText, defaultText, null, null, true);
+      expect(divLabelElement.getTagNameForLabelSize("unknown"), "Unknown label-size should fall back to 'div' when the worker is configured with tagName 'div'.").to.equal("div");
+      expect(divLabelElement.getTagNameForLabelSize(null), "Null label-size should fall back to 'div' when the worker is configured with tagName 'div'.").to.equal("div");
     });
 
     it("should replace element with new tag when label-size changes", function () {
-      const parentElement = document.createElement("div");
-      const oldElement = document.createElement("h2");
-      oldElement.innerText = "Test Label";
-      oldElement.slot = "label-slot";
-      oldElement.classList.add("label-class", "extra-class");
-      oldElement.hidden = false;
-      parentElement.appendChild(oldElement);
-
-      dynamicLabelElement.currentLabelSize = "medium";
+      const oldElement = dynamicLabelElement.getLayout(objectDefinition);
       const newElement = dynamicLabelElement.handleLabelSizeChange(oldElement, "large");
 
-      expect(newElement.tagName.toLowerCase()).to.equal("h1");
-      expect(newElement.innerText).to.equal("Test Label");
-      expect(newElement.slot).to.equal("label-slot");
-      expect(newElement.classList.contains("label-class")).to.be.true;
-      expect(newElement.classList.contains("extra-class")).to.be.true;
-      expect(newElement.hidden).to.be.false;
-      expect(dynamicLabelElement.currentLabelSize).to.equal("large");
+      expect(newElement.tagName.toLowerCase(), "Element should be replaced with h1 for large label-size.").to.equal("h1");
+      expect(oldElement.tagName.toLowerCase(), "Old element should remain span.").to.equal("span");
+      expect(newElement.slot, "New element slot should be set from the worker's configured slot.").to.equal("label-slot");
+      expect(newElement.classList.contains("label-class"), "Style class should be preserved.").to.be.true;
+      expect(newElement.hidden, "Visibility should be preserved from old element.").to.equal(oldElement.hidden);
+      expect(newElement.innerText, "Inner text should be preserved from old element.").to.equal(oldElement.innerText);
     });
 
     it("should not replace element when label-size remains the same", function () {
-      const oldElement = document.createElement("h2");
-      dynamicLabelElement.currentLabelSize = "medium";
+      const oldElement = dynamicLabelElement.getLayout(objectDefinition);
 
-      const result = dynamicLabelElement.handleLabelSizeChange(oldElement, "medium");
+      const newElement = dynamicLabelElement.handleLabelSizeChange(oldElement, "normal");
 
-      expect(result).to.equal(oldElement);
-      expect(result.tagName.toLowerCase()).to.equal("h2");
+      expect(newElement, "Element should not be replaced when label-size does not change.").to.equal(oldElement);
+      expect(newElement.tagName.toLowerCase(), "Element tag should remain span when label-size remains normal.").to.equal("span");
+    });
+
+    it("should replace each element independently when same label-size is requested", function () {
+      // Elements already created with normal label-size (default) which produces span.
+      const firstElement = dynamicLabelElement.getLayout(objectDefinition);
+      const secondElement = dynamicLabelElement.getLayout(objectDefinition);
+
+      expect(firstElement.tagName.toLowerCase(), "Should create span element when label-size is normal.").to.equal("span");
+      expect(secondElement.tagName.toLowerCase(), "Should create span element when label-size is normal.").to.equal("span");
+
+      const firstResult = dynamicLabelElement.handleLabelSizeChange(firstElement, "large");
+      const secondResult = dynamicLabelElement.handleLabelSizeChange(secondElement, "large");
+
+      expect(firstResult.tagName.toLowerCase(), "First element should be replaced with h1.").to.equal("h1");
+      expect(secondResult.tagName.toLowerCase(), "Second element should be replaced with h1.").to.equal("h1");
+      expect(firstResult, "First result should be a new element instance.").to.not.equal(firstElement);
+      expect(secondResult, "Second result should be a new element instance.").to.not.equal(secondElement);
     });
   });
 

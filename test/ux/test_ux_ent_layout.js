@@ -282,6 +282,46 @@
     }
   };
 
+  const mockEntityDefWithNestedEntities = {
+    "nm": "PARENT.ENT.NOMODEL",
+    "type": "entity",
+    "widget_class": "UX.CollectionLayout",
+    "occs": {
+      "#2": {
+        "type": "occurrence",
+        "#10": {
+          "nm": "NESTED1.ENT.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#11": {
+              "type": "occurrence",
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#10"
+        },
+        "#13": {
+          "nm": "NESTED2.ENT.NOMODEL",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#14": {
+              "type": "occurrence",
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {},
+          "id": "#13"
+        },
+        "widget_class": "UX.OccurrenceLayout"
+      }
+    },
+    "properties": {},
+    "id": "#2"
+  };
+
   function verifyWidgetClass(widgetClass, widgetName) {
     assert(
       widgetClass,
@@ -837,6 +877,255 @@
             expect(labelElement, "The '.u-label-text' element should exist after updating label-text to a very long text.").to.exist;
             expect(labelElement.hidden, "The '.u-label-text' element should be visible after updating label-text to a very long text.").to.be.false;
             expect(labelElement.textContent, "The label text content should equal the very long text.").to.equal(longText);
+          });
+        });
+
+        it("should not reset to default when label-size is updated to the same value", function () {
+          return asyncRun(function () {
+            collectionTester.dataUpdate({
+              "label-text": "Same Size Test",
+              "label-size": "large"
+            });
+          }).then(function () {
+            const labelElement = element.querySelector(":scope > .u-label-text");
+            expect(labelElement.tagName.toLowerCase(), "Tag should be 'h1' initially.").to.equal("h1");
+            return asyncRun(function () {
+              collectionTester.dataUpdate({ "label-size": "large" });
+            });
+          }).then(function () {
+            const labelElement = element.querySelector(":scope > .u-label-text");
+            expect(labelElement.tagName.toLowerCase(), "Tag should remain 'h1' after updating to same label-size.").to.equal("h1");
+            expect(labelElement.textContent, "Text should be preserved.").to.equal("Same Size Test");
+          });
+        });
+
+        it("should handle label-size changes through multiple transitions", function () {
+          return asyncRun(function () {
+            collectionTester.dataUpdate({
+              "label-text": "Transition Test",
+              "label-size": "small"
+            });
+          }).then(function () {
+            const labelElement = element.querySelector(":scope > .u-label-text");
+            expect(labelElement.tagName.toLowerCase()).to.equal("h3");
+            return asyncRun(function () {
+              collectionTester.dataUpdate({ "label-size": "large" });
+            });
+          }).then(function () {
+            const labelElement = element.querySelector(":scope > .u-label-text");
+            expect(labelElement.tagName.toLowerCase()).to.equal("h1");
+            return asyncRun(function () {
+              collectionTester.dataUpdate({ "label-size": "medium" });
+            });
+          }).then(function () {
+            const labelElement = element.querySelector(":scope > .u-label-text");
+            expect(labelElement.tagName.toLowerCase()).to.equal("h2");
+            expect(labelElement.textContent).to.equal("Transition Test");
+          });
+        });
+
+        describe("Nested entity label element isolation", function () {
+          let parentEntityTester;
+          let nestedEntity1Tester;
+          let nestedEntity2Tester;
+
+          before(function () {
+            resetWidgetContainer();
+
+            parentEntityTester = new umockup.WidgetTester("UX.CollectionLayout", "uent:PARENT.ENT.NOMODEL");
+            const parentSkeleton = createSkeleton(parentEntityTester.widgetId);
+            parentEntityTester.createWidget(null, parentSkeleton, mockEntityDefWithNestedEntities);
+
+            const occurrenceElement = parentEntityTester.element.querySelector("[id=\"uocc:PARENT.ENT.NOMODEL.1\"]");
+
+            nestedEntity1Tester = new umockup.WidgetTester("UX.CollectionLayout", "uent:NESTED1.ENT.NOMODEL");
+            const nested1Skeleton = occurrenceElement.querySelector(`[id="${nestedEntity1Tester.widgetId}"]`);
+            nestedEntity1Tester.createWidget(null, nested1Skeleton, mockEntityDefWithNestedEntities.occs["#2"]["#10"]);
+
+            nestedEntity2Tester = new umockup.WidgetTester("UX.CollectionLayout", "uent:NESTED2.ENT.NOMODEL");
+            const nested2Skeleton = occurrenceElement.querySelector(`[id="${nestedEntity2Tester.widgetId}"]`);
+            nestedEntity2Tester.createWidget(null, nested2Skeleton, mockEntityDefWithNestedEntities.occs["#2"]["#13"]);
+          });
+
+          after(function () {
+            // Reset collectionTester's cached state so createWidget can re-run.
+            collectionTester.uxTagName = undefined;
+            collectionTester.widget = undefined;
+            collectionTester.element = undefined;
+            resetWidgetContainer();
+            return asyncRun(function () {
+              const collectionSkeleton = createSkeleton(collectionWidgetId);
+              collectionTester.createWidget(null, collectionSkeleton, mockEntityDef);
+              element = collectionTester.element;
+            });
+          });
+
+          it("should not reset first nested entity when second nested entity updates to same label-size", function () {
+            // Step 1: Initialize both nested entities with label text only (no explicit label-size).
+            return asyncRun(function () {
+              nestedEntity1Tester.dataUpdate({
+                "label-text": "First Nested Entity"
+              });
+            }).then(function () {
+              return asyncRun(function () {
+                nestedEntity2Tester.dataUpdate({
+                  "label-text": "Second Nested Entity"
+                });
+              });
+            })
+              // Step 2: Verify both entities use default 'span' tag and have correct text content.
+              .then(function () {
+                const label1 = nestedEntity1Tester.element.querySelector(":scope > .u-label-text");
+                const label2 = nestedEntity2Tester.element.querySelector(":scope > .u-label-text");
+
+                expect(label1.tagName.toLowerCase(), "First nested entity label should be 'span' by default.").to.equal("span");
+                expect(label1.textContent, "First nested entity text should be correct.").to.equal("First Nested Entity");
+                expect(label2.tagName.toLowerCase(), "Second nested entity label should be 'span' by default.").to.equal("span");
+                expect(label2.textContent, "Second nested entity text should be correct.").to.equal("Second Nested Entity");
+              })
+              // Step 3: Update first nested entity to label-size 'large'.
+              .then(function () {
+                return asyncRun(function () {
+                  nestedEntity1Tester.dataUpdate({ "label-size": "large" });
+                });
+              })
+              // Step 4: Update second nested entity to label-size 'large'.
+              .then(function () {
+                return asyncRun(function () {
+                  nestedEntity2Tester.dataUpdate({ "label-size": "large" });
+                });
+              })
+              // Step 5: Verify both entities have correct label tags.
+              .then(function () {
+                const label1 = nestedEntity1Tester.element.querySelector(":scope > .u-label-text");
+                const label2 = nestedEntity2Tester.element.querySelector(":scope > .u-label-text");
+
+                expect(label1.tagName.toLowerCase(), "First nested entity label should be 'h1'.").to.equal("h1");
+                expect(label1.textContent, "First nested entity text should be preserved.").to.equal("First Nested Entity");
+                expect(label2.tagName.toLowerCase(), "Second nested entity label should be 'h1'.").to.equal("h1");
+                expect(label2.textContent, "Second nested entity text should be preserved.").to.equal("Second Nested Entity");
+              });
+          });
+
+          it("should handle mixed label-sizes across nested entities", function () {
+            // Step 1: Initialize both nested entities and apply default label-size 'normal'.
+            return asyncRun(function () {
+              nestedEntity1Tester.dataUpdate({
+                "label-text": "Small Nested Entity",
+                "label-size": "normal"
+              });
+            }).then(function () {
+              return asyncRun(function () {
+                nestedEntity2Tester.dataUpdate({
+                  "label-text": "Large Nested Entity",
+                  "label-size": "normal"
+                });
+              });
+            })
+              // Step 2: Update first nested entity to 'small' and second to 'large'.
+              .then(function () {
+                return asyncRun(function () {
+                  nestedEntity1Tester.dataUpdate({ "label-size": "small" });
+                });
+              })
+              .then(function () {
+                return asyncRun(function () {
+                  nestedEntity2Tester.dataUpdate({ "label-size": "large" });
+                });
+              })
+              // Step 3: Verify both entities maintain their respective label tags.
+              .then(function () {
+                const label1 = nestedEntity1Tester.element.querySelector(":scope > .u-label-text");
+                const label2 = nestedEntity2Tester.element.querySelector(":scope > .u-label-text");
+
+                expect(label1.tagName.toLowerCase(), "First nested entity should have 'h3' for label-size 'small'.").to.equal("h3");
+                expect(label1.textContent, "First nested entity text should be preserved.").to.equal("Small Nested Entity");
+                expect(label2.tagName.toLowerCase(), "Second nested entity should have 'h1' for label-size 'large'.").to.equal("h1");
+                expect(label2.textContent, "Second nested entity text should be preserved.").to.equal("Large Nested Entity");
+              });
+          });
+
+          it("should not carry over label-size state after widget reuse when a sibling entity still uses the same label-size", function () {
+            // Step 1: Update both nested entities to label-size 'large'.
+            return asyncRun(function () {
+              nestedEntity1Tester.dataUpdate({
+                "label-text": "First Nested Entity",
+                "label-size": "large"
+              });
+            }).then(function () {
+              return asyncRun(function () {
+                nestedEntity2Tester.dataUpdate({
+                  "label-text": "Second Nested Entity",
+                  "label-size": "large"
+                });
+              });
+            })
+              // Step 2: Simulate Uniface reusing the first nested entity's widget instance for a new occurrence.
+              .then(function () {
+                nestedEntity1Tester.dataCleanup();
+                return asyncRun(function () {
+                  nestedEntity1Tester.dataInit();
+                });
+              })
+              // Step 3: Verify the reused entity resets to defaults and the sibling entity stays unaffected.
+              .then(function () {
+                const label1Reset = nestedEntity1Tester.element.querySelector(":scope > .u-label-text");
+                const label2Unaffected = nestedEntity2Tester.element.querySelector(":scope > .u-label-text");
+
+                expect(label1Reset.tagName.toLowerCase(), "Reused first nested entity should reset to 'span' (default label-size).").to.equal("span");
+                expect(label2Unaffected.tagName.toLowerCase(), "Second nested entity should remain 'h1' and be unaffected by the first entity's reuse.").to.equal("h1");
+
+                // Step 4: Re-apply label-size 'large' to the reused entity — the shared worker's cached
+                // state for 'large' (from the still-active second entity) must not block this transition.
+                return asyncRun(function () {
+                  nestedEntity1Tester.dataUpdate({
+                    "label-text": "Reused Nested Entity",
+                    "label-size": "large"
+                  });
+                });
+              })
+              // Step 5: Verify the reused entity picks up 'large' correctly and the sibling remains correct.
+              .then(function () {
+                const label1 = nestedEntity1Tester.element.querySelector(":scope > .u-label-text");
+                const label2 = nestedEntity2Tester.element.querySelector(":scope > .u-label-text");
+
+                expect(label1.tagName.toLowerCase(), "Reused first nested entity should become 'h1' for label-size 'large'.").to.equal("h1");
+                expect(label1.textContent, "Reused first nested entity text should update correctly.").to.equal("Reused Nested Entity");
+                expect(label2.tagName.toLowerCase(), "Second nested entity should remain 'h1' and unaffected.").to.equal("h1");
+              });
+          });
+
+          it("should keep label-size correct across three simultaneous entities sharing the same worker", function () {
+            // Step 1: Initialize both nested entities with distinct label-sizes.
+            return asyncRun(function () {
+              nestedEntity1Tester.dataUpdate({
+                "label-text": "First Nested Entity",
+                "label-size": "small"
+              });
+            }).then(function () {
+              return asyncRun(function () {
+                nestedEntity2Tester.dataUpdate({
+                  "label-text": "Second Nested Entity",
+                  "label-size": "large"
+                });
+              });
+            })
+              // Step 2: Update the first entity to 'large', matching the second entity's already-applied size.
+              .then(function () {
+                return asyncRun(function () {
+                  nestedEntity1Tester.dataUpdate({ "label-size": "large" });
+                });
+              })
+              // Step 3: Verify both entities keep their correct, independent label tags.
+              .then(function () {
+                const label1 = nestedEntity1Tester.element.querySelector(":scope > .u-label-text");
+                const label2 = nestedEntity2Tester.element.querySelector(":scope > .u-label-text");
+
+                expect(label1.tagName.toLowerCase(), "First nested entity should become 'h1' after updating to label-size 'large'.").to.equal("h1");
+                expect(label1.textContent, "First nested entity text should be preserved.").to.equal("First Nested Entity");
+                expect(label2.tagName.toLowerCase(), "Second nested entity should remain 'h1' for label-size 'large' and be unaffected by the first entity's update.").to.equal("h1");
+                expect(label2.textContent, "Second nested entity text should be preserved.").to.equal("Second Nested Entity");
+              });
           });
         });
       });
