@@ -948,12 +948,9 @@
       widget = tester.createWidget();
     });
 
-    beforeEach(function () {
-      widget.blockUI();
-    });
-
     it("should remove 'u-blocked' class and enable the widget", function () {
       return asyncRun(function () {
+        widget.blockUI();
         widget.unblockUI();
       }).then(function () {
         expect(element, "Class u-blocked is applied.").not.to.have.class("u-blocked");
@@ -967,6 +964,7 @@
         tester.dataUpdate({
           "html:disabled": true
         });
+        widget.blockUI();
         widget.unblockUI();
       }).then(function () {
         expect(element.hasAttribute("disabled"), "Button should remain disabled after unblockUI when html:disabled was true.").to.be.true;

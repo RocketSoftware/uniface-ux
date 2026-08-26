@@ -42,7 +42,6 @@ export class ElementIconText extends Element {
     this.iconPropId = iconPropId;
     this.iconDefaultValue = iconDefaultValue;
     this.isDynamicLabel = isDynamicLabel;
-    this.currentLabelSize = null;
 
     if (this.iconPropId) {
       this.registerSetter(widgetClass, this.iconPropId, this);
@@ -70,7 +69,9 @@ export class ElementIconText extends Element {
         return "h2";
       case "large":
         return "h1";
+      case "normal":
       default:
+        // Fallback for any invalid value.
         return this.tagName;
     }
   }
@@ -86,7 +87,6 @@ export class ElementIconText extends Element {
 
     if (this.isDynamicLabel) {
       const labelSize = _objectDefinition.getProperty("label-size");
-      this.currentLabelSize = labelSize;
       tagName = this.getTagNameForLabelSize(labelSize);
     }
 
@@ -106,7 +106,7 @@ export class ElementIconText extends Element {
     super.refresh(widgetInstance);
     let element = this.getElement(widgetInstance);
 
-    // Handle dynamic label-size changes
+    // Handle dynamic label-size changes.
     if (this.isDynamicLabel) {
       const labelSize = this.getNode(widgetInstance.data, "label-size");
       element = this.handleLabelSizeChange(element, labelSize);
@@ -151,29 +151,28 @@ export class ElementIconText extends Element {
    * @returns {HTMLElement} The element (new if tag changed, or original if unchanged)
    */
   handleLabelSizeChange(element, labelSize) {
-    if (labelSize !== this.currentLabelSize) {
-      this.currentLabelSize = labelSize;
-      const newTagName = this.getTagNameForLabelSize(labelSize);
+    const newTagName = this.getTagNameForLabelSize(labelSize);
 
-      if (element && element.tagName.toLowerCase() !== newTagName.toLowerCase()) {
-        const newElement = document.createElement(newTagName);
-        newElement.slot = this.slot;
+    // Only replace element if the tag needs to change.
+    if (element.tagName.toLowerCase() !== newTagName.toLowerCase()) {
+      const newElement = document.createElement(newTagName);
+      newElement.slot = this.slot;
 
-        if (this.styleClass) {
-          newElement.classList.add(this.styleClass);
-        }
-
-        // Copy existing attributes and content
-        newElement.hidden = element.hidden;
-        newElement.innerText = element.innerText;
-        newElement.className = element.className;
-
-        const parent = element.parentElement;
-        if (parent) {
-          parent.replaceChild(newElement, element);
-        }
-        return newElement;
+      if (this.styleClass) {
+        newElement.classList.add(this.styleClass);
       }
+
+      // Copy existing attributes and content.
+      newElement.hidden = element.hidden;
+      newElement.innerText = element.innerText;
+      newElement.className = element.className;
+
+      const parent = element.parentElement;
+      if (parent) {
+        parent.replaceChild(newElement, element);
+      }
+
+      return newElement;
     }
     return element;
   }

@@ -483,6 +483,292 @@
           expect(labelElement.textContent, "The label text content should equal the very long text.").to.equal(longText);
         });
       });
+
+      it("should not reset to default when label-size is updated to the same value", function () {
+        return asyncRun(function () {
+          componentTester.dataUpdate({
+            "label-text": "Same Size Test",
+            "label-size": "large"
+          });
+        }).then(function () {
+          const labelElement = element.querySelector(":scope > .u-label-text");
+          expect(labelElement.tagName.toLowerCase(), "Tag should be 'h1' initially.").to.equal("h1");
+          return asyncRun(function () {
+            componentTester.dataUpdate({ "label-size": "large" });
+          });
+        }).then(function () {
+          const labelElement = element.querySelector(":scope > .u-label-text");
+          expect(labelElement.tagName.toLowerCase(), "Tag should remain 'h1' after updating to same label-size.").to.equal("h1");
+          expect(labelElement.textContent, "Text should be preserved.").to.equal("Same Size Test");
+        });
+      });
+
+      it("should handle label-size changes through multiple transitions", function () {
+        return asyncRun(function () {
+          componentTester.dataUpdate({
+            "label-text": "Transition Test",
+            "label-size": "small"
+          });
+        }).then(function () {
+          const labelElement = element.querySelector(":scope > .u-label-text");
+          expect(labelElement.tagName.toLowerCase()).to.equal("h3");
+          return asyncRun(function () {
+            componentTester.dataUpdate({ "label-size": "large" });
+          });
+        }).then(function () {
+          const labelElement = element.querySelector(":scope > .u-label-text");
+          expect(labelElement.tagName.toLowerCase()).to.equal("h1");
+          return asyncRun(function () {
+            componentTester.dataUpdate({ "label-size": "medium" });
+          });
+        }).then(function () {
+          const labelElement = element.querySelector(":scope > .u-label-text");
+          expect(labelElement.tagName.toLowerCase()).to.equal("h2");
+          expect(labelElement.textContent).to.equal("Transition Test");
+        });
+      });
+
+      describe("Nested component label element isolation", function () {
+        let outerComponentTester;
+        let innerComponentTester;
+        let thirdComponentTester;
+
+        before(function () {
+          resetWidgetContainer();
+          // Real component-in-component nesting goes through a DSP container field,
+          // so it's mocked here with a plain <span> rather than a widget
+          // definition. All instances still share the same ElementIconText worker instance,
+          // which is what the underlying bug is about.
+          const outerComponentDef = {
+            "componentname": "OUTER_COMP",
+            "properties": {},
+            "type": "component",
+            "widget_class": "UX.CompLayout"
+          };
+          const innerComponentDef = {
+            "componentname": "INNER_COMP",
+            "properties": {},
+            "type": "component",
+            "widget_class": "UX.CompLayout"
+          };
+          const thirdComponentDef = {
+            "componentname": "THIRD_COMP",
+            "properties": {},
+            "type": "component",
+            "widget_class": "UX.CompLayout"
+          };
+
+          outerComponentTester = new umockup.WidgetTester("UX.CompLayout", "ucpt:OUTER_COMP");
+          outerComponentTester.createWidget(null, createSkeleton(outerComponentTester.widgetId), outerComponentDef);
+
+          innerComponentTester = new umockup.WidgetTester("UX.CompLayout", "ucpt:INNER_COMP");
+          innerComponentTester.createWidget(null, createSkeleton(innerComponentTester.widgetId), innerComponentDef);
+
+          thirdComponentTester = new umockup.WidgetTester("UX.CompLayout", "ucpt:THIRD_COMP");
+          thirdComponentTester.createWidget(null, createSkeleton(thirdComponentTester.widgetId), thirdComponentDef);
+
+          const dspContainer = document.createElement("span");
+          dspContainer.className = "udsp_default";
+          dspContainer.appendChild(innerComponentTester.element);
+          outerComponentTester.element.appendChild(dspContainer);
+
+          const secondDspContainer = document.createElement("span");
+          secondDspContainer.className = "udsp_default";
+          secondDspContainer.appendChild(thirdComponentTester.element);
+          outerComponentTester.element.appendChild(secondDspContainer);
+        });
+
+        after(function () {
+          // Reset componentTester's cached state so createWidget can re-run.
+          componentTester.uxTagName = undefined;
+          componentTester.widget = undefined;
+          componentTester.element = undefined;
+          resetWidgetContainer();
+          return asyncRun(function () {
+            const componentSkeleton = createSkeleton(componentWidgetId);
+            componentTester.createWidget(null, componentSkeleton, mockComponentDef);
+            element = componentTester.element;
+          });
+        });
+
+        it("should not reset outer component label when nested component updates to same label-size", function () {
+          // Step 1: Initialize both components with label text only (no explicit label-size).
+          return asyncRun(function () {
+            outerComponentTester.dataUpdate({
+              "label-text": "Outer Component"
+            });
+          }).then(function () {
+            return asyncRun(function () {
+              innerComponentTester.dataUpdate({
+                "label-text": "Inner Component"
+              });
+            });
+          })
+            // Step 2: Verify both components use default 'span' tag and have correct text content.
+            .then(function () {
+              const label1 = outerComponentTester.element.querySelector(":scope > .u-label-text");
+              const label2 = innerComponentTester.element.querySelector(":scope > .u-label-text");
+
+              expect(label1.tagName.toLowerCase(), "Outer component label should be 'span' by default.").to.equal("span");
+              expect(label1.textContent, "Outer component text should be correct.").to.equal("Outer Component");
+              expect(label2.tagName.toLowerCase(), "Inner component label should be 'span' by default.").to.equal("span");
+              expect(label2.textContent, "Inner component text should be correct.").to.equal("Inner Component");
+            })
+            // Step 3: Update outer component to label-size 'large'.
+            .then(function () {
+              return asyncRun(function () {
+                outerComponentTester.dataUpdate({ "label-size": "large" });
+              });
+            })
+            // Step 4: Update inner component to label-size 'large'.
+            .then(function () {
+              return asyncRun(function () {
+                innerComponentTester.dataUpdate({ "label-size": "large" });
+              });
+            })
+            // Step 5: Verify both components have correct label tags.
+            .then(function () {
+              const label1 = outerComponentTester.element.querySelector(":scope > .u-label-text");
+              const label2 = innerComponentTester.element.querySelector(":scope > .u-label-text");
+
+              expect(label1.tagName.toLowerCase(), "Outer component label should be 'h1'.").to.equal("h1");
+              expect(label1.textContent, "Outer component text should be preserved.").to.equal("Outer Component");
+              expect(label2.tagName.toLowerCase(), "Inner component label should be 'h1'.").to.equal("h1");
+              expect(label2.textContent, "Inner component text should be preserved.").to.equal("Inner Component");
+            });
+        });
+
+        it("should handle mixed label-sizes for outer and nested components", function () {
+          // Step 1: Initialize both components and apply default label-size 'normal'.
+          return asyncRun(function () {
+            outerComponentTester.dataUpdate({
+              "label-text": "Small Outer Component",
+              "label-size": "normal"
+            });
+          }).then(function () {
+            return asyncRun(function () {
+              innerComponentTester.dataUpdate({
+                "label-text": "Large Inner Component",
+                "label-size": "normal"
+              });
+            });
+          })
+            // Step 2: Update outer component to 'small' and inner component to 'large'.
+            .then(function () {
+              return asyncRun(function () {
+                outerComponentTester.dataUpdate({ "label-size": "small" });
+              });
+            })
+            .then(function () {
+              return asyncRun(function () {
+                innerComponentTester.dataUpdate({ "label-size": "large" });
+              });
+            })
+            // Step 3: Verify both components maintain their respective label tags.
+            .then(function () {
+              const label1 = outerComponentTester.element.querySelector(":scope > .u-label-text");
+              const label2 = innerComponentTester.element.querySelector(":scope > .u-label-text");
+
+              expect(label1.tagName.toLowerCase(), "Outer component should have 'h3' for label-size 'small'.").to.equal("h3");
+              expect(label1.textContent, "Outer component text should be preserved.").to.equal("Small Outer Component");
+              expect(label2.tagName.toLowerCase(), "Inner component should have 'h1' for label-size 'large'.").to.equal("h1");
+              expect(label2.textContent, "Inner component text should be preserved.").to.equal("Large Inner Component");
+            });
+        });
+
+        it("should not carry over label-size state after widget reuse when a sibling component still uses the same label-size", function () {
+          // Step 1: Update both outer and inner components to label-size 'large'.
+          return asyncRun(function () {
+            outerComponentTester.dataUpdate({
+              "label-text": "Outer Component",
+              "label-size": "large"
+            });
+          }).then(function () {
+            return asyncRun(function () {
+              innerComponentTester.dataUpdate({
+                "label-text": "Inner Component",
+                "label-size": "large"
+              });
+            });
+          })
+            // Step 2: Simulate Uniface reusing the inner component's widget instance for a new occurrence.
+            .then(function () {
+              innerComponentTester.dataCleanup();
+              return asyncRun(function () {
+                innerComponentTester.dataInit();
+              });
+            })
+            // Step 3: Verify the reused component resets to defaults and the outer component stays unaffected.
+            .then(function () {
+              const label2Reset = innerComponentTester.element.querySelector(":scope > .u-label-text");
+              const label1Unaffected = outerComponentTester.element.querySelector(":scope > .u-label-text");
+
+              expect(label2Reset.tagName.toLowerCase(), "Reused inner component should reset to 'span' (default label-size).").to.equal("span");
+              expect(label1Unaffected.tagName.toLowerCase(), "Outer component should remain 'h1' and be unaffected by the inner component's reuse.").to.equal("h1");
+
+              // Step 4: Re-apply label-size 'large' to the reused component — the shared worker's cached
+              // state for 'large' (from the still-active outer component) must not block this transition.
+              return asyncRun(function () {
+                innerComponentTester.dataUpdate({
+                  "label-text": "Reused Inner Component",
+                  "label-size": "large"
+                });
+              });
+            })
+            // Step 5: Verify the reused component picks up 'large' correctly and the outer component remains correct.
+            .then(function () {
+              const label1 = outerComponentTester.element.querySelector(":scope > .u-label-text");
+              const label2 = innerComponentTester.element.querySelector(":scope > .u-label-text");
+
+              expect(label2.tagName.toLowerCase(), "Reused inner component should become 'h1' for label-size 'large'.").to.equal("h1");
+              expect(label2.textContent, "Reused inner component text should update correctly.").to.equal("Reused Inner Component");
+              expect(label1.tagName.toLowerCase(), "Outer component should remain 'h1' and unaffected.").to.equal("h1");
+            });
+        });
+
+        it("should keep label-size correct across three simultaneous components sharing the same worker", function () {
+          // Step 1: Initialize outer, inner and third components with distinct label-sizes.
+          return asyncRun(function () {
+            outerComponentTester.dataUpdate({
+              "label-text": "Outer Component",
+              "label-size": "small"
+            });
+          }).then(function () {
+            return asyncRun(function () {
+              innerComponentTester.dataUpdate({
+                "label-text": "Inner Component",
+                "label-size": "medium"
+              });
+            });
+          }).then(function () {
+            return asyncRun(function () {
+              thirdComponentTester.dataUpdate({
+                "label-text": "Third Component",
+                "label-size": "large"
+              });
+            });
+          })
+            // Step 2: Update the outer component to 'large', matching the third component's already-applied size.
+            .then(function () {
+              return asyncRun(function () {
+                outerComponentTester.dataUpdate({ "label-size": "large" });
+              });
+            })
+            // Step 3: Verify all three components keep their correct, independent label tags.
+            .then(function () {
+              const label1 = outerComponentTester.element.querySelector(":scope > .u-label-text");
+              const label2 = innerComponentTester.element.querySelector(":scope > .u-label-text");
+              const label3 = thirdComponentTester.element.querySelector(":scope > .u-label-text");
+
+              expect(label1.tagName.toLowerCase(), "Outer component should become 'h1' after updating to label-size 'large'.").to.equal("h1");
+              expect(label1.textContent, "Outer component text should be preserved.").to.equal("Outer Component");
+              expect(label2.tagName.toLowerCase(), "Inner component should remain 'h2' for label-size 'medium'.").to.equal("h2");
+              expect(label2.textContent, "Inner component text should be preserved.").to.equal("Inner Component");
+              expect(label3.tagName.toLowerCase(), "Third component should remain 'h1' for label-size 'large' and be unaffected by the outer component's update.").to.equal("h1");
+              expect(label3.textContent, "Third component text should be preserved.").to.equal("Third Component");
+            });
+        });
+      });
     });
 
     describe("Layout properties", function () {
