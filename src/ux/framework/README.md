@@ -24,7 +24,7 @@ The UX Widget Framework comes with an extensive library of pre-built Workers, ea
 For the full set of UX Workers, please see the [**`workers`**](./workers/) folder.
 
 For full UX widget interface specifications, refer to the official Uniface documentation:  
- [Uniface UX Widget Interface – APIs: DSP UX Widget Class](https://docs.rocketsoftware.com/bundle/uniface_104/page/evh1701459402966.html)
+ [Uniface UX Widget Interface – APIs: DSP UX Widget Class](https://docs.rocketsoftware.com/csh?context=60005&pubname=uniface2_104)
 
 
 ## Folder Structure

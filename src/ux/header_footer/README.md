@@ -54,7 +54,7 @@ integration with the UX widget framework and enables complex nested layouts.
 
 ## Documentation
 
-1. [Uniface Widget](https://docs.rocketsoftware.com/bundle/uniface_104/page/eei1768821828342.html)
+1. [Uniface Widget](https://docs.rocketsoftware.com/csh?context=60006&pubname=uniface2_104)
 2. [Fluent Design System](https://learn.microsoft.com/en-us/fluent-ui/web-components/design-system/design-tokens)
 3. [UX Widget Framework](../framework/README.md)
 

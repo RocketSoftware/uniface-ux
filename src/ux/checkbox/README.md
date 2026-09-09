@@ -32,7 +32,7 @@ This enhancement allows users to manually set the checkbox to any of the three s
 
 ## Documentation
 
-1. [Uniface Widget](https://docs.rocketsoftware.com/bundle/uniface_104/page/xyj1709198004166.html)
+1. [Uniface Widget](https://docs.rocketsoftware.com/csh?context=60001&pubname=uniface2_104)
 2. [Fluent Web Components](https://learn.microsoft.com/en-us/fluent-ui/web-components/)
 3. [UX Widget Framework](../framework/README.md)
 

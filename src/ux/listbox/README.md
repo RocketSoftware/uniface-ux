@@ -30,7 +30,7 @@ The widget supports a size attribute that allows the dropdown height to reflect 
  
 ## Documentation
 
-1. [Uniface Widget](https://docs.rocketsoftware.com/bundle/uniface_104/page/qkk1744107469814.html)  
+1. [Uniface Widget](https://docs.rocketsoftware.com/csh?context=60007&pubname=uniface2_104)  
 2. [Fluent Web Components](https://learn.microsoft.com/en-us/fluent-ui/web-components/)  
 3. [UX Widget Framework](../framework/README.md)
 

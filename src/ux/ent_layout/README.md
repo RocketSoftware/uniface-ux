@@ -44,7 +44,7 @@ The `appearance` property applies a visual style to the collection and occurrenc
 
 ## Documentation
 
-1. [Uniface Widget](https://docs.rocketsoftware.com/bundle/uniface_104/page/daf1771568797099.html)
+1. [Uniface Widget](https://docs.rocketsoftware.com/csh?context=60004&pubname=uniface2_104)
 2. [Fluent Design System](https://learn.microsoft.com/en-us/fluent-ui/web-components/design-system/design-tokens)
 3. [UX Widget Framework](../framework/README.md)
 

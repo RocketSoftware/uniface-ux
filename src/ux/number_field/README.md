@@ -26,7 +26,7 @@ The NumberField widget supports an optional action button rendered alongside the
 
 ## Documentation
 
-1. [Uniface Widget](https://docs.rocketsoftware.com/bundle/uniface_104/page/ndt1709294595416.html)
+1. [Uniface Widget](https://docs.rocketsoftware.com/csh?context=60008&pubname=uniface2_104)
 2. [Fluent Web Component](https://learn.microsoft.com/en-us/fluent-ui/web-components/)  
 3. [UX Widget Framework](../framework/README.md)
 
