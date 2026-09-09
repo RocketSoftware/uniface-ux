@@ -22,7 +22,7 @@ Tooltips are automatically added to each radio button label text (representation
 
 ## Documentation
 
-1. [Uniface Widget](https://docs.rocketsoftware.com/bundle/uniface_104/page/fon1724921035618.html)
+1. [Uniface Widget](https://docs.rocketsoftware.com/csh?context=60010&pubname=uniface2_104)
 2. [Fluent Web Component](https://learn.microsoft.com/en-us/fluent-ui/web-components/)  
 3. [UX Widget Framework](../framework/README.md)
 

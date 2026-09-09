@@ -1,12 +1,12 @@
 # Uniface UX
 
-[Uniface UX](https://docs.rocketsoftware.com/bundle/uniface_104/page/cdk1701320618627.html) (also called UX Widgets) is a repository containing a set of widgets that are implemented using the [UX Widget Interface](https://docs.rocketsoftware.com/bundle/uniface_104/page/eeu1700028296908.html). This widget set is provided by Rocket Software as part of its Uniface product and can be used to implement the Web UI widgets in DSP components.
+[Uniface UX](https://docs.rocketsoftware.com/csh?context=60015&pubname=uniface2_104) (also called UX Widgets) is a repository containing a set of widgets that are implemented using the [UX Widget Interface](https://docs.rocketsoftware.com/csh?context=60016&pubname=uniface2_104). This widget set is provided by Rocket Software as part of its Uniface product and can be used to implement the Web UI widgets in DSP components.
 
 Its public repository is available on GitHub at the following URL: https://github.com/RocketSoftware/uniface-ux.
 
 UX Widgets is published under the BSD 3-Clause [License](LICENSE).
 
-For more details, See [UX Widgets](https://docs.rocketsoftware.com/bundle/uniface_104/page/lzi1701171069984.html) 
+For more details, See [UX Widgets](https://docs.rocketsoftware.com/csh?context=60017&pubname=uniface2_104)
 
 For current release, see [RELEASENOTE.md](RELEASENOTE.md).
 
@@ -145,6 +145,6 @@ This overview represents the minimum Uniface patch/version required to maintain 
 
 When installing a patch that introduces a new uxInterfaceVersion, you need to update all existing UX Widgets according the new specification of the API and indicate that this is done by setting uxInterfaceVersion number in the physical widget definition section of the web.ini file accordingly.
 
-To ease the transition, a compatibility utility is available that allows UX widgets of UX Interface Version 1 to work with version 2. For more information, see [UX Widget Interface Version 2](https://docs.rocketsoftware.com/bundle/uniface_104/page/hzv1743437471930.html) and [Compatibility Utility](https://docs.rocketsoftware.com/bundle/uniface_104/page/vlh1743437921753.html).
+To ease the transition, a compatibility utility is available that allows UX widgets of UX Interface Version 1 to work with version 2. For more information, see [UX Widget Interface Version 2](https://docs.rocketsoftware.com/csh?context=60018&pubname=uniface2_104) and [Compatibility Utility](https://docs.rocketsoftware.com/csh?context=60019&pubname=uniface2_104).
 
 

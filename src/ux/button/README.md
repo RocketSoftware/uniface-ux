@@ -6,7 +6,7 @@ The `Button` widget is a clickable control that triggers an action or event when
 
 ## Documentation
 
-1. [Uniface Widget](https://docs.rocketsoftware.com/bundle/uniface_104/page/adi1709199038344.html)
+1. [Uniface Widget](https://docs.rocketsoftware.com/csh?context=60000&pubname=uniface2_104)
 2. [Fluent Web Component](https://learn.microsoft.com/en-us/fluent-ui/web-components/)
 3. [UX Widget Framework](../framework/README.md)
 

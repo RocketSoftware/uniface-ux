@@ -6,7 +6,7 @@ The `PlainText` widget displays unformatted, plain text content in the user inte
 
 ## Documentation
 
-1. [Uniface Widget](https://docs.rocketsoftware.com/bundle/uniface_104/page/mqe1709206149119.html)  
+1. [Uniface Widget](https://docs.rocketsoftware.com/csh?context=60009&pubname=uniface2_104)  
 2. [UX Widget Framework](../framework/README.md)
 
 ## Configuration
