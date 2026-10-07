@@ -4,7 +4,10 @@ class IndexPage extends BasePage {
     constructor(page)
 {
     super(page);
+    this.accordionUnitTestLink = '#accordion-unit-tests';
+    this.accordionChildSlotsUnitTestLink = '#accordion-child-slots-unit-tests';
     this.applicationUnitTestLink = '#application-unit-tests';
+    this.attributeSlotUnitTestLink = '#attribute-slot-unit-tests';
     this.attributeThemeUnitTestLink = '#attribute-theme-unit-tests';
     this.buttonUnitTestLink = '#button-unit-tests';
     this.childWidgetsWorkerUnitTestLink = '#child-widgets-worker-unit-tests';
@@ -12,6 +15,9 @@ class IndexPage extends BasePage {
     this.layoutWebComponentUnitTestLink = '#layout-web-component-unit-tests';
     this.textFieldUnitTestLink = '#text-field-unit-tests';
     this.layoutWebComponentLink = '#layout';
+    this.shellWebComponentLink = '#shell';
+    this.widgetContainerWebComponentLink = '#widget-container';
+    this.accordionWidgetLink = '#accordion';
     this.buttonWidgetLink = '#button';
     this.checkboxWidgetLink = '#checkbox';
     this.entLayoutWidgetLink = '#ent-layout';

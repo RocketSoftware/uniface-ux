@@ -16,8 +16,9 @@
   width: 100%;
 }
 
-.u-coll-layout:only-of-type:has(~ .u-label-text),
-.u-coll-layout:only-of-type:is(.u-label-text ~ *) {
+.u-coll-layout:has(~ .u-label-text):not(:has(~ :not(.u-label-text))):not(:is(:not(.u-label-text) ~ *)),
+.u-label-text~.u-coll-layout:not(:has(~ :not(.u-label-text))):not(:is(:not(.u-label-text) ~ *))
+ {
   height: 100%;
   width: 100%;
 }

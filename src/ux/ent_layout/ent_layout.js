@@ -7,6 +7,7 @@ import { ChildWidgets } from "../framework/workers/child_widgets.js";
 import { ElementIconText } from "../framework/workers/element_icon_text.js";
 import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
 import { WidgetOccurrence } from "../framework/workers/widget_occurrence.js";
+import { AttributeSlot } from "../framework/workers/attribute_slot.js";
 
 /**
  * Collection Layout
@@ -38,11 +39,11 @@ export class CollectionLayout extends Widget {
   static structure = new Element(this, "uf-layout", "", "", [
     new StyleClassManager(this, ["u-coll-layout"]),
     new AttributeBoolean(this, undefined, "show-label", true, true),
+    new AttributeSlot(this),
     new ElementIconText(this, "span", "u-label-text", ".u-label-text", "label", "label-text", "", "", "", true),
     new AttributeChoice(this, "label-size", "label-size", ["small", "medium", "large", "normal"], "normal", true),
     new AttributeChoice(this, "label-align", "label-align", ["start", "center", "end"], "start", true),
     new AttributeChoice(this, "label-position", "label-position", ["above", "below", "before", "after"], "above", true),
-    new AttributeChoice(this, "area-slot", "area-slot", ["main", "header", "footer"], "main", true),
     new AttributeChoice(this, "layout-type-occurrences", "layout-type", ["vertical-scroll", "horizontal-scroll", "horizontal-wrap", "vertical-wrap", "auto"], "auto", true),
     new AttributeChoice(this, "horizontal-align-occurrences", "horizontal-align", ["start", "center", "end", "space-between", "space-around", "space-evenly", "stretch", "auto"], "auto", true),
     new AttributeChoice(this, "vertical-align-occurrences", "vertical-align", ["start", "center", "end", "space-between", "space-around", "space-evenly", "stretch", "auto"], "auto", true),

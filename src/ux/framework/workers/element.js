@@ -76,10 +76,11 @@ export class Element extends WorkerBase {
    * This ensures all child workers can establish their initial state before the widget
    * is connected to the DOM.
    * @param {HTMLElement} widgetElement - The root widget element.
+   * @param {UObjectDefinition} [objectDefinition] - The definition of the object the widget is created for.
    */
-  initializeLayout(widgetElement) {
+  initializeLayout(widgetElement, objectDefinition) {
     this.childWorkers?.forEach((worker) => {
-      worker.initializeLayout(widgetElement);
+      worker.initializeLayout(widgetElement, objectDefinition);
     });
   }
 

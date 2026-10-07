@@ -109,6 +109,9 @@ export class ChildWidgets extends WorkerBase {
         groups[targetSlot].push(child);
       }
       // If targetSlot is null, child is excluded (not added to any group)
+
+      // Slot routing is complete; remove the property as its no longer needed.
+      child.removeProperty(propertyName);
     });
 
     this.log("distributeByProperty", {

@@ -6,6 +6,7 @@ import { SubWidget } from "../../src/ux/framework/workers/sub_widget.js";
 import { StyleClassManager } from "../../src/ux/framework/workers/style_class_manager.js";
 import { EventTrigger } from "../../src/ux/framework/workers/event_trigger.js";
 import { AttributeUIBlocking } from "../../src/ux/framework/workers/attribute_ui_blocking.js";
+import { CollectionLayout } from "../../src/ux/ent_layout/ent_layout.js";
 
 // Simple widget that has both subwidgets and triggers for easier testing and doens't mess with other widgets.
 export class TestWidget extends Widget {
@@ -56,27 +57,33 @@ export class TestWidget extends Widget {
 
   describe("Widget class methods", function () {
 
-    let definitions, returnedProcess, testWidget, consoleLogSpy;
+    let returnedProcess, testWidget, consoleLogSpy;
 
-    definitions = {
-      "widget_class": "Widget",
-      "controls-center": "four\u001bfive\u001bsix",
-      "controls-end": "seven",
-      "controls-start": "one\u001btwo\u001bthree",
-      "five:widget-class": "UX.Button",
-      "four:widget-class": "UX.Button",
-      "html:readonly": "true",
-      "one:widget-class": "UX.Button",
-      "seven:widget-class": "UX.Button",
-      "six:widget-class": "UX.Button",
-      "three:widget-class": "UX.Button",
-      "two:widget-class": "UX.Button"
-    };
+    // Returns a fresh object every call so removeProperty() calls never leak
+    // mutated state between tests.
+    function createDefinitions() {
+      return {
+        "widget_class": "Widget",
+        "properties": {
+          "controls-center": "four\u001bfive\u001bsix",
+          "controls-end": "seven",
+          "controls-start": "one\u001btwo\u001bthree",
+          "five:widget-class": "UX.Button",
+          "four:widget-class": "UX.Button",
+          "html:readonly": "true",
+          "one:widget-class": "UX.Button",
+          "seven:widget-class": "UX.Button",
+          "six:widget-class": "UX.Button",
+          "three:widget-class": "UX.Button",
+          "two:widget-class": "UX.Button"
+        }
+      };
+    }
 
     beforeEach(function () {
       testWidget = new TestWidget;
       TestWidget.reportUnsupportedTriggerWarnings = true;
-      returnedProcess = TestWidget.processLayout(testWidget, definitions);
+      returnedProcess = TestWidget.processLayout(testWidget, umockup.createUxDefinitions(createDefinitions(), true));
       testWidget.onConnect(returnedProcess);
       testWidget.dataInit();
     });
@@ -86,6 +93,48 @@ export class TestWidget extends Widget {
       expect(returnedProcess.querySelector("span.u-icon"), "Widget misses or has incorrect u-icon element");
       expect(returnedProcess.querySelector("span.u-text"), "Widget misses or has incorrect u-text element.");
       expect(returnedProcess.querySelector("span.u-text").outerText).to.eql("Change");
+    });
+
+    describe("removeProperty() usage", function () {
+
+      it("should forward matching occurrence properties via setOccurrenceProperties() and remove them from the collection objectDefinition", function () {
+        const objectDefinition = umockup.createUxDefinitions({
+          "nm": "MY_ENTITY",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "properties": {
+            "layout-type": "vertical-scroll",
+            "horizontal-align": "center",
+            "vertical-align": "end",
+            "label-size": "normal"
+          },
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          }
+        }, true);
+        const setOccurrencePropertiesSpy = sandbox.spy(objectDefinition, "setOccurrenceProperties");
+        const skeleton = umockup.createSkeleton("uent:MY_ENTITY");
+
+        CollectionLayout.processLayout(skeleton, objectDefinition);
+
+        expect(setOccurrencePropertiesSpy.calledOnce, "setOccurrenceProperties() should be called exactly once.").to.equal(true);
+        expect(setOccurrencePropertiesSpy.firstCall.args[0], "setOccurrenceProperties() should receive only the properties supported by the occurrence widget.").to.eql({
+          "layout-type": "vertical-scroll",
+          "horizontal-align": "center",
+          "vertical-align": "end"
+        });
+
+        expect(objectDefinition.getProperty("layout-type"), "Occurrence property 'layout-type' should be removed from the collection objectDefinition.").to.be.undefined;
+        expect(objectDefinition.getProperty("horizontal-align"), "Occurrence property 'horizontal-align' should be removed from the collection objectDefinition.").to.be.undefined;
+        expect(objectDefinition.getProperty("vertical-align"), "Occurrence property 'vertical-align' should be removed from the collection objectDefinition.").to.be.undefined;
+        expect(objectDefinition.getProperty("label-size"), "Collection property 'label-size' should remain untouched.").to.equal("normal");
+
+        sandbox.restore();
+      });
+
     });
 
     it("onConnect()", function () {

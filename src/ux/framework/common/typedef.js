@@ -15,6 +15,7 @@
  *  @property {function(): Array<UPropName> | undefined} getPropertyNames - Returns array of property names.
  *  @property {function(UPropName): UPropValue} getProperty - Returns property value.
  *  @property {function(UPropName, UPropValue): void} setProperty - Sets property value.
+ *  @property {function(UPropName): void} removeProperty - Removes property value.
  *  @property {function(): UWidgetClassName} getWidgetClass - Returns widget class of a field.
  *  @property {function(): UWidgetClassName} getCollectionWidgetClass - Returns collection widget class of an entity.
  *  @property {function(): UWidgetClassName} getOccurrenceWidgetClass - Returns occurrence widget class of an entity.

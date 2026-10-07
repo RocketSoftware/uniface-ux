@@ -37,6 +37,7 @@ A worker is a functional service module that performs a specific task, such as f
 | [AttributeLength](#attributelength)                 | [attribute_length.js](./attribute_length.js)                   |
 | [AttributeNumber](#attributenumber)                 | [attribute_number.js](./attribute_number.js)                   |
 | [AttributeRange](#attributerange)                   | [attribute_range.js](./attribute_range.js)                     |
+| [AttributeSlot](#attributeslot)                     | [attribute_slot.js](./attribute_slot.js)                       |
 | [AttributeString](#attributestring)                 | [attribute_string.js](./attribute_string.js)                   |
 | [AttributeTheme](#attributetheme)                   | [attribute_theme.js](./attribute_theme.js)                     |
 | [AttributeUIBlocking](#attributeuiblocking)         | [attribute_ui_blocking.js](./attribute_ui_blocking.js)         |
@@ -93,6 +94,12 @@ AttributeNumber manages `numeric` attributes. It ensures proper parsing, formatt
 ### AttributeRange
 
 AttributeRange validates numeric ranges with `min` and `max`. It prevents invalid values and applies constraints to input elements.
+
+---
+
+### AttributeSlot
+
+AttributeSlot manages the `html:slot` attribute, which places a widget in an area of the widget it is placed in. It applies the slot while the layout is created, and reports one the parent does not offer.
 
 ---
 

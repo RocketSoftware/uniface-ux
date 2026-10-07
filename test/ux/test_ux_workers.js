@@ -191,11 +191,11 @@ import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurren
       let layoutElement = element.getLayout(definitions);
       const spies = childWorkers.map((childWorker) => sinon.spy(childWorker, "initializeLayout"));
 
-      element.initializeLayout(layoutElement);
+      element.initializeLayout(layoutElement, definitions);
 
       spies.forEach((spy) => {
         expect(spy.calledOnce, "initializeLayout() should be called on each child worker.").to.be.true;
-        expect(spy.calledWith(layoutElement), "initializeLayout() should be called with the widget element.").to.be.true;
+        expect(spy.calledWith(layoutElement, definitions), "initializeLayout() should be called with the widget element and the object definition.").to.be.true;
         spy.restore();
       });
     });
@@ -505,7 +505,7 @@ import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurren
     });
 
     it("check generate layout for SubWidget class", function () {
-      let layoutElement = slottedWidget.getLayout();
+      let layoutElement = slottedWidget.getLayout(umockup.createUxDefinitions({}, true));
 
       expect(layoutElement).to.have.class("u-sw-undefined");
       expect(layoutElement.hidden).to.equal(true);
@@ -558,7 +558,7 @@ import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurren
         new SubWidget(ParentWidget, "span", "", "", "", "btn", "UX.Button", {}, false, ["detail"], [])
       ]);
 
-      const layout = ParentWidget.processLayout(document.createElement("div"), "");
+      const layout = ParentWidget.processLayout(document.createElement("div"), umockup.createUxDefinitions({}, true));
       document.body.appendChild(layout);
       const parentWidget = new ParentWidget();
       parentWidget.onConnect(layout);
@@ -922,7 +922,7 @@ import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurren
       buttonWidgetClass = getWidgetClass("UX.Button");
       assert(buttonWidgetClass, "Widget class UX.Button is not loaded!");
       buttonWidget = new buttonWidgetClass;
-      returnedProcess = buttonWidgetClass.processLayout(buttonWidget, "");
+      returnedProcess = buttonWidgetClass.processLayout(buttonWidget, umockup.createUxDefinitions({}, true));
     });
 
     it("should initialize with correct properties for AttributeBooleanValue class", function () {
@@ -1448,6 +1448,10 @@ import { WidgetOccurrence } from "../../src/ux/framework/workers/widget_occurren
 
       getPropertyNames() {
         return Object.keys(this.properties);
+      }
+
+      removeProperty(name) {
+        delete this.properties[name];
       }
 
       addChild(child) {

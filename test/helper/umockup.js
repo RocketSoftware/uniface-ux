@@ -395,6 +395,8 @@
      */
     "createUxDefinitions" : function (defs, isUpdatable = false) {
       defs = defs || {};
+      // Mirrors definitions_manager.js: widget properties live in the nested "properties" object.
+      defs.properties = defs.properties || {};
       let children;
       const definition = {
         "getProperty" : function (propertyName) {
@@ -404,10 +406,10 @@
           // This  relies on the syntax and valrep-range having been translated into html properties.
           var propertyNames;
           var prop;
-          if (Object.keys(defs).length > 0) {
+          if (Object.keys(defs.properties).length > 0) {
             propertyNames = [];
-            for (prop in defs) {
-              if (defs.hasOwnProperty(prop)) {
+            for (prop in defs.properties) {
+              if (defs.properties.hasOwnProperty(prop)) {
                 propertyNames.push(externalizePropertyName(prop));
               }
             }
@@ -459,7 +461,12 @@
       };
       if (isUpdatable) {
         definition.setProperty = function (propertyName, propertyValue) {
-          defs[propertyName] = propertyValue;
+          // Set where getProperty() reads, so a property a parent widget writes on the definition
+          // of a child can be read back by that child.
+          defs.properties[propertyName] = propertyValue;
+        };
+        definition.removeProperty = function (propertyName) {
+          delete defs.properties[propertyName];
         };
       }
       if (defs.type === "field") {
@@ -499,6 +506,19 @@
           };
           definition.setCollectionWidgetClass = function (widgetClass) {
             defs.widget_class = widgetClass;
+          };
+          // Mirrors definitions_manager.js: stashes properties on defs.occs.properties for the occurrence-level definition.
+          definition.setOccurrenceProperties = function (properties) {
+            if (Object.prototype.toString.call(properties) === "[object Object]") {
+              if (!defs.occs) {
+                defs.occs = {};
+              }
+              if (!defs.occs.properties) {
+                defs.occs.properties = Object.assign({}, properties);
+              } else {
+                Object.assign(defs.occs.properties, properties);
+              }
+            }
           };
         }
       } else if (defs.type === "component") {
@@ -1519,6 +1539,12 @@
     "asyncRun" : asyncRun,
 
     "createSkeleton" : createSkeleton,
+
+    // Exposes _uf.createUxDefinitions() so test files (which only have the "umockup" global) can
+    // build objectDefinition mocks directly, e.g. to test processLayout()'s removeProperty() usage.
+    "createUxDefinitions" : function (defs, isUpdatable) {
+      return _uf.createUxDefinitions(defs, isUpdatable);
+    },
 
     "WidgetTester" : WidgetTester
 

@@ -1125,34 +1125,6 @@
     });
 
 
-    it("html slot property when set to end", function () {
-      let slotProp = "end";
-      // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "html:slot": slotProp
-        });
-      }).then(function () {
-        let slotPropPresent = element.hasAttribute("slot");
-        assert(element.hasAttribute("slot"), slotPropPresent, "Failed to hide the slot attribute.");
-        assert.equal(element.getAttribute("slot"), slotProp); // Check for visibility.
-      });
-    });
-
-    it("html slot property when set to start", function () {
-      let slotProp = "start";
-      // Calling mock dataUpdate() to have widgetProperties and then call widget dataUpdate().
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "html:slot": slotProp
-        });
-      }).then(function () {
-        let slotPropPresent = element.hasAttribute("slot");
-        assert(element.hasAttribute("slot"), slotPropPresent, "Failed to hide the slot attribute.");
-        assert.equal(element.getAttribute("slot"), slotProp);
-      });
-    });
-
     it("html:tabindex property should not be applied to plaintext element", function () {
       let val = "This is demo plaintext";
       const warnSpy = sinon.spy(console, "warn");

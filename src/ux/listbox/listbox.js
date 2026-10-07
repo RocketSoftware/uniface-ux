@@ -3,6 +3,7 @@ import { Widget } from "../framework/common/widget.js";
 import { WorkerBase } from "../framework/common/worker_base.js";
 import { Element } from "../framework/workers/element.js";
 import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeSlot } from "../framework/workers/attribute_slot.js";
 import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
 import { AttributeNumber } from "../framework/workers/attribute_number.js";
 import { PropertyFilter } from "../framework/workers/property_filter.js";
@@ -273,6 +274,7 @@ export class Listbox extends Widget {
   static structure = new Element(this, "fluent-listbox", "", "", [
     new StyleClassManager(this, ["u-listbox"]),
     new AttributeString(this, "html:title", "title", undefined),
+    new AttributeSlot(this),
     new AttributeString(this, undefined, "role", "listbox"),
     new AttributeString(this, undefined, "ariaActiveDescendant", ""),
     new AttributeString(this, undefined, "ariaControls", ""),

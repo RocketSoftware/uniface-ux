@@ -469,7 +469,6 @@
           "label-text",
           "label-align",
           "label-position",
-          "area-slot",
           "appearance"
         );
       });
@@ -592,10 +591,6 @@
 
       it("should have default value 'above' for 'label-position'", function () {
         expect(collectionTester.defaultValues["label-position"], "Default value of 'label-position' should be 'above'.").to.equal("above");
-      });
-
-      it("should have default value 'main' for 'area-slot'", function () {
-        expect(collectionTester.defaultValues["area-slot"], "Default value of 'area-slot' should be 'main'.").to.equal("main");
       });
 
       it("should have default value 'transparent' for 'appearance'", function () {
@@ -1130,21 +1125,6 @@
         });
       });
 
-      describe("Container properties", function () {
-        ["main", "header", "footer"].forEach(function (slot) {
-          it(`should update area-slot to ${slot}`, function () {
-            const data = {
-              "area-slot": slot
-            };
-            return asyncRun(function () {
-              collectionTester.dataUpdate(data);
-            }).then(function () {
-              expect(element.getAttribute("area-slot"), `The 'area-slot' attribute should equal '${slot}'.`).to.equal(slot);
-            });
-          });
-        });
-      });
-
       describe("Layout properties", function () {
         layoutTypes.forEach(function (layoutType) {
           it(`should update layout-type to ${layoutType}`, function () {
@@ -1372,6 +1352,20 @@
             expect(element.classList.contains("class-a"), "Collection Layout should have custom class 'class-a'.").to.be.true;
             expect(element.classList.contains("class-b"), "Collection Layout should have custom class 'class-b'.").to.be.true;
           });
+        });
+      });
+
+      it("should warn when a property supported only by the occurrence widget is set via dataUpdate() on the collection widget", function () {
+        // Occurrence properties are only stripped from the collection definition during the
+        // initial processLayout() round; later dynamic dataUpdate() calls are not filtered.
+        const warnSpy = sinon.spy(console, "warn");
+        return asyncRun(function () {
+          collectionTester.dataUpdate({
+            "layout-type": "horizontal-scroll"
+          });
+        }).then(function () {
+          expect(warnSpy.calledWith(sinon.match("Widget does not support property 'layout-type'")), "Collection widget should warn for 'layout-type', a property only OccurrenceLayout supports.").to.be.true;
+          warnSpy.restore();
         });
       });
     });

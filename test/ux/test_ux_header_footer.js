@@ -62,7 +62,7 @@
     "componentname": "TESTCOMPONENT",
     "properties": {},
     "type": "component",
-    "widget_class": "UX.CompLayout"
+    "widget_class": "UX.HeaderFooter"
   };
 
   /**
@@ -159,6 +159,28 @@
         const footer = element.querySelector(".u-footer");
         assert(footer, "Widget should have u-footer section.");
         expect(footer, "u-footer section should have tagName 'uf-footer'.").to.have.tagName("uf-footer");
+      });
+
+      it("should remove the area-slot property from the child definition after processLayout()", function () {
+        const objectDefinition = umockup.createUxDefinitions({
+          "#2": {
+            "nm": "FIELD_MAIN",
+            "type": "field",
+            "widget_class": "UX.TextField",
+            "properties": { "area-slot": "main" },
+            "id": "#2"
+          },
+          "componentname": "TESTCOMPONENT",
+          "properties": {},
+          "type": "component",
+          "widget_class": "UX.HeaderFooter"
+        }, true);
+        const skeleton = createSkeleton(componentWidgetId);
+
+        componentWidgetClass.processLayout(skeleton, objectDefinition);
+
+        const [childDefinition] = objectDefinition.getChildDefinitions();
+        expect(childDefinition.getProperty("area-slot"), "area-slot should be removed from the child definition once processLayout() has distributed it into a slot.").to.be.undefined;
       });
     });
   });
@@ -1021,7 +1043,7 @@
         "componentname": "TESTCOMPONENT",
         "properties": {},
         "type": "component",
-        "widget_class": "UX.CompLayout"
+        "widget_class": "UX.HeaderFooter"
       };
 
       entityNames.forEach(function (name, index) {
@@ -1047,7 +1069,7 @@
         "componentname": "TESTCOMPONENT",
         "properties": {},
         "type": "component",
-        "widget_class": "UX.CompLayout"
+        "widget_class": "UX.HeaderFooter"
       };
 
       const element = createIsolatedWidget(noChildDef);
@@ -1152,7 +1174,7 @@
         "componentname": "TESTCOMPONENT",
         "properties": {},
         "type": "component",
-        "widget_class": "UX.CompLayout"
+        "widget_class": "UX.HeaderFooter"
       };
 
       const element = createIsolatedWidget(slotDef);
@@ -1170,6 +1192,91 @@
       expect(hasIdFragment(headerIds, "FIELD_HEADER"), "Header field should be placed in header section.").to.be.true;
       expect(hasIdFragment(mainIds, "FIELD_MAIN"), "Main field should be placed in main section.").to.be.true;
       expect(hasIdFragment(footerIds, "FIELD_FOOTER"), "Footer field should be placed in footer section.").to.be.true;
+    });
+
+    it("should warn and fall back to defaultSlot when an invalid area-slot value is set", function () {
+      const invalidSlotDef = {
+        "#2": {
+          "nm": "ENTITY_INVALID",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {
+            "area-slot": "sidebar",
+            "label-size": "normal"
+          },
+          "id": "#2"
+        },
+        "componentname": "TESTCOMPONENT",
+        "properties": {},
+        "type": "component",
+        "widget_class": "UX.HeaderFooter"
+      };
+
+      const warnSpy = sinon.spy(console, "warn");
+      let element;
+      try {
+        element = createIsolatedWidget(invalidSlotDef);
+      } finally {
+        warnSpy.restore();
+      }
+
+      const mainIds = getSectionChildIds(element, ".u-main");
+      expect(hasIdFragment(mainIds, "ENTITY_INVALID"), "Entity with an invalid area-slot value should fall back to the defaultSlot ('main').").to.be.true;
+      expect(
+        warnSpy.calledWith(sinon.match("Child 'ENTITY_INVALID' has invalid slot 'sidebar' - Using default: main.")),
+        "Console should warn about the invalid area-slot value 'sidebar'."
+      ).to.be.true;
+    });
+
+    it("should warn when the static area-slot property is set dynamically on a child widget", function () {
+      const componentDef = {
+        "#2": {
+          "nm": "ENTITY_HEADER",
+          "type": "entity",
+          "widget_class": "UX.CollectionLayout",
+          "occs": {
+            "#2": {
+              "type": "occurrence",
+              "widget_class": "UX.OccurrenceLayout"
+            }
+          },
+          "properties": {
+            "area-slot": "header",
+            "label-size": "normal"
+          },
+          "id": "#2"
+        },
+        "componentname": "TESTCOMPONENT",
+        "properties": {},
+        "type": "component",
+        "widget_class": "UX.HeaderFooter"
+      };
+
+      const isolatedTester = new umockup.WidgetTester("UX.HeaderFooter", "ucpt:header-footer");
+      const isolatedSkeleton = createSkeleton(isolatedTester.widgetId);
+      isolatedTester.createWidget(null, isolatedSkeleton, componentDef);
+
+      // Fully connect and initialize the child CollectionLayout entity widget on the placeholder ChildWidgets created.
+      const entityTester = new umockup.WidgetTester("UX.CollectionLayout", "uent:ENTITY_HEADER");
+      entityTester.createWidget(null, isolatedTester.element.querySelector(`[id="${entityTester.widgetId}"]`), null);
+
+      const warnSpy = sinon.spy(console, "warn");
+      return asyncRun(function () {
+        entityTester.dataUpdate({ "area-slot": "header" });
+      }).then(function () {
+        expect(
+          warnSpy.calledWith(sinon.match("Widget does not support property 'area-slot' - Ignored")),
+          "Console should warn when the static area-slot property is set dynamically via dataUpdate() on the child widget."
+        ).to.be.true;
+      }).finally(function () {
+        warnSpy.restore();
+      });
     });
   });
 
@@ -1274,7 +1381,7 @@
           "componentname": "TESTCOMPONENT",
           "properties": {},
           "type": "component",
-          "widget_class": "UX.CompLayout"
+          "widget_class": "UX.HeaderFooter"
         };
         componentTester.createWidget(null, createSkeleton(componentWidgetId), componentDef);
         componentTester.onConnect();
@@ -1316,7 +1423,7 @@
           "componentname": "TESTCOMPONENT",
           "properties": {},
           "type": "component",
-          "widget_class": "UX.CompLayout"
+          "widget_class": "UX.HeaderFooter"
         };
         componentTester.createWidget(null, createSkeleton(componentWidgetId), componentDef);
         componentTester.onConnect();
@@ -1358,7 +1465,7 @@
           "componentname": "TESTCOMPONENT",
           "properties": {},
           "type": "component",
-          "widget_class": "UX.CompLayout"
+          "widget_class": "UX.HeaderFooter"
         };
         componentTester.createWidget(null, createSkeleton(componentWidgetId), componentDef);
         componentTester.onConnect();

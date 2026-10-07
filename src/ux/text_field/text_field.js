@@ -3,6 +3,7 @@ import { Widget } from "../framework/common/widget.js";
 import { WorkerBase } from "../framework/common/worker_base.js";
 import { Element } from "../framework/workers/element.js";
 import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeSlot } from "../framework/workers/attribute_slot.js";
 import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
 import { AttributeChoice } from "../framework/workers/attribute_choice.js";
 import { AttributeLength } from "../framework/workers/attribute_length.js";
@@ -206,6 +207,7 @@ export class TextField extends Widget {
     new AttributeString(this, undefined, "currentValue", ""),
     new AttributeString(this, "value", "value", "", false, "change"),
     new AttributeString(this, "html:title", "title", undefined),
+    new AttributeSlot(this),
     new AttributeString(this, "html:size", "size", "20", true),
     new AttributeString(this, "html:pattern", "pattern", undefined),
     new AttributeString(this, "html:placeholder", "placeholder", undefined),
