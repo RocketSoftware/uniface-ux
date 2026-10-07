@@ -2,6 +2,7 @@
 import { Widget } from "../framework/common/widget.js";
 import { Element } from "../framework/workers/element.js";
 import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeSlot } from "../framework/workers/attribute_slot.js";
 import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
 import { AttributeChoice } from "../framework/workers/attribute_choice.js";
 import { AttributeLength } from "../framework/workers/attribute_length.js";
@@ -45,6 +46,7 @@ export class TextArea extends Widget {
     new AttributeString(this, undefined, "currentValue", ""),
     new AttributeString(this, "value", "value", "", false, "change"),
     new AttributeString(this, "html:title", "title", undefined),
+    new AttributeSlot(this),
     new AttributeString(this, "html:cols", "cols", "20"),
     new AttributeString(this, "html:rows", "rows", "", true),
     new AttributeString(this, "html:placeholder", "placeholder", undefined),

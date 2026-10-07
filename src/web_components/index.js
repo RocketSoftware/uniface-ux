@@ -4,3 +4,4 @@
  */
 export * from "./layout/layout";
 export * from "./shell/shell";
+export * from "./widget_container/widget_container";

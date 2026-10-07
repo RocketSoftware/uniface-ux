@@ -31,6 +31,7 @@
 @import "./text_area/text_area.css";
 @import "./text_field/text_field.css";
 
+@import "./accordion/accordion.css";
 @import "./data_grid/data_grid.css";
 @import "./ent_layout/ent_layout.css";
 

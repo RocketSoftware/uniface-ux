@@ -1,0 +1,227 @@
+.u-accordion-item::part(start),
+.u-accordion-item::part(end),
+.u-accordion-item::part(heading-content) {
+  column-gap: calc(var(--u-spacing) * 0.75);
+  flex-wrap: wrap;
+}
+
+/* The icon sits outside the button, with pointer-events:none, so its cursor falls through to
+   this heading wrapper - it must also show not-allowed for the icon area to reflect it. */
+.u-accordion-item.u-blocked::part(heading) {
+  cursor: not-allowed;
+}
+
+/* The button sits inside the heading wrapper, so it must also show not-allowed when blocked. */
+.u-accordion-item.u-blocked::part(button) {
+  cursor: not-allowed;
+}
+
+/* The Fluent button and its overlay otherwise override the heading cursor. */
+.u-accordion-item.u-blocked::part(button)::before {
+  pointer-events: none;
+}
+
+/* Fluent highlights the icon purely from ':hover'/':active' on the heading wrapper, which still
+   match while blocked since pointer-events:none only removes the icon (and the disabled button)
+   from hit-testing, not the heading itself. Without this, the icon keeps looking interactive on
+   hover/press even though it cannot be activated. '!important' is required to outrank Fluent's
+   higher-specificity ':hover'/':active' descendant selectors. */
+.u-accordion-item.u-blocked::part(icon) {
+  background: var(--neutral-fill-stealth-rest-on-neutral-fill-layer-rest) !important;
+}
+
+/* Space multiple child widgets slotted into the heading area so they are not joined together. */
+.u-accordion-item::part(heading-content) {
+  display: inline-flex;
+  align-items: center;
+}
+
+.u-accordion-item[label-size="large"]::part(heading-content),
+.u-accordion-item[label-size="large"]::part(start),
+.u-accordion-item[label-size="large"]::part(end) {
+  font-size: var(--type-ramp-plus-3-font-size);
+}
+
+.u-accordion-item[label-size="medium"]::part(heading-content),
+.u-accordion-item[label-size="medium"]::part(start),
+.u-accordion-item[label-size="medium"]::part(end) {
+  font-size: var(--type-ramp-plus-2-font-size);
+}
+
+.u-accordion-item[label-size="small"]::part(heading-content),
+.u-accordion-item[label-size="small"]::part(start),
+.u-accordion-item[label-size="small"]::part(end) {
+  font-size: var(--type-ramp-plus-1-font-size);
+}
+
+.u-accordion-item[panel-layout-type="horizontal"][expanded]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded]::part(region) {
+  display: flex;
+  gap: calc(var(--u-spacing) * 0.5);
+  flex-wrap: wrap;
+}
+
+.u-accordion-item[panel-layout-type="horizontal"][expanded]::part(region) {
+  flex-direction: row;
+}
+
+.u-accordion-item[panel-layout-type="vertical"][expanded]::part(region) {
+  flex-direction: column;
+}
+
+/* Main-axis alignment (justify-content): horizontal-align drives it in horizontal layout, vertical-align in vertical layout. */
+.u-accordion-item[panel-layout-type="horizontal"][expanded][panel-horizontal-align="start"]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded][panel-vertical-align="start"]::part(region) {
+  justify-content: start;
+}
+
+.u-accordion-item[panel-layout-type="horizontal"][expanded][panel-horizontal-align="center"]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded][panel-vertical-align="center"]::part(region) {
+  justify-content: center;
+}
+
+.u-accordion-item[panel-layout-type="horizontal"][expanded][panel-horizontal-align="end"]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded][panel-vertical-align="end"]::part(region) {
+  justify-content: end;
+}
+
+.u-accordion-item[panel-layout-type="horizontal"][expanded][panel-horizontal-align="space-between"]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded][panel-vertical-align="space-between"]::part(region) {
+  justify-content: space-between;
+}
+
+.u-accordion-item[panel-layout-type="horizontal"][expanded][panel-horizontal-align="space-around"]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded][panel-vertical-align="space-around"]::part(region) {
+  justify-content: space-around;
+}
+
+.u-accordion-item[panel-layout-type="horizontal"][expanded][panel-horizontal-align="space-evenly"]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded][panel-vertical-align="space-evenly"]::part(region) {
+  justify-content: space-evenly;
+}
+
+/* Cross-axis alignment (align-items): the opposite attribute of the one driving justify-content above. */
+.u-accordion-item[panel-layout-type="horizontal"][expanded][panel-vertical-align="start"]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded][panel-horizontal-align="start"]::part(region) {
+  align-items: start;
+}
+
+.u-accordion-item[panel-layout-type="horizontal"][expanded][panel-vertical-align="center"]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded][panel-horizontal-align="center"]::part(region) {
+  align-items: center;
+}
+
+.u-accordion-item[panel-layout-type="horizontal"][expanded][panel-vertical-align="end"]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded][panel-horizontal-align="end"]::part(region) {
+  align-items: end;
+}
+
+.u-accordion-item[panel-layout-type="horizontal"][expanded][panel-vertical-align="stretch"]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded][panel-horizontal-align="stretch"]::part(region) {
+  align-items: stretch;
+}
+
+/* space-between/space-around/space-evenly are invalid for align-items, fall back to start */
+.u-accordion-item[panel-layout-type="horizontal"][expanded][panel-vertical-align="space-between"]::part(region),
+.u-accordion-item[panel-layout-type="horizontal"][expanded][panel-vertical-align="space-around"]::part(region),
+.u-accordion-item[panel-layout-type="horizontal"][expanded][panel-vertical-align="space-evenly"]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded][panel-horizontal-align="space-between"]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded][panel-horizontal-align="space-around"]::part(region),
+.u-accordion-item[panel-layout-type="vertical"][expanded][panel-horizontal-align="space-evenly"]::part(region) {
+  align-items: start;
+}
+
+[layout-type*="vertical-scroll"] > .u-accordion-container,
+[layout-type*="vertical-wrap"] > .u-accordion-container,
+.u-accordion-container:only-child {
+  width: 100%;
+}
+
+/**
+ * Accordion Heading Field.
+ * A child field slotted into the accordion-item "heading" is reclassified to
+ * UX.AccordionHeadingField, which renders the original widget's formatted value as read-only
+ * text. These rules style that formatted value (mirroring the data-grid content cell) so the
+ * heading representation stays inline within the accordion header button.
+ */
+.u-accordion-heading-field {
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  /* Let the line box scale with the (possibly enlarged) heading font-size so
+     that descenders are not clipped by the overflow:hidden rules below. */
+  line-height: normal;
+  /* Raise the heading field above the fluent-accordion-item header button's
+     absolutely-positioned focus/hover overlay so the error icon receives hover
+     and its native title tooltip (error message) is shown. */
+  position: relative;
+  z-index: 1;
+}
+
+.u-accordion-heading-field .u-value {
+  display: inline-flex;
+  overflow: hidden;
+  align-items: center;
+}
+
+.u-accordion-heading-field .u-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.u-accordion-heading-field .u-secondary-text {
+  margin-inline-start: 0.5em;
+}
+
+.u-accordion-heading-field .u-secondary-text::before {
+  content: "(";
+}
+
+.u-accordion-heading-field .u-secondary-text::after {
+  content: ")";
+}
+
+.u-accordion-heading-field .u-prefix-text,
+.u-accordion-heading-field .u-prefix-icon {
+  overflow: hidden;
+  white-space: nowrap;
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin-inline-end: 0.3em;
+}
+
+.u-accordion-heading-field .u-suffix-text,
+.u-accordion-heading-field .u-suffix-icon {
+  overflow: hidden;
+  white-space: nowrap;
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin-inline-start: 0.3em;
+}
+
+.u-accordion-heading-field .u-error-icon {
+  margin-inline-start: 0.3em;
+}
+
+.u-accordion-heading-field.u-disabled > * {
+  opacity: var(--disabled-opacity);
+}
+
+.u-accordion-heading-field.u-hidden > * {
+  display: none;
+}
+
+/**
+ * Error state: highlight the value and error icon.
+ */
+.u-accordion-heading-field.u-invalid .u-value,
+.u-accordion-heading-field.u-format-invalid .u-value,
+.u-accordion-heading-field.u-invalid .u-error-icon,
+.u-accordion-heading-field.u-format-invalid .u-error-icon {
+  color: var(--u-error-color);
+}
+
+.u-accordion-container .u-plain-text {
+  display: inline-flex;
+}

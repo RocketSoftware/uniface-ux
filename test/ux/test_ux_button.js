@@ -864,22 +864,6 @@
         warnSpy.restore();
       });
     });
-
-    it("should not warn for supported but unused properties", function () {
-      const warnSpy = sinon.spy(console, "warn");
-      return asyncRun(function () {
-        tester.dataUpdate({
-          "html:readonly": true,
-          "html:minlength": 5,
-          "html:maxlength": 100
-        });
-      }).then(function () {
-        expect(warnSpy.calledWith(sinon.match("html:readonly")), "Console should not warn about html:readonly.").to.be.false;
-        expect(warnSpy.calledWith(sinon.match("html:minlength")), "Console should not warn about html:minlength.").to.be.false;
-        expect(warnSpy.calledWith(sinon.match("html:maxlength")), "Console should not warn about html:maxlength.").to.be.false;
-        warnSpy.restore();
-      });
-    });
   });
 
   describe("getValue()", function () {

@@ -4,6 +4,7 @@ import { WorkerBase } from "../framework/common/worker_base.js";
 import { Element } from "../framework/workers/element.js";
 import { getWidgetClass, registerWidgetClass } from "../framework/common/dsp_connector.js";
 import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeSlot } from "../framework/workers/attribute_slot.js";
 import { AttributeChoice } from "../framework/workers/attribute_choice.js";
 import { StyleClassToggle } from "../framework/workers/style_class_toggle.js";
 import { ElementIconText } from "../framework/workers/element_icon_text.js";
@@ -194,6 +195,7 @@ export class DataGridCollection extends Widget {
     new AttributeString(this, "html:base-layer-luminance", "baseLayerLuminance", undefined, false),
     new AttributeChoice(this, "responsive-type", "u-responsive-type", ["horizontal-scroll", "wrap"], "horizontal-scroll", true),
     new StyleClassToggle(this, "html:hidden", "u-hidden", false),
+    new AttributeSlot(this),
     new ElementIconText(this, "span", "u-datagrid-labeltext", ".u-datagrid-labeltext", "", "label-text", ""),
     new Element(this, "fluent-data-grid", "u-datagrid", ".u-datagrid", [
       new AttributeString(this, undefined, "role", "grid", false),
@@ -208,7 +210,6 @@ export class DataGridCollection extends Widget {
       ]),
       new WidgetOccurrence(this, "span", "uocc:{{getName()}}")
     ]),
-    new AttributeChoice(this, "area-slot", "area-slot", ["main", "header", "footer"], "main", true),
     new EventTrigger(this, "detail", "click", true)
   ]);
 }

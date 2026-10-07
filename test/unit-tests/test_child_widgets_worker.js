@@ -55,6 +55,10 @@ import { WorkerBase } from "../../src/ux/framework/common/worker_base.js";
       return this.properties[name];
     }
 
+    removeProperty(name) {
+      delete this.properties[name];
+    }
+
     getType() {
       return this.type;
     }
@@ -297,6 +301,73 @@ import { WorkerBase } from "../../src/ux/framework/common/worker_base.js";
         const groups = worker.distributeByProperty(children);
 
         expect(groups.custom).to.have.lengthOf(1);
+      });
+
+      it("should remove the slot property from each child after distribution", function() {
+        const children = [
+          new MockObjectDefinition("child1", { "area-slot": "header" }),
+          new MockObjectDefinition("child2", { "area-slot": "main" })
+        ];
+
+        worker.distributeByProperty(children);
+
+        expect(children[0].getProperty("area-slot"), "Slot property should be removed from child1 after distribution.").to.be.undefined;
+        expect(children[1].getProperty("area-slot"), "Slot property should be removed from child2 after distribution.").to.be.undefined;
+      });
+
+      it("should remove the slot property even when the child falls back to defaultSlot", function() {
+        const children = [new MockObjectDefinition("child1", {})];
+
+        worker.distributeByProperty(children);
+
+        expect(children[0].getPropertyNames(), "Slot property should be removed even when the child used the defaultSlot fallback.").to.not.include("area-slot");
+      });
+
+      it("should remove the slot property even when the child value is invalid", function() {
+        const children = [new MockObjectDefinition("child1", { "area-slot": "sidebar" })];
+
+        worker.distributeByProperty(children);
+
+        expect(children[0].getProperty("area-slot"), "Slot property should be removed even when its value was rejected as invalid.").to.be.undefined;
+      });
+
+      it("should remove the slot property even when the child is excluded from all groups", function() {
+        worker = new ChildWidgets(MockWidget, "div", "main", createSlotConfig({ "defaultSlot": null }));
+        const children = [new MockObjectDefinition("child1", {})];
+
+        worker.distributeByProperty(children);
+
+        expect(children[0].getPropertyNames(), "Slot property should be removed even when the child was excluded from all groups.").to.not.include("area-slot");
+      });
+
+      it("should leave other properties on the child untouched", function() {
+        const children = [
+          new MockObjectDefinition("child1", {
+            "area-slot": "header",
+            "label": "Keep me"
+          })
+        ];
+
+        worker.distributeByProperty(children);
+
+        expect(children[0].getProperty("area-slot"), "Slot property should be removed after distribution.").to.be.undefined;
+        expect(children[0].getProperty("label"), "Unrelated property 'label' should remain untouched.").to.equal("Keep me");
+      });
+
+      it("should remove the configured propertyName, not a hardcoded 'area-slot'", function() {
+        worker = new ChildWidgets(MockWidget, "div", "main", createSlotConfig({ "propertyName": "custom-slot" }));
+        const children = [
+          new MockObjectDefinition("child1", {
+            "custom-slot": "header",
+            "area-slot": "footer"
+          })
+        ];
+
+        const groups = worker.distributeByProperty(children);
+
+        expect(groups.header, "Child should be distributed to the 'header' slot based on the configured propertyName.").to.have.lengthOf(1);
+        expect(children[0].getProperty("custom-slot"), "Configured propertyName 'custom-slot' should be removed after distribution.").to.be.undefined;
+        expect(children[0].getProperty("area-slot"), "Unrelated 'area-slot' property should not be removed.").to.equal("footer");
       });
     });
 
@@ -622,6 +693,27 @@ import { WorkerBase } from "../../src/ux/framework/common/worker_base.js";
         expect(result).to.have.lengthOf(3);
         expect(result[0]).to.be.instanceof(HTMLElement);
         expect(result[0].id).to.equal("uent:child1");
+      });
+
+      it("should not remove the slot property when slotId is null", function() {
+        worker = new ChildWidgets(MockWidget, "div", null, slotConfig);
+
+        worker.getLayout(parentDef);
+
+        parentDef.getChildDefinitions().forEach((child) => {
+          expect(child.getProperty("area-slot"), `Slot property on ${child.getName()} should remain when slotId is null.`).to.exist;
+        });
+      });
+
+      it("should not remove any property when slotConfig is null", function() {
+        worker = new ChildWidgets(MockWidget, "div", "main", null);
+
+        const result = worker.getLayout(parentDef);
+
+        expect(result, "getLayout() should return an empty layout when slotConfig is null.").to.be.an("array").that.is.empty;
+        parentDef.getChildDefinitions().forEach((child) => {
+          expect(child.getProperty("area-slot"), `Slot property on ${child.getName()} should remain when slotConfig is null.`).to.exist;
+        });
       });
 
       it("should return only header slot children", function() {

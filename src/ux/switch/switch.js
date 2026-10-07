@@ -2,6 +2,7 @@
 import { Widget } from "../framework/common/widget.js";
 import { Element } from "../framework/workers/element.js";
 import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeSlot } from "../framework/workers/attribute_slot.js";
 import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
 import { AttributeChoice } from "../framework/workers/attribute_choice.js";
 import { AttributeNumber } from "../framework/workers/attribute_number.js";
@@ -44,6 +45,7 @@ export class Switch extends Widget {
     new StyleClassManager(this, ["u-switch"]),
     new AttributeString(this, "html:title", "title", undefined),
     new AttributeString(this, undefined, "role", "switch"),
+    new AttributeSlot(this),
     new AttributeBooleanValue(this, "value", "checked", null, false, "change"),
     new AttributeString(this, undefined, "currentValue", "on"),
     new AttributeBoolean(this, undefined, "ariaChecked", false),

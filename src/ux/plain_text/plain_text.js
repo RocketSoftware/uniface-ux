@@ -2,6 +2,7 @@
 import { Widget } from "../framework/common/widget.js";
 import { Element } from "../framework/workers/element.js";
 import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeSlot } from "../framework/workers/attribute_slot.js";
 import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
 import { PropertyFilter } from "../framework/workers/property_filter.js";
 import { ElementIconText } from "../framework/workers/element_icon_text.js";
@@ -277,11 +278,10 @@ export class PlainText extends Widget {
     new StyleClassManager(this, ["u-plain-text"]),
     new AttributeString(this, "html:title", "title", undefined),
     new AttributeBoolean(this, "html:hidden", "hidden", false),
-    new AttributeString(this, "html:slot", "slot", ""),
+    new AttributeSlot(this),
     new PropertyFilter(this, "html:maxlength"),
     new PropertyFilter(this, "html:minlength"),
     new PropertyFilter(this, "html:readonly"),
-    new PropertyFilter(this, "uiblocked"),
     new ElementIconText(this, "span", "u-label-text", ".u-label-text", "", "label-text"),
     new ElementIconText(this, "span", "u-prefix", ".u-prefix", "", "prefix-text", "", "prefix-icon", ""),
     new this.SlottedPlainTextFormat(this, "span", "u-control", ".u-control"),

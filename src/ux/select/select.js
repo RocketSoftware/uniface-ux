@@ -3,6 +3,7 @@ import { Widget } from "../framework/common/widget.js";
 import { Element } from "../framework/workers/element.js";
 import { WorkerBase } from "../framework/common/worker_base.js";
 import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeSlot } from "../framework/workers/attribute_slot.js";
 import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
 import { AttributeChoice } from "../framework/workers/attribute_choice.js";
 import { AttributeNumber } from "../framework/workers/attribute_number.js";
@@ -306,6 +307,7 @@ export class Select extends Widget {
     new AttributeString(this, "html:title", "title", undefined),
     new AttributeString(this, undefined, "role", "combobox"),
     new AttributeString(this, undefined, "currentValue", ""),
+    new AttributeSlot(this),
     new AttributeString(this, undefined, "ariaActivedescendant", ""),
     new AttributeString(this, undefined, "ariaControls", ""),
     new AttributeString(this, undefined, "ariaHaspopup", "listbox"),

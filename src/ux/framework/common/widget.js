@@ -100,8 +100,9 @@ export class Widget extends Base {
 
     let widgetElement = this.structure.getLayout(objectDefinition);
 
-    // Initializes the created layout element with worker-specific defaults that must be in place before the widget is inserted into the document.
-    this.structure.initializeLayout(widgetElement);
+    // Initializes the created layout element with worker-specific defaults that must be in place
+    // before the widget is inserted into the document, including what the object definition declares.
+    this.structure.initializeLayout(widgetElement, objectDefinition);
 
     if (elementId) {
       // This widget is bound to Uniface.
@@ -117,13 +118,15 @@ export class Widget extends Base {
       const occurrenceWidgetClassName = objectDefinition.getOccurrenceWidgetClass();
       const properties = occurrenceWidgetClassName ? getWidgetClass(occurrenceWidgetClassName)?.getPropertyIds() ?? [] : [];
       if (properties.length > 0) {
-        const propertyNamesSet = new Set(objectDefinition.getPropertyNames());
+        // An object definition without properties may return undefined rather than an empty array.
+        const propertyNamesSet = new Set(objectDefinition.getPropertyNames() ?? []);
         const occurrenceProperties = {};
         // Filter and collect matching properties for the occurrence widget.
-        for (let i = 0; i < properties.length; i++) {
-          const prop = properties[i];
-          if (propertyNamesSet.has(prop)) {
-            occurrenceProperties[prop] = objectDefinition.getProperty(prop);
+        for (const propertyName of properties) {
+          if (propertyNamesSet.has(propertyName)) {
+            occurrenceProperties[propertyName] = objectDefinition.getProperty(propertyName);
+            // After collecting the occurrence properties, remove them from the object definition.
+            objectDefinition.removeProperty(propertyName);
           }
         }
         // Only set occurrence properties if we have at least one matching property.

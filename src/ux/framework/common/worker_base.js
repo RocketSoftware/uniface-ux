@@ -43,8 +43,9 @@ export class WorkerBase extends Base {
    * values, design tokens, or other element state that must be in place before
    * the widget is inserted into the document and refresh is called.
    * @param {HTMLElement} _widgetElement - The root widget element created by getLayout().
+   * @param {UObjectDefinition} [_objectDefinition] - The definition of the object the widget is created for.
    */
-  initializeLayout(_widgetElement) {
+  initializeLayout(_widgetElement, _objectDefinition) {
     // intentionally left empty.
   }
 

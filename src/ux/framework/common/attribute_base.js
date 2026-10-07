@@ -48,6 +48,15 @@ export class AttributeBase extends WorkerBase {
   }
 
   /**
+   * Tells whether a value means 'not set'.
+   * @param {UPropValue} value
+   * @returns {boolean}
+   */
+  isEmptyValue(value) {
+    return value === undefined || value === null || value === "";
+  }
+
+  /**
    * Updates an attribute of the specified element. Supports both standard HTML attributes
    * and custom user-defined attributes.
    * @param {HTMLElement} element

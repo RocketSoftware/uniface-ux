@@ -3,6 +3,7 @@ import { registerWidgetClass } from "../framework/common/dsp_connector.js";
 import { Widget } from "../framework/common/widget.js";
 import { Element } from "../framework/workers/element.js";
 import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeSlot } from "../framework/workers/attribute_slot.js";
 import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
 import { AttributeChoice } from "../framework/workers/attribute_choice.js";
 import { AttributeRange } from "../framework/workers/attribute_range.js";
@@ -53,6 +54,7 @@ export class NumberField extends Widget {
     new AttributeString(this, "html:step", "step", 1),
     new AttributeString(this, "html:placeholder", "placeholder", undefined),
     new AttributeString(this, "html:title", "title", undefined),
+    new AttributeSlot(this),
     new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new AttributeChoice(this, "html:appearance", "appearance", ["outline", "filled"], "outline", false),
     new AttributeChoice(this, "label-position", "u-label-position", ["above", "below", "before", "after"], "above", true),

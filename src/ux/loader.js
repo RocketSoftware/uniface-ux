@@ -45,6 +45,10 @@ registerWidgetClass("UX.TextField", TextField);
 
 
 // The UX entity level widgets to include
+import {Accordion, AccordionItem} from "./accordion/accordion.js";
+registerWidgetClass("UX.Accordion", Accordion);
+registerWidgetClass("UX.AccordionItem", AccordionItem);
+
 import {DataGridCollection, DataGridOccurrence} from "./data_grid/data_grid.js";
 registerWidgetClass("UX.DataGridCollection", DataGridCollection);
 registerWidgetClass("UX.DataGridOccurrence", DataGridOccurrence);

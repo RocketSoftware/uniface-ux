@@ -12,8 +12,26 @@ test.beforeEach(async ({ page }) => {
     await basePage.open();
 });
 
+test('Accordion Unit Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.accordionUnitTestLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
+test('Accordion Child Slots Unit Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.accordionChildSlotsUnitTestLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
 test('Application Unit Tests', async ({ page }) => {
     const newPage = await indexPage.openNewPage(indexPage.applicationUnitTestLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
+test('AttributeSlot Worker Unit Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.attributeSlotUnitTestLink);
     const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
     await homePage.checkFailuresEncountered(newPage, test);
 });
@@ -56,6 +74,24 @@ test('TextField Unit Tests', async ({ page }) => {
 
 test('Layout Web Component Tests', async ({ page }) => {
     const newPage = await indexPage.openNewPage(indexPage.layoutWebComponentLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
+test('Shell Web Component Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.shellWebComponentLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
+test('Widget Container Web Component Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.widgetContainerWebComponentLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
+test('Accordion Widget Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.accordionWidgetLink);
     const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
     await homePage.checkFailuresEncountered(newPage, test);
 });

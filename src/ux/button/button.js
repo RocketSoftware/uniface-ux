@@ -2,6 +2,7 @@
 import { Widget } from "../framework/common/widget.js";
 import { Element } from "../framework/workers/element.js";
 import { AttributeString } from "../framework/workers/attribute_string.js";
+import { AttributeSlot } from "../framework/workers/attribute_slot.js";
 import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
 import { AttributeChoice } from "../framework/workers/attribute_choice.js";
 import { AttributeNumber } from "../framework/workers/attribute_number.js";
@@ -177,6 +178,7 @@ export class Button extends Widget {
     new StyleClassManager(this, ["u-button", "neutral", "u-stretchable"]),
     new AttributeString(this, undefined, "currentValue", ""),
     new AttributeString(this, "html:title", "title", undefined),
+    new AttributeSlot(this),
     new AttributeNumber(this, "html:tabindex", "tabIndex", -1, null, 0),
     new AttributeChoice(this, "html:appearance", "appearance", ["neutral", "accent", "outline", "lightweight", "stealth"], "neutral"),
     new AttributeBoolean(this, "html:hidden", "hidden", false),
