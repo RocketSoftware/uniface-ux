@@ -87,23 +87,25 @@ export class AttributeSlot extends AttributeString {
     if (this.isEmptyValue(value) || value === this.defaultValue || this.isConfiguredValue(widgetInstance, value)) {
       return;
     }
+    // getTraceDescription() adds the random widget and data ids, which identify nothing to a developer.
+    const widgetName = widgetInstance.elements?.widget?.id || this.widgetClass.name;
     if (!this.placement?.isStatic) {
       // The widget it is placed in moves its children while it runs.
       if (this.isAllowedSlot(this.placement?.allowedSlots, value)) {
         super.refresh(widgetInstance);
       } else {
-        this.warn("setProperties", `Parent widget does not offer slot '${value}'`, "Ignored");
+        this.warn("setProperties", `${widgetName}: Parent widget does not offer slot '${value}'`, "Ignored");
       }
       return;
     }
-    // The widget it is placed in places its children while it creates the layout. A widget that
-    // carries a slot was placed in one, so the value is refused as a change; one that carries none
-    // was never placed, because the slot it asks for is not offered.
+    // The widget it is placed in places its children while it creates the layout, so a slot it
+    // offers is refused as a change. A widget that carries a slot was placed in one; one that
+    // carries none sits in the default slot, which is a placement as well.
     const isPlaced = Boolean(this.attrName && this.getElement(widgetInstance)?.getAttribute(this.attrName));
-    const message = isPlaced
+    const message = isPlaced || this.isAllowedSlot(this.placement?.allowedSlots, value)
       ? `Property '${this.propId}' cannot be changed at runtime`
       : `Parent widget does not offer slot '${value}'`;
-    this.warn("setProperties", message, "Ignored");
+    this.warn("setProperties", `${widgetName}: ${message}`, "Ignored");
   }
 
   /**

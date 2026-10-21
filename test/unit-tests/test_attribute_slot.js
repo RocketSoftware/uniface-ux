@@ -184,6 +184,23 @@ import { AttributeSlot } from "../../src/ux/framework/workers/attribute_slot.js"
         expect(warnings[0]).to.contain("Ignored");
       });
 
+      it("should name the widget it is reported for, so it can be found on the page", function () {
+        const element = createLayout({ "html:slot": "footer" });
+        element.id = "ufld:ADDRESS.PERSON";
+
+        refreshWith(element, "footer");
+
+        expect(warnings[0], "The binding id identifies the widget.").to.contain("ufld:ADDRESS.PERSON");
+      });
+
+      it("should name the widget by its class when it is not bound to Uniface", function () {
+        const element = createLayout({ "html:slot": "footer" });
+
+        refreshWith(element, "footer");
+
+        expect(warnings[0]).to.contain("Checkbox");
+      });
+
       it("should not be applied when the widget it is placed in offers no slots at all", function () {
         // Every widget that places its children without slots, such as an entity layout.
         const element = createLayout({ "html:slot": "end" }, []);
@@ -240,6 +257,48 @@ import { AttributeSlot } from "../../src/ux/framework/workers/attribute_slot.js"
       it("should refuse a slot for a widget that is placed without slots", function () {
         // The case that would otherwise leave the widget unrendered: nothing offers 'end'.
         const element = createLayout({}, []);
+
+        refreshWith(element, "end");
+
+        expect(element.hasAttribute("slot"), "The widget must stay where it is.").to.be.false;
+        expect(warnings).to.have.lengthOf(1);
+        expect(warnings[0]).to.contain("Parent widget does not offer slot 'end'");
+      });
+
+      it("should refuse an offered slot for a widget that is placed in the default slot", function () {
+        // The body of an accordion item: the widget carries no slot, but it was placed all the same.
+        const element = createLayout({});
+
+        refreshWith(element, "heading");
+
+        expect(element.hasAttribute("slot"), "The widget must stay where it is.").to.be.false;
+        expect(warnings).to.have.lengthOf(1);
+        expect(warnings[0]).to.contain("Property 'html:slot' cannot be changed at runtime");
+        expect(warnings[0]).to.contain("Ignored");
+      });
+
+      it("should report a slot it does not offer for a widget that is placed in the default slot", function () {
+        const element = createLayout({});
+
+        refreshWith(element, "footer");
+
+        expect(warnings).to.have.lengthOf(1);
+        expect(warnings[0]).to.contain("Parent widget does not offer slot 'footer'");
+      });
+
+      it("should refuse an offered slot that only differs in surrounding whitespace", function () {
+        const element = createLayout({});
+
+        refreshWith(element, "  heading  ");
+
+        expect(warnings).to.have.lengthOf(1);
+        expect(warnings[0]).to.contain("Property 'html:slot' cannot be changed at runtime");
+      });
+
+      it("should report a slot for a widget whose container declares nothing", function () {
+        // Every widget that places its children without slots, such as an entity layout.
+        const element = document.createElement("fluent-checkbox");
+        worker.initializeLayout(element, objectDefinition({}));
 
         refreshWith(element, "end");
 

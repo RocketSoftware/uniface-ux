@@ -204,8 +204,12 @@
         expect(AccordionItem.defaultValues, "DefaultValues should be a non-empty object.").to.not.be.empty;
       });
 
-      it("should not define any triggers", function () {
-        expect(AccordionItem.triggers, "AccordionItem should not define any triggers.").to.deep.equal({});
+      it("should register the 'ontoggleitem' trigger", function () {
+        expect(AccordionItem.triggers, "Triggers should include 'ontoggleitem'.").to.have.property("ontoggleitem");
+      });
+
+      it("should expose the event the 'ontoggleitem' trigger is mapped to", function () {
+        expect(AccordionItem.toggleItemEvent, "The toggle-item event should be 'uf-toggle-item'.").to.equal("uf-toggle-item");
       });
 
       it("should register an 'item:expanded' setter", function () {
@@ -229,6 +233,189 @@
         expect(AccordionItem.childSlotConfig.propertyName, "childSlotConfig should key on the 'html:slot' property.").to.equal("html:slot");
         expect(AccordionItem.childSlotConfig.validSlots, "childSlotConfig should offer the start/end/heading slots.").to.deep.equal(["start", "end", "heading"]);
         expect(AccordionItem.childSlotConfig.defaultSlot, "childSlotConfig default slot should be the empty (body) slot.").to.equal("");
+      });
+
+    });
+
+    describe("onItemChange()", function () {
+
+      let accordion;
+      let items;
+      let itemWidgets;
+      let toggles;
+
+      /**
+       * Builds a detached accordion whose items are each connected to an AccordionItem widget,
+       * and records every toggle-item event. The tree is left out of the document on purpose, so
+       * the Fluent accordion never attaches its own listeners and the widget is tested in
+       * isolation.
+       * @param {string} [expandMode] - Omitted to leave the accordion without an expand mode.
+       */
+      function buildAccordion(expandMode) {
+        accordion = document.createElement("fluent-accordion");
+        if (expandMode) {
+          accordion.setAttribute("expand-mode", expandMode);
+        }
+        items = [];
+        itemWidgets = [];
+        toggles = [];
+        for (let index = 0; index < 3; index++) {
+          const item = document.createElement("fluent-accordion-item");
+          accordion.appendChild(item);
+          items.push(item);
+          itemWidgets.push(connectItem(item, index));
+        }
+        return accordion;
+      }
+
+      /** Connects an AccordionItem widget to an element the way onConnect() does. */
+      function connectItem(item, index) {
+        const widget = new AccordionItem();
+        widget.elements = { "widget": item };
+        widget.data = {};
+        item.addEventListener("change", widget.itemChangeListener);
+        item.addEventListener(AccordionItem.toggleItemEvent, function () {
+          toggles.push(`${index}=${item.expanded}`);
+        });
+        return widget;
+      }
+
+      /** Mimics Fluent: the item flips its own state and then announces the change. */
+      function toggle(item) {
+        item.expanded = !item.expanded;
+        item.dispatchEvent(new window.CustomEvent("change", { "bubbles": true,
+                                                              "composed": true }));
+      }
+
+      function expandedState() {
+        return items.map((item) => item.expanded);
+      }
+
+      it("should collapse the other items when the accordion expands a single item", function () {
+        buildAccordion("single");
+        toggle(items[0]);
+
+        toggle(items[2]);
+
+        expect(expandedState(), "Only the last expanded item should stay expanded.").to.deep.equal([false, false, true]);
+      });
+
+      it("should leave the other items expanded when the accordion expands multiple items", function () {
+        buildAccordion("multi");
+        toggle(items[0]);
+
+        toggle(items[2]);
+
+        expect(expandedState(), "Both expanded items should stay expanded.").to.deep.equal([true, false, true]);
+      });
+
+      it("should leave the other items expanded when the accordion declares no expand mode", function () {
+        buildAccordion();
+        toggle(items[0]);
+
+        toggle(items[1]);
+
+        expect(expandedState(), "Without an expand mode the items are independent.").to.deep.equal([true, true, false]);
+      });
+
+      it("should re-expand the item when the only expanded item is collapsed in single mode", function () {
+        buildAccordion("single");
+        toggle(items[1]);
+
+        toggle(items[1]);
+
+        expect(expandedState(), "The expanded item should stay expanded.").to.deep.equal([false, true, false]);
+      });
+
+      it("should not report a toggle when the only expanded item is collapsed in single mode", function () {
+        buildAccordion("single");
+        toggle(items[1]);
+
+        toggle(items[1]);
+
+        expect(toggles, "Collapsing the expanded item is not a state change.").to.deep.equal(["1=true"]);
+      });
+
+      it("should report the toggle of the item that changed only", function () {
+        buildAccordion("single");
+        toggle(items[0]);
+
+        toggle(items[2]);
+
+        expect(toggles, "The item that collapses as a side effect should not report.").to.deep.equal(["0=true", "2=true"]);
+      });
+
+      it("should report a collapse in multi mode", function () {
+        buildAccordion("multi");
+        toggle(items[0]);
+
+        toggle(items[0]);
+
+        expect(toggles, "Expand and collapse should both report.").to.deep.equal(["0=true", "0=false"]);
+      });
+
+      it("should update 'item:expanded' with the state of the element", function () {
+        buildAccordion("multi");
+
+        toggle(items[1]);
+
+        expect(itemWidgets[1].data["item:expanded"], "Widget data should follow the element.").to.be.true;
+        toggle(items[1]);
+        expect(itemWidgets[1].data["item:expanded"], "Widget data should follow the collapse as well.").to.be.false;
+      });
+
+      it("should ignore a change event raised by a widget inside the item", function () {
+        buildAccordion("single");
+        const child = document.createElement("span");
+        items[0].appendChild(child);
+        items[1].expanded = true;
+
+        child.dispatchEvent(new window.CustomEvent("change", { "bubbles": true,
+                                                               "composed": true }));
+
+        expect(expandedState(), "A child widget must not collapse the other items.").to.deep.equal([false, true, false]);
+        expect(toggles, "A child widget must not report a toggle.").to.be.empty;
+      });
+
+      it("should leave siblings that are not accordion items untouched", function () {
+        buildAccordion("single");
+        const nonItemSibling = document.createElement("span");
+        nonItemSibling.expanded = true;
+        accordion.appendChild(nonItemSibling);
+
+        toggle(items[0]);
+
+        expect(nonItemSibling.expanded, "Only accordion items should be collapsed.").to.be.true;
+      });
+
+      it("should collapse the items of the nearest accordion only", function () {
+        buildAccordion("single");
+        toggle(items[0]);
+        const nested = document.createElement("fluent-accordion");
+        nested.setAttribute("expand-mode", "single");
+        const nestedItems = [document.createElement("fluent-accordion-item"), document.createElement("fluent-accordion-item")];
+        nestedItems.forEach(function (nestedItem, index) {
+          nested.appendChild(nestedItem);
+          connectItem(nestedItem, `nested${index}`);
+        });
+        items[0].appendChild(nested);
+        toggle(nestedItems[0]);
+
+        toggle(nestedItems[1]);
+
+        expect(nestedItems[0].expanded, "The nested accordion should collapse its own items.").to.be.false;
+        expect(items[0].expanded, "The item holding the nested accordion should stay expanded.").to.be.true;
+      });
+
+      it("should report the toggle of an item that is not placed in an accordion", function () {
+        buildAccordion("single");
+        const itemWithoutAccordion = document.createElement("fluent-accordion-item");
+        items = [itemWithoutAccordion];
+        connectItem(itemWithoutAccordion, 0);
+
+        toggle(itemWithoutAccordion);
+
+        expect(toggles, "An item without an accordion should still report its toggle.").to.deep.equal(["0=true"]);
       });
 
     });
