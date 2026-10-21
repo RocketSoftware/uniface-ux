@@ -48,6 +48,12 @@ test('Button Unit Tests', async ({ page }) => {
     await homePage.checkFailuresEncountered(newPage, test);
 });
 
+test('Checkbox Unit Tests', async ({ page }) => {
+    const newPage = await indexPage.openNewPage(indexPage.checkboxUnitTestLink);
+    const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);
+    await homePage.checkFailuresEncountered(newPage, test);
+});
+
 test('ChildWidgets Worker Unit Tests', async ({ page }) => {
     const newPage = await indexPage.openNewPage(indexPage.childWidgetsWorkerUnitTestLink);
     const extractedText = await homePage.checkElementVisibilityAndExtractText(newPage, homePage.resultsFooterText);

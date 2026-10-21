@@ -99,7 +99,7 @@ AttributeRange validates numeric ranges with `min` and `max`. It prevents invali
 
 ### AttributeSlot
 
-AttributeSlot manages the `html:slot` attribute, which places a widget in an area of the widget it is placed in. It applies the slot while the layout is created, and reports one the parent does not offer.
+AttributeSlot manages the `html:slot` attribute, which places a widget in an area of the widget it is placed in. It applies the slot while the layout is created. A slot that arrives afterwards is reported and ignored: as a slot the parent does not offer when that is the case, and as a property that cannot be changed at runtime when the parent places its children once.
 
 ---
 

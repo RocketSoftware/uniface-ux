@@ -42,13 +42,19 @@ The content panel of every occurrence can arrange its child widgets horizontally
 align them independently in both directions, using the `item:panel:layout-type`,
 `item:panel:horizontal-align`, and `item:panel:vertical-align` properties. Child
 widgets can also opt in to the header areas instead of the body, keeping related content and its
-controls together.
+controls together. A child selects its area with `html:slot`, which the accordion applies once,
+while the panel is built. It cannot be changed while the application runs.
 
 ### Expand Behavior
 
 The `expand-mode` property lets the accordion behave as a multi-expand group, where any number of
 panels can be open at once, or a single-expand group, where opening one panel automatically closes
 the others.
+
+The `ontoggleitem` trigger reports that the user expanded or collapsed a panel. It is fired by the
+panel header only, so interaction with widgets in the `start` and `end` slots does not fire it.
+In single-expand mode, clicking the panel that is already open keeps it open and is therefore not
+reported, and opening another panel is reported once, for the panel that was clicked.
 
 ## Documentation
 

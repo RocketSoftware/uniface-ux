@@ -5,6 +5,7 @@ import { StyleClassManager } from "../framework/workers/style_class_manager.js";
 import { AttributeBoolean } from "../framework/workers/attribute_boolean.js";
 import { AttributeChoice } from "../framework/workers/attribute_choice.js";
 import { ElementIconText } from "../framework/workers/element_icon_text.js";
+import { EventTrigger } from "../framework/workers/event_trigger.js";
 import { ChildWidgets } from "../framework/workers/child_widgets.js";
 import { AttributeSlot } from "../framework/workers/attribute_slot.js";
 import { WidgetOccurrence } from "../framework/workers/widget_occurrence.js";
@@ -98,6 +99,14 @@ export class AccordionItem extends Widget {
     // The default slot of fluent-accordion-item, which is its collapsible body.
     "defaultSlot": ""
   };
+
+  /**
+   * Event the widget emits when the user actually expands or collapses this item.
+   * The 'ontoggleitem' trigger is mapped to this event instead of to a raw click, so that it only
+   * reports expand/collapse and not interaction with widgets slotted into the header.
+   * @static
+   */
+  static toggleItemEvent = "uf-toggle-item";
 
   /**
    * Private Worker: Resolves the slot of every child widget while the layout of this occurrence is
@@ -241,8 +250,67 @@ export class AccordionItem extends Widget {
     // Child widgets fall into fluent-accordion-item's default slot (collapsible body), unless
     // they select one of the slots of childSlotConfig through their 'html:slot' property.
     // children slotted into "heading" are reclassified to the read-only heading field widget.
-    new this.ChildSlots(this, "span", this.childSlotConfig)
+    new this.ChildSlots(this, "span", this.childSlotConfig),
+    new EventTrigger(this, "ontoggleitem", this.toggleItemEvent, false)
   ]);
+
+  /**
+   * Creates an instance of AccordionItem.
+   */
+  constructor() {
+    super();
+    this.itemChangeListener = this.onItemChange.bind(this);
+  }
+
+  /**
+   * Connects the widget and starts listening for the Fluent accordion item's expand/collapse
+   * notification.
+   * @param {HTMLElement} widgetElement
+   * @param {UObjectDefinition} objectDefinition
+   * @returns {Array<Updater> | undefined | null}
+   */
+  onConnect(widgetElement, objectDefinition) {
+    const updaters = super.onConnect(widgetElement, objectDefinition);
+    // Back-reference, so that an item can collapse its siblings through their own widget.
+    this.elements.widget.accordionItemWidget = this;
+    widgetElement.addEventListener("change", this.itemChangeListener);
+    return updaters;
+  }
+
+  /**
+   * Handles the expand/collapse notification of the Fluent accordion item.
+   * The single-expand mode is applied here rather than left to the Fluent accordion, which only
+   * enforces it as long as its own item listeners are attached. Those listeners are lost whenever
+   * the occurrences are re-rendered, for instance after the round trip of an 'ontoggleitem'
+   * trigger, making the accordion behave as if it were in multi-expand mode.
+   * @param {Event} event
+   */
+  onItemChange(event) {
+    const element = this.elements.widget;
+    // Widgets in the header slots and in the panel emit change events that bubble up to here.
+    if (event.target !== element) {
+      return;
+    }
+    const accordion = element.closest("fluent-accordion");
+    if (accordion?.getAttribute("expand-mode") === "single") {
+      if (!element.expanded) {
+        // Collapsing the only expanded item of a single-expand accordion is not a state change.
+        this.setProperties({ "item:expanded": true });
+        return;
+      }
+      Array.from(accordion.children).forEach((sibling) => {
+        if (sibling !== element && sibling.localName === "fluent-accordion-item") {
+          if (sibling.accordionItemWidget) {
+            sibling.accordionItemWidget.setProperties({ "item:expanded": false });
+          } else {
+            sibling.expanded = false;
+          }
+        }
+      });
+    }
+    this.setProperties({ "item:expanded": element.expanded });
+    element.dispatchEvent(new window.CustomEvent(AccordionItem.toggleItemEvent));
+  }
 
   /**
    * Blocks user interaction by disabling the Fluent accordion item's internal heading button.

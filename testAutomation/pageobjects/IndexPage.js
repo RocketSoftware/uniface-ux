@@ -10,6 +10,7 @@ class IndexPage extends BasePage {
     this.attributeSlotUnitTestLink = '#attribute-slot-unit-tests';
     this.attributeThemeUnitTestLink = '#attribute-theme-unit-tests';
     this.buttonUnitTestLink = '#button-unit-tests';
+    this.checkboxUnitTestLink = '#checkbox-unit-tests';
     this.childWidgetsWorkerUnitTestLink = '#child-widgets-worker-unit-tests';
     this.headerFooterUnitTestLink = '#header-footer-unit-tests';
     this.layoutWebComponentUnitTestLink = '#layout-web-component-unit-tests';

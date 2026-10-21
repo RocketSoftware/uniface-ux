@@ -140,8 +140,8 @@
         assert(suffixWorker, "Suffix heading worker should exist.");
       });
 
-      it("should not define any triggers", function () {
-        expect(Object.keys(occurrenceWidgetClass.triggers), "AccordionItem should not define triggers.").to.have.lengthOf(0);
+      it("should register the 'ontoggleitem' trigger", function () {
+        expect(occurrenceWidgetClass.triggers, "AccordionItem should register 'ontoggleitem'.").to.have.property("ontoggleitem");
       });
     });
   });
@@ -873,6 +873,227 @@
         }).then(function () {
           expect(element.hidden, "Occurrence should be hidden when item:hidden is true.").to.be.true;
         });
+      });
+    });
+  });
+
+  describe("mapTrigger()", function () {
+
+    let widget;
+
+    beforeEach(function () {
+      const occurrenceSkeleton = createSkeleton(occurrenceWidgetId);
+      widget = occurrenceTester.onConnect(occurrenceSkeleton, mockEntityDef);
+    });
+
+    it("should map trigger 'ontoggleitem' to event 'uf-toggle-item'", function () {
+      const triggerMapping = widget.mapTrigger("ontoggleitem");
+      assert(triggerMapping, "Trigger 'ontoggleitem' is not mapped!");
+      assert(triggerMapping.element === occurrenceTester.element, "Trigger 'ontoggleitem' is not mapped to the correct HTMLElement!");
+      assert(
+        triggerMapping.event_name === "uf-toggle-item",
+        `Trigger 'ontoggleitem' should be mapped to event 'uf-toggle-item', but got '${triggerMapping.event_name}'!`
+      );
+    });
+  });
+
+  describe("expand behavior", function () {
+
+    const occurrenceDef = {
+      "type": "occurrence",
+      "widget_class": "UX.AccordionItem",
+      "#11": {
+        "nm": "HEADING.TOGGLE.NOMODEL",
+        "type": "field",
+        "widget_class": "UX.PlainText",
+        "properties": {},
+        "id": "#11"
+      }
+    };
+
+    const toggleEntityDef = {
+      "nm": "TOGGLE.NOMODEL",
+      "type": "entity",
+      "widget_class": "UX.Accordion",
+      "occs": {
+        "#10": occurrenceDef,
+        "#20": occurrenceDef,
+        "#30": occurrenceDef
+      },
+      "properties": {},
+      "id": "#10"
+    };
+
+    let root;
+    let accordionElement;
+    let itemElements;
+    let itemWidgets;
+    let toggleEvents;
+
+    /**
+     * Builds a connected accordion with three occurrence widgets and records every toggle-item
+     * event, the way Uniface records them through the 'ontoggleitem' trigger.
+     * The Fluent accordion picks up its items asynchronously, so the caller gets a promise that
+     * resolves once the accordion has settled.
+     * @param {string} expandMode
+     * @returns {Promise}
+     */
+    function buildAccordion(expandMode) {
+      return asyncRun(function () {
+        toggleEvents = [];
+        itemWidgets = [];
+        const tester = new umockup.WidgetTester("UX.Accordion", "uent:TOGGLE.NOMODEL");
+        const collectionWidget = tester.onConnect(createSkeleton("uent:TOGGLE.NOMODEL"), toggleEntityDef);
+        root = tester.element;
+        if (!root.isConnected) {
+          document.body.appendChild(root);
+        }
+        collectionWidget.dataInit();
+        collectionWidget.dataUpdate({ "expand-mode": expandMode });
+        accordionElement = root.querySelector("fluent-accordion");
+        itemElements = Array.from(root.querySelectorAll("fluent-accordion-item"));
+        itemElements.forEach(function (itemElement, index) {
+          const itemWidget = new occurrenceWidgetClass();
+          itemWidget.onConnect(itemElement, umockup.createUxDefinitions(occurrenceDef, true));
+          itemWidget.dataInit();
+          itemWidgets.push(itemWidget);
+          itemElement.addEventListener(occurrenceWidgetClass.toggleItemEvent, function () {
+            toggleEvents.push(`${index}=${itemElement.expanded}`);
+          });
+        });
+      });
+    }
+
+    function clickHeading(itemElement) {
+      itemElement.shadowRoot.querySelector("[part='button']").click();
+    }
+
+    function expandedState() {
+      return itemElements.map((itemElement) => itemElement.expanded);
+    }
+
+    afterEach(function () {
+      root?.remove();
+    });
+
+    it("should expand only one item at a time when expand-mode is single", function () {
+      return buildAccordion("single").then(function () {
+        return asyncRun(function () {
+          clickHeading(itemElements[1]);
+        });
+      }).then(function () {
+        expect(expandedState(), "Only the clicked item should be expanded.").to.deep.equal([false, true, false]);
+        return asyncRun(function () {
+          clickHeading(itemElements[2]);
+        });
+      }).then(function () {
+        expect(expandedState(), "Expanding another item should collapse the previous one.").to.deep.equal([false, false, true]);
+      });
+    });
+
+    it("should keep single expand mode when the Fluent accordion item listeners are gone", function () {
+      return buildAccordion("single").then(function () {
+        // Uniface re-renders the occurrences on a trigger round trip, after which the Fluent
+        // accordion no longer listens to its items.
+        accordionElement.removeItemListeners(accordionElement.accordionItems);
+        return asyncRun(function () {
+          clickHeading(itemElements[1]);
+        });
+      }).then(function () {
+        expect(expandedState(), "Only the clicked item should be expanded.").to.deep.equal([false, true, false]);
+        return asyncRun(function () {
+          clickHeading(itemElements[2]);
+        });
+      }).then(function () {
+        expect(expandedState(), "Expanding another item should collapse the previous one.").to.deep.equal([false, false, true]);
+      });
+    });
+
+    it("should expand items independently when expand-mode is multi", function () {
+      return buildAccordion("multi").then(function () {
+        return asyncRun(function () {
+          clickHeading(itemElements[0]);
+          clickHeading(itemElements[1]);
+        });
+      }).then(function () {
+        expect(expandedState(), "Both clicked items should be expanded.").to.deep.equal([true, true, false]);
+      });
+    });
+
+    it("should report a single toggle for the clicked item", function () {
+      return buildAccordion("single").then(function () {
+        return asyncRun(function () {
+          clickHeading(itemElements[1]);
+        });
+      }).then(function () {
+        expect(toggleEvents, "Only the clicked item should report a toggle.").to.deep.equal(["1=true"]);
+      });
+    });
+
+    it("should not report a toggle when the expanded item is clicked in single mode", function () {
+      return buildAccordion("single").then(function () {
+        return asyncRun(function () {
+          clickHeading(itemElements[1]);
+          clickHeading(itemElements[1]);
+        });
+      }).then(function () {
+        expect(expandedState(), "The expanded item should stay expanded.").to.deep.equal([false, true, false]);
+        expect(toggleEvents, "Clicking the expanded item again should not report a toggle.").to.deep.equal(["1=true"]);
+      });
+    });
+
+    it("should report a toggle on collapse in multi mode", function () {
+      return buildAccordion("multi").then(function () {
+        return asyncRun(function () {
+          clickHeading(itemElements[0]);
+          clickHeading(itemElements[0]);
+        });
+      }).then(function () {
+        expect(expandedState(), "The item should be collapsed again.").to.deep.equal([false, false, false]);
+        expect(toggleEvents, "Both expand and collapse should report a toggle.").to.deep.equal(["0=true", "0=false"]);
+      });
+    });
+
+    it("should ignore change events of widgets inside the item", function () {
+      return buildAccordion("single").then(function () {
+        return asyncRun(function () {
+          const childEvent = new window.CustomEvent("change", { "bubbles": true,
+                                                                "composed": true });
+          itemElements[0].querySelector("span")?.dispatchEvent(childEvent);
+        });
+      }).then(function () {
+        expect(toggleEvents, "A change event of a child widget should not report a toggle.").to.be.empty;
+      });
+    });
+
+    it("should report one toggle when the widget is connected to the same element again", function () {
+      return buildAccordion("multi").then(function () {
+        return asyncRun(function () {
+          // Uniface connects the occurrence widgets again after it has re-rendered them.
+          itemWidgets[0].onConnect(itemElements[0], umockup.createUxDefinitions(occurrenceDef, true));
+          clickHeading(itemElements[0]);
+        });
+      }).then(function () {
+        expect(toggleEvents, "Connecting again should not register a second listener.").to.deep.equal(["0=true"]);
+      });
+    });
+
+    it("should not toggle while the widget is blocked", function () {
+      return buildAccordion("multi").then(function () {
+        return asyncRun(function () {
+          itemWidgets[1].blockUI();
+          clickHeading(itemElements[1]);
+        });
+      }).then(function () {
+        expect(expandedState(), "A blocked item should not expand.").to.deep.equal([false, false, false]);
+        expect(toggleEvents, "A blocked item should not report a toggle.").to.be.empty;
+        return asyncRun(function () {
+          itemWidgets[1].unblockUI();
+          clickHeading(itemElements[1]);
+        });
+      }).then(function () {
+        expect(expandedState(), "An unblocked item should expand again.").to.deep.equal([false, true, false]);
+        expect(toggleEvents, "An unblocked item should report its toggle.").to.deep.equal(["1=true"]);
       });
     });
   });
