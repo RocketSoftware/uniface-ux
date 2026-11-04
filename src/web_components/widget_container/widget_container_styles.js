@@ -1,4 +1,11 @@
-import { bodyFont, designUnit, neutralForegroundRest } from "@fluentui/web-components";
+import {
+  bodyFont,
+  designUnit,
+  neutralForegroundRest,
+  typeRampBaseFontSize,
+  typeRampBaseLineHeight,
+  typeRampBaseFontVariations
+} from "@fluentui/web-components";
 import { css } from "@microsoft/fast-element";
 
 export const widgetContainerStyles = css`
@@ -9,6 +16,9 @@ export const widgetContainerStyles = css`
     box-sizing: border-box;
 
     font-family: ${bodyFont};
+    font-size: ${typeRampBaseFontSize};
+    line-height: ${typeRampBaseLineHeight};
+    font-variation-settings: ${typeRampBaseFontVariations};
     color: ${neutralForegroundRest};
 
     /* Header spacing */

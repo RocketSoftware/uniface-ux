@@ -1,4 +1,11 @@
-import { bodyFont, designUnit, neutralForegroundRest } from "@fluentui/web-components";
+import {
+  bodyFont,
+  designUnit,
+  neutralForegroundRest,
+  typeRampBaseFontSize,
+  typeRampBaseLineHeight,
+  typeRampBaseFontVariations
+} from "@fluentui/web-components";
 import { css } from "@microsoft/fast-element";
 
 /**
@@ -12,6 +19,9 @@ export const layoutStyles = css`
     flex-shrink: var(--u-layout-shrink, 1);
     box-sizing: border-box;
     font-family: ${bodyFont};
+    font-size: ${typeRampBaseFontSize};
+    line-height: ${typeRampBaseLineHeight};
+    font-variation-settings: ${typeRampBaseFontVariations};
     color: ${neutralForegroundRest};
 
     /* Label spacing variables. */
@@ -210,7 +220,7 @@ export const layoutStyles = css`
     --u-layout-flex-wrap: wrap;
     --u-layout-shrink: 1;
   }
-    
+
   :host(.u-layout-type-vs.u-jc-stretch) .root,
   :host(.u-layout-type-vw.u-jc-stretch) .root,
   :host:has(.u-layout-type-vs.u-jc-stretch:not(.u-ai-stretch)) {
@@ -221,7 +231,7 @@ export const layoutStyles = css`
   :host(.u-layout-type-vw.u-ai-stretch) {
     --u-layout-grow: 1;
   }
-  
+
   :host(.u-layout-type-hw.u-jc-stretch),
   :host(.u-layout-type-hs.u-jc-stretch) {
     --u-layout-grow: 1;
